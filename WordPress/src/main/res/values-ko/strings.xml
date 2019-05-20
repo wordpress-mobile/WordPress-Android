@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-02 06:54:09+0000
+Translation-Revision-Date: 2019-05-15 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="post_list_drafts">임시글</string>
+    <string name="post_list_published">게시됨</string>
+    <string name="post_list_author_everyone">모두 볼 수 있음</string>
+    <string name="post_list_author_me">나</string>
+    <string name="error_restoring_post">글을 복원하는 중 오류 발생</string>
+    <string name="backdated_for">소급 적용: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">위에 표시된 항목이 인사이트 탭에 표시됩니다. 끌어서 놓아 사용자 정의할 수 있습니다.</string>
+    <string name="stats_insights_add_insights_header">인사이트 추가</string>
+    <string name="stats_insights_management_title">가장 관련성 높은 통계만 확인하세요. 아래 인사이트를 추가 및 구성하세요.</string>
+    <string name="stats_insights_social">소셜</string>
+    <string name="stats_insights_annual_site_stats">연간 사이트 통계</string>
+    <string name="stats_view_follower_totals">총 팔로워 수</string>
+    <string name="suggestion_fetch_error">도메인 제안을 로드할 수 없음</string>
+    <string name="suggestions_search_hint">추가 아이디어에 대한 키워드 입력</string>
+    <string name="suggestions_empty_list">제안을 찾을 수 없음</string>
+    <string name="choose_domain">도메인 선택</string>
+    <string name="register_domain">도메인 등록</string>
+    <string name="jetpack_installed_message">젯팩 설치되었으므로 설정해야 합니다. 이 작업은 1분 정도 소요됩니다.</string>
+    <string name="stats_menu_remove">인사이트에서 제거</string>
+    <string name="stats_menu_move_down">아래로 이동</string>
+    <string name="stats_menu_move_up">위로 이동</string>
+    <string name="stats_item_settings">통계 항목 설정</string>
+    <string name="post_moving_to_draft">글이 초안으로 이동 중</string>
+    <string name="post_restoring">글이 복원되는 중</string>
+    <string name="post_restored">글이 복원됨</string>
+    <string name="post_trashing">글이 휴지통으로 이동 중</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경 사항이 취소됩니다. 계속하시겠습니까?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">로컬 변경</string>
+    <string name="button_move_to_draft">임시글로 이동</string>
+    <string name="post_list_toggle_item_layout_list_view">목록 보기로 전환</string>
+    <string name="post_list_toggle_item_layout_cards_view">카드 보기로 전환</string>
+    <string name="posts_trashed_empty">휴지통에 버린 글이 없습니다.</string>
+    <string name="posts_draft_empty">임시글이 없습니다.</string>
+    <string name="posts_scheduled_empty">예약한 글이 없습니다.</string>
+    <string name="posts_published_empty">아직 글을 발행하지 않았습니다.</string>
     <string name="notification_wpcom_username_needed">사용자 이름과 비밀번호를 사용하여 로그인하세요.</string>
     <string name="login_invalid_site_url">입력하신 사이트 주소가 유효하지 않습니다. 다시 입력하세요.</string>
     <string name="error_user_username_instead_of_email">이메일 주소가 아닌 워드프레스닷컴 사용자 이름을 사용하여 로그인하세요.</string>
@@ -225,7 +260,6 @@ Language: ko_KR
     <string name="stats_followers_count_message">총 %1$s 팔로워 수: %2$s</string>
     <string name="stats_followers_email">이메일</string>
     <string name="stats_followers_wordpress_com">워드프레스닷컴</string>
-    <string name="stats_manage_insights">인사이트 관리</string>
     <string name="stats_empty_insights_title">아직 추가된 인사이트가 없음</string>
     <string name="stats_no_data_yet">아직 데이터 없음</string>
     <string name="menu_debug">디버그 메뉴</string>
@@ -325,14 +359,9 @@ Language: ko_KR
     <string name="reader_empty_followed_tags_subtitle">즐겨 찾는 주제에 대한 게시물을 찾으려면 여기에 태그를 추가하세요.</string>
     <string name="login_to_to_connect_jetpack">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
     <string name="install_jetpack_retry">다시 시도</string>
-    <string name="install_jetpack_continue">계속</string>
-    <string name="jetpack_installation_problem_message">지금은 젯팩을 설치할 수 없습니다</string>
     <string name="jetpack_installation_problem">문제가 발생했습니다</string>
-    <string name="jetpack_installed_message">귀하의 사이트에 젯팩이 설치되어 있습니다. 축하합니다!</string>
     <string name="jetpack_installed">젯팩이 설치됨</string>
-    <string name="installing_jetpack_message">귀하의 사이트에 젯팩을 설치하는 중입니다. 완료하는 데 몇 분 정도 걸릴 수 있습니다.</string>
     <string name="installing_jetpack">젯팩을 설치하는 중</string>
-    <string name="install_jetpack_message">웹사이트 자격 증명은 저장되지 않으며 젯팩을 설치하는 용도로만 사용됩니다.</string>
     <string name="install_jetpack">젯팩 설치</string>
     <string name="jetpack">젯팩</string>
     <string name="stats_jetpack_connection_faq">젯팩 자주 찾는 질문</string>
@@ -633,7 +662,6 @@ Language: ko_KR
     <string name="dialog_confirm_publish_message_page">이 페이지는 바로 발행됩니다.</string>
     <string name="dialog_confirm_publish_message_post">이 글은 바로 발행됩니다.</string>
     <string name="dialog_confirm_publish_title">발행할 준비가 되었나요?</string>
-    <string name="dialog_confirm_delete_post">이 글은 삭제되어 휴지통으로 보내집니다.</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d개의 글/페이지가 업로드되지 않음</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d개의 페이지가 업로드되지 않음</string>
     <string name="media_file_page_singular_only_not_uploaded">1개의 페이지가 업로드되지 않음</string>
@@ -940,7 +968,6 @@ Language: ko_KR
     <string name="async_promo_title_publish">자신 있게 공개하세요.</string>
     <string name="editor_uploading_post">글을 업로드 중입니다</string>
     <string name="uploading_media">미디어 업로드 중…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">계속할까요? 이 글을 삭제하면 미디어 업로드도 취소됩니다.</string>
     <string name="page_scheduled">페이지가 예약되었습니다</string>
     <string name="post_scheduled">글이 예약되었습니다</string>
     <string name="button_retry">다시 시도</string>
@@ -999,8 +1026,6 @@ Language: ko_KR
     <string name="editor_dropped_text_error">텍스트를 삭제하는 동안 오류가 발생했습니다</string>
     <string name="editor_dropped_html_images_not_allowed">HTML 모드에 있는 동안 이미지를 삭제할 수 없습니다</string>
     <string name="editor_content_hint">여기서 스토리 공유…</string>
-    <string name="post_status_trashed">삭제된</string>
-    <string name="post_status_scheduled">예약됨</string>
     <string name="post_status_post_private">비공개</string>
     <string name="post_status_draft">임시글</string>
     <string name="post_status_pending_review">검토 대기 중</string>
@@ -1598,10 +1623,8 @@ Language: ko_KR
     <string name="button_preview">미리 보기</string>
     <string name="button_trash">휴지통</string>
     <string name="button_stats">통계</string>
-    <string name="button_back">돌아가기</string>
     <string name="stats_no_activity_this_period">이 기간에 활동이 없음</string>
     <string name="post_trashed">휴지통으로 이동된 글</string>
-    <string name="post_deleted">글 삭제됨</string>
     <string name="reader_toast_err_follow_blog_not_authorized">이 블로그에 접근할 권한이 없습니다.</string>
     <string name="reader_toast_err_follow_blog_not_found">블로그를 찾을 수 없습니다.</string>
     <string name="undo">실행 취소</string>

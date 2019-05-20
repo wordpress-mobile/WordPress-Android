@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-25 05:35:57+0000
+Translation-Revision-Date: 2019-05-15 06:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="post_list_drafts">Entwürfe</string>
+    <string name="post_list_published">Veröffentlicht</string>
+    <string name="post_list_author_everyone">Jeder</string>
+    <string name="post_list_author_me">Ich</string>
+    <string name="error_restoring_post">Beim Wiederherstellen des Beitrags ist ein Fehler aufgetreten.</string>
+    <string name="backdated_for">Zurückdatiert auf: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Die oben angezeigten Elemente werden auf deinem Tab „Einsichten“ angezeigt. Per Drag-and-drop kannst du sie individuell anpassen.</string>
+    <string name="stats_insights_add_insights_header">Einsichten hinzufügen</string>
+    <string name="stats_insights_management_title">Zeige nur die relevantesten Statistiken an. Füge deine Einsichten unten hinzu und organisiere sie.</string>
+    <string name="stats_insights_social">Social Media</string>
+    <string name="stats_insights_annual_site_stats">Jährliche Website-Statistiken</string>
+    <string name="stats_view_follower_totals">Follower insgesamt</string>
+    <string name="suggestion_fetch_error">Domain-Vorschläge konnten nicht geladen werden</string>
+    <string name="suggestions_search_hint">Gib ein Stichwort ein, um weitere Ideen zu erhalten</string>
+    <string name="suggestions_empty_list">Keine Vorschläge gefunden</string>
+    <string name="choose_domain">Domain auswählen</string>
+    <string name="register_domain">Domain registrieren</string>
+    <string name="jetpack_installed_message">Jetpack ist installiert. Jetzt müssen wir nur noch die Einrichtung abschließen. Dies dauert nur eine Minute.</string>
+    <string name="stats_menu_remove">Aus Einsichten entfernen</string>
+    <string name="stats_menu_move_down">Nach unten verschieben</string>
+    <string name="stats_menu_move_up">Nach oben verschieben</string>
+    <string name="stats_item_settings">Einstellungen der Statistikelemente</string>
+    <string name="post_moving_to_draft">Der Beitrag wird in Entwürfe verschoben</string>
+    <string name="post_restoring">Beitrag wird wiederhergestellt</string>
+    <string name="post_restored">Beitrag wiederhergestellt</string>
+    <string name="post_trashing">Beitrag wird in den Papierkorb verschoben</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Lokale Änderungen</string>
+    <string name="button_move_to_draft">In Entwurf verschieben</string>
+    <string name="post_list_toggle_item_layout_list_view">Zur Listenansicht wechseln</string>
+    <string name="post_list_toggle_item_layout_cards_view">Zur Kartenansicht wechseln</string>
+    <string name="posts_trashed_empty">Du hast keine Beiträge im Papierkorb</string>
+    <string name="posts_draft_empty">Du hast keine Beitragsentwürfe</string>
+    <string name="posts_scheduled_empty">Du hast keine geplanten Beiträge</string>
+    <string name="posts_published_empty">Du hast noch keine Beiträge veröffentlicht</string>
     <string name="notification_wpcom_username_needed">Bitte mit deinem Benutzernamen und Passwort anmelden.</string>
     <string name="login_invalid_site_url">Die eingegebene Website-Adresse ist ungültig. Bitte erneut eingeben.</string>
     <string name="error_user_username_instead_of_email">Bitte mit deinem WordPress.com-Benutzernamen anstelle deiner E-Mail-Adresse anmelden.</string>
@@ -234,8 +269,6 @@ Language: de
     <string name="stats_followers_count_message">%1$s-Follower insgesamt: %2$s</string>
     <string name="stats_followers_email">E-Mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Einsichten verwalten</string>
-    <string name="stats_empty_insights_description">Passe deine Einsichten an und erhalte Details zur Leistung deiner Website</string>
     <string name="stats_empty_insights_title">Noch keine Einsichten hinzugefügt</string>
     <string name="stats_no_data_yet">Noch keine Daten</string>
     <string name="menu_debug">Debug-Menü</string>
@@ -343,14 +376,9 @@ Language: de
     <string name="reader_empty_followed_tags_subtitle">Füge hier Tags hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
     <string name="install_jetpack_retry">Erneut versuchen</string>
-    <string name="install_jetpack_continue">Weiter</string>
-    <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
     <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
-    <string name="jetpack_installed_message">Du hast Jetpack auf deiner Website installiert. Glückwunsch!</string>
     <string name="jetpack_installed">Jetpack installiert</string>
-    <string name="installing_jetpack_message">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern</string>
     <string name="installing_jetpack">Jetpack installieren</string>
-    <string name="install_jetpack_message">Deine Website-Anmeldedaten werden nicht gespeichert und werden verwendet, um Jetpack zu installieren</string>
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
@@ -651,7 +679,6 @@ Language: de
     <string name="dialog_confirm_publish_message_page">Diese Seite wird umgehend veröffentlicht.</string>
     <string name="dialog_confirm_publish_message_post">Dieser Beitrag wird umgehend veröffentlicht.</string>
     <string name="dialog_confirm_publish_title">Bereit zum Veröffentlichen?</string>
-    <string name="dialog_confirm_delete_post">Dieser Beitrag wird gelöscht und in den Papierkorb verschoben</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d Beiträge/Seiten nicht hochgeladen</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d Seiten nicht hochgeladen</string>
     <string name="media_file_page_singular_only_not_uploaded">1 Seite nicht hochgeladen</string>
@@ -958,7 +985,6 @@ Language: de
     <string name="async_promo_title_publish">Veröffentlichen ohne Sorge</string>
     <string name="editor_uploading_post">Dein Beitrag wird hochgeladen</string>
     <string name="uploading_media">Medien werden hochgeladen …</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Bist du sicher? Durch das Löschen dieses Beitrags wird auch der Medien-Upload abgebrochen.</string>
     <string name="page_scheduled">Seite geplant</string>
     <string name="post_scheduled">Beitrag geplant</string>
     <string name="button_retry">Erneut versuchen</string>
@@ -1017,8 +1043,6 @@ Language: de
     <string name="editor_dropped_text_error">Beim Ablegen des Textes ist ein Fehler aufgetreten</string>
     <string name="editor_dropped_html_images_not_allowed">Im HTML-Modus können keine Bilder abgelegt werden</string>
     <string name="editor_content_hint">Erzähle deine Geschichte hier …</string>
-    <string name="post_status_trashed">Im Papierkorb</string>
-    <string name="post_status_scheduled">Geplant</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Entwurf</string>
     <string name="post_status_pending_review">Ausstehender Review</string>
@@ -1619,10 +1643,8 @@ Language: de
     <string name="button_preview">Vorschau</string>
     <string name="button_trash">In den Papierkorb</string>
     <string name="button_stats">Statistiken</string>
-    <string name="button_back">Zurück</string>
     <string name="stats_no_activity_this_period">Keine Aktivitäten in diesem Zeitraum</string>
     <string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
-    <string name="post_deleted">Beitrag gelöscht</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Du bist nicht berechtigt, auf diese Website zuzugreifen</string>
     <string name="reader_toast_err_follow_blog_not_found">Diese Website konnte nicht gefunden werden</string>
     <string name="undo">Rückgängig</string>

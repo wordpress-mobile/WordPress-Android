@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-29 11:05:04+0000
+Translation-Revision-Date: 2019-05-15 10:54:10+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="post_list_drafts">Taslaklar</string>
+    <string name="post_list_published">Yayımlanmış</string>
+    <string name="post_list_author_everyone">Herkes</string>
+    <string name="post_list_author_me">Ben</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler Insights (İçgörüler) adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
+    <string name="stats_insights_add_insights_header">Insights Ekle</string>
+    <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. İçgörülerinizi aşağıya ekleyin ve düzenleyin.</string>
+    <string name="stats_insights_social">Sosyal</string>
+    <string name="stats_insights_annual_site_stats">Yıllık Site İstatistikleri</string>
+    <string name="stats_view_follower_totals">Toplam Takipçi Sayısı</string>
+    <string name="suggestion_fetch_error">Alan adı teklifleri yüklenemedi</string>
+    <string name="suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
+    <string name="suggestions_empty_list">Teklif bulunamadı</string>
+    <string name="choose_domain">Alan Adını Seç</string>
+    <string name="register_domain">Alan Adını Kaydet</string>
+    <string name="jetpack_installed_message">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
+    <string name="stats_menu_remove">İçgörülerden çıkar</string>
+    <string name="stats_menu_move_down">Aşağı taşı</string>
+    <string name="stats_menu_move_up">Yukarı taşı</string>
+    <string name="stats_item_settings">İstatistikler öğesi ayarları</string>
+    <string name="post_moving_to_draft">Gönderi taslaklara taşınıyor</string>
+    <string name="post_restoring">Gönderi geri yükleniyor</string>
+    <string name="post_restored">Gönderi geri yüklendi</string>
+    <string name="post_trashing">Gönderi siliniyor</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Bu gönderinin silinmesi, yerel değişiklikleri yok sayar. Devam etmek istediğinizden emin misiniz?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Yerel değişiklikler</string>
+    <string name="button_move_to_draft">Taslaklara taşı</string>
+    <string name="post_list_toggle_item_layout_list_view">Liste görünümüne geç</string>
+    <string name="post_list_toggle_item_layout_cards_view">Kart görünümüne geç</string>
+    <string name="posts_trashed_empty">Silinmiş gönderiniz yok</string>
+    <string name="posts_draft_empty">Taslak gönderiniz yok</string>
+    <string name="posts_scheduled_empty">Takvime eklenmiş yazınız yok</string>
+    <string name="posts_published_empty">Henüz hiçbir gönderi yayımlamadınız</string>
     <string name="notification_wpcom_username_needed">Lütfen kullanıcı adı ve parola ile oturum açın.</string>
     <string name="login_invalid_site_url">Girdiğiniz site adresi geçersiz. Lütfen tekrar girin.</string>
     <string name="error_user_username_instead_of_email">Lütfen e-posta adresiniz yerine WordPress.com kullanıcı adınızı kullanarak oturum açın.</string>
@@ -234,8 +267,6 @@ Language: tr
     <string name="stats_followers_count_message">Toplam %1$s takipçisi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">İçgörüleri yönet</string>
-    <string name="stats_empty_insights_description">Analizlerinizi özelleştirin ve sitenizin performansındaki düşüş hakkında bilgi edinin</string>
     <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
     <string name="menu_debug">Hata ayıklama menüsü</string>
@@ -344,13 +375,12 @@ Language: tr
     <string name="login_to_to_connect_jetpack">Jetpack\'i bağlamak için kullandığınız WordPress.com hesabına giriş yapın.</string>
     <string name="install_jetpack_retry">Tekrar dene</string>
     <string name="install_jetpack_continue">Devam et</string>
-    <string name="jetpack_installation_problem_message">Jetpack şu anda yüklenemedi</string>
+    <string name="jetpack_installation_problem_message">Jetpack şu anda yüklenemedi.</string>
     <string name="jetpack_installation_problem">Bir sorun vardı</string>
-    <string name="jetpack_installed_message">Sitenize Jetpack kurdunuz. Tebrikler!</string>
     <string name="jetpack_installed">Jetpack kuruldu</string>
-    <string name="installing_jetpack_message">Jetpack sitenize yükleniyor. Bu işlemin tamamlanması birkaç dakika sürebilir</string>
+    <string name="installing_jetpack_message">Jetpack sitenize yükleniyor. Bu işlemin tamamlanması birkaç dakika sürebilir.</string>
     <string name="installing_jetpack">Jetpack kuruluyor</string>
-    <string name="install_jetpack_message">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak</string>
+    <string name="install_jetpack_message">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak.</string>
     <string name="install_jetpack">Jetpack\'i kur</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
@@ -651,7 +681,6 @@ Language: tr
     <string name="dialog_confirm_publish_message_page">Bu sayfa hemen yayınlanacak.</string>
     <string name="dialog_confirm_publish_message_post">Bu yazı hemen yayınlanacak.</string>
     <string name="dialog_confirm_publish_title">Yayınlanmaya hazır mı?</string>
-    <string name="dialog_confirm_delete_post">Bu yazı silinecek ve çöpe gönderilecek</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d yazı/sayfa karşıya yüklenmedi</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sayfa karşıya yüklenmedi</string>
     <string name="media_file_page_singular_only_not_uploaded">1 sayfa karşıya yüklenmedi</string>
@@ -958,7 +987,6 @@ Language: tr
     <string name="async_promo_title_publish">Güvenle yayımlayın</string>
     <string name="editor_uploading_post">Yazınız yükleniyor</string>
     <string name="uploading_media">Ortam dosyası yükleniyor…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Emin misiniz? Bu yazının silinmesi durumunda ortam dosyasının karşıya yüklenmesi de iptal edilir.</string>
     <string name="page_scheduled">Sayfa zamanlandı</string>
     <string name="post_scheduled">Yazı zamanlandı</string>
     <string name="button_retry">Tekrar dene</string>
@@ -1017,8 +1045,8 @@ Language: tr
     <string name="editor_dropped_text_error">Metin bırakılırken hata oluştu</string>
     <string name="editor_dropped_html_images_not_allowed">HTML modunda görsel bırakmaya izin verilmiyor</string>
     <string name="editor_content_hint">Hikayenizi burada paylaşın…</string>
-    <string name="post_status_trashed">Çöp</string>
-    <string name="post_status_scheduled">Zamanlanmış</string>
+    <string name="post_list_trashed">Çöp</string>
+    <string name="post_list_scheduled">Zamanlanmış</string>
     <string name="post_status_post_private">Özel</string>
     <string name="post_status_draft">Taslak</string>
     <string name="post_status_pending_review">İnceleme bekliyor</string>
@@ -1619,10 +1647,8 @@ Language: tr
     <string name="button_preview">Ön izleme</string>
     <string name="button_trash">Çöpe taşı</string>
     <string name="button_stats">İstatistikler</string>
-    <string name="button_back">Geri</string>
     <string name="stats_no_activity_this_period">Bu dönemde etkinlik yok</string>
     <string name="post_trashed">Yazı çöpe taşındı</string>
-    <string name="post_deleted">Yazı silindi</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Bu siteye erişim için yetkiniz yok</string>
     <string name="reader_toast_err_follow_blog_not_found">Site bulunamadı</string>
     <string name="undo">Geri al</string>

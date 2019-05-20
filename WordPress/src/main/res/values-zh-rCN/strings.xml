@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-30 10:54:30+0000
+Translation-Revision-Date: 2019-05-15 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="post_list_drafts">草稿</string>
+    <string name="post_list_published">已发布</string>
+    <string name="post_list_author_everyone">所有人</string>
+    <string name="post_list_author_me">我</string>
+    <string name="error_restoring_post">恢复文章时出错</string>
+    <string name="backdated_for">倒填日期：%s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">上面显示的项目将显示在您的“见解”选项卡中。拖放以进行自定义设置。</string>
+    <string name="stats_insights_add_insights_header">添加见解</string>
+    <string name="stats_insights_management_title">仅查看相关性较大的统计信息。在下面添加和管理您的见解。</string>
+    <string name="stats_insights_social">社交</string>
+    <string name="stats_insights_annual_site_stats">年度站点统计信息</string>
+    <string name="stats_view_follower_totals">粉丝总数</string>
+    <string name="suggestion_fetch_error">无法加载域建议</string>
+    <string name="suggestions_search_hint">请输入关键字以获取更多想法</string>
+    <string name="suggestions_empty_list">未找到任何建议</string>
+    <string name="choose_domain">选择域</string>
+    <string name="register_domain">注册域</string>
+    <string name="jetpack_installed_message">安装 Jetpack 后，我们只需进行设置即可。这只需要一分钟时间。</string>
+    <string name="stats_menu_remove">从见解中删除</string>
+    <string name="stats_menu_move_down">下移</string>
+    <string name="stats_menu_move_up">上移</string>
+    <string name="stats_item_settings">统计信息项目设置</string>
+    <string name="post_moving_to_draft">文章已移动到草稿</string>
+    <string name="post_restoring">文章已成功恢复</string>
+    <string name="post_restored">文章已恢复</string>
+    <string name="post_trashing">文章正移至回收站</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">将此文章移至回收站将会放弃本地更改，是否确定要继续操作？</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">本地更改</string>
+    <string name="button_move_to_draft">移动到草稿</string>
+    <string name="post_list_toggle_item_layout_list_view">切换到列表视图</string>
+    <string name="post_list_toggle_item_layout_cards_view">切换到卡片视图</string>
+    <string name="posts_trashed_empty">您未将任何文章放至回收站</string>
+    <string name="posts_draft_empty">您没有任何草稿文章</string>
+    <string name="posts_scheduled_empty">您没有任何预发布的文章</string>
+    <string name="posts_published_empty">您尚未发布任何文章</string>
     <string name="notification_wpcom_username_needed">请使用您的用户名和密码登录。</string>
     <string name="login_invalid_site_url">您输入的站点地址无效。请重新输入。</string>
     <string name="error_user_username_instead_of_email">请使用您的 WordPress.com 用户名（而不是电子邮件地址）登录。</string>
@@ -181,7 +216,6 @@ Language: zh_CN
     <string name="stats_followers_count_message">共 %1$s 位粉丝：%2$s</string>
     <string name="stats_followers_email">电子邮件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">管理见解</string>
     <string name="stats_empty_insights_title">尚未添加任何见解</string>
     <string name="stats_no_data_yet">尚无数据</string>
     <string name="change_password_dialog_message">正在更改密码…</string>
@@ -280,14 +314,9 @@ Language: zh_CN
     <string name="reader_empty_followed_tags_subtitle">在此处添加标签，发现与您最喜欢的主题相关的文章</string>
     <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 帐户。</string>
     <string name="install_jetpack_retry">重试</string>
-    <string name="install_jetpack_continue">继续</string>
-    <string name="jetpack_installation_problem_message">目前无法安装 Jetpack</string>
     <string name="jetpack_installation_problem">出现问题</string>
-    <string name="jetpack_installed_message">您已在站点上安装了 Jetpack。恭喜！</string>
     <string name="jetpack_installed">已安装 Jetpack</string>
-    <string name="installing_jetpack_message">正在您的站点上安装 Jetpack。这将花费几分钟的时间才能完成</string>
     <string name="installing_jetpack">正在安装 Jetpack</string>
-    <string name="install_jetpack_message">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack</string>
     <string name="install_jetpack">安装 Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>
@@ -588,7 +617,6 @@ Language: zh_CN
     <string name="dialog_confirm_publish_message_page">此页面将立即发布。</string>
     <string name="dialog_confirm_publish_message_post">此文章将立即发布。</string>
     <string name="dialog_confirm_publish_title">准备好发布了吗？</string>
-    <string name="dialog_confirm_delete_post">将删除此文章并移动至回收站</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d 篇文章/个页面未上传</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d 个页面未上传</string>
     <string name="media_file_page_singular_only_not_uploaded">1 个页面未上传</string>
@@ -889,7 +917,6 @@ Language: zh_CN
     <string name="async_promo_title_publish">放心发布</string>
     <string name="editor_uploading_post">您的文章正在上传</string>
     <string name="uploading_media">正在上传媒体…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">您确定吗？删除此文章将同时取消媒体上传。</string>
     <string name="page_scheduled">页面已定时发布</string>
     <string name="post_scheduled">文章已定时发布</string>
     <string name="button_retry">重试</string>
@@ -948,8 +975,6 @@ Language: zh_CN
     <string name="editor_dropped_text_error">拖动文本时出现错误</string>
     <string name="editor_dropped_html_images_not_allowed">不允许在 HTML 模式下拖动图片</string>
     <string name="editor_content_hint">在此处分享您的故事…</string>
-    <string name="post_status_trashed">已放入回收站</string>
-    <string name="post_status_scheduled">定时发布</string>
     <string name="post_status_post_private">隐私</string>
     <string name="post_status_draft">草稿</string>
     <string name="post_status_pending_review">待审核</string>
@@ -1546,10 +1571,8 @@ Language: zh_CN
     <string name="button_preview">预览</string>
     <string name="button_trash">放入回收站</string>
     <string name="button_stats">统计信息</string>
-    <string name="button_back">返回</string>
     <string name="stats_no_activity_this_period">这段时间内没有任何活动</string>
     <string name="post_trashed">文章已放入回收站</string>
-    <string name="post_deleted">已删除文章</string>
     <string name="reader_toast_err_follow_blog_not_authorized">您无权访问此站点。</string>
     <string name="reader_toast_err_follow_blog_not_found">找不到此站点</string>
     <string name="undo">撤消</string>
