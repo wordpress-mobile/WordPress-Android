@@ -116,10 +116,11 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        List<PostListItem> postListItems = new ArrayList<>(response.posts.size());
-                        for (PostWPComRestResponse postResponse : response.posts) {
+                        List<PostListItem> postListItems = new ArrayList<>(response.getPosts().size());
+                        for (PostWPComRestResponse postResponse : response.getPosts()) {
                             postListItems
-                                    .add(new PostListItem(postResponse.ID, postResponse.modified, postResponse.status));
+                                    .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
+                                            postResponse.getStatus()));
                         }
                         boolean canLoadMore = postListItems.size() == pageSize;
                         FetchPostListResponsePayload responsePayload =
@@ -155,7 +156,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onResponse(PostsResponse response) {
                         List<PostModel> postArray = new ArrayList<>();
                         PostModel post;
-                        for (PostWPComRestResponse postResponse : response.posts) {
+                        for (PostWPComRestResponse postResponse : response.getPosts()) {
                             post = postResponseToPostModel(postResponse);
                             post.setLocalSiteId(site.getId());
                             postArray.add(post);
@@ -326,54 +327,54 @@ public class PostRestClient extends BaseWPComRestClient {
 
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
         PostModel post = new PostModel();
-        post.setRemotePostId(from.ID);
-        post.setRemoteSiteId(from.site_ID);
-        post.setLink(from.URL); // Is this right?
-        post.setDateCreated(from.date);
-        post.setLastModified(from.modified);
-        post.setRemoteLastModified(from.modified);
-        post.setTitle(from.title);
-        post.setContent(from.content);
-        post.setExcerpt(from.excerpt);
-        post.setSlug(from.slug);
-        post.setStatus(from.status);
-        post.setPassword(from.password);
-        post.setIsPage(from.type.equals("page"));
+        post.setRemotePostId(from.getRemotePostId());
+        post.setRemoteSiteId(from.getRemoteSiteId());
+        post.setLink(from.getUrl()); // Is this right?
+        post.setDateCreated(from.getDate());
+        post.setLastModified(from.getModified());
+        post.setRemoteLastModified(from.getModified());
+        post.setTitle(from.getTitle());
+        post.setContent(from.getContent());
+        post.setExcerpt(from.getExcerpt());
+        post.setSlug(from.getSlug());
+        post.setStatus(from.getStatus());
+        post.setPassword(from.getPassword());
+        post.setIsPage(from.getType().equals("page"));
 
-        if (from.post_thumbnail != null) {
-            post.setFeaturedImageId(from.post_thumbnail.ID);
+        if (from.getPostThumbnail() != null) {
+            post.setFeaturedImageId(from.getPostThumbnail().getId());
         }
-        post.setPostFormat(from.format);
-        if (from.geo != null) {
-            post.setLatitude(from.geo.latitude);
-            post.setLongitude(from.geo.longitude);
+        post.setPostFormat(from.getFormat());
+        if (from.getGeo() != null) {
+            post.setLatitude(from.getGeo().latitude);
+            post.setLongitude(from.getGeo().longitude);
         }
 
-        if (from.categories != null) {
+        if (from.getCategories() != null) {
             List<Long> categoryIds = new ArrayList<>();
-            for (TermWPComRestResponse value : from.categories.values()) {
+            for (TermWPComRestResponse value : from.getCategories().values()) {
                 categoryIds.add(value.ID);
             }
             post.setCategoryIdList(categoryIds);
         }
 
-        if (from.tags != null) {
+        if (from.getTags() != null) {
             List<String> tagNames = new ArrayList<>();
-            for (TermWPComRestResponse value : from.tags.values()) {
+            for (TermWPComRestResponse value : from.getTags().values()) {
                 tagNames.add(value.name);
             }
             post.setTagNameList(tagNames);
         }
 
-        if (from.capabilities != null) {
-            post.setHasCapabilityPublishPost(from.capabilities.publish_post);
-            post.setHasCapabilityEditPost(from.capabilities.edit_post);
-            post.setHasCapabilityDeletePost(from.capabilities.delete_post);
+        if (from.getCapabilities() != null) {
+            post.setHasCapabilityPublishPost(from.getCapabilities().getPublishPost());
+            post.setHasCapabilityEditPost(from.getCapabilities().getEditPost());
+            post.setHasCapabilityDeletePost(from.getCapabilities().getDeletePost());
         }
 
-        if (from.parent != null) {
-            post.setParentId(from.parent.ID);
-            post.setParentTitle(from.parent.title);
+        if (from.getParent() != null) {
+            post.setParentId(from.getParent().ID);
+            post.setParentTitle(from.getParent().title);
         }
 
         return post;
