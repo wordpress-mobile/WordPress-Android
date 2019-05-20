@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-03 03:54:10+0000
+Translation-Revision-Date: 2019-05-15 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="post_list_drafts">下書き</string>
+    <string name="post_list_published">公開済み</string>
+    <string name="post_list_author_everyone">すべてのユーザー</string>
+    <string name="post_list_author_me">自分</string>
+    <string name="error_restoring_post">投稿を復元する際にエラーが発生しました</string>
+    <string name="backdated_for">遡及日 :%s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">上記のアイテムは「統計概要」タブに表示されます。ドラッグ &amp; ドロップしてカスタマイズします。</string>
+    <string name="stats_insights_add_insights_header">統計概要を追加</string>
+    <string name="stats_insights_management_title">最も関連の深い統計情報のみを表示します。以下に統計概要を追加し整理します。</string>
+    <string name="stats_insights_social">ソーシャル</string>
+    <string name="stats_insights_annual_site_stats">年間サイト統計情報</string>
+    <string name="stats_view_follower_totals">フォロワー合計数</string>
+    <string name="suggestion_fetch_error">ドメインの提案が読み込めませんでした</string>
+    <string name="suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
+    <string name="suggestions_empty_list">提案が見つかりません</string>
+    <string name="choose_domain">ドメインを選択</string>
+    <string name="register_domain">ドメインを登録</string>
+    <string name="jetpack_installed_message">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
+    <string name="stats_menu_remove">統計概要から削除</string>
+    <string name="stats_menu_move_down">下に移動</string>
+    <string name="stats_menu_move_up">上に移動</string>
+    <string name="stats_item_settings">統計情報アイテムの設定</string>
+    <string name="post_moving_to_draft">投稿は下書きに移動されています</string>
+    <string name="post_restoring">投稿が復元されています</string>
+    <string name="post_restored">投稿を復元しました</string>
+    <string name="post_trashing">投稿はゴミ箱に移動中です。</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更が破棄されます。続行してもよいですか ?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">ローカルの変更</string>
+    <string name="button_move_to_draft">下書きに移動</string>
+    <string name="post_list_toggle_item_layout_list_view">リスト表示に切り替え</string>
+    <string name="post_list_toggle_item_layout_cards_view">カード表示に切り替え</string>
+    <string name="posts_trashed_empty">ゴミ箱に移動済みの投稿はありません</string>
+    <string name="posts_draft_empty">投稿の下書きはありません</string>
+    <string name="posts_scheduled_empty">予約済み投稿はありません</string>
+    <string name="posts_published_empty">公開した投稿はまだありません</string>
     <string name="notification_wpcom_username_needed">ユーザー名とパスワードでログインしてください。</string>
     <string name="login_invalid_site_url">入力されたサイトアドレスが無効です。もう一度入力してください。</string>
     <string name="error_user_username_instead_of_email">メールアドレスではなく WordPress.com ユーザー名を使用してログインしてください。</string>
@@ -232,8 +267,6 @@ Language: ja_JP
     <string name="stats_followers_count_message">Total %1$s Followers:%2$s</string>
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">インサイトを管理</string>
-    <string name="stats_empty_insights_description">インサイトをカスタマイズして、サイトのパフォーマンスを把握しましょう</string>
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>
     <string name="menu_debug">デバッグメニュー</string>
@@ -341,14 +374,9 @@ Language: ja_JP
     <string name="reader_empty_followed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
     <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
     <string name="install_jetpack_retry">再試行</string>
-    <string name="install_jetpack_continue">次へ</string>
-    <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません</string>
     <string name="jetpack_installation_problem">問題が発生しました</string>
-    <string name="jetpack_installed_message">サイトに Jetpack がインストールされました。おめでとうございます !</string>
     <string name="jetpack_installed">Jetpack がインストールされています</string>
-    <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかります</string>
     <string name="installing_jetpack">Jetpack をインストール</string>
-    <string name="install_jetpack_message">サイトの証明書は保存されず、Jetpack インストールの目的のみに使用されます</string>
     <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
@@ -649,7 +677,6 @@ Language: ja_JP
     <string name="dialog_confirm_publish_message_page">このページはすぐに公開されます。</string>
     <string name="dialog_confirm_publish_message_post">この投稿はすぐに公開されます。</string>
     <string name="dialog_confirm_publish_title">公開する準備はできていますか ?</string>
-    <string name="dialog_confirm_delete_post">この投稿は削除され、ゴミ箱に送られます</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d投稿/ページが未アップロード</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d投稿/ページが未アップロード</string>
     <string name="media_file_page_singular_only_not_uploaded">1ページが未アップロード</string>
@@ -956,7 +983,6 @@ Language: ja_JP
     <string name="async_promo_title_publish">自信を持って公開</string>
     <string name="editor_uploading_post">投稿をアップロード中</string>
     <string name="uploading_media">メディアをアップロード中…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">本当に実行しますか ?この投稿を削除すると、メディアのアップロードもキャンセルされます。</string>
     <string name="page_scheduled">ページの公開を予約しました</string>
     <string name="post_scheduled">投稿を予約しました</string>
     <string name="button_retry">再試行</string>
@@ -1015,8 +1041,6 @@ Language: ja_JP
     <string name="editor_dropped_text_error">テキストをドロップする際にエラーが発生しました</string>
     <string name="editor_dropped_html_images_not_allowed">HTML モードで画像をドロップすることはできません</string>
     <string name="editor_content_hint">あなたのストーリーをお聞かせください…</string>
-    <string name="post_status_trashed">ゴミ箱に移動済み</string>
-    <string name="post_status_scheduled">予約済み</string>
     <string name="post_status_post_private">非公開</string>
     <string name="post_status_draft">下書き</string>
     <string name="post_status_pending_review">レビュー待ち</string>
@@ -1617,10 +1641,8 @@ Language: ja_JP
     <string name="button_preview">プレビュー</string>
     <string name="button_trash">ゴミ箱</string>
     <string name="button_stats">統計情報</string>
-    <string name="button_back">戻る</string>
     <string name="stats_no_activity_this_period">この期間中のアクティビティがありません</string>
     <string name="post_trashed">投稿をゴミ箱へ移動しました</string>
-    <string name="post_deleted">投稿を削除しました</string>
     <string name="reader_toast_err_follow_blog_not_authorized">このサイトにアクセスする権限がありません</string>
     <string name="reader_toast_err_follow_blog_not_found">サイトが見つかりませんでした</string>
     <string name="undo">元に戻す</string>

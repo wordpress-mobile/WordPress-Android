@@ -234,9 +234,6 @@ Language: es_CL
     <string name="stats_followers_count_message">Total %1$s Seguidores: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Administrar estadísticas</string>
-    <string name="stats_button_manage_insights">Administrar estadísticas</string>
-    <string name="stats_empty_insights_description">Personaliza tus conocimientos y aprende cuando baja el rendimiento de su sitio</string>
     <string name="stats_empty_insights_title">Aún no se ha añadido estadisticas</string>
     <string name="stats_no_data_yet">Aún no hay datos</string>
     <string name="menu_debug">Menú Depuración</string>
@@ -344,14 +341,9 @@ Language: es_CL
     <string name="reader_empty_followed_tags_subtitle">Agrega etiquetas aquí para encontrar mensajes sobre tus temas favoritos</string>
     <string name="login_to_to_connect_jetpack">Inicia sesión en la cuenta WordPress.com que usaste para conectar jetpack.</string>
     <string name="install_jetpack_retry">Reintentar</string>
-    <string name="install_jetpack_continue">Continuar</string>
-    <string name="jetpack_installation_problem_message">Jetpack no se puede instalar en este instante</string>
     <string name="jetpack_installation_problem">Hubo un problema</string>
-    <string name="jetpack_installed_message">Tienes Jetpack instalado en tu sitio. ¡Felicitaciones!</string>
     <string name="jetpack_installed">Jetpack instalado</string>
-    <string name="installing_jetpack_message">Instalando Jetpack en tu sitio. Esto puede tomar hasta unos pocos minutos para completar</string>
     <string name="installing_jetpack">Instalación de Jetpack</string>
-    <string name="install_jetpack_message">Las credenciales de tu sitio web no se almacenarán y sólo se utilizarán con el fin de instalar Jetpack</string>
     <string name="install_jetpack">Instalar Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -652,7 +644,6 @@ Language: es_CL
     <string name="dialog_confirm_publish_message_page">Esta página se publicará inmediatamente.</string>
     <string name="dialog_confirm_publish_message_post">Esta entrada se publicará inmediatamente.</string>
     <string name="dialog_confirm_publish_title">¿Listo para Publicar?</string>
-    <string name="dialog_confirm_delete_post">Esta entrada será eliminada y se enviará a la Papelera</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d entradas/páginas no cargadas</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas no cargadas</string>
     <string name="media_file_page_singular_only_not_uploaded">1 página no cargada</string>
@@ -959,7 +950,6 @@ Language: es_CL
     <string name="async_promo_title_publish">Publicar con Confianza</string>
     <string name="editor_uploading_post">Tu entrada se está cargando</string>
     <string name="uploading_media">Subiendo media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al eliminar esta entrada también se cancelará la carga de medios.</string>
     <string name="page_scheduled">Página programada</string>
     <string name="post_scheduled">Entrada programada</string>
     <string name="button_retry">Reintentar</string>
@@ -1018,8 +1008,6 @@ Language: es_CL
     <string name="editor_dropped_text_error">Se ha producido un error al soltar texto</string>
     <string name="editor_dropped_html_images_not_allowed">No se permite el soltado de imágenes en modo html</string>
     <string name="editor_content_hint">Comparte tu historia aquí…</string>
-    <string name="post_status_trashed">Eliminado</string>
-    <string name="post_status_scheduled">Programada</string>
     <string name="post_status_post_private">Privado</string>
     <string name="post_status_draft">Borrador</string>
     <string name="post_status_pending_review">Revisión pendiente</string>
@@ -1620,10 +1608,8 @@ Language: es_CL
     <string name="button_preview">Vista previa</string>
     <string name="button_trash">Papelera</string>
     <string name="button_stats">Estadísticas</string>
-    <string name="button_back">Atrás</string>
     <string name="stats_no_activity_this_period">Sin actividad en este periodo</string>
     <string name="post_trashed">Entrada enviada a la papelera</string>
-    <string name="post_deleted">Entrada borrada</string>
     <string name="reader_toast_err_follow_blog_not_authorized">No está autorizado para acceder a este sitio</string>
     <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este sitio</string>
     <string name="undo">Deshacer</string>

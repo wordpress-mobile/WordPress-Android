@@ -247,8 +247,6 @@ Language: eu_ES
     <string name="stats_insights_latest_post_summary">Azken bidalketaren laburpena</string>
     <string name="connectionbar_no_connection">Konexiorik ez</string>
     <string name="post_trashed">Bidalketa zaborretara bidalia</string>
-    <string name="post_deleted">Bidalketa ezabatua</string>
-    <string name="button_back">Itzuli</string>
     <string name="button_stats">Estatistikak</string>
     <string name="button_trash">Zaborra</string>
     <string name="button_preview">Aurreikusi</string>
