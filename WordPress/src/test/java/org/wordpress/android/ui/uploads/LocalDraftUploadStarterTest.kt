@@ -17,8 +17,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,11 +69,7 @@ class LocalDraftUploadStarterTest {
         starter.activateAutoUploading(createMockedProcessLifecycleOwner())
 
         // When
-        runBlocking {
-            connectionStatus.postValue(AVAILABLE)
-
-            starter.waitForAllCoroutinesToFinish()
-        }
+        connectionStatus.postValue(AVAILABLE)
 
         // Then
         verify(uploadServiceFacade, times(posts.size)).uploadPost(
@@ -98,11 +93,7 @@ class LocalDraftUploadStarterTest {
         starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
 
         // When
-        runBlocking {
-            lifecycle.handleLifecycleEvent(Event.ON_START)
-
-            starter.waitForAllCoroutinesToFinish()
-        }
+        lifecycle.handleLifecycleEvent(Event.ON_START)
 
         // Then
         verify(uploadServiceFacade, times(posts.size)).uploadPost(
@@ -125,9 +116,7 @@ class LocalDraftUploadStarterTest {
         val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
 
         // When
-        runBlocking {
-            starter.queueUploadFromSite(site).join()
-        }
+        starter.queueUploadFromSite(site)
 
         // Then
         verify(uploadServiceFacade, times(sitesAndPosts.getValue(site).size)).uploadPost(
@@ -162,9 +151,7 @@ class LocalDraftUploadStarterTest {
         val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
 
         // When
-        runBlocking {
-            starter.queueUploadFromSite(site).join()
-        }
+        starter.queueUploadFromSite(site)
 
         // Then
         verify(uploadServiceFacade, times(expectedUploadedPosts.size)).uploadPost(
@@ -178,11 +165,7 @@ class LocalDraftUploadStarterTest {
         verifyNoMoreInteractions(uploadServiceFacade)
     }
 
-    private suspend fun LocalDraftUploadStarter.waitForAllCoroutinesToFinish() {
-        val job = checkNotNull(coroutineContext[Job])
-        job.children.forEach { it.join() }
-    }
-
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createLocalDraftUploadStarter(
         connectionStatus: LiveData<ConnectionStatus>,
         uploadServiceFacade: UploadServiceFacade
@@ -190,8 +173,8 @@ class LocalDraftUploadStarterTest {
             context = mock(),
             postStore = postStore,
             siteStore = siteStore,
-            bgDispatcher = Dispatchers.Default,
-            ioDispatcher = Dispatchers.IO,
+            bgDispatcher = Dispatchers.Unconfined,
+            ioDispatcher = Dispatchers.Unconfined,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade
