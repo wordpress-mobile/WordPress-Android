@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 68;
+        return 69;
     }
 
     @Override
@@ -515,6 +515,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 68:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REMOTE_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_PREVIEW_URL TEXT");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -562,6 +569,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
 
+    @SuppressWarnings({"MethodLength"})
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {

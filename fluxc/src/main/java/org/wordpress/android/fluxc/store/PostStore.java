@@ -8,9 +8,11 @@ import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
@@ -39,6 +41,7 @@ import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -47,6 +50,7 @@ import org.wordpress.android.fluxc.store.ListStore.ListError;
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
+import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -85,11 +89,13 @@ public class PostStore extends Store {
         public Long remotePostId;
         public String lastModified;
         public String status;
+        public String autoSaveModified;
 
-        public PostListItem(Long remotePostId, String lastModified, String status) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
+            this.autoSaveModified = autoSaveModified;
         }
     }
 
@@ -217,6 +223,24 @@ public class PostStore extends Store {
         public FetchRevisionsResponsePayload(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
             this.revisionsModel = revisionsModel;
+        }
+    }
+
+    public static class RemoteAutoSavePostPayload extends Payload<PostError> {
+        public PostRemoteAutoSaveModel autoSaveModel;
+        public int localPostId;
+        public SiteModel site;
+
+        public RemoteAutoSavePostPayload(int localPostId, @NonNull PostRemoteAutoSaveModel autoSaveModel,
+                                         @NonNull SiteModel site) {
+            this.localPostId = localPostId;
+            this.autoSaveModel = autoSaveModel;
+            this.site = site;
+        }
+
+        public RemoteAutoSavePostPayload(int localPostId, @NonNull PostError error) {
+            this.localPostId = localPostId;
+            this.error = error;
         }
     }
 
@@ -589,6 +613,12 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
+            case REMOTE_AUTO_SAVE_POST:
+                remoteAutoSavePost((RemotePostPayload) action.getPayload());
+                break;
+            case REMOTE_AUTO_SAVED_POST:
+                handleRemoteAutoSavedPost((RemoteAutoSavePostPayload) action.getPayload());
+                break;
             case FETCH_REVISIONS:
                 fetchRevisions((FetchRevisionsPayload) action.getPayload());
                 break;
@@ -662,10 +692,14 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
-                // Check if the post's last modified date or status has changed. We need to check status separately
-                // because when a scheduled post is published, its modified date will not be updated.
+                boolean isAutoSaveChanged = !ObjectsUtils.equals(post.getAutoSaveModified(), item.autoSaveModified);
+                // Check if the post's last modified date, status or meta.data.autosave have changed.
+                // We need to check status separately because when a scheduled post is published, its modified date
+                // will not be updated.
                 boolean isPostChanged =
-                        !post.getLastModified().equals(item.lastModified) || !post.getStatus().equals(item.status);
+                        !post.getLastModified().equals(item.lastModified)
+                        || !post.getStatus().equals(item.status)
+                        || isAutoSaveChanged;
                 if (isPostChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
@@ -676,6 +710,7 @@ public class PostStore extends Store {
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
+                        post.setRemoteAutoSaveModified(item.autoSaveModified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }
@@ -912,6 +947,35 @@ public class PostStore extends Store {
 
         mDispatcher.dispatch(ListActionBuilder
                 .newListRequiresRefreshAction(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId())));
+    }
+
+    private void remoteAutoSavePost(RemotePostPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.remoteAutoSavePost(payload.post, payload.site);
+        } else {
+            throw new NotImplementedException("RemoteAutoSave is not supported in XML-RPC api.");
+        }
+    }
+
+    private void handleRemoteAutoSavedPost(RemoteAutoSavePostPayload payload) {
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RemoteAutoSavePost(payload.localPostId);
+        OnPostChanged onPostChanged;
+
+        if (payload.isError()) {
+            onPostChanged = new OnPostChanged(causeOfChange, 0);
+            onPostChanged.error = payload.error;
+        } else {
+            int rowsAffected = PostSqlUtils.updatePostsAutoSave(payload.site, payload.autoSaveModel);
+            if (rowsAffected != 1) {
+                String errorMsg = "Updating fields of a single post affected: " + rowsAffected + " rows";
+                AppLog.e(AppLog.T.API, errorMsg);
+                if (BuildConfig.DEBUG) {
+                    throw new RuntimeException(errorMsg);
+                }
+            }
+            onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        }
+        emitChange(onPostChanged);
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
