@@ -75,17 +75,13 @@ class DomainRegistrationDetailsViewModelTest {
 
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
-    private val selectedCountry = SupportedDomainCountry("US", "United States")
-    private val testCountries = listOf(
-            selectedCountry,
-            SupportedDomainCountry("UK", "United Kingdom")
-    )
+    private val primaryCountry = SupportedDomainCountry("US", "United States")
+    private val secondaryCountry = SupportedDomainCountry("AU", "Australia")
+    private val countries = listOf(primaryCountry, secondaryCountry)
 
-    private val selectedState = SupportedStateResponse("CA", "California")
-    private val testStates = listOf(
-            selectedState,
-            SupportedStateResponse("WA", "Washington")
-    )
+    private val primaryState = SupportedStateResponse("CA", "California")
+    private val secondaryState = SupportedStateResponse("NSW", "New South Wales")
+    private val states = listOf(primaryState, secondaryState)
 
     private val siteId = 1234L
     private val productId = "76"
@@ -140,13 +136,65 @@ class DomainRegistrationDetailsViewModelTest {
         setupFetchSupportedCountriesDispatcher(false)
         setupFetchDomainContactInformationDispatcher(false)
         setupFetchStatesDispatcher(false)
+
+        viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
+        viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
+        viewModel.statesProgressIndicatorVisible.observeForever(stateProgressIndicatorObserver)
+        viewModel.domainRegistrationButtonEnabled.observeForever(domainRegistrationButtonObserver)
+        viewModel.selectedState.observeForever(selectedStateObserver)
+        viewModel.selectedCountry.observeForever(selectedCountryObserver)
+        viewModel.showCountryPickerDialog.observeForever(countryPickerDialogObserver)
+        viewModel.showStatePickerDialog.observeForever(statePickerDialogObserver)
+        viewModel.showTos.observeForever(tosLinkObserver)
+        viewModel.privacyProtectionState.observeForever(privacyProtectionObserver)
+        viewModel.registrationProgressIndicatorVisible.observeForever(domainRegistrationProgressIndicatorObserver)
+        viewModel.handleCompletedDomainRegistration.observeForever(completedDomainRegistrationObserver)
+        viewModel.stateInputEnabled.observeForever(stateInputVisibleObserver)
+        viewModel.showErrorMessage.observeForever(errorMessageObserver)
+    }
+
+    @Test
+    fun contactDetailsPreload() = test {
+        viewModel.start(site, domainProductDetails)
+
+        // Verifying that correct actions with expected payloads were dispatched
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher, times(3)).dispatch(captor.capture())
+
+        val actionsDispatched = captor.allValues
+        validateFetchSupportedCountriesAction(actionsDispatched[0])
+        validateFetchDomainContactAction(actionsDispatched[1])
+        validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
+
+        // form progress indicator was shown and dismissed
+        verify(formProgressIndicatorObserver, times(1)).onChanged(true)
+        verify(formProgressIndicatorObserver, times(1)).onChanged(false)
+        Assertions.assertThat(viewModel.formProgressIndicatorVisible.value).isEqualTo(false)
+
+        // states progress indicator was shown and dismissed
+        verify(stateProgressIndicatorObserver, times(1)).onChanged(true)
+        verify(stateProgressIndicatorObserver, times(1)).onChanged(false)
+        Assertions.assertThat(viewModel.statesProgressIndicatorVisible.value).isEqualTo(false)
+
+        // domain registration button was disabled and then enabled
+        verify(domainRegistrationButtonObserver, times(1)).onChanged(true)
+        verify(domainRegistrationButtonObserver, times(1)).onChanged(false)
+        Assertions.assertThat(viewModel.domainRegistrationButtonEnabled.value).isEqualTo(true)
+
+        verify(domainContactDetailsObserver, times(1)).onChanged(domainContactModel)
+
+        verify(selectedStateObserver, times(1)).onChanged(primaryState)
+        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(primaryState)
+
+        verify(selectedCountryObserver, times(1)).onChanged(primaryCountry)
+        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(primaryCountry)
+
+        verify(stateInputVisibleObserver, times(1)).onChanged(true)
+        Assertions.assertThat(viewModel.stateInputEnabled.value).isEqualTo(true)
     }
 
     @Test
     fun errorFetchingCountriesDuringPreload() = test {
-        viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
-        viewModel.showErrorMessage.observeForever(errorMessageObserver)
-
         setupFetchSupportedCountriesDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
@@ -167,10 +215,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun errorFetchingDomainContactInformationDuringPreload() = test {
-        viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
-        viewModel.showErrorMessage.observeForever(errorMessageObserver)
-        viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
-
         setupFetchSupportedCountriesDispatcher(false)
         setupFetchDomainContactInformationDispatcher(true)
 
@@ -196,13 +240,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun errorFetchingStatesDuringPreload() = test {
-        viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
-        viewModel.showErrorMessage.observeForever(errorMessageObserver)
-        viewModel.domainRegistrationButtonEnabled.observeForever(domainRegistrationButtonObserver)
-        viewModel.selectedState.observeForever(selectedStateObserver)
-        viewModel.stateInputVisible.observeForever(stateInputVisibleObserver)
-        viewModel.statesProgressIndicatorVisible.observeForever(stateProgressIndicatorObserver)
-
         setupFetchSupportedCountriesDispatcher(false)
         setupFetchDomainContactInformationDispatcher(false)
         setupFetchStatesDispatcher(true)
@@ -216,7 +253,7 @@ class DomainRegistrationDetailsViewModelTest {
         val actionsDispatched = captor.allValues
         validateFetchSupportedCountriesAction(actionsDispatched[0])
         validateFetchDomainContactAction(actionsDispatched[1])
-        validateFetchStatesAction(actionsDispatched[2])
+        validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
 
         verify(errorMessageObserver, times(1)).onChanged(domainSupportedStatesFetchError.message)
 
@@ -235,99 +272,41 @@ class DomainRegistrationDetailsViewModelTest {
     }
 
     @Test
-    fun contactDetailsPreload() = test {
-        // Setting up all observes for all engaged LiveData
-        viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
-        viewModel.statesProgressIndicatorVisible.observeForever(stateProgressIndicatorObserver)
-        viewModel.domainRegistrationButtonEnabled.observeForever(domainRegistrationButtonObserver)
-        viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
-        viewModel.selectedState.observeForever(selectedStateObserver)
-        viewModel.selectedCountry.observeForever(selectedCountryObserver)
-        viewModel.stateInputVisible.observeForever(stateInputVisibleObserver)
-
-        viewModel.start(site, domainProductDetails)
-
-        // Verifying that correct actions with expected payloads were dispatched
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(3)).dispatch(captor.capture())
-
-        val actionsDispatched = captor.allValues
-        validateFetchSupportedCountriesAction(actionsDispatched[0])
-        validateFetchDomainContactAction(actionsDispatched[1])
-        validateFetchStatesAction(actionsDispatched[2])
-
-        // form progress indicator was shown and dismissed
-        verify(formProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(formProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.formProgressIndicatorVisible.value).isEqualTo(false)
-
-        // states progress indicator was shown and dismissed
-        verify(stateProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(stateProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.statesProgressIndicatorVisible.value).isEqualTo(false)
-
-        // domain registration button was disabled and then enabled
-        verify(domainRegistrationButtonObserver, times(1)).onChanged(true)
-        verify(domainRegistrationButtonObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.domainRegistrationButtonEnabled.value).isEqualTo(true)
-
-        verify(domainContactDetailsObserver, times(1)).onChanged(domainContactModel)
-
-        verify(selectedStateObserver, times(1)).onChanged(selectedState)
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(selectedState)
-
-        verify(selectedCountryObserver, times(1)).onChanged(selectedCountry)
-        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(selectedCountry)
-
-        verify(stateInputVisibleObserver, times(1)).onChanged(true)
-        Assertions.assertThat(viewModel.stateInputVisible.value).isEqualTo(true)
-    }
-
-    @Test
     fun onCountrySelectorClicked() = test {
-        viewModel.showCountryPickerDialog.observeForever(countryPickerDialogObserver)
-
         viewModel.start(site, domainProductDetails)
 
         viewModel.onCountrySelectorClicked()
 
-        verify(countryPickerDialogObserver, times(1)).onChanged(testCountries)
+        verify(countryPickerDialogObserver, times(1)).onChanged(countries)
     }
 
     @Test
     fun onStateSelectorClicked() = test {
-        viewModel.showStatePickerDialog.observeForever(statePickerDialogObserver)
-
         viewModel.start(site, domainProductDetails)
 
         viewModel.onStateSelectorClicked()
 
-        verify(statePickerDialogObserver, times(1)).onChanged(testStates)
+        verify(statePickerDialogObserver, times(1)).onChanged(states)
     }
 
     @Test
     fun onCountrySelected() = test {
-        viewModel.selectedCountry.observeForever(selectedCountryObserver)
-        viewModel.selectedState.observeForever(selectedStateObserver)
-        viewModel.statesProgressIndicatorVisible.observeForever(stateProgressIndicatorObserver)
-        viewModel.domainRegistrationButtonEnabled.observeForever(domainRegistrationButtonObserver)
-        viewModel.stateInputVisible.observeForever(stateInputVisibleObserver)
-
         viewModel.start(site, domainProductDetails)
 
-        viewModel.onCountrySelected(selectedCountry)
+        viewModel.onCountrySelected(secondaryCountry)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher, times(4)).dispatch(captor.capture())
 
         val actionsDispatched = captor.allValues
-        validateFetchStatesAction(actionsDispatched[3])
+        validateFetchStatesAction(actionsDispatched[3], secondaryCountry.code)
 
-        verify(selectedStateObserver, times(2)).onChanged(selectedState)
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(selectedState)
+        Assertions.assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
 
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(selectedState)
-        verify(selectedCountryObserver, times(2)).onChanged(selectedCountry)
+        verify(selectedStateObserver, times(2)).onChanged(null)
+        Assertions.assertThat(viewModel.selectedState.value).isNull()
+
+        verify(selectedCountryObserver, times(1)).onChanged(secondaryCountry)
 
         // states progress indicator was shown and dismissed
         verify(stateProgressIndicatorObserver, times(2)).onChanged(true)
@@ -340,19 +319,17 @@ class DomainRegistrationDetailsViewModelTest {
         Assertions.assertThat(viewModel.domainRegistrationButtonEnabled.value).isEqualTo(true)
 
         verify(stateInputVisibleObserver, times(2)).onChanged(true)
-        Assertions.assertThat(viewModel.stateInputVisible.value).isEqualTo(true)
+        Assertions.assertThat(viewModel.stateInputEnabled.value).isEqualTo(true)
     }
 
     @Test
     fun onStateSelected() = test {
-        viewModel.selectedState.observeForever(selectedStateObserver)
-
         viewModel.start(site, domainProductDetails)
 
-        viewModel.onStateSelected(selectedState)
+        viewModel.onStateSelected(primaryState)
 
-        verify(selectedStateObserver, times(2)).onChanged(selectedState)
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(selectedState)
+        verify(selectedStateObserver, times(2)).onChanged(primaryState)
+        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(primaryState)
     }
 
     @Test
@@ -360,9 +337,6 @@ class DomainRegistrationDetailsViewModelTest {
         setupCreateShoppingCartDispatcher(false)
         setupRedeemShoppingCartDispatcher(false)
         setupFetchSiteDispatcher(false)
-
-        viewModel.registrationProgressIndicatorVisible.observeForever(domainRegistrationProgressIndicatorObserver)
-        viewModel.handleCompletedDomainRegistration.observeForever(completedDomainRegistrationObserver)
 
         viewModel.start(site, domainProductDetails)
 
@@ -388,9 +362,6 @@ class DomainRegistrationDetailsViewModelTest {
     fun onErrorCreatingCart() = test {
         setupCreateShoppingCartDispatcher(true)
 
-        viewModel.registrationProgressIndicatorVisible.observeForever(domainRegistrationProgressIndicatorObserver)
-        viewModel.showErrorMessage.observeForever(errorMessageObserver)
-
         viewModel.start(site, domainProductDetails)
 
         viewModel.onRegisterDomainButtonClicked()
@@ -412,9 +383,6 @@ class DomainRegistrationDetailsViewModelTest {
     fun onErrorRedeemingCart() = test {
         setupCreateShoppingCartDispatcher(false)
         setupRedeemShoppingCartDispatcher(true)
-
-        viewModel.registrationProgressIndicatorVisible.observeForever(domainRegistrationProgressIndicatorObserver)
-        viewModel.showErrorMessage.observeForever(errorMessageObserver)
 
         viewModel.start(site, domainProductDetails)
 
@@ -440,10 +408,6 @@ class DomainRegistrationDetailsViewModelTest {
         setupRedeemShoppingCartDispatcher(false)
         setupFetchSiteDispatcher(true)
 
-        viewModel.registrationProgressIndicatorVisible.observeForever(domainRegistrationProgressIndicatorObserver)
-        viewModel.showErrorMessage.observeForever(errorMessageObserver)
-        viewModel.handleCompletedDomainRegistration.observeForever(completedDomainRegistrationObserver)
-
         viewModel.start(site, domainProductDetails)
 
         viewModel.onRegisterDomainButtonClicked()
@@ -468,8 +432,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun onTosLinkClicked() = test {
-        viewModel.showTos.observeForever(tosLinkObserver)
-
         viewModel.start(site, domainProductDetails)
 
         viewModel.onTosLinkClicked()
@@ -479,12 +441,9 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun onDomainContactDetailsChanged() = test {
-        viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
-
         viewModel.start(site, domainProductDetails)
 
         val updatedDomainContactDetails = domainContactModel.copy(firstName = "Peter")
-
         viewModel.onDomainContactDetailsChanged(updatedDomainContactDetails)
 
         verify(domainContactDetailsObserver, times(1)).onChanged(updatedDomainContactDetails)
@@ -493,8 +452,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun togglePrivacyProtection() = test {
-        viewModel.privacyProtectionState.observeForever(privacyProtectionObserver)
-
         viewModel.start(site, domainProductDetails)
 
         Assertions.assertThat(viewModel.privacyProtectionState.value).isTrue()
@@ -510,7 +467,7 @@ class DomainRegistrationDetailsViewModelTest {
         val event = if (isError) {
             OnSupportedCountriesFetched(fetchSupportedCountriesError)
         } else {
-            OnSupportedCountriesFetched(testCountries)
+            OnSupportedCountriesFetched(countries)
         }
         whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == FETCH_SUPPORTED_COUNTRIES })).then {
             viewModel.onSupportedCountriesFetched(event)
@@ -521,7 +478,7 @@ class DomainRegistrationDetailsViewModelTest {
         val event = if (isError) {
             OnDomainSupportedStatesFetched(null, domainSupportedStatesFetchError)
         } else {
-            OnDomainSupportedStatesFetched(testStates, null)
+            OnDomainSupportedStatesFetched(states, null)
         }
         whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == SiteAction.FETCH_DOMAIN_SUPPORTED_STATES })).then {
             viewModel.onDomainSupportedStatesFetched(event)
@@ -581,9 +538,9 @@ class DomainRegistrationDetailsViewModelTest {
         Assertions.assertThat(action.payload).isNull()
     }
 
-    private fun validateFetchStatesAction(action: Action<*>) {
+    private fun validateFetchStatesAction(action: Action<*>, targetCountryCode: String) {
         Assertions.assertThat(action.type).isEqualTo(SiteAction.FETCH_DOMAIN_SUPPORTED_STATES)
-        Assertions.assertThat(action.payload).isEqualTo("US")
+        Assertions.assertThat(action.payload).isEqualTo(targetCountryCode)
     }
 
     private fun validateCreateCartAction(action: Action<*>) {
