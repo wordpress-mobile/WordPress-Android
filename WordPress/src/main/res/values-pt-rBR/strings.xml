@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-02 20:13:42+0000
+Translation-Revision-Date: 2019-05-11 17:36:13+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="post_list_drafts">Rascunhos</string>
+    <string name="post_list_published">Publicado</string>
+    <string name="post_list_author_everyone">Todos</string>
+    <string name="post_list_author_me">Eu</string>
+    <string name="error_restoring_post">Ocorreu um erro ao restaurar o post</string>
+    <string name="backdated_for">Retroceder para: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Os itens acima serão exibidos em sua aba de informações. Arraste e solte para personalizar.</string>
+    <string name="stats_insights_add_insights_header">Adicionar informações</string>
+    <string name="stats_insights_management_title">Ver apenas as estatísticas mais relevantes. Adicione e organize duas informações abaixo.</string>
+    <string name="stats_insights_social">Social</string>
+    <string name="stats_insights_annual_site_stats">Estatística anual do site</string>
+    <string name="stats_view_follower_totals">Total de seguidores</string>
+    <string name="suggestion_fetch_error">Não foi possível carregar as sugestões de domínios</string>
+    <string name="suggestions_search_hint">Digite uma palavra-chave para mais ideias</string>
+    <string name="suggestions_empty_list">Nenhuma sugestão encontrada</string>
+    <string name="choose_domain">Escolha o domínio</string>
+    <string name="register_domain">Registrar domínio</string>
+    <string name="jetpack_installed_message">Agora que o Jetpack está instalado, só precisamos configurá-lo. Isso levará apenas um minuto.</string>
+    <string name="stats_menu_remove">Remover de informações</string>
+    <string name="stats_menu_move_down">Mover para baixo</string>
+    <string name="stats_menu_move_up">Mover para cima</string>
+    <string name="stats_item_settings">Configurações do item de estatística</string>
+    <string name="post_moving_to_draft">O post está sendo movido para rascunho</string>
+    <string name="post_restoring">O post está sendo restaurado</string>
+    <string name="post_restored">Post restaurado</string>
+    <string name="post_trashing">O post está sendo enviado para a lixeira</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira apagará as alterações salvas localmente. Você tem certeza de que deseja continuar?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Alterações locais</string>
+    <string name="button_move_to_draft">Mover para rascunho</string>
+    <string name="post_list_toggle_item_layout_list_view">Mudar para visualização de lista</string>
+    <string name="post_list_toggle_item_layout_cards_view">Mudar para visualização de cartão</string>
+    <string name="posts_trashed_empty">Não há nenhum post na lixeira</string>
+    <string name="posts_draft_empty">Não há nenhum rascunho de post</string>
+    <string name="posts_scheduled_empty">Não há nenhum post agendado</string>
+    <string name="posts_published_empty">Você não publicou nenhum post ainda</string>
     <string name="notification_wpcom_username_needed">Acesse com seu nome de usuário e senha.</string>
     <string name="login_invalid_site_url">O endereço do site informado é inválido. Informe o endereço novamente.</string>
     <string name="error_user_username_instead_of_email">Acesse usando seu nome de usuário do WordPress.com ao invés de seu endereço de e-mail.</string>
@@ -235,7 +270,6 @@ Language: pt_BR
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Gerenciar informações</string>
-    <string name="stats_empty_insights_description">Personalize as informações de seu site para saber mais sobre seu desempenho</string>
     <string name="stats_empty_insights_title">Nenhuma informação adicionada ainda</string>
     <string name="stats_no_data_yet">Nenhum dado ainda</string>
     <string name="menu_debug">Menu de depuração</string>
@@ -343,14 +377,13 @@ Language: pt_BR
     <string name="reader_empty_followed_tags_subtitle">Adicione tags aqui para encontrar posts sobre seus assuntos favoritos</string>
     <string name="login_to_to_connect_jetpack">Acesse a conta do WordPress.com usada para conectar o Jetpack.</string>
     <string name="install_jetpack_retry">Tentar novamente</string>
-    <string name="install_jetpack_continue">Continuar</string>
-    <string name="jetpack_installation_problem_message">Não foi possível instalar o Jetpack agora</string>
+    <string name="install_jetpack_continue">Continuar a configuração</string>
+    <string name="jetpack_installation_problem_message">Não foi possível instalar o Jetpack no momento.</string>
     <string name="jetpack_installation_problem">Houve um problema</string>
-    <string name="jetpack_installed_message">Você já tem o Jetpack instalado em seu site. Parabéns!</string>
     <string name="jetpack_installed">Jetpack instalado</string>
-    <string name="installing_jetpack_message">Instalando o Jetpack em seu site. Isso pode levar alguns minutos para ser concluído</string>
+    <string name="installing_jetpack_message">Instalando o Jetpack em seu site. Isso pode levar alguns minutos para ser concluído.</string>
     <string name="installing_jetpack">Instalando Jetpack</string>
-    <string name="install_jetpack_message">As informações de seu site não serão salvas conosco e serão usadas apenas para instalar o Jetpack</string>
+    <string name="install_jetpack_message">As informações de seu site não serão salvas conosco e serão usadas apenas para instalar o Jetpack.</string>
     <string name="install_jetpack">Instalar Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Perguntas frequentes sobre o Jetpack</string>
@@ -651,7 +684,6 @@ Language: pt_BR
     <string name="dialog_confirm_publish_message_page">Esta página será publicada imediatamente.</string>
     <string name="dialog_confirm_publish_message_post">Este post será publicado imediatamente.</string>
     <string name="dialog_confirm_publish_title">Pronto para publicar?</string>
-    <string name="dialog_confirm_delete_post">Este post será excluído e enviado para a Lixeira</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d posts / páginas não enviados</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas não enviadas</string>
     <string name="media_file_page_singular_only_not_uploaded">1 página não enviada</string>
@@ -958,7 +990,6 @@ Language: pt_BR
     <string name="async_promo_title_publish">Publique sem preocupações</string>
     <string name="editor_uploading_post">Seu post está sendo enviado</string>
     <string name="uploading_media">Fazendo upload da mídia…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Tem certeza? Excluir este post também cancelará o upload da mídia.</string>
     <string name="page_scheduled">Página agendada</string>
     <string name="post_scheduled">Post agendado</string>
     <string name="button_retry">Tentar novamente</string>
@@ -1017,8 +1048,8 @@ Language: pt_BR
     <string name="editor_dropped_text_error">Ocorreu um erro ao soltar texto</string>
     <string name="editor_dropped_html_images_not_allowed">Soltar imagens no modo HTML não é permitido</string>
     <string name="editor_content_hint">Compartihe sua história aqui…</string>
-    <string name="post_status_trashed">Enviado para a lixeira</string>
-    <string name="post_status_scheduled">Agendado</string>
+    <string name="post_list_trashed">Enviado para a lixeira</string>
+    <string name="post_list_scheduled">Agendado</string>
     <string name="post_status_post_private">Privado</string>
     <string name="post_status_draft">Rascunho</string>
     <string name="post_status_pending_review">Revisão pendente</string>
@@ -1619,10 +1650,8 @@ Language: pt_BR
     <string name="button_preview">Visualizar</string>
     <string name="button_trash">Enviar para a lixeira</string>
     <string name="button_stats">Estatísticas</string>
-    <string name="button_back">Voltar</string>
     <string name="stats_no_activity_this_period">Nenhuma atividade no período</string>
     <string name="post_trashed">Post enviado para a lixeira</string>
-    <string name="post_deleted">Post excluído</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Você não está autorizado a acessar este site</string>
     <string name="reader_toast_err_follow_blog_not_found">Não foi possível encontrar esse site</string>
     <string name="undo">Desfazer</string>

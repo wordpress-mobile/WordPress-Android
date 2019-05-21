@@ -1,128 +1,43 @@
-# Contributing
+# How to Contribute
 
-If you're looking to contribute to the project please keep reading, but if you want to help translate the app, jump to [Contribute to translations](#contribute-to-translations).
+First off, thank you for contributing! We're excited to collaborate with you! 🎉
 
-Here's a quick guide to create a pull request for your WordPress-Android patch:
+The following is a set of guidelines for the many ways you can join our collective effort.
 
-1. Fork the github project by visiting this URL: https://github.com/wordpress-mobile/WordPress-Android/fork
+Before anything else, please take a moment to read our [Code of Conduct](CODE-OF-CONDUCT.md). We expect all participants, from full-timers to occasional tinkerers, to uphold it.
 
-2. Clone the git repository
+## Reporting Bugs, Asking Questions, and Suggesting Features
 
-        $ git clone git@github.com:YOUR-GITHUB-USERNAME/WordPress-Android.git
+Have a suggestion or feedback? Please go to [Issues](https://github.com/wordpress-mobile/WordPress-Android/issues) and [open a new issue](https://github.com/wordpress-mobile/WordPress-Android/issues/new). Prefix the title with a category like _"Bug:"_, _"Question:"_, or _"Feature Request:"_. Screenshots help us resolve issues and answer questions faster, so thanks for including some if you can.
 
-3. Create a new branch in your git repository (branched from `develop` - see notes about [branching](#branching) below).
+## Translating
 
-        $ cd WordPress-Android/
-        $ git checkout develop
-        $ git checkout -b issue/123-fix-for-123 # use a better title
+We use GlotPress to manage translations. Please go to the [WordPress for Android GlotPress page](https://translate.wordpress.org/projects/apps/android/dev/) for more information on how to add or edit translations.
 
-4. Setup your build environment (see [build instructions in our README][build-instructions]) and start hacking the project. You must follow our [code style guidelines][style], write good commit messages, comment your code and write automated tests.
+## Beta Testing
 
-5. When your patch is ready, [submit a pull request][pr]. Add some comments or screen shots to help us.
+Interested in using the upcoming versions of WordPress? Do you love giving feedback on new features and don't mind reporting bugs that come up along the way? Join us in the beta-testing program by going to the [WordPress for Android App Testing program](https://play.google.com/apps/testing/org.wordpress.android). Sign in with your Google account, and follow the instructions. 
 
-6. Wait for us to review your pull request. If something is wrong or if we want you to make some changes before the merge, we'll let you know through commit comments or pull request comments.
+## Submitting Code Changes
 
-[build-instructions]: https://github.com/wordpress-mobile/WordPress-Android#build-instructions
-[pr]: https://github.com/wordpress-mobile/WordPress-Android/compare/
-[style]: https://github.com/wordpress-mobile/WordPress-Android/blob/develop/CODESTYLE.md
+If you're just getting started and want to familiarize yourself with the app’s code, we suggest looking at [these issues](https://github.com/wordpress-mobile/WordPress-Android/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) with the **good first issue** label. But if you’d like to tackle something different, you're more than welcome to visit the [Issues](https://github.com/wordpress-mobile/WordPress-Android/issues) page and pick an item that interests you.
 
-# Versioning
+We always try to avoid duplicating efforts, so if you decide to work on an issue, leave a comment to state your intent. If you choose to focus on a new feature or the change you’re proposing is significant, we recommend waiting for a response before proceeding. The issue may no longer align with project goals.
 
-* Version `x.y` (2.8 or 4.0 for instance) are major releases. There is no distinction between a 2.9 version or a 3.0 version, we want to avoid naming like 2.142 so the version after `x.9` (2.9) is simply `x+1.0` (3.0). A new major version is released every ~4 weeks.
+If the change is trivial, feel free to send a pull request without notifying us.
 
-* Version `x.y.z` (2.8.1 or 4.0.2 for instance) are hotfix releases. We release them only when a blocking or major bug is found in the currently released version.
+### Pull Requests and Code Reviews
 
-# Branching
+All code contributions pass through pull requests. If you haven't created a pull request before, we recommend this free video series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github). 
 
-We use the [git flow branching model][git-flow].
+The core team monitors and reviews all pull requests. Depending on the changes, we will either approve them or close them with an explanation. We might also work with you to improve a pull request before approval.
 
-* `master` branch represents latest version released in the Google Play Store. HEAD of this branch should be equal to last tagged release.
+We do our best to respond quickly to all pull requests. If you don't get a response from us after a week, feel free to reach out to us via Slack.
 
-* `develop` branch represents the cutting edge version. This is probably the one you want to fork from and base your patch on. This is the default github branch.
+### Development Practices
 
-* Version tags. All released versions are tagged and pushed in the repository. For instance if you want to checkout the 2.5.1 version:
+Have look at the [Coding Style Guide](https://github.com/wordpress-mobile/WordPress-Android/wiki/Coding-Style) to learn how to format your code so it passes the convention and quality checks like the rest of the project. The [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) contains all the development guides like [what a good pull request looks like](https://github.com/wordpress-mobile/WordPress-Android/wiki/Pull-Request-Guidelines), and [how to use String and Drawable resources](https://github.com/wordpress-mobile/WordPress-Android/wiki/Using-Android-Resources).
 
-        $ git checkout 2.5.1
+## Getting in Touch
 
-* Release branches. When a new version is going to be released, we'll branch from `develop` to `release/x.y`. This marks version x.y code freeze. Only blocking or major bug fixes will be merged to these branches. They represent beta and release candidates.
-
-* Hotfix branches. When one or several critical issues are found on current released version, we'll branch from `tags/x.y` to `hotfix/x.y.1` (or from `tags/x.y.z` to `hotfix/x.y.z+1` if a hotfix release has already been published)
-
-* Fix or feature branches. Proposed new features and bug fixes should live in their own branch. Use the following naming convention: if a github issue exists for this feature/bugfix, the branch will be named `issue/ISSUEID-comment` where ISSUEID is the corresponding github issue id. If a github issue doesn't exist, branch will be named `feature/comment`. These branches will be merged in:
-    * `hotfix/x.y.z` if the change is a fix for a released version,
-    * `release/x.y` if the change is a fix for a beta or release candidate,
-    * `develop` for all other cases.
-
-Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a new version is released. A new tag will be created and pushed at the same time.
-
-[git-flow]: http://nvie.com/posts/a-successful-git-branching-model/
-
-# Subtree'd library projects
-
-A number of library dependencies are managed as separate open source projects and are git-subtree'd into the WordPress Android app source tree. Use the following command to updated (pull latest) from their respective repos:
-
-        $ git subtree pull --squash --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
-
-and substitute the `library_name` and `Library_Name` to match the library project. As an example, for the Analytics library use 'analytics' and 'Analytics' respectively.
-
-Similarly, issue a `subtree push` to push changes committed to the main app repo, upstream to the library repo:
-
-        $ git subtree push --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
-
-Here are the libraries currently maintained and subtree'd:
-
-* Analytics
-* Editor
-* Networking
-* Stores
-* Utils
-
-# String Resources
-
-We use `values/strings.xml` file for *ALL* translatable strings including string arrays. Each element in a string array should be defined as separate string resource first and then the string array should be defined with `translatable="false"` flag. This is due to a GlotPress limitation where translating arrays directly could generate smaller arrays if some elements are not translated. Here is a basic example:
-
-```
-<string name="element1">Element 1</string>
-<string name="element2">Element 2</string>
-<string-array name="elements_array" translatable="false">
-    <item>@string/element1</item>
-    <item>@string/element2</item>
-</string-array>
-```
-
-We also have string resources outside of `strings.xml` such as `key_strings`. These strings are not user-facing and should be used as static strings such as preference keys.
-
-To help ease the translation process we ask that you mark alias string resources - as well as other strings where appropriate - as not translatable. For example `<string name="foo" translatable="false">@string/bar</string>`
-
-# Drawable Resources
-
-Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the first option when adding assets. Only if a vector drawable is not available should PNG files be added to the project. Also make sure to use `android:src` in place of `app:srcCompat` in XML files. Use existing white 24dp variations of vector drawables (i.e. `ic_*_white_24dp`) and tint the drawables statically (i.e. XML) or dynamically (i.e. Java or Kotlin) as necessary. Set values for `android:height` and `android:width` attributes for views with icons to scale the 24dp icon for that view.
-
-Some vector drawables may come from a SVG file and they are not the easiest file type to edit. If the SVG file is specific to the WPAndroid project (like a banner image or unlike a gridicon), then add the SVG source in `WordPress/src/future/svg/`. This will make sure we can find and edit the SVG file and then export it in vector drawable format.
-
-Please use the following naming convention for drawables:
-
-* Use `ic_` for icons (i.e. simple, usually single color, usually square shape) and `img_` for images (i.e. complex, usually multiple colors).
-* Use the [gridicon](http://automattic.github.io/gridicons/) name if applicable (examples: `ic_my_sites` or `ic_reply`).
-* Use the color to icons (example: `ic_reply_white`).
-* Use the width in dp (example: `ic_reply_white_24dp`).
-
-#### Valid
-`ic_reply_white_24dp` (white reply icon 24dp)  
-`ic_stats_black_32dp` (black stats icon 32dp)
-#### Invalid
-`reply_white` (missing `ic_` and width)  
-`ic_confetti_284dp` (uses `ic_`, but should use `img_`)  
-`img_confetti_98dp` (uses height, but should use width)
-
-# Subtree'd projects
-
-The [WordPress-HealthCheck-Common][healthcheck] project is used in the tests and loaded from `assets` on tests run. Use the following command to pull in newer commits from the external project:
-
-        $ git subtree pull --prefix=WordPress/src/androidTest/assets/health-check/ https://github.com/wordpress-mobile/WordPress-HealthCheck-Common.git develop
-
-[healthcheck]: https://github.com/wordpress-mobile/WordPress-HealthCheck-Common
-
-# Contribute to translations
-
-We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: http://translate.wordpress.org/projects/apps/android/dev. To add new translations or fix existing ones, create an account over at GlotPress and submit your changes over at the GlotPress site.
+If you have questions or just want to say hi, join the [WordPress Slack](https://make.wordpress.org/chat/) and drop a message on the `#mobile` channel.

@@ -48,7 +48,7 @@
             android:layout_marginStart="@dimen/margin_extra_small"
             android:background="@android:color/transparent"
             android:clickable="false"
-            android:hint="@string/suggestions_search_hint"
+            android:hint="@string/domain_suggestions_search_hint"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                app:aevTitle="@string/suggestions_empty_list"
+                app:aevTitle="@string/domains_suggestions_empty_list"
                 tools:visibility="visible"/>
         </LinearLayout>
 
@@ -118,7 +118,7 @@
             style="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/choose_domain">
+            android:text="@string/domains_suggestions_choose_domain">
         </android.support.v7.widget.AppCompatButton>
     </RelativeLayout>
 </RelativeLayout>
