@@ -528,10 +528,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
-        if (savedInstanceState == null) {
-            // Bump the stat the first time the editor is opened.
-            PostUtils.trackOpenEditorAnalytics(mPost, mSite);
-        }
+        // Bump editor opened event every time the activity is created, to match the EDITOR_CLOSED event onDestroy
+        PostUtils.trackOpenEditorAnalytics(mPost, mSite);
 
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
