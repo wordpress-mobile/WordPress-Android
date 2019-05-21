@@ -47,7 +47,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 val DEFAULT_INSIGHTS = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
-private const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
+const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
 @Singleton
 class StatsStore
 @Inject constructor(

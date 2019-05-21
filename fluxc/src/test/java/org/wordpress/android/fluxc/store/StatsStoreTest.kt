@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
@@ -12,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
@@ -19,6 +21,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.ManagementType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
@@ -27,6 +30,8 @@ class StatsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var insightTypesSqlUtils: InsightTypeSqlUtils
     @Mock lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
+    @Mock lateinit var sharedPreferences: SharedPreferences
+    @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     private lateinit var store: StatsStore
 
     @ExperimentalCoroutinesApi
@@ -37,6 +42,8 @@ class StatsStoreTest {
                 insightTypesSqlUtils,
                 preferenceUtilsWrapper
         )
+        whenever(preferenceUtilsWrapper.getFluxCPreferences()).thenReturn(sharedPreferences)
+        whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
     }
 
     @Test
@@ -152,5 +159,53 @@ class StatsStoreTest {
                 site,
                 store.getRemovedInsights(addedTypes - POSTING_ACTIVITY)
         )
+    }
+
+    @Test
+    fun `insight types starts with news type and ends with control type when news card was not shown`() = test {
+        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(listOf(COMMENTS))
+        whenever(sharedPreferences.getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)).thenReturn(false)
+
+        val insightTypes = store.getInsightTypes(site)
+
+        assertThat(insightTypes).hasSize(3)
+        assertThat(insightTypes[0]).isEqualTo(ManagementType.NEWS_CARD)
+        assertThat(insightTypes[1]).isEqualTo(COMMENTS)
+        assertThat(insightTypes[2]).isEqualTo(ManagementType.CONTROL)
+    }
+
+    @Test
+    fun `insight types does not start with news type when news card was shown`() = test {
+        whenever(insightTypesSqlUtils.selectAddedItemsOrderedByStatus(site)).thenReturn(listOf(COMMENTS))
+        whenever(sharedPreferences.getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)).thenReturn(true)
+
+        val insightTypes = store.getInsightTypes(site)
+
+        assertThat(insightTypes).hasSize(2)
+        assertThat(insightTypes[0]).isEqualTo(COMMENTS)
+        assertThat(insightTypes[1]).isEqualTo(ManagementType.CONTROL)
+    }
+
+    @Test
+    fun `hide news card sets shared prefs`() {
+        whenever(sharedPreferencesEditor.putBoolean(any(), any())).thenReturn(sharedPreferencesEditor)
+
+        store.hideInsightsManagementNewsCard()
+
+        verify(sharedPreferences).edit()
+        Mockito.inOrder(sharedPreferencesEditor).apply {
+            this.verify(sharedPreferencesEditor).putBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true)
+            this.verify(sharedPreferencesEditor).apply()
+        }
+    }
+
+    @Test
+    fun `is news card showing returns from shared prefs`() {
+        val prefsValue = true
+        whenever(sharedPreferences.getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true)).thenReturn(prefsValue)
+
+        val insightsManagementNewsCardShowing = store.isInsightsManagementNewsCardShowing()
+
+        assertThat(insightsManagementNewsCardShowing).isEqualTo(prefsValue)
     }
 }
