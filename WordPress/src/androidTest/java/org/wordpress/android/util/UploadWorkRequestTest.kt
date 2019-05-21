@@ -13,18 +13,28 @@ import org.hamcrest.Matchers.`is`
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.wordpress.android.WordPressTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.DaggerMockedUploadAppComponent
 
 @RunWith(AndroidJUnit4::class)
 class UploadWorkRequestTest {
     @Before
     fun setUp() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val app = instrumentation.targetContext.applicationContext as WordPressTest
+        val appComponent = DaggerMockedUploadAppComponent.builder()
+                .application(app)
+                .build()
+        app.setAppComponent(appComponent)
+
         val context = InstrumentationRegistry.getTargetContext()
         val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor here to make it easier to write tests
                 .setExecutor(SynchronousExecutor())
                 .build()
+
         // Initialize WorkManager for instrumentation tests.
         WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
     }
@@ -73,19 +83,6 @@ class UploadWorkRequestTest {
 
         // We didn't call setAllConstraintsMet earlier, so the work won't be executed (can't be success or failure)
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun testEnqueuingSeveralUploadWorkRequests() {
-        // Define inputs
-        val site = SiteModel()
-
-        // Enqueue
-        val (_, operation1) = enqueueUploadWorkRequestForSite(site)
-        val (_, operation2) = enqueueUploadWorkRequestForSite(site)
-
-        assertThat(operation1.result, `is`(operation2.result))
     }
 
     @Test
