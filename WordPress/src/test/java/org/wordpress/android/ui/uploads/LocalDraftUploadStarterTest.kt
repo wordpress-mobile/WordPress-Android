@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -57,6 +58,9 @@ class LocalDraftUploadStarterTest {
         sites.forEach {
             on { getLocalDraftPosts(eq(it)) } doReturn sitesAndPosts[it]
         }
+    }
+    private val pageStore = mock<PageStore> {
+        onBlocking { getLocalDraftPages(any()) } doReturn emptyList()
     }
 
     @Test
@@ -172,6 +176,7 @@ class LocalDraftUploadStarterTest {
     ) = LocalDraftUploadStarter(
             context = mock(),
             postStore = postStore,
+            pageStore = pageStore,
             siteStore = siteStore,
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
