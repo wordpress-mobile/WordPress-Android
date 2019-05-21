@@ -34,10 +34,11 @@ import javax.inject.Inject
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val transactionsStore: TransactionsStore
+    private val transactionsStore: TransactionsStore // needed for events to work
 ) : ViewModel() {
     private lateinit var site: SiteModel
     private lateinit var domainProductDetails: DomainProductDetails
+
     private var isStarted = false
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
@@ -117,10 +118,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         this.site = site
         this.domainProductDetails = domainProductDetails
         fetchSupportedCountries()
+        _privacyProtectionState.value = true
 
-        if (privacyProtectionState.value == null) {
-            _privacyProtectionState.value = true
-        }
         isStarted = true
     }
 
@@ -150,11 +149,13 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         } else {
             _domainContactDetails.value = event.contactModel
 
-            if (event.contactModel != null && !TextUtils.isEmpty(event.contactModel!!.countryCode)) {
-                _selectedCountry.value = supportedCountries!!.firstOrNull { it.code == event.contactModel!!.countryCode }
+            if (event.contactModel != null && !TextUtils.isEmpty(event.contactModel?.countryCode)) {
+                _selectedCountry.value = supportedCountries?.firstOrNull { it.code == event.contactModel?.countryCode }
                 _statesProgressIndicatorVisible.value = true
                 _domainRegistrationButtonEnabled.value = false
-                dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(event.contactModel!!.countryCode))
+                dispatcher.dispatch(
+                        SiteActionBuilder.newFetchDomainSupportedStatesAction(event.contactModel?.countryCode)
+                )
             }
         }
     }
@@ -167,7 +168,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             _showErrorMessage.value = event.error.message
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
         } else {
-            _selectedState.value = event.supportedStates?.firstOrNull { it.code == domainContactDetails.value!!.state }
+            _selectedState.value = event.supportedStates?.firstOrNull { it.code == domainContactDetails.value?.state }
             _supportedStates.value = event.supportedStates
         }
     }

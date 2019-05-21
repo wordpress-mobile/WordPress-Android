@@ -142,8 +142,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         }
     }
 
+    // make link to ToS clickable
     private fun setupTosLink() {
-        // make link to ToS clickable
         val spannableTosString = SpannableString(tos_explanation.text)
         val tosUnderlineSpan = spannableTosString.getSpans(
                 0,
@@ -228,6 +228,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         viewModel.domainContactDetails.observe(this, object : Observer<DomainContactModel> {
             override fun onChanged(domainContactModel: DomainContactModel?) {
                 populateContactForm(domainContactModel!!)
+                // we need to remove observer to avoid loop when data is sent back to ViewModel
+                // after initial load we let EditText maintain it's content
                 viewModel.domainContactDetails.removeObserver(this)
             }
         })
@@ -271,7 +273,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                 Observer { error ->
                     var affectedInputFields: Array<TextInputEditText>? = null
 
-                    when (error!!.type) {
+                    when (error?.type) {
                         FIRST_NAME -> affectedInputFields = arrayOf(first_name_input)
                         LAST_NAME -> affectedInputFields = arrayOf(last_name_input)
                         ORGANIZATION -> affectedInputFields = arrayOf(organization_input)
@@ -289,7 +291,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                     affectedInputFields?.forEach {
                         showFieldError(
                                 it,
-                                StringEscapeUtils.unescapeHtml4(error.message)
+                                StringEscapeUtils.unescapeHtml4(error?.message)
                         )
                     }
                     affectedInputFields?.firstOrNull { it.requestFocus() }
@@ -338,6 +340,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         postal_code_input.setText(domainContactInformation.postalCode)
     }
 
+    // local validation
     private fun validateForm(): Boolean {
         var formIsCompleted = true
 
@@ -384,7 +387,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                 address_second_line_input.text.toString(),
                 postal_code_input.text.toString(),
                 city_input.text.toString(),
-                null,     // state code will be added in ViewModel
+                null, // state code will be added in ViewModel
                 null, // country code will be added in ViewModel
                 email_input.text.toString(),
                 combinedPhoneNumber,
@@ -478,7 +481,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            states = arguments!!.getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES) as ArrayList<SupportedStateResponse>
+            states = arguments!!.getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
+                    as ArrayList<SupportedStateResponse>
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -516,7 +520,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            countries = arguments!!.getParcelableArrayList<SupportedDomainCountry>(EXTRA_COUNTRIES) as ArrayList<SupportedDomainCountry>
+            countries = arguments?.getParcelableArrayList<SupportedDomainCountry>(EXTRA_COUNTRIES)
+                    as ArrayList<SupportedDomainCountry>
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

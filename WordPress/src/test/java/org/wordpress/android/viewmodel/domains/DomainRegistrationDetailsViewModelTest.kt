@@ -497,7 +497,9 @@ class DomainRegistrationDetailsViewModelTest {
         } else {
             OnDomainSupportedStatesFetched(states, null)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == SiteAction.FETCH_DOMAIN_SUPPORTED_STATES })).then {
+        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
+            it.type == SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
+        })).then {
             viewModel.onDomainSupportedStatesFetched(event)
         }
     }
@@ -519,7 +521,9 @@ class DomainRegistrationDetailsViewModelTest {
         } else {
             OnShoppingCartCreated(createShoppingCartResponse)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == TransactionAction.CREATE_SHOPPING_CART })).then {
+        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
+            it.type == TransactionAction.CREATE_SHOPPING_CART
+        })).then {
             viewModel.onShoppingCartCreated(event)
         }
     }
@@ -530,7 +534,9 @@ class DomainRegistrationDetailsViewModelTest {
         } else {
             OnShoppingCartRedeemed(true)
         }
-        whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == TransactionAction.REDEEM_CART_WITH_CREDITS })).then {
+        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
+            it.type == TransactionAction.REDEEM_CART_WITH_CREDITS
+        })).then {
             viewModel.onCartRedeemed(event)
         }
     }
