@@ -8,19 +8,18 @@ import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import org.wordpress.android.R.color
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_text_item
+        R.layout.stats_block_text_item
 ) {
-    private val text = itemView.findViewById<TextView>(id.text)
+    private val text = itemView.findViewById<TextView>(R.id.text)
     fun bind(textItem: Text) {
         val loadedText = textItem.text
                 ?: textItem.textResource?.let { text.resources.getString(textItem.textResource) } ?: ""
@@ -29,6 +28,9 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             spannableString.withClickableSpan(text.context, link.link) {
                 link.navigationAction.click()
             }
+        }
+        textItem.bolds?.forEach { bold ->
+            spannableString.withBoldSpan(bold)
         }
         text.text = spannableString
         text.linksClickable = true
@@ -48,7 +50,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             override fun updateDrawState(ds: TextPaint?) {
                 ds?.color = ContextCompat.getColor(
                         context,
-                        color.primary_500
+                        R.color.primary_500
                 )
                 ds?.typeface = Typeface.create(
                         Typeface.DEFAULT_BOLD,
@@ -62,6 +64,17 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 clickableSpan,
                 clickablePartStart,
                 clickablePartStart + clickablePart.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        return this
+    }
+
+    private fun SpannableString.withBoldSpan(boldPart: String): SpannableString {
+        val boldPartIndex = indexOf(boldPart)
+        setSpan(
+                StyleSpan(Typeface.BOLD),
+                boldPartIndex,
+                boldPartIndex + boldPart.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         return this

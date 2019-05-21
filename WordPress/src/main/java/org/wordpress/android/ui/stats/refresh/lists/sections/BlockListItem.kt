@@ -6,12 +6,15 @@ import android.view.View
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
@@ -22,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
@@ -36,6 +40,9 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        BIG_TITLE,
+        TAG_ITEM,
+        IMAGE_ITEM,
         VALUE_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
@@ -55,7 +62,8 @@ sealed class BlockListItem(val type: Type) {
         ACTIVITY_ITEM,
         REFERRED_ITEM,
         QUICK_SCAN_ITEM,
-        LINK_BUTTON
+        LINK_BUTTON,
+        DIALOG_BUTTONS
     }
 
     data class Title(
@@ -63,6 +71,18 @@ sealed class BlockListItem(val type: Type) {
         val text: String? = null,
         val menuAction: ((View) -> Unit)? = null
     ) : BlockListItem(TITLE)
+
+    data class BigTitle(
+        @StringRes val textResource: Int
+    ) : BlockListItem(BIG_TITLE)
+
+    data class Tag(
+        @StringRes val textResource: Int
+    ) : BlockListItem(TAG_ITEM)
+
+    data class ImageItem(
+        @DrawableRes val imageResource: Int
+    ) : BlockListItem(IMAGE_ITEM)
 
     data class ReferredItem(
         @StringRes val label: Int,
@@ -125,6 +145,7 @@ sealed class BlockListItem(val type: Type) {
         val text: String? = null,
         val textResource: Int? = null,
         val links: List<Clickable>? = null,
+        val bolds: List<String>? = null,
         val isLast: Boolean = false
     ) :
             BlockListItem(TEXT) {
@@ -154,6 +175,13 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val text: Int,
         val navigateAction: NavigationAction
     ) : BlockListItem(LINK_BUTTON)
+
+    data class DialogButtons(
+        @StringRes val positiveButtonText: Int,
+        val positiveAction: NavigationAction,
+        @StringRes val negativeButtonText: Int,
+        val negativeAction: NavigationAction
+    ) : BlockListItem(DIALOG_BUTTONS)
 
     data class BarChartItem(
         val entries: List<Bar>,

@@ -97,6 +97,27 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
 }
 
 /**
+ * Merges two LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @return new data source
+ */
+fun <T> merge(sourceA: LiveData<T>?, sourceB: LiveData<T>?): MediatorLiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    if (sourceA != null) {
+        mediator.addSource(sourceA) {
+            mediator.value = it
+        }
+    }
+    if (sourceB != null) {
+        mediator.addSource(sourceB) {
+            mediator.value = it
+        }
+    }
+    return mediator
+}
+
+/**
  * Merges three LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source
  * @param sourceB second source
