@@ -49,8 +49,6 @@ public class EditorPage {
         editor.perform(typeText(postContent), ViewActions.closeSoftKeyboard());
     }
 
-
-
     // Image needs a little time to be uploaded after entering the image
     public void enterImage() {
         // Click on add media button
