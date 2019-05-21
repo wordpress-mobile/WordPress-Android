@@ -20,6 +20,9 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 
 /**
  * Tests for structured concurrency in [LocalDraftUploadStarter].
+ *
+ * This is intentionally a separate class from [LocalDraftUploadStarterTest] because this contains non-deterministic
+ * tests.
  */
 @RunWith(MockitoJUnitRunner::class)
 class LocalDraftUploadStarterConcurrentTest {
