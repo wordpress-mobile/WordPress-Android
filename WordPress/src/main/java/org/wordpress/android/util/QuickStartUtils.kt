@@ -83,7 +83,6 @@ class QuickStartUtils {
             formattedMessage = formattedMessage.replaceFirst(spanTagEnd, "")
             formattedMessage = formattedMessage.replaceFirst("  ", " ")
 
-
             val mutableSpannedMessage = SpannableStringBuilder(formattedMessage)
             // nothing to highlight
             if (startOfHighlight != -1 && endOfHighlight != -1) {
