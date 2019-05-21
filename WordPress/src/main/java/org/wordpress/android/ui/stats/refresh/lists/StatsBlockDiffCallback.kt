@@ -3,9 +3,9 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.support.v7.util.DiffUtil.Callback
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Control
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 
 class StatsBlockDiffCallback(
     private val oldList: List<StatsBlock>,

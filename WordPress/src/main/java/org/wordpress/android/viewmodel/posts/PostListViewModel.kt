@@ -24,6 +24,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -44,6 +45,7 @@ class PostListViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val localDraftUploadStarter: LocalDraftUploadStarter,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
@@ -147,8 +149,9 @@ class PostListViewModel @Inject constructor(
 
     // Public Methods
 
-    fun fetchFirstPage() {
-        pagedListWrapper.fetchFirstPage()
+    fun swipeToRefresh() {
+        localDraftUploadStarter.queueUploadFromSite(connector.site)
+        fetchFirstPage()
     }
 
     fun scrollToPost(localPostId: LocalPostId) {
@@ -162,6 +165,10 @@ class PostListViewModel @Inject constructor(
     }
 
     // Utils
+
+    private fun fetchFirstPage() {
+        pagedListWrapper.fetchFirstPage()
+    }
 
     private fun onDataUpdated(data: PagedPostList) {
         val localPostId = scrollToLocalPostId

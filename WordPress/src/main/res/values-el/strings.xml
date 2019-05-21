@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-27 08:11:21+0000
+Translation-Revision-Date: 2019-05-10 13:09:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
@@ -150,12 +150,10 @@ Language: el_GR
     <string name="reader_empty_followed_tags_title">Δεν ακολουθείτε ετικέτες</string>
     <string name="login_to_to_connect_jetpack">Συνδεθείτε στο WordPress.com λογαριασμό σας που χρησιμοποιείτε για να συνδεθείτε με το Jetpack.</string>
     <string name="install_jetpack_retry">Προσπαθήστε ξανά</string>
-    <string name="install_jetpack_continue">Συνέχεια</string>
-    <string name="jetpack_installation_problem_message">Το Jetpack δεν ήταν δυνατό να εγκατασταθεί αυτή τη στιγμή</string>
+    <string name="jetpack_installation_problem_message">Το Jetpack δεν ήταν δυνατό να εγκατασταθεί αυτή τη στιγμή.</string>
     <string name="jetpack_installation_problem">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="jetpack_installed_message">Έχετε εγκαταστήσει επιτυχώς το Jetpack στον ιστότοπο σας. Συγχαρητήρια!</string>
     <string name="jetpack_installed">Το Jetpack εγκαταστάθηκε</string>
-    <string name="installing_jetpack_message">Το Jetpack εγκαθίσταται στον ιστότοπο σας. Αυτό μπορεί να διαρκέσει μερικά λεπτά για να ολοκληρωθεί</string>
+    <string name="installing_jetpack_message">Το Jetpack εγκαθίσταται στον ιστότοπο σας. Αυτό μπορεί να διαρκέσει μερικά λεπτά για να ολοκληρωθεί.</string>
     <string name="installing_jetpack">Εγκατάσταση Jetpack</string>
     <string name="install_jetpack">Εγκατάσταση Jetpack</string>
     <string name="jetpack">Jetpack</string>
@@ -498,8 +496,8 @@ Language: el_GR
     <string name="menu_redo">Επανάληψη</string>
     <string name="menu_undo">Αναίρεση</string>
     <string name="editor_content_hint">Μοιραστείτε την ιστορία σας εδώ…</string>
-    <string name="post_status_trashed">Διαγραμμένα</string>
-    <string name="post_status_scheduled">Προγραμματισμένο</string>
+    <string name="post_list_trashed">Διαγραμμένα</string>
+    <string name="post_list_scheduled">Προγραμματισμένο</string>
     <string name="post_status_post_private">Ιδιωτικό</string>
     <string name="post_status_draft">Προσχέδιο</string>
     <string name="post_status_pending_review">Εκκρεμής αναθεώρηση</string>
@@ -1061,10 +1059,8 @@ Language: el_GR
     <string name="button_preview">Προεπισκόπηση</string>
     <string name="button_trash">Διαγραφή</string>
     <string name="button_stats">Στατιστικά</string>
-    <string name="button_back">Πίσω</string>
     <string name="stats_no_activity_this_period">Δεν υπήρξε δραστηριότητα αυτή την περίοδο</string>
     <string name="post_trashed">Το άρθρο στάλθηκε στα διαγραμμένα</string>
-    <string name="post_deleted">Το άρθρο διαγράφηκε</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Δεν έχετε εξουσιοδότηση για να συνδεθείτε σε αυτό τον ιστότοπο</string>
     <string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστότοπου</string>
     <string name="undo">Αναίρεση</string>

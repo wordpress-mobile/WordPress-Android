@@ -21,9 +21,7 @@ Language: az
     <string name="reader_short_like_count_multi">%s Bəyənmə</string>
     <string name="email">E-poçt</string>
     <string name="connectionbar_no_connection">Qoşulma yoxdur</string>
-    <string name="post_deleted">Yazı silindi</string>
     <string name="post_trashed">Yazını zibil qutusuna göndər</string>
-    <string name="button_back">Geri</string>
     <string name="button_stats">Statistikalar</string>
     <string name="button_trash">Zibil qutusu</string>
     <string name="button_preview">Önizləmə</string>

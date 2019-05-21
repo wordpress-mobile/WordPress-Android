@@ -4,9 +4,9 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.CONTROL
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR

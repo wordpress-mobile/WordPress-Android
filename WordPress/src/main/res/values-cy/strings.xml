@@ -420,10 +420,8 @@ Language: cy_GB
     <string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
     <string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
     <string name="connectionbar_no_connection">Dim cysylltiad</string>
-    <string name="post_deleted">Dilëwyd y dudalen</string>
     <string name="post_trashed">Anfonwyd y cofnod i\'r Sbwriel</string>
     <string name="stats_no_activity_this_period">Dim gweithgaredd yn ystod y cyfnod hwn</string>
-    <string name="button_back">Nôl</string>
     <string name="button_stats">Ystadegau</string>
     <string name="button_trash">Sbwriel</string>
     <string name="button_edit">Golygu</string>

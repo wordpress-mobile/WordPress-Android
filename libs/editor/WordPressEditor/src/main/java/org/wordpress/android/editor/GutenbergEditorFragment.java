@@ -63,6 +63,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
+    private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private boolean mHtmlModeEnabled;
 
@@ -216,18 +217,35 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClicked() {
-                        onToolbarMediaButtonClicked();
+                    @Override public void onMediaLibraryImageButtonClicked() {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddMediaImageClicked();
                     }
 
                     @Override
-                    public void onUploadMediaButtonClicked() {
+                    public void onMediaLibraryVideoButtonClicked() {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddMediaVideoClicked();
+                    }
+
+                    @Override
+                    public void onUploadPhotoButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
 
                     @Override
+                    public void onUploadVideoButtonClicked() {
+                        mEditorFragmentListener.onAddVideoClicked();
+                    }
+
+                    @Override
+                    public void onCaptureVideoButtonClicked() {
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_VIDEO_PERMISSION_REQUEST_CODE);
+                    }
+
+                    @Override
                     public void onCapturePhotoButtonClicked() {
-                        checkAndRequestCameraAndStoragePermissions();
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
                     }
 
                     @Override public void onRetryUploadForMediaClicked(int mediaId) {
@@ -307,9 +325,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
-            checkAndRequestCameraAndStoragePermissions();
-        }
+        checkAndRequestCameraAndStoragePermissions(requestCode);
     }
 
     private void setEditorProgressBarVisibility(boolean shown) {
@@ -341,10 +357,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private void checkAndRequestCameraAndStoragePermissions() {
+    private void checkAndRequestCameraAndStoragePermissions(int permissionRequestCode) {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
-                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
-            mEditorFragmentListener.onCapturePhotoClicked();
+                permissionRequestCode)) {
+            if (permissionRequestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCapturePhotoClicked();
+            } else if (permissionRequestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCaptureVideoClicked();
+            }
         }
     }
 
@@ -624,9 +644,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            getGutenbergContainerFragment().appendMediaFile(Integer.valueOf(mediaFile.getMediaId()), mediaUrl);
+            getGutenbergContainerFragment().appendMediaFile(
+                    Integer.valueOf(mediaFile.getMediaId()),
+                    mediaUrl,
+                    mediaFile.isVideo());
         } else {
-            getGutenbergContainerFragment().appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
+            getGutenbergContainerFragment().appendUploadMediaFile(
+                    mediaFile.getId(),
+                    "file://" + mediaUrl,
+                    mediaFile.isVideo());
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
         }
     }
@@ -743,35 +769,5 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
-    }
-
-    /**
-     * Returns true if a hardware keyboard is detected, otherwise false.
-     */
-    private boolean isHardwareKeyboardPresent() {
-        Configuration config = getResources().getConfiguration();
-        boolean returnValue = false;
-        if (config.keyboard != Configuration.KEYBOARD_NOKEYS) {
-            returnValue = true;
-        }
-        return returnValue;
-    }
-
-    public boolean onToolbarMediaButtonClicked() {
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-
-        if (isActionInProgress()) {
-            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-        }
-
-
-        getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mEditorFragmentListener.onAddMediaClicked();
-                }
-            });
-
-        return true;
     }
 }
