@@ -280,7 +280,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                         POSTAL_CODE -> affectedInputFields = arrayOf(postal_code_input)
                         CITY -> affectedInputFields = arrayOf(city_input)
                         STATE -> affectedInputFields = arrayOf(state_input)
-                        COUNTRY_CODE -> affectedInputFields = arrayOf(country_code_input)
+                        COUNTRY_CODE -> affectedInputFields = arrayOf(country_input)
                         EMAIL -> affectedInputFields = arrayOf(email_input)
                         PHONE -> affectedInputFields = arrayOf(country_code_input, phone_number_input)
                         else -> {

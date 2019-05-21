@@ -136,6 +136,9 @@ class DomainRegistrationDetailsViewModelTest {
         setupFetchSupportedCountriesDispatcher(false)
         setupFetchDomainContactInformationDispatcher(false)
         setupFetchStatesDispatcher(false)
+        setupCreateShoppingCartDispatcher(false)
+        setupRedeemShoppingCartDispatcher(false)
+        setupFetchSiteDispatcher(false)
 
         viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
         viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
@@ -215,7 +218,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun errorFetchingDomainContactInformationDuringPreload() = test {
-        setupFetchSupportedCountriesDispatcher(false)
         setupFetchDomainContactInformationDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
@@ -240,8 +242,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun errorFetchingStatesDuringPreload() = test {
-        setupFetchSupportedCountriesDispatcher(false)
-        setupFetchDomainContactInformationDispatcher(false)
         setupFetchStatesDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
@@ -302,6 +302,7 @@ class DomainRegistrationDetailsViewModelTest {
         validateFetchStatesAction(actionsDispatched[3], secondaryCountry.code)
 
         Assertions.assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
+        Assertions.assertThat(viewModel.domainContactDetails.value?.state).isNull()
 
         verify(selectedStateObserver, times(2)).onChanged(null)
         Assertions.assertThat(viewModel.selectedState.value).isNull()
@@ -354,13 +355,12 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun onRegisterDomainButtonClicked() = test {
-        setupCreateShoppingCartDispatcher(false)
-        setupRedeemShoppingCartDispatcher(false)
-        setupFetchSiteDispatcher(false)
-
         viewModel.start(site, domainProductDetails)
 
         viewModel.onRegisterDomainButtonClicked()
+
+        Assertions.assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo(primaryCountry.code)
+        Assertions.assertThat(viewModel.domainContactDetails.value?.state).isEqualTo(primaryState.code)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher, times(6)).dispatch(captor.capture())
@@ -401,7 +401,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun onErrorRedeemingCart() = test {
-        setupCreateShoppingCartDispatcher(false)
         setupRedeemShoppingCartDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
@@ -424,8 +423,6 @@ class DomainRegistrationDetailsViewModelTest {
 
     @Test
     fun onErrorFetchingSite() = test {
-        setupCreateShoppingCartDispatcher(false)
-        setupRedeemShoppingCartDispatcher(false)
         setupFetchSiteDispatcher(true)
 
         viewModel.start(site, domainProductDetails)

@@ -234,6 +234,10 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     fun onRegisterDomainButtonClicked() {
         _registrationProgressIndicatorVisible.value = true
+        _domainContactDetails.value = _domainContactDetails.value?.copy(
+                countryCode = selectedCountry.value?.code,
+                state = selectedState.value?.code
+        )
         dispatcher.dispatch(
                 TransactionActionBuilder.newCreateShoppingCartAction(
                         CreateShoppingCartPayload(
