@@ -125,7 +125,7 @@ class LocalDraftUploadStarter @Inject constructor(
     /**
      * This is meant to be used by [checkConnectionAndUpload] only.
      */
-    private suspend fun upload(site: SiteModel) {
+    private suspend fun upload(site: SiteModel) = coroutineScope {
         val posts = async { postStore.getLocalDraftPosts(site) }
         val pages = async { pageStore.getLocalDraftPages(site) }
 
