@@ -323,6 +323,26 @@ class DomainRegistrationDetailsViewModelTest {
     }
 
     @Test
+    fun onSameCountrySelected() = test {
+        viewModel.start(site, domainProductDetails)
+
+        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(primaryCountry)
+        viewModel.onCountrySelected(primaryCountry)
+
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher, times(3)).dispatch(captor.capture())
+
+        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(primaryCountry)
+
+        verify(selectedStateObserver, times(1)).onChanged(primaryState)
+        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(primaryState)
+
+        verify(selectedCountryObserver, times(1)).onChanged(primaryCountry)
+
+        verify(stateInputVisibleObserver, times(1)).onChanged(true)
+    }
+
+    @Test
     fun onStateSelected() = test {
         viewModel.start(site, domainProductDetails)
 
