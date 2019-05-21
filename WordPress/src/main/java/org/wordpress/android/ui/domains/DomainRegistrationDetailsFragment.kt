@@ -232,12 +232,12 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
             }
         })
 
-        viewModel.stateInputVisible.observe(this,
+        viewModel.stateInputEnabled.observe(this,
                 Observer<Boolean> { stateInputVisible ->
                     if (stateInputVisible != null && stateInputVisible) {
-                        showStateInput()
+                        enableStateInput()
                     } else {
-                        hideStatesInput()
+                        disableStateInput()
                     }
                 })
 
@@ -422,18 +422,22 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
     private fun showStateProgress() {
         states_loading_progress_indicator.visibility = View.VISIBLE
+        state_input_container.isEnabled = false
     }
 
     private fun hideStateProgress() {
         states_loading_progress_indicator.visibility = View.GONE
+        state_input_container.isEnabled = true
     }
 
-    private fun showStateInput() {
-        state_container.visibility = View.VISIBLE
+    private fun enableStateInput() {
+        state_input_container.isEnabled = true
+        state_input_container.hint = getString(R.string.domain_contact_information_state_hint)
     }
 
-    private fun hideStatesInput() {
-        state_container.visibility = View.GONE
+    private fun disableStateInput() {
+        state_input_container.isEnabled = false
+        state_input_container.hint = getString(R.string.domain_contact_information_state_not_available_hint)
     }
 
     private fun showDomainRegistrationProgressDialog() {

@@ -41,9 +41,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private var isStarted = false
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
-    private val supportedStates = MutableLiveData<List<SupportedStateResponse>>()
+    private val _supportedStates = MutableLiveData<List<SupportedStateResponse>>()
 
-    val stateInputVisible: LiveData<Boolean> = Transformations.map(supportedStates) { it?.isNotEmpty() ?: false }
+    val stateInputEnabled: LiveData<Boolean> = Transformations.map(_supportedStates) { it?.isNotEmpty() ?: false }
 
     private val _selectedCountry = MutableLiveData<SupportedDomainCountry>()
     val selectedCountry: LiveData<SupportedDomainCountry>
@@ -116,13 +116,12 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         }
         this.site = site
         this.domainProductDetails = domainProductDetails
-        if (domainContactDetails.value == null) {
-            fetchSupportedCountries()
-        }
+        fetchSupportedCountries()
 
         if (privacyProtectionState.value == null) {
             _privacyProtectionState.value = true
         }
+        isStarted = true
     }
 
     private fun fetchSupportedCountries() {
@@ -169,7 +168,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
         } else {
             _selectedState.value = event.supportedStates?.firstOrNull { it.code == domainContactDetails.value!!.state }
-            supportedStates.value = event.supportedStates
+            _supportedStates.value = event.supportedStates
         }
     }
 
@@ -230,7 +229,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     }
 
     fun onStateSelectorClicked() {
-        _showStatePickerDialog.value = supportedStates.value
+        _showStatePickerDialog.value = _supportedStates.value
     }
 
     fun onRegisterDomainButtonClicked() {
@@ -248,11 +247,14 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     }
 
     fun onCountrySelected(country: SupportedDomainCountry) {
-        _selectedCountry.value = country
-        _selectedState.value = null
-        _statesProgressIndicatorVisible.value = true
-        _domainRegistrationButtonEnabled.value = false
-        dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(country.code))
+        if (country != _selectedCountry.value) {
+            _selectedCountry.value = country
+            _domainContactDetails.value = _domainContactDetails.value?.copy(countryCode = country.code, state = null)
+            _selectedState.value = null
+            _statesProgressIndicatorVisible.value = true
+            _domainRegistrationButtonEnabled.value = false
+            dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(country.code))
+        }
     }
 
     fun onStateSelected(state: SupportedStateResponse) {
@@ -264,7 +266,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     }
 
     fun onDomainContactDetailsChanged(domainContactModel: DomainContactModel) {
-        _domainContactDetails.value = domainContactModel
+        if (formProgressIndicatorVisible.value == false) {
+            _domainContactDetails.value = domainContactModel
+        }
     }
 
     fun togglePrivacyProtection(isEnabled: Boolean) {

@@ -1991,6 +1991,7 @@
     <string name="domain_contact_information_address_hint_two">Address 2</string>
     <string name="domain_contact_information_city_hint">City</string>
     <string name="domain_contact_information_state_hint">State</string>
+    <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_register_domain_button">Register Domain</string>
     <string name="domain_registration_result_title">Congratulations</string>
