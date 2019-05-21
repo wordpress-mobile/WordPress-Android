@@ -423,6 +423,8 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
+        localDraftUploadStarter.queueUploadFromSite(site)
+
         launch {
             reloadPages(FETCHING)
         }

@@ -162,6 +162,20 @@ class PagesViewModelTest {
         verifyNoMoreInteractions(localDraftUploadStarter)
     }
 
+    @Test
+    fun onPullToRefreshUploadsAllLocalDrafts() = runBlocking {
+        // Arrange
+        initSearch()
+
+        // Act
+        viewModel.onPullToRefresh()
+
+        // Assert
+        // We get 2 calls because the `viewModel.start()` also requests an upload
+        verify(localDraftUploadStarter, times(2)).queueUploadFromSite(eq(site))
+        verifyNoMoreInteractions(localDraftUploadStarter)
+    }
+
     private suspend fun initSearch() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
