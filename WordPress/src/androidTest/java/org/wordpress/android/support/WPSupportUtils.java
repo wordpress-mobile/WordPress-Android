@@ -104,7 +104,7 @@ public class WPSupportUtils {
             UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
                     "org.wordpress.android:id/" + resourceID)).click();
         } catch (UiObjectNotFoundException e) {
-            System.out.println("Could not find media button to click");
+            System.out.println("Could not find button with Resource ID:" + resourceID + " to click");
         }
     }
 
