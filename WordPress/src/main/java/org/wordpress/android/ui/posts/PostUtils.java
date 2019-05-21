@@ -164,7 +164,7 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenPostAnalytics(PostModel post, SiteModel site) {
+    public static void trackOpenEditorAnalytics(PostModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());

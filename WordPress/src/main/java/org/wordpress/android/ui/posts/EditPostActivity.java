@@ -530,7 +530,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             // Bump the stat the first time the editor is opened.
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+            PostUtils.trackOpenEditorAnalytics(mPost, mSite);
         }
 
         if (mIsNewPost) {
