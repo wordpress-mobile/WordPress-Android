@@ -6,6 +6,9 @@ import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import org.wordpress.android.util.image.ImageType;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
@@ -88,6 +92,20 @@ public class WPSupportUtils {
         waitForElementToBeDisplayed(viewInteraction);
         viewInteraction.perform(click());
         idleFor(500);   // allow for transitions
+    }
+
+    /**
+     * Uses UIAutomator to click on an element using the resource ID in the cases of flakiness in Espresso click
+     * performing a long click
+     * @param resourceID - String resource ID
+     */
+    public static void clickOn(String resourceID) {
+        try {
+            UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
+                    "org.wordpress.android:id/" + resourceID)).click();
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("Could not find media button to click");
+        }
     }
 
     public static void longClickOn(Integer elementID) {

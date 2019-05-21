@@ -33,11 +33,13 @@ public class EditorPage {
     private static ViewInteraction editor = onView(withId(R.id.aztec));
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
+    private static ViewInteraction mediaLibraryButton = onView(withId(R.id.media_bar_button_library));
     private static ViewInteraction publishConfirmation = onView(allOf(
             withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
     private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
+
 
     public EditorPage() {
         editor.check(matches(isDisplayed()));
@@ -51,19 +53,16 @@ public class EditorPage {
         editor.perform(typeText(postContent), ViewActions.closeSoftKeyboard());
     }
 
-    public void clickAddMediaButton() {
-        try {
-            UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
-                    "org.wordpress.android:id/media_button_container")).click();
-        } catch (UiObjectNotFoundException e) {
-            System.out.println("Could not find media button to click");
-        }
-    }
+
 
     // Image needs a little time to be uploaded after entering the image
     public void enterImage() {
         // Click on add media button
-        clickAddMediaButton();
+        String addMediaButtonId = "media_button_container";
+        clickOn(addMediaButtonId);
+
+        String mediaBarButtonId = "media_bar_button_library";
+        clickOn(mediaBarButtonId);
 
         if (isElementDisplayed(allowMediaAccessButton)) {
             // Click on Allow button
@@ -71,7 +70,7 @@ public class EditorPage {
         }
 
         // Click on a random image
-        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
 
         // Click the confirm button
         clickOn(confirmButton);
