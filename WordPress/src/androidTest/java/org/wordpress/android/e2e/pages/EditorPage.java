@@ -2,9 +2,6 @@ package org.wordpress.android.e2e.pages;
 
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-import android.support.test.uiautomator.UiSelector;
 
 import org.wordpress.android.R;
 
@@ -33,7 +30,6 @@ public class EditorPage {
     private static ViewInteraction editor = onView(withId(R.id.aztec));
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
-    private static ViewInteraction mediaLibraryButton = onView(withId(R.id.media_bar_button_library));
     private static ViewInteraction publishConfirmation = onView(allOf(
             withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
