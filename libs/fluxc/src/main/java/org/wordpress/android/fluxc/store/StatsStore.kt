@@ -170,7 +170,7 @@ class StatsStore
         PUBLICIZE
     }
 
-    enum class ManagementType: StatsType {
+    enum class ManagementType : StatsType {
         NEWS_CARD,
         CONTROL
     }
