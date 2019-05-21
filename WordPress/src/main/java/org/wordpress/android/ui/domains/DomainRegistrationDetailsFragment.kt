@@ -487,7 +487,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
+            builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
             builder.setItems(states.map { it.name }.toTypedArray()) { _, which ->
                 if (targetFragment != null && targetFragment is OnStateSelectedListener) {
                     (targetFragment as OnStateSelectedListener).onStateSelected(states[which])
