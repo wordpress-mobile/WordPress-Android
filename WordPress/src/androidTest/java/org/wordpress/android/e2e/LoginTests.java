@@ -32,15 +32,12 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void loginWithEmailPassword() {
-        new LoginFlow().loginEmailPassword();
+        wpLogin();
     }
 
     @Test
     public void loginWithSiteAddress() {
-        new LoginFlow().loginSiteAddress(
-                E2E_WP_COM_USER_SITE_ADDRESS,
-                E2E_WP_COM_USER_USERNAME,
-                E2E_WP_COM_USER_PASSWORD);
+        new LoginFlow().loginEmailPassword();
     }
 
     @Test
