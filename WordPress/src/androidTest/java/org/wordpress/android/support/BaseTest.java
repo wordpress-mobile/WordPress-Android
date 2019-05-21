@@ -80,10 +80,7 @@ public class BaseTest {
     }
     protected void wpLogin() {
         logoutIfNecessary();
-        new LoginFlow().loginSiteAddress(
-                E2E_WP_COM_USER_SITE_ADDRESS,
-                E2E_WP_COM_USER_USERNAME,
-                E2E_WP_COM_USER_PASSWORD);
+        new LoginFlow().loginEmailPassword();
     }
 
     protected void wpLogout() {
