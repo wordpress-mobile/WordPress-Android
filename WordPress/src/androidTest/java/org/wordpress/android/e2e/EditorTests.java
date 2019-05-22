@@ -4,6 +4,7 @@ import android.Manifest.permission;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.R;
@@ -32,12 +33,16 @@ public class EditorTests extends BaseTest {
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
 
+    @Before
+    public void setUp() {
+        logoutIfNecessary();
+        wpLogin();
+    }
+
     @Test
     public void testPublishSimplePost() {
         String title = "Hello Espresso!";
         String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-
-        loginIfNecessary();
 
         MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
         sleep();
@@ -62,8 +67,6 @@ public class EditorTests extends BaseTest {
         String category = "Android Test";
         long now = Instant.now().toEpochMilli();
         String tag = "Tag " + now;
-
-        loginIfNecessary();
 
         MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
         sleep();

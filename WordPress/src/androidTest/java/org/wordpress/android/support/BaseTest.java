@@ -57,16 +57,6 @@ public class BaseTest {
         }
     }
 
-    protected void loginIfNecessary() {
-        if (isElementDisplayed(R.id.nav_me)) {
-            return;
-        }
-
-        if (isElementDisplayed(R.id.login_button) || isElementDisplayed(R.id.login_open_email_client)) {
-            wpLogin();
-        }
-    }
-
     protected void logoutIfNecessary() {
         if (isElementDisplayed(R.id.login_button) || isElementDisplayed(R.id.login_open_email_client)) {
             return;
