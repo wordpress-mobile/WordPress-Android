@@ -26,7 +26,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -48,7 +47,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
-import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
@@ -965,18 +963,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPlansFetched(OnPlansFetched event) {
-        if (event.isError()) {
-            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message);
-        } else {
-            MySiteFragment fragment = getMySiteFragment();
-            if (fragment != null) {
-                fragment.updateDomainRegistrationCtaIfDomainCreditAvailable(event.plans);
-            }
-        }
-    }
-
     /**
      * Bumps stats related to a magic link sign up provided the account has been updated with
      * the username and email address needed to refresh analytics meta data.
@@ -1061,25 +1047,10 @@ public class WPMainActivity extends AppCompatActivity implements
         AppPrefs.setSelectedSite(selectedSite.getId());
 
         updateTitle();
-        if (siteChanged) {
-            MySiteFragment fragment = getMySiteFragment();
-            if (fragment != null) {
-                fragment.hideDomainRegistrationCta();
-            }
-            fetchPlans(selectedSite);
-        }
     }
 
     private boolean didSiteChange(@Nullable SiteModel oldSite, @Nullable SiteModel newSite) {
         return oldSite != null && newSite != null && oldSite.getId() != newSite.getId();
-    }
-
-    private void fetchPlans(@Nullable SiteModel site) {
-        // plans are only needed to decide if we should should the domain registration cta, so if domain
-        // registration is not enabled then don't bother fetching the plans
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
-        }
     }
 
     /**
@@ -1096,7 +1067,6 @@ public class WPMainActivity extends AppCompatActivity implements
             // If saved site exist, then return, else (site has been removed?) try to select another site
             if (mSelectedSite != null) {
                 updateTitle();
-                fetchPlans(mSelectedSite);
                 return;
             }
         }

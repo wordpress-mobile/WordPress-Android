@@ -30,6 +30,8 @@ import android.widget.TextView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -39,13 +41,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
+import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -94,7 +96,6 @@ import org.wordpress.android.widgets.WPTextView;
 import java.io.File;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
@@ -126,6 +127,7 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
     public static final String KEY_IS_DOMAIN_REGISTRATION_VISIBLE = "KEY_IS_DOMAIN_REGISTRATION_VISIBLE";
+    public static final String KEY_DOMAIN_REGISTRATION_SITE_ID = "KEY_DOMAIN_REGISTRATION_SITE_ID";
 
     private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -166,6 +168,7 @@ public class MySiteFragment extends Fragment implements
 
     private int mBlavatarSz;
     private boolean mIsDomainRegistrationCtaVisible = false;
+    private int mDomainRegistrationSiteId = -1;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -194,6 +197,7 @@ public class MySiteFragment extends Fragment implements
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
             mIsDomainRegistrationCtaVisible = savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_VISIBLE, false);
+            mDomainRegistrationSiteId = savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_SITE_ID, -1);
         }
     }
 
@@ -228,6 +232,7 @@ public class MySiteFragment extends Fragment implements
         }
 
         showQuickStartNoticeIfNecessary();
+        fetchPlansIfNecessary(site);
     }
 
     private void showQuickStartNoticeIfNecessary() {
@@ -297,6 +302,7 @@ public class MySiteFragment extends Fragment implements
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
         outState.putBoolean(KEY_IS_DOMAIN_REGISTRATION_VISIBLE, mIsDomainRegistrationCtaVisible);
+        outState.putInt(KEY_DOMAIN_REGISTRATION_SITE_ID, mDomainRegistrationSiteId);
     }
 
     private void updateSiteSettingsIfNecessary() {
@@ -563,25 +569,6 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
-    }
-
-    public void updateDomainRegistrationCtaIfDomainCreditAvailable(List<PlanModel> plans) {
-        mIsDomainRegistrationCtaVisible = isDomainCreditAvailable(plans);
-        updateDomainRegistrationCta();
-    }
-
-    public void hideDomainRegistrationCta() {
-        mIsDomainRegistrationCtaVisible = false;
-        updateDomainRegistrationCta();
-    }
-
-    private void updateDomainRegistrationCta() {
-        // only show the Domain Registration CTA if domain registration is enabled
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainRegistrationCtaVisible) {
-            mDomainRegistrationCta.setVisibility(View.VISIBLE);
-        } else {
-            mDomainRegistrationCta.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -1012,6 +999,7 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void onStop() {
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -1019,6 +1007,7 @@ public class MySiteFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
@@ -1041,6 +1030,7 @@ public class MySiteFragment extends Fragment implements
     public void onSiteChanged(SiteModel site) {
         refreshSelectedSiteDetails(site);
         showSiteIconProgressBar(false);
+        fetchPlansIfNecessary(site);
     }
 
     @SuppressWarnings("unused")
@@ -1138,6 +1128,15 @@ public class MySiteFragment extends Fragment implements
         updateQuickStartContainer();
     }
 
+    private void updateDomainRegistrationCta() {
+        // only show the Domain Registration CTA if domain registration is enabled
+        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainRegistrationCtaVisible) {
+            mDomainRegistrationCta.setVisibility(View.VISIBLE);
+        } else {
+            mDomainRegistrationCta.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
@@ -1221,6 +1220,29 @@ public class MySiteFragment extends Fragment implements
 
     @Override
     public void onCredentialsValidated(Exception error) {
+    }
+
+    private void fetchPlansIfNecessary(@Nullable SiteModel site) {
+        // plans only need to be fetched if domain registration is enabled
+        // AND site has been changed to something that is non-null
+        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && site != null && site.getId() != mDomainRegistrationSiteId) {
+            mIsDomainRegistrationCtaVisible = false;
+            mDomainRegistrationSiteId = site.getId();
+
+            updateDomainRegistrationCta();
+
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlansFetched(OnPlansFetched event) {
+        if (event.isError()) {
+            AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message);
+        } else {
+            mIsDomainRegistrationCtaVisible = isDomainCreditAvailable(event.plans);
+            updateDomainRegistrationCta();
+        }
     }
 
     private Runnable mAddQuickStartFocusPointTask = new Runnable() {
