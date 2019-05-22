@@ -528,9 +528,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
-        if (mIsNewPost) {
+        // Bump post created analytics only once, first time the editor is opened
+        if (mIsNewPost && savedInstanceState == null) {
             trackEditorCreatedPost(action, getIntent());
-        } else {
+        }
+
+        if (!mIsNewPost) {
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mPost);
