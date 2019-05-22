@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-30 09:54:32+0000
+Translation-Revision-Date: 2019-05-14 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="post_list_drafts">Konsep</string>
+    <string name="post_list_published">Dipublikasikan</string>
+    <string name="post_list_author_everyone">Setiap Orang</string>
+    <string name="post_list_author_me">Saya</string>
+    <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
+    <string name="backdated_for">Dimundurkan selama: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Item yang ditampilkan di atas akan ditampilkan di tab Wawasan. Seret dan lepas untuk menyesuaikan.</string>
+    <string name="stats_insights_add_insights_header">Tambahkan Wawasan</string>
+    <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
+    <string name="stats_insights_social">Sosial</string>
+    <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
+    <string name="stats_view_follower_totals">Total Pengikut</string>
+    <string name="suggestion_fetch_error">Saran domain tidak dapat dimuat</string>
+    <string name="suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
+    <string name="suggestions_empty_list">Saran tidak ditemukan</string>
+    <string name="choose_domain">Pilih Domain</string>
+    <string name="register_domain">Daftarkan Domain</string>
+    <string name="jetpack_installed_message">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
+    <string name="stats_menu_remove">Hapus dari wawasan</string>
+    <string name="stats_menu_move_down">Geser bawah</string>
+    <string name="stats_menu_move_up">Geser atas</string>
+    <string name="stats_item_settings">Pengaturan item statistik</string>
+    <string name="post_moving_to_draft">Pos sedang dipindahkan ke konsep</string>
+    <string name="post_restoring">Pos sedang dipulihkan</string>
+    <string name="post_restored">Pos dipulihkan</string>
+    <string name="post_trashing">Pos sedang dibuang</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Perubahan lokal</string>
+    <string name="button_move_to_draft">Pindahkan ke Konsep</string>
+    <string name="post_list_toggle_item_layout_list_view">Beralih ke tampilan daftar</string>
+    <string name="post_list_toggle_item_layout_cards_view">Beralih ke tampilan kartu</string>
+    <string name="posts_trashed_empty">Anda tidak memiliki pos yang dibuang</string>
+    <string name="posts_draft_empty">Anda tidak memiliki pos konsep</string>
+    <string name="posts_scheduled_empty">Anda belum memiliki pos terjadwal</string>
+    <string name="posts_published_empty">Anda belum memublikasikan pos sama sekali</string>
     <string name="notification_wpcom_username_needed">Silakan login dengan nama pengguna dan kata sandi Anda.</string>
     <string name="login_invalid_site_url">Alamat situs yang Anda masukkan tidak valid. Harap masukkan lagi.</string>
     <string name="error_user_username_instead_of_email">Silakan login menggunakan nama pengguna WordPress.com sebagai ganti alamat email Anda.</string>
@@ -229,7 +264,6 @@ Language: id
     <string name="stats_followers_count_message">Total %1$s Pengikut: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Kelola informasi</string>
     <string name="stats_empty_insights_title">Belum ada informasi yang ditambahkan</string>
     <string name="stats_no_data_yet">Belum ada data</string>
     <string name="menu_debug">Menu Debug</string>
@@ -329,14 +363,9 @@ Language: id
     <string name="reader_empty_followed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="install_jetpack_retry">Coba lagi</string>
-    <string name="install_jetpack_continue">Lanjutkan</string>
-    <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini</string>
     <string name="jetpack_installation_problem">Ada masalah</string>
-    <string name="jetpack_installed_message">Jetpack sudah diinstal di situs Anda. Selamat!</string>
     <string name="jetpack_installed">Jetpack sudah diinstal</string>
-    <string name="installing_jetpack_message">Menginstal Jetpack di situs Anda. Mungkin perlu waktu beberapa menit untuk menyelesaikan proses ini</string>
     <string name="installing_jetpack">Menginstal Jetpack</string>
-    <string name="install_jetpack_message">Kredensial situs web Anda tidak akan disimpan dan hanya akan digunakan untuk tujuan penginstalan Jetpack</string>
     <string name="install_jetpack">Instal Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -627,7 +656,6 @@ Language: id
     <string name="dialog_confirm_publish_message_page">Halaman ini akan segera diterbitkan.</string>
     <string name="dialog_confirm_publish_message_post">Pos ini akan segera diterbitkan.</string>
     <string name="dialog_confirm_publish_title">Publikasikan Sekarang?</string>
-    <string name="dialog_confirm_delete_post">Pos ini akan dihapus dan dikirim ke Sampah</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d pos/halaman belum diunggah</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d halaman belum diunggah</string>
     <string name="media_file_page_singular_only_not_uploaded">1 halaman belum diunggah</string>
@@ -918,7 +946,6 @@ Language: id
     <string name="async_promo_title_publish">Publikasikan dengan Percaya Diri</string>
     <string name="editor_uploading_post">Pos Anda sedang diunggah</string>
     <string name="uploading_media">Mengunggah media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Apakah Anda yakin? Menghapus pos ini juga akan membatalkan unggahan media.</string>
     <string name="page_scheduled">Halaman yang dijadwalkan</string>
     <string name="post_scheduled">Pos dijadwalkan</string>
     <string name="button_retry">Coba lagi</string>
@@ -977,8 +1004,6 @@ Language: id
     <string name="editor_dropped_text_error">Terjadi error saat meletakkan teks</string>
     <string name="editor_dropped_html_images_not_allowed">Meletakkan gambar saat dalam mode HTML tidak diizinkan</string>
     <string name="editor_content_hint">Bagikan kisah Anda di sini…</string>
-    <string name="post_status_trashed">Dibuang</string>
-    <string name="post_status_scheduled">Dijadwalkan</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Konsep</string>
     <string name="post_status_pending_review">Menunggu peninjauan</string>
@@ -1567,10 +1592,8 @@ Language: id
     <string name="button_preview">Pratinjau</string>
     <string name="button_trash">Buang</string>
     <string name="button_stats">Statistik</string>
-    <string name="button_back">Kembali</string>
     <string name="stats_no_activity_this_period">Tidak ada aktivitas dalam periode ini</string>
     <string name="post_trashed">Pos dibuang ke tong sampah</string>
-    <string name="post_deleted">Pos dihapus</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Anda tidak memiliki izin untuk mengakses situs ini</string>
     <string name="reader_toast_err_follow_blog_not_found">Situs ini tidak ditemukan</string>
     <string name="undo">Urungkan</string>

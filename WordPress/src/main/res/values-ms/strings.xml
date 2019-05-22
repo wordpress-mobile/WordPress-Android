@@ -120,7 +120,6 @@ Language: ms
     <string name="async_promo_link">Bagaimana ianya berfungsi?</string>
     <string name="editor_uploading_post">Kiriman anda sedang dimuat naik</string>
     <string name="uploading_media">Memuat naik media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Anda pasti? Menghapuskan kiriman ini juga akan membatalkan muat naik media.</string>
     <string name="page_scheduled">Halaman dijadualkan</string>
     <string name="post_scheduled">Kiriman dijadualkan</string>
     <string name="button_retry">Cuba Semula</string>
@@ -179,8 +178,6 @@ Language: ms
     <string name="editor_dropped_text_error">Ralat berlaku semasa menjatuhkan teks</string>
     <string name="editor_dropped_html_images_not_allowed">Menjatuhkan imej sambil dalam mod HTML tidak dibenarkan</string>
     <string name="editor_content_hint">Kongsi cerita anda di sini…</string>
-    <string name="post_status_trashed">Disampah</string>
-    <string name="post_status_scheduled">Dijadualkan</string>
     <string name="post_status_post_private">Persendirian</string>
     <string name="post_status_draft">Draf</string>
     <string name="post_status_pending_review">Menunggu tinjauan</string>
@@ -763,10 +760,8 @@ Language: ms
     <string name="button_preview">Pratonton</string>
     <string name="button_trash">Sampah</string>
     <string name="button_stats">Statistik</string>
-    <string name="button_back">Kembali</string>
     <string name="stats_no_activity_this_period">Tiada aktiviti tempoh ini</string>
     <string name="post_trashed">Kiriman dihantar ke sampah</string>
-    <string name="post_deleted">Kiriman dihapuskan</string>
     <string name="undo">Kembali ke asal</string>
     <string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba lagi.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% yang dilihat</string>

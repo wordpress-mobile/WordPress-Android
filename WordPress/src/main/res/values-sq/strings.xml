@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-24 22:40:24+0000
+Translation-Revision-Date: 2019-05-09 10:07:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="post_list_drafts">Skica</string>
+    <string name="post_list_published">Të botuar</string>
+    <string name="post_list_author_everyone">Cilido</string>
+    <string name="post_list_author_me">Unë</string>
+    <string name="error_restoring_post">Ndodhi një gabim gjatë rikthimit të postimit</string>
+    <string name="stats_insights_add_insights_header">Shtoni Tendencë</string>
+    <string name="stats_insights_management_title">Shihni vetëm statistikat më me peshë. Shtoni dhe sistemoni më poshtë tendencat tuaja.</string>
+    <string name="stats_insights_social">Shoqërore</string>
+    <string name="stats_insights_annual_site_stats">Statistika Vjetore Sajti</string>
+    <string name="stats_view_follower_totals">Ndjekës Gjithsej</string>
+    <string name="suggestions_search_hint">Për më tepër ide, shtypni një fjalëkyç</string>
+    <string name="suggestions_empty_list">S’u gjetën sugjerime</string>
+    <string name="choose_domain">Zgjidhni Përkatësi</string>
+    <string name="register_domain">Regjistroni Përkatësi</string>
+    <string name="jetpack_installed_message">Tani që Jetpack-u është instaluar, na duhet vetëm t’ju bëjmë gati. Kjo do të hajë vetëm një minutë.</string>
+    <string name="stats_menu_remove">Hiqe prej tendencave</string>
+    <string name="stats_menu_move_down">Ule poshtë </string>
+    <string name="stats_menu_move_up">Ngjite sipër</string>
     <string name="notification_wpcom_username_needed">Ju lutemi, bëni hyrjen me emrin tuaj të përdoruesit dhe fjalëkalimin.</string>
     <string name="login_invalid_site_url">Adresa e sajtit që dhatë është e pavlefshme. Ju lutemi, rijepeni.</string>
     <string name="error_user_username_instead_of_email">Ju lutemi, hyni duke përdorur emrin tuaj të përdoruesit WordPress.com, në vend se adresën tuaj email.</string>
@@ -234,8 +252,7 @@ Language: sq_AL
     <string name="stats_followers_count_message">%1$s Ndjekës Gjithsej: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Administroni tendenca</string>
-    <string name="stats_empty_insights_description">Përshtatni tendencat tuaj dhe merrni faktet mbi funksionimin e sajtit tuaj</string>
+    <string name="stats_manage_insights">Administroni Tendenca</string>
     <string name="stats_empty_insights_title">S’janë shtuar ende tendenca</string>
     <string name="stats_no_data_yet">Ende pa të dhëna</string>
     <string name="menu_debug">Diagnostikoni Menunë</string>
@@ -343,14 +360,13 @@ Language: sq_AL
     <string name="reader_empty_followed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
     <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="install_jetpack_retry">Riprovoni</string>
-    <string name="install_jetpack_continue">Vazhdo</string>
-    <string name="jetpack_installation_problem_message">Jetpack-u s’u instalua dot këtë herë</string>
+    <string name="install_jetpack_continue">Ujdise</string>
+    <string name="jetpack_installation_problem_message">Jetpack-u s’u instalua dot këtë herë.</string>
     <string name="jetpack_installation_problem">Pati një problem</string>
-    <string name="jetpack_installed_message">E instaluat Jetpack-un në sajtin tuaj. Përgëzime!</string>
     <string name="jetpack_installed">Jetpack-u u instalua</string>
-    <string name="installing_jetpack_message">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të dojë ca minuta të plotësohet</string>
+    <string name="installing_jetpack_message">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të dojë ca minuta të plotësohet.</string>
     <string name="installing_jetpack">Iinstalim i Jetpack-ut</string>
-    <string name="install_jetpack_message">Kredencialet e hyrjes në sajtin tuaj nuk do të depozitohen dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut</string>
+    <string name="install_jetpack_message">Kredencialet e hyrjes në sajtin tuaj nuk do të depozitohen, dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut.</string>
     <string name="install_jetpack">Instaloni Jetpack-un</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ për Jetpack</string>
@@ -651,7 +667,6 @@ Language: sq_AL
     <string name="dialog_confirm_publish_message_page">Kjo faqe do të botohet menjëherë.</string>
     <string name="dialog_confirm_publish_message_post">Ky postim do të botohet menjëherë.</string>
     <string name="dialog_confirm_publish_title">Gati për Botim?</string>
-    <string name="dialog_confirm_delete_post">Ky postim do të fshihet dhe kalohet te Hedhurinat</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d postime / faqe të pangarkuara</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d faqe të pangarkuara</string>
     <string name="media_file_page_singular_only_not_uploaded">1 faqe e pangarkuar</string>
@@ -958,7 +973,6 @@ Language: sq_AL
     <string name="async_promo_title_publish">Botoni Me Vetëbesim</string>
     <string name="editor_uploading_post">Postimi juaj po ngarkohet</string>
     <string name="uploading_media">Po ngarkohet media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Jeni i sigurt? Fshirja e këtij postimi do të anulojë edhe ngarkimin e medias.</string>
     <string name="page_scheduled">Faqe e planifikuar për botim</string>
     <string name="post_scheduled">Postim i planifikuar për botim</string>
     <string name="button_retry">Riprovoni</string>
@@ -1017,8 +1031,8 @@ Language: sq_AL
     <string name="editor_dropped_text_error">Ndodhi një gabim gjatë lënies së tekstit</string>
     <string name="editor_dropped_html_images_not_allowed">Lënia e figurave teksa jeni nën mënyrën HTML nuk lejohet</string>
     <string name="editor_content_hint">Ndajeni shembullin tuaj me ta…</string>
-    <string name="post_status_trashed">I shpënë te hedhurinat</string>
-    <string name="post_status_scheduled">I planifikuar për botim</string>
+    <string name="post_list_trashed">I shpënë te hedhurinat</string>
+    <string name="post_list_scheduled">I planifikuar për botim</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Skicë</string>
     <string name="post_status_pending_review">Në pritje të shqyrtimit</string>
@@ -1619,10 +1633,8 @@ Language: sq_AL
     <string name="button_preview">Paraparje</string>
     <string name="button_trash">Hedhurina</string>
     <string name="button_stats">Statistika</string>
-    <string name="button_back">Mbrapsht</string>
     <string name="stats_no_activity_this_period">S’ka veprimtari për këtë periudhë</string>
     <string name="post_trashed">Postimi u kalua te hedhurinat</string>
-    <string name="post_deleted">Postimi u fshi</string>
     <string name="reader_toast_err_follow_blog_not_authorized">S’jeni i autorizuar të hyni në këtë sajt</string>
     <string name="reader_toast_err_follow_blog_not_found">Ky sajt s’u gjet dot</string>
     <string name="undo">Zhbëje</string>

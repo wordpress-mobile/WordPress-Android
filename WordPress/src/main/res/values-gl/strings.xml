@@ -466,10 +466,8 @@ Language: gl_ES
     <string name="button_preview">Vista previa</string>
     <string name="button_trash">Lixo</string>
     <string name="button_stats">Estatísticas</string>
-    <string name="button_back">Atrás</string>
     <string name="stats_no_activity_this_period">Non hai actividade neste período</string>
     <string name="post_trashed">Artigo botado ao lixo</string>
-    <string name="post_deleted">Artigo eliminado</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
     <string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
     <string name="undo">Desfacer</string>

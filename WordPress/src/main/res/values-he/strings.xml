@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-01 08:54:09+0000
+Translation-Revision-Date: 2019-05-15 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="post_list_drafts">טיוטות</string>
+    <string name="post_list_published">פורסם</string>
+    <string name="post_list_author_everyone">כולם</string>
+    <string name="post_list_author_me">אני</string>
+    <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
+    <string name="backdated_for">עדכון לתאריך הזה בעבר: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">הפריטים שמוצגים לעיל יופיעו בלשונית \'תובנות\'. ניתן לגרור ולשחרר כדי להתאים את הסדר.</string>
+    <string name="stats_insights_add_insights_header">הוספת תובנות</string>
+    <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
+    <string name="stats_insights_social">רשתות חברתיות</string>
+    <string name="stats_insights_annual_site_stats">נתונים סטטיסטיים שנתיים של האתר</string>
+    <string name="stats_view_follower_totals">נתונים כוללים של עוקבים</string>
+    <string name="suggestion_fetch_error">לא ניתן לטעון הצעות לדומיין</string>
+    <string name="suggestions_search_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
+    <string name="suggestions_empty_list">לא נמצאו הצעות</string>
+    <string name="choose_domain">בחירת דומיין</string>
+    <string name="register_domain">רישום דומיין</string>
+    <string name="jetpack_installed_message">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
+    <string name="stats_menu_remove">הסרה מהתובנות</string>
+    <string name="stats_menu_move_down">העברה למטה</string>
+    <string name="stats_menu_move_up">העברה למעלה</string>
+    <string name="stats_item_settings">הגדרות של פריט הנתונים הסטטיסטיים</string>
+    <string name="post_moving_to_draft">הפוסט מועבר לטיוטות</string>
+    <string name="post_restoring">הפוסט משוחזר</string>
+    <string name="post_restored">הפוסט שוחזר</string>
+    <string name="post_trashing">הפוסט מועבר לפח</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">העבר הפוסט לפח תבטל שינויים מקומיים, האם ברצונך להמשיך?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">שינויים מקומיים</string>
+    <string name="button_move_to_draft">העברה לטיוטות</string>
+    <string name="post_list_toggle_item_layout_list_view">החלפה לתצוגת רשימה</string>
+    <string name="post_list_toggle_item_layout_cards_view">החלפה לתצוגת כרטיסים</string>
+    <string name="posts_trashed_empty">אין לך פוסטים שהועברו לפח</string>
+    <string name="posts_draft_empty">אין לך אף פוסט שנשמר כטיוטה</string>
+    <string name="posts_scheduled_empty">אין לך אף פוסט מתוזמן לפרסום</string>
+    <string name="posts_published_empty">עדיין לא פרסמת אף פוסט</string>
     <string name="notification_wpcom_username_needed">עליך להיכנס באמצעות שם המשתמש והסיסמה שלך.</string>
     <string name="login_invalid_site_url">כתובת האתר שהזנת לא תקפה. יש להזין את הכתובת שוב.</string>
     <string name="error_user_username_instead_of_email">יש להיכנס באמצעות שם המשתמש ב-WordPress.com במקום כתובת המייל.</string>
@@ -229,7 +264,6 @@ Language: he_IL
     <string name="stats_followers_count_message">סך הכול %1$s עוקבים: %2$s</string>
     <string name="stats_followers_email">אימייל</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">ניהול תובנות</string>
     <string name="stats_empty_insights_title">עדיין לא נוספו תובנות</string>
     <string name="stats_no_data_yet">עדיין אין נתונים</string>
     <string name="menu_debug">תפריט איתור באגים</string>
@@ -333,14 +367,9 @@ Language: he_IL
     <string name="reader_empty_followed_tags_subtitle">ניתן להוסיף כאן תגיות כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="install_jetpack_retry">יש לנסות שנית</string>
-    <string name="install_jetpack_continue">המשך</string>
-    <string name="jetpack_installation_problem_message">אין אפשרות להתקין את Jetpack כעת</string>
     <string name="jetpack_installation_problem">הייתה בעיה</string>
-    <string name="jetpack_installed_message">השירות של Jetpack מותקן באתר שלך. ברכותינו!</string>
     <string name="jetpack_installed">Jetpack מותקן</string>
-    <string name="installing_jetpack_message">אנחנו מתקינים את Jetpack באתר שלך. השלב הזה יארך מספר דקות לפני השלמתו</string>
     <string name="installing_jetpack">מתקין את Jetpack</string>
-    <string name="install_jetpack_message">פרטי הכניסה שלך לאתר לא יאוחסנו. אנחנו משתמשים בהם כדי להתקין את Jetpack בלבד</string>
     <string name="install_jetpack">התקנת Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">שאלות נפוצות בנושא Jetpack</string>
@@ -641,7 +670,6 @@ Language: he_IL
     <string name="dialog_confirm_publish_message_page">עמוד זה יפורסם מייד.</string>
     <string name="dialog_confirm_publish_message_post">פוסט זה יפורסם מייד.</string>
     <string name="dialog_confirm_publish_title">הכול מוכן לפרסום?</string>
-    <string name="dialog_confirm_delete_post">פוסט זה יימחק ויועבר לפח</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d פוסטים / עמודים לא הועלו</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d עמודים לא הועלו</string>
     <string name="media_file_page_singular_only_not_uploaded">עמוד אחד לא הועלה</string>
@@ -948,7 +976,6 @@ Language: he_IL
     <string name="async_promo_title_publish">לפרסם בלי לחץ</string>
     <string name="editor_uploading_post">הפוסט נטען</string>
     <string name="uploading_media">מעלה מדיה…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">האם ההחלטה סופית? מחיקת הפוסט תבטל גם את העלאת המדיה.</string>
     <string name="page_scheduled">העמוד תוזמן לפרסום</string>
     <string name="post_scheduled">הפוסט תוזמן לפרסום</string>
     <string name="button_retry">לנסות שנית</string>
@@ -1007,8 +1034,6 @@ Language: he_IL
     <string name="editor_dropped_text_error">אירעה שגיאה בעת הוספת הטקסט</string>
     <string name="editor_dropped_html_images_not_allowed">אין אפשרות להוסיף תמונות כשהעורך במצב של HTML</string>
     <string name="editor_content_hint">כאן המקום לשתף את הסיפור שלך…</string>
-    <string name="post_status_trashed">הועבר לפח</string>
-    <string name="post_status_scheduled">מתוזמן לפרסום</string>
     <string name="post_status_post_private">פרטי</string>
     <string name="post_status_draft">טיוטה</string>
     <string name="post_status_pending_review">ממתין לתצוגה מקדימה</string>
@@ -1606,10 +1631,8 @@ Language: he_IL
     <string name="button_preview">תצוגה מקדימה</string>
     <string name="button_trash">פח</string>
     <string name="button_stats">נתונים סטטיסטיים</string>
-    <string name="button_back">חזרה</string>
     <string name="stats_no_activity_this_period">אין פעילות בפרק זמן זה</string>
     <string name="post_trashed">הפוסט הועבר לפח</string>
-    <string name="post_deleted">הפוסט נמחק</string>
     <string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לאתר זה</string>
     <string name="reader_toast_err_follow_blog_not_found">האתר לא נמצא</string>
     <string name="undo">ביטול פעולה אחרונה</string>
