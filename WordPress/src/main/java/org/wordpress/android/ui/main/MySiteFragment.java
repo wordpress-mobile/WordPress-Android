@@ -168,7 +168,7 @@ public class MySiteFragment extends Fragment implements
 
     private int mBlavatarSz;
     private boolean mIsDomainRegistrationCtaVisible = false;
-    private int mMDomainRegistrationCtaSiteId = -1;
+    private int mDomainRegistrationCtaSiteId = -1;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -198,7 +198,7 @@ public class MySiteFragment extends Fragment implements
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
             mIsDomainRegistrationCtaVisible =
                     savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, false);
-            mMDomainRegistrationCtaSiteId =
+            mDomainRegistrationCtaSiteId =
                     savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, -1);
         }
     }
@@ -304,7 +304,7 @@ public class MySiteFragment extends Fragment implements
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
         outState.putBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, mIsDomainRegistrationCtaVisible);
-        outState.putInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, mMDomainRegistrationCtaSiteId);
+        outState.putInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, mDomainRegistrationCtaSiteId);
     }
 
     private void updateSiteSettingsIfNecessary() {
@@ -1226,9 +1226,9 @@ public class MySiteFragment extends Fragment implements
     private void fetchPlansIfNecessary(@Nullable SiteModel site) {
         // plans only need to be fetched if domain registration is enabled
         // AND site has been changed to something that is non-null
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && site != null && site.getId() != mMDomainRegistrationCtaSiteId) {
+        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && site != null && site.getId() != mDomainRegistrationCtaSiteId) {
             mIsDomainRegistrationCtaVisible = false;
-            mMDomainRegistrationCtaSiteId = site.getId();
+            mDomainRegistrationCtaSiteId = site.getId();
 
             updateDomainRegistrationCta();
 
