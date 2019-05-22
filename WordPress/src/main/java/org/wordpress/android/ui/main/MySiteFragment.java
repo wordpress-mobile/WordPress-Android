@@ -158,7 +158,7 @@ public class MySiteFragment extends Fragment implements
     private View mQuickStartGrowView;
     private View mQuickStartMenuButton;
     private Handler mQuickStartSnackBarHandler = new Handler();
-    private LinearLayout mDomainRegistrationCta;
+    private View mDomainRegistrationCta;
 
     @Nullable
     private Toolbar mToolbar = null;
