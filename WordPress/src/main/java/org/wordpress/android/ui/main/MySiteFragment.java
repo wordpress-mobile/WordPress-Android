@@ -126,8 +126,8 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
     public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
-    public static final String KEY_IS_DOMAIN_REGISTRATION_VISIBLE = "KEY_IS_DOMAIN_REGISTRATION_VISIBLE";
-    public static final String KEY_DOMAIN_REGISTRATION_SITE_ID = "KEY_DOMAIN_REGISTRATION_SITE_ID";
+    public static final String KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE = "KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE";
+    public static final String KEY_DOMAIN_REGISTRATION_CTA_SITE_ID = "KEY_DOMAIN_REGISTRATION_CTA_SITE_ID";
 
     private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -168,7 +168,7 @@ public class MySiteFragment extends Fragment implements
 
     private int mBlavatarSz;
     private boolean mIsDomainRegistrationCtaVisible = false;
-    private int mDomainRegistrationSiteId = -1;
+    private int mMDomainRegistrationCtaSiteId = -1;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -196,8 +196,8 @@ public class MySiteFragment extends Fragment implements
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
-            mIsDomainRegistrationCtaVisible = savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_VISIBLE, false);
-            mDomainRegistrationSiteId = savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_SITE_ID, -1);
+            mIsDomainRegistrationCtaVisible = savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, false);
+            mMDomainRegistrationCtaSiteId = savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, -1);
         }
     }
 
@@ -301,8 +301,8 @@ public class MySiteFragment extends Fragment implements
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
-        outState.putBoolean(KEY_IS_DOMAIN_REGISTRATION_VISIBLE, mIsDomainRegistrationCtaVisible);
-        outState.putInt(KEY_DOMAIN_REGISTRATION_SITE_ID, mDomainRegistrationSiteId);
+        outState.putBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, mIsDomainRegistrationCtaVisible);
+        outState.putInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, mMDomainRegistrationCtaSiteId);
     }
 
     private void updateSiteSettingsIfNecessary() {
@@ -1225,9 +1225,9 @@ public class MySiteFragment extends Fragment implements
     private void fetchPlansIfNecessary(@Nullable SiteModel site) {
         // plans only need to be fetched if domain registration is enabled
         // AND site has been changed to something that is non-null
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && site != null && site.getId() != mDomainRegistrationSiteId) {
+        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && site != null && site.getId() != mMDomainRegistrationCtaSiteId) {
             mIsDomainRegistrationCtaVisible = false;
-            mDomainRegistrationSiteId = site.getId();
+            mMDomainRegistrationCtaSiteId = site.getId();
 
             updateDomainRegistrationCta();
 
