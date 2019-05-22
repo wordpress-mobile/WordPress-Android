@@ -131,9 +131,10 @@ class DomainSuggestionsViewModel @Inject constructor(
     }
 
     fun updateSearchQuery(query: String) {
+        _isIntroVisible.value = query.isEmpty()
+
         if (!TextUtils.isEmpty(query)) {
             searchQuery = query
-            _isIntroVisible.value = false
         } else if (searchQuery != site.name) {
             // Only reinitialize the search query, if it has changed.
             initializeDefaultSuggestions()
