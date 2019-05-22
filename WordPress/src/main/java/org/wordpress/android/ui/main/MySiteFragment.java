@@ -196,8 +196,10 @@ public class MySiteFragment extends Fragment implements
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
-            mIsDomainRegistrationCtaVisible = savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, false);
-            mMDomainRegistrationCtaSiteId = savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, -1);
+            mIsDomainRegistrationCtaVisible =
+                    savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, false);
+            mMDomainRegistrationCtaSiteId =
+                    savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, -1);
         }
     }
 
