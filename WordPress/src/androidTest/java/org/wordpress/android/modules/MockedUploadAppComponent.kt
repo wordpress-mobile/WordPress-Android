@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule
 import org.wordpress.android.login.di.LoginFragmentModule
 import org.wordpress.android.login.di.LoginServiceModule
 import org.wordpress.android.ui.stats.refresh.StatsModule
+import org.wordpress.android.util.UploadWorkRequestTest
 import javax.inject.Singleton
 
 @Singleton
@@ -42,4 +43,6 @@ interface MockedUploadAppComponent : AppComponent {
 
         override fun build(): MockedUploadAppComponent
     }
+
+    fun inject(o: UploadWorkRequestTest)
 }

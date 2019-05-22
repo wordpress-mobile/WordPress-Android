@@ -16,9 +16,15 @@ import org.junit.runner.RunWith
 import org.wordpress.android.WordPressTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.DaggerMockedUploadAppComponent
+import org.wordpress.android.modules.FakeLocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 class UploadWorkRequestTest {
+    @Inject lateinit var mockedLocalDraftUploadStarter: LocalDraftUploadStarter
+    lateinit var fakeLocalDraftUploadStarter: FakeLocalDraftUploadStarter
+
     @Before
     fun setUp() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -27,6 +33,8 @@ class UploadWorkRequestTest {
                 .application(app)
                 .build()
         app.setAppComponent(appComponent)
+        appComponent.inject(this)
+        fakeLocalDraftUploadStarter = mockedLocalDraftUploadStarter as FakeLocalDraftUploadStarter
 
         val context = InstrumentationRegistry.getTargetContext()
         val config = Configuration.Builder()
