@@ -1032,7 +1032,6 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     public void setSelectedSite(@Nullable SiteModel selectedSite) {
-        boolean siteChanged = didSiteChange(mSelectedSite, selectedSite);
         mSelectedSite = selectedSite;
         if (selectedSite == null) {
             AppPrefs.setSelectedSite(-1);
@@ -1047,10 +1046,6 @@ public class WPMainActivity extends AppCompatActivity implements
         AppPrefs.setSelectedSite(selectedSite.getId());
 
         updateTitle();
-    }
-
-    private boolean didSiteChange(@Nullable SiteModel oldSite, @Nullable SiteModel newSite) {
-        return oldSite != null && newSite != null && oldSite.getId() != newSite.getId();
     }
 
     /**
