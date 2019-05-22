@@ -81,7 +81,7 @@ open class LocalDraftUploadStarter @Inject constructor(
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
-    fun queueUploadFromAllSites() = launch {
+    open fun queueUploadFromAllSites() = launch {
         val sites = siteStore.sites
         try {
             checkConnectionAndUpload(sites = sites)
@@ -93,7 +93,7 @@ open class LocalDraftUploadStarter @Inject constructor(
     /**
      * Upload all local drafts from the given [site].
      */
-    fun queueUploadFromSite(site: SiteModel) = launch {
+    open fun queueUploadFromSite(site: SiteModel) = launch {
         try {
             checkConnectionAndUpload(sites = listOf(site))
         } catch (e: Exception) {

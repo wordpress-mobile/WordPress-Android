@@ -5,7 +5,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkUtilsWrapper @Inject constructor() {
+open class NetworkUtilsWrapper @Inject constructor() {
     /**
      * Returns true if a network connection is available.
      */

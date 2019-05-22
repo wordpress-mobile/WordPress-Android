@@ -10,7 +10,7 @@ import javax.inject.Inject
  * The main purpose of this is to provide testability for classes that use [UploadService]. This should never
  * contain any static methods.
  */
-class UploadServiceFacade @Inject constructor() {
+open class UploadServiceFacade @Inject constructor() {
     fun uploadPost(context: Context, post: PostModel, trackAnalytics: Boolean, publish: Boolean, isRetry: Boolean) {
         val intent = UploadService.getUploadPostServiceIntent(context, post, trackAnalytics, publish, isRetry)
         context.startService(intent)
