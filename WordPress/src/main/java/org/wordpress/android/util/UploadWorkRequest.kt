@@ -27,11 +27,8 @@ class AutoUploadWorker(
     @Inject lateinit var localDraftUploadStarter: LocalDraftUploadStarter
     @Inject lateinit var siteStore: SiteStore
 
-    init {
-        (appContext as WordPress).component().inject(this)
-    }
-
     override fun doWork(): Result {
+        (applicationContext as WordPress).component().inject(this)
         when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, -1)) {
             -1 -> localDraftUploadStarter.queueUploadFromAllSites()
             else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }

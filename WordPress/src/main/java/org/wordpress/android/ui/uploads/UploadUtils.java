@@ -29,6 +29,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UploadWorkRequestKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
@@ -117,7 +118,9 @@ public class UploadUtils {
 
         boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
         if (savedLocally && !NetworkUtils.isNetworkAvailable(activity)) {
-            // The network is not available, we can't do anything
+            // The network is not available, we can enqueue a request to upload local changes later
+            UploadWorkRequestKt.enqueueUploadWorkRequestForSite(site);
+            // And tell the user about it
             ToastUtils.showToast(activity, R.string.error_publish_no_network,
                                  ToastUtils.Duration.SHORT);
             return;
