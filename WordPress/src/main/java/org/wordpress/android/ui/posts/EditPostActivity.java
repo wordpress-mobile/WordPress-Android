@@ -528,9 +528,6 @@ public class EditPostActivity extends AppCompatActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
-        // Bump editor opened event every time the activity is created, to match the EDITOR_CLOSED event onDestroy
-        PostUtils.trackOpenEditorAnalytics(mPost, mSite);
-
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
@@ -713,6 +710,9 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().register(this);
 
         reattachUploadingMediaForAztec();
+
+        // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
+        PostUtils.trackOpenEditorAnalytics(mPost, mSite);
     }
 
     private void reattachUploadingMediaForAztec() {
@@ -756,6 +756,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
     }
 
     @Override protected void onStop() {
@@ -773,7 +775,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPostEditorAnalyticsSession.end();
             }
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+
         mDispatcher.unregister(this);
         if (mHandler != null) {
             mHandler.removeCallbacks(mSave);
