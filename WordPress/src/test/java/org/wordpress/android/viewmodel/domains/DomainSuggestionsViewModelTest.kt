@@ -40,7 +40,7 @@ class DomainSuggestionsViewModelTest {
     }
 
     @Test
-    fun isIntroVisibleIsSetToFalseWhenSearchQueryIsFirstSetToNonBlankValue() {
+    fun isIntroVisibleIsSetToFalseWhenSearchQueryIsSetToNonBlankValue() {
         viewModel.updateSearchQuery("Hello World")
 
         assertNotNull(viewModel.isIntroVisible.value)
@@ -50,13 +50,13 @@ class DomainSuggestionsViewModelTest {
     }
 
     @Test
-    fun isIntroVisibleNeverGetsSetBackToTrue() {
+    fun isIntroVisibleIsSetToTrueWhenSearchQueryIsCleared() {
         viewModel.updateSearchQuery("Hello World")
         viewModel.updateSearchQuery("")
 
         assertNotNull(viewModel.isIntroVisible.value)
         viewModel.isIntroVisible.value?.let { isIntroVisible ->
-            assertFalse(isIntroVisible)
+            assert(isIntroVisible)
         }
     }
 }
