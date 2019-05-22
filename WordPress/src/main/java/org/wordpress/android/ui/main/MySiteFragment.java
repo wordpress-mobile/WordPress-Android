@@ -1032,7 +1032,6 @@ public class MySiteFragment extends Fragment implements
     public void onSiteChanged(SiteModel site) {
         refreshSelectedSiteDetails(site);
         showSiteIconProgressBar(false);
-        fetchPlansIfNecessary(site);
     }
 
     @SuppressWarnings("unused")
