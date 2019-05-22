@@ -59,7 +59,7 @@ fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operatio
 }
 
 fun enqueuePeriodicUploadWorkRequestForAllSites(): Pair<WorkRequest, Operation> {
-    val request = PeriodicWorkRequestBuilder<AutoUploadWorker>(6, HOURS)
+    val request = PeriodicWorkRequestBuilder<AutoUploadWorker>(8, HOURS, 6, HOURS)
             .setConstraints(getUploadConstraints())
             .build()
     val operation = WorkManager.getInstance().enqueueUniquePeriodicWork(
