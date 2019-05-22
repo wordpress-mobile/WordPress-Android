@@ -8,15 +8,13 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import org.wordpress.android.R
 
-class ListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
+class ViewsListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     override fun onCreate() {
-        Log.d("vojta", "org.wordpress.android.ui.stats.refresh.lists.widget.ListProvider.onCreate")
     }
 
     override fun getLoadingView(): RemoteViews? = null
 
     override fun onDataSetChanged() {
-        Log.d("vojta", "org.wordpress.android.ui.stats.refresh.lists.widget.ListProvider.onDataSetChanged")
     }
 
     override fun hasStableIds(): Boolean = true
@@ -24,7 +22,6 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     override fun getViewTypeCount(): Int = 1
 
     override fun onDestroy() {
-        Log.d("vojta", "org.wordpress.android.ui.stats.refresh.lists.widget.ListProvider.onDestroy")
     }
 
     private val listItemList = mutableListOf<Item>()
@@ -34,7 +31,6 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     )
 
     init {
-        Log.d("vojta", "org.wordpress.android.ui.stats.refresh.lists.widget.ListProvider.init")
         populateListItem();
     }
 
@@ -47,12 +43,10 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     override fun getCount(): Int = listItemList.size
 
     override fun getItemId(position: Int): Long {
-        Log.d("vojta", "org.wordpress.android.ui.stats.refresh.lists.widget.ListProvider.getItemId($position")
         return listItemList[position].id
     }
 
     override fun getViewAt(position: Int): RemoteViews {
-        Log.d("vojta", "org.wordpress.android.ui.stats.refresh.lists.widget.ListProvider.getViewAt($position")
         val remoteView = RemoteViews(context.packageName, R.layout.stats_block_referred_item)
         remoteView.setTextViewText(R.id.title, listItemList[position].heading)
         return remoteView

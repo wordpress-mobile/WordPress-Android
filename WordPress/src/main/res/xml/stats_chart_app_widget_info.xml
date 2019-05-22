@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsChartAppWidgetConfigureActivity"
+                    android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureActivity"
                     android:initialKeyguardLayout="@layout/stats_chart_app_widget"
                     android:initialLayout="@layout/stats_chart_app_widget"
                     android:minHeight="110dp"
                     android:minResizeWidth="50dp"
                     android:minResizeHeight="50dp"
                     android:minWidth="110dp"
-                    android:previewImage="@drawable/example_appwidget_preview"
+                    android:previewImage="@drawable/stats_widget_preview"
                     android:resizeMode="horizontal|vertical"
                     android:updatePeriodMillis="86400000"
                     android:widgetCategory="home_screen">
