@@ -90,6 +90,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.UploadWorkRequestKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -310,6 +311,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+
+        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
+        // It will upload local draft or published posts with local changes to the server.
+        UploadWorkRequestKt.enqueuePeriodicUploadWorkRequestForAllSites();
     }
 
     // note that this is overridden in WordPressDebug
