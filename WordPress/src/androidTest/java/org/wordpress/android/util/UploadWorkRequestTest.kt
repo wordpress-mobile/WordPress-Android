@@ -116,7 +116,8 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Periodic upload worker will stay enqueued after success/failure: ENQUEUED -> RUNNING -> ENQUEUED
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites), `is`(1))
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites),
+                `is`(1))
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -147,7 +148,8 @@ class UploadWorkRequestTest {
         operation.result.get()
 
         // Check LocalDraftUploadStarter.queueUploadFromAllSites() was called twice
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites), `is`(2))
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites),
+                `is`(2))
 
         // WorkRequest should still be queued
         val workInfo2 = workManager.getWorkInfoById(request.id).get()
