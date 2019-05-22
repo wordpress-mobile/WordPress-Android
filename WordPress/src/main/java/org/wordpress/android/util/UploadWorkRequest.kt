@@ -33,8 +33,8 @@ class AutoUploadWorker(
 
     override fun doWork(): Result {
         when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, -1)) {
-            -1 -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
-            else -> localDraftUploadStarter.queueUploadFromAllSites()
+            -1 -> localDraftUploadStarter.queueUploadFromAllSites()
+            else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
         }
         return Result.success()
     }

@@ -68,7 +68,8 @@ class UploadWorkRequestTest {
         // Get WorkInfo and outputData
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
-        // Assert
+        // Check the work was successful and the method was called with the right argument
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromSite), `is`(1))
         assertThat(workInfo.state, `is`(WorkInfo.State.SUCCEEDED))
     }
 
@@ -90,12 +91,13 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // We didn't call setAllConstraintsMet earlier, so the work won't be executed (can't be success or failure)
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromSite), `is`(0))
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
     @Test
     @Throws(Exception::class)
-    fun testPeriodicUploadWorkerWithConstraints() {
+    fun testPeriodicUploadWorkerWithMetConstraints() {
         // Define input data
         val testDriver = WorkManagerTestInitHelper.getTestDriver()
         val workManager = WorkManager.getInstance()
@@ -113,7 +115,42 @@ class UploadWorkRequestTest {
         // Get WorkInfo and outputData
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
-        // Periodic upload worker will stay enqueued after success/failure
+        // Periodic upload worker will stay enqueued after success/failure: ENQUEUED -> RUNNING -> ENQUEUED
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites), `is`(1))
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun testPeriodicUploadWorkerWithMetConstraintsCalledTwice() {
+        // Define input data
+        val testDriver = WorkManagerTestInitHelper.getTestDriver()
+        val workManager = WorkManager.getInstance()
+
+        // Enqueue
+        val (request, operation) = enqueuePeriodicUploadWorkRequestForAllSites()
+
+        // ############### First round
+        // Meet delay, constraints, and wait for result
+        testDriver.setAllConstraintsMet(request.id)
+        testDriver.setPeriodDelayMet(request.id)
+        operation.result.get()
+
+        // Periodic upload worker will stay queued after success/failure
+        val workInfo = workManager.getWorkInfoById(request.id).get()
+        assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
+
+        // ############### Second round
+        // Meet delay, constraints, and wait for result
+        testDriver.setAllConstraintsMet(request.id)
+        testDriver.setPeriodDelayMet(request.id)
+        operation.result.get()
+
+        // Check LocalDraftUploadStarter.queueUploadFromAllSites() was called twice
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites), `is`(2))
+
+        // WorkRequest should still be queued
+        val workInfo2 = workManager.getWorkInfoById(request.id).get()
+        assertThat(workInfo2.state, `is`(WorkInfo.State.ENQUEUED))
     }
 }

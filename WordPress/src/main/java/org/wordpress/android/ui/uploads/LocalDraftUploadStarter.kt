@@ -34,7 +34,7 @@ import kotlin.coroutines.CoroutineContext
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
-class LocalDraftUploadStarter @Inject constructor(
+open class LocalDraftUploadStarter @Inject constructor(
     /**
      * The Application context
      */
