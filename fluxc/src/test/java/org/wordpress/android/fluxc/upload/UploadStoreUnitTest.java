@@ -41,8 +41,9 @@ import static org.junit.Assert.assertTrue;
 public class UploadStoreUnitTest {
     private Dispatcher mDispatcher = new Dispatcher();
     private UploadStore mUploadStore = new UploadStore(mDispatcher);
+    private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
     private PostStore mPostStore = new PostStore(mDispatcher, Mockito.mock(PostRestClient.class),
-            Mockito.mock(PostXMLRPCClient.class));
+            Mockito.mock(PostXMLRPCClient.class), mPostSqlUtils);
 
     @Before
     public void setUp() {
@@ -78,7 +79,7 @@ public class UploadStoreUnitTest {
         // Create a PostModel and add it to the PostStore
         PostModel postModel = UploadTestUtils.getTestPost();
         postModel.setId(55);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
         postModel = mPostStore.getPostByLocalPostId(postModel.getId());
         assertNotNull(postModel);
 
@@ -126,7 +127,7 @@ public class UploadStoreUnitTest {
         // Create a PostModel and add it to the PostStore
         PostModel postModel = UploadTestUtils.getTestPost();
         postModel.setId(55);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
         postModel = mPostStore.getPostByLocalPostId(postModel.getId());
         assertNotNull(postModel);
 
@@ -187,7 +188,7 @@ public class UploadStoreUnitTest {
         // Create another PostModel and add it to the PostStore - this time, without registering it with the UploadStore
         PostModel unregisteredPostModel = UploadTestUtils.getTestPost();
         unregisteredPostModel.setId(55);
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(unregisteredPostModel);
+        mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(unregisteredPostModel);
 
         // Create a MediaModel attached to the above post
         MediaModel mediaLinkedToPost = UploadTestUtils.getLocalTestMedia();

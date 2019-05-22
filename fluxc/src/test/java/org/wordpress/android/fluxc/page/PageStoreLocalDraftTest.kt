@@ -21,7 +21,13 @@ import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
 class PageStoreLocalDraftTest {
-    private val pageStore = PageStore(postStore = mock(), dispatcher = mock(), coroutineContext = Dispatchers.Default)
+    private val postSqlUtils = PostSqlUtils()
+    private val pageStore = PageStore(
+            postStore = mock(),
+            dispatcher = mock(),
+            coroutineContext = Dispatchers.Default,
+            postSqlUtils = postSqlUtils
+    )
 
     @Before
     fun setUp() {
@@ -62,7 +68,7 @@ class PageStoreLocalDraftTest {
                 }
         )
 
-        expectedPages.plus(unexpectedPosts).forEach { PostSqlUtils.insertPostForResult(it) }
+        expectedPages.plus(unexpectedPosts).forEach { postSqlUtils.insertPostForResult(it) }
 
         // Act
         val localDraftPages = pageStore.getLocalDraftPages(site)
