@@ -4,8 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
-import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
+import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel;
@@ -19,9 +19,10 @@ import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
@@ -132,6 +133,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StatsViewModel.class)
     abstract ViewModel statsViewModel(StatsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ViewsWidgetViewModel.class)
+    abstract ViewModel statsViewsWidgetViewModel(ViewsWidgetViewModel viewModel);
 
     @Binds
     @IntoMap

@@ -237,4 +237,14 @@
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
+    
+    <style name="StatsWidgetConfigureTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsWidgetConfigureValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_500</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
 </resources>

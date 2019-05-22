@@ -833,6 +833,15 @@
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
 
+    <!-- Stats refreshed widgets -->
+
+    <string name="stats_widget_add">Add widget</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_color">Color</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color_dark">Dark</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>

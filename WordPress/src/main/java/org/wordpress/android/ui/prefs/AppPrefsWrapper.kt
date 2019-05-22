@@ -37,4 +37,14 @@ class AppPrefsWrapper @Inject constructor() {
     var postListViewLayoutType: PostListViewLayoutType
         get() = AppPrefs.getPostsListViewLayoutType()
         set(value) = AppPrefs.setPostsListViewLayoutType(value)
+
+    fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
+    fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
+    fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
+
+    fun getAppWidgetColorModeId(appWidgetId: Int) = AppPrefs.getStatsWidgetColorModeId(appWidgetId)
+    fun setAppWidgetColorModeId(colorModeId: Int, appWidgetId: Int) =
+            AppPrefs.setStatsWidgetColorModeId(colorModeId, appWidgetId)
+
+    fun removeAppWidgetColorModeId(appWidgetId: Int) = AppPrefs.removeStatsWidgetColorModeId(appWidgetId)
 }
