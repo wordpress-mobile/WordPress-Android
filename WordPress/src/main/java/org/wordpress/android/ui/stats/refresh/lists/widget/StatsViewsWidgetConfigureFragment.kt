@@ -75,4 +75,3 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
         viewModel.start(appWidgetId)
     }
 }
-

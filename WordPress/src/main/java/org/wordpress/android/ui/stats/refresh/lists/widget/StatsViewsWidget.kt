@@ -53,7 +53,7 @@ class StatsViewsWidget : AppWidgetProvider() {
             context: Context,
             appWidgetManager: AppWidgetManager
         ) {
-            val views = RemoteViews(context.packageName, R.layout.stats_chart_app_widget)
+            val views = RemoteViews(context.packageName, R.layout.stats_views_widget_configure_fragment)
             val svcIntent = Intent(context, WidgetService::class.java)
             svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             svcIntent.data = Uri.parse(
@@ -64,4 +64,3 @@ class StatsViewsWidget : AppWidgetProvider() {
         }
     }
 }
-

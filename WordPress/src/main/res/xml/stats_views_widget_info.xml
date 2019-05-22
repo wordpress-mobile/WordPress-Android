@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
                     android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureActivity"
-                    android:initialKeyguardLayout="@layout/stats_chart_app_widget"
-                    android:initialLayout="@layout/stats_chart_app_widget"
+                    android:initialKeyguardLayout="@layout/stats_views_widget_configure_fragment"
+                    android:initialLayout="@layout/stats_views_widget_configure_fragment"
                     android:minHeight="110dp"
                     android:minResizeWidth="50dp"
                     android:minResizeHeight="50dp"
