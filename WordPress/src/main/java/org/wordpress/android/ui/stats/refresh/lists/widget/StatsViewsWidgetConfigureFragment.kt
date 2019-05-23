@@ -18,14 +18,14 @@ import javax.inject.Inject
 
 class StatsViewsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var viewModel: ViewsWidgetViewModel
+    private lateinit var viewModel: ViewsWidgetViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.stats_views_widget_configure_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewsWidgetViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ViewsWidgetViewModel::class.java)
         activity?.setResult(AppCompatActivity.RESULT_CANCELED)
 
         val appWidgetId = activity?.intent?.extras?.getInt(
@@ -39,7 +39,7 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
         }
 
         site_container.setOnClickListener {
-            viewModel.siteClicked()
+            SiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
         }
         color_container.setOnClickListener {
             viewModel.colorClicked()
