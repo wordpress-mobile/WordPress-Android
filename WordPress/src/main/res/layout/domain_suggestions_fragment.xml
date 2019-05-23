@@ -31,10 +31,10 @@
         android:layout_below="@id/introduction_container"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_large"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_extra_large">
+        android:paddingTop="@dimen/margin_large">
 
         <FrameLayout
             android:layout_width="wrap_content"
