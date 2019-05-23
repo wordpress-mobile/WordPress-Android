@@ -3,7 +3,6 @@ package org.wordpress.android.e2e.pages;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 
-import org.hamcrest.CoreMatchers;
 import org.wordpress.android.R;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -11,6 +10,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -26,9 +26,8 @@ public class EditorPage {
 
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title), withHint("Title")));
 
-    private static ViewInteraction publishConfirmation = onView(
-            CoreMatchers.allOf(withId(android.support.design.R.id.snackbar_text),
-                    withText("Post published")));
+    private static ViewInteraction publishConfirmation = onView(allOf(
+            withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
 
     public EditorPage() {
         editor.check(matches(isDisplayed()));
