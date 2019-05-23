@@ -69,7 +69,7 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Check the work was successful and the method was called with the right argument
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromSite), `is`(1))
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromSite), `is`(1))
         assertThat(workInfo.state, `is`(WorkInfo.State.SUCCEEDED))
     }
 
@@ -91,7 +91,7 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // We didn't call setAllConstraintsMet earlier, so the work won't be executed (can't be success or failure)
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromSite), `is`(0))
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromSite), `is`(0))
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -116,7 +116,8 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Periodic upload worker will stay enqueued after success/failure: ENQUEUED -> RUNNING -> ENQUEUED
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites), `is`(1))
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromAllSites),
+                `is`(1))
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -147,7 +148,8 @@ class UploadWorkRequestTest {
         operation.result.get()
 
         // Check LocalDraftUploadStarter.queueUploadFromAllSites() was called twice
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(LocalDraftUploadStarter::queueUploadFromAllSites), `is`(2))
+        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromAllSites),
+                `is`(2))
 
         // WorkRequest should still be queued
         val workInfo2 = workManager.getWorkInfoById(request.id).get()
