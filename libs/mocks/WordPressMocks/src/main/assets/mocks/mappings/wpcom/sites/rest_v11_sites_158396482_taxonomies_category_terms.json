@@ -1,0 +1,35 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.1/sites/158396482/taxonomies/category/terms/"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "found": 1,
+            "terms": [
+                {
+                    "ID": 1,
+                    "name": "Uncategorized",
+                    "slug": "uncategorized",
+                    "description": "",
+                    "post_count": 2,
+                    "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/uncategorized/feed/",
+                    "parent": 0,
+                    "meta": {
+                        "links": {
+                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized",
+                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
+                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                        }
+                    }
+                }
+            ]
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}

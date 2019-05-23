@@ -28,10 +28,10 @@ wp.sentry.dsn=wordpress
 wp.res.com.google.android.geo.api.key = geo-api-key
 
 # Optional: Needed for the end to end tests
-wp.e2e.wp_com_user.email=
-wp.e2e.wp_com_user.password=
-wp.e2e.wp_com_user.site_address=
-wp.e2e.wp_com_user.username=
-wp.e2e.self_hosted_user.username=
-wp.e2e.self_hosted_user.password=
-wp.e2e.self_hosted_user.site_address=
+wp.e2e.wp_com_user.email=e2eflowtestingmobile@example.com
+wp.e2e.wp_com_user.password=mocked_password
+wp.e2e.wp_com_user.site_address=e2eflowtestingmobile.wordpress.com
+wp.e2e.wp_com_user.username=e2eflowtestingmobile
+wp.e2e.self_hosted_user.username=e2eflowtestingmobile
+wp.e2e.self_hosted_user.password=mocked_password
+wp.e2e.self_hosted_user.site_address=127.0.0.1:8080
