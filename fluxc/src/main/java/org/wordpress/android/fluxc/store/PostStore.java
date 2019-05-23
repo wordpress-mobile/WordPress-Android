@@ -317,16 +317,19 @@ public class PostStore extends Store {
 
     private final PostRestClient mPostRestClient;
     private final PostXMLRPCClient mPostXMLRPCClient;
+    private final PostSqlUtils mPostSqlUtils;
     // Ensures that the UploadStore is initialized whenever the PostStore is,
     // to ensure actions are shadowed and repeated by the UploadStore
     @SuppressWarnings("unused")
     @Inject UploadStore mUploadStore;
 
     @Inject
-    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient) {
+    public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient,
+                     PostSqlUtils postSqlUtils) {
         super(dispatcher);
         mPostRestClient = postRestClient;
         mPostXMLRPCClient = postXMLRPCClient;
+        mPostSqlUtils = postSqlUtils;
     }
 
     @Override
@@ -350,7 +353,7 @@ public class PostStore extends Store {
         post.setPostFormat(postFormat);
 
         // Insert the post into the db, updating the object to include the local ID
-        post = PostSqlUtils.insertPostForResult(post);
+        post = mPostSqlUtils.insertPostForResult(post);
 
         // id is set to -1 if insertion fails
         if (post.getId() == -1) {
@@ -363,21 +366,21 @@ public class PostStore extends Store {
      * Returns all posts in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPostsForSite(SiteModel site) {
-        return PostSqlUtils.getPostsForSite(site, false);
+        return mPostSqlUtils.getPostsForSite(site, false);
     }
 
     /**
      * Returns posts with given format in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPostsForSiteWithFormat(SiteModel site, List<String> postFormat) {
-        return PostSqlUtils.getPostsForSiteWithFormat(site, postFormat, false);
+        return mPostSqlUtils.getPostsForSiteWithFormat(site, postFormat, false);
     }
 
     /**
      * Returns all pages in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPagesForSite(SiteModel site) {
-        return PostSqlUtils.getPostsForSite(site, true);
+        return mPostSqlUtils.getPostsForSite(site, true);
     }
 
     /**
@@ -398,14 +401,14 @@ public class PostStore extends Store {
      * Returns all uploaded posts in the store for the given site.
      */
     public List<PostModel> getUploadedPostsForSite(SiteModel site) {
-        return PostSqlUtils.getUploadedPostsForSite(site, false);
+        return mPostSqlUtils.getUploadedPostsForSite(site, false);
     }
 
     /**
      * Returns all uploaded pages in the store for the given site.
      */
     public List<PostModel> getUploadedPagesForSite(SiteModel site) {
-        return PostSqlUtils.getUploadedPostsForSite(site, true);
+        return mPostSqlUtils.getUploadedPostsForSite(site, true);
     }
 
     /**
@@ -426,7 +429,7 @@ public class PostStore extends Store {
      * Returns all posts and pages that are local drafts for the given site.
      */
     public List<PostModel> getLocalDraftPosts(@NonNull SiteModel site) {
-        return PostSqlUtils.getLocalDrafts(site.getId(), false);
+        return mPostSqlUtils.getLocalDrafts(site.getId(), false);
     }
 
     /**
@@ -449,7 +452,7 @@ public class PostStore extends Store {
         if (localOrRemoteIds == null || site == null) {
             return Collections.emptyList();
         }
-        return PostSqlUtils.getPostsByLocalOrRemotePostIds(localOrRemoteIds, site.getId());
+        return mPostSqlUtils.getPostsByLocalOrRemotePostIds(localOrRemoteIds, site.getId());
     }
 
     /**
@@ -460,7 +463,7 @@ public class PostStore extends Store {
         if (site == null) {
             return Collections.emptyMap();
         }
-        List<PostModel> postList = PostSqlUtils.getPostsByRemoteIds(remoteIds, site.getId());
+        List<PostModel> postList = mPostSqlUtils.getPostsByRemoteIds(remoteIds, site.getId());
         Map<Long, PostModel> postMap = new HashMap<>(postList.size());
         for (PostModel post : postList) {
             postMap.put(post.getRemotePostId(), post);
@@ -522,14 +525,14 @@ public class PostStore extends Store {
         } else {
             order = SelectQuery.ORDER_DESCENDING;
         }
-        return PostSqlUtils.getLocalPostIdsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
+        return mPostSqlUtils.getLocalPostIdsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
 
     /**
      * returns the total number of posts with local changes across all sites
      */
-    public static int getNumLocalChanges() {
-        return PostSqlUtils.getNumLocalChanges();
+    public int getNumLocalChanges() {
+        return mPostSqlUtils.getNumLocalChanges();
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -691,7 +694,7 @@ public class PostStore extends Store {
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
         int offset = 0;
         if (payload.loadMore) {
-            offset = PostSqlUtils.getUploadedPostsForSite(payload.site, pages).size();
+            offset = mPostSqlUtils.getUploadedPostsForSite(payload.site, pages).size();
         }
 
         if (payload.site.isUsingWpComRestApi()) {
@@ -756,7 +759,7 @@ public class PostStore extends Store {
             mDispatcher.dispatch(
                     PostActionBuilder.newFetchPostAction(new RemotePostPayload(postToSave, payload.site)));
         }
-        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postToSave);
+        mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postToSave);
     }
 
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
@@ -777,12 +780,12 @@ public class PostStore extends Store {
             // This is the simplest way of keeping our local posts in sync with remote posts (in case of deletions,
             // or if the user manual changed some post IDs)
             if (!payload.loadedMore) {
-                PostSqlUtils.deleteUploadedPostsForSite(payload.site, payload.isPages);
+                mPostSqlUtils.deleteUploadedPostsForSite(payload.site, payload.isPages);
             }
 
             int rowsAffected = 0;
             for (PostModel post : payload.posts.getPosts()) {
-                rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
+                rowsAffected += mPostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
             }
 
             onPostChanged = new OnPostChanged(causeOfChange, rowsAffected, payload.canLoadMore);
@@ -831,7 +834,7 @@ public class PostStore extends Store {
                 // XML-RPC does not respond to new/edit post calls with the modified post
                 // Update the post locally to reflect its uploaded status, but also request a fresh copy
                 // from the server to ensure local copy matches server
-                PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+                mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
                 mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.PUSH_POST);
             }
         }
@@ -850,7 +853,7 @@ public class PostStore extends Store {
                 // XML-RPC responds to post restore request with status boolean
                 // Update the post locally to reflect its published state, and request a fresh copy
                 // from the server to ensure local copy matches server
-                PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+                mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
                 mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.RESTORE_POST);
             }
         }
@@ -874,7 +877,7 @@ public class PostStore extends Store {
         if (changeLocalDate) {
             post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
         }
-        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+        int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
@@ -890,7 +893,7 @@ public class PostStore extends Store {
         mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(
                 new ListItemsRemovedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()),
                         Collections.singletonList(post.getRemotePostId()))));
-        int rowsAffected = PostSqlUtils.deletePost(post);
+        int rowsAffected = mPostSqlUtils.deletePost(post);
 
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RemovePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
@@ -898,13 +901,13 @@ public class PostStore extends Store {
     }
 
     private void removeAllPosts() {
-        int rowsAffected = PostSqlUtils.deleteAllPosts();
+        int rowsAffected = mPostSqlUtils.deleteAllPosts();
         OnPostChanged event = new OnPostChanged(RemoveAllPosts.INSTANCE, rowsAffected);
         emitChange(event);
     }
 
     private void restorePost(PostModel postModel) {
-        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
         CauseOfOnPostChanged causeOfChange =
                 new CauseOfOnPostChanged.RestorePost(postModel.getId(), postModel.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
@@ -929,12 +932,12 @@ public class PostStore extends Store {
                     contentDiff, LocalDiffType.CONTENT, localRevision));
         }
 
-        PostSqlUtils.insertOrUpdateLocalRevision(localRevision, localDiffs);
+        mPostSqlUtils.insertOrUpdateLocalRevision(localRevision, localDiffs);
     }
 
 
     public RevisionModel getLocalRevision(SiteModel site, PostModel post) {
-        List<LocalRevisionModel> localRevisions = PostSqlUtils.getLocalRevisions(site, post);
+        List<LocalRevisionModel> localRevisions = mPostSqlUtils.getLocalRevisions(site, post);
 
         if (localRevisions.isEmpty()) {
             return null;
@@ -943,17 +946,17 @@ public class PostStore extends Store {
         // we currently only support one local revision per post or page
         LocalRevisionModel localRevision = localRevisions.get(0);
         List<LocalDiffModel> localDiffs =
-                PostSqlUtils.getLocalRevisionDiffs(localRevision);
+                mPostSqlUtils.getLocalRevisionDiffs(localRevision);
 
         return RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs);
     }
 
     public void deleteLocalRevision(RevisionModel revisionModel, SiteModel site, PostModel post) {
-        PostSqlUtils.deleteLocalRevisionAndDiffs(
+        mPostSqlUtils.deleteLocalRevisionAndDiffs(
                 LocalRevisionModel.fromRevisionModel(revisionModel, site, post));
     }
 
     public void deleteLocalRevisionOfAPostOrPage(PostModel post) {
-        PostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
+        mPostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
     }
 }
