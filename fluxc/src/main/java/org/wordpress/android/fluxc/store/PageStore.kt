@@ -31,6 +31,7 @@ import kotlin.coroutines.suspendCoroutine
 @Singleton
 class PageStore @Inject constructor(
     private val postStore: PostStore,
+    private val postSqlUtils: PostSqlUtils,
     private val dispatcher: Dispatcher,
     private val coroutineContext: CoroutineContext
 ) {
@@ -170,7 +171,7 @@ class PageStore @Inject constructor(
     suspend fun deletePageFromDb(page: PageModel): Boolean = withContext(coroutineContext) {
         val post = postStore.getPostByLocalPostId(page.pageId)
         return@withContext if (post != null) {
-            PostSqlUtils.deletePost(post) > 0
+            postSqlUtils.deletePost(post) > 0
         } else {
             false
         }
@@ -183,7 +184,7 @@ class PageStore @Inject constructor(
     }
 
     suspend fun getLocalDraftPages(site: SiteModel): List<PageModel> = withContext(coroutineContext) {
-        return@withContext PostSqlUtils.getLocalDrafts(site.id, true).map {
+        return@withContext postSqlUtils.getLocalDrafts(site.id, true).map {
             PageModel(post = it, site = site)
         }
     }
