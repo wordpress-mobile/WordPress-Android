@@ -11,6 +11,13 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_125"
+msgid ""
+"12.5:\n"
+"Better offline support: If you draft offline, drafts automatically upload to the server when you log in.\n"
+"Clearer stats: Navigate to a post’s detailed data by clicking on its title on the Stats screen. The current day’s stats appear in gray to help you remember that they’re not final.\n"
+msgstr ""
+
 msgctxt "release_note_124"
 msgid ""
 "12.4:\n"
@@ -18,14 +25,6 @@ msgid ""
 "* Focus on the most important stats in the Insights screen — tap the Edit button to customize your view.\n"
 "* Add a soundtrack to your Reader experience! Audio embeds are now playable there.\n"
 "* It’s always nice to save space on your device, so you’ll love the (significantly) smaller download size of the app.\n"
-msgstr ""
-
-msgctxt "release_note_123"
-msgid ""
-"12.3:\n"
-"* Better sharing: You can now share entire sites from the Reader, not just posts.\n"
-"* Better Stats: Insights includes a new “This Year” section, and stats have better RTL support.\n"
-"* Fixes: Issues with missing posts in the Reader and site icons that didn’t updating properly when switching sites have been resolved.\n"
 msgstr ""
 
 msgctxt "sample_post_content"
