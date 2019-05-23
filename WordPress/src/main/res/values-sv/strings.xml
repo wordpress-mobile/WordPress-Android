@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-24 09:26:39+0000
+Translation-Revision-Date: 2019-05-08 14:55:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="post_list_drafts">Utkast</string>
+    <string name="post_list_published">Publicerat</string>
+    <string name="post_list_author_everyone">Alla</string>
+    <string name="post_list_author_me">Jag</string>
+    <string name="error_restoring_post">Ett fel inträffade när inlägget skulle återställas</string>
+    <string name="backdated_for">Backdaterad: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Objekt som visas ovan kommer att vara synliga under fliken Insikter. Dra och släpp för att anpassa.</string>
+    <string name="stats_insights_add_insights_header">Lägg till Insikter</string>
+    <string name="stats_insights_management_title">Visa endast den mest relevanta statistiken. Lägg till och organisera dina insikter nedan.</string>
+    <string name="stats_insights_social">Socialt</string>
+    <string name="stats_insights_annual_site_stats">Årlig webbplatsstatistik</string>
+    <string name="stats_view_follower_totals">Totalt antal följare</string>
+    <string name="suggestion_fetch_error">Det gick inte att ladda in förslag på domäner</string>
+    <string name="suggestions_search_hint">Skriv in ett nyckelord för fler idéer</string>
+    <string name="suggestions_empty_list">Inga förslag hittades</string>
+    <string name="choose_domain">Välj en domän</string>
+    <string name="register_domain">Registrera domän</string>
+    <string name="jetpack_installed_message">Nu när Jetpack är installerat behöver vi hjälpa dig igång. Det tar bara någon minut.</string>
+    <string name="stats_menu_remove">Ta bort från Insikter</string>
+    <string name="stats_menu_move_down">Flytta ned</string>
+    <string name="stats_menu_move_up">Flytta upp</string>
+    <string name="stats_item_settings">Inställningar för statistikobjekt</string>
+    <string name="post_moving_to_draft">Inlägget flyttas till utkast</string>
+    <string name="post_restoring">Inlägget återställs</string>
+    <string name="post_restored">Inlägget har återställts</string>
+    <string name="post_trashing">Inlägget läggs i papperskorgen</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer lokalt utförd redigering att kastas. Vill du fortsätta?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Lokala ändringar</string>
+    <string name="button_move_to_draft">Flytta till utkast</string>
+    <string name="post_list_toggle_item_layout_list_view">Växla till listvy</string>
+    <string name="post_list_toggle_item_layout_cards_view">Växla till kortvy</string>
+    <string name="posts_trashed_empty">Du har inga inlägg i papperskorgen</string>
+    <string name="posts_draft_empty">Du har inte några utkast till inlägg</string>
+    <string name="posts_scheduled_empty">Du har inte några schemalagda inlägg</string>
+    <string name="posts_published_empty">Du har inte publicerat några inlägg ännu</string>
     <string name="notification_wpcom_username_needed">Logga in med ditt användarnamn och lösenord.</string>
     <string name="login_invalid_site_url">Du har angivit en ogiltig webbplatsadress. Försök igen.</string>
     <string name="error_user_username_instead_of_email">Logga in med ditt användarnamn för WordPress.com och inte med din e-postadress.</string>
@@ -234,8 +269,7 @@ Language: sv_SE
     <string name="stats_followers_count_message">Totalt antal följare för ”%1$s”: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Hantera insikter</string>
-    <string name="stats_empty_insights_description">Anpassa dina insikter och se detaljerna om hur din webbplats presterar</string>
+    <string name="stats_manage_insights">Hantera Insikter</string>
     <string name="stats_empty_insights_title">Inga insikter har lagts till än</string>
     <string name="stats_no_data_yet">Inga data insamlade än</string>
     <string name="menu_debug">Felsökningsmeny</string>
@@ -343,14 +377,13 @@ Language: sv_SE
     <string name="reader_empty_followed_tags_subtitle">Lägg till etiketter här för att hitta inlägg om dina favoritämnen</string>
     <string name="login_to_to_connect_jetpack">Logga in på WordPress.com-kontot du använde för att ansluta Jetpack.</string>
     <string name="install_jetpack_retry">Försök igen</string>
-    <string name="install_jetpack_continue">Fortsätt</string>
-    <string name="jetpack_installation_problem_message">Jetpack kunde inte installeras just nu</string>
+    <string name="install_jetpack_continue">Konfigurera</string>
+    <string name="jetpack_installation_problem_message">Jetpack kunde inte installeras just nu.</string>
     <string name="jetpack_installation_problem">Det var ett problem</string>
-    <string name="jetpack_installed_message">Du har Jetpack installerat på din webbplats. Grattis!</string>
     <string name="jetpack_installed">Jetpack installerat</string>
-    <string name="installing_jetpack_message">Installera Jetpack på din webbplats. Detta kan ta upp till några minuter att slutföra</string>
+    <string name="installing_jetpack_message">Installerar Jetpack på din webbplats. Detta kan ta några minuter att slutföra.</string>
     <string name="installing_jetpack">Installerar Jetpack</string>
-    <string name="install_jetpack_message">Dina webbplatsuppgifter kommer inte att lagras och används endast för att installera Jetpack</string>
+    <string name="install_jetpack_message">Dina webbplatsuppgifter kommer inte att lagras och används endast för att installera Jetpack.</string>
     <string name="install_jetpack">Installera Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -651,7 +684,6 @@ Language: sv_SE
     <string name="dialog_confirm_publish_message_page">Sidan kommer att publiceras direkt.</string>
     <string name="dialog_confirm_publish_message_post">Inlägget kommer att publiceras direkt.</string>
     <string name="dialog_confirm_publish_title">Redo att publicera?</string>
-    <string name="dialog_confirm_delete_post">Detta inlägg kommer att tas bort och läggas i papperskorgen</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d sidor/inlägg laddades inte upp</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sidor laddades inte upp</string>
     <string name="media_file_page_singular_only_not_uploaded">1 sida laddades inte upp</string>
@@ -958,7 +990,6 @@ Language: sv_SE
     <string name="async_promo_title_publish">Publicera utan oro</string>
     <string name="editor_uploading_post">Ditt inlägg håller på att laddas upp</string>
     <string name="uploading_media">Laddar upp media …</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Är du säker? Om du raderar detta inlägg kommer även mediauppladdningen att avbrytas.</string>
     <string name="page_scheduled">Sidan har tidsinställts</string>
     <string name="post_scheduled">Inlägget har tidsinställts</string>
     <string name="button_retry">Försök igen</string>
@@ -1017,8 +1048,8 @@ Language: sv_SE
     <string name="editor_dropped_text_error">Ett fel inträffade när text skulle dras in</string>
     <string name="editor_dropped_html_images_not_allowed">Det är inte tillåtet att dra in bilder när du befinner dig i HTML-läge</string>
     <string name="editor_content_hint">Berätta din historia här …</string>
-    <string name="post_status_trashed">Ligger i papperskorgen</string>
-    <string name="post_status_scheduled">Schemalagt</string>
+    <string name="post_list_trashed">I papperskorgen</string>
+    <string name="post_list_scheduled">Schemalagt</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Väntar på granskning</string>
@@ -1619,10 +1650,8 @@ Language: sv_SE
     <string name="button_preview">Förhandsgranska</string>
     <string name="button_trash">Ta bort</string>
     <string name="button_stats">Statistik</string>
-    <string name="button_back">Tillbaka</string>
     <string name="stats_no_activity_this_period">Ingen aktivitet denna period</string>
     <string name="post_trashed">Inlägget placerat i papperskorgen</string>
-    <string name="post_deleted">Inlägg raderat</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för att komma åt denna blogg</string>
     <string name="reader_toast_err_follow_blog_not_found">Denna webbplats kunde inte hittas</string>
     <string name="undo">Ångra</string>

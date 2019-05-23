@@ -34,10 +34,8 @@ Language: sr_RS
     <string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
     <string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
     <string name="connectionbar_no_connection">Нема везе</string>
-    <string name="post_deleted">Чланак је обрисан</string>
     <string name="post_trashed">Чланак је послат на отпад</string>
     <string name="stats_no_activity_this_period">Нема активности за овај период</string>
-    <string name="button_back">Назад</string>
     <string name="button_stats">Статистике</string>
     <string name="button_trash">Отпад</string>
     <string name="button_preview">Предпреглед</string>

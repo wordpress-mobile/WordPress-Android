@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-03 07:54:09+0000
+Translation-Revision-Date: 2019-05-15 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="post_list_drafts">草稿</string>
+    <string name="post_list_published">已發佈</string>
+    <string name="post_list_author_everyone">所有人</string>
+    <string name="post_list_author_me">我</string>
+    <string name="error_restoring_post">還原文章時發生錯誤</string>
+    <string name="backdated_for">回溯至：%s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">上方顯示的項目會顯示在你的「洞察報告」分頁中。拖放以進行自訂。</string>
+    <string name="stats_insights_add_insights_header">新增洞察報告</string>
+    <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>
+    <string name="stats_insights_social">社交</string>
+    <string name="stats_insights_annual_site_stats">年度網站統計</string>
+    <string name="stats_view_follower_totals">關注者總數</string>
+    <string name="suggestion_fetch_error">無法載入網域建議</string>
+    <string name="suggestions_search_hint">輸入一個關鍵字以獲得更多構想</string>
+    <string name="suggestions_empty_list">找不到任何建議</string>
+    <string name="choose_domain">選擇網域</string>
+    <string name="register_domain">註冊網域</string>
+    <string name="jetpack_installed_message">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
+    <string name="stats_menu_remove">從洞察報告中移除</string>
+    <string name="stats_menu_move_down">向下移動</string>
+    <string name="stats_menu_move_up">向上移動</string>
+    <string name="stats_item_settings">統計資料項目設定</string>
+    <string name="post_moving_to_draft">正在將文章移至草稿</string>
+    <string name="post_restoring">正在還原文章</string>
+    <string name="post_restored">文章已還原</string>
+    <string name="post_trashing">正在將文章移至垃圾桶</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶會捨棄本機變更，你確定要繼續？</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">本機變更</string>
+    <string name="button_move_to_draft">移至草稿</string>
+    <string name="post_list_toggle_item_layout_list_view">切換至清單檢視</string>
+    <string name="post_list_toggle_item_layout_cards_view">切換至卡片檢視</string>
+    <string name="posts_trashed_empty">你沒有任何已移至垃圾桶的文章</string>
+    <string name="posts_draft_empty">你沒有任何文章草稿</string>
+    <string name="posts_scheduled_empty">你沒有任何已安排時間的文章</string>
+    <string name="posts_published_empty">你尚未發表任何文章</string>
     <string name="notification_wpcom_username_needed">請透過你的使用者名稱和密碼登入。</string>
     <string name="login_invalid_site_url">你輸入的網站地址無效。請重新輸入。</string>
     <string name="error_user_username_instead_of_email">請使用你的 WordPress.com 使用者名稱登入，而非電子郵件地址。</string>
@@ -187,7 +222,6 @@ Language: zh_TW
     <string name="stats_followers_count_message">%1$s 關注者總數：%2$s</string>
     <string name="stats_followers_email">電子郵件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">管理洞察報告</string>
     <string name="stats_empty_insights_title">尚未新增任何洞察報告</string>
     <string name="stats_no_data_yet">尚無資料</string>
     <string name="menu_debug">除錯選單</string>
@@ -287,14 +321,9 @@ Language: zh_TW
     <string name="reader_empty_followed_tags_subtitle">請在此處新增標籤，以尋找有關您最喜愛主題的文章</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="install_jetpack_retry">重試</string>
-    <string name="install_jetpack_continue">繼續</string>
-    <string name="jetpack_installation_problem_message">目前無法安裝 Jetpack</string>
     <string name="jetpack_installation_problem">發生問題</string>
-    <string name="jetpack_installed_message">你的網站已安裝 Jetpack。恭喜！</string>
     <string name="jetpack_installed">已安裝 Jetpack</string>
-    <string name="installing_jetpack_message">正在你的網站上安裝 Jetpack。這可能需要幾分鐘才能完成</string>
     <string name="installing_jetpack">正在安裝 Jetpack</string>
-    <string name="install_jetpack_message">我們不會儲存你的網站憑證，而且只會將其用於安裝 Jetpack</string>
     <string name="install_jetpack">安裝 Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>
@@ -594,7 +623,6 @@ Language: zh_TW
     <string name="dialog_confirm_publish_message_page">此頁面會立即發表。</string>
     <string name="dialog_confirm_publish_message_post">此文章會立即發表。</string>
     <string name="dialog_confirm_publish_title">現在要發表了嗎？</string>
-    <string name="dialog_confirm_delete_post">此文章會刪除並傳送至垃圾桶</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">無法上傳 %1$d 篇文章/個頁面</string>
     <string name="media_file_pages_plural_only_not_uploaded">無法上傳 %1$d 個頁面</string>
     <string name="media_file_page_singular_only_not_uploaded">無法上傳 1 個頁面</string>
@@ -899,7 +927,6 @@ Language: zh_TW
     <string name="async_promo_description_schedule_post">你現在只要退出編輯器，文章就會儲存並在幕後排程！馬上試用看看！</string>
     <string name="editor_uploading_post">你的文章正在上傳</string>
     <string name="uploading_media">正在上傳媒體…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">你確定嗎？刪除此文章也會取消媒體上傳作業。</string>
     <string name="page_scheduled">頁面已排程</string>
     <string name="post_scheduled">文章已排程</string>
     <string name="button_retry">重試</string>
@@ -958,8 +985,6 @@ Language: zh_TW
     <string name="editor_dropped_text_error">拖放文字時發生錯誤</string>
     <string name="editor_dropped_html_images_not_allowed">不允許在 HTML 模式拖放圖片</string>
     <string name="editor_content_hint">在此分享你的故事…</string>
-    <string name="post_status_trashed">已移至垃圾桶</string>
-    <string name="post_status_scheduled">已排程</string>
     <string name="post_status_post_private">私人</string>
     <string name="post_status_draft">草稿</string>
     <string name="post_status_pending_review">待審中</string>
@@ -1538,10 +1563,8 @@ Language: zh_TW
     <string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
     <string name="stats_insights_latest_post_summary">最新文章摘要</string>
     <string name="connectionbar_no_connection">沒有連線</string>
-    <string name="post_deleted">文章已刪除</string>
     <string name="post_trashed">文章已移至垃圾桶</string>
     <string name="stats_no_activity_this_period">此期間沒有任何活動</string>
-    <string name="button_back">返回</string>
     <string name="button_stats">統計</string>
     <string name="button_trash">垃圾桶</string>
     <string name="button_preview">預覽</string>

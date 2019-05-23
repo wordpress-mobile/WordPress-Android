@@ -200,8 +200,6 @@ Language: nb_NO
     <string name="stats_followers_count_message">Totalt %1$s følgere: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Behandle innsikter</string>
-    <string name="stats_empty_insights_description">Tilpass dine innsikter og få den viktigste informasjonen om ytelsen til nettstedet ditt</string>
     <string name="stats_empty_insights_title">Ingen innsikter lagt til ennå</string>
     <string name="stats_no_data_yet">Ingen data ennå</string>
     <string name="menu_debug">Feilrettingsmeny</string>
@@ -307,14 +305,9 @@ Language: nb_NO
     <string name="reader_empty_followed_tags_subtitle">Legg til emneord for å finne innlegg om dine favoritt-emner</string>
     <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="install_jetpack_retry">Prøv på nytt</string>
-    <string name="install_jetpack_continue">Fortsett</string>
-    <string name="jetpack_installation_problem_message">Jetpack kunne ikke installeres denne gang</string>
     <string name="jetpack_installation_problem">Det oppsto et problem</string>
-    <string name="jetpack_installed_message">Du har installert Jetpack på ditt nettsted. Gratulerer!</string>
     <string name="jetpack_installed">Jetpack installert</string>
-    <string name="installing_jetpack_message">Installerer Jetpack på ditt nettsted. Dette kan ta opp til et par minutter å fullføre</string>
     <string name="installing_jetpack">Installerer Jetpack</string>
-    <string name="install_jetpack_message">Din innlogging til nettstedet må lagres og vil kun bli brukt for å installere Jetpoack</string>
     <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -592,7 +585,6 @@ Language: nb_NO
     <string name="dialog_confirm_publish_message_page">Denn siden vil bli publsert straks.</string>
     <string name="dialog_confirm_publish_message_post">Dette innlegget vil bli publsert straks.</string>
     <string name="dialog_confirm_publish_title">Klar til å publisere?</string>
-    <string name="dialog_confirm_delete_post">Dette innlegget vil bli slettet og lagt i papirkurven</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d innlegg / sider ikke lastet opp</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sider ikke lastet opp</string>
     <string name="media_file_page_singular_only_not_uploaded">1 side ikke lastet opp</string>
@@ -873,7 +865,6 @@ Language: nb_NO
     <string name="async_promo_title_publish">Publiser med trygghet</string>
     <string name="editor_uploading_post">Innlegget ditt lastes opp</string>
     <string name="uploading_media">Laster opp medie …</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
     <string name="page_scheduled">Siden har blitt planlagt</string>
     <string name="post_scheduled">Innlegget har blitt planlagt</string>
     <string name="button_retry">Prøv igjen</string>
@@ -932,8 +923,6 @@ Language: nb_NO
     <string name="editor_dropped_text_error">En feil oppstod under slipping av tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Å slippe bilder når du er i HTML-modus, er ikke tillatt</string>
     <string name="editor_content_hint">Del historien din her …</string>
-    <string name="post_status_trashed">Lagt i papirkurven</string>
-    <string name="post_status_scheduled">Planlagt</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Avventer gjennomgang</string>
@@ -1534,10 +1523,8 @@ Language: nb_NO
     <string name="button_preview">Forhåndsvis</string>
     <string name="button_trash">Papirkurv</string>
     <string name="button_stats">Statistikk</string>
-    <string name="button_back">Tilbake</string>
     <string name="stats_no_activity_this_period">Ingen aktivitet i denne perioden</string>
     <string name="post_trashed">Innlegg lagt i papirkurven</string>
-    <string name="post_deleted">Innlegg slettet</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Du har ikke tillatelse til å få adgang til dette nettstedet</string>
     <string name="reader_toast_err_follow_blog_not_found">Dette nettstdet ble ikke funnet</string>
     <string name="undo">Angre</string>
