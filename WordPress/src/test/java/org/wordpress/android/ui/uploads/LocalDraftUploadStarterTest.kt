@@ -9,6 +9,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ProcessLifecycleOwner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -72,19 +73,51 @@ class LocalDraftUploadStarterTest {
     }
 
     @Test
-    fun `when the internet connection is restored, it uploads all local drafts`() {
+    fun `when the internet connection is restored and the app is in foreground, it uploads all local drafts`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
-        starter.activateAutoUploading(createMockedProcessLifecycleOwner())
+        // ON_RESUME -> app is in the foreground
+        val lifecycle = LifecycleRegistry(mock()).apply { handleLifecycleEvent(Event.ON_RESUME) }
 
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
+
+        // we need to reset the uploadServiceFacade mock as when the app moves to ON_RESUME state (comes to foreground)
+        // an automatic upload is initiated and we want to test whether changing connection while the app
+        // is in the foreground initiates the upload.
+        clearInvocations(uploadServiceFacade)
         // When
         connectionStatus.postValue(AVAILABLE)
 
         // Then
         verify(uploadServiceFacade, times(posts.size + pages.size)).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any(),
+                publish = any(),
+                isRetry = eq(true)
+        )
+    }
+
+    @Test
+    fun `when the internet connection is restored and the app is in background it doesn't upload all local drafts`() {
+        // Given
+        val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+
+        // ON_CREATE -> app is in the background
+        val lifecycle = LifecycleRegistry(mock()).apply { handleLifecycleEvent(Event.ON_CREATE) }
+
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
+
+        // When
+        connectionStatus.postValue(AVAILABLE)
+
+        // Then
+        verify(uploadServiceFacade, times(0)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),

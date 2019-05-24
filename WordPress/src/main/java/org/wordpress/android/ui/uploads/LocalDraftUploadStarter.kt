@@ -3,6 +3,7 @@ package org.wordpress.android.ui.uploads
 import android.arch.lifecycle.Lifecycle.Event
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
@@ -74,12 +75,11 @@ class LocalDraftUploadStarter @Inject constructor(
      * ```
      */
     fun activateAutoUploading(processLifecycleOwner: ProcessLifecycleOwner) {
-        // Since this class is meant to be a Singleton, it should be fine (I think) to use observeForever in here.
         // We're skipping the first emitted value because the processLifecycleObserver below will also trigger an
         // immediate upload.
-        connectionStatus.skip(1).observeForever {
+        connectionStatus.skip(1).observe(processLifecycleOwner, Observer {
             queueUploadFromAllSites()
-        }
+        })
 
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
