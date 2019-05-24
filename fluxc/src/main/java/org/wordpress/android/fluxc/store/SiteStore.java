@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.utils.SiteErrorUtils;
@@ -896,12 +897,15 @@ public class SiteStore extends Store {
 
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
+    private PostSqlUtils mPostSqlUtils;
 
     @Inject
-    public SiteStore(Dispatcher dispatcher, SiteRestClient siteRestClient, SiteXMLRPCClient siteXMLRPCClient) {
+    public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
+                     SiteXMLRPCClient siteXMLRPCClient) {
         super(dispatcher);
         mSiteRestClient = siteRestClient;
         mSiteXMLRPCClient = siteXMLRPCClient;
+        mPostSqlUtils = postSqlUtils;
     }
 
     @Override
@@ -1412,7 +1416,7 @@ public class SiteStore extends Store {
             if (res.duplicateSiteFound) {
                 event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
             }
-            SiteSqlUtils.removeWPComRestSitesAbsentFromList(fetchedSites.getSites());
+            SiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, fetchedSites.getSites());
         }
         emitChange(event);
     }

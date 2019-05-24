@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
@@ -81,7 +82,7 @@ class PageStoreTest {
         actionCaptor = argumentCaptor()
         val pages = listOf(pageWithoutQuery, pageWithQuery, pageWithoutTitle)
         whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-        store = PageStore(postStore, dispatcher, Dispatchers.Unconfined)
+        store = PageStore(postStore, PostSqlUtils(), dispatcher, Dispatchers.Unconfined)
     }
 
     @Test
