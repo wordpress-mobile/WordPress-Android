@@ -247,16 +247,4 @@
         <item name="android:textColor">@color/grey_500</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
-
-    <style name="StatsWidgetSelectTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
-    </style>
-
-    <style name="StatsDialogButton">
-        <item name="android:layout_margin">@dimen/margin_medium</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:textColor">@color/blue_500</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
 </resources>
