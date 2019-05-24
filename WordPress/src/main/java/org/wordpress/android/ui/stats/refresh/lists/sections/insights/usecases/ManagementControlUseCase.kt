@@ -9,12 +9,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import javax.inject.Inject
 import javax.inject.Named
 
 class ManagementControlUseCase
 @Inject constructor(
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val newsCardHandler: NewsCardHandler
 ) : StatelessUseCase<Boolean>(ManagementType.CONTROL, mainDispatcher) {
     override suspend fun loadCachedData() = true
 
@@ -27,6 +29,7 @@ class ManagementControlUseCase
     }
 
     private fun onClick() {
+        newsCardHandler.dismiss()
         navigateTo(ViewInsightsManagement)
     }
 }

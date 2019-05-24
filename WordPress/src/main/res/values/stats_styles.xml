@@ -243,7 +243,7 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="StatsNewTag" parent="TextAppearance.AppCompat.Body2">
+    <style name="StatsTag" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>

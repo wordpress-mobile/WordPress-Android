@@ -30,13 +30,13 @@ class ManagementNewsCardUseCase
     override fun buildLoadingItem(): List<BlockListItem> = listOf()
 
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
-        val editText = resourceProvider.getString(R.string.stats_management_edit)
-        val newsCardMessage = resourceProvider.getString(R.string.stats_management_news_card_message, editText)
+        val highlightedText = resourceProvider.getString(R.string.stats_management_edit)
+        val newsCardMessage = resourceProvider.getString(R.string.stats_management_news_card_message, highlightedText)
         return listOf(
                 ImageItem(R.drawable.insights_management_feature_resource),
                 Tag(R.string.stats_management_new),
                 BigTitle(R.string.stats_manage_your_stats),
-                Text(text = newsCardMessage, bolds = listOf(editText)),
+                Text(text = newsCardMessage, bolds = listOf(highlightedText)),
                 DialogButtons(
                         R.string.stats_management_try_it_now,
                         NavigationAction.create(this::onEditInsights),

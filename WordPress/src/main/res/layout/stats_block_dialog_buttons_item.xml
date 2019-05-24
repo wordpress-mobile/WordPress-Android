@@ -17,7 +17,7 @@
         android:padding="@dimen/margin_medium"
         android:textColor="@color/blue_500"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="Cnacel"/>
+        tools:text="Cancel"/>
 
     <Button
         android:id="@+id/button_positive"
