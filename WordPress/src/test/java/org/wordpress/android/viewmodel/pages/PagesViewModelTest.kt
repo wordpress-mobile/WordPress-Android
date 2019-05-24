@@ -19,11 +19,13 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -176,6 +178,42 @@ class PagesViewModelTest {
         // We get 2 calls because the `viewModel.start()` also requests an upload
         verify(localDraftUploadStarter, times(2)).queueUploadFromSite(eq(site))
         verifyNoMoreInteractions(localDraftUploadStarter)
+    }
+
+    @Test
+    fun `when a page is being uploaded, page actions are disabled`() = test {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
+
+        assertThat(viewModel.arePageActionsEnabled).isTrue()
+
+        // Act
+        viewModel.onPageEditFinished(remotePageId = 1_900, wasPageUpdated = true)
+
+        // Assert
+        assertThat(viewModel.arePageActionsEnabled).isFalse()
+    }
+
+    @Test
+    fun `when a page upload is completed, page actions are re-enabled`() = test {
+        // Given
+        val post = PostModel().apply {
+            id = 132
+            remotePostId = 1_9810L
+        }
+
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
+
+        viewModel.onPageEditFinished(remotePageId = post.remotePostId, wasPageUpdated = true)
+        assertThat(viewModel.arePageActionsEnabled).isFalse()
+
+        // When
+        viewModel.onPostUploaded(OnPostUploaded(post))
+
+        // Then
+        assertThat(viewModel.arePageActionsEnabled).isTrue()
     }
 
     private suspend fun setUpPageStoreWithEmptyPages() {
