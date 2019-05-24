@@ -49,7 +49,7 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
             viewModel.addWidget()
         }
 
-        viewModel.uiModel.observe(this, Observer { uiModel ->
+        viewModel.settingsModel.observe(this, Observer { uiModel ->
             uiModel?.let {
                 if (uiModel.siteTitle != null) {
                     site_value.text = uiModel.siteTitle

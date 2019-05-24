@@ -24,8 +24,11 @@ class ViewsWidgetViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableSelectedSite = MutableLiveData<SiteUiModel>()
     private val mutableViewMode = MutableLiveData<ViewMode>()
-    val uiModel: LiveData<UiModel> = merge(mutableSelectedSite, mutableViewMode) { selectedSite, viewMode ->
-        UiModel(
+    val settingsModel: LiveData<WidgetSettingsModel> = merge(
+            mutableSelectedSite,
+            mutableViewMode
+    ) { selectedSite, viewMode ->
+        WidgetSettingsModel(
                 selectedSite?.title,
                 viewMode
         )
@@ -98,7 +101,7 @@ class ViewsWidgetViewModel
         LIGHT(R.string.stats_widget_color_light), DARK(R.string.stats_widget_color_dark)
     }
 
-    data class UiModel(
+    data class WidgetSettingsModel(
         val siteTitle: String? = null,
         val viewMode: ViewMode? = null,
         val buttonEnabled: Boolean = siteTitle != null && viewMode != null
