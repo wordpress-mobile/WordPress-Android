@@ -147,7 +147,7 @@ class HelpActivity : AppCompatActivity() {
         RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
-        SITE_CREATION_CREATING("origin:site-create-creating"),
+        NEW_SITE_CREATION_CREATING("origin:new-site-create-creating"),
         NEW_SITE_CREATION_SEGMENTS("origin:new-site-create-site-segments"),
         NEW_SITE_CREATION_VERTICALS("origin:new-site-create-site-verticals"),
         NEW_SITE_CREATION_DOMAINS("origin:new-site-create-domains"),
