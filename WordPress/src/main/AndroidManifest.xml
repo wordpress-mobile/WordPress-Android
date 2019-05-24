@@ -110,20 +110,9 @@
             android:theme="@style/LoginTheme" />
 
         <activity
-            android:name=".ui.accounts.NewBlogActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/LoginTheme"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
             android:name=".ui.accounts.SignupEpilogueActivity"
             android:label="@string/signup_epilogue_screen_title"
             android:theme="@style/LoginTheme" />
-
-        <activity
-            android:name=".ui.accounts.SiteCreationActivity"
-            android:theme="@style/LoginTheme"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.sitecreation.NewSiteCreationActivity"
@@ -685,10 +674,6 @@
             android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
-        <service
-            android:name=".ui.accounts.signup.SiteCreationService"
-            android:exported="false"
-            android:label="Site Creation Service" />
 
         <service
             android:name=".ui.sitecreation.services.NewSiteCreationService"
