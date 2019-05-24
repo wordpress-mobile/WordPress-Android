@@ -58,7 +58,6 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
-        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
     }
