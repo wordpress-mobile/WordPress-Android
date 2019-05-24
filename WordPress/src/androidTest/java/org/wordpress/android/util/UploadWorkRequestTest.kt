@@ -48,7 +48,6 @@ class UploadWorkRequestTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testOneTimeUploadWorker() {
         val testDriver = WorkManagerTestInitHelper.getTestDriver()
         val workManager = WorkManager.getInstance()
@@ -75,7 +74,6 @@ class UploadWorkRequestTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testOneTimeUploadWorkerWithUnmetConstraints() {
         // Define inputs
         val site = SiteModel()
@@ -98,7 +96,6 @@ class UploadWorkRequestTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testPeriodicUploadWorkerWithMetConstraints() {
         // Define input data
         val testDriver = WorkManagerTestInitHelper.getTestDriver()
@@ -124,7 +121,6 @@ class UploadWorkRequestTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testPeriodicUploadWorkerWithMetConstraintsCalledTwice() {
         // Define input data
         val testDriver = WorkManagerTestInitHelper.getTestDriver()
