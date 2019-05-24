@@ -297,6 +297,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private PostModel mPost;
     private PostModel mPostForUndo;
+    // mPostSnapshotWhenEditorOpened should not be updated after the post editor session start
     private PostModel mPostSnapshotWhenEditorOpened;
 
     private Revision mRevision;
@@ -2062,7 +2063,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
                     // original post's status as we could not proceed with the action
-                    mPost.setStatus(mPostSnapshotWhenEditorOpened.getStatus());
+                    if (mPostSnapshotWhenEditorOpened != null) {
+                        mPost.setStatus(mPostSnapshotWhenEditorOpened.getStatus());
+                    } else {
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                    }
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
