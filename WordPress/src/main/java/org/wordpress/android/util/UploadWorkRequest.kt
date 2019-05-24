@@ -15,6 +15,7 @@ import androidx.work.Worker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import kotlinx.coroutines.runBlocking
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -32,9 +33,12 @@ class AutoUploadWorker(
     }
 
     override fun doWork(): Result {
-        when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
-            UPLOAD_FROM_ALL_SITES -> localDraftUploadStarter.queueUploadFromAllSites()
-            else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
+        runBlocking {
+            val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
+                UPLOAD_FROM_ALL_SITES -> localDraftUploadStarter.queueUploadFromAllSites()
+                else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
+            }
+            job?.join()
         }
         return Result.success()
     }
