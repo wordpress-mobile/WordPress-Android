@@ -51,7 +51,6 @@ class PagesViewModelTest {
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
-    private lateinit var pageModel: PageModel
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
     @Before
@@ -71,91 +70,93 @@ class PagesViewModelTest {
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
-        pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
     fun clearsResultAndLoadsDataOnStart() = test {
-        val pageModel = initPageRepo()
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false)
-        )
+        // Arrange
+        val pageModel = setUpPageStoreWithASinglePage()
 
+        // Act
         viewModel.start(site)
 
+        // Assert
         assertThat(listStates).containsExactly(REFRESHING, DONE)
         assertThat(pages).hasSize(2)
         assertThat(pages.last()).containsOnly(pageModel)
     }
 
-    private suspend fun initPageRepo(): PageModel {
-        val expectedPages = listOf(
-                pageModel
-        )
-        whenever(pageStore.getPagesFromDb(site)).thenReturn(
-                expectedPages
-        )
-        return pageModel
-    }
-
     @Test
     fun onSiteWithoutPages() = test {
-        whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
-        )
+        // Arrange
+        setUpPageStoreWithEmptyPages()
 
+        // Act
         viewModel.start(site)
 
+        // Assert
         assertThat(listStates).containsExactly(FETCHING, DONE)
         assertThat(pages).hasSize(2)
     }
 
     @Test
     fun onSearchReturnsResultsFromStore() = test {
-        initSearch()
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
+
         val query = "query"
         val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0))
         val expectedResult = sortedMapOf(DRAFTS to drafts)
         whenever(pageStore.search(site, query)).thenReturn(drafts)
 
+        // Act
         viewModel.onSearch(query, 0)
 
+        // Assert
         val result = viewModel.searchPages.value
-
         assertThat(result).isEqualTo(expectedResult)
     }
 
     @Test
     fun onEmptySearchResultEmitsEmptyItem() = runBlocking {
-        initSearch()
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
         val query = "query"
         whenever(pageStore.search(site, query)).thenReturn(listOf())
 
+        // Act
         viewModel.onSearch(query, 0)
 
+        // Assert
         val result = viewModel.searchPages.value
-
         assertThat(result).isEmpty()
     }
 
     @Test
     fun onEmptyQueryClearsSearch() = runBlocking {
-        initSearch()
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
         val query = ""
 
+        // Act
         viewModel.onSearch(query, 0)
 
+        // Assert
         val result = viewModel.searchPages.value
-
         assertThat(result).isNull()
     }
 
     @Test
     fun onStartUploadsAllLocalDrafts() = runBlocking {
+        // Arrange
+        setUpPageStoreWithEmptyPages()
+
         // Act
-        initSearch()
+        viewModel.start(site)
 
         // Assert
         verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
@@ -165,7 +166,8 @@ class PagesViewModelTest {
     @Test
     fun onPullToRefreshUploadsAllLocalDrafts() = runBlocking {
         // Arrange
-        initSearch()
+        setUpPageStoreWithEmptyPages()
+        viewModel.start(site)
 
         // Act
         viewModel.onPullToRefresh()
@@ -176,11 +178,21 @@ class PagesViewModelTest {
         verifyNoMoreInteractions(localDraftUploadStarter)
     }
 
-    private suspend fun initSearch() {
+    private suspend fun setUpPageStoreWithEmptyPages() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
                 OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
         )
-        viewModel.start(site)
+    }
+
+    private suspend fun setUpPageStoreWithASinglePage(): PageModel {
+        val pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0)
+
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(pageModel))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false)
+        )
+
+        return pageModel
     }
 }
