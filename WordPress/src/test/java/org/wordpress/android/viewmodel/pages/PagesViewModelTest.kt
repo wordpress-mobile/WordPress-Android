@@ -74,7 +74,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun clearsResultAndLoadsDataOnStart() = test {
+    fun `when started with a non-empty PageStore, it clears the results and loads the data`() = test {
         // Arrange
         val pageModel = setUpPageStoreWithASinglePage()
 
@@ -88,7 +88,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onSiteWithoutPages() = test {
+    fun `when started with an empty PageStore, it shows an initial fetch UI`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
 
@@ -101,7 +101,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onSearchReturnsResultsFromStore() = test {
+    fun `when searching, it returns the results from the Store`() = test {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
@@ -120,7 +120,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onEmptySearchResultEmitsEmptyItem() = runBlocking {
+    fun `when searching and the Store is empty, it returns an empty list`() = runBlocking {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
@@ -136,7 +136,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onEmptyQueryClearsSearch() = runBlocking {
+    fun `when searching with an empty query, it clears the search results`() = runBlocking {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
@@ -151,7 +151,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onStartUploadsAllLocalDrafts() = runBlocking {
+    fun `when started, it uploads all local drafts`() = runBlocking {
         // Arrange
         setUpPageStoreWithEmptyPages()
 
@@ -164,7 +164,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onPullToRefreshUploadsAllLocalDrafts() = runBlocking {
+    fun `when pulling to refresh, it uploads all local drafts`() = runBlocking {
         // Arrange
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
