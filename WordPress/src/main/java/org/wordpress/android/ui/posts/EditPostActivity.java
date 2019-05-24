@@ -297,7 +297,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private PostModel mPost;
     private PostModel mPostForUndo;
-    private PostModel mOriginalPost;
+    private PostModel mPostSnapshotWhenEditorOpened;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
     private Revision mRevision;
@@ -591,8 +591,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void initializePostObject() {
         if (mPost != null) {
-            mOriginalPost = mPost.clone();
-            mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
+            mPostSnapshotWhenEditorOpened = mPost.clone();
+            mOriginalPostHadLocalChangesOnOpen = mPostSnapshotWhenEditorOpened.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
                 try {
@@ -1812,7 +1812,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
 
         // update the original post object, so we'll know of new changes
-        mOriginalPost = mPost.clone();
+        mPostSnapshotWhenEditorOpened = mPost.clone();
 
         if (mShowAztecEditor) {
             // update the list of uploading ids
@@ -1928,11 +1928,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
-                // If no changes have been made to the post, set it back to the original - don't save it
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mOriginalPost));
-                return false;
-            } else {
+            if (PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost)) {
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
@@ -2071,7 +2067,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
                     // original post's status as we could not proceed with the action
-                    mPost.setStatus(mOriginalPost.getStatus());
+                    mPost.setStatus(mPostSnapshotWhenEditorOpened.getStatus());
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -2157,14 +2153,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean shouldSavePost() {
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
-        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+        boolean hasChanges = PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
         boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
                                                    || PostStatus.fromPost(mPost) == PostStatus.PENDING)
                                                       && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
-        return (mOriginalPost != null && hasChanges)
+        return (mPostSnapshotWhenEditorOpened != null && hasChanges)
                              || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
     }
 
@@ -2175,8 +2171,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isFirstTimePublish() {
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mOriginalPost) == PostStatus.PENDING);
+               && (mPost.isLocalDraft() || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
     }
 
     /**
@@ -2612,7 +2608,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
+                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
@@ -2647,7 +2644,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setContent(content);
         }
 
-        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
+                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
