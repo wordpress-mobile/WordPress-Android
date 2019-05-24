@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/colors"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:paddingEnd="@dimen/margin_extra_medium_large"
+    android:paddingStart="@dimen/margin_extra_medium_large"
+    android:paddingTop="16dp"
+    android:scrollbars="vertical">
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:id="@+id/stats_widget_light_color"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:checked="true"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:text="@string/stats_widget_color_light"/>
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:id="@+id/stats_widget_dark_color"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:text="@string/stats_widget_color_dark"/>
+</RadioGroup>

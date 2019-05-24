@@ -14,12 +14,10 @@ import android.view.View
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.stats_site_selector.*
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class SiteSelectionDialogFragment : AppCompatDialogFragment() {
-    @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ViewsWidgetViewModel

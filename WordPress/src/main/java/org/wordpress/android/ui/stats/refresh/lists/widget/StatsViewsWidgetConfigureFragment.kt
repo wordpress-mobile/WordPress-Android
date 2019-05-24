@@ -42,7 +42,7 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
             SiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
         }
         color_container.setOnClickListener {
-            viewModel.colorClicked()
+            ColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
         }
 
         add_widget_button.setOnClickListener {
@@ -54,8 +54,8 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
                 if (uiModel.siteTitle != null) {
                     site_value.text = uiModel.siteTitle
                 }
-                if (uiModel.viewMode != null) {
-                    color_value.setText(uiModel.viewMode.title)
+                if (uiModel.color != null) {
+                    color_value.setText(uiModel.color.title)
                 }
                 add_widget_button.isEnabled = uiModel.buttonEnabled
             }

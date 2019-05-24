@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.LIGHT
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -23,14 +24,14 @@ class ViewsWidgetViewModel
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableSelectedSite = MutableLiveData<SiteUiModel>()
-    private val mutableViewMode = MutableLiveData<ViewMode>()
+    private val mutableViewMode = MutableLiveData<Color>()
     val settingsModel: LiveData<WidgetSettingsModel> = merge(
             mutableSelectedSite,
             mutableViewMode
     ) { selectedSite, viewMode ->
         WidgetSettingsModel(
                 selectedSite?.title,
-                viewMode
+                viewMode ?: LIGHT
         )
     }
     private val mutableWidgetAdded = MutableLiveData<Event<WidgetAdded>>()
@@ -47,7 +48,7 @@ class ViewsWidgetViewModel
         this.appWidgetId = appWidgetId
         val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
         if (colorModeId >= 0) {
-            mutableViewMode.postValue(ViewMode.values()[colorModeId])
+            mutableViewMode.postValue(Color.values()[colorModeId])
         }
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         if (siteId > -1) {
@@ -55,8 +56,8 @@ class ViewsWidgetViewModel
         }
     }
 
-    fun colorClicked() {
-        TODO("not implemented")
+    fun colorClicked(color: Color) {
+        mutableViewMode.postValue(color)
     }
 
     fun addWidget() {
@@ -97,14 +98,14 @@ class ViewsWidgetViewModel
         }
     }
 
-    enum class ViewMode(@StringRes val title: Int) {
+    enum class Color(@StringRes val title: Int) {
         LIGHT(R.string.stats_widget_color_light), DARK(R.string.stats_widget_color_dark)
     }
 
     data class WidgetSettingsModel(
         val siteTitle: String? = null,
-        val viewMode: ViewMode? = null,
-        val buttonEnabled: Boolean = siteTitle != null && viewMode != null
+        val color: Color,
+        val buttonEnabled: Boolean = siteTitle != null
     )
 
     data class WidgetAdded(val appWidgetId: Int)
