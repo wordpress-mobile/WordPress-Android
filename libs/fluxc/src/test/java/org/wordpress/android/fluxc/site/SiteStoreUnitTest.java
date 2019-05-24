@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -45,7 +46,8 @@ import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
-    private SiteStore mSiteStore = new SiteStore(new Dispatcher(), Mockito.mock(SiteRestClient.class),
+    private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
+    private SiteStore mSiteStore = new SiteStore(new Dispatcher(), mPostSqlUtils, Mockito.mock(SiteRestClient.class),
             Mockito.mock(SiteXMLRPCClient.class));
 
     @Before
@@ -811,7 +813,7 @@ public class SiteStoreUnitTest {
         sitesToKeep.addAll(allSites.subList(0, 6));
 
         // remove six sites (2/3 * (15 - 6))
-        SiteSqlUtils.removeWPComRestSitesAbsentFromList(sitesToKeep);
+        SiteSqlUtils.removeWPComRestSitesAbsentFromList(mPostSqlUtils, sitesToKeep);
 
         assertTrue(mSiteStore.getSitesCount() == 9);
 
