@@ -9,11 +9,11 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ProcessLifecycleOwner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
+import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -87,7 +87,7 @@ class LocalDraftUploadStarterTest {
         // we need to reset the uploadServiceFacade mock as when the app moves to ON_RESUME state (comes to foreground)
         // an automatic upload is initiated and we want to test whether changing connection while the app
         // is in the foreground initiates the upload.
-        reset(uploadServiceFacade)
+        clearInvocations(uploadServiceFacade)
         // When
         connectionStatus.postValue(AVAILABLE)
 
