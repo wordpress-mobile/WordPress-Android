@@ -33,6 +33,7 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 public class UploadSqlUtilsTest {
     private Random mRandom = new Random(System.currentTimeMillis());
+    private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
 
     @Before
     public void setUp() {
@@ -173,7 +174,7 @@ public class UploadSqlUtilsTest {
     @Test
     public void testInsertPost() {
         PostModel testPost = UploadTestUtils.getTestPost();
-        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
+        assertEquals(1, mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
         List<PostModel> postList = PostTestUtils.getPosts();
         assertEquals(1, postList.size());
         assertNotNull(postList.get(0));
@@ -189,7 +190,7 @@ public class UploadSqlUtilsTest {
         assertEquals(PostUploadModel.PENDING, postUploadModel.getUploadState());
 
         // Deleting the PostModel should cause the corresponding PostUploadModel to be deleted also
-        PostSqlUtils.deletePost(testPost);
+        mPostSqlUtils.deletePost(testPost);
 
         postList = PostTestUtils.getPosts();
         assertTrue(postList.isEmpty());
@@ -202,10 +203,10 @@ public class UploadSqlUtilsTest {
     public void testGetPostModelsByState() {
         PostModel testPost1 = UploadTestUtils.getTestPost();
         testPost1.setIsLocalDraft(true);
-        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost1));
+        assertEquals(1, mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost1));
         PostModel testPost2 = UploadTestUtils.getTestPost();
         testPost2.setIsLocalDraft(true);
-        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost2));
+        assertEquals(1, mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost2));
         List<PostModel> postList = PostTestUtils.getPosts();
         assertEquals(2, postList.size());
 
@@ -255,8 +256,8 @@ public class UploadSqlUtilsTest {
         testPost1.setIsLocalDraft(true);
         PostModel testPost2 = UploadTestUtils.getTestPost();
         testPost2.setIsLocalDraft(true);
-        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost1));
-        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost2));
+        assertEquals(1, mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost1));
+        assertEquals(1, mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost2));
         List<PostModel> postModels = PostTestUtils.getPosts();
         assertEquals(2, postModels.size());
 
