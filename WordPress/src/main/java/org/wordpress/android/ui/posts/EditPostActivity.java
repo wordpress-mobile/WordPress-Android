@@ -298,7 +298,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mPost;
     private PostModel mPostForUndo;
     private PostModel mPostSnapshotWhenEditorOpened;
-    private boolean mOriginalPostHadLocalChangesOnOpen;
 
     private Revision mRevision;
 
@@ -592,7 +591,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private void initializePostObject() {
         if (mPost != null) {
             mPostSnapshotWhenEditorOpened = mPost.clone();
-            mOriginalPostHadLocalChangesOnOpen = mPostSnapshotWhenEditorOpened.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
                 try {
@@ -1230,7 +1228,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         showDiscardChanges = true;
                     } else {
                         // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+                        showDiscardChanges = mPostSnapshotWhenEditorOpened.isLocallyChanged();
                     }
                 }
                 discardChanges.setVisible(showDiscardChanges);
@@ -1810,9 +1808,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private synchronized void savePostToDb() {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
-
-        // update the original post object, so we'll know of new changes
-        mPostSnapshotWhenEditorOpened = mPost.clone();
 
         if (mShowAztecEditor) {
             // update the list of uploading ids
