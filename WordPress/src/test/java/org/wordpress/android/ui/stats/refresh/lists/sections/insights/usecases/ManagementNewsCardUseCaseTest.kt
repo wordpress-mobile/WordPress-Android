@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
@@ -17,15 +18,22 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Image
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class ManagementNewsCardUseCaseTest : BaseUnitTest() {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var newsCardHandler: NewsCardHandler
+    @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: ManagementNewsCardUseCase
     @Before
     fun setUp() {
-        useCase = ManagementNewsCardUseCase(Dispatchers.Unconfined, resourceProvider, newsCardHandler)
+        useCase = ManagementNewsCardUseCase(
+                Dispatchers.Unconfined,
+                resourceProvider,
+                newsCardHandler,
+                analyticsTrackerWrapper
+        )
     }
 
     @Test
@@ -56,10 +64,12 @@ class ManagementNewsCardUseCaseTest : BaseUnitTest() {
 
         dialogButtons.positiveAction.click()
 
+        verify(analyticsTrackerWrapper).track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
         verify(newsCardHandler).goToEdit()
 
         dialogButtons.negativeAction.click()
 
+        verify(analyticsTrackerWrapper).track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
         verify(newsCardHandler).dismiss()
     }
 
