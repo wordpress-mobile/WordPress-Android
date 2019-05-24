@@ -8,39 +8,36 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.impl.utils.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.wordpress.android.WordPressTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.DaggerMockedUploadAppComponent
-import org.wordpress.android.modules.FakeLocalDraftUploadStarter
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 class UploadWorkRequestTest {
-    @Inject lateinit var mockedLocalDraftUploadStarter: LocalDraftUploadStarter
-    lateinit var fakeLocalDraftUploadStarter: FakeLocalDraftUploadStarter
+    private val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
+    private val siteStore = mock<SiteStore>()
 
     @Before
     fun setUp() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val app = instrumentation.targetContext.applicationContext as WordPressTest
-        val appComponent = DaggerMockedUploadAppComponent.builder()
-                .application(app)
-                .build()
-        app.setAppComponent(appComponent)
-        appComponent.inject(this)
-        fakeLocalDraftUploadStarter = mockedLocalDraftUploadStarter as FakeLocalDraftUploadStarter
-
         val context = InstrumentationRegistry.getTargetContext()
         val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor here to make it easier to write tests
                 .setExecutor(SynchronousExecutor())
+                .setWorkerFactory(AutoUploadWorker.Factory(localDraftUploadStarter, siteStore))
                 .build()
 
         // Initialize WorkManager for instrumentation tests.
@@ -54,6 +51,7 @@ class UploadWorkRequestTest {
 
         // Define inputs
         val site = SiteModel()
+        whenever(siteStore.getSiteByLocalId(any())).doReturn(site)
 
         // Enqueue
         val (request, operation) = enqueueUploadWorkRequestForSite(site)
@@ -68,8 +66,7 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Check the work was successful and the method was called with the right argument
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromSite),
-                `is`(1))
+        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
         assertThat(workInfo.state, `is`(WorkInfo.State.SUCCEEDED))
     }
 
@@ -77,6 +74,7 @@ class UploadWorkRequestTest {
     fun testOneTimeUploadWorkerWithUnmetConstraints() {
         // Define inputs
         val site = SiteModel()
+        whenever(siteStore.getSiteByLocalId(any())).doReturn(site)
 
         val workManager = WorkManager.getInstance()
 
@@ -90,8 +88,7 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // We didn't call setAllConstraintsMet earlier, so the work won't be executed (can't be success or failure)
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromSite),
-                `is`(0))
+        verifyZeroInteractions(localDraftUploadStarter)
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -115,8 +112,7 @@ class UploadWorkRequestTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Periodic upload worker will stay enqueued after success/failure: ENQUEUED -> RUNNING -> ENQUEUED
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromAllSites),
-                `is`(1))
+        verify(localDraftUploadStarter, times(1)).queueUploadFromAllSites()
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -146,8 +142,7 @@ class UploadWorkRequestTest {
         operation.result.get()
 
         // Check LocalDraftUploadStarter.queueUploadFromAllSites() was called twice
-        assertThat(fakeLocalDraftUploadStarter.counter.getValue(fakeLocalDraftUploadStarter::queueUploadFromAllSites),
-                `is`(2))
+        verify(localDraftUploadStarter, times(2)).queueUploadFromAllSites()
 
         // WorkRequest should still be queued
         val workInfo2 = workManager.getWorkInfoById(request.id).get()
