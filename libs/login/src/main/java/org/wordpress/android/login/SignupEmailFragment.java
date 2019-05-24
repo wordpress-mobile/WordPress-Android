@@ -324,6 +324,10 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == EMAIL_CREDENTIALS_REQUEST_CODE) {
+            if (mEmailInput == null) {
+                // Activity result received before the fragments onCreateView(), disregard result.
+                return;
+            }
             if (resultCode == RESULT_OK) {
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
                 mEmailInput.getEditText().setText(credential.getId());
