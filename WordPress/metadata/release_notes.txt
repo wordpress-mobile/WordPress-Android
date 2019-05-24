@@ -1,4 +1,2 @@
-* Explore the updated blog posts list screen: it can sort posts by publication status and filter them by author, and includes a compact-view toggle.
-* Focus on the most important stats in the Insights screen — tap the Edit button to customize your view.
-* Add a soundtrack to your Reader experience! Audio embeds are now playable there.
-* It’s always nice to save space on your device, so you’ll love the (significantly) smaller download size of the app.
+Better offline support: If you draft offline, drafts automatically upload to the server when you log in.
+Clearer stats: Navigate to a post’s detailed data by clicking on its title on the Stats screen. The current day’s stats appear in gray to help you remember that they’re not final.
