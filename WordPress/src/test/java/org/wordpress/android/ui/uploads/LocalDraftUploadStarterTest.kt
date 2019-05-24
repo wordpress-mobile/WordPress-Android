@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -50,12 +51,23 @@ class LocalDraftUploadStarterTest {
     )
     private val posts = sitesAndPosts.values.flatten()
 
+    private val sitesAndPages: Map<SiteModel, List<PostModel>> = mapOf(
+            sites[0] to listOf(createPostModel(), createPostModel()),
+            sites[1] to listOf(createPostModel(), createPostModel(), createPostModel(), createPostModel())
+    )
+    private val pages = sitesAndPages.values.flatten()
+
     private val siteStore = mock<SiteStore> {
         on { sites } doReturn sites
     }
     private val postStore = mock<PostStore> {
         sites.forEach {
-            on { getLocalDraftPosts(eq(it)) } doReturn sitesAndPosts[it]
+            on { getLocalDraftPosts(eq(it)) } doReturn sitesAndPosts.getValue(it)
+        }
+    }
+    private val pageStore = mock<PageStore> {
+        sites.forEach {
+            onBlocking { getLocalDraftPages(eq(it)) } doReturn sitesAndPages.getValue(it)
         }
     }
 
@@ -72,7 +84,7 @@ class LocalDraftUploadStarterTest {
         connectionStatus.postValue(AVAILABLE)
 
         // Then
-        verify(uploadServiceFacade, times(posts.size)).uploadPost(
+        verify(uploadServiceFacade, times(posts.size + pages.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),
@@ -96,7 +108,7 @@ class LocalDraftUploadStarterTest {
         lifecycle.handleLifecycleEvent(Event.ON_START)
 
         // Then
-        verify(uploadServiceFacade, times(posts.size)).uploadPost(
+        verify(uploadServiceFacade, times(posts.size + pages.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),
@@ -119,7 +131,8 @@ class LocalDraftUploadStarterTest {
         starter.queueUploadFromSite(site)
 
         // Then
-        verify(uploadServiceFacade, times(sitesAndPosts.getValue(site).size)).uploadPost(
+        val expectedUploadPostExecutions = sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size
+        verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),
@@ -139,12 +152,21 @@ class LocalDraftUploadStarterTest {
                     posts.subList(posts.size / 2, posts.size)
             )
         }
+        val (expectedQueuedPages, expectedUploadedPages) = sitesAndPages.getValue(site).let { pages ->
+            // Split into halves of already queued and what should be uploaded
+            return@let Pair(
+                    pages.subList(0, pages.size / 2),
+                    pages.subList(pages.size / 2, pages.size)
+            )
+        }
+        val expectedQueuedPostsAndPages = expectedQueuedPosts + expectedQueuedPages
+        val expectedUploadPostsAndPages = expectedUploadedPosts + expectedUploadedPages
 
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = mock<UploadServiceFacade> {
             on { isPostUploadingOrQueued(any()) } doAnswer {
                 val post = it.arguments.first() as PostModel
-                expectedQueuedPosts.contains(post)
+                expectedQueuedPostsAndPages.contains(post)
             }
         }
 
@@ -154,14 +176,17 @@ class LocalDraftUploadStarterTest {
         starter.queueUploadFromSite(site)
 
         // Then
-        verify(uploadServiceFacade, times(expectedUploadedPosts.size)).uploadPost(
+        verify(uploadServiceFacade, times(expectedUploadPostsAndPages.size)).uploadPost(
                 context = any(),
-                post = argWhere { expectedUploadedPosts.contains(it) },
+                post = argWhere { expectedUploadPostsAndPages.contains(it) },
                 trackAnalytics = any(),
                 publish = any(),
                 isRetry = eq(true)
         )
-        verify(uploadServiceFacade, times(sitesAndPosts.getValue(site).size)).isPostUploadingOrQueued(any())
+        verify(
+                uploadServiceFacade,
+                times(sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size)
+        ).isPostUploadingOrQueued(any())
         verifyNoMoreInteractions(uploadServiceFacade)
     }
 
@@ -172,6 +197,7 @@ class LocalDraftUploadStarterTest {
     ) = LocalDraftUploadStarter(
             context = mock(),
             postStore = postStore,
+            pageStore = pageStore,
             siteStore = siteStore,
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
