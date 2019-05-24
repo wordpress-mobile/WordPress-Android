@@ -80,7 +80,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.AutoUploadWorker;
+import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -91,7 +91,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
-import org.wordpress.android.util.UploadWorkRequestKt;
+import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -318,11 +318,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
         // It will upload local draft or published posts with local changes to the server.
-        UploadWorkRequestKt.enqueuePeriodicUploadWorkRequestForAllSites();
+        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
     }
 
     protected void initWorkManager() {
-        AutoUploadWorker.Factory factory = new AutoUploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
+        UploadWorker.Factory factory = new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
         androidx.work.Configuration config =
                 (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
         WorkManager.initialize(this, config);

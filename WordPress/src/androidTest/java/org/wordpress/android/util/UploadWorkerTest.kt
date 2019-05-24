@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 
 @RunWith(AndroidJUnit4::class)
-class UploadWorkRequestTest {
+class UploadWorkerTest {
     private val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
     private val siteStore = mock<SiteStore>()
 
@@ -37,7 +37,7 @@ class UploadWorkRequestTest {
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor here to make it easier to write tests
                 .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(AutoUploadWorker.Factory(localDraftUploadStarter, siteStore))
+                .setWorkerFactory(UploadWorker.Factory(localDraftUploadStarter, siteStore))
                 .build()
 
         // Initialize WorkManager for instrumentation tests.

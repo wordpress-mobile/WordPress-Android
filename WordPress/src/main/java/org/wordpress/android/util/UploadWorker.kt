@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import java.util.concurrent.TimeUnit.HOURS
 
-class AutoUploadWorker(
+class UploadWorker(
     appContext: Context,
     workerParams: WorkerParameters,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
@@ -53,7 +53,7 @@ class AutoUploadWorker(
             workerParameters: WorkerParameters
         ): ListenableWorker? {
             // TODO This should use the [workerClassName] if there are other of Worker subclasses in the project
-            return AutoUploadWorker(appContext, workerParameters, localDraftUploadStarter, siteStore)
+            return UploadWorker(appContext, workerParameters, localDraftUploadStarter, siteStore)
         }
     }
 }
@@ -65,7 +65,7 @@ private fun getUploadConstraints(): Constraints {
 }
 
 fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operation> {
-    val request = OneTimeWorkRequestBuilder<AutoUploadWorker>()
+    val request = OneTimeWorkRequestBuilder<UploadWorker>()
             .setConstraints(getUploadConstraints())
             .setInputData(workDataOf(WordPress.LOCAL_SITE_ID to site.id))
             .build()
@@ -77,7 +77,7 @@ fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operatio
 }
 
 fun enqueuePeriodicUploadWorkRequestForAllSites(): Pair<WorkRequest, Operation> {
-    val request = PeriodicWorkRequestBuilder<AutoUploadWorker>(8, HOURS, 6, HOURS)
+    val request = PeriodicWorkRequestBuilder<UploadWorker>(8, HOURS, 6, HOURS)
             .setConstraints(getUploadConstraints())
             .build()
     val operation = WorkManager.getInstance().enqueueUniquePeriodicWork(
