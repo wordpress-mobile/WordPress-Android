@@ -1132,6 +1132,7 @@ public class MySiteFragment extends Fragment implements
     private void updateDomainRegistrationCta() {
         // only show the Domain Registration CTA if domain registration is enabled
         if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainRegistrationCtaVisible) {
+            AnalyticsTracker.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN);
             mDomainRegistrationCta.setVisibility(View.VISIBLE);
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);

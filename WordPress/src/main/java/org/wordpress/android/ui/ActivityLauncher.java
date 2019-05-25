@@ -423,6 +423,7 @@ public class ActivityLauncher {
     }
 
     public static void viewDomainRegistrationActivity(Activity activity, SiteModel site) {
+        AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, site);
         Intent intent = new Intent(activity, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);

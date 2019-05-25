@@ -1598,6 +1598,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE:
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 return "app_reviews_significant_event_incremented";
+            case DOMAIN_CREDIT_PROMPT_SHOWN:
+                return "domain_credit_prompt_shown";
+            case DOMAIN_CREDIT_REDEMPTION_TAPPED:
+                return "domain_credit_redemption_tapped";
+            case DOMAIN_CREDIT_REDEMPTION_SUCCESS:
+                return "domain_credit_redemption_success";
         }
         return null;
     }

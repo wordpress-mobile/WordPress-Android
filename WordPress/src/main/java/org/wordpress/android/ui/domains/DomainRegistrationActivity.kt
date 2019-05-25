@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 
 class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +52,7 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
     }
 
     override fun onDomainRegistered(domainName: String) {
+        AnalyticsTracker.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
         supportFragmentManager.beginTransaction()
                 .setCustomAnimations(
                         R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
