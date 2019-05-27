@@ -29,7 +29,7 @@
         android:textColorHint="@color/neutral_300"
         tools:drawableStart="@drawable/ic_search_white_24dp"
         tools:drawableTint="@color/neutral_300"
-        tools:hint="@string/site_creation_domain_keywords_hint"
+        tools:hint="Type a keyword for more ideas"
         tools:ignore="RtlSymmetry"
         tools:targetApi="o">
     </EditText>

@@ -2,8 +2,13 @@ package org.wordpress.android.viewmodel.pages
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,6 +25,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.test
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -40,21 +46,24 @@ class PagesViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var localDraftUploadStarter: LocalDraftUploadStarter
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
     private lateinit var pageModel: PageModel
 
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         viewModel = PagesViewModel(
-                pageStore,
-                dispatcher,
-                actionPerformer,
-                networkUtils,
-                Dispatchers.Unconfined,
-                Dispatchers.Unconfined
+                pageStore = pageStore,
+                dispatcher = dispatcher,
+                actionPerfomer = actionPerformer,
+                networkUtils = networkUtils,
+                localDraftUploadStarter = localDraftUploadStarter,
+                uiDispatcher = Dispatchers.Unconfined,
+                defaultDispatcher = Dispatchers.Unconfined
         )
         listStates = mutableListOf()
         pages = mutableListOf()
@@ -141,6 +150,30 @@ class PagesViewModelTest {
         val result = viewModel.searchPages.value
 
         assertThat(result).isNull()
+    }
+
+    @Test
+    fun onStartUploadsAllLocalDrafts() = runBlocking {
+        // Act
+        initSearch()
+
+        // Assert
+        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
+        verifyNoMoreInteractions(localDraftUploadStarter)
+    }
+
+    @Test
+    fun onPullToRefreshUploadsAllLocalDrafts() = runBlocking {
+        // Arrange
+        initSearch()
+
+        // Act
+        viewModel.onPullToRefresh()
+
+        // Assert
+        // We get 2 calls because the `viewModel.start()` also requests an upload
+        verify(localDraftUploadStarter, times(2)).queueUploadFromSite(eq(site))
+        verifyNoMoreInteractions(localDraftUploadStarter)
     }
 
     private suspend fun initSearch() {

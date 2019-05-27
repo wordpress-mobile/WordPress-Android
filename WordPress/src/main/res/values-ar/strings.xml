@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-24 19:41:07+0000
+Translation-Revision-Date: 2019-05-14 11:54:08+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="post_list_drafts">المسودات</string>
+    <string name="post_list_published">منشور</string>
+    <string name="post_list_author_everyone">الجميع</string>
+    <string name="post_list_author_me">أنا</string>
+    <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
+    <string name="backdated_for">تاريخ سابق ليوم: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">ستظهر العناصر الموضَّحة أعلاه في علامة تبويب الرؤى الخاصة بك. اسحب وأفلت للتخصيص.</string>
+    <string name="stats_insights_add_insights_header">إضافة رؤى</string>
+    <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
+    <string name="stats_insights_social">اجتماعي</string>
+    <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>
+    <string name="stats_view_follower_totals">إجماليات المتابعين</string>
+    <string name="suggestion_fetch_error">تعذَّر تحميل اقتراحات النطاق</string>
+    <string name="suggestions_search_hint">كتابة كلمة أساسية للحصول على مزيد من الأفكار</string>
+    <string name="suggestions_empty_list">لم يتم العثور على أي اقتراحات</string>
+    <string name="choose_domain">اختيار نطاق</string>
+    <string name="register_domain">تسجيل نطاق</string>
+    <string name="jetpack_installed_message">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
+    <string name="stats_menu_remove">إزالة من الرؤى</string>
+    <string name="stats_menu_move_down">نقل إلى أسفل</string>
+    <string name="stats_menu_move_up">نقل إلى أعلى</string>
+    <string name="stats_item_settings">إعدادات عنصر الإحصاءات</string>
+    <string name="post_moving_to_draft">يجري نقل المقالة إلى المسودة</string>
+    <string name="post_restoring">تجري استعادة المقالة</string>
+    <string name="post_restored">تمت استعادة المقالة</string>
+    <string name="post_trashing">يجري نقل المقالة إلى سلة المهملات</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية، ‏‏هل تريد الاستمرار بالتأكيد؟</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">التغييرات المحلية</string>
+    <string name="button_move_to_draft">نقل إلى المسودة</string>
+    <string name="post_list_toggle_item_layout_list_view">تبديل إلى عرض القائمة</string>
+    <string name="post_list_toggle_item_layout_cards_view">تبديل إلى عرض البطاقات</string>
+    <string name="posts_trashed_empty">ليس لديك أي مقالات تم وضعها في سلة المهملات</string>
+    <string name="posts_draft_empty">ليس لديك أي مسودة مقالات</string>
+    <string name="posts_scheduled_empty">ليس لديك أية مقالات مجدولة</string>
+    <string name="posts_published_empty">لم تنشر أي مقالات حتى الآن</string>
     <string name="notification_wpcom_username_needed">يرجى تسجيل الدخول باسم المستخدم وكلمة المرور الخاصة بك.</string>
     <string name="login_invalid_site_url">عنوان الموقع الذي أدخلته غير صالح. يرجى إعادة إدخاله.</string>
     <string name="error_user_username_instead_of_email">يرجى تسجيل الدخول باستخدام اسم مستخدم WordPress.com الخاص بك بدلاً من عنوان بريدك الإلكتروني.</string>
@@ -235,7 +270,6 @@ Language: ar
     <string name="stats_followers_email">البريد الإلكتروني</string>
     <string name="stats_followers_wordpress_com">ووردبريس.كوم</string>
     <string name="stats_manage_insights">إدارة الرؤى</string>
-    <string name="stats_empty_insights_description">تخصيص الرؤى الخاصة بك والحصول على معلومات حول أداء موقعك</string>
     <string name="stats_empty_insights_title">لم تتم إضافة رى حتى الآن</string>
     <string name="stats_no_data_yet">لا توجد بيانات حتى الآن</string>
     <string name="menu_debug">قائمة تصحيح الأخطاء</string>
@@ -343,12 +377,11 @@ Language: ar
     <string name="reader_empty_followed_tags_subtitle">أضف وسومًا هنا للعثور على مقالات حول موضوعاتك المفضلة</string>
     <string name="login_to_to_connect_jetpack">سجّل الدخول إلى حساب WordPress.com الذي تستخدمه للاتصال بـ Jetpack.</string>
     <string name="install_jetpack_retry">إعادة المحاولة</string>
-    <string name="install_jetpack_continue">المتابعة</string>
-    <string name="jetpack_installation_problem_message">يتعذر تنصيب Jetpack في الوقت الحالي</string>
+    <string name="install_jetpack_continue">الإعداد</string>
+    <string name="jetpack_installation_problem_message">يتعذر تنصيب Jetpack في الوقت الحالي.</string>
     <string name="jetpack_installation_problem">حدثت مشكلة</string>
-    <string name="jetpack_installed_message">أصبحت إضافة Jetpack منصّبة على موقعك. تهانينا!</string>
     <string name="jetpack_installed">تمّ تنصيب Jetpack</string>
-    <string name="installing_jetpack_message">تنصيب Jetpack على موقعك. قد يستغرق هذا الأمر وقتًا يصل إلى بضع دقائق لاكتماله</string>
+    <string name="installing_jetpack_message">تنصيب Jetpack على موقعك. قد يستغرق هذا الأمر وقتًا يصل إلى بضع دقائق لاكتماله.</string>
     <string name="installing_jetpack">تنصيب Jetpack</string>
     <string name="install_jetpack_message">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تنصيب Jetpack.</string>
     <string name="install_jetpack">تنصيب Jetpack</string>
@@ -651,7 +684,6 @@ Language: ar
     <string name="dialog_confirm_publish_message_page">سيتم نشر هذه الصفحة فورًا.</string>
     <string name="dialog_confirm_publish_message_post">سيتم نشر هذه المقالة فورًا.</string>
     <string name="dialog_confirm_publish_title">هل أنت جاهز للنشر؟</string>
-    <string name="dialog_confirm_delete_post">سيتم حذف هذه المقالة وإرسالها إلى سلة المهملات</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">لم يتم رفع %1$d من المقالات / الصفحات</string>
     <string name="media_file_pages_plural_only_not_uploaded">لم يتم رفع %1$d من الصفحات</string>
     <string name="media_file_page_singular_only_not_uploaded">لم يتم رفع صفحة واحدة</string>
@@ -958,7 +990,6 @@ Language: ar
     <string name="async_promo_title_publish">النشر مع التمتع بالثقة</string>
     <string name="editor_uploading_post">يجري رفع مقالتك</string>
     <string name="uploading_media">جاري رفع الوسائط…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">هل أنت متأكد من ذلك؟ سيؤدي حذف هذه المقالة إلى إلغاء رفع الوسائط كذلك.</string>
     <string name="page_scheduled">تمت جدولة الصفحة</string>
     <string name="post_scheduled">تمت جدولة المقالة</string>
     <string name="button_retry">إعادة المحاولة</string>
@@ -1017,8 +1048,8 @@ Language: ar
     <string name="editor_dropped_text_error">حدث خطأ أثناء إسقاط النص</string>
     <string name="editor_dropped_html_images_not_allowed">لا يُسمح بإسقاط الصور في وضع HTML</string>
     <string name="editor_content_hint">شارك قصتك هنا…</string>
-    <string name="post_status_trashed">أُضيف إلى المهملات</string>
-    <string name="post_status_scheduled">مجدول</string>
+    <string name="post_list_trashed">تم النقل إلى سلة المهملات</string>
+    <string name="post_list_scheduled">مجدول</string>
     <string name="post_status_post_private">خاص</string>
     <string name="post_status_draft">مسودة</string>
     <string name="post_status_pending_review">في انتظار المراجعة</string>
@@ -1619,10 +1650,8 @@ Language: ar
     <string name="button_preview">معاينة</string>
     <string name="button_trash">سلة المهملات</string>
     <string name="button_stats">إحصاءات</string>
-    <string name="button_back">رجوع</string>
     <string name="stats_no_activity_this_period">لا يوجد أي نشاط في هذه الفترة</string>
     <string name="post_trashed">تم إرسال المقالة إلى سلة المهملات</string>
-    <string name="post_deleted">تم حذف المقالة</string>
     <string name="reader_toast_err_follow_blog_not_authorized">غير مخوّل لك الوصول إلى هذا الموقع</string>
     <string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذا الموقع</string>
     <string name="undo">تراجع</string>

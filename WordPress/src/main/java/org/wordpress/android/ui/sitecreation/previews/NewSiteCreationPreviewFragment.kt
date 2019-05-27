@@ -148,7 +148,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
             }
         })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_CREATING)
         })
         viewModel.onSiteCreationCompleted.observe(this, Observer {
             sitePreviewScreenListener.onSiteCreationCompleted()

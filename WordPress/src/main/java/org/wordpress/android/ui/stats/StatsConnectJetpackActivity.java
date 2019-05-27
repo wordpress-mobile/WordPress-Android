@@ -137,12 +137,14 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (event.isError()) {
-            AppLog.e(T.API, "StatsConnectJetpackActivity.onAccountChanged error: "
-                            + event.error.type + " - " + event.error.message);
-        } else if (!mIsJetpackConnectStarted && event.causeOfChange == AccountAction.FETCH_ACCOUNT
-                   && !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())) {
-            startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
+        if (!isFinishing()) {
+            if (event.isError()) {
+                AppLog.e(T.API, "StatsConnectJetpackActivity.onAccountChanged error: "
+                                + event.error.type + " - " + event.error.message);
+            } else if (!mIsJetpackConnectStarted && event.causeOfChange == AccountAction.FETCH_ACCOUNT
+                       && !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())) {
+                startJetpackConnectionFlow((SiteModel) getIntent().getSerializableExtra(SITE));
+            }
         }
     }
 }

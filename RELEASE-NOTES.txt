@@ -1,6 +1,13 @@
+12.6
+-----
+* Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
+
+
 12.5
 -----
-* Fixed local drafts not automatically pushed to the server.
+* Local Drafts will be automatically uploaded to the server as soon as internet connection is available.
+* Make current day difference grey in Stats Overview.
+* Add link to the Post from the Post stats.
 
 12.4
 -----
@@ -10,8 +17,6 @@
 * Added ability to toggle to compact view type for blog posts list
 * Fixed several bugs on the blog posts screen
 * Fixed bug that prevented audio playing in the reader
-* Make current day difference grey in Stats Overview
-* Add link to the Post from the Post stats
 * New Insights Management for selecting the most relevant stats
 * App download size is now much smaller.
 
@@ -54,5 +59,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-
-

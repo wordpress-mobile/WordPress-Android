@@ -101,6 +101,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject AppPrefsWrapper mAppPrefsWrapper;
+    @Inject PostStore mPostStore;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -370,7 +371,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
         // we use a simpler (less scary!) confirmation
         String message;
-        if (PostStore.getNumLocalChanges() > 0) {
+        if (mPostStore.getNumLocalChanges() > 0) {
             message = getString(R.string.sign_out_wpcom_confirm_with_changes);
         } else {
             message = getString(R.string.sign_out_wpcom_confirm_with_no_changes);

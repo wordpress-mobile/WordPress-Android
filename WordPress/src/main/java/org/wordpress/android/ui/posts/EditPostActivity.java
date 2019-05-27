@@ -528,14 +528,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
-        if (savedInstanceState == null) {
-            // Bump the stat the first time the editor is opened.
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+        // Bump post created analytics only once, first time the editor is opened
+        if (mIsNewPost && savedInstanceState == null) {
+            trackEditorCreatedPost(action, getIntent());
         }
 
-        if (mIsNewPost) {
-            trackEditorCreatedPost(action, getIntent());
-        } else {
+        if (!mIsNewPost) {
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mPost);
@@ -715,6 +713,11 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().register(this);
 
         reattachUploadingMediaForAztec();
+
+        // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
+        PostUtils.trackOpenEditorAnalytics(mPost, mSite);
+
+        mIsConfigChange = false;
     }
 
     private void reattachUploadingMediaForAztec() {
@@ -758,6 +761,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
     }
 
     @Override protected void onStop() {
@@ -775,7 +780,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPostEditorAnalyticsSession.end();
             }
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+
         mDispatcher.unregister(this);
         if (mHandler != null) {
             mHandler.removeCallbacks(mSave);

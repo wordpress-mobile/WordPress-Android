@@ -208,10 +208,8 @@ Language: hr
     <string name="button_publish">Objavi</string>
     <string name="post_trashed">Objava poslana u smeće</string>
     <string name="button_trash">Smeće</string>
-    <string name="button_back">Nazad</string>
     <string name="button_stats">Statistika</string>
     <string name="button_preview">Predpregled</string>
-    <string name="post_deleted">Objava obrisana</string>
     <string name="stats_no_activity_this_period">U ovom periodu nema aktivnosti</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovoj web-stranici</string>
     <string name="reader_toast_err_follow_blog_not_found">Web-stranicu nije moguće pronaći</string>

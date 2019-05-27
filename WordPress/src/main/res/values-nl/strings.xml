@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-30 14:54:09+0000
+Translation-Revision-Date: 2019-05-14 16:54:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="post_list_drafts">Concepten</string>
+    <string name="post_list_published">Gepubliceerd</string>
+    <string name="post_list_author_everyone">Iedereen</string>
+    <string name="post_list_author_me">Ik</string>
+    <string name="error_restoring_post">Er is een fout opgetreden tijdens het herstellen van het bericht</string>
+    <string name="backdated_for">Van datum voorzien voor: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Items die hierboven getoond worden, worden op het tabblad Inzichten weergegeven. Sleep items hierheen om ze aan te passen.</string>
+    <string name="stats_insights_add_insights_header">Inzichten toevoegen</string>
+    <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
+    <string name="stats_insights_social">Sociaal</string>
+    <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
+    <string name="stats_view_follower_totals">Aantal volgers</string>
+    <string name="suggestion_fetch_error">Domeinsuggesties konden niet geladen worden</string>
+    <string name="suggestions_search_hint">Voer een trefwoord in voor meer ideeën</string>
+    <string name="suggestions_empty_list">Geen suggesties gevonden</string>
+    <string name="choose_domain">Ander domein kiezen</string>
+    <string name="register_domain">Registreer domein</string>
+    <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
+    <string name="stats_menu_remove">Verwijderen uit inzichten</string>
+    <string name="stats_menu_move_down">Omlaag verplaatsen</string>
+    <string name="stats_menu_move_up">Omhoog verplaatsen</string>
+    <string name="stats_item_settings">Iteminstellingen voor statistieken</string>
+    <string name="post_moving_to_draft">Bericht wordt naar concept verplaatst</string>
+    <string name="post_restoring">Bericht wordt hersteld</string>
+    <string name="post_restored">Bericht hersteld</string>
+    <string name="post_trashing">Bericht wordt naar prullenbak verplaatst</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Door dit bericht naar de prullenbak te verplaatsen, worden lokale wijzigingen geannuleerd. Weet je zeker dat je wilt doorgaan?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Lokale wijzigingen</string>
+    <string name="button_move_to_draft">Verplaatsen naar concept</string>
+    <string name="post_list_toggle_item_layout_list_view">Overschakelen op lijstweergave</string>
+    <string name="post_list_toggle_item_layout_cards_view">Overschakelen op kaartweergave</string>
+    <string name="posts_trashed_empty">Je hebt geen verwijderde berichten</string>
+    <string name="posts_draft_empty">Je hebt geen conceptberichten</string>
+    <string name="posts_scheduled_empty">Je hebt geen geplande berichten</string>
+    <string name="posts_published_empty">Je hebt nog geen berichten gepubliceerd</string>
     <string name="notification_wpcom_username_needed">Log in met je gebruikersnaam en wachtwoord.</string>
     <string name="login_invalid_site_url">Het site-adres dat je hebt ingevuld, is ongeldig. Voer het opnieuw in.</string>
     <string name="error_user_username_instead_of_email">Log in met je WordPress.com-gebruikersnaam in plaats van met je e-mailadres.</string>
@@ -272,14 +307,9 @@ Language: nl
     <string name="reader_empty_followed_tags_subtitle">Voeg hier tags toe om berichten te vinden over je favoriete onderwerpen</string>
     <string name="login_to_to_connect_jetpack">Log in op het WordPress.com-account dat je gebruikte om verbinding te maken met Jetpack.</string>
     <string name="install_jetpack_retry">Opnieuw proberen</string>
-    <string name="install_jetpack_continue">Doorgaan</string>
-    <string name="jetpack_installation_problem_message">Jetpack kan momenteel niet geïnstalleerd worden</string>
     <string name="jetpack_installation_problem">Er is een probleem opgetreden</string>
-    <string name="jetpack_installed_message">Je hebt Jetpack geïnstalleerd op je site. Gefeliciteerd!</string>
     <string name="jetpack_installed">Jetpack geïnstalleerd</string>
-    <string name="installing_jetpack_message">Jetpack installeren op je site. Het kan een aantal minuten duren voordat de installatie is afgerond</string>
     <string name="installing_jetpack">Jetpack installeren</string>
-    <string name="install_jetpack_message">De inloggegevens voor je website zullen niet worden opgeslagen en worden alleen gebruikt om Jetpack te installeren.</string>
     <string name="install_jetpack">Jetpack installeren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
@@ -580,7 +610,6 @@ Language: nl
     <string name="dialog_confirm_publish_message_page">Deze pagina wordt onmiddellijk gepubliceerd.</string>
     <string name="dialog_confirm_publish_message_post">Dit bericht wordt onmiddellijk gepubliceerd.</string>
     <string name="dialog_confirm_publish_title">Klaar om te publiceren?</string>
-    <string name="dialog_confirm_delete_post">Dit bericht wordt verwijderd en naar de prullenbak verzonden</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d berichten/pagina\'s niet geüpload</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagina\'s niet geüpload</string>
     <string name="media_file_page_singular_only_not_uploaded">1 pagina niet geüpload</string>
@@ -848,7 +877,6 @@ Language: nl
     <string name="async_promo_title_publish">Vol vertrouwen publiceren</string>
     <string name="editor_uploading_post">Je bericht wordt geüpload</string>
     <string name="uploading_media">Media uploaden…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media-upload ook geannuleerd.</string>
     <string name="page_scheduled">Pagina ingepland</string>
     <string name="post_scheduled">Bericht ingepland</string>
     <string name="button_retry">Opnieuw proberen</string>
@@ -907,8 +935,6 @@ Language: nl
     <string name="editor_dropped_text_error">Fout opgetreden bij het verslepen van tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Afbeeldingen in HTML-modus slepen, is niet toegestaan</string>
     <string name="editor_content_hint">Deel hier je verhaal…</string>
-    <string name="post_status_trashed">Verwijderd</string>
-    <string name="post_status_scheduled">Gepland</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Concept</string>
     <string name="post_status_pending_review">Beoordeling in behandeling</string>
@@ -1506,10 +1532,8 @@ Language: nl
     <string name="button_preview">Voorbeeld</string>
     <string name="button_trash">Prullenbak</string>
     <string name="button_stats">Statistieken</string>
-    <string name="button_back">Terug</string>
     <string name="stats_no_activity_this_period">Geen activiteit deze periode</string>
     <string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
-    <string name="post_deleted">Bericht verwijderd</string>
     <string name="undo">Ongedaan maken</string>
     <string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% van weergaven</string>
