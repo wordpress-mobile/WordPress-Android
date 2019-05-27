@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
+import de.greenrobot.event.EventBus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -149,6 +151,8 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
+            EventBus.getDefault().register(this)
+
             loadPagesAsync()
 
             localDraftUploadStarter.queueUploadFromSite(site)
@@ -161,6 +165,7 @@ class PagesViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        EventBus.getDefault().unregister(this)
 
         actionPerfomer.onCleanup()
     }
@@ -581,7 +586,7 @@ class PagesViewModel
                     }
                 }
 
-            launch {
+                launch {
                     _arePageActionsEnabled = false
                     actionPerfomer.performAction(action)
                     _arePageActionsEnabled = true
@@ -630,6 +635,21 @@ class PagesViewModel
         pageUpdateContinuations[id]?.let { cont ->
             pageUpdateContinuations.remove(id)
             cont.resume(Unit)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
+        if (!event.post.isPage) {
+            return
+        }
+
+        launch {
+            performIfNetworkAvailableAsync {
+                waitForPageUpdate(event.post.remotePostId)
+                reloadPages()
+            }
         }
     }
 
