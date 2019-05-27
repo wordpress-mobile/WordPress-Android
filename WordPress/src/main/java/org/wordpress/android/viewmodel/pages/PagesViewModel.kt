@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.StringRes
-import de.greenrobot.event.EventBus
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -40,6 +39,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EventBusAdapter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
@@ -78,6 +78,7 @@ class PagesViewModel
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val eventBusAdapter: EventBusAdapter,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -151,7 +152,7 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
-            EventBus.getDefault().register(this)
+            eventBusAdapter.register(this)
 
             loadPagesAsync()
 
@@ -165,7 +166,7 @@ class PagesViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        EventBus.getDefault().unregister(this)
+        eventBusAdapter.unregister(this)
 
         actionPerfomer.onCleanup()
     }
