@@ -205,16 +205,9 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(remotePageId: Long, wasPageUpdated: Boolean) {
+    fun onPageEditFinished() {
         launch {
             refreshPages() // show local changes immediately
-
-            if (wasPageUpdated) {
-                performIfNetworkAvailableAsync {
-                    waitForPageUpdate(remotePageId)
-                    reloadPages()
-                }
-            }
         }
     }
 

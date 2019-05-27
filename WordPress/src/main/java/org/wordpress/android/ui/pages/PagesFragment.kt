@@ -115,9 +115,8 @@ class PagesFragment : Fragment() {
                 return
             }
 
-            val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
-                onPageEditFinished(pageId, wasPageUpdated)
+                viewModel.onPageEditFinished()
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
@@ -135,10 +134,6 @@ class PagesFragment : Fragment() {
 
     fun onSpecificPageRequested(remotePageId: Long) {
         viewModel.onSpecificPageRequested(remotePageId)
-    }
-
-    private fun onPageEditFinished(pageId: Long, wasPageUpdated: Boolean) {
-        viewModel.onPageEditFinished(pageId, wasPageUpdated)
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
