@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -37,6 +39,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import java.util.Date
 import java.util.SortedMap
+import kotlin.random.Random
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesViewModelTest {
@@ -64,7 +67,8 @@ class PagesViewModelTest {
                 networkUtils = networkUtils,
                 localDraftUploadStarter = localDraftUploadStarter,
                 uiDispatcher = Dispatchers.Unconfined,
-                defaultDispatcher = Dispatchers.Unconfined
+                defaultDispatcher = Dispatchers.Unconfined,
+                eventBusAdapter = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()
@@ -189,7 +193,7 @@ class PagesViewModelTest {
         assertThat(viewModel.arePageActionsEnabled).isTrue()
 
         // Act
-        viewModel.onPageEditFinished(remotePageId = 1_900, wasPageUpdated = true)
+        viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(createPostModel()))
 
         // Assert
         assertThat(viewModel.arePageActionsEnabled).isFalse()
@@ -198,19 +202,17 @@ class PagesViewModelTest {
     @Test
     fun `when a page upload is completed, page actions are re-enabled`() = test {
         // Given
-        val post = PostModel().apply {
-            id = 132
-            remotePostId = 1_9810L
-        }
+        val page = createPostModel()
 
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
 
-        viewModel.onPageEditFinished(remotePageId = post.remotePostId, wasPageUpdated = true)
+
+        viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(page))
         assertThat(viewModel.arePageActionsEnabled).isFalse()
 
         // When
-        viewModel.onPostUploaded(OnPostUploaded(post))
+        viewModel.onPostUploaded(OnPostUploaded(page))
 
         // Then
         assertThat(viewModel.arePageActionsEnabled).isTrue()
@@ -232,5 +234,13 @@ class PagesViewModelTest {
         )
 
         return pageModel
+    }
+
+    private companion object Fixtures {
+        fun createPostModel() = PostModel().apply {
+            id = Random(100).nextInt()
+            remotePostId = Random(200).nextLong()
+            setIsPage(true)
+        }
     }
 }
