@@ -1,6 +1,9 @@
 12.6
 -----
 * Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
+* A new block is available: video block.
+* Added UI to display a warning when a block has invalid content.
+* Fixed issue with link settings where “Open in New Tab” was always OFF on open.
 
 
 12.5
