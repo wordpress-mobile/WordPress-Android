@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.util.BaseWebViewClient.BaseWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPWebViewClient;
 
@@ -61,7 +62,15 @@ public class EditPostPreviewFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);
         mWebView = rootView.findViewById(R.id.post_preview_web_view);
-        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
+        // Listener is not used, this preview is only used to display local data and will be dropped soon.
+        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken(),
+                new BaseWebViewClientListener() {
+                    @Override public void onPageLoaded() {
+                    }
+
+                    @Override public void onError() {
+                    }
+                });
         mWebView.setWebViewClient(client);
         mWebView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

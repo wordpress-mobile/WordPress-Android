@@ -322,11 +322,10 @@ public class WPWebViewActivity extends WebViewActivity implements BaseWebViewCli
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL, this);
         } else {
-            webViewClient = new URLFilteredWebViewClient(allowedURL);
+            webViewClient = new URLFilteredWebViewClient(allowedURL, this);
         }
-        webViewClient.setMBaseWebViewClientListener(this);
         return webViewClient;
     }
 

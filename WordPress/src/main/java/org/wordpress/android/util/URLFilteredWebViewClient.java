@@ -22,14 +22,13 @@ public class URLFilteredWebViewClient extends BaseWebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
     private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
 
-    public URLFilteredWebViewClient() {
-    }
-
-    public URLFilteredWebViewClient(String url) {
+    public URLFilteredWebViewClient(String url, BaseWebViewClientListener listener) {
+        super(listener);
         mAllowedURLs.add(url);
     }
 
-    public URLFilteredWebViewClient(Collection<String> urls) {
+    public URLFilteredWebViewClient(Collection<String> urls, BaseWebViewClientListener listener) {
+        super(listener);
         if (urls == null || urls.size() == 0) {
             AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! HTTP Links in the"
                                      + " page are NOT disabled, and ALL URLs could be loaded by the user!!");
