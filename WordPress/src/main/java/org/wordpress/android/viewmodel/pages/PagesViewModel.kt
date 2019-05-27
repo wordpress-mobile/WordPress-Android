@@ -180,18 +180,18 @@ class PagesViewModel
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
         if (performIfNetworkAvailableAsync {
-            _listState.setOnUi(state)
+                    _listState.setOnUi(state)
 
-            val result = pageStore.requestPagesFromServer(site)
-            if (result.isError) {
-                _listState.setOnUi(ERROR)
-                showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
-                AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
-            } else {
-                _listState.setOnUi(DONE)
-            }
-            refreshPages()
-        }) else {
+                    val result = pageStore.requestPagesFromServer(site)
+                    if (result.isError) {
+                        _listState.setOnUi(ERROR)
+                        showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
+                        AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+                    } else {
+                        _listState.setOnUi(DONE)
+                    }
+                    refreshPages()
+                }) else {
             _listState.setOnUi(DONE)
         }
     }
