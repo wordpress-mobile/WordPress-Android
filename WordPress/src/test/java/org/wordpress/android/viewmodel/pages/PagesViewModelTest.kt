@@ -207,7 +207,6 @@ class PagesViewModelTest {
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
 
-
         viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(page))
         assertThat(viewModel.arePageActionsEnabled).isFalse()
 
