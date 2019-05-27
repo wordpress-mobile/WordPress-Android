@@ -29,10 +29,10 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BaseWebViewClient.BaseWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
-import org.wordpress.android.util.URLFilteredWebViewClient.URLWebViewClientListener;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -82,7 +82,7 @@ import javax.inject.Inject;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity implements URLWebViewClientListener {
+public class WPWebViewActivity extends WebViewActivity implements BaseWebViewClientListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -326,7 +326,7 @@ public class WPWebViewActivity extends WebViewActivity implements URLWebViewClie
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
-        webViewClient.setListener(this);
+        webViewClient.setMBaseWebViewClientListener(this);
         return webViewClient;
     }
 
