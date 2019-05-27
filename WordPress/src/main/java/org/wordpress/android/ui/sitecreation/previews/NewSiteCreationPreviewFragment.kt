@@ -34,10 +34,10 @@ import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.Si
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
 import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
-import org.wordpress.android.ui.sitecreation.previews.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.ui.sitecreation.services.NewSiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
+import org.wordpress.android.util.BaseWebViewClient.BaseWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
 
@@ -45,7 +45,7 @@ private const val ARG_DATA = "arg_site_creation_data"
 private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
 class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
-        PageFullyLoadedListener {
+        BaseWebViewClientListener {
     /**
      * We need to connect to the service, so the service knows when the app is in the background. The service
      * automatically shows system notifications when site creation is in progress and the app is in the background.
@@ -131,7 +131,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
             url?.let {
-                sitePreviewWebView.webViewClient = PreviewWebViewClient(this@NewSiteCreationPreviewFragment, url)
+                sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@NewSiteCreationPreviewFragment)
                 sitePreviewWebView.loadUrl(url)
             }
         })
@@ -275,8 +275,12 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
     }
 
-    override fun onPageFullyLoaded() {
+    override fun onPageLoaded() {
         viewModel.onUrlLoaded()
+    }
+
+    override fun onError() {
+        // TODO: viewModel.onError() manage error when loading the WebView.
     }
 
     // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
@@ -360,19 +364,5 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
             fragment.arguments = bundle
             return fragment
         }
-    }
-}
-
-private class PreviewWebViewClient internal constructor(
-    val pageLoadedListener: PageFullyLoadedListener,
-    siteAddress: String
-) : URLFilteredWebViewClient(siteAddress) {
-    interface PageFullyLoadedListener {
-        fun onPageFullyLoaded()
-    }
-
-    override fun onPageFinished(view: WebView, url: String) {
-        super.onPageFinished(view, url)
-        pageLoadedListener.onPageFullyLoaded()
     }
 }
