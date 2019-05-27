@@ -54,9 +54,7 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
                 if (uiModel.siteTitle != null) {
                     site_value.text = uiModel.siteTitle
                 }
-                if (uiModel.color != null) {
-                    color_value.setText(uiModel.color.title)
-                }
+                color_value.setText(uiModel.color.title)
                 add_widget_button.isEnabled = uiModel.buttonEnabled
             }
         })
