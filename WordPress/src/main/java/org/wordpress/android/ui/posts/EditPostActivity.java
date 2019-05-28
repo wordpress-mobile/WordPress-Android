@@ -298,7 +298,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mPost;
     private PostModel mPostForUndo;
     // mPostSnapshotWhenEditorOpened should not be updated after the post editor session start
-    private PostModel mPostSnapshotWhenEditorOpened;
+    private @Nullable PostModel mPostSnapshotWhenEditorOpened;
 
     private Revision mRevision;
 
@@ -1229,7 +1229,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         showDiscardChanges = true;
                     } else {
                         // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mPostSnapshotWhenEditorOpened.isLocallyChanged();
+                        showDiscardChanges = mPostSnapshotWhenEditorOpened != null
+                                             && mPostSnapshotWhenEditorOpened.isLocallyChanged();
                     }
                 }
                 discardChanges.setVisible(showDiscardChanges);
@@ -2171,7 +2172,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isFirstTimePublish() {
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
+               && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
                    || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
     }
 
