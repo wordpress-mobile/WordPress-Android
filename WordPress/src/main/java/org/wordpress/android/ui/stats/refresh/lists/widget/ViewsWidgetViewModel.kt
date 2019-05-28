@@ -21,7 +21,7 @@ class ViewsWidgetViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper
+    internal val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableSelectedSite = MutableLiveData<SiteUiModel>()
     private val mutableViewMode = MutableLiveData<Color>()
