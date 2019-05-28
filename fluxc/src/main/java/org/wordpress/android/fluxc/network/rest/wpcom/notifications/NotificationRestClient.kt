@@ -84,7 +84,7 @@ class NotificationRestClient constructor(
                         dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
                     } } ?: run {
                         AppLog.e(T.API, "Response for url $url with param $params is null: $response")
-                        val registrationError = DeviceRegistrationError(DeviceRegistrationErrorType.RESPONSE_NULL,
+                        val registrationError = DeviceRegistrationError(DeviceRegistrationErrorType.INVALID_RESPONSE,
                                 "Response object is null")
                         val payload = RegisterDeviceResponsePayload(registrationError)
                         dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
