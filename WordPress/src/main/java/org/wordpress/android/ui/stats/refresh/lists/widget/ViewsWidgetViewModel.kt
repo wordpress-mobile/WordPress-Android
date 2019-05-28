@@ -62,10 +62,9 @@ class ViewsWidgetViewModel
 
     fun addWidget() {
         val selectedSite = mutableSelectedSite.value
-        val selectedViewMode = mutableViewMode.value
-        if (appWidgetId != -1 && selectedSite != null && selectedViewMode != null) {
+        if (appWidgetId != -1 && selectedSite != null) {
             appPrefsWrapper.setAppWidgetSiteId(selectedSite.siteId, appWidgetId)
-            appPrefsWrapper.setAppWidgetColorModeId(selectedViewMode.ordinal, appWidgetId)
+            appPrefsWrapper.setAppWidgetColorModeId((mutableViewMode.value ?: LIGHT).ordinal, appWidgetId)
             mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId)))
         }
     }
