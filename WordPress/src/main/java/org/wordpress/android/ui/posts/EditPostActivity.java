@@ -716,6 +716,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(mPost, mSite);
+
+        mIsConfigChange = false;
     }
 
     private void reattachUploadingMediaForAztec() {

@@ -1207,20 +1207,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_success";
             case SIGNUP_SOCIAL_TO_LOGIN:
                 return "signup_social_to_login";
-            case SITE_CREATION_ACCESSED:
-                return "site_creation_accessed";
-            case SITE_CREATION_CATEGORY_VIEWED:
-                return "site_creation_category_viewed";
-            case SITE_CREATION_THEME_VIEWED:
-                return "site_creation_theme_viewed";
-            case SITE_CREATION_DETAILS_VIEWED:
-                return "site_creation_details_viewed";
-            case SITE_CREATION_DOMAIN_VIEWED:
-                return "site_creation_domain_viewed";
-            case SITE_CREATION_CREATING_VIEWED:
-                return "site_creation_creating_viewed";
-            case SITE_CREATION_SUCCESS_VIEWED:
-                return "site_creation_success_viewed";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
             case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
