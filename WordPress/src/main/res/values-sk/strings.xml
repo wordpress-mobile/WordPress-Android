@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-22 15:38:45+0000
+Translation-Revision-Date: 2019-05-14 14:45:57+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
+    <string name="new_site_creation_preview_subtitle">Vzhľad svojej stránky si budeš vedieť prispôsobiť neskôr.</string>
+    <string name="scheduled_for">Naplánované na: %s</string>
+    <string name="stats_detail_average_views_per_day">Priemerný počet zobrazení za deň</string>
+    <string name="stats_months_and_years_views_label">Zobrazení</string>
+    <string name="stats_months_and_years_period_label">Obdobie</string>
+    <string name="stats_detail_months_and_years">Mesiace a roky</string>
+    <string name="stats_insights_load_more">Načítaj viac</string>
+    <string name="stats_insights_today_stats">Dnes</string>
+    <string name="stats_insights_best_hour">Najlepšia hodina</string>
+    <string name="stats_insights_best_day">Najlepší deň</string>
     <string name="app_rating_rate_never">Nie, ďakujem</string>
     <string name="app_rating_rate_later">Neskôr</string>
     <string name="app_rating_rate_now">Ohodnotiť teraz</string>
@@ -20,7 +31,9 @@ Language: sk
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">VYBERTE OBRÁZOK</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_paragraph_edit_native_js_128">Začnite písať…</string>
     <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_152">Odstrániť odkaz</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Text odkazu</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_214">Pridať URL adresu</string>
+    <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_101">Link vložený</string>
     <string name="plans_loading_error_network_title">Žiadne pripojenie</string>
     <string name="quick_start_sites_type_subtitle">%1$d z %2$d kompletné</string>
     <string name="quick_start_sites">Ďalšie kroky</string>
@@ -198,14 +211,9 @@ Language: sk
     <string name="reader_empty_followed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
     <string name="install_jetpack_retry">Znova</string>
-    <string name="install_jetpack_continue">Pokračovať</string>
-    <string name="jetpack_installation_problem_message">Nepodarilo sa teraz nainštalovať Jetpack</string>
     <string name="jetpack_installation_problem">Vyskytol sa problém</string>
-    <string name="jetpack_installed_message">Jetpack je nainštalovaný na webovej stránke. Gratulujeme!</string>
     <string name="jetpack_installed">Jetpack nainštalovaný</string>
-    <string name="installing_jetpack_message">Nainštalujte si Jetpack na webovú stránku. Inštalácia môže trvať niekolko minút.</string>
     <string name="installing_jetpack">Inštalovanie Jetpack</string>
-    <string name="install_jetpack_message">Poverenia webovej stránky nebudú uložené. Používajú sa len pri inštalovaní Jetpack.</string>
     <string name="install_jetpack">Inštalovať Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
@@ -506,7 +514,6 @@ Language: sk
     <string name="dialog_confirm_publish_message_page">Stránka bude okamžite publikovaná.</string>
     <string name="dialog_confirm_publish_message_post">Článok bude okamžite publikovaný.</string>
     <string name="dialog_confirm_publish_title">Ste pripravený publikovať?</string>
-    <string name="dialog_confirm_delete_post">Tento článok bude zmazaný a odoslaný do Koša</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d príspevkov / stránok nebolo nahraných</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránok nebolo nahraných</string>
     <string name="media_file_page_singular_only_not_uploaded">1 stránka nebola nahraná</string>
@@ -813,7 +820,6 @@ Language: sk
     <string name="async_promo_title_publish">Zverejniť s funkciou Spoľahlivosť</string>
     <string name="editor_uploading_post">Váš článok sa načítáva</string>
     <string name="uploading_media">Načítavanie médií…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Ste si istý? Odstránením článku sa zruší načítavanie médií.</string>
     <string name="page_scheduled">Naplánovaná stránka</string>
     <string name="post_scheduled">Naplánovaný článok</string>
     <string name="button_retry">Zopakovať</string>
@@ -872,8 +878,8 @@ Language: sk
     <string name="editor_dropped_text_error">Vyskytla sa chyba pri odovzdávaní textu.</string>
     <string name="editor_dropped_html_images_not_allowed">Odovzdávanie obrázkov zatiaľ čo HTML ich nepodporuje.</string>
     <string name="editor_content_hint">Zdieľajte svoj príbeh…</string>
-    <string name="post_status_trashed">Zahodené</string>
-    <string name="post_status_scheduled">Naplánované</string>
+    <string name="post_list_trashed">Zahodené</string>
+    <string name="post_list_scheduled">Naplánované</string>
     <string name="post_status_post_private">Súkromné</string>
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Nepotvrdená recenzia</string>
@@ -1471,10 +1477,8 @@ Language: sk
     <string name="button_preview">Náhľad</string>
     <string name="button_trash">Kôš</string>
     <string name="button_stats">Štatistiky</string>
-    <string name="button_back">Späť</string>
     <string name="stats_no_activity_this_period">Žiadna činnosť v toto obdobie</string>
     <string name="post_trashed">Článok presunutý do koša</string>
-    <string name="post_deleted">Článok vymazaný</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnenie na prístup na túto webovú stránku</string>
     <string name="reader_toast_err_follow_blog_not_found">Táto webová stránka sa nenašla</string>
     <string name="undo">Zrušiť zmenu</string>

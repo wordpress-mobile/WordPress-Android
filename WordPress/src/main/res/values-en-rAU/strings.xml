@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-25 00:45:24+0000
+Translation-Revision-Date: 2019-05-08 10:19:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="post_list_drafts">Drafts</string>
+    <string name="post_list_published">Published</string>
+    <string name="post_list_author_everyone">Everyone</string>
+    <string name="post_list_author_me">Me</string>
+    <string name="error_restoring_post">An error occurred while restoring the post</string>
+    <string name="backdated_for">Backdated for: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customise.</string>
+    <string name="stats_insights_add_insights_header">Add Insights</string>
+    <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
+    <string name="stats_insights_social">Social</string>
+    <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
+    <string name="stats_view_follower_totals">Followers Totals</string>
+    <string name="suggestion_fetch_error">Domain suggestions couldn\'t be loaded</string>
+    <string name="suggestions_search_hint">Type a keyword for more ideas</string>
+    <string name="suggestions_empty_list">No suggestions found</string>
+    <string name="choose_domain">Choose Domain</string>
+    <string name="register_domain">Register Domain</string>
+    <string name="jetpack_installed_message">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
+    <string name="stats_menu_remove">Remove from insights</string>
+    <string name="stats_menu_move_down">Move down</string>
+    <string name="stats_menu_move_up">Move up</string>
+    <string name="stats_item_settings">Stats item settings</string>
+    <string name="post_moving_to_draft">Post is being moved to draft</string>
+    <string name="post_restoring">Post is being restored</string>
+    <string name="post_restored">Post restored</string>
+    <string name="post_trashing">Post is being trashed</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
+    <string name="button_move_to_draft">Move to Draft</string>
+    <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
+    <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
+    <string name="posts_trashed_empty">You don\'t have any trashed posts</string>
+    <string name="posts_draft_empty">You don\'t have any draft posts</string>
+    <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
+    <string name="posts_published_empty">You haven\'t published any posts yet</string>
     <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
     <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
     <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
@@ -234,8 +269,7 @@ Language: en_AU
     <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Manage insights</string>
-    <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
+    <string name="stats_manage_insights">Manage Insights</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_no_data_yet">No data yet</string>
     <string name="menu_debug">Debug Menu</string>
@@ -343,14 +377,13 @@ Language: en_AU
     <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="install_jetpack_retry">Retry</string>
-    <string name="install_jetpack_continue">Continue</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
+    <string name="install_jetpack_continue">Set up</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
     <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
     <string name="jetpack_installed">Jetpack installed</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
     <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
     <string name="install_jetpack">Install Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -651,7 +684,6 @@ Language: en_AU
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
-    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d posts / pages not uploaded</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pages not uploaded</string>
     <string name="media_file_page_singular_only_not_uploaded">1 page not uploaded</string>
@@ -958,7 +990,6 @@ Language: en_AU
     <string name="async_promo_title_publish">Publish with Confidence</string>
     <string name="editor_uploading_post">Your post is uploading</string>
     <string name="uploading_media">Uploading media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="page_scheduled">Page scheduled</string>
     <string name="post_scheduled">Post scheduled</string>
     <string name="button_retry">Retry</string>
@@ -1017,8 +1048,8 @@ Language: en_AU
     <string name="editor_dropped_text_error">Error occurred while dropping text</string>
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_content_hint">Share your story here…</string>
-    <string name="post_status_trashed">Trashed</string>
-    <string name="post_status_scheduled">Scheduled</string>
+    <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_scheduled">Scheduled</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_pending_review">Pending review</string>
@@ -1619,10 +1650,8 @@ Language: en_AU
     <string name="button_preview">Preview</string>
     <string name="button_trash">Trash</string>
     <string name="button_stats">Stats</string>
-    <string name="button_back">Back</string>
     <string name="stats_no_activity_this_period">No activity this period</string>
     <string name="post_trashed">Post sent to trash</string>
-    <string name="post_deleted">Post deleted</string>
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this site</string>
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="undo">Undo</string>

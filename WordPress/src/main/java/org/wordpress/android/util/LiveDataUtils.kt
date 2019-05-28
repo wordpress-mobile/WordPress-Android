@@ -2,6 +2,7 @@ package org.wordpress.android.util
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
@@ -222,5 +223,35 @@ fun <T> LiveData<T>.filter(predicate: (T) -> Boolean): LiveData<T> {
             mediator.value = it
         }
     }
+    return mediator
+}
+
+/**
+ * Suppresses the first n items by this [LiveData].
+ *
+ * Consider this for example:
+ *
+ * ```
+ * val connectionStatusLiveData = getConnectionStatusLiveData()
+ * connectionStatusLiveData.skip(1).observe(this, Observer {
+ *     refresh()
+ * })
+ * ```
+ *
+ * The first value emitted by `connectionStatusLiveData` would be ignored and [Observer] will not be called.
+ */
+fun <T> LiveData<T>.skip(times: Int): LiveData<T> {
+    check(times > 0) { "The number of times to skip must be greater than 0" }
+
+    var skipped = 0
+    val mediator = MediatorLiveData<T>()
+    mediator.addSource(this) { value ->
+        skipped += 1
+
+        if (skipped > times) {
+            mediator.value = value
+        }
+    }
+
     return mediator
 }

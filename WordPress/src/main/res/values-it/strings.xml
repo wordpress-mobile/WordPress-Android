@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-02 12:54:09+0000
+Translation-Revision-Date: 2019-05-15 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="post_list_drafts">Bozze</string>
+    <string name="post_list_author_everyone">Tutti</string>
+    <string name="post_list_author_me">Io</string>
+    <string name="backdated_for">Retrodatato per: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Gli elementi mostrati sopra compariranno nella scheda Panoramica. Trascina e rilascia per personalizzare.</string>
+    <string name="stats_insights_add_insights_header">Aggiungi Panoramica</string>
+    <string name="stats_insights_management_title">Vedi solo le statistiche più rilevanti. Aggiungi e organizza le tue informazioni di seguito.</string>
+    <string name="stats_insights_annual_site_stats">Statistiche annuali del sito</string>
+    <string name="suggestion_fetch_error">Non è stato possibile caricare i suggerimenti di dominio</string>
+    <string name="suggestions_search_hint">Digita una parola chiave per ulteriori idee</string>
+    <string name="suggestions_empty_list">Nessun suggerimento trovato</string>
+    <string name="choose_domain">Scegli dominio</string>
+    <string name="register_domain">Registra dominio</string>
+    <string name="jetpack_installed_message">Ora che Jetpack è installato, manca solo la configurazione. Ci vorrà soltanto un minuto.</string>
+    <string name="stats_menu_remove">Rimuovi da Panoramica</string>
+    <string name="post_trashing">L\'articolo è stato spostato nel cestino</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Lo spostamento dell\'articolo nel cestino scarterà le modifiche in locale. Desideri continuare?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Modifiche in locale</string>
+    <string name="button_move_to_draft">Sposta in bozze</string>
+    <string name="post_list_toggle_item_layout_list_view">Passa alla vista a lista</string>
+    <string name="post_list_toggle_item_layout_cards_view">Passa alla vista a schede</string>
+    <string name="posts_trashed_empty">Non sono presenti articoli nel cestino</string>
+    <string name="posts_draft_empty">Non sono presenti articoli in bozze</string>
+    <string name="posts_scheduled_empty">Non sono presenti articoli programmati</string>
+    <string name="posts_published_empty">Non hai ancora pubblicato alcun articolo</string>
     <string name="notification_wpcom_username_needed">Accedi con i tuoi nome utente e password.</string>
     <string name="login_invalid_site_url">L\'indirizzo del sito immesso non è valido. Immettilo di nuovo.</string>
     <string name="error_user_username_instead_of_email">Accedi utilizzando il tuo nome utente di WordPress.com invece del tuo indirizzo e-mail.</string>
@@ -213,7 +238,6 @@ Language: it
     <string name="stats_followers_count_message">Totale follower da %1$s: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Gestisci insight</string>
     <string name="stats_empty_insights_title">Nessun insight aggiunto</string>
     <string name="stats_no_data_yet">Nessun dato</string>
     <string name="menu_debug">Menu di debug</string>
@@ -313,14 +337,9 @@ Language: it
     <string name="reader_empty_followed_tags_subtitle">Aggiungi qui le tag per trovare gli articoli con i tuoi argomenti preferiti</string>
     <string name="login_to_to_connect_jetpack">Accedi all\'account WordPress.com che hai utilizzato per connettere Jetpack.</string>
     <string name="install_jetpack_retry">Riprova</string>
-    <string name="install_jetpack_continue">Continua</string>
-    <string name="jetpack_installation_problem_message">Jetpack non può essere installato in questo momento</string>
     <string name="jetpack_installation_problem">Si è verificato un problema</string>
-    <string name="jetpack_installed_message">Jetpack è installato sul tuo sito. Complimenti!</string>
     <string name="jetpack_installed">Jetpack installato</string>
-    <string name="installing_jetpack_message">Installa Jetpack sul tuo sito. Può richiedere alcuni minuti per essere completato.</string>
     <string name="installing_jetpack">Installazione di Jetpack</string>
-    <string name="install_jetpack_message">Le credenziali del tuo sito web non verranno archiviate e saranno utilizzate per installare Jetpack.</string>
     <string name="install_jetpack">Installa Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -621,7 +640,6 @@ Language: it
     <string name="dialog_confirm_publish_message_page">Questa pagina verrà pubblicata immediatamente.</string>
     <string name="dialog_confirm_publish_message_post">Questo post verrà pubblicato immediatamente.</string>
     <string name="dialog_confirm_publish_title">Pronto a pubblicare?</string>
-    <string name="dialog_confirm_delete_post">Questo post verrà eliminato e inviato nel Cestino</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d post/pagine non caricate</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagine non caricate</string>
     <string name="media_file_page_singular_only_not_uploaded">1 pagina non caricata</string>
@@ -928,7 +946,6 @@ Language: it
     <string name="async_promo_title_publish">Pubblica con Confidence</string>
     <string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
     <string name="uploading_media">Caricamento del media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Sei sicuro? Cancellando questo articolo annullerai anche il caricamento del file multimediale.</string>
     <string name="page_scheduled">Pagina programmata</string>
     <string name="post_scheduled">Articolo programmata</string>
     <string name="button_retry">Riprova</string>
@@ -987,8 +1004,6 @@ Language: it
     <string name="editor_dropped_text_error">Si è verificato un errore durante il rilascio del testo</string>
     <string name="editor_dropped_html_images_not_allowed">Non è consentito rilasciare immagini quando si è in modalità HTML</string>
     <string name="editor_content_hint">Condividi la tua storia qui…</string>
-    <string name="post_status_trashed">Eliminati nel cestino</string>
-    <string name="post_status_scheduled">Programmati</string>
     <string name="post_status_post_private">Privato</string>
     <string name="post_status_draft">Bozza</string>
     <string name="post_status_pending_review">In attesa di revisione</string>
@@ -1081,7 +1096,7 @@ Language: it
     <string name="connections_label">Connessioni</string>
     <string name="sharing">Condivisione</string>
     <string name="tabbar_accessibility_label_notifications">Notifiche. Gestisci le tue notifiche.</string>
-    <string name="tabbar_accessibility_label_reader">Lettore. Segui i contenuti dagli altri siti.</string>
+    <string name="tabbar_accessibility_label_reader">Reader. Segui i contenuti dagli altri siti.</string>
     <string name="tabbar_accessibility_label_me">Me. Visualizza il tuo profilo e apporta modifiche.</string>
     <string name="tabbar_accessibility_label_my_site">Il mio sito. Visualizza il tuo sito e gestiscilo insieme alle statistiche.</string>
     <string name="my_site_btn_sharing">Condivisione</string>
@@ -1451,7 +1466,7 @@ Language: it
     <string name="site_settings_allow_comments_hint">Consenti ai lettori di pubblicare commenti</string>
     <string name="site_settings_discussion_hint">Visualizza e modifica le impostazioni di discussione del sito</string>
     <string name="site_settings_more_hint">Visualizza tutte le impostazioni di discussione disponibili</string>
-    <string name="site_settings_related_posts_hint">Mostra o nascondi gli articoli correlati nel lettore</string>
+    <string name="site_settings_related_posts_hint">Mostra o nascondi gli articoli correlati nel Reader</string>
     <string name="site_settings_image_width_hint">Ridimensiona le immagini negli articoli secondo questa larghezza</string>
     <string name="site_settings_format_hint">Imposta nuovo formato articolo</string>
     <string name="site_settings_category_hint">Imposta nuova categoria articolo</string>
@@ -1586,10 +1601,8 @@ Language: it
     <string name="button_preview">Anteprima</string>
     <string name="button_trash">Cestino</string>
     <string name="button_stats">Statistiche</string>
-    <string name="button_back">Indietro</string>
     <string name="stats_no_activity_this_period">Nessuna attivata in questo periodo</string>
     <string name="post_trashed">Articolo inviato al cestino</string>
-    <string name="post_deleted">Articolo cancellato</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Non sei autorizzato ad accedere a questo sito</string>
     <string name="reader_toast_err_follow_blog_not_found">Impossibile trovare questo sito</string>
     <string name="undo">Annulla</string>
@@ -1931,7 +1944,7 @@ Language: it
     <string name="log_in">Accedi</string>
     <string name="username">Nome utente</string>
     <string name="password">Password</string>
-    <string name="reader">Lettore</string>
+    <string name="reader">Reader</string>
     <string name="anonymous">Anonimo</string>
     <string name="posts">Articoli</string>
     <string name="width">Larghezza</string>

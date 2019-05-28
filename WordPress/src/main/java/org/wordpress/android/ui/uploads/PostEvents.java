@@ -6,7 +6,7 @@ public class PostEvents {
     public static class PostUploadStarted {
         public final PostModel post;
 
-        PostUploadStarted(PostModel post) {
+        public PostUploadStarted(PostModel post) {
             this.post = post;
         }
     }

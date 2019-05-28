@@ -2000,7 +2000,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static SpannableStringBuilder getCalypsoCompatibleStringBuilder(Context context, String postContent,
                                                                             AztecParser parser) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        String cleanSource = Format.removeSourceEditorFormatting(postContent, true);
+        String cleanSource = Format.removeSourceEditorFormatting(postContent, true, false);
         builder.append(parser.parseHtmlForInspection(cleanSource, context));
         Format.preProcessSpannedText(builder, true);
         return builder;

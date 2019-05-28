@@ -85,7 +85,6 @@ Language: es_CO
     <string name="error_upload_page_param">Hubo un error al subir esta página: %s.</string>
     <string name="async_promo_link">¿Cómo funciona?</string>
     <string name="editor_uploading_post">Tu entrada se está subiendo</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al borrar esta entrada también cancelarás la subida de medios.</string>
     <string name="page_scheduled">Página programada</string>
     <string name="post_scheduled">Entrada programada</string>
     <string name="button_retry">Reintentar</string>
@@ -144,8 +143,6 @@ Language: es_CO
     <string name="editor_dropped_text_error">Ocurrió un error al arrastrar texto</string>
     <string name="editor_dropped_html_images_not_allowed">No está permitido arrastrar imágenes en el modo HTML</string>
     <string name="editor_content_hint">Comparte tu historia aquí…</string>
-    <string name="post_status_trashed">En la papelera</string>
-    <string name="post_status_scheduled">Programada</string>
     <string name="post_status_post_private">Privada</string>
     <string name="post_status_draft">Borrador</string>
     <string name="post_status_pending_review">Pendiente de revisión</string>
@@ -727,10 +724,8 @@ Language: es_CO
     <string name="button_preview">Vista previa</string>
     <string name="button_trash">Papelera</string>
     <string name="button_stats">Estadísticas</string>
-    <string name="button_back">Atrás</string>
     <string name="stats_no_activity_this_period">Sin actividad en este periodo</string>
     <string name="post_trashed">Entrada enviada a la papelera</string>
-    <string name="post_deleted">Entrada borrada</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>

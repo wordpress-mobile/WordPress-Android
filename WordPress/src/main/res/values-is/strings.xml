@@ -455,7 +455,6 @@ Language: is
     <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til…</string>
     <string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
     <string name="connectionbar_no_connection">Ekkert samband</string>
-    <string name="button_back">Til baka</string>
     <string name="button_edit">Leiðrétta</string>
     <string name="button_preview">Forskoða</string>
     <string name="button_publish">Birta á vef</string>
@@ -463,7 +462,6 @@ Language: is
     <string name="button_trash">Rusl</string>
     <string name="button_view">Skoða</string>
     <string name="stats_no_activity_this_period">Engin virkni skráð á tímabili</string>
-    <string name="post_deleted">Færslu eytt</string>
     <string name="post_trashed">Færslu hent í ruslatunnu</string>
     <string name="undo">Afturkalla</string>
     <string name="push_auth_expired">Fyrirspurnin rann út á tíma. Skráðu þig inn á WordPress.com til þess að reyna aftur.</string>

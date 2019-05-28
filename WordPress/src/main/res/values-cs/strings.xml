@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-24 10:29:25+0000
+Translation-Revision-Date: 2019-05-09 06:50:22+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -130,7 +130,7 @@ Language: cs_CZ
     <string name="stats_followers_count_message">Celkem %1$s fanoušků: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Správa přehledů</string>
+    <string name="stats_manage_insights">Správa přehledů</string>
     <string name="stats_no_data_yet">Zatím žádná data</string>
     <string name="menu_debug">Debug Menu</string>
     <string name="change_password_dialog_message">Změna hesla…</string>
@@ -518,7 +518,6 @@ Language: cs_CZ
     <string name="dialog_confirm_publish_message_page">Tato stránka bude publikována okamžitě.</string>
     <string name="dialog_confirm_publish_message_post">Tento příspěvek bude publikován okamžitě.</string>
     <string name="dialog_confirm_publish_title">Připraveno k publikování?</string>
-    <string name="dialog_confirm_delete_post">Tento příspěvek bude smazán a přesunut do koše.</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d příspěvků / stránek se nenahrálo</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránek se nenahrálo</string>
     <string name="media_file_page_singular_only_not_uploaded">1 stránka se nenahrála</string>
@@ -823,7 +822,6 @@ Language: cs_CZ
     <string name="async_promo_link">Jak to funguje?</string>
     <string name="editor_uploading_post">Příspěvek se nahrává</string>
     <string name="uploading_media">Nahrávám média…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Opravdu? Smazání tohoto příspěvku zruší také nahrávání médií.</string>
     <string name="page_scheduled">Stránka naplánována</string>
     <string name="post_scheduled">Příspěvek naplánován</string>
     <string name="button_retry">Opakovat</string>
@@ -882,8 +880,8 @@ Language: cs_CZ
     <string name="editor_dropped_text_error">Při odstraňování textu došlo k chybě</string>
     <string name="editor_dropped_html_images_not_allowed">Odstraňování obrázků v režimu HTML není povoleno</string>
     <string name="editor_content_hint">Sdílejte svůj příběh zde…</string>
-    <string name="post_status_trashed">Smazáno</string>
-    <string name="post_status_scheduled">Naplánovat</string>
+    <string name="post_list_trashed">Smazáno</string>
+    <string name="post_list_scheduled">Naplánovat</string>
     <string name="post_status_post_private">Soukromé</string>
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Čeká na schválení</string>
@@ -1483,10 +1481,8 @@ Language: cs_CZ
     <string name="button_preview">Náhled</string>
     <string name="button_trash">Koš</string>
     <string name="button_stats">Statistiky</string>
-    <string name="button_back">Zpět</string>
     <string name="stats_no_activity_this_period">Žádná aktivita v tomto období</string>
     <string name="post_trashed">Příspěvek byl přesunut do koše</string>
-    <string name="post_deleted">Příspěvek byl odstraněn</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
     <string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
     <string name="undo">Zpět</string>

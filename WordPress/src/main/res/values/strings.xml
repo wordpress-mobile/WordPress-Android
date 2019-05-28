@@ -867,13 +867,6 @@
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
-    <!-- Domain Registration-->
-    <string name="register_domain">Register Domain</string>
-    <string name="choose_domain">Choose Domain</string>
-    <string name="suggestions_empty_list">No suggestions found</string>
-    <string name="suggestions_search_hint">Type a keyword for more ideas</string>
-    <string name="suggestion_fetch_error">Domain suggestions couldn\'t be loaded</string>
-
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
@@ -1974,6 +1967,45 @@
     <string name="plugin_install_first_plugin_progress_dialog_message">Installing plugin…</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
 
+    <!-- Domain Registration -->
+    <string name="register_domain">Register Domain</string>
+    <string name="domains_suggestions_choose_domain">Choose Domain</string>
+    <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
+    <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
+    <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
+    <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
+    <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.
+        With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
+    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our <u>terms and conditions</u></string>
+    <string name="domain_privacy_option_on_title">Register privately with Privacy Protection</string>
+    <string name="domain_privacy_option_off_title">Register publicly</string>
+    <string name="domain_contact_information_title">Domain contact information</string>
+    <string name="domain_contact_information_description">For your convenience, we have pre-filled your WordPress.com
+        contact information. Please review to be sure it’s the correct information you want to use for this domain.</string>
+    <string name="domain_contact_information_organization_hint">Organization (optional)</string>
+    <string name="domain_contact_information_phone_number_hint">Phone</string>
+    <string name="domain_contact_information_country_code_hint">Country code</string>
+    <string name="domain_contact_information_country_hint">Country</string>
+    <string name="domain_contact_information_address_hint">Address</string>
+    <string name="domain_contact_information_address_hint_two">Address 2</string>
+    <string name="domain_contact_information_city_hint">City</string>
+    <string name="domain_contact_information_state_hint">State</string>
+    <string name="domain_contact_information_postal_code_hint">Postal code</string>
+    <string name="domain_contact_information_register_domain_button">Register Domain</string>
+    <string name="domain_registration_result_title">Congratulations</string>
+    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is
+        doing somersaults in excitement!</string>
+    <string name="domain_registration_result_continue_button">continue</string>
+    <string name="domain_registration_country_picker_dialog_title">Select Country</string>
+    <string name="domain_registration_state_picker_dialog_title">Select State</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
+    <string name="domain_registration_error_registering_domain">Error occurred during domain registration: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Error occurred fetching domain contact information: %s</string>
+    <string name="domain_registration_error_updating_site">Error occurred while updating your site details: %s</string>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+
+
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
@@ -2308,13 +2340,6 @@
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
-    <string name="notification_site_creation_step_creating">Step 1 of 4</string>
-    <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
-    <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
-    <string name="notification_site_creation_step_theme">Step 4 of 4</string>
-    <string name="notification_site_creation_title_in_progress">Creating site… This might take a couple of minutes.</string>
-    <string name="notification_site_creation_title_stopped">Site creation stopped</string>
-    <string name="notification_site_creation_failed">An error has occurred.</string>
 
     <!-- Login notifications -->
     <string name="notification_login_title_success">Logged in!</string>
@@ -2390,46 +2415,6 @@
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
-
-    <!-- Site Creation -->
-    <string name="site_creation_title">Create New Site</string>
-    <string name="site_creation_category_title">Create New Site Step 1</string>
-    <string name="site_creation_theme_selection_title">Create New Site Step 2</string>
-    <string name="site_creation_site_details_title">Create New Site Step 3</string>
-    <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
-    <string name="site_creation_label_category_title">Step 1 of 4</string>
-    <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
-    <string name="site_creation_title_blog">Start with a Blog</string>
-    <string name="site_creation_subtitle_blog">To share your ideas, stories and photographs with your followers.</string>
-    <string name="site_creation_title_website">Start with a Website</string>
-    <string name="site_creation_subtitle_website">To promote your business or brand and connect with your audience.</string>
-    <string name="site_creation_title_portfolio">Start with a Portfolio</string>
-    <string name="site_creation_subtitle_portfolio">To present your creative projects in a visual showcase.</string>
-    <string name="site_creation_label_theme_selection_title">Step 2 of 4</string>
-    <string name="site_creation_label_theme_selection">Get started fast with one of our popular themes. Once your site is created, you can browse and choose from hundreds more.</string>
-    <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
-    <string name="site_creation_label_site_details_title">Step 3 of 4</string>
-    <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
-    <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
-    <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
-    <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
-    <string name="site_creation_domain_finish_button">Create site</string>
-    <string name="site_creation_title_hint">Site title</string>
-    <string name="site_creation_tagline_hint">Site tagline (optional)</string>
-    <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>
-    <string name="site_creation_empty_site_title">Please enter a site title</string>
-    <string name="site_creation_creating_laying_foundation">Laying site foundation…</string>
-    <string name="site_creation_creating_fetching_info">Retrieving site information…</string>
-    <string name="site_creation_creating_configuring_content">Configuring site content…</string>
-    <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
-    <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
-    <string name="site_creation_creating_failed">Something went wrong…</string>
-    <string name="site_creation_creating_failed_extended">We ran into an unexpected problem. How about giving it another shot?</string>
-    <string name="site_creation_creating_retry">Try again</string>
-    <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
-    <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
-    <string name="site_creation_epilogue_configure">Configure</string>
-    <string name="site_creation_epilogue_write">Write first post</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
@@ -2514,7 +2499,7 @@
     <string name="quick_start_sites_type_grow">Grow Your Audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
-    <string name="quick_start_span_start" translatable="false">&lt;span style="color:#0"&gt;</string>
+    <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
     <!-- Pages -->
@@ -2585,6 +2570,7 @@
     <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="site_creation_domain_finish_button">Create site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>

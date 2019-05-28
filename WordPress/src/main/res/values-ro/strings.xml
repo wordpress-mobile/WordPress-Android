@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-24 09:44:20+0000
+Translation-Revision-Date: 2019-05-14 19:33:14+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="post_list_drafts">Ciorne</string>
+    <string name="post_list_published">Publicat</string>
+    <string name="post_list_author_everyone">Toată lumea</string>
+    <string name="post_list_author_me">Eu</string>
+    <string name="error_restoring_post">A apărut o eroare la restaurarea articolului</string>
+    <string name="backdated_for">Antedatat pentru: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Elementele afișate mai sus vor apărea în fila Perspective. Trage și plasează pentru a personaliza.</string>
+    <string name="stats_insights_add_insights_header">Adaugă Perspective</string>
+    <string name="stats_insights_management_title">Vezi numai statisticile relevante. Adaugă și organizează perspectivele mai jos.</string>
+    <string name="stats_insights_social">Sociale</string>
+    <string name="stats_insights_annual_site_stats">Statistici sit anuale</string>
+    <string name="stats_view_follower_totals">Total urmăritori</string>
+    <string name="suggestion_fetch_error">Sugestiile pentru domeniu nu au putut fi încărcate</string>
+    <string name="suggestions_search_hint">Introdu un cuvânt cheie pentru mai multe idei</string>
+    <string name="suggestions_empty_list">Nicio sugestie găsită</string>
+    <string name="choose_domain">Alege domeniul</string>
+    <string name="register_domain">Înregistrează domeniul</string>
+    <string name="jetpack_installed_message">Acum, după ce ai instalat Jetpack, trebuie doar să te pregătim pentru inițializare. Nu va dura decât un minut.</string>
+    <string name="stats_menu_remove">Înlătură din perspective</string>
+    <string name="stats_menu_move_down">Mută în jos</string>
+    <string name="stats_menu_move_up">Mută în sus</string>
+    <string name="stats_item_settings">Setări elemente de statistici</string>
+    <string name="post_moving_to_draft">Articolul este mutat acum în ciorne</string>
+    <string name="post_restoring">Articolul este restaurat acum</string>
+    <string name="post_restored">Articol restaurat</string>
+    <string name="post_trashing">Articolul este aruncat la gunoi</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula modificările locale, sigur vrei să continui?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Modificări locale</string>
+    <string name="button_move_to_draft">Mută în ciorne</string>
+    <string name="post_list_toggle_item_layout_list_view">Comută la vizualizarea listei</string>
+    <string name="post_list_toggle_item_layout_cards_view">Comută la vizualizarea cardurilor</string>
+    <string name="posts_trashed_empty">Nu ai niciun articol aruncat la gunoi</string>
+    <string name="posts_draft_empty">Nu ai niciun articol în ciornă</string>
+    <string name="posts_scheduled_empty">Nu ai niciun articol programat</string>
+    <string name="posts_published_empty">Nu ai publicat încă niciun articol</string>
     <string name="notification_wpcom_username_needed">Te rog autentifică-te cu numele de utilizator și parola.</string>
     <string name="login_invalid_site_url">Ai introdus o adresă de sit invalidă. Te rog introdu adresa din nou.</string>
     <string name="error_user_username_instead_of_email">Te rog autentifică-te folosind numele tău de utilizator WordPress.com în loc de adresa ta de email.</string>
@@ -235,7 +270,6 @@ Language: ro
     <string name="stats_followers_email">Prin email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Administrează perspectivele</string>
-    <string name="stats_empty_insights_description">Personalizează-ți perspectivele și primești informații relevante despre performanța sitului</string>
     <string name="stats_empty_insights_title">Nu ai adăugat perspective până acum</string>
     <string name="stats_no_data_yet">Încă nu există date</string>
     <string name="menu_debug">Meniu de depanare</string>
@@ -343,14 +377,13 @@ Language: ro
     <string name="reader_empty_followed_tags_subtitle">Adaugă etichete aici pentru a găsi articole despre subiectele tale preferate</string>
     <string name="login_to_to_connect_jetpack">Autentifică-te în contul WordPress.com pe care l-ai folosit pentru a conecta Jetpack.</string>
     <string name="install_jetpack_retry">Reîncearcă</string>
-    <string name="install_jetpack_continue">Continuă</string>
-    <string name="jetpack_installation_problem_message">Jetpack nu a putut fi instalat în acest moment</string>
+    <string name="install_jetpack_continue">Inițializează</string>
+    <string name="jetpack_installation_problem_message">Jetpack nu a putut fi instalat în acest moment.</string>
     <string name="jetpack_installation_problem">A fost o problemă</string>
-    <string name="jetpack_installed_message">Ai instalat Jetpack pe situl tău. Felicitări!</string>
     <string name="jetpack_installed">Jetpack instalat</string>
-    <string name="installing_jetpack_message">Instalez Jetpack pe situl tău. Poate dura câteva minute până la finalizare</string>
+    <string name="installing_jetpack_message">Instalez Jetpack pe situl tău. Poate dura câteva minute până la finalizare.</string>
     <string name="installing_jetpack">Instalez Jetpack</string>
-    <string name="install_jetpack_message">Datele de conectare ale sitului tău web nu vor fi stocate și vor fi folosite numai pentru instalarea Jetpack</string>
+    <string name="install_jetpack_message">Datele de conectare ale sitului tău web nu vor fi stocate și vor fi folosite numai pentru instalarea Jetpack.</string>
     <string name="install_jetpack">Instalează Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Întrebări frecvente Jetpack</string>
@@ -651,7 +684,6 @@ Language: ro
     <string name="dialog_confirm_publish_message_page">Această pagină va fi publicată imediat.</string>
     <string name="dialog_confirm_publish_message_post">Acest articol va fi publicat imediat.</string>
     <string name="dialog_confirm_publish_title">Ești gata să publici?</string>
-    <string name="dialog_confirm_delete_post">Acest articol va fi șters și trimis la gunoi</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d articole/pagini neîncărcate</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagini neîncărcate</string>
     <string name="media_file_page_singular_only_not_uploaded">O pagină neîncărcată</string>
@@ -958,7 +990,6 @@ Language: ro
     <string name="async_promo_title_publish">Publică cu Confidence</string>
     <string name="editor_uploading_post">Articolul tău se încarcă</string>
     <string name="uploading_media">Încarc media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Sigur? Ștergerea acestui articol va anula, de asemenea, încărcarea media.</string>
     <string name="page_scheduled">Pagină programată</string>
     <string name="post_scheduled">Articol programat</string>
     <string name="button_retry">Reîncearcă</string>
@@ -1017,8 +1048,8 @@ Language: ro
     <string name="editor_dropped_text_error">A apărut o eroare în timpul plasării textului</string>
     <string name="editor_dropped_html_images_not_allowed">Plasarea imaginilor în modul HTML nu este permisă</string>
     <string name="editor_content_hint">Partajează-ți povestea aici…</string>
-    <string name="post_status_trashed">Aruncat la gunoi</string>
-    <string name="post_status_scheduled">Programat</string>
+    <string name="post_list_trashed">Aruncat la gunoi</string>
+    <string name="post_list_scheduled">Programat</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Ciornă</string>
     <string name="post_status_pending_review">Revizie în așteptare</string>
@@ -1317,7 +1348,7 @@ Language: ro
     <string name="error_cropping_image">Eroare la decuparea imaginii</string>
     <string name="checking_email">Verificarea emailului</string>
     <string name="magic_link_unavailable_error_message">În prezent indisponibilă. Te rog să-ți introduci parola</string>
-    <string name="logging_in">Autentificat</string>
+    <string name="logging_in">Autentificare</string>
     <string name="enter_your_password_instead">Introdu-ți parola în schimb</string>
     <string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
     <string name="new_editor_reflection_error">Editorul vizual nu este compatibil cu dispozitivul tău. A fost\n        dezactivat automat.</string>
@@ -1335,7 +1366,7 @@ Language: ro
     <string name="premium_upgrades_title">Actualizări Premium</string>
     <string name="purchases_request_error">Ceva a fost greșit. Nu pot cere achizițiile.</string>
     <string name="delete_site_progress">Ștergere sit…</string>
-    <string name="delete_site_hint">Ștergere sit</string>
+    <string name="delete_site_hint">Șterge situl</string>
     <string name="export_site_hint">Exportă situl tău într-un fișier XML</string>
     <string name="primary_domain">Domeniul primar</string>
     <string name="error_deleting_site_summary">A fost o eroare la ștergerea sitului tău. Te rog contactează suportul pentru asistență suplimentară.</string>
@@ -1498,7 +1529,7 @@ Language: ro
     <string name="site_settings_privacy_private_summary">Privat</string>
     <string name="site_settings_privacy_hidden_summary">Ascuns</string>
     <string name="site_settings_privacy_public_summary">Public</string>
-    <string name="site_settings_delete_site_title">Șterge sit</string>
+    <string name="site_settings_delete_site_title">Șterge situl</string>
     <string name="site_settings_blacklist_title">Lista neagră</string>
     <string name="site_settings_moderation_hold_title">Reținere pentru moderare</string>
     <string name="site_settings_multiple_links_title">Legături în comentarii</string>
@@ -1619,10 +1650,8 @@ Language: ro
     <string name="button_preview">Previzualizare</string>
     <string name="button_trash">Gunoi</string>
     <string name="button_stats">Statistici</string>
-    <string name="button_back">Înapoi</string>
     <string name="stats_no_activity_this_period">Nicio activitate în această perioadă</string>
     <string name="post_trashed">Articol trimis la gunoi</string>
-    <string name="post_deleted">Articol șters</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest sit</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest sit nu a putut fi găsit</string>
     <string name="undo">Revin</string>

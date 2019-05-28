@@ -436,16 +436,31 @@ public class MediaUtils {
                 }
 
                 // TODO handle non-primary volumes
-            } else if (isDownloadsDocument(uri)) { // DownloadsProvider
+            } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
-                try {
-                    final Uri contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                    return getDataColumn(context, contentUri, null, null);
-                } catch (NumberFormatException e) {
-                    AppLog.e(AppLog.T.UTILS, "Can't read the path for file with ID " + id);
-                    return null;
+
+                if (id != null && id.startsWith("raw:")) {
+                    return id.substring(4);
                 }
+
+                String[] contentUriPrefixesToTry = new String[]{
+                        "content://downloads/public_downloads",
+                        "content://downloads/my_downloads",
+                        "content://downloads/all_downloads"
+                };
+
+                for (String contentUriPrefix : contentUriPrefixesToTry) {
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+                    try {
+                        String path = getDataColumn(context, contentUri, null, null);
+                        if (path != null) {
+                            return path;
+                        }
+                    } catch (Exception e) {
+                        AppLog.e(AppLog.T.UTILS, "Error reading _data column for URI: " + contentUri, e);
+                    }
+                }
+                return downloadExternalMedia(context, uri).getPath();
             } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");

@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-24 12:43:44+0000
+Translation-Revision-Date: 2019-05-14 10:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="post_list_drafts">Brouillons</string>
+    <string name="post_list_published">Publiés</string>
+    <string name="post_list_author_everyone">Tout le monde</string>
+    <string name="post_list_author_me">Moi</string>
+    <string name="error_restoring_post">Une erreur est survenue pendant la restauration de la publication</string>
+    <string name="backdated_for">Antidaté pour : %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Les éléments présentés ci-dessus apparaîtront dans votre onglet Tendances. Glissez-déposez pour personnaliser.</string>
+    <string name="stats_insights_add_insights_header">Ajouter des tendances</string>
+    <string name="stats_insights_management_title">N\'affichez que les statistiques les plus pertinentes. Ajoutez et organisez vos tendances ci-après.</string>
+    <string name="stats_insights_social">Réseaux sociaux</string>
+    <string name="stats_insights_annual_site_stats">Statistiques annuelles du site</string>
+    <string name="stats_view_follower_totals">Total des abonnés</string>
+    <string name="suggestion_fetch_error">Impossible de charger les suggestions de domaine</string>
+    <string name="suggestions_search_hint">Saisir un mot-clé pour obtenir davantage d\'idées</string>
+    <string name="suggestions_empty_list">Suggestions introuvables</string>
+    <string name="choose_domain">Choisir le domaine</string>
+    <string name="register_domain">Enregistrer un domaine</string>
+    <string name="jetpack_installed_message">Maintenant que Jetpack est installé, vous devez procéder à quelques réglages. Cela ne prendra qu\'une minute.</string>
+    <string name="stats_menu_remove">Supprimer des tendances</string>
+    <string name="stats_menu_move_down">Déplacer vers le bas</string>
+    <string name="stats_menu_move_up">Déplacer vers le haut</string>
+    <string name="stats_item_settings">Réglages de l\'élément de statistiques</string>
+    <string name="post_moving_to_draft">Basculement de l\'article en mode brouillon</string>
+    <string name="post_restoring">Restauration de l\'article</string>
+    <string name="post_restored">Article restauré</string>
+    <string name="post_trashing">Suppression de l\'article</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">La suppression de cet article effacera les modifications locales. Voulez-vous vraiment continuer ?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Changements locaux</string>
+    <string name="button_move_to_draft">Passer en brouillon</string>
+    <string name="post_list_toggle_item_layout_list_view">Basculer vers la vue de la liste</string>
+    <string name="post_list_toggle_item_layout_cards_view">Basculer vers la vue des cartes</string>
+    <string name="posts_trashed_empty">Vous n\'avez pas d\'articles dans la corbeille</string>
+    <string name="posts_draft_empty">Vous n\'avez pas de brouillons d\'article</string>
+    <string name="posts_scheduled_empty">Vous n\'avez aucun article planifié</string>
+    <string name="posts_published_empty">Vous n\'avez pas encore publié d\'articles</string>
     <string name="notification_wpcom_username_needed">Veuillez vous connecter avec votre identifiant et votre mot de passe.</string>
     <string name="login_invalid_site_url">L’adresse que vous avez saisie est non valide. Veuillez la ressaisir.</string>
     <string name="error_user_username_instead_of_email">Veuillez vous connecter avec votre identifiant WordPress.com plutôt qu\'avec votre adresse de messagerie.</string>
@@ -234,8 +269,6 @@ Language: fr
     <string name="stats_followers_count_message">Total des abonnés %1$s : %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_manage_insights">Gérer les tendances</string>
-    <string name="stats_empty_insights_description">Personnalisez vos tendances et obtenez les dernières informations sur les performances de votre site</string>
     <string name="stats_empty_insights_title">Aucune tendance n’a encore été ajoutée</string>
     <string name="stats_no_data_yet">Aucune donnée pour le moment.</string>
     <string name="menu_debug">Menu de débogage</string>
@@ -343,14 +376,9 @@ Language: fr
     <string name="reader_empty_followed_tags_subtitle">Ajoutez des étiquettes ici pour rechercher des articles sur vos rubriques préférées</string>
     <string name="login_to_to_connect_jetpack">Connectez-vous au compte WordPress.com que vous utilisez pour connecter Jetpack.</string>
     <string name="install_jetpack_retry">Réessayer</string>
-    <string name="install_jetpack_continue">Continuer</string>
-    <string name="jetpack_installation_problem_message">Impossible d\'installer Jetpack pour le moment</string>
     <string name="jetpack_installation_problem">Un problème est survenu</string>
-    <string name="jetpack_installed_message">Jetpack est installé sur votre site. Bravo !</string>
     <string name="jetpack_installed">Jetpack installé</string>
-    <string name="installing_jetpack_message">Installation de Jetpack sur votre site. Cette opération peut prendre quelques minutes</string>
     <string name="installing_jetpack">Installation de Jetpack</string>
-    <string name="install_jetpack_message">Vos informations d\'identification sur le site Web ne seront pas conservées. Elles sont utilisées afin d\'installer Jetpack.</string>
     <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -651,7 +679,6 @@ Language: fr
     <string name="dialog_confirm_publish_message_page">Cette page sera publiée immédiatement.</string>
     <string name="dialog_confirm_publish_message_post">Cet article sera publié immédiatement.</string>
     <string name="dialog_confirm_publish_title">Prêt pour la publication ?</string>
-    <string name="dialog_confirm_delete_post">Cet article sera supprimé et placé dans la Corbeille</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d articles/pages non chargés</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pages non chargées</string>
     <string name="media_file_page_singular_only_not_uploaded">1 page non chargée</string>
@@ -958,7 +985,6 @@ Language: fr
     <string name="async_promo_title_publish">Publier en toute confiance</string>
     <string name="editor_uploading_post">Votre article est en cours de téléversement</string>
     <string name="uploading_media">Téléversement du média…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Êtes-vous certain-e ? Supprimer ce article supprimera aussi les médias téléversés.</string>
     <string name="page_scheduled">Page planifiée</string>
     <string name="post_scheduled">Article planifié</string>
     <string name="button_retry">Réessayer</string>
@@ -1017,8 +1043,6 @@ Language: fr
     <string name="editor_dropped_text_error">Erreur survenue pendant le glisser-déposer du texte</string>
     <string name="editor_dropped_html_images_not_allowed">Il n\'est pas permis de glisser des images en mode HTML</string>
     <string name="editor_content_hint">Partagez votre histoire ici…</string>
-    <string name="post_status_trashed">Supprimé</string>
-    <string name="post_status_scheduled">Planifié</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Brouillon</string>
     <string name="post_status_pending_review">En attente de relecture</string>
@@ -1619,10 +1643,8 @@ Language: fr
     <string name="button_preview">Aperçu</string>
     <string name="button_trash">Corbeille</string>
     <string name="button_stats">Stats</string>
-    <string name="button_back">Retour</string>
     <string name="stats_no_activity_this_period">Pas d\'activité durant cette période</string>
     <string name="post_trashed">Article envoyé à la corbeille</string>
-    <string name="post_deleted">Article supprimé</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Vous n\'êtes pas autorisé à accéder à ce site</string>
     <string name="reader_toast_err_follow_blog_not_found">Ce site est introuvable</string>
     <string name="undo">Annuler</string>
