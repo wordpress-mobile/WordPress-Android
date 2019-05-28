@@ -10,11 +10,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.WidgetSettingsModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.WidgetSettingsModel
 
 class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
@@ -37,7 +36,7 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Test
     fun `loads site and view mode from app prefs on start`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(Color.DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(DARK.ordinal)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(siteId)
         whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
 
@@ -51,13 +50,13 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
         assertThat(settingsModel).isNotNull
         assertThat(settingsModel!!.buttonEnabled).isTrue()
         assertThat(settingsModel!!.siteTitle).isEqualTo(siteName)
-        assertThat(settingsModel!!.color).isEqualTo(Color.DARK)
+        assertThat(settingsModel!!.color).isEqualTo(DARK)
     }
 
     @Test
     fun `button is disabled when site not set`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(Color.DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(DARK.ordinal)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(-1)
 
         var settingsModel: WidgetSettingsModel? = null
@@ -70,7 +69,7 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
         assertThat(settingsModel).isNotNull
         assertThat(settingsModel!!.buttonEnabled).isFalse()
         assertThat(settingsModel!!.siteTitle).isNull()
-        assertThat(settingsModel!!.color).isEqualTo(Color.DARK)
+        assertThat(settingsModel!!.color).isEqualTo(DARK)
     }
 
     @Test
