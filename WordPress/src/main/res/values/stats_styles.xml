@@ -262,7 +262,7 @@
     </style>
 
     <style name="StatsWidgetTitle.Light">
-        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:textColor">@color/gray_900</item>
     </style>
 
 
@@ -283,7 +283,7 @@
     </style>
 
     <style name="StatsWidgetKey.Light">
-        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:textColor">@color/gray_900</item>
     </style>
 
     <style name="StatsWidgetKey.Dark">
@@ -296,11 +296,11 @@
     </style>
 
     <style name="StatsWidgetValue.Light">
-        <item name="android:textColor">@color/grey_500</item>
+        <item name="android:textColor">@color/gray_500</item>
     </style>
 
     <style name="StatsWidgetValue.Dark">
-        <item name="android:textColor">@color/grey_200</item>
+        <item name="android:textColor">@color/gray_200</item>
     </style>
 
     <style name="StatsChange" parent="TextAppearance.AppCompat.Body1">
@@ -312,11 +312,11 @@
     </style>
 
     <style name="StatsChange.NeutralLight" parent="StatsChange">
-        <item name="android:textColor">@color/grey_500</item>
+        <item name="android:textColor">@color/gray_500</item>
     </style>
 
     <style name="StatsChange.NeutralDark" parent="StatsChange">
-        <item name="android:textColor">@color/grey_200</item>
+        <item name="android:textColor">@color/gray_200</item>
     </style>
 
     <style name="StatsChange.PositiveLight" parent="StatsChange">

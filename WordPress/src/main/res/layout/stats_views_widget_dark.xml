@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_rectangle_grey_800_radius_4dp">
+    android:background="@drawable/bg_rectangle_gray_800_radius_4dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/stats_widget_list_item_height"
-        android:background="@drawable/bg_rectangle_grey_700_top_radius_4dp"/>
+        android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"/>
 
     <ImageView
         android:id="@+id/widget_site_icon"
