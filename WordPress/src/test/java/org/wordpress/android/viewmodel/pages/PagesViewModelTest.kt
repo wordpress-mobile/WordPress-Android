@@ -39,7 +39,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import java.util.Date
 import java.util.SortedMap
-import kotlin.random.Random
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesViewModelTest {
@@ -68,7 +67,7 @@ class PagesViewModelTest {
                 localDraftUploadStarter = localDraftUploadStarter,
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
-                eventBusAdapter = mock()
+                eventBusWrapper = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()

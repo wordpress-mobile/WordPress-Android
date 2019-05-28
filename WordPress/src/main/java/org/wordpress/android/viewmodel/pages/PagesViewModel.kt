@@ -39,7 +39,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.EventBusAdapter
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
@@ -78,7 +78,7 @@ class PagesViewModel
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
-    private val eventBusAdapter: EventBusAdapter,
+    private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -152,7 +152,7 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
-            eventBusAdapter.register(this)
+            eventBusWrapper.register(this)
 
             loadPagesAsync()
 
@@ -166,7 +166,7 @@ class PagesViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        eventBusAdapter.unregister(this)
+        eventBusWrapper.unregister(this)
 
         actionPerfomer.onCleanup()
     }
