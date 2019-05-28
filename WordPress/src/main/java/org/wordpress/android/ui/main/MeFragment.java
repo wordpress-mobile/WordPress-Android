@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -66,8 +67,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class MeFragment extends Fragment implements MainToolbarFragment, WPMainActivity.OnScrollToTopListener {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
@@ -522,6 +521,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(GravatarUploadFinished event) {
         showGravatarProgressBar(false);
         if (event.success) {

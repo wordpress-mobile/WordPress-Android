@@ -1,11 +1,11 @@
 package org.wordpress.android.util
 
 import dagger.Reusable
-import de.greenrobot.event.EventBus
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Inject
 
 /**
- * Provides an interface for [de.greenrobot.eventbus.EventBus] which can be mocked and used in unit tests.
+ * Provides an interface for [org.greenrobot.eventbus.EventBus] which can be mocked and used in unit tests.
  */
 @Reusable
 class EventBusWrapper @Inject constructor() {

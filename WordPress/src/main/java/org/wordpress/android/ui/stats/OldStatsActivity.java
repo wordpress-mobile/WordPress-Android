@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -51,8 +52,6 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.stats.service.StatsService.TASK_ID_GROUP_ALL;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
@@ -654,6 +653,7 @@ public class OldStatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StatsEvents.UpdateStatusStarted event) {
         if (isFinishing() || !mIsInFront) {
             return;
@@ -663,6 +663,7 @@ public class OldStatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StatsEvents.UpdateStatusFinished event) {
         if (isFinishing()) {
             return;
@@ -689,6 +690,7 @@ public class OldStatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
         // There was an error loading Stats. Don't bump stats for promo widget.
         if (isFinishing() || !mIsInFront) {

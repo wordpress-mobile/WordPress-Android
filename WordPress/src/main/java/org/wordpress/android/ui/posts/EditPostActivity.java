@@ -46,6 +46,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -188,8 +189,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
@@ -3957,6 +3956,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
         if (!isFinishing()) {
             // use upload progress rather than optimizer progress since the former includes upload+optimization
@@ -3966,6 +3966,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
         if (!isFinishing()
             && event.mediaModelList != null

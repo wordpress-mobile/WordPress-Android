@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.io.BufferedReader;
@@ -21,8 +22,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;

@@ -36,6 +36,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -111,7 +112,6 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import de.greenrobot.event.EventBus;
 
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {

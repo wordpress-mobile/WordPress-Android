@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
@@ -43,8 +44,6 @@ import org.wordpress.android.util.VolleyUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import de.greenrobot.event.EventBus;
 
 public class ReaderPostActions {
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
