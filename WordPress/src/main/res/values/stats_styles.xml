@@ -254,14 +254,6 @@
         <item name="android:paddingTop">10dp</item>
     </style>
 
-    <style name="StatsWidgetSiteIcon.Light">
-        <item name="android:background">@drawable/bg_rectangle_grey_0_top_left_radius_4dp</item>
-    </style>
-
-    <style name="StatsWidgetSiteIcon.Dark">
-        <item name="android:background">@drawable/bg_rectangle_grey_700_top_left_radius_4dp</item>
-    </style>
-
     <style name="StatsWidgetTitle" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:gravity">center_vertical</item>
@@ -270,13 +262,11 @@
     </style>
 
     <style name="StatsWidgetTitle.Light">
-        <item name="android:background">@drawable/bg_rectangle_grey_0_top_right_radius_4dp</item>
         <item name="android:textColor">@color/grey_900</item>
     </style>
 
 
     <style name="StatsWidgetTitle.Dark">
-        <item name="android:background">@drawable/bg_rectangle_grey_700_top_right_radius_4dp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 

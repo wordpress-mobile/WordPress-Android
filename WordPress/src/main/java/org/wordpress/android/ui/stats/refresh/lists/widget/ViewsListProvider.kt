@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
@@ -123,7 +122,6 @@ class ViewsListProvider(val context: Context, intent: Intent) : RemoteViewsFacto
         } else {
             rv.setViewVisibility(R.id.divider, View.VISIBLE)
         }
-        Log.d("vojta", "Drawing item: ${uiModel.state}, $showChangeColumn, ${uiModel.change}")
         rv.setTextViewText(R.id.value, uiModel.value)
         return rv
     }

@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.widget.RemoteViews
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.AppWidgetTarget
 import org.wordpress.android.R
 import org.wordpress.android.R.id
@@ -16,6 +14,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.ICON
 import javax.inject.Inject
 
 const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
@@ -25,6 +25,7 @@ const val SITE_ID_KEY = "site_id_key"
 class StatsViewsWidget : AppWidgetProvider() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
+    @Inject lateinit var imageManager: ImageManager
 
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
@@ -42,6 +43,7 @@ class StatsViewsWidget : AppWidgetProvider() {
                     appWidgetId,
                     appPrefsWrapper,
                     siteStore,
+                    imageManager,
                     minWidth > 250
             )
         }
@@ -68,7 +70,15 @@ class StatsViewsWidget : AppWidgetProvider() {
             // Get min width and height.
             val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
             (context.applicationContext as WordPress).component().inject(this)
-            updateAppWidget(context, appWidgetManager, appWidgetId, appPrefsWrapper, siteStore, minWidth > 250)
+            updateAppWidget(
+                    context,
+                    appWidgetManager,
+                    appWidgetId,
+                    appPrefsWrapper,
+                    siteStore,
+                    imageManager,
+                    minWidth > 250
+            )
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
     }
@@ -80,9 +90,10 @@ class StatsViewsWidget : AppWidgetProvider() {
             appWidgetId: Int,
             appPrefsWrapper: AppPrefsWrapper,
             siteStore: SiteStore,
+            imageManager: ImageManager,
             showChangeColumn: Boolean = true
         ) {
-            drawList(appWidgetId, context, appPrefsWrapper, siteStore, appWidgetManager, showChangeColumn)
+            drawList(appWidgetId, context, appPrefsWrapper, siteStore, imageManager, appWidgetManager, showChangeColumn)
         }
 
         private fun drawList(
@@ -90,27 +101,19 @@ class StatsViewsWidget : AppWidgetProvider() {
             context: Context,
             appPrefsWrapper: AppPrefsWrapper,
             siteStore: SiteStore,
+            imageManager: ImageManager,
             appWidgetManager: AppWidgetManager,
             showChangeColumn: Boolean
         ) {
-            val layout = when(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)) {
+            val layout = when (appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)) {
                 Color.DARK.ordinal -> R.layout.stats_views_widget_dark
                 Color.LIGHT.ordinal -> R.layout.stats_views_widget_light
                 else -> R.layout.stats_views_widget_light
             }
             val views = RemoteViews(context.packageName, layout)
             val siteIconUrl = siteStore.getSiteBySiteId(appPrefsWrapper.getAppWidgetSiteId(appWidgetId))?.iconUrl
-            if (siteIconUrl != null) {
-                val awt = AppWidgetTarget(context, id.widget_site_icon, views, appWidgetId)
-                Glide.with(context)
-                        .asBitmap()
-                        .load(siteIconUrl)
-                        .into(awt)
-
-                views.setViewVisibility(id.widget_site_icon, View.VISIBLE)
-            } else {
-                views.setViewVisibility(id.widget_site_icon, View.GONE)
-            }
+            val awt = AppWidgetTarget(context, id.widget_site_icon, views, appWidgetId)
+            imageManager.load(awt, context, ICON, siteIconUrl ?: "")
             val svcIntent = Intent(context, WidgetService::class.java)
             svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             svcIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
