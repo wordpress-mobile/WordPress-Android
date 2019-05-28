@@ -237,8 +237,8 @@ class PagesViewModelTest {
 
     private companion object Fixtures {
         fun createPostModel() = PostModel().apply {
-            id = Random(100).nextInt()
-            remotePostId = Random(200).nextLong()
+            id = 1_001
+            remotePostId = 2_034
             setIsPage(true)
         }
     }
