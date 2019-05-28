@@ -250,15 +250,14 @@
 
     <style name="StatsWidgetSiteIcon">
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingStart">18dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_large</item>
         <item name="android:paddingTop">10dp</item>
     </style>
 
     <style name="StatsWidgetTitle" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:paddingStart">16dp</item>
     </style>
 
     <style name="StatsWidgetTitle.Light">

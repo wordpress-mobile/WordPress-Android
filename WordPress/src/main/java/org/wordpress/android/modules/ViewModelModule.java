@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
@@ -136,8 +136,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ViewsWidgetViewModel.class)
-    abstract ViewModel statsViewsWidgetViewModel(ViewsWidgetViewModel viewModel);
+    @ViewModelKey(StatsViewsWidgetConfigureViewModel.class)
+    abstract ViewModel statsViewsWidgetViewModel(StatsViewsWidgetConfigureViewModel viewModel);
 
     @Binds
     @IntoMap

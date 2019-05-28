@@ -10,24 +10,24 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.WidgetSettingsModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetConfigurationViewModel.WidgetSettingsModel
 
-class ViewsWidgetViewModelTest : BaseUnitTest() {
+class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
-    private lateinit var viewModel: ViewsWidgetViewModel
+    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
     private val siteId = 15L
     private val siteName = "WordPress"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
     @Before
     fun setUp() {
-        viewModel = ViewsWidgetViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
+        viewModel = StatsViewsWidgetConfigureViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
         whenever(site.siteId).thenReturn(siteId)
         whenever(site.name).thenReturn(siteName)
         whenever(site.url).thenReturn(siteUrl)

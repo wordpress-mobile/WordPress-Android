@@ -86,7 +86,13 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
      * If no URL is provided, it only loads the placeholder
      */
     @JvmOverloads
-    fun load(awt: AppWidgetTarget, context: Context, imageType: ImageType, imgUrl: String = "", scaleType: ScaleType = CENTER) {
+    fun load(
+        awt: AppWidgetTarget,
+        context: Context,
+        imageType: ImageType,
+        imgUrl: String = "",
+        scaleType: ScaleType = CENTER
+    ) {
         if (!context.isAvailable()) return
         GlideApp.with(context)
                 .asBitmap()

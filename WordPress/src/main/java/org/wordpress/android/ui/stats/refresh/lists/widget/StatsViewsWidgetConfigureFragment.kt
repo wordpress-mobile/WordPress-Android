@@ -24,14 +24,15 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
-    private lateinit var viewModel: ViewsWidgetViewModel
+    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.stats_views_widget_configure_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ViewsWidgetViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(StatsViewsWidgetConfigureViewModel::class.java)
         activity?.setResult(AppCompatActivity.RESULT_CANCELED)
 
         val appWidgetId = activity?.intent?.extras?.getInt(

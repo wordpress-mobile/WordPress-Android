@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.stats_site_selector_item.view.*
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.SiteUiModel
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 
