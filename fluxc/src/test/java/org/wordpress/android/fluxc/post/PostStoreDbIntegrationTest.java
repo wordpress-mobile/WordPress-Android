@@ -43,7 +43,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @RunWith(RobolectricTestRunner.class)
-public class PostStoreUnitTest {
+public class PostStoreDbIntegrationTest {
     private PostSqlUtils mPostSqlUtils = new PostSqlUtils();
     private PostStore mPostStore = new PostStore(new Dispatcher(), Mockito.mock(PostRestClient.class),
             Mockito.mock(PostXMLRPCClient.class), mPostSqlUtils);
