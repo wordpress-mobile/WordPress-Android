@@ -14,13 +14,19 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+
+import java.net.URI;
+import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
 
 import static org.wordpress.android.WordPress.getContext;
 
@@ -32,10 +38,12 @@ import static org.wordpress.android.WordPress.getContext;
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
-    public static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
-    public static final String DEEP_LINK_HOST_POST = "post";
-    public static final String DEEP_LINK_HOST_STATS = "stats";
-    public static final String DEEP_LINK_HOST_READ = "read";
+    private static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
+    private static final String DEEP_LINK_HOST_POST = "post";
+    private static final String DEEP_LINK_HOST_STATS = "stats";
+    private static final String DEEP_LINK_HOST_READ = "read";
+    private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
+    private static final String HOST_WORDPRESS_COM = "wordpress.com";
 
     private String mInterceptedUri;
     private String mBlogId;
@@ -66,27 +74,66 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             mInterceptedUri = uri.toString();
 
-            if (isFromAppBanner(host)) {
+            if (shouldOpenEditor(uri)) {
+                handleOpenEditor(uri);
+            } else if (isFromAppBanner(host)) {
                 handleAppBanner(host);
+            } else if (shouldViewPost(host)) {
+                handleViewPost(uri);
             } else {
-                mBlogId = uri.getQueryParameter("blogId");
-                mPostId = uri.getQueryParameter("postId");
-
-                // if user is signed in wpcom show the post right away - otherwise show welcome activity
-                // and then show the post once the user has signed in
-                if (mAccountStore.hasAccessToken()) {
-                    showPost();
-                    finish();
-                } else {
-                    ActivityLauncher.loginForDeeplink(this);
-                }
+                // not handled
+                finish();
             }
         } else {
             finish();
         }
     }
 
-    private void handleAppBanner(String host) {
+    private boolean shouldOpenEditor(@NonNull Uri uri) {
+        return StringUtils.equals(uri.getHost(), HOST_WORDPRESS_COM)
+               && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), "post"));
+    }
+
+    private void handleOpenEditor(@NonNull Uri uri) {
+        String urlPathSegment = uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
+        openEditorForSite(urlPathSegment);
+    }
+
+    private void openEditorForSite(@NonNull String targetHost) {
+        List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(targetHost);
+        SiteModel site = matchedSites.isEmpty() ? null : matchedSites.get(0);
+        String host = null;
+        if (site != null && site.getUrl() != null) {
+            host = URI.create(site.getUrl()).getHost();
+        }
+        if (site != null && host != null && StringUtils.equals(host, targetHost)) {
+            // if we found the site with the matching url, open the editor for this site.
+            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+        } else {
+            // In other cases, open the editor with the current selected site.
+            ActivityLauncher.openEditorInNewStack(getContext());
+        }
+    }
+
+    private boolean shouldViewPost(String host) {
+        return StringUtils.equals(host, DEEP_LINK_HOST_VIEWPOST);
+    }
+
+    private void handleViewPost(@NonNull Uri uri) {
+        mBlogId = uri.getQueryParameter("blogId");
+        mPostId = uri.getQueryParameter("postId");
+
+        // if user is signed in wpcom show the post right away - otherwise show welcome activity
+        // and then show the post once the user has signed in
+        if (mAccountStore.hasAccessToken()) {
+            showPost();
+            finish();
+        } else {
+            ActivityLauncher.loginForDeeplink(this);
+        }
+    }
+
+    private void handleAppBanner(@NonNull String host) {
         switch (host) {
             case DEEP_LINK_HOST_NOTIFICATIONS:
                 ActivityLauncher.viewNotificationsInNewStack(getContext());

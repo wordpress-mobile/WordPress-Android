@@ -370,6 +370,16 @@
                 <data
                     android:host="notifications"
                     android:scheme="wordpress" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
