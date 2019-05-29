@@ -1,6 +1,7 @@
 12.6
 -----
 * Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
+* Show upload in progress notification when retrying
 
 
 12.5
