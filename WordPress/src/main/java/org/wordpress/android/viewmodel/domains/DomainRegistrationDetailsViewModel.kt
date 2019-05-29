@@ -94,8 +94,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val domainContactDetails: LiveData<DomainContactModel>
         get() = _domainContactDetails
 
-    private val _handleCompletedDomainRegistration = SingleLiveEvent<Unit>()
-    val handleCompletedDomainRegistration: LiveData<Unit>
+    private val _handleCompletedDomainRegistration = SingleLiveEvent<String>()
+    val handleCompletedDomainRegistration: LiveData<String>
         get() = _handleCompletedDomainRegistration
 
     private val _showTos = SingleLiveEvent<Unit>()
@@ -222,7 +222,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             _showErrorMessage.value = event.error.message
         }
 
-        _handleCompletedDomainRegistration.call()
+        _handleCompletedDomainRegistration.postValue(domainProductDetails.domainName)
     }
 
     fun onCountrySelectorClicked() {

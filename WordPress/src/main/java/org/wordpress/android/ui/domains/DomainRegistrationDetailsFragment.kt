@@ -68,19 +68,12 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
-    private var site: SiteModel? = null
-    private var domainProductDetails: DomainProductDetails? = null
-
     private var loadingProgressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val nonNullActivity = checkNotNull(activity)
         (nonNullActivity.application as WordPress).component()?.inject(this)
-
-        site = nonNullActivity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
-
-        domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -92,7 +85,11 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
-        viewModel.start(site!!, domainProductDetails!!)
+
+        val domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS) as DomainProductDetails
+        val site = activity!!.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+
+        viewModel.start(site, domainProductDetails)
 
         // Country and State input could only be populated from the dialog
         country_input.inputType = 0
@@ -303,8 +300,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                 })
 
         viewModel.handleCompletedDomainRegistration.observe(this,
-                Observer {
-                    (activity as DomainRegistrationActivity).onDomainRegistered(domainProductDetails!!.domainName)
+                Observer { domainName ->
+                    (activity as DomainRegistrationActivity).onDomainRegistered(StringUtils.notNullStr(domainName))
                 })
 
         viewModel.showTos.observe(this,
