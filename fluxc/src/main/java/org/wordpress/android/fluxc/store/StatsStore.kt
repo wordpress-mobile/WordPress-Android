@@ -40,18 +40,39 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.VIDEOS
 import org.wordpress.android.fluxc.store.Store.OnChangedError
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 val DEFAULT_INSIGHTS = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
+const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
 @Singleton
 class StatsStore
 @Inject constructor(
     private val coroutineContext: CoroutineContext,
-    private val insightTypeSqlUtils: InsightTypeSqlUtils
+    private val insightTypeSqlUtils: InsightTypeSqlUtils,
+    private val preferenceUtils: PreferenceUtilsWrapper
 ) {
+    suspend fun getInsightTypes(site: SiteModel): List<StatsType> = withContext(coroutineContext) {
+        val types = mutableListOf<StatsType>()
+        if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {
+            types.add(ManagementType.NEWS_CARD)
+        }
+        types.addAll(getAddedInsights(site))
+        types.add(ManagementType.CONTROL)
+        return@withContext types
+    }
+
+    fun hideInsightsManagementNewsCard() {
+        preferenceUtils.getFluxCPreferences().edit().putBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true).apply()
+    }
+
+    fun isInsightsManagementNewsCardShowing(): Boolean {
+        return preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true)
+    }
+
     suspend fun getAddedInsights(site: SiteModel) = withContext(coroutineContext) {
         val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
         val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
@@ -147,6 +168,11 @@ class StatsStore
         TODAY_STATS,
         POSTING_ACTIVITY,
         PUBLICIZE
+    }
+
+    enum class ManagementType : StatsType {
+        NEWS_CARD,
+        CONTROL
     }
 
     enum class TimeStatsType : StatsType {
