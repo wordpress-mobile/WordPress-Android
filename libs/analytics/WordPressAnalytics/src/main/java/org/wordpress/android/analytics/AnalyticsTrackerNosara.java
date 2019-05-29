@@ -977,6 +977,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_access_error";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
+                return "stats_insights_management_hint_dismissed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED:
+                return "stats_insights_management_hint_clicked";
+            case STATS_INSIGHTS_MANAGEMENT_ACCESSED:
+                return "stats_insights_management_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:

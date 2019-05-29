@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.F
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ManagementControlUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ManagementNewsCardUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
@@ -87,7 +88,8 @@ class StatsModule {
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
-        managementControlUseCase: ManagementControlUseCase
+        managementControlUseCase: ManagementControlUseCase,
+        managementNewsCardUseCase: ManagementNewsCardUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -101,7 +103,8 @@ class StatsModule {
                 postingActivityUseCase,
                 followerTotalsUseCase,
                 annualSiteStatsUseCaseFactory.build(BLOCK),
-                managementControlUseCase
+                managementControlUseCase,
+                managementNewsCardUseCase
         )
     }
 
