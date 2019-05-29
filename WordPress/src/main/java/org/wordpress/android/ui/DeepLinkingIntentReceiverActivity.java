@@ -45,6 +45,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
     private static final String HOST_API_WORDPRESS_COM = "public-api.wordpress.com";
+    private static final String HOST_DEEPLINKED_API_WORDPRESS_COM = "mobile-api.wordpress.com";
     private static final String TRACKING_PATH = "bar";
     private static final String POST_PATH = "post";
     private static final String REDIRECT_TO_PARAM = "redirect_to";
@@ -81,7 +82,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
             if (shouldOpenEditor(uri)) {
                 handleOpenEditor(uri);
-            } else if (shouldOpenEditorFromTrackingUrl(uri)) {
+            } else if (shouldHandleTrackingUrl(uri)) {
+                // There is only one handled tracking URL for now (open editor)
                 handleOpenEditorFromTrackingUrl(uri);
             } else if (isFromAppBanner(host)) {
                 handleAppBanner(host);
@@ -110,20 +112,25 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         return Uri.parse(redirectTo);
     }
 
-    private boolean shouldOpenEditorFromTrackingUrl(@NonNull Uri uri) {
-        // https://public-api.wordpress.com/bar/?redirect_to=https%3A%2F%2Fwordpress.com%2Fpost%2Furl.wordpress.com
-        if (!StringUtils.equals(uri.getHost(), HOST_API_WORDPRESS_COM)
-            || uri.getPathSegments().isEmpty()
-            || !StringUtils.equals(uri.getPathSegments().get(0), TRACKING_PATH)) {
-            return false;
-        }
-        Uri redirectUri = getRedirectUri(uri);
-        return redirectUri != null && shouldOpenEditor(redirectUri);
+    private boolean shouldHandleTrackingUrl(@NonNull Uri uri) {
+        // https://mobile-api.wordpress.com/bar/
+        return StringUtils.equals(uri.getHost(), HOST_DEEPLINKED_API_WORDPRESS_COM)
+            && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), TRACKING_PATH));
     }
 
     private void handleOpenEditorFromTrackingUrl(@NonNull Uri uri) {
         Uri redirectUri = getRedirectUri(uri);
-        if (redirectUri == null) {
+        if (redirectUri == null || !shouldOpenEditor(redirectUri)) {
+            // Replace host to redirect to the browser
+            Uri newUri = (new Uri.Builder())
+                    .scheme(uri.getScheme())
+                    .path(uri.getPath())
+                    .query(uri.getQuery())
+                    .fragment(uri.getFragment())
+                    .authority(HOST_API_WORDPRESS_COM)
+                    .build();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, newUri);
+            startActivity(browserIntent);
             finish();
             return;
         }
