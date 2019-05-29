@@ -27,6 +27,8 @@ class SelectedDateProvider
 
     private val selectedDateChanged = MutableLiveData<Event<SectionChange>>()
 
+    private var initialSelectedPeriod: Pair<StatsGranularity, String>? = null
+
     fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<Event<SectionChange>> {
         return selectedDateChanged.filter { it.peekContent().selectedSection == statsGranularity.toStatsSection() }
     }
@@ -67,6 +69,19 @@ class SelectedDateProvider
         if (selectedDate.hasUpdatedDate(currentDate)) {
             selectedDateChanged.postValue(Event(SectionChange(statsSection)))
         }
+    }
+
+    fun setInitialSelectedPeriod(statsSection: StatsGranularity, period: String) {
+        initialSelectedPeriod = statsSection to period
+    }
+
+    fun getInitialSelectedPeriod(statsSection: StatsGranularity): String? {
+        val initialValue = initialSelectedPeriod
+        if (initialValue?.first == statsSection) {
+            initialSelectedPeriod = null
+            return initialValue.second
+        }
+        return null
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity): Date? {

@@ -61,13 +61,16 @@ class StatsViewModel
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
 
-    fun start(launchedFromWidget: Boolean, initialSection: StatsSection?) {
+    fun start(launchedFromWidget: Boolean, initialSection: StatsSection?, initialSelectedPeriod: String?) {
         // Check if VM is not already initialized
         if (!isInitialized) {
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
+            if (initialSection != null && initialSelectedPeriod != null) {
+                selectedDateProvider.setInitialSelectedPeriod(initialSection, initialSelectedPeriod)
+            }
             _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)

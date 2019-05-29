@@ -91,7 +91,8 @@ constructor(
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            val periodFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val selectedDateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val initialPeriodSelection = selectedDateProvider.getInitialSelectedPeriod(statsGranularity)
             val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
             val availablePeriods = domainModel.dates.takeLast(visibleBarCount)
             val availableDates = availablePeriods.map {
@@ -100,8 +101,9 @@ constructor(
                         it.period
                 )
             }
-            val selectedDate = periodFromProvider ?: availableDates.last()
-            val index = availableDates.indexOf(selectedDate)
+            val selectedDate = selectedDateFromProvider ?: availableDates.last()
+            val initialIndex = availablePeriods.indexOfFirst { it.period == initialPeriodSelection }
+            val index = if (initialIndex > -1) initialIndex else availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
                     index,

@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
+import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -36,7 +37,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -50,7 +50,6 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    @Inject lateinit var navigator: StatsNavigator
 
     private var restorePreviousSearch = false
 
@@ -106,8 +105,9 @@ class StatsFragment : DaggerFragment() {
         val launchedFrom = activity.intent.getSerializableExtra(ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(activity)
+        val initialSelectedPeriod = activity.intent.getStringExtra(INITIAL_SELECTED_PERIOD_KEY)
 
-        viewModel.start(launchedFromWidget, initialTimeFrame)
+        viewModel.start(launchedFromWidget, initialTimeFrame, initialSelectedPeriod)
 
         if (!isFirstStart) {
             restorePreviousSearch = true

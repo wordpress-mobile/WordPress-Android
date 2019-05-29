@@ -73,8 +73,8 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -92,7 +92,6 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -237,8 +236,7 @@ public class ActivityLauncher {
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = new Intent(context, StatsActivity.class);
-        statsIntent.putExtra(WordPress.SITE, site);
+        Intent statsIntent = StatsActivity.buildIntent(context, site);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
@@ -277,9 +275,7 @@ public class ActivityLauncher {
                                   );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
+            StatsActivity.start(context, site);
         }
     }
 
@@ -317,10 +313,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, site.getId());
-        intent.putExtra(LOGGED_INTO_JETPACK, true);
-        context.startActivity(intent);
+        StatsActivity.start(context, site);
     }
 
     public static void viewConnectJetpackForStats(Context context, SiteModel site) {
