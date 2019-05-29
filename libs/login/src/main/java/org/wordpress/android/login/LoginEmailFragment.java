@@ -66,6 +66,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
+    private static final String ARG_HIDE_LOGIN_BY_SITE_OPTION = "ARG_HIDE_LOGIN_BY_SITE_OPTION";
+
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
@@ -78,6 +80,15 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
     protected boolean mIsDisplayingEmailHints;
+    protected boolean mHideLoginWithSiteOption;
+
+    public static LoginEmailFragment newInstance(Boolean hideLoginWithSiteOption) {
+        LoginEmailFragment fragment = new LoginEmailFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, hideLoginWithSiteOption);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -161,18 +172,22 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         });
 
         LinearLayout siteLoginButton = rootView.findViewById(R.id.login_site_button);
-        siteLoginButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mLoginListener != null) {
-                    if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-                        mLoginListener.loginViaWpcomUsernameInstead();
-                    } else {
-                        mLoginListener.loginViaSiteAddress();
+        if (mHideLoginWithSiteOption) {
+            siteLoginButton.setVisibility(View.GONE);
+        } else {
+            siteLoginButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mLoginListener != null) {
+                        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+                            mLoginListener.loginViaWpcomUsernameInstead();
+                        } else {
+                            mLoginListener.loginViaSiteAddress();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         ImageView siteLoginButtonIcon = rootView.findViewById(R.id.login_site_button_icon);
         TextView siteLoginButtonText = rootView.findViewById(R.id.login_site_button_text);
@@ -243,6 +258,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mHideLoginWithSiteOption = args.getBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, false);
+        }
+
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(LoginEmailFragment.this)
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
