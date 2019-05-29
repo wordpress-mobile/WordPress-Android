@@ -21,12 +21,12 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static org.wordpress.android.WordPress.getContext;
 
@@ -44,6 +44,11 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final String DEEP_LINK_HOST_READ = "read";
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
+    private static final String HOST_API_WORDPRESS_COM = "public-api.wordpress.com";
+    private static final String TRACKING_PATH = "bar";
+    private static final String POST_PATH = "post";
+    private static final String REDIRECT_TO_PARAM = "redirect_to";
+
 
     private String mInterceptedUri;
     private String mBlogId;
@@ -76,6 +81,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
             if (shouldOpenEditor(uri)) {
                 handleOpenEditor(uri);
+            } else if (shouldOpenEditorFromTrackingUrl(uri)) {
+                handleOpenEditorFromTrackingUrl(uri);
             } else if (isFromAppBanner(host)) {
                 handleAppBanner(host);
             } else if (shouldViewPost(host)) {
@@ -90,8 +97,37 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     }
 
     private boolean shouldOpenEditor(@NonNull Uri uri) {
+        // Match: https://wordpress.com/post/
         return StringUtils.equals(uri.getHost(), HOST_WORDPRESS_COM)
-               && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), "post"));
+               && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), POST_PATH));
+    }
+
+    private @Nullable Uri getRedirectUri(@NonNull Uri uri) {
+        String redirectTo = uri.getQueryParameter(REDIRECT_TO_PARAM);
+        if (redirectTo == null) {
+            return null;
+        }
+        return Uri.parse(redirectTo);
+    }
+
+    private boolean shouldOpenEditorFromTrackingUrl(@NonNull Uri uri) {
+        // https://public-api.wordpress.com/bar/?redirect_to=https%3A%2F%2Fwordpress.com%2Fpost%2Furl.wordpress.com
+        if (!StringUtils.equals(uri.getHost(), HOST_API_WORDPRESS_COM)
+            || uri.getPathSegments().isEmpty()
+            || !StringUtils.equals(uri.getPathSegments().get(0), TRACKING_PATH)) {
+            return false;
+        }
+        Uri redirectUri = getRedirectUri(uri);
+        return redirectUri != null && shouldOpenEditor(redirectUri);
+    }
+
+    private void handleOpenEditorFromTrackingUrl(@NonNull Uri uri) {
+        Uri redirectUri = getRedirectUri(uri);
+        if (redirectUri == null) {
+            finish();
+            return;
+        }
+        handleOpenEditor(redirectUri);
     }
 
     private void handleOpenEditor(@NonNull Uri uri) {
@@ -104,7 +140,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         SiteModel site = matchedSites.isEmpty() ? null : matchedSites.get(0);
         String host = null;
         if (site != null && site.getUrl() != null) {
-            host = URI.create(site.getUrl()).getHost();
+            host = Uri.parse(site.getUrl()).getHost();
         }
         if (site != null && host != null && StringUtils.equals(host, targetHost)) {
             // if we found the site with the matching url, open the editor for this site.
