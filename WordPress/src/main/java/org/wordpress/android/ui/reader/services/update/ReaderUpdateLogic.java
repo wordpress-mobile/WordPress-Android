@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -31,8 +32,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class ReaderUpdateLogic {
     /***

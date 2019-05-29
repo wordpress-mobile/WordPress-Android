@@ -384,16 +384,16 @@
     <dimen name="site_creation_verticals_clear_search_icon_size">24dp</dimen>
     <dimen name="site_creation_verticals_clear_search_clickable_area_width">48dp</dimen>
 
-    <dimen name="new_site_creation_preview_web_view_side_margin">40dp</dimen>
-    <dimen name="new_site_creation_preview_ok_button_container_height">68dp</dimen>
-    <dimen name="new_site_creation_container_elevation">6dp</dimen>
-    <dimen name="new_site_creation_verticals_search_input_text_padding">32dp</dimen>
+    <dimen name="site_creation_preview_web_view_side_margin">40dp</dimen>
+    <dimen name="site_creation_preview_ok_button_container_height">68dp</dimen>
+    <dimen name="site_creation_container_elevation">6dp</dimen>
+    <dimen name="site_creation_verticals_search_input_text_padding">32dp</dimen>
 
-    <dimen name="new_site_creation_domains_radio_button_padding_start">28dp</dimen>
+    <dimen name="site_creation_domains_radio_button_padding_start">28dp</dimen>
 
-    <dimen name="new_site_creation_preview_skeleton_mid_size_width">174dp</dimen>
-    <dimen name="new_site_creation_preview_skeleton_large_block_height">136dp</dimen>
-    <dimen name="new_site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>
+    <dimen name="site_creation_preview_skeleton_mid_size_width">174dp</dimen>
+    <dimen name="site_creation_preview_skeleton_large_block_height">136dp</dimen>
+    <dimen name="site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
