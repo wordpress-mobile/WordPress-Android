@@ -4,19 +4,15 @@
         "urlPath": "/is-available/email/",
         "queryParameters": {
             "q": {
-                "matches": "^(?!new@example.com).*$"
+                "matches": "^e2eflowtestingmobile@example.com$"
             }
         }
     },
     "response": {
         "status": 200,
-        "jsonBody": {
-            "error": "taken",
-            "message": "Choose a different email address. This one is not available.",
-            "status": "error"
-        },
+        "body": true,
         "headers": {
-            "Content-Type": "application/json",
+            "Content-Type": "text/javascript",
             "Connection": "keep-alive"
         }
     }
