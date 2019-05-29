@@ -755,7 +755,6 @@ public class UploadService extends Service {
 
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
-        mPostUploadNotifier.removePostInfoFromForegroundNotificationData(post, mediaToRetry);
         if (!failedMedia.isEmpty()) {
             // reset these media items to QUEUED
             for (MediaModel media : failedMedia) {
@@ -784,6 +783,7 @@ public class UploadService extends Service {
             // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
             EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaToRetry));
         } else {
+            mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             // retry uploading the Post
             mPostUploadHandler.upload(post);
         }
