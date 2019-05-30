@@ -203,7 +203,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                 })
 
         viewModel.domainRegistrationButtonEnabled.observe(this,
-                Observer<Boolean> { isEnabled ->
+                Observer { isEnabled ->
                     register_domain_button.isEnabled = isEnabled == true
                 })
 
