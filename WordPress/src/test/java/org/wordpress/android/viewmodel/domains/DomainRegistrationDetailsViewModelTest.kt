@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.domains
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
@@ -9,12 +8,10 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.action.SiteAction
@@ -51,9 +48,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.
 import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainProductDetails
 
-@RunWith(MockitoJUnitRunner::class)
-class DomainRegistrationDetailsViewModelTest {
-    @Rule @JvmField val rule = InstantTaskExecutorRule()
+class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var store: TransactionsStore
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var site: SiteModel
@@ -69,7 +64,7 @@ class DomainRegistrationDetailsViewModelTest {
     @Mock private lateinit var tosLinkObserver: Observer<Unit>
     @Mock private lateinit var privacyProtectionObserver: Observer<Boolean>
     @Mock private lateinit var domainRegistrationProgressIndicatorObserver: Observer<Boolean>
-    @Mock private lateinit var completedDomainRegistrationObserver: Observer<Unit>
+    @Mock private lateinit var completedDomainRegistrationObserver: Observer<String>
     @Mock private lateinit var stateInputVisibleObserver: Observer<Boolean>
     @Mock private lateinit var errorMessageObserver: Observer<String>
 
@@ -375,7 +370,7 @@ class DomainRegistrationDetailsViewModelTest {
         verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(false)
         Assertions.assertThat(viewModel.registrationProgressIndicatorVisible.value).isEqualTo(false)
 
-        verify(completedDomainRegistrationObserver, times(1)).onChanged(null)
+        verify(completedDomainRegistrationObserver, times(1)).onChanged(domainProductDetails.domainName)
     }
 
     @Test
@@ -444,7 +439,7 @@ class DomainRegistrationDetailsViewModelTest {
 
         verify(errorMessageObserver, times(1)).onChanged(siteChangedError.message)
 
-        verify(completedDomainRegistrationObserver, times(1)).onChanged(null)
+        verify(completedDomainRegistrationObserver, times(1)).onChanged(domainProductDetails.domainName)
     }
 
     @Test
