@@ -10,10 +10,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.SiteUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.SiteUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.WidgetSettingsModel
 
 class ViewsWidgetViewModelTest : BaseUnitTest() {
@@ -108,13 +108,13 @@ class ViewsWidgetViewModelTest : BaseUnitTest() {
         viewModel.settingsModel.observeForever {
             settingsModel = it
         }
-        var hideSite: SiteUiModel? = null
-        viewModel.hideSite.observeForever { hideSite = it?.getContentIfNotHandled() }
+        var hideSiteDialog: Unit? = null
+        viewModel.hideSiteDialog.observeForever { hideSiteDialog = it?.getContentIfNotHandled() }
 
         loadedSite.click()
 
         assertThat(settingsModel!!.siteTitle).isEqualTo(siteName)
-        assertThat(hideSite).isNotNull
+        assertThat(hideSiteDialog).isNotNull
     }
 
     @Test

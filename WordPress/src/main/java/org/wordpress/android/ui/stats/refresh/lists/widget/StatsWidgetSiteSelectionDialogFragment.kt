@@ -12,20 +12,20 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.stats_site_selector.*
+import kotlinx.android.synthetic.main.stats_widget_site_selector.*
 import org.wordpress.android.R
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class SiteSelectionDialogFragment : AppCompatDialogFragment() {
+class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ViewsWidgetViewModel
     private fun buildView(): View? {
-        val rootView = activity!!.layoutInflater.inflate(R.layout.stats_site_selector, null)
+        val rootView = activity!!.layoutInflater.inflate(R.layout.stats_widget_site_selector, null)
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = StatsSiteAdapter(imageManager)
+        recyclerView.adapter = StatsWidgetSiteAdapter(imageManager)
         return rootView
     }
 
@@ -33,16 +33,14 @@ class SiteSelectionDialogFragment : AppCompatDialogFragment() {
         val alertDialogBuilder = AlertDialog.Builder(activity)
         alertDialogBuilder.setView(buildView())
         alertDialogBuilder.setTitle(R.string.stats_widget_select_your_site)
-        alertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
-            dialog?.dismiss()
-        }
+        alertDialogBuilder.setNegativeButton(R.string.cancel) { _, _ -> }
         alertDialogBuilder.setCancelable(true)
 
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ViewsWidgetViewModel::class.java)
         viewModel.sites.observe(this, Observer {
-            (dialog.recycler_view.adapter as? StatsSiteAdapter)?.update(it ?: listOf())
+            (dialog.recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())
         })
-        viewModel.hideSite.observe(this, Observer {
+        viewModel.hideSiteDialog.observe(this, Observer {
             it?.applyIfNotHandled {
                 if (dialog?.isShowing == true) {
                     dialog.dismiss()

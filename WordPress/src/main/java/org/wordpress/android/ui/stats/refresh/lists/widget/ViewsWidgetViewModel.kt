@@ -39,8 +39,8 @@ class ViewsWidgetViewModel
 
     private val mutableSites = MutableLiveData<List<SiteUiModel>>()
     val sites: LiveData<List<SiteUiModel>> = mutableSites
-    private val mutableHideSiteDialog = MutableLiveData<Event<SiteUiModel>>()
-    val hideSite: LiveData<Event<SiteUiModel>> = mutableHideSiteDialog
+    private val mutableHideSiteDialog = MutableLiveData<Event<Unit>>()
+    val hideSiteDialog: LiveData<Event<Unit>> = mutableHideSiteDialog
 
     private var appWidgetId: Int = -1
 
@@ -52,7 +52,7 @@ class ViewsWidgetViewModel
         }
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         if (siteId > -1) {
-            mutableSelectedSite.postValue(siteStore.getSiteBySiteId(siteId)?.toUiModel())
+            mutableSelectedSite.postValue(siteStore.getSiteBySiteId(siteId)?.let { toUiModel(it) })
         }
     }
 
@@ -70,12 +70,12 @@ class ViewsWidgetViewModel
     }
 
     fun loadSites() {
-        mutableSites.postValue(siteStore.sites.map { it.toUiModel() })
+        mutableSites.postValue(siteStore.sites.map { toUiModel(it) })
     }
 
-    private fun SiteModel.toUiModel(): SiteUiModel {
-        val blogName = SiteUtils.getSiteNameOrHomeURL(this)
-        val homeUrl = SiteUtils.getHomeURLOrHostName(this)
+    private fun toUiModel(site: SiteModel): SiteUiModel {
+        val blogName = SiteUtils.getSiteNameOrHomeURL(site)
+        val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val title = when {
             !blogName.isNullOrEmpty() -> blogName
             !homeUrl.isNullOrEmpty() -> homeUrl
@@ -85,16 +85,12 @@ class ViewsWidgetViewModel
             !homeUrl.isNullOrEmpty() -> homeUrl
             else -> null
         }
-        return SiteUiModel(this.siteId, this.iconUrl, title, description) {
-            selectSite(it)
-        }
+        return SiteUiModel(site.siteId, site.iconUrl, title, description, this::selectSite)
     }
 
     private fun selectSite(site: SiteUiModel) {
-        if (mutableSelectedSite.value != site) {
-            mutableHideSiteDialog.postValue(Event(site))
-            mutableSelectedSite.postValue(site)
-        }
+        mutableHideSiteDialog.postValue(Event(Unit))
+        mutableSelectedSite.postValue(site)
     }
 
     enum class Color(@StringRes val title: Int) {

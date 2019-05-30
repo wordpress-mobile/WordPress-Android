@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="16dp">
+    android:paddingTop="@dimen/margin_extra_large">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="288dp"
+        android:layout_height="@dimen/stats_widget_dialog_list_height"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"/>
 </FrameLayout>
