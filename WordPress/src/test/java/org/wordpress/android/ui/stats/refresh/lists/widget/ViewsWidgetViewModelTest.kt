@@ -127,7 +127,7 @@ class ViewsWidgetViewModelTest : BaseUnitTest() {
             settingsModel = it
         }
         var hideSite: SiteUiModel? = null
-        viewModel.hideSite.observeForever { hideSite = it?.getContentIfNotHandled() }
+        viewModel.hideSiteDialog.observeForever { hideSite = it?.getContentIfNotHandled() }
 
         loadedSite.click()
 

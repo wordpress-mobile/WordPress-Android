@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementFragment;
-import org.wordpress.android.ui.stats.refresh.lists.widget.SiteSelectionDialogFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetSiteSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureFragment;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
@@ -54,7 +54,7 @@ public abstract class ApplicationModule {
     abstract StatsViewsWidgetConfigureFragment contributeStatsViewsWidgetConfigureFragment();
 
     @ContributesAndroidInjector
-    abstract SiteSelectionDialogFragment contributeSiteSelectionDialogFragment();
+    abstract StatsWidgetSiteSelectionDialogFragment contributeSiteSelectionDialogFragment();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(NewSiteCreationStepsProvider stepsProvider) {
