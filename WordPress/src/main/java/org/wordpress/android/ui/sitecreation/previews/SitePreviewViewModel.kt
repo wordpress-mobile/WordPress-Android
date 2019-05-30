@@ -146,7 +146,7 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     fun onOkButtonClicked() {
-        tracker.trackCreationCompleted()
+        tracker.trackPreviewOkButtonTapped()
         _onOkButtonClicked.value = createSiteState
     }
 
