@@ -26,7 +26,7 @@ public class SignUpTests extends BaseTest {
         signupFlow.enterEmail("e2eflowtestingmobile@example.com", mMagicLinkActivityTestRule);
         signupFlow.checkEpilogue(
                 "e2eflowtestingmobile@example.com",
-                "Eeflowtestingmobile@example.com",
+                "Eeflowtestingmobile",
                 "e2eflowtestingmobile");
         signupFlow.enterPassword("Pa$$word");
         signupFlow.confirmSignup();
