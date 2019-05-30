@@ -3,24 +3,24 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.stats_site_selector_item.view.*
+import kotlinx.android.synthetic.main.stats_widget_site_selector_item.view.*
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.SiteUiModel
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.ICON
+import org.wordpress.android.util.image.ImageType.BLAVATAR
 
-class StatsSiteViewHolder(parent: ViewGroup, val imageManager: ImageManager) : ViewHolder(
+class StatsWidgetSiteViewHolder(parent: ViewGroup, val imageManager: ImageManager) : ViewHolder(
         LayoutInflater.from(parent.context).inflate(
-                layout.stats_site_selector_item,
+                layout.stats_widget_site_selector_item,
                 parent,
                 false
         )
 ) {
     fun bind(site: SiteUiModel) {
         if (site.iconUrl != null) {
-            imageManager.load(itemView.site_icon, ICON, site.iconUrl)
+            imageManager.load(itemView.site_icon, BLAVATAR, site.iconUrl)
         } else {
             imageManager.load(
                     itemView.site_icon,

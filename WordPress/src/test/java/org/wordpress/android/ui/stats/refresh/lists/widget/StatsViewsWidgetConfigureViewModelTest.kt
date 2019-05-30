@@ -107,13 +107,13 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
         viewModel.settingsModel.observeForever {
             settingsModel = it
         }
-        var hideSite: SiteUiModel? = null
-        viewModel.hideSite.observeForever { hideSite = it?.getContentIfNotHandled() }
+        var hideSiteDialog: Unit? = null
+        viewModel.hideSiteDialog.observeForever { hideSiteDialog = it?.getContentIfNotHandled() }
 
         loadedSite.click()
 
         assertThat(settingsModel!!.siteTitle).isEqualTo(siteName)
-        assertThat(hideSite).isNotNull
+        assertThat(hideSiteDialog).isNotNull
     }
 
     @Test
