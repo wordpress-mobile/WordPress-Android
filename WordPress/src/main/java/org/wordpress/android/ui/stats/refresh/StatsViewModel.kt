@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -68,8 +70,10 @@ class StatsViewModel
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
-            if (initialSection != null && initialSelectedPeriod != null) {
-                selectedDateProvider.setInitialSelectedPeriod(initialSection, initialSelectedPeriod)
+            val initialGranularity = initialSection?.toStatsGranularity()
+            Log.d("vojta", "Stats from widget started: $initialSection $initialSelectedPeriod")
+            if (initialGranularity != null && initialSelectedPeriod != null) {
+                selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
             _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 

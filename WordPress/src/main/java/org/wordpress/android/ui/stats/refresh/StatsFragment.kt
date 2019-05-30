@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -107,6 +108,8 @@ class StatsFragment : DaggerFragment() {
         val initialTimeFrame = getInitialTimeFrame(activity)
         val initialSelectedPeriod = activity.intent.getStringExtra(INITIAL_SELECTED_PERIOD_KEY)
 
+        Log.d("vojta", "Receiving intent: ${activity.intent.extras}")
+
         viewModel.start(launchedFromWidget, initialTimeFrame, initialSelectedPeriod)
 
         if (!isFirstStart) {
@@ -170,6 +173,7 @@ class StatsFragment : DaggerFragment() {
         })
 
         viewModel.siteChanged.observe(this, Observer {
+            Log.d("vojta", "Refreshing data with updated site")
             viewModel.refreshData()
         })
     }

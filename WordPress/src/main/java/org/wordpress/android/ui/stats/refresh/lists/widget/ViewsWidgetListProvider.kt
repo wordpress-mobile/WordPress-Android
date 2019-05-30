@@ -7,6 +7,9 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.stats.OldStatsActivity
+import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color
 import javax.inject.Inject
 
@@ -73,6 +76,12 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
             rv.setViewVisibility(R.id.divider, View.GONE)
         }
         rv.setTextViewText(R.id.value, uiModel.value)
+        val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra(INITIAL_SELECTED_PERIOD_KEY, uiModel.period)
+        intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
+        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
+        rv.setOnClickFillInIntent(R.id.container, intent)
         return rv
     }
 }

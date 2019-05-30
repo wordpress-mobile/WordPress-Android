@@ -50,7 +50,7 @@ class ViewsListViewModel
             val visitsAndViewsModel = visitsAndViewsStore.getVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), Date())
             val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
             val uiModels = periods.mapIndexed { index, periodData ->
-                buildListItemUiModel(index, periodData, periods)
+                buildListItemUiModel(index, periodData, periods, site.id)
             }
                     .take(LIST_ITEM_COUNT)
             if (uiModels != data) {
@@ -63,7 +63,8 @@ class ViewsListViewModel
     private fun buildListItemUiModel(
         position: Int,
         selectedItem: PeriodData,
-        periods: List<PeriodData>
+        periods: List<PeriodData>,
+        localSiteId: Int
     ): ListItemUiModel {
         val layout = when (colorModeId) {
             Color.DARK.ordinal -> R.layout.stats_views_widget_item_dark
@@ -89,7 +90,9 @@ class ViewsListViewModel
                 isPositiveChangeVisible,
                 isNegativeChangeVisible,
                 isNeutralChangeVisible,
-                uiModel.change
+                uiModel.change,
+                selectedItem.period,
+                localSiteId
         )
     }
 
@@ -101,6 +104,8 @@ class ViewsListViewModel
         val isNegativeChangeVisible: Boolean,
         val isNeutralChangeVisible: Boolean,
         val change: String? = null,
+        val period: String,
+        val localSiteId: Int,
         val showDivider: Boolean = !isPositiveChangeVisible && !isNegativeChangeVisible && !isNeutralChangeVisible
     )
 }
