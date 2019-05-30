@@ -3,7 +3,6 @@
 * Add Insights management introductory card
 * Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
 
-
 12.5
 -----
 * Local Drafts will be automatically uploaded to the server as soon as internet connection is available.
