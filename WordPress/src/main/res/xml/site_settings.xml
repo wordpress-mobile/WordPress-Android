@@ -76,7 +76,7 @@
             app:maxSummaryLines="2"
             app:summaryLines="1"/>
 
-        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+        <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
             android:id="@+id/pref_site_password"
             android:enabled="false"
             android:inputType="textPassword"

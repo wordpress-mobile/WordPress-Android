@@ -67,6 +67,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
@@ -178,7 +179,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Account settings (NOTE: only for WP.org)
     private EditTextPreference mUsernamePref;
-    private EditTextPreference mPasswordPref;
+    private EditTextPreferenceWithValidation mPasswordPref;
 
     // Writing settings
     private DetailListPreference mCategoryPref;
@@ -697,7 +698,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
         } else if (preference == mPasswordPref) {
             mSiteSettings.setPassword(newValue.toString());
-            changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
+            ToastUtils.showToast(getActivity(), R.string.site_settings_password_updated, ToastUtils.Duration.SHORT);
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -848,7 +849,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPrivacyPref = (DetailListPreference) getChangePref(R.string.pref_key_site_visibility);
         mLanguagePref = (DetailListPreference) getChangePref(R.string.pref_key_site_language);
         mUsernamePref = (EditTextPreference) getChangePref(R.string.pref_key_site_username);
-        mPasswordPref = (EditTextPreference) getChangePref(R.string.pref_key_site_password);
+        mPasswordPref = (EditTextPreferenceWithValidation) getChangePref(R.string.pref_key_site_password);
+        mPasswordPref.setValidationType(ValidationType.NOT_EMPTY);
+        mPasswordPref.setDialogMessage(R.string.site_settings_update_password_message);
+        mPasswordPref.setOnPreferenceChangeListener(this);
         mCategoryPref = (DetailListPreference) getChangePref(R.string.pref_key_site_category);
         mTagsPref = getClickPref(R.string.pref_key_site_tags);
         mFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_format);
@@ -1197,7 +1201,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
         changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
         changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
-        changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         changeLanguageValue(mSiteSettings.getLanguageCode());
         setDetailListPreferenceValue(mPrivacyPref,
                                      String.valueOf(mSiteSettings.getPrivacy()),

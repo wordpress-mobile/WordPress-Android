@@ -73,6 +73,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                         case URL:
                             positiveButton.setEnabled(ValidationUtils.validateUrl(s));
                             break;
+                        case NOT_EMPTY:
+                            positiveButton.setEnabled(!s.toString().isEmpty());
                     }
                 }
             });
@@ -106,6 +108,6 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
     }
 
     public enum ValidationType {
-        NONE, EMAIL, PASSWORD, URL
+        NONE, EMAIL, PASSWORD, URL, NOT_EMPTY
     }
 }

@@ -585,6 +585,8 @@
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
+    <string name="site_settings_password_updated">Password updated</string>
+    <string name="site_settings_update_password_message">Update a password the app uses to connect to your self-hosted site.</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
