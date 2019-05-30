@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
@@ -175,6 +176,37 @@ class LocalDraftUploadStarterTest {
     }
 
     @Test
+    fun `when uploading, it ignores local drafts that are not publishable`() {
+        // Given
+        val site: SiteModel = sites[1]
+
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+        val postUtilsWrapper = mock<PostUtilsWrapper> {
+            on { isPublishable(any()) } doAnswer {
+                // return isPublishable = false on the first post of the site
+                it.getArgument<PostModel>(0) != sitesAndPosts[site]?.get(0)!!
+            }
+        }
+
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade, postUtilsWrapper)
+
+        // When
+        starter.queueUploadFromSite(site)
+
+        // Then
+        // subtract - 1 as we've returned isPublishable = false for the first post of the site
+        val expectedUploadPostExecutions = sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size - 1
+        verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any(),
+                publish = any(),
+                isRetry = eq(true)
+        )
+    }
+
+    @Test
     fun `when uploading, it ignores local drafts that are already queued`() {
         // Given
         val site: SiteModel = sites[1]
@@ -226,7 +258,8 @@ class LocalDraftUploadStarterTest {
     @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createLocalDraftUploadStarter(
         connectionStatus: LiveData<ConnectionStatus>,
-        uploadServiceFacade: UploadServiceFacade
+        uploadServiceFacade: UploadServiceFacade,
+        postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper()
     ) = LocalDraftUploadStarter(
             context = mock(),
             postStore = postStore,
@@ -235,6 +268,7 @@ class LocalDraftUploadStarterTest {
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+            postUtilsWrapper = postUtilsWrapper,
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade
     )
@@ -248,6 +282,10 @@ class LocalDraftUploadStarterTest {
             return MutableLiveData<ConnectionStatus>().apply {
                 value = initialValue
             }
+        }
+
+        fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
+            on { isPublishable(any()) } doReturn true
         }
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
