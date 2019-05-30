@@ -184,7 +184,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
     private fun setupObservers() {
         viewModel.formProgressIndicatorVisible.observe(this,
-                Observer<Boolean> { isVisible ->
+                Observer { isVisible ->
                     if (isVisible == true) {
                         showFormProgressIndicator()
                     } else {
@@ -193,7 +193,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                 })
 
         viewModel.statesProgressIndicatorVisible.observe(this,
-                Observer<Boolean> { isVisible ->
+                Observer { isVisible ->
                     if (isVisible == true) {
                         showStateProgress()
                     } else {
@@ -202,7 +202,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                 })
 
         viewModel.registrationProgressIndicatorVisible.observe(this,
-                Observer<Boolean> { isVisible ->
+                Observer { isVisible ->
                     if (isVisible == true) {
                         showDomainRegistrationProgressDialog()
                     } else {
@@ -233,7 +233,7 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         })
 
         viewModel.stateInputEnabled.observe(this,
-                Observer<Boolean> { stateInputVisible ->
+                Observer { stateInputVisible ->
                     if (stateInputVisible != null && stateInputVisible) {
                         enableStateInput()
                     } else {
