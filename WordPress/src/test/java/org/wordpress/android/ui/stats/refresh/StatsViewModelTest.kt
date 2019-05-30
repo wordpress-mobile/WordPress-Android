@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -38,6 +39,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var newsCardHandler: NewsCardHandler
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
     @ExperimentalCoroutinesApi
@@ -51,7 +53,8 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSectionManager,
                 analyticsTracker,
                 networkUtilsWrapper,
-                statsSiteProvider
+                statsSiteProvider,
+                newsCardHandler
         )
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
 
