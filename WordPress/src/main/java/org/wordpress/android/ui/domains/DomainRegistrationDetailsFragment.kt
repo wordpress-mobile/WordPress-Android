@@ -91,6 +91,14 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
         viewModel.start(site, domainProductDetails)
 
+        domain_privacy_on_radio_button.setOnClickListener {
+            viewModel.togglePrivacyProtection(true)
+        }
+
+        domain_privacy_off_radio_button.setOnClickListener {
+            viewModel.togglePrivacyProtection(false)
+        }
+
         // Country and State input could only be populated from the dialog
         country_input.inputType = 0
         country_input.setOnClickListener {
@@ -207,18 +215,11 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
                     register_domain_button.isEnabled = isEnabled == true
                 })
 
-        viewModel.privacyProtectionState.observe(this, object : Observer<Boolean?> {
-            override fun onChanged(privacyEnabled: Boolean?) {
-                if (privacyEnabled != null && privacyEnabled) {
-                    domain_privacy_options_radiogroup.check(R.id.domain_privacy_on_radio_button)
-                } else {
-                    domain_privacy_options_radiogroup.check(R.id.domain_privacy_off_radio_button)
-                }
-
-                domain_privacy_options_radiogroup.setOnCheckedChangeListener { _, _ ->
-                    viewModel.togglePrivacyProtection(domain_privacy_on_radio_button.isChecked)
-                }
-                viewModel.privacyProtectionState.removeObserver(this)
+        viewModel.privacyProtectionState.observe(this, Observer { privacyEnabled ->
+            if (privacyEnabled == true) {
+                domain_privacy_options_radiogroup.check(R.id.domain_privacy_on_radio_button)
+            } else {
+                domain_privacy_options_radiogroup.check(R.id.domain_privacy_off_radio_button)
             }
         })
 
