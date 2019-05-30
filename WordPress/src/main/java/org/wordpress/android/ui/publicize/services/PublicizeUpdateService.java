@@ -8,6 +8,7 @@ import android.support.v4.app.JobIntentService;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -18,8 +19,6 @@ import org.wordpress.android.ui.publicize.PublicizeEvents;
 import org.wordpress.android.util.AppLog;
 
 import java.util.Locale;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.JobServiceId.JOB_PUBLICIZE_UPDATE_SERVICE_ID;
 

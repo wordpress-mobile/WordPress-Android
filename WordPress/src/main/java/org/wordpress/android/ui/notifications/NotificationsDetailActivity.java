@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -57,14 +60,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
 import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
-import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
-        .IS_TAPPED_ON_NOTIFICATION;
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
         CommentActions.OnNoteCommentActionListener,
@@ -235,7 +235,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         // If the user hasn't used swipe yet and if the adapter is initialised and have at least 2 notifications,
         // show a hint to promote swipe usage on the ViewPager
         if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getCount() > 1) {
@@ -441,12 +441,14 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
         setProgressVisible(false);
         updateUIAndNote(false);
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
         setProgressVisible(false);
         if (mNoteId == null) {
