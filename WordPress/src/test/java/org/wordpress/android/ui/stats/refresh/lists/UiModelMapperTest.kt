@@ -13,7 +13,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LinkButton
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
@@ -30,18 +29,18 @@ class UiModelMapperTest : BaseUnitTest() {
     fun `mapInsights returns success ui model when all the inputs are successful`() {
         var error: Int? = null
         val navigationTarget = MutableLiveData<Event<NavigationTarget>>()
-        val uiModel = mapper.mapInsights(listOf(
-                UseCaseModel(FOLLOWER_TOTALS, data = listOf(), state = SUCCESS)), navigationTarget) {
+        val uiModel = mapper.mapInsights(
+                listOf(
+                        UseCaseModel(FOLLOWER_TOTALS, data = listOf(), state = SUCCESS))
+        ) {
             error = it
         }
 
         val model = uiModel as UiModel.Success
-        assertThat(model.data).hasSize(2)
+        assertThat(model.data).hasSize(1)
         assertThat((model.data[0] as Success).statsType).isEqualTo(FOLLOWER_TOTALS)
         assertThat(model.data[0].type).isEqualTo(StatsBlock.Type.SUCCESS)
         assertThat(model.data[0].data).isEmpty()
-        assertThat(model.data[1].type).isEqualTo(StatsBlock.Type.CONTROL)
-        assertThat(model.data[1].data.first() is LinkButton).isTrue()
         assertThat(error).isNull()
     }
 }

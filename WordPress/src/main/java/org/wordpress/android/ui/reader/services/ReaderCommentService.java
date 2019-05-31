@@ -8,6 +8,7 @@ import android.os.IBinder;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -25,8 +26,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
-
-import de.greenrobot.event.EventBus;
 
 public class ReaderCommentService extends Service {
     private static final String ARG_POST_ID = "post_id";

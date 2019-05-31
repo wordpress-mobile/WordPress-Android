@@ -36,6 +36,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -80,6 +81,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -90,6 +92,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -104,11 +107,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import androidx.work.WorkManager;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import de.greenrobot.event.EventBus;
 
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {
@@ -310,6 +313,19 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+
+        initWorkManager();
+
+        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
+        // It will upload local draft or published posts with local changes to the server.
+        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+    }
+
+    protected void initWorkManager() {
+        UploadWorker.Factory factory = new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
+        androidx.work.Configuration config =
+                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
+        WorkManager.initialize(this, config);
     }
 
     // note that this is overridden in WordPressDebug

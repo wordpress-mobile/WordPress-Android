@@ -833,6 +833,13 @@
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
 
+    <string name="stats_manage_your_stats">Manage Your Stats</string>
+    <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
+    <string name="stats_management_try_it_now">Try it now</string>
+    <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
+    <string name="stats_management_edit">Edit</string>
+    <string name="stats_management_new">New</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>

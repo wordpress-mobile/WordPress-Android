@@ -40,6 +40,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -127,8 +128,6 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
@@ -458,7 +457,7 @@ public class ReaderPostListFragment extends Fragment
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
 
         reloadTags();
 
@@ -512,6 +511,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             // reload the tag filter since tags have changed
@@ -526,6 +526,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
         // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
@@ -1097,6 +1098,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
         if (!isAdded()) {
             return;
@@ -1108,6 +1110,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
         if (!isAdded()) {
             return;
@@ -1776,6 +1779,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.UpdatePostsStarted event) {
         if (!isAdded()) {
             return;
@@ -1786,6 +1790,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.UpdatePostsEnded event) {
         if (!isAdded()) {
             return;
