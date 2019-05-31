@@ -280,7 +280,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment(),
     }
 
     override fun onError() {
-        // TODO: viewModel.onError() manage error when loading the WebView.
+        viewModel.showFullscreenErrorWithDelay()
     }
 
     // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233

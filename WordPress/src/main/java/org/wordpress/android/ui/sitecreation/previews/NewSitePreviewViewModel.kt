@@ -150,7 +150,7 @@ class NewSitePreviewViewModel @Inject constructor(
         _onOkButtonClicked.value = createSiteState
     }
 
-    private fun showFullscreenErrorWithDelay() {
+    fun showFullscreenErrorWithDelay() {
         updateUiState(SitePreviewFullscreenProgressUiState)
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
