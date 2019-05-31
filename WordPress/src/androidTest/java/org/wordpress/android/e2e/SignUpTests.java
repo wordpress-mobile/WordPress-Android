@@ -14,7 +14,6 @@ import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_DISPLAY_NAME;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_PASSWORD;
