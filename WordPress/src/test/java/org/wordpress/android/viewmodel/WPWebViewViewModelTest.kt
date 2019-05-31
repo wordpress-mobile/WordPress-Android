@@ -65,7 +65,7 @@ class WPWebViewViewModelTest {
     @Test
     fun `show progress screen on retry clicked`() {
         initViewModel()
-        mViewModel.retry()
+        mViewModel.load()
         Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 

@@ -137,8 +137,7 @@ public class WPWebViewActivity extends WebViewActivity implements BaseWebViewCli
     private void initRetryButton() {
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
-                    mViewModel.retry();
-                    loadContent();
+                    mViewModel.load();
                 }
         });
     }
@@ -153,6 +152,13 @@ public class WPWebViewActivity extends WebViewActivity implements BaseWebViewCli
                     mUiHelpers.updateVisibility(mFullScreenProgressLayout,
                             webPreviewUiState.getFullscreenProgressLayoutVisibility());
                     mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
+                }
+            }
+        });
+        mViewModel.getLoadNeeded().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(@Nullable Boolean loadNeeded) {
+                if (loadNeeded != null && loadNeeded) {
+                    loadContent();
                 }
             }
         });
