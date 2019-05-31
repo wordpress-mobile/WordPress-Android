@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
@@ -17,59 +18,57 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUi
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 
 @RunWith(MockitoJUnitRunner::class)
 class WPWebViewViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
+    @Mock private lateinit var connectionStatus: LiveData<ConnectionStatus>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock private lateinit var mUiStateObserver: Observer<WebPreviewUiState>
+    @Mock private lateinit var uiStateObserver: Observer<WebPreviewUiState>
 
-    private lateinit var mViewModel: WPWebViewViewModel
+    private lateinit var viewModel: WPWebViewViewModel
 
     @Before
     fun setUp() {
-        mViewModel = WPWebViewViewModel(networkUtils)
-        mViewModel.uiState.observeForever(mUiStateObserver)
+        viewModel = WPWebViewViewModel(networkUtils, connectionStatus)
+        viewModel.uiState.observeForever(uiStateObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
     fun `progress shown on start`() = test {
-        initViewModel()
-        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
+        viewModel.start()
+        Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 
     @Test
     fun `error shown on start when internet access not available`() = test {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
-        initViewModel()
-        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
+        viewModel.start()
+        Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `error shown on error failure`() {
-        initViewModel()
-        mViewModel.onError()
-        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
+        viewModel.start()
+        viewModel.onError()
+        Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `show content on UrlLoaded`() {
-        initViewModel()
-        mViewModel.onUrlLoaded()
-        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
+        viewModel.start()
+        viewModel.onUrlLoaded()
+        Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
     }
 
     @Test
     fun `show progress screen on retry clicked`() {
-        initViewModel()
-        mViewModel.load()
-        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
-    }
-
-    private fun initViewModel() {
-        mViewModel.start()
+        viewModel.start()
+        viewModel.load()
+        Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 }
