@@ -4,7 +4,7 @@
         "urlPath": "/is-available/email/",
         "queryParameters": {
             "q": {
-                "matches": "^e2eflowtestingmobile@example.com$"
+                "matches": "^e2eflowsignuptestingmobile@example.com$"
             }
         }
     },

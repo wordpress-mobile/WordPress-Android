@@ -14,7 +14,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -41,14 +40,13 @@ public class SignupFlow {
         magicLinkActivityTestRule.launchActivity(intent);
     }
 
-    public void checkEpilogue(String email, String displayName, String username) {
+    public void checkEpilogue(String displayName, String username) {
         // Check Epilogue data
         ViewInteraction emailHeaderView = onView(withId(R.id.signup_epilogue_header_email));
         waitForElementToBeDisplayed(emailHeaderView);
-        checkViewHasText(emailHeaderView, email);
 
         ViewInteraction displayNameField = onView(allOf(withId(R.id.input), withText(displayName)));
-        ViewInteraction usernameField = onView(allOf(withId(R.id.input), withText(displayName)));
+        ViewInteraction usernameField = onView(allOf(withId(R.id.input), withText(username)));
 
         waitForElementToBeDisplayed(displayNameField);
         waitForElementToBeDisplayed(usernameField);
