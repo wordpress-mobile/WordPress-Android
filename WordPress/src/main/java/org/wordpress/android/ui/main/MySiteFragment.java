@@ -113,7 +113,7 @@ public class MySiteFragment extends Fragment implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
-        OnConfirmListener, OnDismissListener {
+        OnConfirmListener, OnDismissListener, OnClickListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -401,12 +401,7 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewDomainRegistrationActivity(getActivity(), getSelectedSite());
-            }
-        });
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(this);
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -571,6 +566,13 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.row_register_domain) {
+            ActivityLauncher.viewDomainRegistrationActivity(this, getSelectedSite());
+        }
     }
 
     @Override
@@ -798,6 +800,13 @@ public class MySiteFragment extends Fragment implements
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
+                }
+                break;
+            case RequestCodes.REGISTER_DOMAIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    mIsDomainRegistrationCtaVisible = false;
+                    mDomainRegistrationCtaSiteId = -1;
+                    fetchPlansIfNecessary(getSelectedSite());
                 }
                 break;
         }
