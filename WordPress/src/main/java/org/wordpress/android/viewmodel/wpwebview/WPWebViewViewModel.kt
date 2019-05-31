@@ -3,10 +3,10 @@ package org.wordpress.android.viewmodel.wpwebview
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
-import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 class WPWebViewViewModel
@@ -15,8 +15,8 @@ class WPWebViewViewModel
 ) : ViewModel() {
     private var isStarted = false
 
-    private val m_uiState: MutableLiveData<WebPreviewUiState> = MutableLiveData()
-    val mUiState: LiveData<WebPreviewUiState> = m_uiState
+    private val _uiState: MutableLiveData<WebPreviewUiState> = MutableLiveData()
+    val uiState: LiveData<WebPreviewUiState> = _uiState
 
     /**
      * If there is no internet show the error screen
@@ -34,7 +34,7 @@ class WPWebViewViewModel
     }
 
     private fun updateUiState(uiState: WebPreviewUiState) {
-        m_uiState.value = uiState
+        _uiState.value = uiState
     }
 
     /**
@@ -42,7 +42,7 @@ class WPWebViewViewModel
      * In other words don't update it after a configuration change.
      */
     fun onUrlLoaded() {
-        if (mUiState.value !is WebPreviewContentUiState) {
+        if (uiState.value !is WebPreviewContentUiState) {
             updateUiState(WebPreviewContentUiState)
         }
     }
@@ -51,13 +51,13 @@ class WPWebViewViewModel
      * Update the ui state if the Loading or Success screen is being shown.
      */
     fun onError() {
-        if (mUiState.value !is WebPreviewFullscreenErrorUiState) {
+        if (uiState.value !is WebPreviewFullscreenErrorUiState) {
             updateUiState(WebPreviewFullscreenErrorUiState)
         }
     }
 
     fun retry() {
-        if (mUiState.value !is WebPreviewFullscreenProgressUiState) {
+        if (uiState.value !is WebPreviewFullscreenProgressUiState) {
             updateUiState(WebPreviewFullscreenProgressUiState)
         }
     }

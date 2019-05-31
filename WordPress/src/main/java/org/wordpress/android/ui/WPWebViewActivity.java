@@ -145,7 +145,7 @@ public class WPWebViewActivity extends WebViewActivity implements BaseWebViewCli
 
     private void initViewModel() {
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPWebViewViewModel.class);
-        mViewModel.getMUiState().observe(this, new Observer<WebPreviewUiState>() {
+        mViewModel.getUiState().observe(this, new Observer<WebPreviewUiState>() {
             @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
                 if (webPreviewUiState != null) {
                     mUiHelpers.updateVisibility(mActionableEmptyView,

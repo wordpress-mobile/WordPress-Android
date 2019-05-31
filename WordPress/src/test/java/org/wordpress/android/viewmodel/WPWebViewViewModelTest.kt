@@ -31,42 +31,42 @@ class WPWebViewViewModelTest {
     @Before
     fun setUp() {
         mViewModel = WPWebViewViewModel(networkUtils)
-        mViewModel.mUiState.observeForever(mUiStateObserver)
+        mViewModel.uiState.observeForever(mUiStateObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
     fun `progress shown on start`() = test {
         initViewModel()
-        Assertions.assertThat(mViewModel.mUiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
+        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 
     @Test
     fun `error shown on start when internet access not available`() = test {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
         initViewModel()
-        Assertions.assertThat(mViewModel.mUiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
+        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `error shown on error failure`() {
         initViewModel()
         mViewModel.onError()
-        Assertions.assertThat(mViewModel.mUiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
+        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `show content on UrlLoaded`() {
         initViewModel()
         mViewModel.onUrlLoaded()
-        Assertions.assertThat(mViewModel.mUiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
+        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
     }
 
     @Test
     fun `show progress screen on retry clicked`() {
         initViewModel()
         mViewModel.retry()
-        Assertions.assertThat(mViewModel.mUiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
+        Assertions.assertThat(mViewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 
     private fun initViewModel() {
