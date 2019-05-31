@@ -14,6 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
@@ -53,6 +54,7 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 private const val SCROLL_TO_DELAY = 50L
+private const val SEARCH_COLLAPSE_DELAY = 500L
 private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 private const val TRACKS_SELECTED_TAB = "selected_tab"
@@ -112,6 +114,13 @@ class PostListMainViewModel @Inject constructor(
 
     private val _viewLayoutTypeMenuUiState = MutableLiveData<PostListViewLayoutTypeMenuUiState>()
     val viewLayoutTypeMenuUiState: LiveData<PostListViewLayoutTypeMenuUiState> = _viewLayoutTypeMenuUiState
+
+    private val _isSearchExpanded = MutableLiveData<Boolean>()
+    val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
+
+    private var _lastSearchQuery = ""
+    val lastSearchQuery: String
+        get() = _lastSearchQuery
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -241,6 +250,37 @@ class PostListMainViewModel @Inject constructor(
                 postFetcher = postFetcher,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
+    }
+
+    fun onSearchExpanded(restorePreviousSearch: Boolean) {
+        if (isSearchExpanded.value != true) {
+            AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
+
+            if (!restorePreviousSearch) {
+                clearSearch()
+            }
+
+            _isSearchExpanded.value = true
+            _viewState.value = _viewState.value?.copy(isFabVisible = false)
+        }
+    }
+
+    fun onSearchCollapsed() {
+        _isSearchExpanded.value = false
+        clearSearch()
+
+        launch {
+            delay(SEARCH_COLLAPSE_DELAY)
+        }
+        _viewState.value = _viewState.value?.copy(isFabVisible = true)
+    }
+
+    fun onSearchQueryInput(searchQuery: String) {
+
+    }
+
+    private fun clearSearch() {
+        _lastSearchQuery = ""
     }
 
     fun newPost() {
