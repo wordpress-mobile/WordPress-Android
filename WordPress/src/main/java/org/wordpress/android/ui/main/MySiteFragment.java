@@ -113,7 +113,7 @@ public class MySiteFragment extends Fragment implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
-        OnConfirmListener, OnDismissListener, OnClickListener {
+        OnConfirmListener, OnDismissListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -401,7 +401,11 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(this);
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                ActivityLauncher.viewDomainRegistrationActivity(MySiteFragment.this, getSelectedSite());
+            }
+        });
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -566,13 +570,6 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.row_register_domain) {
-            ActivityLauncher.viewDomainRegistrationActivity(this, getSelectedSite());
-        }
     }
 
     @Override
