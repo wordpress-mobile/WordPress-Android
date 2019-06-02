@@ -15,16 +15,18 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,6 +39,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var newsCardHandler: NewsCardHandler
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
     @ExperimentalCoroutinesApi
@@ -44,13 +47,14 @@ class StatsViewModelTest : BaseUnitTest() {
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
         viewModel = StatsViewModel(
-                mapOf(StatsSection.DAYS to baseListUseCase),
+                mapOf(DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
                 selectedDateProvider,
                 statsSectionManager,
                 analyticsTracker,
                 networkUtilsWrapper,
-                statsSiteProvider
+                statsSiteProvider,
+                newsCardHandler
         )
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
 
@@ -70,7 +74,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(DAYS)
 
         verify(statsSectionManager).setSelectedSection(DAYS)
-        verify(analyticsTracker).track(STATS_PERIOD_DAYS_ACCESSED)
+        verify(analyticsTracker).trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
     }
 
     @Test
@@ -78,7 +82,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(WEEKS)
 
         verify(statsSectionManager).setSelectedSection(WEEKS)
-        verify(analyticsTracker).track(STATS_PERIOD_WEEKS_ACCESSED)
+        verify(analyticsTracker).trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
     }
 
     @Test
@@ -86,7 +90,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(MONTHS)
 
         verify(statsSectionManager).setSelectedSection(MONTHS)
-        verify(analyticsTracker).track(STATS_PERIOD_MONTHS_ACCESSED)
+        verify(analyticsTracker).trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
     }
 
     @Test
@@ -94,6 +98,6 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(YEARS)
 
         verify(statsSectionManager).setSelectedSection(YEARS)
-        verify(analyticsTracker).track(STATS_PERIOD_YEARS_ACCESSED)
+        verify(analyticsTracker).trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
     }
 }

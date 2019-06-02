@@ -52,6 +52,30 @@ jobs:
             fi 
       - android/save-gradle-cache
       - android/save-lint-results
+  connected-tests:
+    executor:
+      name: android/default
+      api-version: "28"
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - copy-gradle-properties
+      - run:
+          name: Build
+          command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
+      - run:
+          name: Decrypt credentials
+          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
+      - android/firebase-test:
+          key-file: .circleci/.firebase.secrets.json
+          type: instrumentation
+          apk-path: WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk
+          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk
+          device: model=Nexus5X,version=26,locale=en,orientation=portrait
+          project: api-project-108380595987
+          timeout: 10m
+          results-history-name: CircleCI WordPress Connected Tests
+      - android/save-gradle-cache
   strings-check:
     docker:
       - image: circleci/ruby:2.3
@@ -68,3 +92,13 @@ workflows:
       - strings-check
       - test
       - lint
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - connected-tests

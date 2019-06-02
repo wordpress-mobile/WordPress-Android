@@ -404,9 +404,7 @@ Language: es_VE
     <string name="button_trash">Papelera</string>
     <string name="button_stats">Estadísticas</string>
     <string name="post_trashed">Entrada enviada a la papelera</string>
-    <string name="post_deleted">Entrada borrada</string>
     <string name="button_edit">Editar</string>
-    <string name="button_back">Atrás</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="ignore">Ignorar</string>

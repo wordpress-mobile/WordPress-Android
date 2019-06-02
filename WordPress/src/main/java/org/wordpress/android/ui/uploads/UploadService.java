@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -48,8 +49,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
     private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
@@ -209,9 +208,8 @@ public class UploadService extends Service {
         if (mediaList != null && !mediaList.isEmpty()) {
             Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
             for (PostModel post : postsToRefresh) {
-                if (!mUploadStore.isRegisteredPostModel(post)) {
-                    mUploadStore.registerPostModel(post, mediaList);
-                }
+                // If the post is already registered, the new media will be added to its list
+                mUploadStore.registerPostModel(post, mediaList);
             }
 
             if (isRetry) {

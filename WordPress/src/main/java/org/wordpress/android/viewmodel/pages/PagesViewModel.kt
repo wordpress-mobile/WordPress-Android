@@ -36,7 +36,10 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
@@ -74,6 +77,8 @@ class PagesViewModel
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
+    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -147,7 +152,11 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
+            eventBusWrapper.register(this)
+
             loadPagesAsync()
+
+            localDraftUploadStarter.queueUploadFromSite(site)
         }
     }
 
@@ -157,6 +166,7 @@ class PagesViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        eventBusWrapper.unregister(this)
 
         actionPerfomer.onCleanup()
     }
@@ -176,18 +186,18 @@ class PagesViewModel
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
         if (performIfNetworkAvailableAsync {
-            _listState.setOnUi(state)
+                    _listState.setOnUi(state)
 
-            val result = pageStore.requestPagesFromServer(site)
-            if (result.isError) {
-                _listState.setOnUi(ERROR)
-                showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
-                AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
-            } else {
-                _listState.setOnUi(DONE)
-            }
-            refreshPages()
-        }) else {
+                    val result = pageStore.requestPagesFromServer(site)
+                    if (result.isError) {
+                        _listState.setOnUi(ERROR)
+                        showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
+                        AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+                    } else {
+                        _listState.setOnUi(DONE)
+                    }
+                    refreshPages()
+                }) else {
             _listState.setOnUi(DONE)
         }
     }
@@ -196,16 +206,9 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(remotePageId: Long, wasPageUpdated: Boolean) {
+    fun onPageEditFinished() {
         launch {
             refreshPages() // show local changes immediately
-
-            if (wasPageUpdated) {
-                performIfNetworkAvailableAsync {
-                    waitForPageUpdate(remotePageId)
-                    reloadPages()
-                }
-            }
         }
     }
 
@@ -419,6 +422,8 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
+        localDraftUploadStarter.queueUploadFromSite(site)
+
         launch {
             reloadPages(FETCHING)
         }
@@ -575,7 +580,7 @@ class PagesViewModel
                     }
                 }
 
-            launch {
+                launch {
                     _arePageActionsEnabled = false
                     actionPerfomer.performAction(action)
                     _arePageActionsEnabled = true
@@ -624,6 +629,21 @@ class PagesViewModel
         pageUpdateContinuations[id]?.let { cont ->
             pageUpdateContinuations.remove(id)
             cont.resume(Unit)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
+        if (!event.post.isPage) {
+            return
+        }
+
+        launch {
+            performIfNetworkAvailableAsync {
+                waitForPageUpdate(event.post.remotePostId)
+                reloadPages()
+            }
         }
     }
 

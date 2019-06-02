@@ -171,7 +171,6 @@ Language: hi_IN
     <string name="notifications_tab">अधिसूचना सूचि</string>
     <string name="email">ईमेल</string>
     <string name="app_notifications">एप्लिकेशन अधिसूची</string>
-    <string name="button_back">पीछे</string>
     <string name="button_preview">पूर्वावलोकन</string>
     <string name="button_view">देखें</string>
     <string name="button_publish">प्रकाशित करें</string>
@@ -179,7 +178,6 @@ Language: hi_IN
     <string name="post_trashed">पोस्ट ट्रैश में भेज दिया गया</string>
     <string name="button_trash">ट्रैश</string>
     <string name="button_stats">आकड़े</string>
-    <string name="post_deleted">पोस्ट नष्ट कर दिया गया</string>
     <string name="ignore">ध्यान न दें</string>
     <string name="stats_insights_most_popular_hour">सबसे लोकप्रिय घण्टा</string>
     <string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>

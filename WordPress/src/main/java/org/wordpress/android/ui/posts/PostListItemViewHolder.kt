@@ -167,7 +167,7 @@ sealed class PostListItemViewHolder(
     }
 
     private fun showFeaturedImage(imageUrl: String?) {
-        if (imageUrl == loadedFeaturedImgUrl) {
+        if (!imageUrl.isNullOrBlank() && imageUrl == loadedFeaturedImgUrl) {
             // Suppress blinking as the media upload progresses
             return
         }

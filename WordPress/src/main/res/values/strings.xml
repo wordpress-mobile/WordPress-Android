@@ -247,6 +247,7 @@
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="local_draft">Local draft</string>
     <string name="post_uploading">Uploading post</string>
+    <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_queued">Queued post</string>
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="posts_empty_list_button">Create a post</string>
@@ -832,6 +833,13 @@
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
 
+    <string name="stats_manage_your_stats">Manage Your Stats</string>
+    <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
+    <string name="stats_management_try_it_now">Try it now</string>
+    <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
+    <string name="stats_management_edit">Edit</string>
+    <string name="stats_management_new">New</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
@@ -1238,11 +1246,14 @@
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
     <string name="async_promo_title_publish">Publish with Confidence</string>
     <string name="async_promo_title_schedule">Schedule with Confidence</string>
@@ -1345,6 +1356,7 @@
     <string name="history_load_dialog_button_positive">Load</string>
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
+    <string name="history_fetching_revisions">Fetching revisions…</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
     <string name="history_preview_visual">Visual preview</string>
     <string name="history_preview_html">HTML preview</string>
@@ -2336,13 +2348,6 @@
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
-    <string name="notification_site_creation_step_creating">Step 1 of 4</string>
-    <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
-    <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
-    <string name="notification_site_creation_step_theme">Step 4 of 4</string>
-    <string name="notification_site_creation_title_in_progress">Creating site… This might take a couple of minutes.</string>
-    <string name="notification_site_creation_title_stopped">Site creation stopped</string>
-    <string name="notification_site_creation_failed">An error has occurred.</string>
 
     <!-- Login notifications -->
     <string name="notification_login_title_success">Logged in!</string>
@@ -2418,46 +2423,6 @@
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
-
-    <!-- Site Creation -->
-    <string name="site_creation_title">Create New Site</string>
-    <string name="site_creation_category_title">Create New Site Step 1</string>
-    <string name="site_creation_theme_selection_title">Create New Site Step 2</string>
-    <string name="site_creation_site_details_title">Create New Site Step 3</string>
-    <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
-    <string name="site_creation_label_category_title">Step 1 of 4</string>
-    <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
-    <string name="site_creation_title_blog">Start with a Blog</string>
-    <string name="site_creation_subtitle_blog">To share your ideas, stories and photographs with your followers.</string>
-    <string name="site_creation_title_website">Start with a Website</string>
-    <string name="site_creation_subtitle_website">To promote your business or brand and connect with your audience.</string>
-    <string name="site_creation_title_portfolio">Start with a Portfolio</string>
-    <string name="site_creation_subtitle_portfolio">To present your creative projects in a visual showcase.</string>
-    <string name="site_creation_label_theme_selection_title">Step 2 of 4</string>
-    <string name="site_creation_label_theme_selection">Get started fast with one of our popular themes. Once your site is created, you can browse and choose from hundreds more.</string>
-    <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
-    <string name="site_creation_label_site_details_title">Step 3 of 4</string>
-    <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
-    <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
-    <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
-    <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
-    <string name="site_creation_domain_finish_button">Create site</string>
-    <string name="site_creation_title_hint">Site title</string>
-    <string name="site_creation_tagline_hint">Site tagline (optional)</string>
-    <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>
-    <string name="site_creation_empty_site_title">Please enter a site title</string>
-    <string name="site_creation_creating_laying_foundation">Laying site foundation…</string>
-    <string name="site_creation_creating_fetching_info">Retrieving site information…</string>
-    <string name="site_creation_creating_configuring_content">Configuring site content…</string>
-    <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
-    <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
-    <string name="site_creation_creating_failed">Something went wrong…</string>
-    <string name="site_creation_creating_failed_extended">We ran into an unexpected problem. How about giving it another shot?</string>
-    <string name="site_creation_creating_retry">Try again</string>
-    <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
-    <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
-    <string name="site_creation_epilogue_configure">Configure</string>
-    <string name="site_creation_epilogue_write">Write first post</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
@@ -2542,7 +2507,7 @@
     <string name="quick_start_sites_type_grow">Grow Your Audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
-    <string name="quick_start_span_start" translatable="false">&lt;span style="color:#0"&gt;</string>
+    <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
     <!-- Pages -->
@@ -2613,6 +2578,7 @@
     <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="site_creation_domain_finish_button">Create site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
@@ -2642,7 +2608,7 @@
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198" tools:ignore="UnusedResources">WordPress Media Library</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280" tools:ignore="UnusedResources">Clear All Settings</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374" translatable="false" tools:ignore="UnusedResources">@string/editor_failed_to_insert_media_tap_for_options</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26" tools:ignore="UnusedResources">CHOOSE IMAGE</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27" tools:ignore="UnusedResources">Paste URL</string>
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21" tools:ignore="UnusedResources">Unsupported Block</string>

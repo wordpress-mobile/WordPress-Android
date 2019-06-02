@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.support.v7.util.DiffUtil.Callback
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Control
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 
 class StatsBlockDiffCallback(
     private val oldList: List<StatsBlock>,
@@ -20,7 +19,6 @@ class StatsBlockDiffCallback(
             is EmptyBlock -> oldItem.statsType == (newItem as EmptyBlock).statsType
             is Error -> oldItem.statsType == (newItem as Error).statsType
             is Loading -> oldItem.statsType == (newItem as Loading).statsType
-            is Control -> true
         }
     }
 

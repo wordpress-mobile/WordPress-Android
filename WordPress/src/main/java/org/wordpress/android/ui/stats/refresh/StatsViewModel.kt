@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_A
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -23,8 +24,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mergeNotNull
@@ -40,7 +43,8 @@ class StatsViewModel
     private val statsSectionManager: SelectedSectionManager,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val statsSiteProvider: StatsSiteProvider
+    private val statsSiteProvider: StatsSiteProvider,
+    private val newsCardHandler: NewsCardHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -58,6 +62,8 @@ class StatsViewModel
 
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
+
+    val hideToolbar = newsCardHandler.hideToolbar
 
     fun start(launchedFromWidget: Boolean, initialSection: StatsSection?) {
         // Check if VM is not already initialized
@@ -112,10 +118,10 @@ class StatsViewModel
 
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
-            DAYS -> analyticsTracker.track(STATS_PERIOD_DAYS_ACCESSED)
-            WEEKS -> analyticsTracker.track(STATS_PERIOD_WEEKS_ACCESSED)
-            MONTHS -> analyticsTracker.track(STATS_PERIOD_MONTHS_ACCESSED)
-            YEARS -> analyticsTracker.track(STATS_PERIOD_YEARS_ACCESSED)
+            DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+            WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+            MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+            YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
             DETAIL -> {
             }
         }

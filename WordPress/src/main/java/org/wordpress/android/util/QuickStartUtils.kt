@@ -5,15 +5,16 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,28 +66,35 @@ class QuickStartUtils {
         fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
-            val formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
+            var formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
 
-            val spannedMessage = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                Html.fromHtml(formattedMessage, Html.FROM_HTML_MODE_LEGACY)
-            } else {
-                Html.fromHtml(formattedMessage)
-            }
+            val startOfHighlight = formattedMessage.indexOf(spanTagOpen)
 
-            val highlightColor = ContextCompat.getColor(context, R.color.accent_300)
+            // remove the <span> tag
+            formattedMessage = formattedMessage.replaceFirst(spanTagOpen, "")
+            /**
+             * Some string resources contain whitespaces before and after the placeholder tags.
+             * For example: `Tap %1$s Customize %2$s to start` becomes `Tap <span> Customize </span> to start`.
+             * However, when we remove "<span>" the string ends up having two whitespaces.
+             */
+            formattedMessage = formattedMessage.replaceFirst("  ", " ")
 
-            val mutableSpannedMessage = SpannableStringBuilder(spannedMessage)
-            val foregroundColorSpan = mutableSpannedMessage
-                    .getSpans(0, spannedMessage.length, ForegroundColorSpan::class.java).firstOrNull()
+            val endOfHighlight = formattedMessage.indexOf(spanTagEnd)
 
+            // remove the </span> tag
+            formattedMessage = formattedMessage.replaceFirst(spanTagEnd, "")
+            formattedMessage = formattedMessage.replaceFirst("  ", " ")
+
+            val mutableSpannedMessage = SpannableStringBuilder(formattedMessage)
             // nothing to highlight
-            if (foregroundColorSpan != null) {
-                val startOfHighlight = mutableSpannedMessage.getSpanStart(foregroundColorSpan)
-                val endOfHighlight = mutableSpannedMessage.getSpanEnd(foregroundColorSpan)
-
-                mutableSpannedMessage.removeSpan(foregroundColorSpan)
+            if (startOfHighlight != -1 && endOfHighlight != -1) {
+                val highlightColor = ContextCompat.getColor(context, android.R.color.white)
                 mutableSpannedMessage.setSpan(
                         ForegroundColorSpan(highlightColor),
+                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                mutableSpannedMessage.setSpan(
+                        StyleSpan(Typeface.BOLD),
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 

@@ -13,26 +13,15 @@ trap cleanup ERR
 
 # This script defines some shared functions that are used by the build-app-bundle* set.
 
-function get_gradle_property {
-    PROP_KEY=$1
-    PROP_VALUE=`cat "gradle.properties" | grep "$PROP_KEY" | cut -d'=' -f2`
-    echo $PROP_VALUE
-}
-
-function gradle_version_name {
-  grep -E 'versionName' $BUILDFILE | sed s/versionName// | grep -Eo "[a-zA-Z0-9.-]+"
-}
-
-function gradle_version_code {
-  grep -E 'versionCode' $BUILDFILE | sed s/versionCode// | grep -Eo "[a-zA-Z0-9.-]+"
-}
+# Load the Gradle helper functions
+source "./tools/gradle-functions.sh"
 
 function build_app_bundle {
   branch=$1
   flavor=$2
   git checkout $branch >> $LOGFILE 2>&1
-  version_code=`gradle_version_code`
-  version_name=`gradle_version_name`
+  version_code=`gradle_version_code "$BUILDFILE"`
+  version_name=`gradle_version_name "$BUILDFILE"`
   name="wpandroid-$version_name.aab"
   apk_name="wpandroid-$version_name-universal.apk"
   aab="WordPress.aab"
@@ -58,10 +47,10 @@ function extract_universal_apk {
   bundletool build-apks --bundle="$app_bundle" \
                         --output="$tmp_dir/universal.apks" \
                         --mode=universal \
-                        --ks="$(get_gradle_property storeFile)" \
-                        --ks-pass="pass:$(get_gradle_property storePassword)" \
-                        --ks-key-alias="$(get_gradle_property keyAlias)" \
-                        --key-pass="pass:$(get_gradle_property keyPassword)" >> $LOGFILE 2>&1
+                        --ks="$(get_gradle_property gradle.properties storeFile)" \
+                        --ks-pass="pass:$(get_gradle_property gradle.properties storePassword)" \
+                        --ks-key-alias="$(get_gradle_property gradle.properties keyAlias)" \
+                        --key-pass="pass:$(get_gradle_property gradle.properties keyPassword)" >> $LOGFILE 2>&1
   
   unzip "$tmp_dir/universal.apks" -d "$tmp_dir"  >> $LOGFILE 2>&1
   cp "$tmp_dir/universal.apk" "$apk_output" | tee -a $LOGFILE
