@@ -1,3 +1,2 @@
-* Better sharing: You can now share entire sites from the Reader, not just posts.
-* Better Stats: Insights includes a new “This Year” section, and stats have better RTL support.
-* Fixes: Issues with missing posts in the Reader and site icons that didn’t updating properly when switching sites have been resolved.
+Better offline support: If you draft offline, drafts automatically upload to the server when you log in.
+Clearer stats: Navigate to a post’s detailed data by clicking on its title on the Stats screen. The current day’s stats appear in gray to help you remember that they’re not final.

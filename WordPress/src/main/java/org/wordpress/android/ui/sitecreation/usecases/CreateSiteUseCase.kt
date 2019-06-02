@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
-import org.wordpress.android.ui.sitecreation.services.NewSiteCreationServiceData
+import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.util.UrlUtilsWrapper
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
@@ -27,7 +27,7 @@ class CreateSiteUseCase @Inject constructor(
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
     suspend fun createSite(
-        siteData: NewSiteCreationServiceData,
+        siteData: SiteCreationServiceData,
         languageWordPressId: String,
         siteVisibility: SiteVisibility = PUBLIC,
         dryRun: Boolean = false

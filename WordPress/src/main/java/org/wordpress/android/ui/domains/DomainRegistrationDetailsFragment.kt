@@ -92,8 +92,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private var site: SiteModel? = null
     private var domainProductDetails: DomainProductDetails? = null
 
-    private var supportedCountries: Array<SupportedDomainCountry>? = null
-    private var supportedStates: Array<SupportedStateResponse>? = null
+    private var supportedCountries: ArrayList<SupportedDomainCountry>? = null
+    private var supportedStates: ArrayList<SupportedStateResponse>? = null
 
     private var selectedCountry: SupportedDomainCountry? = null
     private var selectedState: SupportedStateResponse? = null
@@ -111,10 +111,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
         domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS)
 
         if (savedInstanceState != null) {
-            supportedCountries = savedInstanceState.getParcelableArray(EXTRA_SUPPORTED_COUNTRIES)
-                    ?.filterIsInstance(SupportedDomainCountry::class.java)?.toTypedArray()
-            supportedStates = savedInstanceState.getParcelableArray(EXTRA_SUPPORTED_STATES)
-                    ?.filterIsInstance(SupportedStateResponse::class.java)?.toTypedArray()
+            supportedCountries = savedInstanceState.getParcelableArrayList<SupportedDomainCountry>(
+                    EXTRA_SUPPORTED_COUNTRIES
+            )
+            supportedStates = savedInstanceState.getParcelableArrayList<SupportedStateResponse>(EXTRA_SUPPORTED_STATES)
 
             selectedCountry = savedInstanceState.getParcelable(EXTRA_SELECTED_COUNTRY)
             selectedState = savedInstanceState.getParcelable(EXTRA_SELECTED_STATE)
@@ -126,8 +126,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, site)
         outState.putParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS, domainProductDetails)
-        outState.putParcelableArray(EXTRA_SUPPORTED_COUNTRIES, supportedCountries)
-        outState.putParcelableArray(EXTRA_SUPPORTED_STATES, supportedStates)
+        outState.putParcelableArrayList(EXTRA_SUPPORTED_COUNTRIES, supportedCountries)
+        outState.putParcelableArrayList(EXTRA_SUPPORTED_STATES, supportedStates)
         outState.putParcelable(EXTRA_SELECTED_COUNTRY, selectedCountry)
         outState.putParcelable(EXTRA_SELECTED_STATE, selectedState)
         outState.putParcelable(EXTRA_INITIAL_DOMAIN_CONTACT_MODEL, initialDomainContactModel)
@@ -202,7 +202,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
 
         if (supportedStates == null || supportedStates!!.isEmpty()) {
-            toggleStatesInputField(false)
+            toggleStatesInputFieldVisibility(false)
         }
 
         if (savedInstanceState != null) {
@@ -328,7 +328,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
-    private fun showStatePicker(states: Array<SupportedStateResponse>?) {
+    private fun showStatePicker(states: List<SupportedStateResponse>?) {
         if (states == null || states.isEmpty()) {
             return
         }
@@ -347,7 +347,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         builder.show()
     }
 
-    private fun showCountryPicker(countries: Array<SupportedDomainCountry>) {
+    private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
         builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
@@ -413,14 +413,17 @@ class DomainRegistrationDetailsFragment : Fragment() {
         dispatcher.dispatch(TransactionActionBuilder.generateNoPayloadAction(FETCH_SUPPORTED_COUNTRIES))
     }
 
-    private fun toggleStatesInputField(isEnabled: Boolean) {
-        state_input.isEnabled = isEnabled
-        state_input.isClickable = isEnabled
+    private fun toggleStatesInputFieldVisibility(isEnabled: Boolean) {
+        state_input_container.visibility = if (isEnabled) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     private fun fetchStates() {
         showStatesProgressIndicator()
-        toggleStatesInputField(false)
+        toggleStatesInputFieldVisibility(false)
         dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(selectedCountry!!.code))
     }
 
@@ -438,7 +441,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             )
             return
         }
-        supportedCountries = event.countries
+        supportedCountries = event.countries?.toCollection(ArrayList())
         fetchContactInformation()
     }
 
@@ -481,9 +484,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
             )
             return
         }
-        supportedStates = event.supportedStates?.toTypedArray()
+        supportedStates = event.supportedStates?.toCollection(ArrayList())
         if (supportedStates != null && supportedStates!!.isNotEmpty()) {
-            toggleStatesInputField(true)
+            toggleStatesInputFieldVisibility(true)
             if (initialDomainContactModel != null && !TextUtils.isEmpty(initialDomainContactModel!!.state)) {
                 selectedState = supportedStates!!.firstOrNull { it.code == initialDomainContactModel?.state }
                 state_input.setText(selectedState?.name)
@@ -547,7 +550,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 } // Something else, will just show a Toast with an error message
             }
             affectedInputFields?.forEach { showFieldError(it, StringEscapeUtils.unescapeHtml4(event.error.message)) }
-            affectedInputFields?.first { it.requestFocus() }
+            affectedInputFields?.firstOrNull { it.requestFocus() }
             return
         }
 

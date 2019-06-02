@@ -115,7 +115,6 @@ Language: bg
     <string name="error_post_does_not_exist">Тази публикация вече не съществува</string>
     <string name="async_promo_link">Как работи?</string>
     <string name="uploading_media">Качване на файл…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Сигурни ли сте? Изтриването на тази публикация ще отмени и качването на файлове.</string>
     <string name="page_scheduled">Насрочено е публикуване на страницата</string>
     <string name="post_scheduled">Насрочено е излизане на публикацията</string>
     <string name="button_retry">Повторен опит</string>
@@ -154,7 +153,6 @@ Language: bg
     <string name="post_status_pending_review">Очаква коментар</string>
     <string name="post_status_post_private">Лична</string>
     <string name="post_status_draft">Чернова</string>
-    <string name="post_status_scheduled">Планирана</string>
     <string name="change_location">Промяна на местоположението</string>
     <string name="remove_location">Премахване на местоположението</string>
     <string name="post_settings_error_placepicker_missing_play_services">Не мога да отворя избора на местоположение, Google Play Services не са достъпни.</string>
@@ -686,11 +684,9 @@ Language: bg
     <string name="button_stats">Статистика</string>
     <string name="post_trashed">Публиказията е изпратена към кошчето</string>
     <string name="button_publish">Публикуване</string>
-    <string name="post_deleted">Публикацията е изтрита</string>
     <string name="button_trash">Кошче</string>
     <string name="button_preview">Преглед</string>
     <string name="button_view">Изглед</string>
-    <string name="button_back">Назад</string>
     <string name="button_edit">Редактиране</string>
     <string name="undo">Отмяна</string>
     <string name="push_auth_expired">Заявката е изтекла. Влезте в WordPress.com и опитайте отново.</string>

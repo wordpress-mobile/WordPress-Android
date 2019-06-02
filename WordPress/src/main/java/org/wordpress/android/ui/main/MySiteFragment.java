@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -101,8 +102,6 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
@@ -1070,6 +1069,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         EventBus.getDefault().removeStickyEvent(event);
@@ -1093,6 +1093,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOADED);
         EventBus.getDefault().removeStickyEvent(event);

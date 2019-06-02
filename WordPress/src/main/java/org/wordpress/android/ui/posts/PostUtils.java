@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -164,7 +165,7 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenPostAnalytics(PostModel post, SiteModel site) {
+    public static void trackOpenEditorAnalytics(PostModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
@@ -188,7 +189,7 @@ public class PostUtils {
     /**
      * Checks if two posts have differing data
      */
-    public static boolean postHasEdits(PostModel oldPost, PostModel newPost) {
+    public static boolean postHasEdits(@Nullable PostModel oldPost, PostModel newPost) {
         if (oldPost == null) {
             return newPost != null;
         }
@@ -200,6 +201,7 @@ public class PostUtils {
                                     && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
                                     && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
                                     && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
+                                    && StringUtils.equals(oldPost.getSlug(), newPost.getSlug())
                                     && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
                                     && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
                                     && newPost.getTagNameList().containsAll(oldPost.getTagNameList())

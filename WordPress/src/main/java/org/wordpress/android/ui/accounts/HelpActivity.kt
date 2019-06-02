@@ -147,15 +147,11 @@ class HelpActivity : AppCompatActivity() {
         RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
-        SITE_CREATION_CATEGORY("origin:site-create-site-category"),
-        SITE_CREATION_THEME("origin:site-create-site-theme"),
-        SITE_CREATION_DETAILS("origin:site-create-site-details"),
-        SITE_CREATION_DOMAIN("origin:site-create-site-domain"),
         SITE_CREATION_CREATING("origin:site-create-creating"),
-        NEW_SITE_CREATION_SEGMENTS("origin:new-site-create-site-segments"),
-        NEW_SITE_CREATION_VERTICALS("origin:new-site-create-site-verticals"),
-        NEW_SITE_CREATION_DOMAINS("origin:new-site-create-domains"),
-        NEW_SITE_CREATION_SITE_INFO("origin:new-site-create-site-info");
+        SITE_CREATION_SEGMENTS("origin:site-create-site-segments"),
+        SITE_CREATION_VERTICALS("origin:site-create-site-verticals"),
+        SITE_CREATION_DOMAINS("origin:site-create-domains"),
+        SITE_CREATION_SITE_INFO("origin:site-create-site-info");
 
         override fun toString(): String {
             return stringValue

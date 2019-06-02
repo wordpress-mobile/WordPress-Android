@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +22,6 @@ import org.wordpress.android.util.JSONUtils;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * API calls to connect/disconnect publicize services

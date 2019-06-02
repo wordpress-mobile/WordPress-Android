@@ -38,6 +38,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -65,8 +66,10 @@ class PostListMainViewModel @Inject constructor(
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
+    private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val localDraftUploadStarter: LocalDraftUploadStarter
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -181,7 +184,7 @@ class PostListMainViewModel @Inject constructor(
             AuthorFilterSelection.EVERYONE
         }
 
-        listenForPostListEvents(
+        postListEventListenerFactory.createAndStartListening(
                 lifecycle = lifecycle,
                 dispatcher = dispatcher,
                 postStore = postStore,
@@ -201,6 +204,7 @@ class PostListMainViewModel @Inject constructor(
                     invalidateAllLists()
                 }
         )
+
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
@@ -209,6 +213,8 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
+
+        localDraftUploadStarter.queueUploadFromSite(site)
     }
 
     override fun onCleared() {

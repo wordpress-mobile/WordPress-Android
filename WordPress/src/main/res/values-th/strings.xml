@@ -161,14 +161,12 @@ Language: th
     <string name="stats_insights_latest_post_summary">สรุปเรื่องล่าสุด</string>
     <string name="connectionbar_no_connection">ไม่มีการเชื่อมต่อ</string>
     <string name="stats_no_activity_this_period">ไม่มีกิจกรรมในช่วงเวลานี้</string>
-    <string name="button_back">กลับไป</string>
     <string name="button_stats">สถิติ</string>
     <string name="button_trash">ขยะ</string>
     <string name="button_preview">ดูก่อน</string>
     <string name="button_view">ดู</string>
     <string name="button_edit">แก้ไข</string>
     <string name="button_publish">เผยแพร่</string>
-    <string name="post_deleted">ลบหน้าแล้ว</string>
     <string name="post_trashed">เรื่องที่ส่งไปถังขยะ</string>
     <string name="undo">ย้อนกลับ</string>
     <string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>

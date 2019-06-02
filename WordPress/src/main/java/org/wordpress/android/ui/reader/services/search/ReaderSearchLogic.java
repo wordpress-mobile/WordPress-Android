@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.services.search;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -12,8 +13,6 @@ import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.reader.utils.ReaderUtils.getTagForSearchQuery;
 

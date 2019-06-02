@@ -33,21 +33,11 @@
         android:layout_weight="1"/>
 
     <TextView
-        android:id="@+id/positive_change"
+        android:id="@+id/change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:textColor="@color/success_500"
         android:textSize="16sp"
         android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/negative_change"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textColor="@color/error_500"
-        android:textSize="16sp"
-        android:visibility="gone"/>
-
 </LinearLayout>

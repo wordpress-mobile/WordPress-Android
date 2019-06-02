@@ -4,12 +4,11 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.Bundle;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.stats.service.StatsServiceStarter.ARG_START_ID;
 

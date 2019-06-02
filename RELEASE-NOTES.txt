@@ -1,3 +1,17 @@
+12.6
+-----
+* Add Insights management introductory card
+* Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
+* Block Editor: A new block is available: video block.
+* Block Editor: Added UI to display a warning when a block has invalid content.
+* Block Editor: Fixed issue with link settings where “Open in New Tab” was always OFF on open.
+
+12.5
+-----
+* Local Drafts will be automatically uploaded to the server as soon as internet connection is available.
+* Make current day difference grey in Stats Overview.
+* Add link to the Post from the Post stats.
+
 12.4
 -----
 * Reduce number of network calls in Stats and improve performance
@@ -22,6 +36,7 @@
 * Fixed an issue with Twitter publicize connections
 * Fixed an issue where the site icon wasn't updating correctly after switching to another site
 * Fixes an issue which can result in missing posts in the Reader
+* Fixed crash when editing a post with a previously cancelled image upload
 
 12.2
 -----
@@ -47,12 +62,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-
-11.9
------
-* Introduced new site creation wizard
-* Make "<em>" the default markup for italic in the editor
-* Updated Plans with new design
-* Fixed an issue where posts show up as scheduled even after they are published
-* Add Visitors overlay to the Overview block in Stats
-* Change Stats design to flat on smaller devices
