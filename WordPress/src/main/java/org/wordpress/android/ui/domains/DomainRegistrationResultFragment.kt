@@ -43,7 +43,7 @@ class DomainRegistrationResultFragment : Fragment() {
         checkNotNull((activity?.application as WordPress).component())
 
         continue_button.setOnClickListener {
-            activity!!.setResult(RESULT_OK, Intent())
+            activity!!.setResult(RESULT_OK)
             activity!!.finish()
         }
 
