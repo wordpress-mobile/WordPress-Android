@@ -372,8 +372,8 @@
                     android:scheme="wordpress" />
 
                 <data
-                    android:host="mobile-api.wordpress.com"
-                    android:pathPattern="/bar/.*"
+                    android:host="public-api.wordpress.com"
+                    android:pathPattern="/mbar/.*"
                     android:scheme="https" />
 
                 <data

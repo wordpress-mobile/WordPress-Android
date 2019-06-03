@@ -45,8 +45,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final String DEEP_LINK_HOST_VIEWPOST = "viewpost";
     private static final String HOST_WORDPRESS_COM = "wordpress.com";
     private static final String HOST_API_WORDPRESS_COM = "public-api.wordpress.com";
-    private static final String HOST_DEEPLINKED_API_WORDPRESS_COM = "mobile-api.wordpress.com";
-    private static final String TRACKING_PATH = "bar";
+    private static final String MOBILE_TRACKING_PATH = "mbar";
+    private static final String REGULAR_TRACKING_PATH = "bar";
     private static final String POST_PATH = "post";
     private static final String REDIRECT_TO_PARAM = "redirect_to";
 
@@ -113,9 +113,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     }
 
     private boolean shouldHandleTrackingUrl(@NonNull Uri uri) {
-        // https://mobile-api.wordpress.com/bar/
-        return StringUtils.equals(uri.getHost(), HOST_DEEPLINKED_API_WORDPRESS_COM)
-            && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), TRACKING_PATH));
+        // https://public-api.wordpress.com/mbar/
+        return StringUtils.equals(uri.getHost(), HOST_API_WORDPRESS_COM)
+               && (!uri.getPathSegments().isEmpty()
+                   && StringUtils.equals(uri.getPathSegments().get(0), MOBILE_TRACKING_PATH));
     }
 
     private void handleOpenEditorFromTrackingUrl(@NonNull Uri uri) {
@@ -124,10 +125,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             // Replace host to redirect to the browser
             Uri newUri = (new Uri.Builder())
                     .scheme(uri.getScheme())
-                    .path(uri.getPath())
+                    .path(REGULAR_TRACKING_PATH)
                     .query(uri.getQuery())
                     .fragment(uri.getFragment())
-                    .authority(HOST_API_WORDPRESS_COM)
+                    .authority(uri.getAuthority())
                     .build();
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, newUri);
             startActivity(browserIntent);
