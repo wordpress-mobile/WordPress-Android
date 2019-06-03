@@ -99,8 +99,6 @@
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
-    <string name="enter_woo_site">It doesn\'t look like there\'s a WooCommerce site at this URL. Check the spelling and try again.</string>
-    <string name="not_woo_site_error">The website at this address is not a WooCommerce site. For us to connect to it, the site must have WooCommerce installed.</string>
 
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 
