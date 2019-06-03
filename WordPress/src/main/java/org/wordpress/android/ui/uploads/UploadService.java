@@ -248,10 +248,7 @@ public class UploadService extends Service {
                         return;
                     }
                     boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
-                    boolean processWithAztec =
-                            AppPrefs.isAztecEditorEnabled() && !AppPrefs.isGutenbergEditorEnabled()
-                            && !postHasGutenbergBlocks;
-                    retryUpload(post, processWithAztec);
+                    retryUpload(post, !postHasGutenbergBlocks);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
