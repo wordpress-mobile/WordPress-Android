@@ -850,7 +850,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLanguagePref = (DetailListPreference) getChangePref(R.string.pref_key_site_language);
         mUsernamePref = (EditTextPreference) getChangePref(R.string.pref_key_site_username);
         mPasswordPref = (EditTextPreferenceWithValidation) getChangePref(R.string.pref_key_site_password);
-        mPasswordPref.setValidationType(ValidationType.NOT_EMPTY);
+        mPasswordPref.setValidationType(ValidationType.PASSWORD_SELF_HOSTED);
         mPasswordPref.setDialogMessage(R.string.site_settings_update_password_message);
         mPasswordPref.setOnPreferenceChangeListener(this);
         mCategoryPref = (DetailListPreference) getChangePref(R.string.pref_key_site_category);
@@ -1201,6 +1201,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
         changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
         changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
+        changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         changeLanguageValue(mSiteSettings.getLanguageCode());
         setDetailListPreferenceValue(mPrivacyPref,
                                      String.valueOf(mSiteSettings.getPrivacy()),

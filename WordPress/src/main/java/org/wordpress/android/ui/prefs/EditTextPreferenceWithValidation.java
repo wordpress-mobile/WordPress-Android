@@ -73,7 +73,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                         case URL:
                             positiveButton.setEnabled(ValidationUtils.validateUrl(s));
                             break;
-                        case NOT_EMPTY:
+                        case PASSWORD_SELF_HOSTED:
                             positiveButton.setEnabled(ValidationUtils.validatePasswordSelfHosted(s));
                     }
                 }
@@ -90,6 +90,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
 
         // Use "hidden" input type for passwords so characters are replaced with dots for added security.
         hideInputCharacters(mValidationType == ValidationType.PASSWORD);
+        hideInputCharacters(mValidationType == ValidationType.PASSWORD_SELF_HOSTED);
     }
 
     public void setValidationType(ValidationType validationType) {
