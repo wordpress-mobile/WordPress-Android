@@ -977,6 +977,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_access_error";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
+                return "stats_insights_management_hint_dismissed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED:
+                return "stats_insights_management_hint_clicked";
+            case STATS_INSIGHTS_MANAGEMENT_ACCESSED:
+                return "stats_insights_management_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:
@@ -1235,14 +1241,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_success_preview_viewed";
             case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED:
                 return "enhanced_site_creation_success_preview_loaded";
-            case ENHANCED_SITE_CREATION_COMPLETED:
-                return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED:
+                return "enhanced_site_creation_preview_ok_button_tapped";
             case ENHANCED_SITE_CREATION_EXITED:
                 return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
             case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
                 return "enhanced_site_creation_background_service_updated";
+            case SITE_CREATED:
+                return "site_created";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -1317,10 +1325,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "themes_details_accessed";
             case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 return "account_settings_language_changed";
-            case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
-                return "site_creation_background_service_update";
-            case NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
-                return "new_site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
