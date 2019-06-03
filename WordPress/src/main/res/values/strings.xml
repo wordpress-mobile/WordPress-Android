@@ -586,7 +586,7 @@
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
     <string name="site_settings_password_updated">Password updated</string>
-    <string name="site_settings_update_password_message">Update a password the app uses to connect to your self-hosted site.</string>
+    <string name="site_settings_update_password_message">Enter the password of your self-hosted site to connect it to the app.</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
