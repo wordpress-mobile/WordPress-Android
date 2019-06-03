@@ -761,7 +761,7 @@
 
     <!-- Errors -->
     <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
-    <string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
+    <string name="site_settings_disconnected_toast">No connection. Editing is disabled.</string>
 
     <!--               -->
     <!-- Site Settings -->
