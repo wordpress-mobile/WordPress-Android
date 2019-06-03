@@ -163,11 +163,15 @@ class SelectedDateProvider
     fun clear() {
         mutableDates.clear()
         selectedDateChanged.value = null
+        initialSelectedPeriod = null
     }
 
     fun clear(statsSection: StatsSection) {
         mutableDates[statsSection] = SelectedDate(loading = true)
         selectedDateChanged.value = null
+        if (initialSelectedPeriod?.first?.toStatsSection() == statsSection) {
+            initialSelectedPeriod = null
+        }
     }
 
     data class SelectedDate(

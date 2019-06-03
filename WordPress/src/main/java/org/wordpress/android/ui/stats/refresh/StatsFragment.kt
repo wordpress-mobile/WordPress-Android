@@ -22,23 +22,12 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.stats.OldStatsActivity.ARG_DESIRED_TIMEFRAME
-import org.wordpress.android.ui.stats.OldStatsActivity.ARG_LAUNCHED_FROM
-import org.wordpress.android.ui.stats.OldStatsActivity.StatsLaunchedFrom
-import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.StatsTimeframe.DAY
-import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
-import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
-import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
-import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPSnackbar
@@ -48,7 +37,6 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -100,17 +88,9 @@ class StatsFragment : DaggerFragment() {
 
         setupObservers(activity)
 
-        val siteId = activity.intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
-        statsSiteProvider.start(siteId)
-
-        val launchedFrom = activity.intent.getSerializableExtra(ARG_LAUNCHED_FROM)
-        val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
-        val initialTimeFrame = getInitialTimeFrame(activity)
-        val initialSelectedPeriod = activity.intent.getStringExtra(INITIAL_SELECTED_PERIOD_KEY)
-
         Log.d("vojta", "Receiving intent: ${activity.intent.extras}")
 
-        viewModel.start(launchedFromWidget, initialTimeFrame, initialSelectedPeriod)
+        viewModel.start(activity.intent)
 
         if (!isFirstStart) {
             restorePreviousSearch = true
@@ -122,17 +102,6 @@ class StatsFragment : DaggerFragment() {
                 swipeToRefreshHelper.setEnabled(true)
             }
             return@setOnTouchListener false
-        }
-    }
-
-    private fun getInitialTimeFrame(activity: FragmentActivity): StatsSection? {
-        return when (activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)) {
-            StatsTimeframe.INSIGHTS -> INSIGHTS
-            DAY -> DAYS
-            WEEK -> WEEKS
-            MONTH -> MONTHS
-            YEAR -> YEARS
-            else -> null
         }
     }
 

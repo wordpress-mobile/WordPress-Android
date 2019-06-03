@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
 import org.wordpress.android.R
@@ -15,7 +14,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.OldStatsActivity
-import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
+import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color
 import org.wordpress.android.util.image.ImageManager
@@ -25,7 +24,6 @@ import javax.inject.Inject
 const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
 const val COLOR_MODE_KEY = "color_mode_key"
 const val SITE_ID_KEY = "site_id_key"
-const val CLICKED_PERIOD_KEY = "clicked_period_key"
 
 class StatsViewsWidget : AppWidgetProvider() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -140,16 +138,16 @@ class StatsViewsWidget : AppWidgetProvider() {
         }
 
         private fun getPendingSelfIntent(context: Context, localSiteId: Int): PendingIntent {
-            val intent = StatsActivity.buildIntent(context, localSiteId, MONTH)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
-            Log.d("vojta", "Building base intent: ${intent.extras}")
+            val intent = Intent(context, StatsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
+            intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         private fun getPendingTemplate(context: Context): PendingIntent {
             val intent = Intent(context, StatsActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }
