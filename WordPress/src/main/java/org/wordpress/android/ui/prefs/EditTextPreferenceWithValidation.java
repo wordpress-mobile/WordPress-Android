@@ -108,6 +108,6 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
     }
 
     public enum ValidationType {
-        NONE, EMAIL, PASSWORD, URL, NOT_EMPTY
+        NONE, EMAIL, PASSWORD, PASSWORD_SELF_HOSTED, URL
     }
 }
