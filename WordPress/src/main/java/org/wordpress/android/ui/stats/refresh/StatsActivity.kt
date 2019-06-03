@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
@@ -47,37 +46,30 @@ class StatsActivity : AppCompatActivity() {
     }
 
     override fun onNewIntent(intent: Intent?) {
-        Log.d("vojta", "onNewIntent: $intent ${intent?.extras}")
-        Log.d("vojta", "current intent: ${this.intent} ${this.intent?.extras}")
         intent?.let {
             val siteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, -1)
             if (siteId > -1) {
                 viewModel = ViewModelProviders.of(this, viewModelFactory).get(StatsViewModel::class.java)
-                Log.d("vojta", "Updating site to: $siteId")
-                viewModel.start(intent, update = true)
+                viewModel.start(intent)
             }
         }
         super.onNewIntent(intent)
-        Log.d("vojta", "after super: ${this.intent} ${this.intent?.extras}")
     }
 
     companion object {
         const val INITIAL_SELECTED_PERIOD_KEY = "INITIAL_SELECTED_PERIOD_KEY"
         @JvmStatic
         fun start(context: Context, site: SiteModel) {
-            Log.d("vojta", "Starting without timeframe")
             context.startActivity(buildIntent(context, site))
         }
 
         fun start(context: Context, localSiteId: Int, statsTimeframe: StatsTimeframe, period: String?) {
-            Log.d("vojta", "Starting with timeframe: $statsTimeframe")
             val intent = buildIntent(context, localSiteId, statsTimeframe, period)
             context.startActivity(intent)
         }
 
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
-            Log.d("vojta", "Building intent without data")
             return buildIntent(context, site.id)
         }
 
@@ -91,7 +83,6 @@ class StatsActivity : AppCompatActivity() {
             intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             statsTimeframe?.let { intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, statsTimeframe) }
             period?.let { intent.putExtra(INITIAL_SELECTED_PERIOD_KEY, period) }
-            Log.d("vojta", "Building intent: $statsTimeframe $period")
             return intent
         }
     }

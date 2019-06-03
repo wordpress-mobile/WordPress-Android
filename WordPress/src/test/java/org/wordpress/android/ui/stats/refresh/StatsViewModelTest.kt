@@ -55,7 +55,7 @@ class StatsViewModelTest : BaseUnitTest() {
         )
         whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
 
-        viewModel.start(false, null, initialSelectedPeriod)
+        viewModel.start(1, false, null, null)
     }
 
     @Test

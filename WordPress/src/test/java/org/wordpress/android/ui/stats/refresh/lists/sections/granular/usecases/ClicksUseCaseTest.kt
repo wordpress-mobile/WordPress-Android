@@ -73,7 +73,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
-                        0,
+                        selectedDate,
                         listOf(selectedDate)
                 )
         )

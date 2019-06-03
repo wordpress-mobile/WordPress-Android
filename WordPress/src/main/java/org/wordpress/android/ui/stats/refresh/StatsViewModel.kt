@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.Intent
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,6 +26,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
@@ -72,18 +72,14 @@ class StatsViewModel
     private val _toolbarHasShadow = MutableLiveData<Boolean>()
     val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
 
-    fun start(intent: Intent, update: Boolean = false) {
+    fun start(intent: Intent) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
         val launchedFrom = intent.getSerializableExtra(OldStatsActivity.ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
-        Log.d(
-                "vojta",
-                "Starting view model: localSiteId : $localSiteId launchedFromWidget: $launchedFromWidget, initialTimeFrame : $initialTimeFrame initialSelectedPeriod: $initialSelectedPeriod"
-        )
-        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, update)
+        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod)
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
@@ -101,20 +97,18 @@ class StatsViewModel
         localSiteId: Int,
         launchedFromWidget: Boolean,
         initialSection: StatsSection?,
-        initialSelectedPeriod: String?,
-        update: Boolean = false
+        initialSelectedPeriod: String?
     ) {
-        if (update && launchedFromWidget) {
+        if (launchedFromWidget) {
             selectedDateProvider.clear()
         }
         // Check if VM is not already initialized
-        if (!isInitialized || update) {
+        if (!isInitialized || launchedFromWidget) {
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
             val initialGranularity = initialSection?.toStatsGranularity()
-            Log.d("vojta", "Stats from widget started: $initialSection $initialSelectedPeriod")
             if (initialGranularity != null && initialSelectedPeriod != null) {
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
@@ -127,7 +121,7 @@ class StatsViewModel
             }
         }
         statsSiteProvider.start(localSiteId)
-        if (update && launchedFromWidget) {
+        if (launchedFromWidget) {
             refreshData()
         }
     }
@@ -172,8 +166,7 @@ class StatsViewModel
             WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
             MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
             YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
-            DETAIL -> {
-            }
+            ANNUAL_STATS, DETAIL -> { }
         }
     }
 

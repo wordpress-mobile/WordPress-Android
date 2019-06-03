@@ -44,10 +44,11 @@ class ViewsListViewModel
     fun onDataSetChanged() {
         siteId?.let {
             val site = siteStore.getSiteBySiteId(it)
+            val currentDate = Date()
             runBlocking {
-                visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), Date())
+                visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
             }
-            val visitsAndViewsModel = visitsAndViewsStore.getVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), Date())
+            val visitsAndViewsModel = visitsAndViewsStore.getVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
             val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
             val uiModels = periods.mapIndexed { index, periodData ->
                 buildListItemUiModel(index, periodData, periods, site.id)
