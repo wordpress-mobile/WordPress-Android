@@ -23,6 +23,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.inject.Inject;
 
@@ -119,7 +120,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
             if (!event.isConnected()) {
-                ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
+                ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast), Duration.LONG);
             }
             siteSettingsFragment.setEditingEnabled(event.isConnected());
 
