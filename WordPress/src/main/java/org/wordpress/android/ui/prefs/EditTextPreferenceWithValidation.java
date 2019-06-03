@@ -89,8 +89,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         }
 
         // Use "hidden" input type for passwords so characters are replaced with dots for added security.
-        hideInputCharacters(mValidationType == ValidationType.PASSWORD);
-        hideInputCharacters(mValidationType == ValidationType.PASSWORD_SELF_HOSTED);
+        hideInputCharacters(
+                mValidationType == ValidationType.PASSWORD || mValidationType == ValidationType.PASSWORD_SELF_HOSTED);
     }
 
     public void setValidationType(ValidationType validationType) {
