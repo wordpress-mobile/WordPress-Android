@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
 import org.wordpress.android.R
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfi
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import javax.inject.Inject
+import kotlin.random.Random
 
 const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
 const val COLOR_MODE_KEY = "color_mode_key"
@@ -120,7 +122,7 @@ class StatsViewsWidget : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, layout)
             val siteIconUrl = siteModel?.iconUrl
             val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
-            imageManager.load(awt, context, ICON, siteIconUrl ?: "")
+            imageManager.load(awt, context, ICON, siteIconUrl ?: "", FIT_START)
             siteModel?.let {
                 views.setOnClickPendingIntent(R.id.widget_title, getPendingSelfIntent(context, siteModel.id))
                 views.setPendingIntentTemplate(R.id.widget_list, getPendingTemplate(context))
@@ -142,7 +144,12 @@ class StatsViewsWidget : AppWidgetProvider() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
-            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getActivity(
+                    context,
+                    Random(localSiteId).nextInt(),
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         private fun getPendingTemplate(context: Context): PendingIntent {

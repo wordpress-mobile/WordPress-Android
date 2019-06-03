@@ -92,15 +92,9 @@ constructor(
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            val dateFromProvider = selectedDateProvider.getInitialSelectedPeriod(statsGranularity)?.let {
-                statsDateFormatter.parseStatsDate(
-                        statsGranularity,
-                        it
-                )
-            } ?: selectedDateProvider.getSelectedDate(statsGranularity)
+            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
             val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
-            val availablePeriods = domainModel.dates.takeLast(visibleBarCount)
-            val availableDates = availablePeriods.map {
+            val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
                         it.period
@@ -109,13 +103,13 @@ constructor(
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
+
             selectedDateProvider.selectDate(
-                    index,
-                    availableDates,
+                    selectedDate,
+                    availableDates.takeLast(visibleBarCount),
                     statsGranularity
             )
-            val shiftedIndex = index + domainModel.dates.size - visibleBarCount
-            val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
+            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
             val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
                     overviewMapper.buildTitle(
@@ -132,7 +126,7 @@ constructor(
                             this::onBarSelected,
                             this::onBarChartDrawn,
                             uiState.selectedPosition,
-                            shiftedIndex
+                            selectedItem.period
                     )
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))

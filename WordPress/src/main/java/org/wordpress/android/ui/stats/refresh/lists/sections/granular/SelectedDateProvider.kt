@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.util.filter
 import org.wordpress.android.viewmodel.Event
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SelectedDateProvider
-@Inject constructor() {
+@Inject constructor(private val statsDateFormatter: StatsDateFormatter) {
     private val mutableDates = mutableMapOf(
             DAYS to SelectedDate(loading = true),
             WEEKS to SelectedDate(loading = true),
@@ -41,7 +42,7 @@ class SelectedDateProvider
         val selectedDate = getSelectedDateState(statsSection)
         val selectedDateIndex = selectedDate.availableDates.indexOf(date)
         if (selectedDate.getDate() != date && selectedDateIndex > -1) {
-            updateSelectedDate(selectedDate.copy(index = selectedDateIndex), statsSection)
+            updateSelectedDate(selectedDate.copy(dateValue = date), statsSection)
         }
     }
 
@@ -49,18 +50,18 @@ class SelectedDateProvider
         selectDate(date, statsGranularity.toStatsSection())
     }
 
-    fun selectDate(updatedIndex: Int, availableDates: List<Date>, statsSection: StatsSection) {
+    fun selectDate(updatedDate: Date, availableDates: List<Date>, statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
-        if (selectedDate.index != updatedIndex || selectedDate.availableDates != availableDates) {
+        if (selectedDate.dateValue != updatedDate || selectedDate.availableDates != availableDates) {
             updateSelectedDate(
-                    selectedDate.copy(index = updatedIndex, availableDates = availableDates),
+                    selectedDate.copy(dateValue = updatedDate, availableDates = availableDates),
                     statsSection
             )
         }
     }
 
-    fun selectDate(updatedIndex: Int, availableDates: List<Date>, statsGranularity: StatsGranularity) {
-        selectDate(updatedIndex, availableDates, statsGranularity.toStatsSection())
+    fun selectDate(updatedDate: Date, availableDates: List<Date>, statsGranularity: StatsGranularity) {
+        selectDate(updatedDate, availableDates, statsGranularity.toStatsSection())
     }
 
     private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
@@ -71,16 +72,18 @@ class SelectedDateProvider
         }
     }
 
-    fun setInitialSelectedPeriod(statsSection: StatsGranularity, period: String) {
-        initialSelectedPeriod = statsSection to period
+    fun setInitialSelectedPeriod(statsGranularity: StatsGranularity, period: String) {
+        val updatedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
+        val selectedDate = getSelectedDateState(statsGranularity)
+        updateSelectedDate(selectedDate.copy(dateValue = updatedDate), statsGranularity.toStatsSection())
     }
 
     fun getInitialSelectedPeriod(statsSection: StatsGranularity): String? {
-        val initialValue = initialSelectedPeriod
-        if (initialValue?.first == statsSection) {
-            initialSelectedPeriod = null
-            return initialValue.second
-        }
+//        val initialValue = initialSelectedPeriod
+//        if (initialValue?.first == statsSection) {
+//            initialSelectedPeriod = null
+//            return initialValue.second
+//        }
         return null
     }
 
@@ -89,9 +92,7 @@ class SelectedDateProvider
     }
 
     fun getSelectedDate(statsSection: StatsSection): Date? {
-        return getSelectedDateState(statsSection).let { selectedDate ->
-            selectedDate.index?.let { selectedDate.availableDates.getOrNull(selectedDate.index) }
-        }
+        return getSelectedDateState(statsSection).dateValue
     }
 
     fun getSelectedDateState(statsGranularity: StatsGranularity): SelectedDate {
@@ -104,31 +105,26 @@ class SelectedDateProvider
 
     fun hasPreviousDate(statsSection: StatsSection): Boolean {
         val selectedDate = getSelectedDateState(statsSection)
-        return selectedDate.index != null && selectedDate.hasData() && selectedDate.index > 0
+        return selectedDate.hasData() && selectedDate.getDateIndex() > 0
     }
 
     fun hasNextDate(statsSection: StatsSection): Boolean {
         val selectedDate = getSelectedDateState(statsSection)
         return selectedDate.hasData() &&
-                selectedDate.index != null &&
-                selectedDate.index < selectedDate.availableDates.size - 1
+                selectedDate.getDateIndex() < selectedDate.availableDates.size - 1
     }
 
     fun selectPreviousDate(statsSection: StatsSection) {
-        getSelectedDateState(statsSection).let { selectedDate ->
-            val selectedDateIndex = selectedDate.index
-            if (selectedDateIndex != null && selectedDateIndex > 0) {
-                updateSelectedDate(selectedDate.copy(index = selectedDate.index - 1), statsSection)
-            }
+        val selectedDateState = getSelectedDateState(statsSection)
+        if (selectedDateState.hasData()) {
+            updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getPreviousDate()), statsSection)
         }
     }
 
     fun selectNextDate(statsSection: StatsSection) {
-        getSelectedDateState(statsSection).let { selectedDate ->
-            val selectedDateIndex = selectedDate.index
-            if (selectedDateIndex != null && selectedDateIndex < selectedDate.availableDates.size - 1) {
-                updateSelectedDate(selectedDate.copy(index = selectedDate.index + 1), statsSection)
-            }
+        val selectedDateState = getSelectedDateState(statsSection)
+        if (selectedDateState.hasData()) {
+            updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsSection)
         }
     }
 
@@ -138,9 +134,9 @@ class SelectedDateProvider
 
     fun onDateLoadingFailed(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
-        if (selectedDate.index != null && !selectedDate.error) {
+        if (selectedDate.dateValue != null && !selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = true, loading = false), statsSection)
-        } else if (selectedDate.index == null) {
+        } else if (selectedDate.dateValue == null) {
             updateSelectedDate(SelectedDate(error = true, loading = false), statsSection)
         }
     }
@@ -151,9 +147,9 @@ class SelectedDateProvider
 
     fun onDateLoadingSucceeded(statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
-        if (selectedDate.index != null && selectedDate.error) {
+        if (selectedDate.dateValue != null && selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = false, loading = false), statsSection)
-        } else if (selectedDate.index == null) {
+        } else if (selectedDate.dateValue == null) {
             updateSelectedDate(SelectedDate(error = false, loading = false), statsSection)
         }
     }
@@ -175,20 +171,39 @@ class SelectedDateProvider
     }
 
     data class SelectedDate(
-        val index: Int? = null,
+        val dateValue: Date? = null,
         val availableDates: List<Date> = listOf(),
         val loading: Boolean = false,
         val error: Boolean = false
     ) {
-        fun hasData(): Boolean = index != null && availableDates.size > index && index >= 0
-        fun getDate(): Date = availableDates[index!!]
+        fun hasData(): Boolean = dateValue != null && availableDates.contains(dateValue)
+        fun getDate() = dateValue!!
         fun hasUpdatedDate(selectedDate: SelectedDate?): Boolean {
             return if (selectedDate == null) {
                 hasData()
             } else if (hasData() && selectedDate.hasData()) {
                 getDate() != selectedDate.getDate()
             } else {
-                index != selectedDate.index
+                dateValue != selectedDate.dateValue
+            }
+        }
+        fun getDateIndex(): Int {
+            return availableDates.indexOf(dateValue)
+        }
+        fun getPreviousDate(): Date? {
+            val dateIndex = getDateIndex()
+            return if (dateIndex > 0) {
+                availableDates[dateIndex - 1]
+            } else {
+                null
+            }
+        }
+        fun getNextDate(): Date? {
+            val dateIndex = getDateIndex()
+            return if (dateIndex > -1 && dateIndex < availableDates.size - 1) {
+                availableDates[dateIndex + 1]
+            } else {
+                null
             }
         }
     }

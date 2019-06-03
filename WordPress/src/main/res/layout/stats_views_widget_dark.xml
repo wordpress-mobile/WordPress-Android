@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/bg_rectangle_gray_800_radius_4dp">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/stats_widget_list_item_height"
-        android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"/>
+        android:orientation="horizontal"
+        android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp">
 
-    <ImageView
-        android:id="@+id/widget_site_icon"
-        style="@style/StatsWidgetSiteIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/stats_widget_list_item_height"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/my_site_icon_content_description"
-        android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
-        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
+        <ImageView
+            android:id="@+id/widget_site_icon"
+            style="@style/StatsWidgetSiteIcon"
+            android:layout_width="@dimen/stats_widget_list_item_height"
+            android:layout_height="@dimen/stats_widget_list_item_height"
+            android:contentDescription="@string/my_site_icon_content_description"
+            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
 
-    <TextView
-        android:id="@+id/widget_title"
-        style="@style/StatsWidgetTitle.Dark"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/stats_widget_list_item_height"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="52dp"
-        android:layout_toEndOf="@id/widget_site_icon"
-        android:text="@string/stats_widget_views_title"
-        tools:text="Today"/>
+        <TextView
+            android:id="@+id/widget_title"
+            style="@style/StatsWidgetTitle.Dark"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/stats_widget_list_item_height"
+            android:text="@string/stats_widget_views_title"
+            tools:text="Today"/>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/widget_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/widget_title"
         android:divider="@null"
         android:dividerHeight="0dp"/>
-</RelativeLayout>
+</LinearLayout>
