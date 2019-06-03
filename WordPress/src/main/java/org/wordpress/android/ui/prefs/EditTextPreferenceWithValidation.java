@@ -74,7 +74,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                             positiveButton.setEnabled(ValidationUtils.validateUrl(s));
                             break;
                         case NOT_EMPTY:
-                            positiveButton.setEnabled(!s.toString().isEmpty());
+                            positiveButton.setEnabled(ValidationUtils.validatePasswordSelfHosted(s));
                     }
                 }
             });
