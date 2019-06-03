@@ -172,6 +172,12 @@ class StatsFragment : DaggerFragment() {
         viewModel.siteChanged.observe(this, Observer {
             viewModel.refreshData()
         })
+
+        viewModel.hideToolbar.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { hideToolbar ->
+                app_bar_layout.setExpanded(!hideToolbar, true)
+            }
+        })
     }
 }
 

@@ -115,7 +115,7 @@
             android:theme="@style/LoginTheme" />
 
         <activity
-            android:name=".ui.sitecreation.NewSiteCreationActivity"
+            android:name=".ui.sitecreation.SiteCreationActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
 
@@ -676,7 +676,7 @@
             android:label="Login to WPCOM Service" />
 
         <service
-            android:name=".ui.sitecreation.services.NewSiteCreationService"
+            android:name=".ui.sitecreation.services.SiteCreationService"
             android:exported="false"
             android:label="Site Creation Service" />
 

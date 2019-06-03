@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
@@ -57,6 +59,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StatsEvents.InsightsLatestPostSummaryUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
@@ -93,6 +96,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StatsEvents.InsightsLatestPostDetailsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
@@ -109,6 +113,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
         if (!shouldUpdateFragmentOnErrorEvent(event)
             && event.mEndPointName != StatsServiceLogic.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {

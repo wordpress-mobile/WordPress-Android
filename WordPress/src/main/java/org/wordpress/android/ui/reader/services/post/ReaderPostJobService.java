@@ -4,13 +4,12 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.PersistableBundle;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_ACTION;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_BLOG_ID;

@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
@@ -49,6 +50,7 @@ open class LocalDraftUploadStarter @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val postUtilsWrapper: PostUtilsWrapper,
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
@@ -131,7 +133,9 @@ open class LocalDraftUploadStarter @Inject constructor(
 
         val postsAndPages = posts.await() + pages.await()
 
-        postsAndPages.filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
+        postsAndPages
+                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
+                .filter { postUtilsWrapper.isPublishable(it) }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,

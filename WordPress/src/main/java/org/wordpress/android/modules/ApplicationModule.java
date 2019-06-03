@@ -6,7 +6,7 @@ import android.content.Context;
 
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationStepsProvider;
+import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
@@ -49,7 +49,7 @@ public abstract class ApplicationModule {
     abstract StatsDetailFragment contributeStatsDetailFragment();
 
     @Provides
-    public static WizardManager<SiteCreationStep> provideWizardManager(NewSiteCreationStepsProvider stepsProvider) {
+    public static WizardManager<SiteCreationStep> provideWizardManager(SiteCreationStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
     }
 
