@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Base64;
 
 import org.apache.commons.lang3.StringEscapeUtils;
