@@ -394,14 +394,17 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             showError(R.string.invalid_site_url_message);
         } else {
             if (!event.info.exists) {
-                // Site does not exist. Invalid URL, show error
+                // Site does not exist
                 showError(R.string.invalid_site_url_message);
             } else if (!event.info.isWordPress) {
-                // Not a wordpress site, show error
+                // Not a WordPress site
                 showError(R.string.enter_wordpress_site);
             } else {
                 boolean hasJetpack = false;
-                if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
+                if (event.info.isWPCom && event.info.hasJetpack) {
+                    // This is likely an atomic site.
+                    hasJetpack = true;
+                } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
                     hasJetpack = true;
                 }
                 mLoginListener.gotConnectedSiteInfo(event.info.url, hasJetpack);
