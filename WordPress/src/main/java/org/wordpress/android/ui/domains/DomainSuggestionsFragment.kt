@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -53,7 +54,7 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupViews() {
-        domain_suggestions_list.layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        domain_suggestions_list.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         domain_suggestions_list.setEmptyView(actionableEmptyView)
         chose_domain_button.setOnClickListener {
             val selectedDomain = viewModel.selectedSuggestion.value

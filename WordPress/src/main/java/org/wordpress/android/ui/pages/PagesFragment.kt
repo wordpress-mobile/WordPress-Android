@@ -17,6 +17,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -138,7 +140,7 @@ class PagesFragment : Fragment() {
         viewModel.onPageParentSet(pageId, parentId)
     }
 
-    private fun initializeViews(activity: androidx.fragment.app.FragmentActivity) {
+    private fun initializeViews(activity: FragmentActivity) {
         pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)
 
@@ -231,7 +233,7 @@ class PagesFragment : Fragment() {
         })
     }
 
-    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity, savedInstanceState: Bundle?) {
+    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         setupObservers(activity)
@@ -247,7 +249,7 @@ class PagesFragment : Fragment() {
         viewModel.start(site)
     }
 
-    private fun setupObservers(activity: androidx.fragment.app.FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
         })
@@ -397,7 +399,7 @@ class PagesFragment : Fragment() {
     }
 }
 
-class PagesPagerAdapter(val context: Context, val fm: androidx.fragment.app.FragmentManager) : FragmentPagerAdapter(fm) {
+class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
         val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
     }
@@ -406,7 +408,7 @@ class PagesPagerAdapter(val context: Context, val fm: androidx.fragment.app.Frag
 
     override fun getCount(): Int = pageTypes.size
 
-    override fun getItem(position: Int): androidx.fragment.app.Fragment {
+    override fun getItem(position: Int): Fragment {
         val fragment = PageListFragment.newInstance(pageTypes[position])
         listFragments[pageTypes[position]] = WeakReference(fragment)
         return fragment

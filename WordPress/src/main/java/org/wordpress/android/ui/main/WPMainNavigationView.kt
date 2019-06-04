@@ -12,6 +12,8 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -38,11 +40,11 @@ class WPMainNavigationView @JvmOverloads constructor(
 ) : BottomNavigationView(context, attrs, defStyleAttr),
         OnNavigationItemSelectedListener, OnNavigationItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
-    private lateinit var fragmentManager: androidx.fragment.app.FragmentManager
+    private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
 
-    val activeFragment: androidx.fragment.app.Fragment?
+    val activeFragment: Fragment?
         get() = navAdapter.getFragment(currentPosition)
 
     var currentPosition: Int
@@ -54,7 +56,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked()
     }
 
-    fun init(fm: androidx.fragment.app.FragmentManager, listener: OnPageListener) {
+    fun init(fm: FragmentManager, listener: OnPageListener) {
         fragmentManager = fm
         pageListener = listener
 
@@ -302,10 +304,10 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private inner class NavAdapter {
-        private val mFragments = SparseArray<androidx.fragment.app.Fragment>(NUM_PAGES)
+        private val mFragments = SparseArray<Fragment>(NUM_PAGES)
 
-        private fun createFragment(position: Int): androidx.fragment.app.Fragment? {
-            val fragment: androidx.fragment.app.Fragment = when (position) {
+        private fun createFragment(position: Int): Fragment? {
+            val fragment: Fragment = when (position) {
                 PAGE_MY_SITE -> MySiteFragment.newInstance()
                 PAGE_READER -> ReaderPostListFragment.newInstance()
                 PAGE_ME -> MeFragment.newInstance()
@@ -317,7 +319,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             return fragment
         }
 
-        internal fun getFragment(position: Int): androidx.fragment.app.Fragment? {
+        internal fun getFragment(position: Int): Fragment? {
             if (isValidPosition(position) && mFragments.get(position) != null) {
                 return mFragments.get(position)
             }

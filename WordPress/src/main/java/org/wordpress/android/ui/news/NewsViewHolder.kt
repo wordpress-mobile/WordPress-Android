@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.models.news.NewsItem
 
 class NewsViewHolder(parent: ViewGroup, private val listener: NewsCardListener) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(
+        RecyclerView.ViewHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.news_card, parent, false)
         ) {
     interface NewsCardListener {

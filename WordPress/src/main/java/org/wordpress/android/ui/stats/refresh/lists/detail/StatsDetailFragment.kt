@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -49,7 +50,7 @@ class StatsDetailFragment : DaggerFragment() {
         }
     }
 
-    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
+    private fun initializeViewModels(activity: FragmentActivity) {
         val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
         statsSiteProvider.start(siteId)
 

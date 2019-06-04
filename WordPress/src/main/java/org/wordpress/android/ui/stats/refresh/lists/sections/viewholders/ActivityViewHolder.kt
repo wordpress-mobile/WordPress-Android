@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.stats_block_single_activity.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -69,7 +70,7 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun drawBlock(recyclerView: androidx.recyclerview.widget.RecyclerView, boxes: List<Box>) {
+    private fun drawBlock(recyclerView: RecyclerView, boxes: List<Box>) {
         if (recyclerView.adapter == null) {
             recyclerView.adapter = MonthActivityAdapter()
         }
@@ -77,19 +78,19 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
             recyclerView.layoutManager = GridLayoutManager(
                     recyclerView.context,
                     SPAN_COUNT,
-                    androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL,
+                    GridLayoutManager.HORIZONTAL,
                     false
             )
         }
         if (recyclerView.itemDecorationCount == 0) {
             val offsets = recyclerView.resources.getDimensionPixelSize(R.dimen.stats_activity_spacing)
             recyclerView.addItemDecoration(
-                    object : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
+                    object : RecyclerView.ItemDecoration() {
                         override fun getItemOffsets(
                             outRect: Rect,
                             view: View,
-                            parent: androidx.recyclerview.widget.RecyclerView,
-                            state: androidx.recyclerview.widget.RecyclerView.State
+                            parent: RecyclerView,
+                            state: RecyclerView.State
                         ) {
                             super.getItemOffsets(outRect, view, parent, state)
                             outRect.set(offsets, offsets, offsets, offsets)

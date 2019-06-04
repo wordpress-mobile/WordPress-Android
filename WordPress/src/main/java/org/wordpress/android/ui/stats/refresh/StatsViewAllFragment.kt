@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -82,14 +84,14 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
         recyclerView.layoutManager = layoutManager
-        loadingRecyclerView.layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        loadingRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
@@ -118,7 +120,7 @@ class StatsViewAllFragment : DaggerFragment() {
         (activity as AppCompatActivity).supportActionBar?.title = getString(viewModel.title)
     }
 
-    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity, savedInstanceState: Bundle?) {
+    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val type = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
@@ -145,7 +147,7 @@ class StatsViewAllFragment : DaggerFragment() {
         viewModel.start()
     }
 
-    private fun setupObservers(activity: androidx.fragment.app.FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.isRefreshing.observe(this, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -236,7 +238,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
     }
 
-    private fun loadData(recyclerView: androidx.recyclerview.widget.RecyclerView, data: List<BlockListItem>) {
+    private fun loadData(recyclerView: RecyclerView, data: List<BlockListItem>) {
         val adapter: BlockListAdapter
         if (recyclerView.adapter == null) {
             adapter = BlockListAdapter(imageManager)

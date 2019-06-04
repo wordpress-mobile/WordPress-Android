@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.helpers
 
 import android.content.Context
+import androidx.fragment.app.FragmentManager
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -12,7 +13,7 @@ class DialogHolder(
     private val positiveButton: UiString,
     private val negativeButton: UiString
 ) {
-    fun show(context: Context, fragmentManager: androidx.fragment.app.FragmentManager, uiHelpers: UiHelpers) {
+    fun show(context: Context, fragmentManager: FragmentManager, uiHelpers: UiHelpers) {
         val dialog = BasicFragmentDialog()
         dialog.initialize(
                 tag = tag,

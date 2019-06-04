@@ -5,10 +5,12 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.android.support.DaggerFragment
@@ -65,9 +67,9 @@ class StatsListFragment : DaggerFragment() {
     private fun initializeViews(savedInstanceState: Bundle?) {
         val columns = resources.getInteger(R.integer.stats_number_of_columns)
         val layoutManager: LayoutManager = if (columns == 1) {
-            LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         } else {
-            StaggeredGridLayoutManager(columns, androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL)
+            StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
         }
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -90,8 +92,8 @@ class StatsListFragment : DaggerFragment() {
             viewModel.onEmptyInsightsButtonClicked()
         }
 
-        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
                     viewModel.onScrolledToBottom()
                 }
@@ -120,7 +122,7 @@ class StatsListFragment : DaggerFragment() {
         initializeViewModels(nonNullActivity)
     }
 
-    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
+    private fun initializeViewModels(activity: FragmentActivity) {
         val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
                 ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
                 ?: StatsSection.INSIGHTS
@@ -142,7 +144,7 @@ class StatsListFragment : DaggerFragment() {
         viewModel.start()
     }
 
-    private fun setupObservers(activity: androidx.fragment.app.FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.uiModel.observe(this, Observer {
             if (it != null) {
                 when (it) {

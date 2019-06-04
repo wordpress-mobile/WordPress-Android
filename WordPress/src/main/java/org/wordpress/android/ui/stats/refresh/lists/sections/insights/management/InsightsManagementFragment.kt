@@ -8,11 +8,13 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
 import kotlinx.coroutines.delay
@@ -64,11 +66,11 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun initializeViews() {
-        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
-        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
     }
 
-    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
+    private fun initializeViewModels(activity: FragmentActivity) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
         viewModel.start()
 

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -10,7 +11,7 @@ class PostsPagerAdapter(
     private val pages: List<PostListType>,
     private val site: SiteModel,
     private val authorFilter: AuthorFilterSelection,
-    val fm: androidx.fragment.app.FragmentManager
+    val fm: FragmentManager
 ) : FragmentStatePagerAdapter(fm) {
     private val listFragments = mutableMapOf<Int, WeakReference<PostListFragment>>()
 

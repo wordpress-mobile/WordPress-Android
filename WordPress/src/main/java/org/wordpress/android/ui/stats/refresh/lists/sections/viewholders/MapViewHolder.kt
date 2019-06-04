@@ -12,6 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -65,7 +66,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
             if (webView != null) {
                 val params = webView.layoutParams as LayoutParams
-                val wrapperParams = itemView.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
+                val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT
                 params.height = height
                 wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT

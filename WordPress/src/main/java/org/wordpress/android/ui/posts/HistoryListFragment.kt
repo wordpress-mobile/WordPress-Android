@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -65,7 +66,7 @@ class HistoryListFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
         actionable_empty_view.button.setText(R.string.button_retry)
         actionable_empty_view.button.setOnClickListener {

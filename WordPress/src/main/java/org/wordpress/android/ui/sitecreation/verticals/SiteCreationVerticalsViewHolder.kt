@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
@@ -15,7 +16,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsView
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 
 sealed class SiteCreationVerticalsViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(uiState: VerticalsListItemUiState)
 
     class VerticalsSuggestionItemViewHolder(

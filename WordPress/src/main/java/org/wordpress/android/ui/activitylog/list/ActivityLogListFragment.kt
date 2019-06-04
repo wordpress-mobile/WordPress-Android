@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
@@ -41,7 +42,7 @@ class ActivityLogListFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipe_refresh_layout) {
             if (NetworkUtils.checkConnection(nonNullActivity)) {
@@ -63,8 +64,8 @@ class ActivityLogListFragment : Fragment() {
         }
 
         log_list_view.setEmptyView(actionable_empty_view)
-        log_list_view.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+        log_list_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
                     viewModel.onScrolledToBottom()
                 }

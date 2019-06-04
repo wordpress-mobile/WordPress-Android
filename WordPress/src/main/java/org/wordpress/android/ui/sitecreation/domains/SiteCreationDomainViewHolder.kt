@@ -6,6 +6,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
@@ -14,7 +15,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 
 sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(uiState: DomainsListItemUiState)
 
     class DomainSuggestionItemViewHolder(

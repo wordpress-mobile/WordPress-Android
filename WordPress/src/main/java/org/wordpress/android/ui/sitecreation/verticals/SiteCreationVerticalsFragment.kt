@@ -6,10 +6,12 @@ import android.os.Parcelable
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.LayoutRes
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -29,10 +31,10 @@ import kotlin.properties.Delegates
 private const val KEY_LIST_STATE = "list_state"
 
 class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
-    private lateinit var nonNullActivity: androidx.fragment.app.FragmentActivity
+    private lateinit var nonNullActivity: FragmentActivity
     private var segmentId by Delegates.notNull<Long>()
-    private lateinit var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager
-    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SiteCreationVerticalsViewModel
 
     private lateinit var fullscreenErrorLayout: ViewGroup
@@ -114,7 +116,7 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
 
     private fun initRecyclerView(rootView: ViewGroup) {
         recyclerView = rootView.findViewById(R.id.recycler_view)
-        val layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         initAdapter()

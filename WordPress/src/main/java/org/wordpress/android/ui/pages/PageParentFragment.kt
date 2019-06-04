@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
@@ -34,7 +35,7 @@ class PageParentFragment : Fragment() {
 
     private val listStateKey = "list_state"
 
-    private var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
+    private var linearLayoutManager: LinearLayoutManager? = null
     private var saveButton: MenuItem? = null
 
     private var pageId: Long? = null
@@ -96,7 +97,7 @@ class PageParentFragment : Fragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }

@@ -11,6 +11,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.widget.CompoundButtonCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -26,7 +27,7 @@ import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
 
     class PageViewHolder(

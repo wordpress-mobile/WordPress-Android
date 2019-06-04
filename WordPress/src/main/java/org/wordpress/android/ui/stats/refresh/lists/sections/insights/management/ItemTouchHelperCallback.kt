@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : ItemTouchHelper.Callback() {
@@ -12,12 +13,12 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Ite
         return false
     }
 
-    override fun getMovementFlags(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: ViewHolder): Int {
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: ViewHolder): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         return makeMovementFlags(dragFlags, 0)
     }
 
-    override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
+    override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
         adapter.onItemMoved(viewHolder, target)
         return true
     }
@@ -25,7 +26,7 @@ class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : Ite
     override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
     }
 
-    override fun clearView(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: ViewHolder) {
+    override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
         super.clearView(recyclerView, viewHolder)
 
         adapter.onDragFinished(viewHolder)

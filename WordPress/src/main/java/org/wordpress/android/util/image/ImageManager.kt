@@ -50,7 +50,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         if (this == null) {
             return false
         } else if (this !is Application) {
-            if (this is androidx.fragment.app.FragmentActivity) {
+            if (this is FragmentActivity) {
                 return !this.isDestroyed
             } else if (this is Activity) {
                 return !this.isDestroyed

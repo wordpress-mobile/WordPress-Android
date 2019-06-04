@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.plans_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -44,7 +45,7 @@ class PlansListFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(swipe_refresh_layout) {

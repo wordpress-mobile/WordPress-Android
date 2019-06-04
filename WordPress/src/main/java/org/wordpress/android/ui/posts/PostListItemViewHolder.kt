@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
@@ -35,7 +36,7 @@ sealed class PostListItemViewHolder(
     parent: ViewGroup,
     private val config: PostViewHolderConfig,
     private val uiHelpers: UiHelpers
-) : androidx.recyclerview.widget.RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
     private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
     private val dateTextView: WPTextView = itemView.findViewById(R.id.date)

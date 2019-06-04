@@ -80,7 +80,7 @@ abstract class LifecycleOwnerViewHolder<T>(itemView: View) : ViewHolder(itemView
      */
     private val parentOnAttachStateChangeListener = object : OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(view: View) {
-            assert(view is androidx.recyclerview.widget.RecyclerView)
+            assert(view is RecyclerView)
 
             // Setting the state to DESTROYED removes the observers initialized in bind()
             lifecycleRegistry.markState(State.DESTROYED)
@@ -97,7 +97,7 @@ abstract class LifecycleOwnerViewHolder<T>(itemView: View) : ViewHolder(itemView
         itemView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(view: View) {
                 if (!hasAddedParentOnAttachStateChangeListener) {
-                    assert(view.parent is androidx.recyclerview.widget.RecyclerView)
+                    assert(view.parent is RecyclerView)
 
                     (view.parent as ViewGroup).addOnAttachStateChangeListener(parentOnAttachStateChangeListener)
                     hasAddedParentOnAttachStateChangeListener = true

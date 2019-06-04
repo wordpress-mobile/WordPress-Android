@@ -5,13 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 
 class DomainSuggestionsViewHolder(
     parent: ViewGroup,
     private val itemSelectionListener: (DomainSuggestionResponse?, Int) -> Unit
-) : androidx.recyclerview.widget.RecyclerView.ViewHolder(
+) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
 ) {
     private val domainName: TextView = itemView.findViewById(R.id.domain_name)

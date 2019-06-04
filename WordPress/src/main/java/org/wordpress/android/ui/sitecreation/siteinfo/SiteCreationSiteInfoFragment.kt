@@ -12,6 +12,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -28,7 +29,7 @@ import javax.inject.Inject
 class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var nonNullActivity: androidx.fragment.app.FragmentActivity
+    private lateinit var nonNullActivity: FragmentActivity
     private lateinit var viewModel: SiteCreationSiteInfoViewModel
 
     private lateinit var skipNextButton: AppCompatButton
