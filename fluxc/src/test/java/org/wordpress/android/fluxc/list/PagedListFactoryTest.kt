@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.list
 
-import android.arch.paging.DataSource.InvalidatedCallback
+import androidx.paging.DataSource.InvalidatedCallback
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify

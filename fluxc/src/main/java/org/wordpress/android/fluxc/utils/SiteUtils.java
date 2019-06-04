@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 

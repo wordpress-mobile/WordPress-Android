@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.discovery;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 

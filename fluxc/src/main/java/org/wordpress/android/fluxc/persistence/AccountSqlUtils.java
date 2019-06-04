@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.SubscriptionModelTable;
