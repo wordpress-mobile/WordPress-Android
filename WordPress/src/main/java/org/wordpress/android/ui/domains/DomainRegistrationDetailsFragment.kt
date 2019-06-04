@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
@@ -22,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.domain_registration_details_fragment.*
 import org.apache.commons.lang3.StringEscapeUtils
 import org.wordpress.android.R
@@ -48,7 +50,7 @@ import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel
 import javax.inject.Inject
 
-class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, OnCountrySelectedListener {
+class DomainRegistrationDetailsFragment : Fragment() {
     companion object {
         private const val PHONE_NUMBER_PREFIX = "+"
         private const val PHONE_NUMBER_CONNECTING_CHARACTER = "."
@@ -83,7 +85,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainRegistrationDetailsViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
         val domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS) as DomainProductDetails
@@ -403,14 +406,6 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         dialogFragment.show(fragmentManager, CountryPickerDialogFragment.TAG)
     }
 
-    override fun OnCountrySelected(country: SupportedDomainCountry) {
-        viewModel.onCountrySelected(country)
-    }
-
-    override fun onStateSelected(state: SupportedStateResponse) {
-        viewModel.onStateSelected(state)
-    }
-
     private fun showFormProgressIndicator() {
         form_progress_indicator.visibility = View.VISIBLE
     }
@@ -461,6 +456,8 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
     class StatePickerDialogFragment : DialogFragment() {
         private lateinit var states: ArrayList<SupportedStateResponse>
+        @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+        private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
             private const val EXTRA_STATES = "EXTRA_STATES"
@@ -482,12 +479,12 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                    .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
             builder.setItems(states.map { it.name }.toTypedArray()) { _, which ->
-                if (targetFragment != null && targetFragment is OnStateSelectedListener) {
-                    (targetFragment as OnStateSelectedListener).onStateSelected(states[which])
-                }
+                viewModel.onStateSelected(states[which])
             }
 
             builder.setPositiveButton(R.string.dialog_button_cancel) { dialog, _ ->
@@ -496,10 +493,17 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
 
             return builder.create()
         }
+
+        override fun onAttach(context: Context?) {
+            super.onAttach(context)
+            AndroidSupportInjection.inject(this)
+        }
     }
 
     class CountryPickerDialogFragment : DialogFragment() {
         private lateinit var countries: ArrayList<SupportedDomainCountry>
+        @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+        private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
         companion object {
             private const val EXTRA_COUNTRIES = "EXTRA_COUNTRIES"
@@ -521,12 +525,12 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                    .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
             builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
-                if (targetFragment != null && targetFragment is OnStateSelectedListener) {
-                    (targetFragment as OnCountrySelectedListener).OnCountrySelected(countries[which])
-                }
+                viewModel.onCountrySelected(countries[which])
             }
 
             builder.setPositiveButton(R.string.dialog_button_cancel) { dialog, _ ->
@@ -534,6 +538,11 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
             }
 
             return builder.create()
+        }
+
+        override fun onAttach(context: Context?) {
+            super.onAttach(context)
+            AndroidSupportInjection.inject(this)
         }
     }
 }
