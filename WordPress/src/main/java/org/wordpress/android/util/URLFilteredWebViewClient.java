@@ -10,14 +10,11 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.inject.Singleton;
-
 
 /**
  * WebViewClient that adds the ability of restrict URL loading (navigation) to a list of allowed URLs.
  * Generally used to disable links and navigation in admin pages.
  */
-@Singleton
 public class URLFilteredWebViewClient extends BaseWebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
     private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;

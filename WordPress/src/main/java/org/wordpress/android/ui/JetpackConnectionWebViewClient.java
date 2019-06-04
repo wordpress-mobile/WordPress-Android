@@ -10,9 +10,6 @@ import org.wordpress.android.util.BaseWebViewClient;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import javax.inject.Singleton;
-
-@Singleton
 class JetpackConnectionWebViewClient extends BaseWebViewClient {
     interface JetpackConnectionWebViewClientListener {
         void onRequiresWPComLogin(WebView webView, String redirectPage);
