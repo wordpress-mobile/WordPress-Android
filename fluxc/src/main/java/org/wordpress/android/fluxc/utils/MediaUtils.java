@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.utils;
 
-import android.support.annotation.NonNull;
-import android.support.media.ExifInterface;
+import androidx.annotation.NonNull;
+import androidx.exifinterface.media.ExifInterface;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.MediaModel;

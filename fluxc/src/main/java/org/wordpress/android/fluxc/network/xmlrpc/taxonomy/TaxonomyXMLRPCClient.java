@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc.taxonomy;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;

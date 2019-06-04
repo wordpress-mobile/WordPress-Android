@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.util.MapUtils;
 
