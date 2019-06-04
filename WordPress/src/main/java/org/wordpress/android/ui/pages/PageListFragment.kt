@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.pages
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +26,7 @@ class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
     private lateinit var viewModel: PageListViewModel
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     private val listStateKey = "list_state"
 
@@ -63,7 +63,7 @@ class PageListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         val listType = arguments?.getSerializable(typeKey) as PageListType
@@ -76,7 +76,7 @@ class PageListFragment : Fragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }

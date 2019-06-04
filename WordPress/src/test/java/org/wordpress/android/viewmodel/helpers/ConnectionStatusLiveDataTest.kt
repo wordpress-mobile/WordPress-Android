@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.helpers
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.LiveData
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.net.ConnectivityManager

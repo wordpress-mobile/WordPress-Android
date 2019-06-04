@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.annotation.NonNull
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.annotation.NonNull
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +65,7 @@ class HistoryListFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, LinearLayoutManager.VERTICAL, false)
+        empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
         actionable_empty_view.button.setText(R.string.button_retry)
         actionable_empty_view.button.setOnClickListener {

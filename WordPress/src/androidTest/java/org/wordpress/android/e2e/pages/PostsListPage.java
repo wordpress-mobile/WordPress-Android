@@ -1,7 +1,7 @@
 package org.wordpress.android.e2e.pages;
 
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.scrollToAndClickOnTextInRecyclerView;

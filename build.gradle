@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.automattic.android:fetchstyle:1.1'
     }
 }
@@ -106,5 +106,5 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    fluxCVersion = '542a28ca32714104489aab834abd6cdc4b0c1f02'
+    fluxCVersion = '6095f1e0852bd29f064da765261612b865456faa'
 }

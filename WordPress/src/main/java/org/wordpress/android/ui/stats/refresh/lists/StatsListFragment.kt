@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.LayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,9 +67,9 @@ class StatsListFragment : DaggerFragment() {
     private fun initializeViews(savedInstanceState: Bundle?) {
         val columns = resources.getInteger(R.integer.stats_number_of_columns)
         val layoutManager: LayoutManager = if (columns == 1) {
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         } else {
-            StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
+            StaggeredGridLayoutManager(columns, androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL)
         }
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
@@ -92,8 +92,8 @@ class StatsListFragment : DaggerFragment() {
             viewModel.onEmptyInsightsButtonClicked()
         }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1) && dy != 0) {
                     viewModel.onScrolledToBottom()
                 }
@@ -122,7 +122,7 @@ class StatsListFragment : DaggerFragment() {
         initializeViewModels(nonNullActivity)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
         val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
                 ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
                 ?: StatsSection.INSIGHTS
@@ -144,7 +144,7 @@ class StatsListFragment : DaggerFragment() {
         viewModel.start()
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun setupObservers(activity: androidx.fragment.app.FragmentActivity) {
         viewModel.uiModel.observe(this, Observer {
             if (it != null) {
                 when (it) {

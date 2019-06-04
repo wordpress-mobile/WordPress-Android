@@ -1,6 +1,6 @@
 package org.wordpress.android.models.networkresource
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Init
 import org.wordpress.android.models.networkresource.ListState.Loading

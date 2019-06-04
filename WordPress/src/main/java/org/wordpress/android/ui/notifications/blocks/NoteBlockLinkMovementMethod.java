@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;

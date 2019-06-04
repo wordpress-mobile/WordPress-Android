@@ -2,8 +2,8 @@ package org.wordpress.android.ui.publicize;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;

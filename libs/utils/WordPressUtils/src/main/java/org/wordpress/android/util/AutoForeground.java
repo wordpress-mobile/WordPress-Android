@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.util.AutoForeground.ServiceState;

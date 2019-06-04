@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.news
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -10,7 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.models.news.NewsItem
 
 class NewsViewHolder(parent: ViewGroup, private val listener: NewsCardListener) :
-        RecyclerView.ViewHolder(
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.news_card, parent, false)
         ) {
     interface NewsCardListener {

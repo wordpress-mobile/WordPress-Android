@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.domains
 
-import android.support.v7.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 

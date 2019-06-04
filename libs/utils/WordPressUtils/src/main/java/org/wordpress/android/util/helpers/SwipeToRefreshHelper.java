@@ -1,8 +1,9 @@
 package org.wordpress.android.util.helpers;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import androidx.annotation.ColorRes;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
@@ -17,7 +18,7 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
 
     /**
      * Helps {@link org.wordpress.android.util.widgets.CustomSwipeRefreshLayout} by passing the
-     * {@link android.support.v4.widget.SwipeRefreshLayout}, {@link RefreshListener}, and color.
+     * {@link SwipeRefreshLayout}, {@link RefreshListener}, and color.
      *
      * @param context {@link Context} in which this layout is used.
      * @param swipeRefreshLayout {@link CustomSwipeRefreshLayout} for refreshing the contents
@@ -35,7 +36,7 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
 
     /**
      * Helps {@link org.wordpress.android.util.widgets.CustomSwipeRefreshLayout} by passing the
-     * {@link android.support.v4.widget.SwipeRefreshLayout}, {@link RefreshListener}, and color(s).
+     * {@link SwipeRefreshLayout}, {@link RefreshListener}, and color(s).
      *
      * @param swipeRefreshLayout {@link CustomSwipeRefreshLayout} for refreshing the contents
      * of a view via a vertical swipe gesture.
@@ -52,7 +53,7 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
 
     /**
      * Initializes {@link org.wordpress.android.util.widgets.CustomSwipeRefreshLayout} by assigning
-     * {@link android.support.v4.widget.SwipeRefreshLayout}, {@link RefreshListener}, and color(s).
+     * {@link SwipeRefreshLayout}, {@link RefreshListener}, and color(s).
      *
      * @param swipeRefreshLayout {@link CustomSwipeRefreshLayout} for refreshing the contents
      * of a view via a vertical swipe gesture.

@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

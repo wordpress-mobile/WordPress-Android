@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v7.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View

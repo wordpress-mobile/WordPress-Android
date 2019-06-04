@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -65,11 +65,11 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun initializeViews() {
-        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
         viewModel.start()
 

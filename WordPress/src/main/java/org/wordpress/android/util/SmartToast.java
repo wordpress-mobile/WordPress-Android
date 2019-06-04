@@ -1,7 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.Gravity;
 import android.widget.Toast;
 

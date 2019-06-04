@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope

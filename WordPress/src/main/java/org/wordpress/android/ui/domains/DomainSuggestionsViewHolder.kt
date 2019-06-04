@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.domains
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 class DomainSuggestionsViewHolder(
     parent: ViewGroup,
     private val itemSelectionListener: (DomainSuggestionResponse?, Int) -> Unit
-) : RecyclerView.ViewHolder(
+) : androidx.recyclerview.widget.RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.domain_suggestion_list_item, parent, false)
 ) {
     private val domainName: TextView = itemView.findViewById(R.id.domain_name)

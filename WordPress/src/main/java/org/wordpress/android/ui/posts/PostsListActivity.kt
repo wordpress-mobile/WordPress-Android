@@ -1,21 +1,21 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.AppCompatSpinner
-import android.support.v7.widget.Toolbar
+import androidx.annotation.DrawableRes
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.appcompat.widget.Toolbar
 import android.view.HapticFeedbackConstants
 import android.view.Menu
 import android.view.MenuItem
@@ -61,7 +61,7 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var tabLayoutFadingEdge: View
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
-    private lateinit var pager: ViewPager
+    private lateinit var pager: androidx.viewpager.widget.ViewPager
     private lateinit var fab: FloatingActionButton
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {

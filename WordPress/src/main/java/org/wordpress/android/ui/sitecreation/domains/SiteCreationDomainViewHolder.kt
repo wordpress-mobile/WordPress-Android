@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import android.support.annotation.LayoutRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RadioButton
@@ -15,7 +15,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 
 sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(uiState: DomainsListItemUiState)
 
     class DomainSuggestionItemViewHolder(

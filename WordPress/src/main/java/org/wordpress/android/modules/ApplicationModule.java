@@ -1,7 +1,7 @@
 package org.wordpress.android.modules;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.content.Context;
 
 import org.wordpress.android.ui.news.LocalNewsService;

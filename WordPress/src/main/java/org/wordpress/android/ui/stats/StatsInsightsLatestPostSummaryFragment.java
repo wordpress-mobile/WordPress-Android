@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;

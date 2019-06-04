@@ -21,7 +21,7 @@
         android:text="@string/stats_views"
         android:textAllCaps="true"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/value"
         style="@style/StatsBlockColumnSmallValue"
         android:layout_width="match_parent"

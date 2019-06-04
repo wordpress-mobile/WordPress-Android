@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.plans
 
 import android.app.Activity
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -54,7 +54,7 @@ class PlansListAdapter(
         parent: ViewGroup,
         private val itemClickListener: (PlanOffersModel) -> Unit,
         val imageManager: ImageManager
-    ) : RecyclerView.ViewHolder(
+    ) : androidx.recyclerview.widget.RecyclerView.ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.plans_list_item, parent, false)
     ) {
         private val planImage: ImageView = itemView.findViewById(R.id.plan_image)

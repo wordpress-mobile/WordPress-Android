@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon

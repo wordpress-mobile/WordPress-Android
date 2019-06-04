@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.uploads
 
-import android.arch.lifecycle.Lifecycle.Event
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.OnLifecycleEvent
-import android.arch.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.Lifecycle.Event
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

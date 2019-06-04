@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.publicize;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
 

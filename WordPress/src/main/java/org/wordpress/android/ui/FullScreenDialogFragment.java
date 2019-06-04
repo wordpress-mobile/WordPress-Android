@@ -6,21 +6,21 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -219,7 +219,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
-     * Hide {@link android.support.v7.app.AppCompatActivity} bar when showing fullscreen dialog.
+     * Hide {@link androidx.appcompat.app.AppCompatActivity} bar when showing fullscreen dialog.
      */
     public void hideActivityBar() {
         FragmentActivity activity = getActivity();
@@ -386,7 +386,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
-     * Show {@link android.support.v7.app.AppCompatActivity} bar when hiding fullscreen dialog.
+     * Show {@link androidx.appcompat.app.AppCompatActivity} bar when hiding fullscreen dialog.
      */
     public void showActivityBar() {
         FragmentActivity activity = getActivity();

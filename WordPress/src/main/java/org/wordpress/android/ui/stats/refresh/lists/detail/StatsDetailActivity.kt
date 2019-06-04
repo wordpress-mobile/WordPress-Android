@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R

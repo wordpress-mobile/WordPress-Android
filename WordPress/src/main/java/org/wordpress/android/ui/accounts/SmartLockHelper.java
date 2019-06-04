@@ -3,9 +3,9 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 
 import com.google.android.gms.auth.api.Auth;

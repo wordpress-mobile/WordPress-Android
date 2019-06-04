@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.core.app.NotificationManagerCompat;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;

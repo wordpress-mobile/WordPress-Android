@@ -1,6 +1,6 @@
 package org.wordpress.android.viewmodel.giphy
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import android.net.Uri
 import com.giphy.sdk.core.models.Media
 

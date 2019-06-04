@@ -5,8 +5,6 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
-import android.support.v4.app.FragmentActivity
 import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
@@ -17,6 +15,8 @@ import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.ImageView.ScaleType.FIT_XY
 import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.BaseTarget
@@ -50,7 +50,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         if (this == null) {
             return false
         } else if (this !is Application) {
-            if (this is FragmentActivity) {
+            if (this is androidx.fragment.app.FragmentActivity) {
                 return !this.isDestroyed
             } else if (this is Activity) {
                 return !this.isDestroyed

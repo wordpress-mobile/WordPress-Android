@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/tags_edit_text_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,9 +23,9 @@
             android:hint="@string/tags_separate_with_commas"
             android:inputType="textMultiLine"
             android:textSize="@dimen/text_sz_large"/>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tags_suggestion_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

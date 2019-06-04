@@ -1,7 +1,7 @@
 package org.wordpress.android.support;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;

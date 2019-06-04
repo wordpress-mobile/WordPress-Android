@@ -13,8 +13,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -863,7 +863,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
             if (getActivity() != null) {
                 SharedPreferences prefs =
-                        android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        androidx.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
                 boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
                 if (shouldNotifyOfPendingDrafts) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);

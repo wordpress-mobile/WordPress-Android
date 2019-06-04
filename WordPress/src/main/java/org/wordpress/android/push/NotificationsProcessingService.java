@@ -8,8 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.RemoteInput;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.RemoteInput;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;

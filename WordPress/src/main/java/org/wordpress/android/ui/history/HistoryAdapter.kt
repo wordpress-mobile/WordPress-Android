@@ -2,8 +2,8 @@ package org.wordpress.android.ui.history
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.history.HistoryListItem.Footer

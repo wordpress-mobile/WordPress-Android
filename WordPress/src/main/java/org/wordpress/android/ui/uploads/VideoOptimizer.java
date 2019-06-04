@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.m4m.MediaComposer;
 import org.wordpress.android.WordPress;

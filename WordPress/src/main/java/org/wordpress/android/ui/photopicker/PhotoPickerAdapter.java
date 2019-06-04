@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +34,7 @@ import java.util.Comparator;
 import java.util.Locale;
 import java.util.Map;
 
-import static android.support.v7.widget.RecyclerView.NO_POSITION;
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
 public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {

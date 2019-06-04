@@ -2,11 +2,11 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.AccessibilityDelegateCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
-import android.support.v4.view.accessibility.AccessibilityRecordCompat;
-import android.support.v4.widget.NestedScrollView;
+import androidx.core.view.AccessibilityDelegateCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityRecordCompat;
+import androidx.core.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;

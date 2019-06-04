@@ -161,7 +161,7 @@
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.3.2&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -178,7 +178,7 @@
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.3.2&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -195,7 +195,7 @@
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.3.2&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -212,7 +212,7 @@
         priority="4"
         summary="Obsolete Gradle Dependency"
         explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.2.1&apos;"
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.3.2&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
@@ -365,7 +365,7 @@
         priority="3"
         summary="Using private resources"
         explanation="Private resources should not be referenced; the may not be present everywhere, and even where they are they may disappear without notice.&#xA;&#xA;To fix this, copy the resource into your own project instead."
-        errorLine1="                context.getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);"
+        errorLine1="                context.getResources().getDimensionPixelSize(com.google.android.material.R.dimen.design_fab_size_normal);"
         errorLine2="                                                                                            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/java/org/wordpress/android/util/AniUtils.java"

@@ -2,10 +2,10 @@ package org.wordpress.android.ui.domains
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
-import android.support.design.widget.TextInputLayout
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod

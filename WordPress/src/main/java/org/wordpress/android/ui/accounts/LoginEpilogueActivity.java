@@ -2,8 +2,8 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;

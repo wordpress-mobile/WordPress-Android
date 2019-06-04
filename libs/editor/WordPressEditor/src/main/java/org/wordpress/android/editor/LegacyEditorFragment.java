@@ -1,7 +1,7 @@
 package org.wordpress.android.editor;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,8 +13,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;

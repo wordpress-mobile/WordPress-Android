@@ -5,8 +5,8 @@ package org.wordpress.android.ui.notifications;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ListFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.ListFragment;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;

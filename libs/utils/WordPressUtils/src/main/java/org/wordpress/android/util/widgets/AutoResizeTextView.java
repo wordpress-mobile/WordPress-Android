@@ -2,8 +2,8 @@ package org.wordpress.android.util.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.core.view.ViewCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;

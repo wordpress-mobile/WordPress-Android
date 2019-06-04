@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.wordpress.android.R

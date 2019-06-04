@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import android.support.annotation.LayoutRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsView
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 
 sealed class SiteCreationVerticalsViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(uiState: VerticalsListItemUiState)
 
     class VerticalsSuggestionItemViewHolder(

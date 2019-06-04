@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty

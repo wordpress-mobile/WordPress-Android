@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.sitecreation.siteinfo
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.design.widget.TextInputEditText
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.AppCompatButton
+import androidx.annotation.LayoutRes
+import com.google.android.material.textfield.TextInputEditText
+import androidx.fragment.app.FragmentActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.widget.AppCompatButton
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -29,7 +29,7 @@ import javax.inject.Inject
 class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var nonNullActivity: FragmentActivity
+    private lateinit var nonNullActivity: androidx.fragment.app.FragmentActivity
     private lateinit var viewModel: SiteCreationSiteInfoViewModel
 
     private lateinit var skipNextButton: AppCompatButton

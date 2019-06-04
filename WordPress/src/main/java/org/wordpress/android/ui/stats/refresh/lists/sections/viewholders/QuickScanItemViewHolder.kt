@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.support.v7.widget.TooltipCompat
+import androidx.appcompat.widget.TooltipCompat
 import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R.id

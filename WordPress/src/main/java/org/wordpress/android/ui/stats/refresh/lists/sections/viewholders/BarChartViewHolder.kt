@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart

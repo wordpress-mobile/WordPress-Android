@@ -6,10 +6,10 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Outline;
 import android.os.Build;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.v4.view.ViewCompat;
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 data class StatsListItemDecoration(
@@ -12,8 +12,8 @@ data class StatsListItemDecoration(
     val lastSpacing: Int,
     val columnCount: Int
 ) :
-        RecyclerView.ItemDecoration() {
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
         val isFirst = parent.getChildAdapterPosition(view) == 0
         val isLast = parent.adapter?.let { parent.getChildAdapterPosition(view) == it.itemCount - 1 } ?: false

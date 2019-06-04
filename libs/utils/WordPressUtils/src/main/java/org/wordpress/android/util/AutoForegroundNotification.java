@@ -4,10 +4,10 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+import androidx.core.app.NotificationCompat;
 
 import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_FAILURE;
 import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_PROGRESS;

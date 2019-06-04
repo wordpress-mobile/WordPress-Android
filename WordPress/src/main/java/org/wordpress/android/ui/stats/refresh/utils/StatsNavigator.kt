@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.Intent
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
@@ -51,7 +51,7 @@ import javax.inject.Singleton
 @Singleton
 class StatsNavigator
 @Inject constructor(private val siteProvider: StatsSiteProvider) {
-    fun navigate(activity: FragmentActivity, target: NavigationTarget) {
+    fun navigate(activity: androidx.fragment.app.FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false)
             is ViewPost -> {

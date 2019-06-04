@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MarginLayoutParamsCompat;
+import androidx.core.view.MarginLayoutParamsCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;

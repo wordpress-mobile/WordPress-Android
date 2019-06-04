@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.notifications.utils
 
 import android.content.Intent
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.model.SiteModel
@@ -39,7 +39,7 @@ private const val DOMAIN_WP_COM = "wordpress.com"
 
 class FormattableContentClickHandler
 @Inject constructor(val siteStore: SiteStore) {
-    fun onClick(activity: FragmentActivity, clickedSpan: FormattableRange) {
+    fun onClick(activity: androidx.fragment.app.FragmentActivity, clickedSpan: FormattableRange) {
         if (activity.isFinishing) {
             return
         }
@@ -83,15 +83,15 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showBlogPreviewActivity(activity: FragmentActivity, siteId: Long) {
+    private fun showBlogPreviewActivity(activity: androidx.fragment.app.FragmentActivity, siteId: Long) {
         ReaderActivityLauncher.showReaderBlogPreview(activity, siteId)
     }
 
-    private fun showPostActivity(activity: FragmentActivity, siteId: Long, postId: Long) {
+    private fun showPostActivity(activity: androidx.fragment.app.FragmentActivity, siteId: Long, postId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(activity, siteId, postId)
     }
 
-    private fun showStatsActivityForSite(activity: FragmentActivity, siteId: Long, rangeType: FormattableRangeType) {
+    private fun showStatsActivityForSite(activity: androidx.fragment.app.FragmentActivity, siteId: Long, rangeType: FormattableRangeType) {
         val site = siteStore.getSiteBySiteId(siteId)
         if (site == null) {
             // One way the site can be null: new site created, receive a notification from this site,
@@ -103,7 +103,7 @@ class FormattableContentClickHandler
     }
 
     private fun showStatsActivityForSite(
-        activity: FragmentActivity,
+        activity: androidx.fragment.app.FragmentActivity,
         site: SiteModel,
         rangeType: FormattableRangeType
     ) {
@@ -125,7 +125,7 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showWebViewActivityForUrl(activity: FragmentActivity, url: String?, rangeType: FormattableRangeType) {
+    private fun showWebViewActivityForUrl(activity: androidx.fragment.app.FragmentActivity, url: String?, rangeType: FormattableRangeType) {
         if (url == null || url.isEmpty()) {
             AppLog.e(API, "Trying to open web view activity but the URL is missing for range type $rangeType")
             return
@@ -138,11 +138,11 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showReaderPostLikeUsers(activity: FragmentActivity, blogId: Long, postId: Long) {
+    private fun showReaderPostLikeUsers(activity: androidx.fragment.app.FragmentActivity, blogId: Long, postId: Long) {
         ReaderActivityLauncher.showReaderLikingUsers(activity, blogId, postId)
     }
 
-    private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
+    private fun showReaderCommentsList(activity: androidx.fragment.app.FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
         ReaderActivityLauncher.showReaderComments(activity, siteId, postId, commentId)
     }
 }

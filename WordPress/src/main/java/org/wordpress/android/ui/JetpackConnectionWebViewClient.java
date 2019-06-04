@@ -1,7 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 

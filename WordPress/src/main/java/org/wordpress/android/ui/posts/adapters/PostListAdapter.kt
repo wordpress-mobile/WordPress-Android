@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.posts.adapters
 
-import android.arch.paging.PagedListAdapter
+import androidx.paging.PagedListAdapter
 import android.content.Context
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

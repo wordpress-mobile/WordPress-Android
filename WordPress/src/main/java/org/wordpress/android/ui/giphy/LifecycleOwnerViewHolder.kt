@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.giphy
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Lifecycle.State
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.ViewHolder
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.State
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
@@ -80,7 +80,7 @@ abstract class LifecycleOwnerViewHolder<T>(itemView: View) : ViewHolder(itemView
      */
     private val parentOnAttachStateChangeListener = object : OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(view: View) {
-            assert(view is RecyclerView)
+            assert(view is androidx.recyclerview.widget.RecyclerView)
 
             // Setting the state to DESTROYED removes the observers initialized in bind()
             lifecycleRegistry.markState(State.DESTROYED)
@@ -97,7 +97,7 @@ abstract class LifecycleOwnerViewHolder<T>(itemView: View) : ViewHolder(itemView
         itemView.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(view: View) {
                 if (!hasAddedParentOnAttachStateChangeListener) {
-                    assert(view.parent is RecyclerView)
+                    assert(view.parent is androidx.recyclerview.widget.RecyclerView)
 
                     (view.parent as ViewGroup).addOnAttachStateChangeListener(parentOnAttachStateChangeListener)
                     hasAddedParentOnAttachStateChangeListener = true

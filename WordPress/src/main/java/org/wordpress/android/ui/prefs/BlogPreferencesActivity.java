@@ -3,8 +3,8 @@ package org.wordpress.android.ui.prefs;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.apache.commons.text.StringEscapeUtils;

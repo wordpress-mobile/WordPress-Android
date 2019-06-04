@@ -2,7 +2,7 @@ package org.wordpress.android.ui.pages
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R

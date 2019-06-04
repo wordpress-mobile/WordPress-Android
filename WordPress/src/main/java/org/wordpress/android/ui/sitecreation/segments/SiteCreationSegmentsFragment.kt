@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.sitecreation.segments
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -27,8 +27,8 @@ import javax.inject.Inject
 private const val KEY_LIST_STATE = "list_state"
 
 class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     private lateinit var viewModel: SiteCreationSegmentsViewModel
 
     private lateinit var errorLayout: ViewGroup
@@ -74,7 +74,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
 
     private fun initRecyclerView(rootView: ViewGroup) {
         recyclerView = rootView.findViewById(R.id.recycler_view)
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         initAdapter()

@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +50,7 @@ class StatsDetailFragment : DaggerFragment() {
         }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity) {
         val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
         statsSiteProvider.start(siteId)
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;

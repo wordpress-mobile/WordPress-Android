@@ -1,7 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.text.TextUtils;
 
 import org.wordpress.android.util.AppLog.T;

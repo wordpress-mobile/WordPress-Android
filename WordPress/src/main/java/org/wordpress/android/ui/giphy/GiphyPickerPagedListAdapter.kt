@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.giphy
 
-import android.arch.paging.PagedListAdapter
-import android.support.v7.util.DiffUtil.ItemCallback
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import android.view.ViewGroup
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.image.ImageManager

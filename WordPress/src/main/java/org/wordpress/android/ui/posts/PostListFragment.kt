@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.posts
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,14 +50,14 @@ class PostListFragment : Fragment() {
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
 
     private var swipeRefreshLayout: CustomSwipeRefreshLayout? = null
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
     private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
     private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
 
-    private lateinit var nonNullActivity: FragmentActivity
+    private lateinit var nonNullActivity: androidx.fragment.app.FragmentActivity
     private lateinit var site: SiteModel
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
@@ -200,7 +200,7 @@ class PostListFragment : Fragment() {
         val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.submitList(pagedListData)
         recyclerView?.post {
-            (recyclerView?.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+            (recyclerView?.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)?.let { layoutManager ->
                 if (layoutManager.findFirstVisibleItemPosition() < MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION) {
                     layoutManager.onRestoreInstanceState(recyclerViewState)
                 }

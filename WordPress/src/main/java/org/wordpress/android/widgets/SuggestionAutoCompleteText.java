@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;

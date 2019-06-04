@@ -1,7 +1,7 @@
 package org.wordpress.android.support
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View

@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.viewholders
 
-import android.support.annotation.CallSuper
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.StaggeredGridLayoutManager.LayoutParams
+import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.StaggeredGridLayoutManager.LayoutParams
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY

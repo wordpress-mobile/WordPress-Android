@@ -1,18 +1,18 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout.OnTabSelectedListener
-import android.support.design.widget.TabLayout.Tab
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewCompat
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayout.Tab
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.core.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -73,7 +73,7 @@ class StatsFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(activity: FragmentActivity) {
+    private fun initializeViews(activity: androidx.fragment.app.FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
         statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
@@ -95,7 +95,7 @@ class StatsFragment : DaggerFragment() {
         }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
+    private fun initializeViewModels(activity: androidx.fragment.app.FragmentActivity, isFirstStart: Boolean) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewModel::class.java)
 
         setupObservers(activity)
@@ -122,7 +122,7 @@ class StatsFragment : DaggerFragment() {
         }
     }
 
-    private fun getInitialTimeFrame(activity: FragmentActivity): StatsSection? {
+    private fun getInitialTimeFrame(activity: androidx.fragment.app.FragmentActivity): StatsSection? {
         return when (activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> INSIGHTS
             DAY -> DAYS
@@ -133,7 +133,7 @@ class StatsFragment : DaggerFragment() {
         }
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun setupObservers(activity: androidx.fragment.app.FragmentActivity) {
         viewModel.isRefreshing.observe(this, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -181,10 +181,10 @@ class StatsFragment : DaggerFragment() {
     }
 }
 
-class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class StatsPagerAdapter(val context: Context, val fm: androidx.fragment.app.FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getCount(): Int = statsSections.size
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return StatsListFragment.newInstance(statsSections[position])
     }
 

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.content.ActivityNotFoundException;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
