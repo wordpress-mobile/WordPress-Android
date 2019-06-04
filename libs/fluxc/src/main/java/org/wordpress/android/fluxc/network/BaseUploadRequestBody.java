@@ -1,7 +1,8 @@
 package org.wordpress.android.fluxc.network;
 
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;

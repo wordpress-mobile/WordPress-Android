@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.StringDef;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;

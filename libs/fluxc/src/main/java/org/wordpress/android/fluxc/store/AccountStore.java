@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.store;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.yarolegovich.wellsql.WellSql;
