@@ -15,6 +15,7 @@
     <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
     <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
     <string name="alternatively">Alternatively:</string>

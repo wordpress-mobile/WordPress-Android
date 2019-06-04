@@ -67,6 +67,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
     private static final String ARG_HIDE_LOGIN_BY_SITE_OPTION = "ARG_HIDE_LOGIN_BY_SITE_OPTION";
+    private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -81,11 +82,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected boolean mHasDismissedEmailHints;
     protected boolean mIsDisplayingEmailHints;
     protected boolean mHideLoginWithSiteOption;
+    protected String mLoginSiteUrl;
 
-    public static LoginEmailFragment newInstance(Boolean hideLoginWithSiteOption) {
+    public static LoginEmailFragment newInstance(Boolean hideLoginWithSiteOption, String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, hideLoginWithSiteOption);
+        args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
         return fragment;
     }
@@ -112,6 +115,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case FULL:
             case WPCOM_LOGIN_ONLY:
                 label.setText(R.string.enter_email_wordpress_com);
+                break;
+            case WOO_LOGIN_MODE:
+                label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
                 break;
             case JETPACK_STATS:
                 label.setText(R.string.login_to_to_connect_jetpack);
@@ -195,6 +201,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         switch (mLoginListener.getLoginMode()) {
             case FULL:
             case WPCOM_LOGIN_ONLY:
+            case WOO_LOGIN_MODE:
             case SHARE_INTENT:
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);
@@ -262,6 +269,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         Bundle args = getArguments();
         if (args != null) {
             mHideLoginWithSiteOption = args.getBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, false);
+            mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
