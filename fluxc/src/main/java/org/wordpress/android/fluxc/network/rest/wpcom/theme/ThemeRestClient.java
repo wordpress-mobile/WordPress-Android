@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.theme;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;

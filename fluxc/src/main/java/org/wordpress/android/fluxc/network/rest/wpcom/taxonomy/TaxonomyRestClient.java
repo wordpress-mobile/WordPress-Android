@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.taxonomy;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
