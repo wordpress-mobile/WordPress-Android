@@ -103,7 +103,6 @@ constructor(
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
-
             selectedDateProvider.selectDate(
                     selectedDate,
                     availableDates.takeLast(visibleBarCount),
