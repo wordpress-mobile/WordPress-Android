@@ -3,6 +3,7 @@ package org.wordpress.android.login;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
