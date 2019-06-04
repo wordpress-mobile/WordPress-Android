@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
+
 import androidx.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;

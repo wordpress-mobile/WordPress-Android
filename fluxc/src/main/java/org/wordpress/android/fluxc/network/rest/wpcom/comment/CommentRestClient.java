@@ -2,6 +2,9 @@ package org.wordpress.android.fluxc.network.rest.wpcom.comment;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
@@ -30,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 @Singleton
 public class CommentRestClient extends BaseWPComRestClient {

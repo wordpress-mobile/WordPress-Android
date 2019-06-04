@@ -2,8 +2,9 @@ package org.wordpress.android.fluxc.network;
 
 import android.net.Uri;
 import android.net.Uri.Builder;
-import androidx.annotation.NonNull;
 import android.util.Base64;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;

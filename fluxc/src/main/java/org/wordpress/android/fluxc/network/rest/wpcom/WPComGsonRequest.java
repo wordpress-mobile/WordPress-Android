@@ -1,7 +1,8 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;

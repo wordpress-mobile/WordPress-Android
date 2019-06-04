@@ -1,7 +1,8 @@
 package org.wordpress.android.fluxc.persistence;
 
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
