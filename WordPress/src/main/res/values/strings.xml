@@ -843,7 +843,7 @@
     <string name="stats_widget_color_light">Light</string>
     <string name="stats_widget_color_dark">Dark</string>
     <string name="stats_widget_select_your_site">Select your site</string>
-    <string name="stats_widget_select_colour">Colour</string>
+    <string name="stats_widget_select_color">Color</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
