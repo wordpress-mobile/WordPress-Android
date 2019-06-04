@@ -19,9 +19,6 @@ import org.wordpress.android.modules.AppComponentTest;
 import org.wordpress.android.modules.DaggerAppComponentTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
@@ -34,10 +31,6 @@ public class BaseTest {
 
     @Before
     public void setup() {
-        stubFor(get(urlEqualTo("/rest/v1.1/me/"))
-                .inScenario("Sign up")
-                .whenScenarioStateIs("No"));
-
         mAppContext =
                 (WordPress) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         mMockedAppComponent = DaggerAppComponentTest.builder()

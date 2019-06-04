@@ -27,10 +27,6 @@ public class SignUpTests extends BaseTest {
     @Before
     public void setUp() {
         logoutIfNecessary();
-
-        stubFor(get(urlEqualTo("/rest/v1.1/me/"))
-                .inScenario("Sign up")
-                .whenScenarioStateIs(Scenario.STARTED));
     }
 
     @Test
