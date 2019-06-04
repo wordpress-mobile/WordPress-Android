@@ -40,6 +40,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -171,6 +172,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             // TODO: This is temporary code to test out sign in flow milestone 1 effectiveness. If we move
             // forward with this flow, we will need to just call the XMLRPC discovery code and handle all the
             // edge cases such as HTTP auth and self-signed SSL.
+            mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
             mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
         } else {
             mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
@@ -386,13 +388,28 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         if (event.isError()) {
-            mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
-                    event.error.type.name(), event.error.message);
+            mAnalyticsListener.trackConnectedSiteInfoFailed(
+                    requestedSiteAddress,
+                    event.getClass().getSimpleName(),
+                    event.error.type.name(),
+                    event.error.message);
 
             AppLog.e(T.API, "onFetchedConnectSiteInfo has error: " + event.error.message);
 
             showError(R.string.invalid_site_url_message);
         } else {
+            // TODO: If we plan to keep this logic we should convert these labels to constants
+            HashMap<String, String> properties = new HashMap<>();
+            properties.put("url", event.info.url);
+            properties.put("urlAfterRedirects", event.info.urlAfterRedirects);
+            properties.put("exists", Boolean.toString(event.info.exists));
+            properties.put("hasJetpack", Boolean.toString(event.info.hasJetpack));
+            properties.put("isJetpackActive", Boolean.toString(event.info.isJetpackActive));
+            properties.put("isJetpackConnected", Boolean.toString(event.info.isJetpackConnected));
+            properties.put("isWordPress", Boolean.toString(event.info.isWordPress));
+            properties.put("isWPCom", Boolean.toString(event.info.isWPCom));
+            mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
+
             if (!event.info.exists) {
                 // Site does not exist
                 showError(R.string.invalid_site_url_message);
