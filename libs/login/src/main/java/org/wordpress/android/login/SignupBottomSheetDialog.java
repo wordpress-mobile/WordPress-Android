@@ -2,8 +2,8 @@ package org.wordpress.android.login;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
