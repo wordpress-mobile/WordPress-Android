@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.news
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.domains
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.text.HtmlCompat
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.domain_registration_result_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress

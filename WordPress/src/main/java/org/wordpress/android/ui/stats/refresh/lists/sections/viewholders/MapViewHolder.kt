@@ -2,8 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.annotation.SuppressLint
 import android.net.http.SslError
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.SslErrorHandler
@@ -13,6 +11,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay

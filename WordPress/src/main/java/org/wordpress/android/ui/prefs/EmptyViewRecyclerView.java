@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerView with setEmptyView method which displays a view when RecyclerView adapter is empty.

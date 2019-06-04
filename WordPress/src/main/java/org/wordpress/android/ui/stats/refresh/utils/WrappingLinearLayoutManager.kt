@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * This class should be used only when the RecyclerView's height is set to wrap_content.

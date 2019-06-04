@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.graphics.Bitmap;
+
 import androidx.collection.LruCache;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;

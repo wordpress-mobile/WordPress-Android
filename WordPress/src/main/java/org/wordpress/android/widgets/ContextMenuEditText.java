@@ -1,8 +1,9 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import androidx.appcompat.widget.AppCompatEditText;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * WPEditText which notifies when text is cut, copied, or pasted.

@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.giphy
 
+import android.view.View
+import android.view.View.OnAttachStateChangeListener
+import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import android.view.View
-import android.view.View.OnAttachStateChangeListener
-import android.view.ViewGroup
 
 /**
  * A [ViewHolder] that is also a [LifecycleOwner]

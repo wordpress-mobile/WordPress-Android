@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 class ItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter) : ItemTouchHelper.Callback() {
     override fun isLongPressDragEnabled(): Boolean {

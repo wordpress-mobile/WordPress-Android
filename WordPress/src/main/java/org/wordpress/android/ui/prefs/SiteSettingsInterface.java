@@ -3,11 +3,12 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Handler;
+import android.text.Html;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
-import android.text.Html;
-import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

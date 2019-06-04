@@ -2,11 +2,12 @@ package org.wordpress.android.ui.reader;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;

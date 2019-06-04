@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.NoConnectionError;

@@ -1,6 +1,7 @@
 package org.wordpress.android.support;
 
 import androidx.test.espresso.IdlingResource;
+
 import static junit.framework.Assert.fail;
 
 public abstract class WPIdler implements IdlingResource {

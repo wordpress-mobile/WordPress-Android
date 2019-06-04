@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+
 import androidx.core.view.ViewCompat;
 
 import javax.inject.Inject;

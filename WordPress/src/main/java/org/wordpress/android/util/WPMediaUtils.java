@@ -10,12 +10,13 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.ContextThemeWrapper;
+import android.view.ViewConfiguration;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import android.view.ContextThemeWrapper;
-import android.view.ViewConfiguration;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;

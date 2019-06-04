@@ -1,6 +1,7 @@
 package org.wordpress.android.util.helpers;
 
 import android.content.Context;
+
 import androidx.annotation.ColorRes;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;

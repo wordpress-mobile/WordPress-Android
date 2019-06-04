@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import androidx.appcompat.widget.TooltipCompat
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.TooltipCompat
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.Intent
-import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import android.graphics.Rect
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 data class StatsListItemDecoration(

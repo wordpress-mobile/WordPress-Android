@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments;
 
 import android.os.Parcelable;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;

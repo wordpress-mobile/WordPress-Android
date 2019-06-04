@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.giphy
 
-import androidx.lifecycle.Observer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout

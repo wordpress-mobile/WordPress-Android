@@ -2,6 +2,7 @@ package org.wordpress.android.ui.publicize.services;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 

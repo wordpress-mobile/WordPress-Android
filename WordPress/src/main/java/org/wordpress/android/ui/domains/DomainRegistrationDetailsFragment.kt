@@ -2,10 +2,6 @@ package org.wordpress.android.ui.domains
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AlertDialog
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
@@ -15,6 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.domain_registration_details_fragment.*
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe

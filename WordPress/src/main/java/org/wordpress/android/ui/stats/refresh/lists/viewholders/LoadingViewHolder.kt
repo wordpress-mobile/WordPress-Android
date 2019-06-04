@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.viewholders
 
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter

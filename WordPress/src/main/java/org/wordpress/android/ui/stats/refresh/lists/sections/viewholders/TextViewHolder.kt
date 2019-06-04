@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.content.Context
 import android.graphics.Typeface
-import androidx.core.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextPaint
@@ -12,6 +11,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text

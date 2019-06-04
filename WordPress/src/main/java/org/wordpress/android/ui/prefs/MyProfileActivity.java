@@ -2,10 +2,11 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.MenuItem;
+import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;

@@ -1,6 +1,7 @@
 package org.wordpress.android.login;
 
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 

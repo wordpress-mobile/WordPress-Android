@@ -3,10 +3,11 @@ package org.wordpress.android.editor;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
 
 public class RippleToggleButton extends ToggleButton {
     private static final int FRAME_RATE = 10;

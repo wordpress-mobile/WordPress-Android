@@ -8,9 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
+
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;

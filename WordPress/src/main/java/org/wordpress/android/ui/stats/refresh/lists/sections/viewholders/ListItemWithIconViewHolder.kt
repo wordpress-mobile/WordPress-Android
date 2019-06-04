@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout

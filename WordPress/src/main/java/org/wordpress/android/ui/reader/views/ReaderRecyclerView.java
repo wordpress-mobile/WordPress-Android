@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
 
 public class ReaderRecyclerView extends RecyclerView {
     public ReaderRecyclerView(Context context) {

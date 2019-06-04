@@ -1,9 +1,10 @@
 package org.wordpress.android.util.widgets;
 
 import android.content.Context;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;

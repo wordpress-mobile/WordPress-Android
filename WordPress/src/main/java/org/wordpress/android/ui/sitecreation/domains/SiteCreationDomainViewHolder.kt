@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import androidx.annotation.LayoutRes
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable

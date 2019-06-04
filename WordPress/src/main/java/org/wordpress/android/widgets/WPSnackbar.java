@@ -1,16 +1,18 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AccessibilityUtils;

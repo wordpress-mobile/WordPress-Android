@@ -3,10 +3,11 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.net.Uri;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import android.text.TextUtils;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;

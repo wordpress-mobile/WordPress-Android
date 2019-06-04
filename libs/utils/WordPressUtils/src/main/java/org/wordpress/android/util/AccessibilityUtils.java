@@ -1,8 +1,9 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
-import com.google.android.material.snackbar.Snackbar;
 import android.view.accessibility.AccessibilityManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import static android.content.Context.ACCESSIBILITY_SERVICE;
 

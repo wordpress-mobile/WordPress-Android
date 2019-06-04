@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
+import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import android.view.View
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART

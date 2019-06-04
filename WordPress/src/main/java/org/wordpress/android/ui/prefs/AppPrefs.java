@@ -2,8 +2,9 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;

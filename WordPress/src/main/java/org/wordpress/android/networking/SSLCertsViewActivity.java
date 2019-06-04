@@ -1,6 +1,7 @@
 package org.wordpress.android.networking;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.ActionBar;
 
 import org.wordpress.android.R;

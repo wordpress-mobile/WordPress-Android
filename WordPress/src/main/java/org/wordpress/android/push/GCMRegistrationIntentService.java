@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
-import android.text.TextUtils;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 

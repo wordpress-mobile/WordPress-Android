@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications.utils
 
 import android.content.Intent
-import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,8 +24,8 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.OldStatsActivity
+import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsViewAllActivity
 import org.wordpress.android.ui.stats.StatsViewType

@@ -1,6 +1,7 @@
 package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
+
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.domains
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

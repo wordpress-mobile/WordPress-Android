@@ -2,10 +2,11 @@ package org.wordpress.android.e2e.flows;
 
 import android.content.Intent;
 import android.net.Uri;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.rule.ActivityTestRule;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matchers;
 import org.wordpress.android.R;

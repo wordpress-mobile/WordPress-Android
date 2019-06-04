@@ -1,7 +1,8 @@
 package org.wordpress.android.support;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

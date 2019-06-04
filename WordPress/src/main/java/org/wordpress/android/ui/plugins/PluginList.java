@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.plugins;
 
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 

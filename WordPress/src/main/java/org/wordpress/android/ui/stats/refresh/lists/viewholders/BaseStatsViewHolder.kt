@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.stats.refresh.lists.viewholders
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.recyclerview.widget.StaggeredGridLayoutManager.LayoutParams
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType

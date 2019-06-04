@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
 
 class InsightsManagementActivity : AppCompatActivity() {

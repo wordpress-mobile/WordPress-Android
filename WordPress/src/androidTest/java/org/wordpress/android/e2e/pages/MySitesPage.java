@@ -1,8 +1,9 @@
 package org.wordpress.android.e2e.pages;
 
-import androidx.test.espresso.ViewInteraction;
-import androidx.appcompat.widget.Toolbar;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.test.espresso.ViewInteraction;
 
 import org.wordpress.android.R;
 

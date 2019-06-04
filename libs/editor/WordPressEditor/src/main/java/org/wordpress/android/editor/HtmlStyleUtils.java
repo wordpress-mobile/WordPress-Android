@@ -3,12 +3,13 @@ package org.wordpress.android.editor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
-import androidx.annotation.NonNull;
 import android.text.Spannable;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog;
 

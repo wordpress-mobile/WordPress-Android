@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+
 import androidx.annotation.Nullable;
 
 import java.util.Locale;

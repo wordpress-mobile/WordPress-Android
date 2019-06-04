@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
-import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem

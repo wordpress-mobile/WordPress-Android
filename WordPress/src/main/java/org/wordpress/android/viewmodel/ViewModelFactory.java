@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
 
 import java.util.Map;
 

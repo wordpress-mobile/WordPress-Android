@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import android.view.ViewGroup
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewHolder.VerticalsErrorViewHolder
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewHolder.VerticalsSuggestionCustomItemViewHolder
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewHolder.VerticalsSuggestionItemViewHolder

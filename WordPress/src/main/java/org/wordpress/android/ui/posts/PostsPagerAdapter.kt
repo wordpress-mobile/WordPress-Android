@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.posts
 
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentStatePagerAdapter
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import java.lang.ref.WeakReference
