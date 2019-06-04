@@ -214,7 +214,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 mEmailSnackbar = Snackbar
                         .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.button_discard), clickListener);
-                TextView textView = mEmailSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+                TextView textView =
+                        mEmailSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
                 textView.setMaxLines(4);
             }
             // instead of creating a new snackbar, update the current one to avoid the jumping animation
