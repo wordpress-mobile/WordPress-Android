@@ -21,7 +21,7 @@ open class BaseWebViewClient(
     override fun onPageFinished(view: WebView, url: String) {
         super.onPageFinished(view, url)
         if (!errorReceived) {
-            baseWebViewClientListener.onPageLoaded()
+            baseWebViewClientListener.onWebViewPageLoaded()
         }
     }
 
@@ -33,12 +33,12 @@ open class BaseWebViewClient(
         // > Thus, it is recommended to perform minimum required work in this callback.
         if (request?.isForMainFrame == true && requestedUrl == request.url.toString()) {
             errorReceived = true
-            baseWebViewClientListener.onError()
+            baseWebViewClientListener.onWebViewReceivedError()
         }
     }
 
     interface BaseWebViewClientListener {
-        fun onPageLoaded()
-        fun onError()
+        fun onWebViewPageLoaded()
+        fun onWebViewReceivedError()
     }
 }

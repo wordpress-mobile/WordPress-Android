@@ -336,12 +336,12 @@ public class WPWebViewActivity extends WebViewActivity implements BaseWebViewCli
     }
 
     @Override
-    public void onPageLoaded() {
+    public void onWebViewPageLoaded() {
         mViewModel.onUrlLoaded();
     }
 
     @Override
-    public void onError() {
+    public void onWebViewReceivedError() {
         mViewModel.onError();
     }
 

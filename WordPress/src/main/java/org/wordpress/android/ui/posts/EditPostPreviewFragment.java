@@ -65,10 +65,10 @@ public class EditPostPreviewFragment extends Fragment {
         // Listener is not used, this preview is only used to display local data and will be dropped soon.
         WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken(),
                 new BaseWebViewClientListener() {
-                    @Override public void onPageLoaded() {
+                    @Override public void onWebViewPageLoaded() {
                     }
 
-                    @Override public void onError() {
+                    @Override public void onWebViewReceivedError() {
                     }
                 });
         mWebView.setWebViewClient(client);

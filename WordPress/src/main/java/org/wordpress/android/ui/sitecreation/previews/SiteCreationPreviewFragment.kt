@@ -275,11 +275,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
     }
 
-    override fun onPageLoaded() {
+    override fun onWebViewPageLoaded() {
         viewModel.onUrlLoaded()
     }
 
-    override fun onError() {
+    override fun onWebViewReceivedError() {
         viewModel.showFullscreenErrorWithDelay()
     }
 
