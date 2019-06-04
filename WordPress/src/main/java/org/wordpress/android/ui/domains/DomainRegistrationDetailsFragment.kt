@@ -223,12 +223,10 @@ class DomainRegistrationDetailsFragment : Fragment(), OnStateSelectedListener, O
             }
         })
 
-        viewModel.domainContactDetails.observe(this, object : Observer<DomainContactModel> {
-            override fun onChanged(domainContactModel: DomainContactModel?) {
+        viewModel.domainContactDetails.observe(this, Observer<DomainContactModel> { domainContactModel ->
+            val currentModel = contactFormToDomainContactModel()
+            if (currentModel != domainContactModel) {
                 populateContactForm(domainContactModel!!)
-                // we need to remove observer to avoid loop when data is sent back to ViewModel
-                // after initial load we let EditText maintain it's content
-                viewModel.domainContactDetails.removeObserver(this)
             }
         })
 
