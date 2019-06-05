@@ -2,17 +2,18 @@ package org.wordpress.android.e2e.flows;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.rule.ActivityTestRule;
+
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.rule.ActivityTestRule;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.withHint;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withHint;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
