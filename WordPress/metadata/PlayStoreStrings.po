@@ -11,20 +11,18 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_126"
+msgid ""
+"12.6:\n"
+"* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.\n"
+"* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.\n"
+msgstr ""
+
 msgctxt "release_note_125"
 msgid ""
 "12.5:\n"
 "Better offline support: If you draft offline, drafts automatically upload to the server when you log in.\n"
 "Clearer stats: Navigate to a post’s detailed data by clicking on its title on the Stats screen. The current day’s stats appear in gray to help you remember that they’re not final.\n"
-msgstr ""
-
-msgctxt "release_note_124"
-msgid ""
-"12.4:\n"
-"* Explore the updated blog posts list screen: it can sort posts by publication status and filter them by author, and includes a compact-view toggle.\n"
-"* Focus on the most important stats in the Insights screen — tap the Edit button to customize your view.\n"
-"* Add a soundtrack to your Reader experience! Audio embeds are now playable there.\n"
-"* It’s always nice to save space on your device, so you’ll love the (significantly) smaller download size of the app.\n"
 msgstr ""
 
 msgctxt "sample_post_content"

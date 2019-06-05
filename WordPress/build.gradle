@@ -121,6 +121,14 @@ android {
         // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
+
+    bundle {
+        language {
+            // Don't split language resources for App Bundles.
+            // This is required to switch language in app.
+            enableSplit = false
+        }
+    }
 }
 
 // allows us to use cool things like @Parcelize annotations
