@@ -2,14 +2,16 @@ package org.wordpress.android.login;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import org.wordpress.android.login.widgets.WPBottomSheetDialog;
+
+import androidx.annotation.NonNull;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     public SignupBottomSheetDialog(@NonNull final Context context,

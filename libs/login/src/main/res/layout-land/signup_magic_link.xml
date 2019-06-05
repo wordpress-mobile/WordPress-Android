@@ -59,7 +59,7 @@
         android:paddingTop="@dimen/margin_medium_large"
         tools:ignore="InconsistentLayout">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_magic_link_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:text="@string/open_mail"
             style="@style/LoginTheme.Button.Primary" >
-        </android.support.v7.widget.AppCompatButton>
+        </androidx.appcompat.widget.AppCompatButton>
 
     </RelativeLayout>
 

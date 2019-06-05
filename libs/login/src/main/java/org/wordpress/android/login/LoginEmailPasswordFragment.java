@@ -2,9 +2,6 @@ package org.wordpress.android.login;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,8 +14,8 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
+import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -31,6 +28,9 @@ import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import dagger.android.support.AndroidSupportInjection;
 
 public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
