@@ -1,20 +1,19 @@
 package org.wordpress.android.ui.activitylog.list
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -42,7 +41,7 @@ class ActivityLogListFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, LinearLayoutManager.VERTICAL, false)
+        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipe_refresh_layout) {
             if (NetworkUtils.checkConnection(nonNullActivity)) {
@@ -123,10 +122,10 @@ class ActivityLogListFragment : Fragment() {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
             dialog.initialize(it,
-                    getString(string.activity_log_rewind_site),
-                    getString(string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
-                    getString(string.activity_log_rewind_site),
-                    getString(string.cancel))
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.cancel))
             dialog.show(fragmentManager, it)
         }
     }

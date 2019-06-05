@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -212,7 +214,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 mEmailSnackbar = Snackbar
                         .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.button_discard), clickListener);
-                TextView textView = mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView =
+                        mEmailSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
                 textView.setMaxLines(4);
             }
             // instead of creating a new snackbar, update the current one to avoid the jumping animation

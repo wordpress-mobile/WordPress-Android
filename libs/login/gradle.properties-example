@@ -4,3 +4,6 @@
 wp.debug.wpcom_login_email =
 wp.debug.wpcom_login_username =
 wp.debug.wpcom_login_password =
+
+android.useAndroidX=true
+android.enableJetifier=true

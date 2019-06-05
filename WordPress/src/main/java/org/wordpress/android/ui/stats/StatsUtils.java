@@ -2,8 +2,9 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;

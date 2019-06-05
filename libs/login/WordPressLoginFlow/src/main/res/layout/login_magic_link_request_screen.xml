@@ -62,7 +62,7 @@
                 android:text="@string/send_link"
                 android:theme="@style/LoginTheme.Button"/>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/login_enter_password"
                 style="@style/LoginTheme.Button.Secondary"
                 android:layout_width="wrap_content"

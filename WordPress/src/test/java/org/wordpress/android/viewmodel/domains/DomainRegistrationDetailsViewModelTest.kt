@@ -1,6 +1,6 @@
 package org.wordpress.android.viewmodel.domains
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.times

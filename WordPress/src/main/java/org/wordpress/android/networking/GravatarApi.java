@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -22,6 +24,7 @@ import okhttp3.Response;
 
 public class GravatarApi {
     public static final String API_BASE_URL = "https://api.gravatar.com/v1/";
+    private static final int DEFAULT_TIMEOUT = 15000;
 
     public interface GravatarUploadListener {
         void onSuccess();
@@ -31,7 +34,14 @@ public class GravatarApi {
 
     private static OkHttpClient createClient(final String accessToken) {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
-
+        // This should help with recovery from the SocketTimeoutException
+        // https://github.com/square/okhttp/issues/3146#issuecomment-311158567
+        httpClientBuilder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                         .retryOnConnectionFailure(true)
+                         .readTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS)
+                         .connectionPool(
+                                 new ConnectionPool(0, 1, TimeUnit.NANOSECONDS)
+                                        );
         // // uncomment the following line to add logcat logging
         // httpClientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
 

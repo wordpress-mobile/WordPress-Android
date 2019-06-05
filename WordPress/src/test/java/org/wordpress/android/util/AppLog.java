@@ -1,6 +1,6 @@
 package org.wordpress.android.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * simple wrapper for Android log calls, enables recording and displaying log

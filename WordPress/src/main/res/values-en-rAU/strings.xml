@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-08 10:19:04+0000
+Translation-Revision-Date: 2019-05-23 18:30:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="history_fetching_revisions">Fetching revisions…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_uploading_draft">Your draft is uploading</string>
+    <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_published">Published</string>
     <string name="post_list_author_everyone">Everyone</string>
@@ -93,7 +98,6 @@ Language: en_AU
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Unsupported Block</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Paste URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">CHOOSE IMAGE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Failed to insert media.\nPlease tap for options.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Clear All Settings</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt Text</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress Media Library</string>

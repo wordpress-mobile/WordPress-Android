@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 10:54:10+0000
+Translation-Revision-Date: 2019-05-29 13:54:10+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="history_fetching_revisions">Eski srümler getiriliyor…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Ortam ekleme başarısız.\nSeçenekler için dokunun.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Ortam eklenemedi.\nTekrar denemek için lütfen dokunun.</string>
+    <string name="editor_uploading_draft">Taslağınız karşıya yükleniyor</string>
+    <string name="post_uploading_draft">Taslak karşıya yükleniyor</string>
     <string name="post_list_drafts">Taslaklar</string>
     <string name="post_list_published">Yayımlanmış</string>
     <string name="post_list_author_everyone">Herkes</string>
     <string name="post_list_author_me">Ben</string>
+    <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
+    <string name="backdated_for">Geriye dönüldü: %s</string>
     <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler Insights (İçgörüler) adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
     <string name="stats_insights_add_insights_header">Insights Ekle</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. İçgörülerinizi aşağıya ekleyin ve düzenleyin.</string>
@@ -91,7 +98,6 @@ Language: tr
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Desteklenmeyen Blok</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL\'yi Yapıştır</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">GÖRSEL SEÇ</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280"> Tüm Ayarları Temizle</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alternatif Metin</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress Ortam Kitaplığı</string>
@@ -267,6 +273,7 @@ Language: tr
     <string name="stats_followers_count_message">Toplam %1$s takipçisi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_manage_insights">Analizleri Yönet</string>
     <string name="stats_empty_insights_title">Henüz içgörü eklenmedi</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
     <string name="menu_debug">Hata ayıklama menüsü</string>

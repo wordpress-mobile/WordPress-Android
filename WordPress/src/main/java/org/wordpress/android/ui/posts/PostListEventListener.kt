@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.posts
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import de.greenrobot.event.EventBus
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
@@ -63,7 +63,7 @@ class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
             // Fetched post list event will be handled by OnListChanged
@@ -105,7 +105,7 @@ class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             featuredMediaChanged(*event.mediaList.map { it.mediaId }.toLongArray())
@@ -114,7 +114,7 @@ class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
@@ -126,7 +126,7 @@ class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onMediaUploaded(event: OnMediaUploaded) {
         if (event.isError || event.canceled) {
             return
@@ -142,6 +142,7 @@ class PostListEventListener(
     // EventBus Events
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadErrorEvent) {
         EventBus.getDefault().removeStickyEvent(event)
         if (event.post != null) {
@@ -152,6 +153,7 @@ class PostListEventListener(
     }
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaSuccessEvent) {
         EventBus.getDefault().removeStickyEvent(event)
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
@@ -165,6 +167,7 @@ class PostListEventListener(
      * Upload started, reload so correct status on uploading post appears
      */
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
             uploadStatusChanged(event.post.id)
@@ -175,6 +178,7 @@ class PostListEventListener(
      * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
      */
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
             uploadStatusChanged(event.post.id)
@@ -182,11 +186,13 @@ class PostListEventListener(
     }
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
         uploadStatusChanged(event.media.localPostId)
     }
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status

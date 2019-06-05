@@ -35,7 +35,7 @@
             android:src="@drawable/ic_search_white_24dp" >
         </ImageView>
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"
             android:background="@android:color/white"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -48,7 +48,7 @@
             android:paddingTop="@dimen/margin_extra_large"
             android:textColorHint="@color/neutral_200"
             app:theme="@style/LoginTheme.EditText" >
-        </android.support.design.widget.TextInputEditText>
+        </com.google.android.material.textfield.TextInputEditText>
 
         <ProgressBar
             android:id="@+id/progress"
@@ -69,12 +69,12 @@
         android:layout_width="match_parent" >
     </View>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/suggestions"
         android:background="@android:color/white"
         android:layout_height="fill_parent"
         android:layout_width="match_parent"
         android:scrollbars="vertical" >
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

@@ -1,20 +1,19 @@
 package org.wordpress.android.ui.posts
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
 import android.content.Intent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
@@ -44,7 +43,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostFetcher
@@ -68,11 +66,10 @@ class PostListMainViewModel @Inject constructor(
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
-    private val localDraftUploadStarter: LocalDraftUploadStarter,
-    private val connectionStatus: LiveData<ConnectionStatus>,
     private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val localDraftUploadStarter: LocalDraftUploadStarter
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -217,9 +214,7 @@ class PostListMainViewModel @Inject constructor(
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
-        connectionStatus.observe(this, Observer {
-            localDraftUploadStarter.uploadLocalDrafts(scope = this@PostListMainViewModel, site = site)
-        })
+        localDraftUploadStarter.queueUploadFromSite(site)
     }
 
     override fun onCleared() {
@@ -278,7 +273,7 @@ class PostListMainViewModel @Inject constructor(
     fun showTargetPost(targetPostId: Int) {
         val postModel = postStore.getPostByLocalPostId(targetPostId)
         if (postModel == null) {
-            _snackBarMessage.value = SnackbarMessageHolder(string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
         } else {
             launch(mainDispatcher) {
                 val targetTab = PostListType.fromPostStatus(PostStatus.fromPost(postModel))
@@ -368,7 +363,7 @@ class PostListMainViewModel @Inject constructor(
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 true
             } else {
-                _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
+                _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
                 false
             }
 

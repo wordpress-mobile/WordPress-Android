@@ -6,14 +6,46 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "found": 1,
+            "found": 3,
             "terms": [
+                {
+                    "ID": 21452108,
+                    "name": "Android Test",
+                    "slug": "android-test",
+                    "description": "",
+                    "post_count": 6,
+                    "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/android-test/feed/",
+                    "parent": 0,
+                    "meta": {
+                        "links": {
+                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:android-test",
+                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:android-test/help",
+                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                        }
+                    }
+                },
+                {
+                    "ID": 43134051,
+                    "name": "iOS Test",
+                    "slug": "ios-test",
+                    "description": "",
+                    "post_count": 25,
+                    "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/ios-test/feed/",
+                    "parent": 0,
+                    "meta": {
+                        "links": {
+                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:ios-test",
+                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:ios-test/help",
+                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                        }
+                    }
+                },
                 {
                     "ID": 1,
                     "name": "Uncategorized",
                     "slug": "uncategorized",
                     "description": "",
-                    "post_count": 2,
+                    "post_count": 159,
                     "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/uncategorized/feed/",
                     "parent": 0,
                     "meta": {

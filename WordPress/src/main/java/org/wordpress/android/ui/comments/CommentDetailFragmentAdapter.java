@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.comments;
 
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
