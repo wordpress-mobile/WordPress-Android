@@ -32,7 +32,7 @@
         android:layout_below="@+id/toolbar"
         android:visibility="gone"
         app:aevButton="@string/retry"
-        app:aevImage="@drawable/ic_cloud_illo"
+        app:aevImage="@drawable/img_illustration_cloud_off_152dp"
         app:aevTitle="@string/error_browser_no_network"
         app:aevSubtitle="@string/error_network_connection"
         tools:visibility="visible">
