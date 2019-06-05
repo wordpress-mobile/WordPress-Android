@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.store;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
