@@ -41,6 +41,7 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -91,8 +92,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
 
@@ -372,7 +371,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         mDispatcher.register(this);
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override

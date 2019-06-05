@@ -4,11 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-
-import de.greenrobot.event.EventBus;
 
 /*
  * global network connection change receiver - declared in the manifest to monitor

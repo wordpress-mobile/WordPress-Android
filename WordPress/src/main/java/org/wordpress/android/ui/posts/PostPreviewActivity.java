@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -53,8 +54,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
@@ -326,6 +325,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
         if (event.post.getLocalSiteId() == mSite.getId()) {
             showProgress();

@@ -77,7 +77,11 @@ class GiphyPickerDataSource(
 
         apiClient.search(searchQuery, gif, params.requestedLoadSize, startPosition, null, null) { response, error ->
             if (response != null) {
-                callback.onResult(response.data.toGiphyMediaViewModels(), startPosition, response.pagination.totalCount)
+                callback.onResult(
+                        response.data.toGiphyMediaViewModels(),
+                        startPosition,
+                        response.pagination?.totalCount ?: response.data.size
+                )
             } else {
                 initialLoadError = error
                 callback.onResult(emptyList(), startPosition, 0)
