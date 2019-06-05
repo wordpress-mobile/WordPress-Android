@@ -227,6 +227,7 @@
     <dimen name="stats_widget_dialog_icon_top_bottom_margin">20dp</dimen>
     <dimen name="stats_widget_dialog_title_left_margin">80dp</dimen>
     <dimen name="stats_widget_dialog_list_height">288dp</dimen>
+    <dimen name="stats_widget_color_selector_padding">28dp</dimen>
 
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
