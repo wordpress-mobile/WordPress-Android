@@ -53,71 +53,12 @@ val DAY_VIEW_RESPONSE_MAP = mapOf(
                 TOTAL_VIEWS
         )
 )
-val DAY_POST_AND_PAGE_VIEWS_RESPONSE = PostAndPageViewsResponse(
+val POST_AND_PAGE_VIEWS_RESPONSE = PostAndPageViewsResponse(
         DATE,
         DAY_VIEW_RESPONSE_MAP,
         DAY_GRANULARITY
 )
 
-val WEEK_POST_VIEW_RESPONSE = PostViewsResponse(
-        POST_ID,
-        POST_TITLE,
-        DAY_GRANULARITY,
-        POST_URL,
-        POST_VIEWS
-)
-val WEEK_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { WEEK_POST_VIEW_RESPONSE }
-val WEEK_VIEW_RESPONSE_MAP = mapOf(
-        DATE.toString() to ViewsResponse(
-                WEEK_POST_VIEW_RESPONSE_LIST,
-                TOTAL_VIEWS
-        )
-)
-val WEEK_POST_AND_PAGE_VIEWS_RESPONSE = PostAndPageViewsResponse(
-        DATE,
-        WEEK_VIEW_RESPONSE_MAP,
-        WEEK_GRANULARITY
-)
-
-val MONTH_POST_VIEW_RESPONSE = PostViewsResponse(
-        POST_ID,
-        POST_TITLE,
-        DAY_GRANULARITY,
-        POST_URL,
-        POST_VIEWS
-)
-val MONTH_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { MONTH_POST_VIEW_RESPONSE }
-val MONTH_VIEW_RESPONSE_MAP = mapOf(
-        DATE.toString() to ViewsResponse(
-                MONTH_POST_VIEW_RESPONSE_LIST,
-                TOTAL_VIEWS
-        )
-)
-val MONTH_POST_AND_PAGE_VIEWS_RESPONSE = PostAndPageViewsResponse(
-        DATE,
-        MONTH_VIEW_RESPONSE_MAP,
-        MONTH_GRANULARITY
-)
-
-val YEAR_POST_VIEW_RESPONSE = PostViewsResponse(
-        POST_ID,
-        POST_TITLE,
-        DAY_GRANULARITY,
-        POST_URL,
-        POST_VIEWS
-)
-val YEAR_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { YEAR_POST_VIEW_RESPONSE }
-val YEAR_VIEW_RESPONSE_MAP = mapOf(
-        DATE.toString() to ViewsResponse(
-                YEAR_POST_VIEW_RESPONSE_LIST,
-                TOTAL_VIEWS
-        )
-)
-val YEAR_POST_AND_PAGE_VIEWS_RESPONSE = PostAndPageViewsResponse(
-        DATE,
-        YEAR_VIEW_RESPONSE_MAP,
-        YEAR_GRANULARITY
-)
 const val GROUP_ID = "group ID"
 val REFERRER = Referrer(
         GROUP_ID,

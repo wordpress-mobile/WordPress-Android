@@ -1,7 +1,8 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
-import android.support.annotation.NonNull;
 import android.util.Xml;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
