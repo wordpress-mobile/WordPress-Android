@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-14 11:54:08+0000
+Translation-Revision-Date: 2019-05-23 22:41:10+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="history_fetching_revisions">جاري جلب المراجعات…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">فشلت عملية إدراج وسائط.\nيرجى النقر على إعادة المحاولة.</string>
+    <string name="editor_uploading_draft">جاري رفع مسودّتك</string>
+    <string name="post_uploading_draft">رفع المسودّة</string>
     <string name="post_list_drafts">المسودات</string>
     <string name="post_list_published">منشور</string>
     <string name="post_list_author_everyone">الجميع</string>
@@ -93,7 +98,6 @@ Language: ar
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">مكوّن غير مدعوم</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">لصق الرابط</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">اختيار صورة</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">مسح كل الإعدادات</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">النص البديل</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">مكتبة وسائط ووردبريس</string>
