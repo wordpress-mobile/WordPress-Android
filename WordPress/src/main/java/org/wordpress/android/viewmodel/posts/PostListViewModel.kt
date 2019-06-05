@@ -7,8 +7,11 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -20,6 +23,8 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
@@ -28,14 +33,18 @@ import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState.RefreshError
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias PagedPostList = PagedList<PostListItemType>
+
+private const val SEARCH_DELAY = 200L
 
 @SuppressLint("UseSparseArrays")
 class PostListViewModel @Inject constructor(
@@ -46,19 +55,24 @@ class PostListViewModel @Inject constructor(
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
-    connectionStatus: LiveData<ConnectionStatus>
-) : ViewModel(), LifecycleOwner {
+    connectionStatus: LiveData<ConnectionStatus>,
+    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
+    private var searcListDescriptor: PostListDescriptor? = null
     private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
+
+    private var searchJob: Job? = null
 
     private val pagedListWrapper: PagedListWrapper<PostListItemType> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
@@ -73,6 +87,23 @@ class PostListViewModel @Inject constructor(
         listStore.getList(listDescriptor, dataSource, lifecycle)
     }
 
+    private val searchListWrapper: PagedListWrapper<PostListItemType> by lazy {
+        val listDescriptor = requireNotNull(searcListDescriptor) {
+            "ListDescriptor needs to be initialized before this is observed!"
+        }
+        val dataSource = PostListItemDataSource(
+                dispatcher = dispatcher,
+                postStore = postStore,
+                postFetcher = connector.postFetcher,
+                transform = this::transformPostModelToPostListItemUiState
+        )
+        listStore.getList(listDescriptor, dataSource, lifecycle)
+    }
+
+    private var _lastSearchQuery = ""
+    val lastSearchQuery: String
+        get() = _lastSearchQuery
+
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
     val pagedListData: LiveData<PagedPostList> by lazy {
@@ -80,6 +111,16 @@ class PostListViewModel @Inject constructor(
         result.addSource(pagedListWrapper.data) { pagedPostList ->
             pagedPostList?.let {
                 onDataUpdated(it)
+                result.value = it
+            }
+        }
+        result
+    }
+
+    val searchListData: LiveData<PagedPostList> by lazy {
+        val result = MediatorLiveData<PagedPostList>()
+        result.addSource(pagedListWrapper.data) { pagedPostList ->
+            pagedPostList?.let {
                 result.value = it
             }
         }
@@ -137,6 +178,11 @@ class PostListViewModel @Inject constructor(
             PostListDescriptorForXmlRpcSite(site = connector.site, statusList = connector.postListType.postStatuses)
         }
 
+        this.searcListDescriptor = PostListDescriptorForRestSite(
+                site = connector.site,
+                author = AuthorFilter.Everyone
+        )
+
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
         fetchFirstPage()
@@ -162,6 +208,23 @@ class PostListViewModel @Inject constructor(
             // store the target post id and scroll there when the data is loaded
             scrollToLocalPostId = localPostId
         }
+    }
+
+    fun onSearch(searchQuery: String, delay: Long = SEARCH_DELAY) {
+        searchJob?.cancel()
+        if (searchQuery.isNotEmpty()) {
+            searchJob = launch {
+                kotlinx.coroutines.delay(delay)
+                searchJob = null
+                if (isActive) {
+                    _lastSearchQuery = searchQuery
+                    pagedListWrapper.fetchFirstPage()
+                }
+            }
+        }
+//        else {
+//            clearSearch()
+//        }
     }
 
     // Utils

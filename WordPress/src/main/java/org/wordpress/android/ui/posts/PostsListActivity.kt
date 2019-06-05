@@ -345,7 +345,7 @@ class PostsListActivity : AppCompatActivity(),
                 override fun onQueryTextChange(newText: String): Boolean {
                     if (restorePreviousSearch) {
                         restorePreviousSearch = false
-                        searchView.setQuery(viewModel.lastSearchQuery, false)
+//                        searchView.setQuery(viewModel.lastSearchQuery, false)
                     } else {
                         viewModel.onSearchQueryInput(newText)
                     }

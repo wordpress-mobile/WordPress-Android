@@ -118,9 +118,8 @@ class PostListMainViewModel @Inject constructor(
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
-    private var _lastSearchQuery = ""
-    val lastSearchQuery: String
-        get() = _lastSearchQuery
+    private val _searchQuery = MutableLiveData<String>()
+    val searchQuery: LiveData<String> = _searchQuery
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -276,10 +275,11 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onSearchQueryInput(searchQuery: String) {
+        _searchQuery.value = searchQuery
     }
 
     private fun clearSearch() {
-        _lastSearchQuery = ""
+        _searchQuery.value = null
     }
 
     fun newPost() {
