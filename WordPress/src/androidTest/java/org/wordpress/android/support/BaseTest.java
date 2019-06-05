@@ -21,7 +21,6 @@ import org.wordpress.android.ui.WPLaunchActivity;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
@@ -71,7 +70,7 @@ public class BaseTest {
         new LoginFlow().loginEmailPassword();
     }
 
-    protected void wpLogout() {
-        new MePage().go().verifyUsername(E2E_WP_COM_USER_USERNAME).logout();
+    private void wpLogout() {
+        new MePage().go().logout();
     }
 }

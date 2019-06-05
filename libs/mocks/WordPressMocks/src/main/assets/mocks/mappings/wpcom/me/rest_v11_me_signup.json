@@ -1,5 +1,6 @@
 {
     "scenarioName": "auth",
+    "requiredScenarioState": "signed-up",
     "request": {
         "urlPath": "/rest/v1.1/me/",
         "method": "GET"
@@ -8,11 +9,11 @@
         "status": 200,
         "jsonBody": {
             "ID": 152748359,
-            "display_name": "e2eflowtestingmobile",
-            "username": "e2eflowtestingmobile",
-            "email": "e2eflowtestingmobile@example.com",
-            "primary_blog": 158396482,
-            "primary_blog_url": "http://e2eflowtestingmobile.wordpress.com",
+            "display_name": "e2eflowsignuptestingmobile",
+            "username": "e2eflowsignuptestingmobile",
+            "email": "e2eflowsignuptestingmobile@example.com",
+            "primary_blog": null,
+            "primary_blog_url": null,
             "primary_blog_is_jetpack": false,
             "language": "en",
             "locale_variant": "",
@@ -21,7 +22,7 @@
                 "global"
             ],
             "avatar_URL": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon",
-            "profile_URL": "http://en.gravatar.com/e2eflowtestingmobile",
+            "profile_URL": "http://en.gravatar.com/e2eflowsignuptestingmobile",
             "verified": true,
             "email_verified": true,
             "date": "2019-02-14T09:49:17+00:00",
