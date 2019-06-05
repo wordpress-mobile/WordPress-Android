@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
@@ -305,7 +306,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                         for (UserRoleWPComRestResponse roleResponse : response.roles) {
                             RoleModel roleModel = new RoleModel();
                             roleModel.setName(roleResponse.name);
-                            roleModel.setDisplayName(roleResponse.display_name);
+                            roleModel.setDisplayName(StringEscapeUtils.unescapeHtml4(roleResponse.display_name));
                             roleArray.add(roleModel);
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedUserRolesAction(new
