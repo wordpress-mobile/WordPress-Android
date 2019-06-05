@@ -15,7 +15,7 @@ import java.util.Set;
  * WebViewClient that adds the ability of restrict URL loading (navigation) to a list of allowed URLs.
  * Generally used to disable links and navigation in admin pages.
  */
-public class URLFilteredWebViewClient extends BaseWebViewClient {
+public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
     private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
 

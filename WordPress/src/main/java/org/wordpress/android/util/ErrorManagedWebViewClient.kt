@@ -6,7 +6,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
-open class BaseWebViewClient(
+open class ErrorManagedWebViewClient(
     private val baseWebViewClientListener: BaseWebViewClientListener
 ) : WebViewClient() {
     private var errorReceived = false

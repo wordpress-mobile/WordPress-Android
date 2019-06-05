@@ -37,7 +37,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
-import org.wordpress.android.util.BaseWebViewClient.BaseWebViewClientListener
+import org.wordpress.android.util.ErrorManagedWebViewClient.BaseWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
 

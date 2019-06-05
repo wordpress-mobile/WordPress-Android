@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import android.webkit.WebView;
 
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.BaseWebViewClient;
+import org.wordpress.android.util.ErrorManagedWebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-class JetpackConnectionWebViewClient extends BaseWebViewClient {
+class JetpackConnectionWebViewClient extends ErrorManagedWebViewClient {
     interface JetpackConnectionWebViewClientListener {
         void onRequiresWPComLogin(WebView webView, String redirectPage);
         void onRequiresJetpackLogin();

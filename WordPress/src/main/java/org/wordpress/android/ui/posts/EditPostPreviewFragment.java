@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.util.BaseWebViewClient.BaseWebViewClientListener;
+import org.wordpress.android.util.ErrorManagedWebViewClient.BaseWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPWebViewClient;
 

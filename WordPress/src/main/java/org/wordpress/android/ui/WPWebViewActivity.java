@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.BaseWebViewClient.BaseWebViewClientListener;
+import org.wordpress.android.util.ErrorManagedWebViewClient.BaseWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
