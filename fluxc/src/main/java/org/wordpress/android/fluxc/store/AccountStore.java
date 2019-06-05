@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.store;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.VolleyError;
 import com.yarolegovich.wellsql.WellSql;
@@ -410,7 +411,6 @@ public class AccountStore extends Store {
         public IsAvailable type;
         public String value;
         public boolean isAvailable;
-        public List<String> suggestions;
 
         public OnAvailabilityChecked(IsAvailable type, String value, boolean isAvailable) {
             this.type = type;
@@ -847,9 +847,6 @@ public class AccountStore extends Store {
             case IS_AVAILABLE_BLOG:
                 mAccountRestClient.isAvailable((String) payload, IsAvailable.BLOG);
                 break;
-            case IS_AVAILABLE_DOMAIN:
-                mAccountRestClient.isAvailable((String) payload, IsAvailable.DOMAIN);
-                break;
             case IS_AVAILABLE_EMAIL:
                 mAccountRestClient.isAvailable((String) payload, IsAvailable.EMAIL);
                 break;
@@ -1055,7 +1052,6 @@ public class AccountStore extends Store {
 
     private void handleCheckedIsAvailable(IsAvailableResponsePayload payload) {
         OnAvailabilityChecked event = new OnAvailabilityChecked(payload.type, payload.value, payload.isAvailable);
-        event.suggestions = payload.suggestions;
 
         if (payload.isError()) {
             event.error = payload.error;

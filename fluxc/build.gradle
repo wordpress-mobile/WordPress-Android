@@ -21,7 +21,7 @@ repositories {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
@@ -66,10 +66,10 @@ android.buildTypes.all { buildType ->
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
-    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
 
-    implementation "com.android.support:exifinterface:$supportLibraryVersion"
+    implementation "androidx.exifinterface:exifinterface:1.0.0"
 
     // WordPress libs
     implementation ('org.wordpress:utils:1.20.0') {
@@ -87,13 +87,13 @@ dependencies {
     kapt project(':fluxc-processor')
 
     // External libs
-    api 'org.greenrobot:eventbus:3.0.0'
+    api 'org.greenrobot:eventbus:3.1.1'
     api 'com.squareup.okhttp3:okhttp:3.9.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
     api 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.apache.commons:commons-text:1.1'
-    api "android.arch.paging:runtime:$arch_paging_version"
+    api "androidx.paging:paging-runtime:2.1.0"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"

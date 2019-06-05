@@ -56,8 +56,6 @@ public enum AccountAction implements IAction {
     @Action(payloadType = String.class)
     IS_AVAILABLE_BLOG,
     @Action(payloadType = String.class)
-    IS_AVAILABLE_DOMAIN,
-    @Action(payloadType = String.class)
     IS_AVAILABLE_EMAIL,
     @Action(payloadType = String.class)
     IS_AVAILABLE_USERNAME,
