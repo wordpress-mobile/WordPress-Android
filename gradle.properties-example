@@ -37,6 +37,6 @@ wp.e2e.self_hosted_user.password=mocked_password
 wp.e2e.self_hosted_user.site_address=127.0.0.1:8080
 
 wp.e2e.signup_email=e2eflowsignuptestingmobile@example.com
-wp.e2e.signup_username=e2eflowtestingmobile
-wp.e2e.signup_display_name=Eeflowtestingmobile
+wp.e2e.signup_username=e2eflowsignuptestingmobile
+wp.e2e.signup_display_name=e2eflowsignuptestingmobile
 wp.e2e.signup_password=mocked_password
