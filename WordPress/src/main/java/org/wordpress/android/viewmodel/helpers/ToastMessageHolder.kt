@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.helpers
 
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 

@@ -1,6 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 import org.wordpress.android.fluxc.model.LocalOrRemoteId
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId

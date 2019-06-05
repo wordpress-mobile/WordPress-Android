@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/installed_plugins_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,14 +44,14 @@
                         style="@style/PluginDirectoryListButton"
                         android:text="@string/plugin_manage" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/installed_plugins_recycler"
                         android:layout_below="@+id/text_manage"
                         style="@style/PluginDirectoryList" />
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/featured_plugins_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,14 +76,14 @@
                         style="@style/PluginDirectoryListButton"
                         android:text="@string/plugin_see_all" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/featured_plugins_recycler"
                         android:layout_below="@+id/text_all_featured"
                         style="@style/PluginDirectoryList" />
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/popular_plugins_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,14 +108,14 @@
                         style="@style/PluginDirectoryListButton"
                         android:text="@string/plugin_see_all" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/popular_plugins_recycler"
                         android:layout_below="@+id/text_all_popular"
                         style="@style/PluginDirectoryList" />
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/new_plugins_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,12 +141,12 @@
                         style="@style/PluginDirectoryListButton"
                         android:text="@string/plugin_see_all" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/new_plugins_recycler"
                         android:layout_below="@+id/text_all_new"
                         style="@style/PluginDirectoryList" />
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
     </ScrollView>

@@ -1,6 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R

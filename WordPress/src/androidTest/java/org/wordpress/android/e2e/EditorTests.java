@@ -1,8 +1,9 @@
 package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
+
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,10 +17,10 @@ import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.time.Instant;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
 import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;

@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
@@ -20,8 +20,8 @@ repositories {
 dependencies {
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.mcxiaoke.volley:library:1.0.18'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
     lintChecks 'org.wordpress:lint:1.0.1'

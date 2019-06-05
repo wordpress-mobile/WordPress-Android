@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -15,41 +15,41 @@ class AnnualStatsMapper
         return listOf(
                 QuickScanItem(
                         Column(
-                                string.stats_insights_year,
+                                R.string.stats_insights_year,
                                 selectedYear.year
                         ),
                         Column(
-                                string.stats_insights_posts,
+                                R.string.stats_insights_posts,
                                 selectedYear.totalPosts.toFormattedString()
                         )
                 ),
                 QuickScanItem(
                         Column(
-                                string.stats_insights_total_comments,
+                                R.string.stats_insights_total_comments,
                                 selectedYear.totalComments.toFormattedString()
                         ),
                         Column(
-                                string.stats_insights_average_comments,
+                                R.string.stats_insights_average_comments,
                                 selectedYear.avgComments?.toFormattedString() ?: "0"
                         )
                 ),
                 QuickScanItem(
                         Column(
-                                string.stats_insights_total_likes,
+                                R.string.stats_insights_total_likes,
                                 selectedYear.totalLikes.toFormattedString()
                         ),
                         Column(
-                                string.stats_insights_average_likes,
+                                R.string.stats_insights_average_likes,
                                 selectedYear.avgLikes?.toFormattedString() ?: "0"
                         )
                 ),
                 QuickScanItem(
                         Column(
-                                string.stats_insights_total_words,
+                                R.string.stats_insights_total_words,
                                 selectedYear.totalWords.toFormattedString()
                         ),
                         Column(
-                                string.stats_insights_average_words,
+                                R.string.stats_insights_average_words,
                                 selectedYear.avgWords?.toFormattedString() ?: "0"
                         )
                 )
@@ -59,31 +59,31 @@ class AnnualStatsMapper
     fun mapYearInViewAll(selectedYear: YearInsights): List<BlockListItem> {
         return listOf(
                 ListItemWithIcon(
-                        textResource = string.stats_insights_posts,
+                        textResource = R.string.stats_insights_posts,
                         value = selectedYear.totalPosts.toFormattedString()
                 ),
                 ListItemWithIcon(
-                        textResource = string.stats_insights_total_comments,
+                        textResource = R.string.stats_insights_total_comments,
                         value = selectedYear.totalComments.toFormattedString()
                 ),
                 ListItemWithIcon(
-                        textResource = string.stats_insights_average_comments,
+                        textResource = R.string.stats_insights_average_comments,
                         value = selectedYear.avgComments?.toFormattedString() ?: "0"
                 ),
                 ListItemWithIcon(
-                        textResource = string.stats_insights_total_likes,
+                        textResource = R.string.stats_insights_total_likes,
                         value = selectedYear.totalLikes.toFormattedString()
                 ),
                 ListItemWithIcon(
-                        textResource = string.stats_insights_average_likes,
+                        textResource = R.string.stats_insights_average_likes,
                         value = selectedYear.avgLikes?.toFormattedString() ?: "0"
                 ),
                 ListItemWithIcon(
-                        textResource = string.stats_insights_total_words,
+                        textResource = R.string.stats_insights_total_words,
                         value = selectedYear.totalWords.toFormattedString()
                 ),
                 ListItemWithIcon(
-                        textResource = string.stats_insights_average_words,
+                        textResource = R.string.stats_insights_average_words,
                         value = selectedYear.avgWords?.toFormattedString() ?: "0"
                 )
         )

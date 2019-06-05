@@ -1,6 +1,6 @@
 package org.wordpress.android.ui;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public enum JetpackConnectionSource {
     NOTIFICATIONS("notifications"),
