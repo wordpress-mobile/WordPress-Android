@@ -47,26 +47,21 @@ import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPay
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
 import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainProductDetails
+import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var store: TransactionsStore
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var site: SiteModel
 
-    @Mock private lateinit var formProgressIndicatorObserver: Observer<Boolean>
     @Mock private lateinit var domainContactDetailsObserver: Observer<DomainContactModel>
-    @Mock private lateinit var stateProgressIndicatorObserver: Observer<Boolean>
-    @Mock private lateinit var domainRegistrationButtonObserver: Observer<Boolean>
-    @Mock private lateinit var selectedStateObserver: Observer<SupportedStateResponse>
-    @Mock private lateinit var selectedCountryObserver: Observer<SupportedDomainCountry>
     @Mock private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
     @Mock private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
     @Mock private lateinit var tosLinkObserver: Observer<Unit>
-    @Mock private lateinit var privacyProtectionObserver: Observer<Boolean>
-    @Mock private lateinit var domainRegistrationProgressIndicatorObserver: Observer<Boolean>
     @Mock private lateinit var completedDomainRegistrationObserver: Observer<String>
-    @Mock private lateinit var stateInputVisibleObserver: Observer<Boolean>
     @Mock private lateinit var errorMessageObserver: Observer<String>
+
+    private val uiStateResults = mutableListOf<DomainRegistrationDetailsUiState>()
 
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
 
@@ -135,19 +130,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         setupRedeemShoppingCartDispatcher(false)
         setupFetchSiteDispatcher(false)
 
-        viewModel.formProgressIndicatorVisible.observeForever(formProgressIndicatorObserver)
+        uiStateResults.clear()
+        viewModel.uiState.observeForever { if (it != null) uiStateResults.add(it) }
         viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
-        viewModel.statesProgressIndicatorVisible.observeForever(stateProgressIndicatorObserver)
-        viewModel.domainRegistrationButtonEnabled.observeForever(domainRegistrationButtonObserver)
-        viewModel.selectedState.observeForever(selectedStateObserver)
-        viewModel.selectedCountry.observeForever(selectedCountryObserver)
         viewModel.showCountryPickerDialog.observeForever(countryPickerDialogObserver)
         viewModel.showStatePickerDialog.observeForever(statePickerDialogObserver)
         viewModel.showTos.observeForever(tosLinkObserver)
-        viewModel.privacyProtectionState.observeForever(privacyProtectionObserver)
-        viewModel.registrationProgressIndicatorVisible.observeForever(domainRegistrationProgressIndicatorObserver)
         viewModel.handleCompletedDomainRegistration.observeForever(completedDomainRegistrationObserver)
-        viewModel.stateInputEnabled.observeForever(stateInputVisibleObserver)
         viewModel.showErrorMessage.observeForever(errorMessageObserver)
     }
 
@@ -164,31 +153,70 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchDomainContactAction(actionsDispatched[1])
         validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
 
-        // form progress indicator was shown and dismissed
-        verify(formProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(formProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.formProgressIndicatorVisible.value).isEqualTo(false)
+        var preloadStep = 0
 
-        // states progress indicator was shown and dismissed
-        verify(stateProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(stateProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.statesProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(5)
 
-        // domain registration button was disabled and then enabled
-        verify(domainRegistrationButtonObserver, times(1)).onChanged(true)
-        verify(domainRegistrationButtonObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.domainRegistrationButtonEnabled.value).isEqualTo(true)
+        // initial state
+        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isNull()
 
-        verify(domainContactDetailsObserver, times(1)).onChanged(domainContactModel)
+        preloadStep++
 
-        verify(selectedStateObserver, times(1)).onChanged(primaryState)
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(primaryState)
+        // fetching countries and domain contact details
+        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isNull()
 
-        verify(selectedCountryObserver, times(1)).onChanged(primaryCountry)
-        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(primaryCountry)
+        preloadStep++
 
-        verify(stateInputVisibleObserver, times(1)).onChanged(true)
-        Assertions.assertThat(viewModel.stateInputEnabled.value).isEqualTo(true)
+        // hiding form progress after domain contact details fetched
+        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isNull()
+
+        verify(domainContactDetailsObserver).onChanged(domainContactModel)
+
+        preloadStep++
+
+        // fetching states using country code in domain contact details
+        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isEqualTo(primaryCountry)
+
+        preloadStep++
+
+        // fetched states, ending preload
+
+        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isEqualTo(primaryState)
+        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isEqualTo(primaryCountry)
     }
 
     @Test
@@ -199,16 +227,23 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         // Verifying that correct actions with expected payloads were dispatched
         val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(1)).dispatch(captor.capture())
+        verify(dispatcher).dispatch(captor.capture())
 
         val actionsDispatched = captor.allValues
         validateFetchSupportedCountriesAction(actionsDispatched[0])
 
-        verify(formProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(formProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.formProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(3)
 
-        verify(errorMessageObserver, times(1)).onChanged(fetchSupportedCountriesError.message)
+        // error fetching countries
+        Assertions.assertThat(uiStateResults[2].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[2].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[2].selectedCountry).isNull()
+
+        verify(errorMessageObserver).onChanged(fetchSupportedCountriesError.message)
     }
 
     @Test
@@ -225,11 +260,19 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchSupportedCountriesAction(actionsDispatched[0])
         validateFetchDomainContactAction(actionsDispatched[1])
 
-        verify(errorMessageObserver, times(1)).onChanged(domainContactInformationFetchError.message)
+        verify(errorMessageObserver).onChanged(domainContactInformationFetchError.message)
 
-        verify(formProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(formProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.formProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(3)
+
+        // error fetching domain contact details
+        Assertions.assertThat(uiStateResults[2].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[2].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[2].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[2].selectedCountry).isNull()
 
         verify(domainContactDetailsObserver, times(0)).onChanged(any())
         Assertions.assertThat(viewModel.domainContactDetails.value).isNull()
@@ -250,20 +293,18 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchDomainContactAction(actionsDispatched[1])
         validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
 
-        verify(errorMessageObserver, times(1)).onChanged(domainSupportedStatesFetchError.message)
+        verify(errorMessageObserver).onChanged(domainSupportedStatesFetchError.message)
 
-        verify(formProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(formProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.formProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(5)
 
-        verify(stateProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(stateProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.statesProgressIndicatorVisible.value).isEqualTo(false)
-
-        // domain registration button was disabled and then enabled
-        verify(domainRegistrationButtonObserver, times(1)).onChanged(true)
-        verify(domainRegistrationButtonObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.domainRegistrationButtonEnabled.value).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[4].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[4].isDomainRegistrationButtonEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[4].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[4].isPrivacyProtectionEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[4].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[4].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[4].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[4].selectedCountry).isEqualTo(primaryCountry)
     }
 
     @Test
@@ -272,7 +313,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onCountrySelectorClicked()
 
-        verify(countryPickerDialogObserver, times(1)).onChanged(countries)
+        verify(countryPickerDialogObserver).onChanged(countries)
     }
 
     @Test
@@ -281,12 +322,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onStateSelectorClicked()
 
-        verify(statePickerDialogObserver, times(1)).onChanged(states)
+        verify(statePickerDialogObserver).onChanged(states)
     }
 
     @Test
     fun onCountrySelected() = test {
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
         viewModel.onCountrySelected(secondaryCountry)
 
@@ -299,58 +341,62 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         Assertions.assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
         Assertions.assertThat(viewModel.domainContactDetails.value?.state).isNull()
 
-        verify(selectedStateObserver, times(2)).onChanged(null)
-        Assertions.assertThat(viewModel.selectedState.value).isNull()
+        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
 
-        verify(selectedCountryObserver, times(1)).onChanged(secondaryCountry)
+        var loadingStep = 0
 
-        // states progress indicator was shown and dismissed
-        verify(stateProgressIndicatorObserver, times(2)).onChanged(true)
-        verify(stateProgressIndicatorObserver, times(2)).onChanged(false)
-        Assertions.assertThat(viewModel.statesProgressIndicatorVisible.value).isEqualTo(false)
+        // county selected
+        Assertions.assertThat(uiStateResults[loadingStep].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].isStateProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[loadingStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].isStateInputEnabled).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[loadingStep].selectedCountry).isEqualTo(secondaryCountry)
 
-        // domain registration button was disabled and then enabled
-        verify(domainRegistrationButtonObserver, times(2)).onChanged(true)
-        verify(domainRegistrationButtonObserver, times(2)).onChanged(false)
-        Assertions.assertThat(viewModel.domainRegistrationButtonEnabled.value).isEqualTo(true)
+        loadingStep++
 
-        verify(stateInputVisibleObserver, times(2)).onChanged(true)
-        Assertions.assertThat(viewModel.stateInputEnabled.value).isEqualTo(true)
+        // states fetched
+        Assertions.assertThat(uiStateResults[loadingStep].isFormProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].isDomainRegistrationButtonEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[loadingStep].isStateProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        Assertions.assertThat(uiStateResults[loadingStep].isStateInputEnabled).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[loadingStep].selectedState).isNull()
+        Assertions.assertThat(uiStateResults[loadingStep].selectedCountry).isEqualTo(secondaryCountry)
     }
 
     @Test
     fun onSameCountrySelected() = test {
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
-        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(primaryCountry)
+        Assertions.assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
         viewModel.onCountrySelected(primaryCountry)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher, times(3)).dispatch(captor.capture())
 
-        Assertions.assertThat(viewModel.selectedCountry.value).isEqualTo(primaryCountry)
-
-        verify(selectedStateObserver, times(1)).onChanged(primaryState)
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(primaryState)
-
-        verify(selectedCountryObserver, times(1)).onChanged(primaryCountry)
-
-        verify(stateInputVisibleObserver, times(1)).onChanged(true)
+        Assertions.assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(0)
     }
 
     @Test
     fun onStateSelected() = test {
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
         viewModel.onStateSelected(primaryState)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(1)
 
-        verify(selectedStateObserver, times(2)).onChanged(primaryState)
-        Assertions.assertThat(viewModel.selectedState.value).isEqualTo(primaryState)
+        Assertions.assertThat(uiStateResults[0].selectedState).isEqualTo(primaryState)
+        Assertions.assertThat(viewModel.uiState.value?.selectedState).isEqualTo(primaryState)
     }
 
     @Test
     fun onRegisterDomainButtonClicked() = test {
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
         viewModel.onRegisterDomainButtonClicked()
 
@@ -366,11 +412,12 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateRedeemCartAction(actionsDispatched[4])
         validateFetchSiteAction(actionsDispatched[5])
 
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.registrationProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
 
-        verify(completedDomainRegistrationObserver, times(1)).onChanged(domainProductDetails.domainName)
+        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+
+        verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
     }
 
     @Test
@@ -378,6 +425,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         setupCreateShoppingCartDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
         viewModel.onRegisterDomainButtonClicked()
 
@@ -387,11 +435,12 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val actionsDispatched = captor.allValues
         validateCreateCartAction(actionsDispatched[3])
 
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.registrationProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
 
-        verify(errorMessageObserver, times(1)).onChanged(shoppingCartCreateError.message)
+        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+
+        verify(errorMessageObserver).onChanged(shoppingCartCreateError.message)
     }
 
     @Test
@@ -399,6 +448,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         setupRedeemShoppingCartDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
         viewModel.onRegisterDomainButtonClicked()
 
@@ -409,11 +459,12 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateCreateCartAction(actionsDispatched[3])
         validateRedeemCartAction(actionsDispatched[4])
 
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.registrationProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
 
-        verify(errorMessageObserver, times(1)).onChanged(shoppingCartRedeemError.message)
+        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+
+        verify(errorMessageObserver).onChanged(shoppingCartRedeemError.message)
     }
 
     @Test
@@ -421,6 +472,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         setupFetchSiteDispatcher(true)
 
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
         viewModel.onRegisterDomainButtonClicked()
 
@@ -433,13 +485,14 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateRedeemCartAction(actionsDispatched[4])
         validateFetchSiteAction(actionsDispatched[5])
 
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(true)
-        verify(domainRegistrationProgressIndicatorObserver, times(1)).onChanged(false)
-        Assertions.assertThat(viewModel.registrationProgressIndicatorVisible.value).isEqualTo(false)
+        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
 
-        verify(errorMessageObserver, times(1)).onChanged(siteChangedError.message)
+        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
+        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
-        verify(completedDomainRegistrationObserver, times(1)).onChanged(domainProductDetails.domainName)
+        verify(errorMessageObserver).onChanged(siteChangedError.message)
+
+        verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
     }
 
     @Test
@@ -448,7 +501,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onTosLinkClicked()
 
-        verify(tosLinkObserver, times(1)).onChanged(null)
+        verify(tosLinkObserver).onChanged(null)
     }
 
     @Test
@@ -458,21 +511,24 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val updatedDomainContactDetails = domainContactModel.copy(firstName = "Peter")
         viewModel.onDomainContactDetailsChanged(updatedDomainContactDetails)
 
-        verify(domainContactDetailsObserver, times(1)).onChanged(updatedDomainContactDetails)
+        verify(domainContactDetailsObserver).onChanged(updatedDomainContactDetails)
         Assertions.assertThat(viewModel.domainContactDetails.value).isEqualTo(updatedDomainContactDetails)
     }
 
     @Test
     fun togglePrivacyProtection() = test {
         viewModel.start(site, domainProductDetails)
+        clearPreLoadUiStateResult()
 
-        Assertions.assertThat(viewModel.privacyProtectionState.value).isTrue()
+        Assertions.assertThat(viewModel.uiState.value?.isPrivacyProtectionEnabled).isTrue()
 
         viewModel.togglePrivacyProtection(true)
-        verify(privacyProtectionObserver, times(2)).onChanged(true)
+        Assertions.assertThat(uiStateResults[0].isPrivacyProtectionEnabled).isEqualTo(true)
 
         viewModel.togglePrivacyProtection(false)
-        verify(privacyProtectionObserver, times(1)).onChanged(false)
+        Assertions.assertThat(uiStateResults[1].isPrivacyProtectionEnabled).isEqualTo(false)
+
+        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
     }
 
     private fun setupFetchSupportedCountriesDispatcher(isError: Boolean) {
@@ -590,5 +646,9 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         val fetchSitePayload = action.payload as SiteModel
         Assertions.assertThat(fetchSitePayload).isEqualTo(site)
+    }
+
+    private fun clearPreLoadUiStateResult() {
+        uiStateResults.clear()
     }
 }
