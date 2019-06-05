@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COUNTRY_VIEWS
@@ -26,178 +27,160 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VISITS_AN
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
 import java.util.Date
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class TimeStatsSqlUtils
-@Inject constructor(private val statsSqlUtils: StatsSqlUtils, private val statsUtils: StatsUtils) {
-    fun insert(site: SiteModel, data: PostAndPageViewsResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
+open class TimeStatsSqlUtils<RESPONSE_TYPE>(
+    private val statsSqlUtils: StatsSqlUtils,
+    private val statsUtils: StatsUtils,
+    private val statsRequestSqlUtils: StatsRequestSqlUtils,
+    private val blockType: BlockType,
+    private val classOfResponse: Class<RESPONSE_TYPE>
+) {
+    fun insert(
+        site: SiteModel,
+        data: RESPONSE_TYPE,
+        granularity: StatsGranularity,
+        date: Date,
+        requestedItems: Int? = null
+    ) {
+        val formattedDate = statsUtils.getFormattedDate(date)
+        statsSqlUtils.insert(site, blockType, granularity.toStatsType(), data, true, formattedDate)
+        statsRequestSqlUtils.insert(
                 site,
-                POSTS_AND_PAGES_VIEWS,
+                blockType,
                 granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
+                requestedItems,
+                formattedDate
         )
     }
 
-    fun insert(site: SiteModel, data: ReferrersResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                REFERRERS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun insert(site: SiteModel, data: ClicksResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                CLICKS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun insert(site: SiteModel, data: VisitsAndViewsResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                VISITS_AND_VIEWS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun insert(site: SiteModel, data: CountryViewsResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                COUNTRY_VIEWS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun insert(site: SiteModel, data: AuthorsResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                AUTHORS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun insert(site: SiteModel, data: SearchTermsResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                SEARCH_TERMS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun insert(site: SiteModel, data: VideoPlaysResponse, granularity: StatsGranularity, date: Date) {
-        statsSqlUtils.insert(
-                site,
-                VIDEO_PLAYS,
-                granularity.toStatsType(),
-                data,
-                true,
-                statsUtils.getFormattedDate(date)
-        )
-    }
-
-    fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity, date: Date): PostAndPageViewsResponse? {
+    fun select(site: SiteModel, granularity: StatsGranularity, date: Date): RESPONSE_TYPE? {
         return statsSqlUtils.select(
                 site,
-                POSTS_AND_PAGES_VIEWS,
+                blockType,
                 granularity.toStatsType(),
-                PostAndPageViewsResponse::class.java,
+                classOfResponse,
                 statsUtils.getFormattedDate(date)
         )
     }
 
-    fun selectReferrers(site: SiteModel, granularity: StatsGranularity, date: Date): ReferrersResponse? {
-        return statsSqlUtils.select(
+    fun hasFreshRequest(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        date: Date,
+        requestedItems: Int? = null
+    ): Boolean {
+        return statsRequestSqlUtils.hasFreshRequest(
                 site,
-                REFERRERS,
+                blockType,
                 granularity.toStatsType(),
-                ReferrersResponse::class.java,
-                statsUtils.getFormattedDate(date)
+                requestedItems,
+                date = statsUtils.getFormattedDate(date)
         )
     }
 
-    fun selectClicks(site: SiteModel, granularity: StatsGranularity, date: Date): ClicksResponse? {
-        return statsSqlUtils.select(
-                site,
-                CLICKS,
-                granularity.toStatsType(),
-                ClicksResponse::class.java,
-                statsUtils.getFormattedDate(date)
-        )
-    }
+    class PostsAndPagesSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<PostAndPageViewsResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            POSTS_AND_PAGES_VIEWS,
+            PostAndPageViewsResponse::class.java
+    )
 
-    fun selectVisitsAndViews(site: SiteModel, granularity: StatsGranularity, date: Date): VisitsAndViewsResponse? {
-        return statsSqlUtils.select(
-                site,
-                VISITS_AND_VIEWS,
-                granularity.toStatsType(),
-                VisitsAndViewsResponse::class.java,
-                statsUtils.getFormattedDate(date)
-        )
-    }
+    class ReferrersSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<ReferrersResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            REFERRERS,
+            ReferrersResponse::class.java
+    )
 
-    fun selectCountryViews(site: SiteModel, granularity: StatsGranularity, date: Date): CountryViewsResponse? {
-        return statsSqlUtils.select(
-                site,
-                COUNTRY_VIEWS,
-                granularity.toStatsType(),
-                CountryViewsResponse::class.java,
-                statsUtils.getFormattedDate(date)
-        )
-    }
+    class ClicksSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<ClicksResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            CLICKS,
+            ClicksResponse::class.java
+    )
 
-    fun selectAuthors(site: SiteModel, granularity: StatsGranularity, date: Date): AuthorsResponse? {
-        return statsSqlUtils.select(
-                site,
-                AUTHORS,
-                granularity.toStatsType(),
-                AuthorsResponse::class.java,
-                statsUtils.getFormattedDate(date)
-        )
-    }
+    class VisitsAndViewsSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<VisitsAndViewsResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            VISITS_AND_VIEWS,
+            VisitsAndViewsResponse::class.java
+    )
 
-    fun selectSearchTerms(site: SiteModel, granularity: StatsGranularity, date: Date): SearchTermsResponse? {
-        return statsSqlUtils.select(
-                site,
-                SEARCH_TERMS,
-                granularity.toStatsType(),
-                SearchTermsResponse::class.java,
-                statsUtils.getFormattedDate(date)
-        )
-    }
+    class CountryViewsSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<CountryViewsResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            COUNTRY_VIEWS,
+            CountryViewsResponse::class.java
+    )
 
-    fun selectVideoPlays(site: SiteModel, granularity: StatsGranularity, date: Date): VideoPlaysResponse? {
-        return statsSqlUtils.select(
-                site,
-                VIDEO_PLAYS,
-                granularity.toStatsType(),
-                VideoPlaysResponse::class.java,
-                statsUtils.getFormattedDate(date)
-        )
-    }
+    class AuthorsSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<AuthorsResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            AUTHORS,
+            AuthorsResponse::class.java
+    )
+
+    class SearchTermsSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<SearchTermsResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            SEARCH_TERMS,
+            SearchTermsResponse::class.java
+    )
+
+    class VideoPlaysSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<VideoPlaysResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            VIDEO_PLAYS,
+            VideoPlaysResponse::class.java
+    )
 
     private fun StatsGranularity.toStatsType(): StatsType {
         return when (this) {
