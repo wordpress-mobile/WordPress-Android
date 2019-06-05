@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 
@@ -39,7 +38,7 @@ class PagesActivity : AppCompatActivity(),
     private fun handleIntent(intent: Intent) {
         if (intent.hasExtra(EXTRA_PAGE_REMOTE_ID_KEY)) {
             val pageId = intent.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, -1)
-            supportFragmentManager.findFragmentById(id.fragment_container)?.let {
+            supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
                 (it as PagesFragment).onSpecificPageRequested(pageId)
             }
         }
@@ -61,7 +60,7 @@ class PagesActivity : AppCompatActivity(),
     }
 
     private fun passDeleteConfirmation(remoteId: Long) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {
             fragment.onPageDeleteConfirmed(remoteId)
         }

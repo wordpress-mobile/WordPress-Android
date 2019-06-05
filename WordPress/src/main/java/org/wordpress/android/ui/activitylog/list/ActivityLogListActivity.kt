@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
@@ -49,7 +48,7 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
     }
 
     private fun passRewindConfirmation(rewindId: String) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogListFragment) {
             fragment.onRewindConfirmed(rewindId)
         }

@@ -89,8 +89,7 @@ sealed class ListState<T>(val data: List<T>) {
      * value is `false` which should be useful in situations where pagination is not available.
      */
     class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean) : ListState<T>(data) {
-        constructor(previous: ListState<T>, loadingMore: Boolean = false)
-                : this(previous.data, loadingMore)
+        constructor(previous: ListState<T>, loadingMore: Boolean = false) : this(previous.data, loadingMore)
 
         override fun transform(transformFunc: (List<T>) -> List<T>) =
                 Loading(transformFunc(data), loadingMore)
@@ -124,8 +123,11 @@ sealed class ListState<T>(val data: List<T>) {
         val errorMessage: String? = null,
         @StringRes val errorMessageResId: Int? = null
     ) : ListState<T>(data) {
-        constructor(previous: ListState<T>, errorMessage: String? = null, @StringRes errorMessageResId: Int? = null)
-                : this(previous.data, errorMessage, errorMessageResId)
+        constructor(
+            previous: ListState<T>,
+            errorMessage: String? = null,
+            @StringRes errorMessageResId: Int? = null
+        ) : this(previous.data, errorMessage, errorMessageResId)
 
         override fun transform(transformFunc: (List<T>) -> List<T>) =
                 Error(transformFunc(data), errorMessage, errorMessageResId)

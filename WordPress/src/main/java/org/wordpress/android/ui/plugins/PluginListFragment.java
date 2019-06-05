@@ -153,7 +153,7 @@ public class PluginListFragment extends Fragment {
         View view = inflater.inflate(R.layout.plugin_list_fragment, container, false);
 
         mRecycler = view.findViewById(R.id.recycler);
-        mRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         mRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(

@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -200,7 +199,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
             bottomImage.setImageResource(R.drawable.img_giphy_100dp)
-            bottomImage.contentDescription = getString(string.giphy_powered_by_giphy)
+            bottomImage.contentDescription = getString(R.string.giphy_powered_by_giphy)
         }
 
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->

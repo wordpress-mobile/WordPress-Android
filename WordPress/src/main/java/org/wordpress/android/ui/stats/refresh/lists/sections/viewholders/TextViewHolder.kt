@@ -13,12 +13,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_text_item
+        R.layout.stats_block_text_item
 ) {
     private val text = itemView.findViewById<TextView>(R.id.text)
     fun bind(textItem: Text) {

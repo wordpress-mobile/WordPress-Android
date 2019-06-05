@@ -83,7 +83,7 @@ public class AniUtils {
 
         Context context = view.getContext();
         int fabHeight = context.getResources()
-                       .getDimensionPixelSize(com.google.android.material.R.dimen.design_fab_size_normal);
+                       .getDimensionPixelSize(R.dimen.design_fab_size);
         int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
         int max = (fabHeight + fabMargin) * 2;
         float fromY = (show ? max : 0f);

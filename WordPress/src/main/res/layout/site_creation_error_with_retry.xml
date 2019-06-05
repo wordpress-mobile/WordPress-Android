@@ -15,7 +15,9 @@
         android:padding="@dimen/margin_extra_large"
         android:src="@drawable/ic_close_white_24dp"
         android:tint="@color/primary"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/error_title"

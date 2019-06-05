@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.HIGH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box.INVISIBLE
@@ -16,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 
 class DayViewHolder(parent: ViewGroup) : ViewHolder(
         LayoutInflater.from(parent.context).inflate(
-                layout.stats_day_activity_box,
+                R.layout.stats_day_activity_box,
                 parent,
                 false
         )

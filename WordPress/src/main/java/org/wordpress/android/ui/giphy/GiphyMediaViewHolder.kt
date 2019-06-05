@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
@@ -147,7 +146,7 @@ class GiphyMediaViewHolder(
         ): GiphyMediaViewHolder {
             // We are intentionally reusing this layout since the UI is very similar.
             val view = LayoutInflater.from(parent.context)
-                    .inflate(layout.media_picker_thumbnail, parent, false)
+                    .inflate(R.layout.media_picker_thumbnail, parent, false)
             return GiphyMediaViewHolder(
                     imageManager = imageManager,
                     onClickListener = onClickListener,

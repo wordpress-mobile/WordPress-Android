@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 
 class TitleViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_title_item
+        R.layout.stats_block_title_item
 ) {
     private val text = itemView.findViewById<TextView>(id.text)
     private val menu = itemView.findViewById<ImageButton>(R.id.menu)

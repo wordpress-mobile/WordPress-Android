@@ -13,7 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
@@ -273,7 +273,7 @@ class PostListMainViewModel @Inject constructor(
     fun showTargetPost(targetPostId: Int) {
         val postModel = postStore.getPostByLocalPostId(targetPostId)
         if (postModel == null) {
-            _snackBarMessage.value = SnackbarMessageHolder(string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
         } else {
             launch(mainDispatcher) {
                 val targetTab = PostListType.fromPostStatus(PostStatus.fromPost(postModel))
@@ -363,7 +363,7 @@ class PostListMainViewModel @Inject constructor(
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 true
             } else {
-                _toastMessage.postValue(ToastMessageHolder(string.no_network_message, Duration.SHORT))
+                _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
                 false
             }
 

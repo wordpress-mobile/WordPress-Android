@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -136,7 +135,7 @@ class StatsViewAllViewModelFactory(
                     useCase,
                     statsSiteProvider,
                     dateSelectorFactory.build(StatsSection.ANNUAL_STATS),
-                    string.stats_insights_annual_site_stats
+                    R.string.stats_insights_annual_site_stats
             )
         }
 

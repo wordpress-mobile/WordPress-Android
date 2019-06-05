@@ -69,7 +69,8 @@
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
-                            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp" />
+                            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+                            tools:ignore="UnusedAttribute" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -115,7 +116,7 @@
                         android:minHeight="@dimen/min_touch_target_sz"
                         android:orientation="horizontal"
                         android:paddingStart="@dimen/my_site_list_row_padding_left_switch"
-                        tools:ignore="RtlSymmetry" >
+                        tools:ignore="RtlSymmetry,UnusedAttribute" >
 
                         <ImageView
                             android:importantForAccessibility="no"

@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.modules.UI_SCOPE
@@ -56,7 +56,7 @@ class SearchListViewModel
 
             pagesViewModel.checkIfNewPageButtonShouldBeVisible()
         } else {
-            _searchResult.value = listOf(Empty(string.pages_search_suggestion, true))
+            _searchResult.value = listOf(Empty(R.string.pages_search_suggestion, true))
         }
     }
 
@@ -81,7 +81,7 @@ class SearchListViewModel
                     }
             _searchResult.value = pageItems
         } else {
-            _searchResult.value = listOf(Empty(string.pages_empty_search_result, true))
+            _searchResult.value = listOf(Empty(R.string.pages_empty_search_result, true))
         }
     }
 

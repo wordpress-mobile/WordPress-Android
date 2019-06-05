@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
@@ -79,7 +78,7 @@ class MostPopularInsightsUseCase
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_insights_popular, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_popular, menuAction = this::onMenuClick)
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)

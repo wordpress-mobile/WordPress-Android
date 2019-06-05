@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
@@ -191,7 +190,7 @@ class PagesViewModel
                     val result = pageStore.requestPagesFromServer(site)
                     if (result.isError) {
                         _listState.setOnUi(ERROR)
-                        showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
+                        showSnackbar(SnackbarMessageHolder(R.string.error_refresh_pages))
                         AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
                     } else {
                         _listState.setOnUi(DONE)
@@ -276,7 +275,7 @@ class PagesViewModel
             if (page != null) {
                 _scrollToPage.postValue(page)
             } else {
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.pages_open_page_error))
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.pages_open_page_error))
             }
         } else {
             scrollToPageId = remotePageId
@@ -456,9 +455,9 @@ class PagesViewModel
 
                 showSnackbar(
                         if (action.undo != null) {
-                            SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo!!)
+                            SnackbarMessageHolder(R.string.page_parent_changed, R.string.undo, action.undo!!)
                         } else {
-                            SnackbarMessageHolder(string.page_parent_changed)
+                            SnackbarMessageHolder(R.string.page_parent_changed)
                         }
                 )
             }
@@ -467,7 +466,7 @@ class PagesViewModel
             launch(defaultDispatcher) {
                 refreshPages()
 
-                showSnackbar(SnackbarMessageHolder(string.page_parent_change_error))
+                showSnackbar(SnackbarMessageHolder(R.string.page_parent_change_error))
             }
         }
 
@@ -508,14 +507,14 @@ class PagesViewModel
                 delay(ACTION_DELAY)
                 reloadPages()
 
-                showSnackbar(SnackbarMessageHolder(string.page_permanently_deleted))
+                showSnackbar(SnackbarMessageHolder(R.string.page_permanently_deleted))
             }
         }
         action.onError = {
             launch(defaultDispatcher) {
                 refreshPages()
 
-                showSnackbar(SnackbarMessageHolder(string.page_delete_error))
+                showSnackbar(SnackbarMessageHolder(R.string.page_delete_error))
             }
         }
 
@@ -576,7 +575,7 @@ class PagesViewModel
                     launch(defaultDispatcher) {
                         action.undo?.let { it() }
 
-                        showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
+                        showSnackbar(SnackbarMessageHolder(R.string.page_status_change_error))
                     }
                 }
 
@@ -599,15 +598,15 @@ class PagesViewModel
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
-            PageStatus.DRAFT -> string.page_moved_to_draft
-            PageStatus.PUBLISHED -> string.page_moved_to_published
-            PageStatus.TRASHED -> string.page_moved_to_trash
-            PageStatus.SCHEDULED -> string.page_moved_to_scheduled
+            PageStatus.DRAFT -> R.string.page_moved_to_draft
+            PageStatus.PUBLISHED -> R.string.page_moved_to_published
+            PageStatus.TRASHED -> R.string.page_moved_to_trash
+            PageStatus.SCHEDULED -> R.string.page_moved_to_scheduled
             else -> throw NotImplementedError("Status change to ${newStatus.getTitle()} not supported")
         }
 
         return if (undo != null) {
-            SnackbarMessageHolder(message, string.undo, undo)
+            SnackbarMessageHolder(message, R.string.undo, undo)
         } else {
             SnackbarMessageHolder(message)
         }
@@ -661,11 +660,11 @@ class PagesViewModel
 
 @StringRes fun PageStatus.getTitle(): Int {
     return when (this) {
-        PageStatus.PUBLISHED -> string.pages_published
-        PageStatus.DRAFT -> string.pages_drafts
-        PageStatus.SCHEDULED -> string.pages_scheduled
-        PageStatus.TRASHED -> string.pages_trashed
-        PageStatus.PENDING -> string.pages_pending
-        PageStatus.PRIVATE -> string.pages_private
+        PageStatus.PUBLISHED -> R.string.pages_published
+        PageStatus.DRAFT -> R.string.pages_drafts
+        PageStatus.SCHEDULED -> R.string.pages_scheduled
+        PageStatus.TRASHED -> R.string.pages_trashed
+        PageStatus.PENDING -> R.string.pages_pending
+        PageStatus.PRIVATE -> R.string.pages_private
     }
 }

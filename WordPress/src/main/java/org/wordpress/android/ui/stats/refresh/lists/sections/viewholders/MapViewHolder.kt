@@ -17,16 +17,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.color
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_web_view_item
+        R.layout.stats_block_web_view_item
 ) {
-    val webView: WebView? = itemView.findViewById(id.web_view)
+    val webView: WebView? = itemView.findViewById(R.id.web_view)
     @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
         GlobalScope.launch {
@@ -35,8 +33,8 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
             // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, color.accent_50) and 0xffffff)
-            val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, color.accent) and 0xffffff)
+            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_50) and 0xffffff)
+            val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent) and 0xffffff)
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
