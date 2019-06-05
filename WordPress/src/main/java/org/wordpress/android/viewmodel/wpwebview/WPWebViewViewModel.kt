@@ -46,10 +46,10 @@ class WPWebViewViewModel
         }
         isStarted = true
         // If there is no internet show the error screen
-        if (!networkUtils.isNetworkAvailable()) {
-            updateUiState(WebPreviewFullscreenErrorUiState)
-        } else {
+        if (networkUtils.isNetworkAvailable()) {
             updateUiState(WebPreviewFullscreenProgressUiState)
+        } else {
+            updateUiState(WebPreviewFullscreenErrorUiState)
         }
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
