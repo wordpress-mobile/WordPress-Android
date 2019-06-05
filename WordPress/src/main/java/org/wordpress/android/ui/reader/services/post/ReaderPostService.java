@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
@@ -14,8 +15,6 @@ import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceSta
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_FEED_ID;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_TAG;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * service which updates posts with specific tags or in specific blogs/feeds - relies on

@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -67,8 +68,6 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
 public class MeFragment extends Fragment implements MainToolbarFragment, WPMainActivity.OnScrollToTopListener {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
@@ -101,6 +100,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject AppPrefsWrapper mAppPrefsWrapper;
+    @Inject PostStore mPostStore;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -370,7 +370,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
         // we use a simpler (less scary!) confirmation
         String message;
-        if (PostStore.getNumLocalChanges() > 0) {
+        if (mPostStore.getNumLocalChanges() > 0) {
             message = getString(R.string.sign_out_wpcom_confirm_with_changes);
         } else {
             message = getString(R.string.sign_out_wpcom_confirm_with_no_changes);
@@ -521,6 +521,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(GravatarUploadFinished event) {
         showGravatarProgressBar(false);
         if (event.success) {

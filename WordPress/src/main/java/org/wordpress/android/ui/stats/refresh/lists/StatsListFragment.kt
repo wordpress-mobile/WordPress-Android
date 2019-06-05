@@ -197,9 +197,19 @@ class StatsListFragment : DaggerFragment() {
             viewModel.onListSelected()
         })
 
-        viewModel.typeMoved?.observe(this, Observer { event ->
+        viewModel.typesChanged.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                viewModel.onTypeMoved()
+                viewModel.onTypesChanged()
+            }
+        })
+
+        viewModel.scrollTo?.observe(this, Observer { event ->
+            if (event != null) {
+                (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                    event.getContentIfNotHandled()?.let { statsType ->
+                        recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
+                    }
+                }
             }
         })
     }

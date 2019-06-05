@@ -7,6 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.util.image.ImageManager
 
 open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder(
@@ -18,8 +19,18 @@ open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager
         super.bind(statsType, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
-            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
-            list.adapter = BlockListAdapter(imageManager)
+            val blockListAdapter = BlockListAdapter(imageManager)
+            val layoutManager = WrappingLinearLayoutManager(
+                    list.context,
+                    LinearLayoutManager.VERTICAL,
+                    false
+            )
+            list.adapter = blockListAdapter
+            list.layoutManager = layoutManager
+        }
+        (list.layoutManager as WrappingLinearLayoutManager).init()
+        if (list.adapter?.itemCount ?: 0 > items.size) {
+            (list.layoutManager as? WrappingLinearLayoutManager)?.onItemRangeRemoved()
         }
         (list.adapter as BlockListAdapter).update(items)
     }

@@ -22,6 +22,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +88,6 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.EnumSet;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
@@ -682,6 +681,7 @@ public class ReaderPostDetailFragment extends Fragment
      * related posts were retrieved
      */
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
         if (!isAdded() || !hasPost()) {
             return;
@@ -1003,6 +1003,7 @@ public class ReaderPostDetailFragment extends Fragment
      * post slugs resolution to IDs has completed
      */
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.PostSlugsRequestCompleted event) {
         mPostSlugsResolutionUnderway = false;
 

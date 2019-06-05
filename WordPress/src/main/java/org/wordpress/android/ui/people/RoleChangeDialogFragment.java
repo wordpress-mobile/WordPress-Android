@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -23,8 +24,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class RoleChangeDialogFragment extends DialogFragment {
     private static final String PERSON_ID_TAG = "person_id";

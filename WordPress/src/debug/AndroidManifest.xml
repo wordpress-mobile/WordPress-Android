@@ -7,10 +7,10 @@
     <application
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
-        android:supportsRtl="true"
-        />
+        android:supportsRtl="true">
+    </application>
 
-    <!-- 
+    <!--
         The below permissions are required by Fastlane for taking screenshots.
         They should never be included in release builds
      -->

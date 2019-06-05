@@ -35,25 +35,12 @@
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
-    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar"/>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.WordPress.Widget" parent="Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
-    </style>
-
-    <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral</item>
-    </style>
-
-    <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/neutral</item>
-        <item name="android:lineSpacingExtra">4dp</item>
-    </style>
-
-    <style name="SiteCreation.CardTitle" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/neutral_700</item>
     </style>
 
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
@@ -150,15 +137,18 @@
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
 
-    <style name="MediaSettings" />
+    <style name="MediaSettings"/>
+
     <style name="MediaSettings.Activity" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
+
     <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/neutral_400</item>
@@ -169,17 +159,20 @@
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
+
     <style name="MediaSettings.Divider">
         <item name="android:background">@color/divider</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
+
     <style name="MediaSettings.Label">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
         <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
+
     <style name="MediaSettings.Value">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
@@ -377,8 +370,8 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@color/divider</item>
-        <item name="android:layout_marginEnd" >@dimen/content_margin</item>
-        <item name="android:layout_marginStart" >@dimen/content_margin</item>
+        <item name="android:layout_marginEnd">@dimen/content_margin</item>
+        <item name="android:layout_marginStart">@dimen/content_margin</item>
     </style>
 
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
@@ -771,6 +764,7 @@
     <style name="PageListItemTextStyle" parent="PageListTopLevelItemTextStyle">
         <item name="android:fontFamily">serif</item>
     </style>
+
     <style name="PageListTopLevelItemTextStyle">
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textColor">@color/neutral_700</item>
@@ -833,6 +827,31 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:background">@color/neutral_0</item>
+    </style>
+
+    <style name="DomainRegistrationFormTitle">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+      <style name="DomainRegistrationFormSubTitle">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">start</item>
+    </style>
+
+    <style name="DomainRegistrationDetailsFormTextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
     </style>
 
 </resources>

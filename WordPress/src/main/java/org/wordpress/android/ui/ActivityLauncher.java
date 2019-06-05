@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -32,7 +31,6 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -65,7 +63,7 @@ import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -73,8 +71,8 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -622,8 +620,7 @@ public class ActivityLauncher {
     }
 
     public static void newBlogForResult(Activity activity) {
-        Intent intent = new Intent(activity,
-                BuildConfig.NEW_SITE_CREATION_ENABLED ? NewSiteCreationActivity.class : SiteCreationActivity.class);
+        Intent intent = new Intent(activity, SiteCreationActivity.class);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 

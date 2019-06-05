@@ -118,23 +118,6 @@
     </issue>
 
     <issue
-        id="UnusedAttribute"
-        severity="Error"
-        message="Attribute `drawableTint` is only used in API level 23 and higher (current min is 21)"
-        category="Correctness"
-        priority="6"
-        summary="Attribute unused on older versions"
-        explanation="This check finds attributes set in XML files that were introduced in a version newer than the oldest version targeted by your application (with the `minSdkVersion` attribute).&#xA;&#xA;This is not an error; the application will simply ignore the attribute. However, if the attribute is important to the appearance or functionality of your application, you should consider finding an alternative way to achieve the same result with only available attributes, and then you can optionally create a copy of the layout in a layout-vNN folder which will be used on API NN or higher where you can take advantage of the newer attribute.&#xA;&#xA;Note: This check does not only apply to attributes. For example, some tags can be unused too, such as the new `&lt;tag>` element in layouts introduced in API 21."
-        errorLine1="        android:drawableTint=&quot;@color/neutral&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../WordPress/src/main/res/layout/site_creation_domain_input.xml"
-            line="16"
-            column="9"/>
-    </issue>
-
-    <issue
         id="InflateParams"
         severity="Warning"
         message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
@@ -2527,54 +2510,6 @@
         priority="3"
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@color/neutral_0&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/main/res/layout/site_creation_domain_header.xml"
-            line="6"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        severity="Warning"
-        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        category="Performance"
-        priority="3"
-        summary="Overdraw: Painting regions more than once"
-        explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@android:color/white&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/main/res/layout/site_creation_domain_input.xml"
-            line="8"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        severity="Warning"
-        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        category="Performance"
-        priority="3"
-        summary="Overdraw: Painting regions more than once"
-        explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@android:color/white&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/main/res/layout/site_creation_domain_screen.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        severity="Warning"
-        message="Possible overdraw: Root element paints background `@color/neutral_0` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        category="Performance"
-        priority="3"
-        summary="Overdraw: Painting regions more than once"
-        explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
         errorLine1="    android:background=&quot;@color/neutral_0&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -2741,82 +2676,6 @@
             file="../WordPress/src/main/res/layout/toolbar_main.xml"
             line="8"
             column="5"/>
-    </issue>
-
-    <issue
-        id="TypographyFractions"
-        severity="Warning"
-        message="Use fraction character ¾ (&amp;#190;) instead of 3/4 ?"
-        category="Usability:Typography"
-        priority="5"
-        summary="Fraction string can be replaced with fraction character"
-        explanation="You can replace certain strings, such as 1/2, and 1/4, with dedicated characters for these, such as ½ (&amp;#189;) and ¼ (&amp;#188;). This can help make the text more readable."
-        url="http://en.wikipedia.org/wiki/Number_Forms"
-        urls="http://en.wikipedia.org/wiki/Number_Forms"
-        errorLine1="    &lt;string name=&quot;site_creation_label_site_details_title&quot;>Adım 3/4&lt;/string>"
-        errorLine2="                                                          ^"
-        quickfix="studio">
-        <location
-            file="../WordPress/src/main/res/values-tr/strings.xml"
-            line="476"
-            column="59"/>
-    </issue>
-
-    <issue
-        id="TypographyFractions"
-        severity="Warning"
-        message="Use fraction character ¼ (&amp;#188;) instead of 1/4 ?"
-        category="Usability:Typography"
-        priority="5"
-        summary="Fraction string can be replaced with fraction character"
-        explanation="You can replace certain strings, such as 1/2, and 1/4, with dedicated characters for these, such as ½ (&amp;#189;) and ¼ (&amp;#188;). This can help make the text more readable."
-        url="http://en.wikipedia.org/wiki/Number_Forms"
-        urls="http://en.wikipedia.org/wiki/Number_Forms"
-        errorLine1="    &lt;string name=&quot;site_creation_label_category_title&quot;>Adım 1/4&lt;/string>"
-        errorLine2="                                                      ^"
-        quickfix="studio">
-        <location
-            file="../WordPress/src/main/res/values-tr/strings.xml"
-            line="487"
-            column="55"/>
-    </issue>
-
-    <issue
-        id="TypographyFractions"
-        severity="Warning"
-        message="Use fraction character ¾ (&amp;#190;) instead of 3/4 ?"
-        category="Usability:Typography"
-        priority="5"
-        summary="Fraction string can be replaced with fraction character"
-        explanation="You can replace certain strings, such as 1/2, and 1/4, with dedicated characters for these, such as ½ (&amp;#189;) and ¼ (&amp;#188;). This can help make the text more readable."
-        url="http://en.wikipedia.org/wiki/Number_Forms"
-        urls="http://en.wikipedia.org/wiki/Number_Forms"
-        errorLine1="    &lt;string name=&quot;notification_site_creation_step_tagline&quot;>Adım 3/4&lt;/string>"
-        errorLine2="                                                           ^"
-        quickfix="studio">
-        <location
-            file="../WordPress/src/main/res/values-tr/strings.xml"
-            line="492"
-            column="60"/>
-    </issue>
-
-    <issue
-        id="TypographyFractions"
-        severity="Warning"
-        message="Use fraction character ¼ (&amp;#188;) instead of 1/4 ?"
-        category="Usability:Typography"
-        priority="5"
-        summary="Fraction string can be replaced with fraction character"
-        explanation="You can replace certain strings, such as 1/2, and 1/4, with dedicated characters for these, such as ½ (&amp;#189;) and ¼ (&amp;#188;). This can help make the text more readable."
-        url="http://en.wikipedia.org/wiki/Number_Forms"
-        urls="http://en.wikipedia.org/wiki/Number_Forms"
-        errorLine1="    &lt;string name=&quot;notification_site_creation_step_creating&quot;>Adım 1/4&lt;/string>"
-        errorLine2="                                                            ^"
-        quickfix="studio">
-        <location
-            file="../WordPress/src/main/res/values-tr/strings.xml"
-            line="494"
-            column="61"/>
     </issue>
 
     <issue

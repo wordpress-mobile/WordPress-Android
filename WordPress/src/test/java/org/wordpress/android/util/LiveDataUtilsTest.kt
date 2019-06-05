@@ -66,4 +66,85 @@ class LiveDataUtilsTest : BaseUnitTest() {
         sourceB.value = null
         assertThat(combineMap.value).isEqualTo(mapOf(keyA to valueA))
     }
+
+    @Test
+    fun `when skipping 1 on a LiveData emitting nothing, nothing is emitted`() {
+        // Given
+        val source = MutableLiveData<String>()
+        check(source.value == null)
+
+        val skip = source.skip(1)
+
+        // When
+        var emitCount = 0
+        skip.observeForever {
+            emitCount += 1
+        }
+
+        // Then
+        assertThat(emitCount).isZero()
+        assertThat(skip.value).isNull()
+    }
+
+    @Test
+    fun `when skipping 1 on a LiveData emitting a single value, nothing is emitted`() {
+        // Given
+        val source = MutableLiveData<String>().apply { value = "Alpha" }
+        val skip = source.skip(1)
+
+        // When
+        var emitCount = 0
+        skip.observeForever {
+            emitCount += 1
+        }
+
+        // Then
+        assertThat(emitCount).isZero()
+        assertThat(skip.value).isNull()
+    }
+
+    @Test
+    fun `when skipping 1 on a LiveData emitting multiple values, the first value is not emitted`() {
+        // Given
+        val source = MutableLiveData<String>().apply {
+            // Capture the scenario of the LiveData having a pre-existing value before an observer is added
+            value = "Alpha"
+        }
+        val skip = source.skip(1)
+
+        // When
+        var emitCount = 0
+        skip.observeForever {
+            emitCount += 1
+        }
+
+        source.postValue("Bravo")
+
+        // Then
+        assertThat(emitCount).isOne()
+        assertThat(skip.value).isEqualTo("Bravo")
+    }
+
+    @Test
+    fun `when skipping 3 on a LiveData emitting multiple values, the first three are not emitted`() {
+        // Given
+        val source = MutableLiveData<String>()
+        val skip = source.skip(3)
+
+        // When
+        var emitCount = 0
+        val emittedValues = mutableListOf<String>()
+        skip.observeForever { value ->
+            emitCount += 1
+
+            value?.let { emittedValues.add(it) }
+        }
+
+        listOf("Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel").forEach(source::postValue)
+
+        // Then
+        assertThat(emitCount).isEqualTo(5)
+        assertThat(emittedValues).isEqualTo(listOf("Delta", "Echo", "Foxtrot", "Golf", "Hotel"))
+        assertThat(skip.value).isEqualTo("Hotel")
+    }
 }

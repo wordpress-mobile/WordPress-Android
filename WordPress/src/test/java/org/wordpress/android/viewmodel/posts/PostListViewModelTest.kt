@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import kotlinx.coroutines.Dispatchers
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
@@ -28,7 +27,7 @@ class PostListViewModelTest {
         viewModel.swipeToRefresh()
 
         // Then
-        verify(localDraftUploadStarter, times(1)).uploadLocalDrafts(scope = eq(viewModel), site = eq(site))
+        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
 
     private companion object {
@@ -62,8 +61,7 @@ class PostListViewModelTest {
                     listItemUiStateHelper = mock(),
                     networkUtilsWrapper = mock(),
                     localDraftUploadStarter = localDraftUploadStarter,
-                    connectionStatus = mock(),
-                    bgDispatcher = Dispatchers.Default
+                    connectionStatus = mock()
             )
         }
     }
