@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentCaptor
@@ -153,70 +154,66 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateFetchDomainContactAction(actionsDispatched[1])
         validateFetchStatesAction(actionsDispatched[2], primaryCountry.code)
 
-        var preloadStep = 0
-
         Assertions.assertThat(uiStateResults.size).isEqualTo(5)
 
-        // initial state
-        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isNull()
+        val initialState = uiStateResults[0]
 
-        preloadStep++
+        assertThat(initialState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(initialState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(initialState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(initialState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(initialState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(initialState.isStateInputEnabled).isEqualTo(false)
+        assertThat(initialState.selectedState).isNull()
+        assertThat(initialState.selectedCountry).isNull()
 
-        // fetching countries and domain contact details
-        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isNull()
+        val fetchingCountriesAndDomainContactState = uiStateResults[1]
 
-        preloadStep++
+        assertThat(fetchingCountriesAndDomainContactState.isFormProgressIndicatorVisible).isEqualTo(true)
+        assertThat(fetchingCountriesAndDomainContactState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(fetchingCountriesAndDomainContactState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchingCountriesAndDomainContactState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(fetchingCountriesAndDomainContactState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchingCountriesAndDomainContactState.isStateInputEnabled).isEqualTo(false)
+        assertThat(fetchingCountriesAndDomainContactState.selectedState).isNull()
+        assertThat(fetchingCountriesAndDomainContactState.selectedCountry).isNull()
 
         // hiding form progress after domain contact details fetched
-        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isNull()
+        val domainContactDetailsFetchedState = uiStateResults[2]
+
+        assertThat(domainContactDetailsFetchedState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(domainContactDetailsFetchedState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(domainContactDetailsFetchedState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(domainContactDetailsFetchedState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(domainContactDetailsFetchedState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(domainContactDetailsFetchedState.isStateInputEnabled).isEqualTo(false)
+        assertThat(domainContactDetailsFetchedState.selectedState).isNull()
+        assertThat(domainContactDetailsFetchedState.selectedCountry).isNull()
 
         verify(domainContactDetailsObserver).onChanged(domainContactModel)
 
-        preloadStep++
+        val fetchingStatesState = uiStateResults[3]
 
-        // fetching states using country code in domain contact details
-        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isEqualTo(primaryCountry)
+        assertThat(fetchingStatesState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchingStatesState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(fetchingStatesState.isStateProgressIndicatorVisible).isEqualTo(true)
+        assertThat(fetchingStatesState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(fetchingStatesState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchingStatesState.isStateInputEnabled).isEqualTo(false)
+        assertThat(fetchingStatesState.selectedState).isNull()
+        assertThat(fetchingStatesState.selectedCountry).isEqualTo(primaryCountry)
 
-        preloadStep++
+        //  ending preload
+        val fetchedStatesState = uiStateResults[4]
 
-        // fetched states, ending preload
-
-        Assertions.assertThat(uiStateResults[preloadStep].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isDomainRegistrationButtonEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[preloadStep].isStateInputEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[preloadStep].selectedState).isEqualTo(primaryState)
-        Assertions.assertThat(uiStateResults[preloadStep].selectedCountry).isEqualTo(primaryCountry)
+        assertThat(fetchedStatesState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchedStatesState.isDomainRegistrationButtonEnabled).isEqualTo(true)
+        assertThat(fetchedStatesState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchedStatesState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(fetchedStatesState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(fetchedStatesState.isStateInputEnabled).isEqualTo(true)
+        assertThat(fetchedStatesState.selectedState).isEqualTo(primaryState)
+        assertThat(fetchedStatesState.selectedCountry).isEqualTo(primaryCountry)
     }
 
     @Test
@@ -232,16 +229,17 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val actionsDispatched = captor.allValues
         validateFetchSupportedCountriesAction(actionsDispatched[0])
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(3)
+        assertThat(uiStateResults.size).isEqualTo(3)
 
-        // error fetching countries
-        Assertions.assertThat(uiStateResults[2].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[2].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[2].selectedCountry).isNull()
+        val errorFetchingCountriesState = uiStateResults[2]
+
+        assertThat(errorFetchingCountriesState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingCountriesState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(errorFetchingCountriesState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingCountriesState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(errorFetchingCountriesState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingCountriesState.selectedState).isNull()
+        assertThat(errorFetchingCountriesState.selectedCountry).isNull()
 
         verify(errorMessageObserver).onChanged(fetchSupportedCountriesError.message)
     }
@@ -262,20 +260,21 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         verify(errorMessageObserver).onChanged(domainContactInformationFetchError.message)
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(3)
+        assertThat(uiStateResults.size).isEqualTo(3)
 
-        // error fetching domain contact details
-        Assertions.assertThat(uiStateResults[2].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[2].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[2].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[2].selectedCountry).isNull()
+        val errorFetchingDomainContactDetailsState = uiStateResults[2]
+
+        assertThat(errorFetchingDomainContactDetailsState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingDomainContactDetailsState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(errorFetchingDomainContactDetailsState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingDomainContactDetailsState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(errorFetchingDomainContactDetailsState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingDomainContactDetailsState.isStateInputEnabled).isEqualTo(false)
+        assertThat(errorFetchingDomainContactDetailsState.selectedState).isNull()
+        assertThat(errorFetchingDomainContactDetailsState.selectedCountry).isNull()
 
         verify(domainContactDetailsObserver, times(0)).onChanged(any())
-        Assertions.assertThat(viewModel.domainContactDetails.value).isNull()
+        assertThat(viewModel.domainContactDetails.value).isNull()
     }
 
     @Test
@@ -295,16 +294,18 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         verify(errorMessageObserver).onChanged(domainSupportedStatesFetchError.message)
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(5)
+        assertThat(uiStateResults.size).isEqualTo(5)
 
-        Assertions.assertThat(uiStateResults[4].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[4].isDomainRegistrationButtonEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[4].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[4].isPrivacyProtectionEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[4].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[4].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[4].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[4].selectedCountry).isEqualTo(primaryCountry)
+        val errorFetchingStatesState = uiStateResults[4]
+
+        assertThat(errorFetchingStatesState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingStatesState.isDomainRegistrationButtonEnabled).isEqualTo(true)
+        assertThat(errorFetchingStatesState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingStatesState.isPrivacyProtectionEnabled).isEqualTo(true)
+        assertThat(errorFetchingStatesState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(errorFetchingStatesState.isStateInputEnabled).isEqualTo(false)
+        assertThat(errorFetchingStatesState.selectedState).isNull()
+        assertThat(errorFetchingStatesState.selectedCountry).isEqualTo(primaryCountry)
     }
 
     @Test
@@ -338,32 +339,30 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val actionsDispatched = captor.allValues
         validateFetchStatesAction(actionsDispatched[3], secondaryCountry.code)
 
-        Assertions.assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
-        Assertions.assertThat(viewModel.domainContactDetails.value?.state).isNull()
+        assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
+        assertThat(viewModel.domainContactDetails.value?.state).isNull()
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
+        assertThat(uiStateResults.size).isEqualTo(2)
 
-        var loadingStep = 0
+        val countrySelectedState = uiStateResults[0]
 
-        // county selected
-        Assertions.assertThat(uiStateResults[loadingStep].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].isDomainRegistrationButtonEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].isStateProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[loadingStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].isStateInputEnabled).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[loadingStep].selectedCountry).isEqualTo(secondaryCountry)
+        assertThat(countrySelectedState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(countrySelectedState.isDomainRegistrationButtonEnabled).isEqualTo(false)
+        assertThat(countrySelectedState.isStateProgressIndicatorVisible).isEqualTo(true)
+        assertThat(countrySelectedState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(countrySelectedState.isStateInputEnabled).isEqualTo(false)
+        assertThat(countrySelectedState.selectedState).isNull()
+        assertThat(countrySelectedState.selectedCountry).isEqualTo(secondaryCountry)
 
-        loadingStep++
+        val statesFetchedState = uiStateResults[1]
 
-        // states fetched
-        Assertions.assertThat(uiStateResults[loadingStep].isFormProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].isDomainRegistrationButtonEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[loadingStep].isStateProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].isRegistrationProgressIndicatorVisible).isEqualTo(false)
-        Assertions.assertThat(uiStateResults[loadingStep].isStateInputEnabled).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[loadingStep].selectedState).isNull()
-        Assertions.assertThat(uiStateResults[loadingStep].selectedCountry).isEqualTo(secondaryCountry)
+        assertThat(statesFetchedState.isFormProgressIndicatorVisible).isEqualTo(false)
+        assertThat(statesFetchedState.isDomainRegistrationButtonEnabled).isEqualTo(true)
+        assertThat(statesFetchedState.isStateProgressIndicatorVisible).isEqualTo(false)
+        assertThat(statesFetchedState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        assertThat(statesFetchedState.isStateInputEnabled).isEqualTo(true)
+        assertThat(statesFetchedState.selectedState).isNull()
+        assertThat(statesFetchedState.selectedCountry).isEqualTo(secondaryCountry)
     }
 
     @Test
@@ -371,14 +370,14 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.start(site, domainProductDetails)
         clearPreLoadUiStateResult()
 
-        Assertions.assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
+        assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
         viewModel.onCountrySelected(primaryCountry)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher, times(3)).dispatch(captor.capture())
 
-        Assertions.assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
-        Assertions.assertThat(uiStateResults.size).isEqualTo(0)
+        assertThat(viewModel.uiState.value?.selectedCountry).isEqualTo(primaryCountry)
+        assertThat(uiStateResults.size).isEqualTo(0)
     }
 
     @Test
@@ -387,10 +386,12 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         clearPreLoadUiStateResult()
 
         viewModel.onStateSelected(primaryState)
-        Assertions.assertThat(uiStateResults.size).isEqualTo(1)
+        assertThat(uiStateResults.size).isEqualTo(1)
 
-        Assertions.assertThat(uiStateResults[0].selectedState).isEqualTo(primaryState)
-        Assertions.assertThat(viewModel.uiState.value?.selectedState).isEqualTo(primaryState)
+        val stateSelectedState = uiStateResults[0]
+
+        assertThat(stateSelectedState.selectedState).isEqualTo(primaryState)
+        assertThat(viewModel.uiState.value?.selectedState).isEqualTo(primaryState)
     }
 
     @Test
@@ -400,8 +401,8 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onRegisterDomainButtonClicked()
 
-        Assertions.assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo(primaryCountry.code)
-        Assertions.assertThat(viewModel.domainContactDetails.value?.state).isEqualTo(primaryState.code)
+        assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo(primaryCountry.code)
+        assertThat(viewModel.domainContactDetails.value?.state).isEqualTo(primaryState.code)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher, times(6)).dispatch(captor.capture())
@@ -412,10 +413,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateRedeemCartAction(actionsDispatched[4])
         validateFetchSiteAction(actionsDispatched[5])
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
+        assertThat(uiStateResults.size).isEqualTo(2)
 
-        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        val domainRegisteringState = uiStateResults[0]
+        assertThat(domainRegisteringState.isRegistrationProgressIndicatorVisible).isEqualTo(true)
+
+        val domainRegisteredState = uiStateResults[1]
+        assertThat(domainRegisteredState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
         verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
     }
@@ -435,10 +439,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val actionsDispatched = captor.allValues
         validateCreateCartAction(actionsDispatched[3])
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
+        assertThat(uiStateResults.size).isEqualTo(2)
 
-        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        val domainRegisteringState = uiStateResults[0]
+        assertThat(domainRegisteringState.isRegistrationProgressIndicatorVisible).isEqualTo(true)
+
+        val errorCreatingCartState = uiStateResults[1]
+        assertThat(errorCreatingCartState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
         verify(errorMessageObserver).onChanged(shoppingCartCreateError.message)
     }
@@ -459,10 +466,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateCreateCartAction(actionsDispatched[3])
         validateRedeemCartAction(actionsDispatched[4])
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
+        assertThat(uiStateResults.size).isEqualTo(2)
 
-        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        val domainRegisteringState = uiStateResults[0]
+        assertThat(domainRegisteringState.isRegistrationProgressIndicatorVisible).isEqualTo(true)
+
+        val errorRedeemingCartState = uiStateResults[1]
+        assertThat(errorRedeemingCartState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
         verify(errorMessageObserver).onChanged(shoppingCartRedeemError.message)
     }
@@ -485,10 +495,13 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         validateRedeemCartAction(actionsDispatched[4])
         validateFetchSiteAction(actionsDispatched[5])
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
+        assertThat(uiStateResults.size).isEqualTo(2)
 
-        Assertions.assertThat(uiStateResults[0].isRegistrationProgressIndicatorVisible).isEqualTo(true)
-        Assertions.assertThat(uiStateResults[1].isRegistrationProgressIndicatorVisible).isEqualTo(false)
+        val domainRegisteringState = uiStateResults[0]
+        assertThat(domainRegisteringState.isRegistrationProgressIndicatorVisible).isEqualTo(true)
+
+        val errorFetchingSiteState = uiStateResults[1]
+        assertThat(errorFetchingSiteState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
         verify(errorMessageObserver).onChanged(siteChangedError.message)
 
@@ -512,7 +525,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.onDomainContactDetailsChanged(updatedDomainContactDetails)
 
         verify(domainContactDetailsObserver).onChanged(updatedDomainContactDetails)
-        Assertions.assertThat(viewModel.domainContactDetails.value).isEqualTo(updatedDomainContactDetails)
+        assertThat(viewModel.domainContactDetails.value).isEqualTo(updatedDomainContactDetails)
     }
 
     @Test
@@ -520,15 +533,17 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         viewModel.start(site, domainProductDetails)
         clearPreLoadUiStateResult()
 
-        Assertions.assertThat(viewModel.uiState.value?.isPrivacyProtectionEnabled).isTrue()
+        assertThat(viewModel.uiState.value?.isPrivacyProtectionEnabled).isTrue()
 
         viewModel.togglePrivacyProtection(true)
-        Assertions.assertThat(uiStateResults[0].isPrivacyProtectionEnabled).isEqualTo(true)
+        val privacyProtectionOnState = uiStateResults[0]
+        assertThat(privacyProtectionOnState.isPrivacyProtectionEnabled).isEqualTo(true)
 
         viewModel.togglePrivacyProtection(false)
-        Assertions.assertThat(uiStateResults[1].isPrivacyProtectionEnabled).isEqualTo(false)
+        val privacyProtectionOffState = uiStateResults[1]
+        assertThat(privacyProtectionOffState.isPrivacyProtectionEnabled).isEqualTo(false)
 
-        Assertions.assertThat(uiStateResults.size).isEqualTo(2)
+        assertThat(uiStateResults.size).isEqualTo(2)
     }
 
     private fun setupFetchSupportedCountriesDispatcher(isError: Boolean) {
@@ -603,49 +618,49 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     private fun validateFetchSupportedCountriesAction(action: Action<*>) {
-        Assertions.assertThat(action.type).isEqualTo(FETCH_SUPPORTED_COUNTRIES)
-        Assertions.assertThat(action.payload).isNull()
+        assertThat(action.type).isEqualTo(FETCH_SUPPORTED_COUNTRIES)
+        assertThat(action.payload).isNull()
     }
 
     private fun validateFetchDomainContactAction(action: Action<*>) {
-        Assertions.assertThat(action.type).isEqualTo(AccountAction.FETCH_DOMAIN_CONTACT)
-        Assertions.assertThat(action.payload).isNull()
+        assertThat(action.type).isEqualTo(AccountAction.FETCH_DOMAIN_CONTACT)
+        assertThat(action.payload).isNull()
     }
 
     private fun validateFetchStatesAction(action: Action<*>, targetCountryCode: String) {
-        Assertions.assertThat(action.type).isEqualTo(SiteAction.FETCH_DOMAIN_SUPPORTED_STATES)
-        Assertions.assertThat(action.payload).isEqualTo(targetCountryCode)
+        assertThat(action.type).isEqualTo(SiteAction.FETCH_DOMAIN_SUPPORTED_STATES)
+        assertThat(action.payload).isEqualTo(targetCountryCode)
     }
 
     private fun validateCreateCartAction(action: Action<*>) {
-        Assertions.assertThat(action.type).isEqualTo(TransactionAction.CREATE_SHOPPING_CART)
-        Assertions.assertThat(action.payload).isNotNull
-        Assertions.assertThat(action.payload).isInstanceOf(CreateShoppingCartPayload::class.java)
+        assertThat(action.type).isEqualTo(TransactionAction.CREATE_SHOPPING_CART)
+        assertThat(action.payload).isNotNull
+        assertThat(action.payload).isInstanceOf(CreateShoppingCartPayload::class.java)
 
         val createShoppingCartPayload = action.payload as CreateShoppingCartPayload
-        Assertions.assertThat(createShoppingCartPayload.site).isEqualTo(site)
-        Assertions.assertThat(createShoppingCartPayload.domainName).isEqualTo(testDomainName)
-        Assertions.assertThat(createShoppingCartPayload.productId).isEqualTo(productId)
-        Assertions.assertThat(createShoppingCartPayload.isPrivacyEnabled).isEqualTo(true)
+        assertThat(createShoppingCartPayload.site).isEqualTo(site)
+        assertThat(createShoppingCartPayload.domainName).isEqualTo(testDomainName)
+        assertThat(createShoppingCartPayload.productId).isEqualTo(productId)
+        assertThat(createShoppingCartPayload.isPrivacyEnabled).isEqualTo(true)
     }
 
     private fun validateRedeemCartAction(action: Action<*>) {
-        Assertions.assertThat(action.type).isEqualTo(TransactionAction.REDEEM_CART_WITH_CREDITS)
-        Assertions.assertThat(action.payload).isNotNull
-        Assertions.assertThat(action.payload).isInstanceOf(RedeemShoppingCartPayload::class.java)
+        assertThat(action.type).isEqualTo(TransactionAction.REDEEM_CART_WITH_CREDITS)
+        assertThat(action.payload).isNotNull
+        assertThat(action.payload).isInstanceOf(RedeemShoppingCartPayload::class.java)
 
         val redeemShoppingCartPayload = action.payload as RedeemShoppingCartPayload
-        Assertions.assertThat(redeemShoppingCartPayload.cartDetails).isEqualTo(createShoppingCartResponse)
-        Assertions.assertThat(redeemShoppingCartPayload.domainContactModel).isEqualTo(domainContactModel)
+        assertThat(redeemShoppingCartPayload.cartDetails).isEqualTo(createShoppingCartResponse)
+        assertThat(redeemShoppingCartPayload.domainContactModel).isEqualTo(domainContactModel)
     }
 
     private fun validateFetchSiteAction(action: Action<*>) {
-        Assertions.assertThat(action.type).isEqualTo(SiteAction.FETCH_SITE)
-        Assertions.assertThat(action.payload).isNotNull
-        Assertions.assertThat(action.payload).isInstanceOf(SiteModel::class.java)
+        assertThat(action.type).isEqualTo(SiteAction.FETCH_SITE)
+        assertThat(action.payload).isNotNull
+        assertThat(action.payload).isInstanceOf(SiteModel::class.java)
 
         val fetchSitePayload = action.payload as SiteModel
-        Assertions.assertThat(fetchSitePayload).isEqualTo(site)
+        assertThat(fetchSitePayload).isEqualTo(site)
     }
 
     private fun clearPreLoadUiStateResult() {
