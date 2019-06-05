@@ -160,7 +160,15 @@ class PageListViewModel @Inject constructor(
     private fun displayListItems(newPages: List<PageItem>) {
         if (newPages.isEmpty()) {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
-                _pages.postValue(listOf(Empty(R.string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
+                _pages.postValue(
+                        listOf(
+                                Empty(
+                                        R.string.pages_fetching,
+                                        isButtonVisible = false,
+                                        isImageVisible = false
+                                )
+                        )
+                )
             } else {
                 when (listType) {
                     PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
