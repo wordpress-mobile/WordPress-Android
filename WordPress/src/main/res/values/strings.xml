@@ -836,12 +836,14 @@
     <!-- Stats refreshed widgets -->
 
     <string name="stats_widget_add">Add widget</string>
+    <string name="stats_widget_views_title">Views This Week</string>
     <string name="stats_widget_site">Site</string>
     <string name="stats_widget_site_caption">Select your site</string>
     <string name="stats_widget_color">Color</string>
     <string name="stats_widget_color_light">Light</string>
     <string name="stats_widget_color_dark">Dark</string>
     <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_select_color">Color</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>

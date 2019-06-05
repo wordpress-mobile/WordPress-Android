@@ -34,7 +34,7 @@
                 app:layout_scrollFlags="enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/stats"/>
+                app:title="@string/stats_widget_views_title"/>
 
         </android.support.design.widget.AppBarLayout>
 
