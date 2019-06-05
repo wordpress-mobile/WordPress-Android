@@ -186,45 +186,46 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.formProgressIndicatorVisible.observe(this,
-                Observer { isVisible ->
-                    if (isVisible == true) {
-                        showFormProgressIndicator()
-                    } else {
-                        hideFormProgressIndicator()
+        viewModel.uiState.observe(this,
+                Observer { uiState ->
+                    uiState?.let {
+                        if (uiState.isFormProgressIndicatorVisible) {
+                            showFormProgressIndicator()
+                        } else {
+                            hideFormProgressIndicator()
+                        }
+
+                        if (uiState.isStateProgressIndicatorVisible) {
+                            showStateProgress()
+                        } else {
+                            hideStateProgress()
+                        }
+
+                        if (uiState.isRegistrationProgressIndicatorVisible) {
+                            showDomainRegistrationProgressDialog()
+                        } else {
+                            hideDomainRegistrationProgressDialog()
+                        }
+
+                        if (uiState.isPrivacyProtectionEnabled) {
+                            domain_privacy_options_radiogroup.check(R.id.domain_privacy_on_radio_button)
+                        } else {
+                            domain_privacy_options_radiogroup.check(R.id.domain_privacy_off_radio_button)
+                        }
+
+                        if (uiState.isStateInputEnabled) {
+                            enableStateInput()
+                        } else {
+                            disableStateInput()
+                        }
+
+                        register_domain_button.isEnabled = uiState.isDomainRegistrationButtonEnabled
+
+                        // Country and State fields treated as UI state, since we only use them for display purpose
+                        country_input.setText(uiState.selectedCountry?.name)
+                        state_input.setText(uiState.selectedState?.name)
                     }
                 })
-
-        viewModel.statesProgressIndicatorVisible.observe(this,
-                Observer { isVisible ->
-                    if (isVisible == true) {
-                        showStateProgress()
-                    } else {
-                        hideStateProgress()
-                    }
-                })
-
-        viewModel.registrationProgressIndicatorVisible.observe(this,
-                Observer { isVisible ->
-                    if (isVisible == true) {
-                        showDomainRegistrationProgressDialog()
-                    } else {
-                        hideDomainRegistrationProgressDialog()
-                    }
-                })
-
-        viewModel.domainRegistrationButtonEnabled.observe(this,
-                Observer { isEnabled ->
-                    register_domain_button.isEnabled = isEnabled == true
-                })
-
-        viewModel.privacyProtectionState.observe(this, Observer { privacyEnabled ->
-            if (privacyEnabled == true) {
-                domain_privacy_options_radiogroup.check(R.id.domain_privacy_on_radio_button)
-            } else {
-                domain_privacy_options_radiogroup.check(R.id.domain_privacy_off_radio_button)
-            }
-        })
 
         viewModel.domainContactDetails.observe(this, Observer<DomainContactModel> { domainContactModel ->
             val currentModel = contactFormToDomainContactModel()
@@ -232,27 +233,6 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 populateContactForm(domainContactModel!!)
             }
         })
-
-        viewModel.stateInputEnabled.observe(this,
-                Observer { stateInputVisible ->
-                    if (stateInputVisible != null && stateInputVisible) {
-                        enableStateInput()
-                    } else {
-                        disableStateInput()
-                    }
-                })
-
-        viewModel.selectedCountry.observe(this,
-                Observer { country ->
-                    if (country != null) {
-                        country_input.setText(country.name)
-                    }
-                })
-
-        viewModel.selectedState.observe(this,
-                Observer { state ->
-                    state_input.setText(state?.name)
-                })
 
         viewModel.showCountryPickerDialog.observe(this,
                 Observer {
