@@ -15,6 +15,11 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -43,9 +48,6 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import dagger.android.support.AndroidSupportInjection;
 
 public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,

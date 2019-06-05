@@ -2,13 +2,13 @@ package org.wordpress.android.login;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public interface LoginListener {
     interface SelfSignedSSLCallback {

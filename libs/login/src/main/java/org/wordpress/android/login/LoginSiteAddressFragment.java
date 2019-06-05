@@ -15,6 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -39,9 +43,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import dagger.android.support.AndroidSupportInjection;
 
 public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,

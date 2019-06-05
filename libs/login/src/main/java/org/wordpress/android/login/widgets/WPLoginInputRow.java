@@ -20,13 +20,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputLayout;
-
-import org.wordpress.android.login.R;
-
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.wordpress.android.login.R;
 
 /**
  * Compound view composed of an icon and an EditText

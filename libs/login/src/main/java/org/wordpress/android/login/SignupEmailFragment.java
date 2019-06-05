@@ -15,6 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
@@ -39,10 +44,6 @@ import org.wordpress.android.util.NetworkUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import dagger.android.support.AndroidSupportInjection;
 
 import static android.app.Activity.RESULT_OK;

@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.wordpress.android.login.widgets.WPBottomSheetDialog;
-
-import androidx.annotation.NonNull;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     public SignupBottomSheetDialog(@NonNull final Context context,

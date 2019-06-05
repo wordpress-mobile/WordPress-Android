@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
@@ -28,9 +32,6 @@ import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import dagger.android.support.AndroidSupportInjection;
 
 public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,

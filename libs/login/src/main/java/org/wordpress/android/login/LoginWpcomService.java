@@ -4,6 +4,10 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -31,9 +35,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import dagger.android.AndroidInjection;
 
 public class LoginWpcomService extends AutoForeground<LoginState> {

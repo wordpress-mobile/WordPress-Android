@@ -6,6 +6,9 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -20,9 +23,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import javax.inject.Inject;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
 

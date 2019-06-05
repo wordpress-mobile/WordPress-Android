@@ -6,14 +6,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import dagger.android.support.AndroidSupportInjection;
 
 public class LoginSiteAddressHelpDialogFragment extends DialogFragment {

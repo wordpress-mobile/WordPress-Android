@@ -13,12 +13,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.wordpress.android.util.EditTextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import org.wordpress.android.util.EditTextUtils;
 
 public class LoginHttpAuthDialogFragment extends DialogFragment {
     public static final String TAG = "login_http_auth_dialog_fragment_tag";
