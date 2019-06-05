@@ -17,7 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetSiteSelectionDialogFragment;
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.ColorSelectionDialogFragment;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
@@ -61,7 +61,7 @@ public abstract class ApplicationModule {
     abstract StatePickerDialogFragment contributeCStatePickerDialogFragment();
 
     @ContributesAndroidInjector
-    abstract StatsViewsWidgetConfigureFragment contributeStatsViewsWidgetConfigureFragment();
+    abstract StatsWidgetConfigureFragment contributeStatsViewsWidgetConfigureFragment();
 
     @ContributesAndroidInjector
     abstract StatsWidgetSiteSelectionDialogFragment contributeSiteSelectionDialogFragment();

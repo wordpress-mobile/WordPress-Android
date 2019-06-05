@@ -2,8 +2,10 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 
 import android.app.Activity.RESULT_OK
 import android.appwidget.AppWidgetManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,22 +14,49 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_views_widget_configure_fragment.*
+import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class StatsViewsWidgetConfigureFragment : DaggerFragment() {
+class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
-    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Inject lateinit var siteStore: SiteStore
+    @Inject lateinit var imageManager: ImageManager
+    private lateinit var viewModel: StatsWidgetConfigureViewModel
+    private lateinit var viewType: ViewType
+
+    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+        super.onInflate(context, attrs, savedInstanceState)
+        activity?.let {
+            val a = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
+            val views = a.getInt(R.styleable.statsWidget_viewType, -1)
+            viewType = when (views) {
+                -1 -> throw IllegalArgumentException("The view type needs to be specified on the fragment")
+                0 -> ViewType.WEEK_VIEWS
+                1 -> ViewType.ALL_TIME_VIEWS
+                else -> {
+                    throw IllegalArgumentException("The view type with the value $views needs to be specified in the attrs.xml file")
+                }
+            }
+            a.recycle()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_views_widget_configure_fragment, container, false)
+        return inflater.inflate(R.layout.stats_widget_configure_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(StatsViewsWidgetConfigureViewModel::class.java)
+                .get(StatsWidgetConfigureViewModel::class.java)
         activity?.setResult(AppCompatActivity.RESULT_CANCELED)
 
         val appWidgetId = activity?.intent?.extras?.getInt(
@@ -62,11 +91,16 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
         })
 
         viewModel.widgetAdded.observe(this, Observer { event ->
-            event?.applyIfNotHandled {
-                viewsWidgetUpdater.updateAppWidget(
-                        context!!,
-                        appWidgetId = appWidgetId
-                )
+            event?.getContentIfNotHandled()?.let {
+                when(it.viewType) {
+                    WEEK_VIEWS -> {
+                        viewsWidgetUpdater.updateAppWidget(
+                                context!!,
+                                    appWidgetId = it.appWidgetId
+                            )
+                    }
+                    ALL_TIME_VIEWS -> TODO()
+                }
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 activity?.setResult(RESULT_OK, resultValue)
@@ -74,6 +108,8 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
             }
         })
 
-        viewModel.start(appWidgetId)
+        viewModel.start(appWidgetId, viewType)
     }
+
+    enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS }
 }

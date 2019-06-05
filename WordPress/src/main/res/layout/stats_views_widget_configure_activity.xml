@@ -13,10 +13,11 @@
 
         <fragment
             android:id="@+id/fragment_container"
-            android:name="org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureFragment"
+            android:name="org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
+            app:widgetType="views"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.google.android.material.appbar.AppBarLayout

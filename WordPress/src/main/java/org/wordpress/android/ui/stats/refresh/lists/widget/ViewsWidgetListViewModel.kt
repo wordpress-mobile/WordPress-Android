@@ -1,4 +1,4 @@
-@file:JvmName("StatsViewsWidgetConfigureViewModelKt")
+@file:JvmName("StatsWidgetConfigureViewModelKt")
 
 package org.wordpress.android.ui.stats.refresh.lists.widget
 
@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date

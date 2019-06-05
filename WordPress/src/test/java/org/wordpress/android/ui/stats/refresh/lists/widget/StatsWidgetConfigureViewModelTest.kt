@@ -10,23 +10,23 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.WidgetSettingsModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.WidgetSettingsModel
 
-class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
+class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
-    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
+    private lateinit var viewModel: StatsWidgetConfigureViewModel
     private val siteId = 15L
     private val siteName = "WordPress"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
     @Before
     fun setUp() {
-        viewModel = StatsViewsWidgetConfigureViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
+        viewModel = StatsWidgetConfigureViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
         whenever(site.siteId).thenReturn(siteId)
         whenever(site.name).thenReturn(siteName)
         whenever(site.url).thenReturn(siteUrl)
