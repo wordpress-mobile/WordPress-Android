@@ -29,18 +29,18 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
-class ViewsListViewModelTest {
+class ViewsWidgetListViewModelTest {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var visitsAndViewsStore: VisitsAndViewsStore
     @Mock private lateinit var overviewMapper: OverviewMapper
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var statsDateFormatter: StatsDateFormatter
     @Mock private lateinit var site: SiteModel
-    private lateinit var viewModel: ViewsListViewModel
+    private lateinit var viewModel: ViewsWidgetListViewModel
     private val siteId: Long = 15
     @Before
     fun setUp() {
-        viewModel = ViewsListViewModel(
+        viewModel = ViewsWidgetListViewModel(
                 siteStore,
                 visitsAndViewsStore,
                 overviewMapper,

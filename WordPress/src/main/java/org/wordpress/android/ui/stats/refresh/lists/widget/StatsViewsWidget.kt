@@ -27,6 +27,8 @@ const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
 const val COLOR_MODE_KEY = "color_mode_key"
 const val SITE_ID_KEY = "site_id_key"
 
+private const val MIN_WIDTH = 250
+
 class StatsViewsWidget : AppWidgetProvider() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
@@ -49,7 +51,7 @@ class StatsViewsWidget : AppWidgetProvider() {
                     appPrefsWrapper,
                     siteStore,
                     imageManager,
-                    minWidth > 250
+                    minWidth > MIN_WIDTH
             )
         }
     }
@@ -69,10 +71,8 @@ class StatsViewsWidget : AppWidgetProvider() {
         newOptions: Bundle?
     ) {
         if (context != null) {
-            // See the dimensions and
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
 
-            // Get min width and height.
             val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
             (context.applicationContext as WordPress).component().inject(this)
             updateAppWidget(
@@ -82,7 +82,7 @@ class StatsViewsWidget : AppWidgetProvider() {
                     appPrefsWrapper,
                     siteStore,
                     imageManager,
-                    minWidth > 250
+                    minWidth > MIN_WIDTH
             )
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
@@ -127,15 +127,15 @@ class StatsViewsWidget : AppWidgetProvider() {
                 views.setOnClickPendingIntent(R.id.widget_title, getPendingSelfIntent(context, siteModel.id))
                 views.setPendingIntentTemplate(R.id.widget_list, getPendingTemplate(context))
             }
-            val svcIntent = Intent(context, WidgetService::class.java)
-            svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            svcIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
-            svcIntent.putExtra(COLOR_MODE_KEY, colorModeId)
-            svcIntent.putExtra(SITE_ID_KEY, siteId)
-            svcIntent.data = Uri.parse(
-                    svcIntent.toUri(Intent.URI_INTENT_SCHEME)
+            val listIntent = Intent(context, WidgetService::class.java)
+            listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
+            listIntent.putExtra(COLOR_MODE_KEY, colorModeId)
+            listIntent.putExtra(SITE_ID_KEY, siteId)
+            listIntent.data = Uri.parse(
+                    listIntent.toUri(Intent.URI_INTENT_SCHEME)
             )
-            views.setRemoteAdapter(R.id.widget_list, svcIntent)
+            views.setRemoteAdapter(R.id.widget_list, listIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
 

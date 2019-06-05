@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 const val LIST_ITEM_COUNT = 7
 
-class ViewsListViewModel
+class ViewsWidgetListViewModel
 @Inject constructor(
     private val siteStore: SiteStore,
     private val visitsAndViewsStore: VisitsAndViewsStore,
@@ -44,19 +44,25 @@ class ViewsListViewModel
     fun onDataSetChanged() {
         siteId?.let {
             val site = siteStore.getSiteBySiteId(it)
-            val currentDate = Date()
-            runBlocking {
-                visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
-            }
-            val visitsAndViewsModel = visitsAndViewsStore.getVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
-            val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
-            val uiModels = periods.mapIndexed { index, periodData ->
-                buildListItemUiModel(index, periodData, periods, site.id)
-            }
-                    .take(LIST_ITEM_COUNT)
-            if (uiModels != data) {
-                mutableData.clear()
-                mutableData.addAll(uiModels)
+            site?.let {
+                val currentDate = Date()
+                runBlocking {
+                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
+                }
+                val visitsAndViewsModel = visitsAndViewsStore.getVisits(
+                        site,
+                        DAYS,
+                        Top(LIST_ITEM_COUNT + 1),
+                        currentDate
+                )
+                val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
+                val uiModels = periods.mapIndexed { index, periodData ->
+                    buildListItemUiModel(index, periodData, periods, site.id)
+                }.take(LIST_ITEM_COUNT)
+                if (uiModels != data) {
+                    mutableData.clear()
+                    mutableData.addAll(uiModels)
+                }
             }
         }
     }
@@ -108,5 +114,7 @@ class ViewsListViewModel
         val period: String,
         val localSiteId: Int,
         val showDivider: Boolean = !isPositiveChangeVisible && !isNegativeChangeVisible && !isNeutralChangeVisible
-    )
+    ) {
+        enum class ChangeVisible { POSITIVE, NEGATIVE, NEUTRAL, NONE }
+    }
 }

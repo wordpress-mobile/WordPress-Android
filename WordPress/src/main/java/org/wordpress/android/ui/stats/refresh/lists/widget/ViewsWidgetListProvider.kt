@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfi
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
-    @Inject lateinit var viewModel: ViewsListViewModel
+    @Inject lateinit var viewModel: ViewsWidgetListViewModel
     private var showChangeColumn: Boolean = intent.getBooleanExtra(SHOW_CHANGE_VALUE_KEY, true)
     private var colorModeId: Int = intent.getIntExtra(COLOR_MODE_KEY, Color.LIGHT.ordinal)
     private var siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)

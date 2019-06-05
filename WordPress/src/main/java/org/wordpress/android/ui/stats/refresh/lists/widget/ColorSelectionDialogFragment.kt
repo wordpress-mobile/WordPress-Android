@@ -39,7 +39,7 @@ class ColorSelectionDialogFragment : AppCompatDialogFragment() {
                 updatedColor?.let { view.check(updatedColor.toViewId()) }
             }
         })
-        alertDialogBuilder.setTitle(R.string.stats_widget_select_colour)
+        alertDialogBuilder.setTitle(R.string.stats_widget_select_color)
 
         alertDialogBuilder.setPositiveButton(R.string.dialog_button_ok) { dialog, _ ->
             dialog?.dismiss()
