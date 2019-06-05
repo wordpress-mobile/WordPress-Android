@@ -189,17 +189,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
         viewModel.uiState.observe(this,
                 Observer { uiState ->
                     uiState?.let {
-                        if (uiState.isFormProgressIndicatorVisible) {
-                            showFormProgressIndicator()
-                        } else {
-                            hideFormProgressIndicator()
-                        }
-
-                        if (uiState.isStateProgressIndicatorVisible) {
-                            showStateProgress()
-                        } else {
-                            hideStateProgress()
-                        }
+                        toggleFormProgressIndictor(uiState.isFormProgressIndicatorVisible)
+                        toggleStateProgressIndicator(uiState.isStateProgressIndicatorVisible)
+                        toggleStateInputEnabledState(uiState.isStateInputEnabled)
 
                         if (uiState.isRegistrationProgressIndicatorVisible) {
                             showDomainRegistrationProgressDialog()
@@ -211,12 +203,6 @@ class DomainRegistrationDetailsFragment : Fragment() {
                             domain_privacy_options_radiogroup.check(R.id.domain_privacy_on_radio_button)
                         } else {
                             domain_privacy_options_radiogroup.check(R.id.domain_privacy_off_radio_button)
-                        }
-
-                        if (uiState.isStateInputEnabled) {
-                            enableStateInput()
-                        } else {
-                            disableStateInput()
                         }
 
                         register_domain_button.isEnabled = uiState.isDomainRegistrationButtonEnabled
@@ -386,32 +372,31 @@ class DomainRegistrationDetailsFragment : Fragment() {
         dialogFragment.show(fragmentManager, CountryPickerDialogFragment.TAG)
     }
 
-    private fun showFormProgressIndicator() {
-        form_progress_indicator.visibility = View.VISIBLE
+    private fun toggleFormProgressIndictor(visible: Boolean) {
+        if (visible) {
+            form_progress_indicator.visibility = View.VISIBLE
+        } else {
+            form_progress_indicator.visibility = View.GONE
+        }
     }
 
-    private fun hideFormProgressIndicator() {
-        form_progress_indicator.visibility = View.GONE
+    private fun toggleStateProgressIndicator(visible: Boolean) {
+        if (visible) {
+            states_loading_progress_indicator.visibility = View.VISIBLE
+        } else {
+            states_loading_progress_indicator.visibility = View.GONE
+        }
+
+        state_input_container.isEnabled = !visible
     }
 
-    private fun showStateProgress() {
-        states_loading_progress_indicator.visibility = View.VISIBLE
-        state_input_container.isEnabled = false
-    }
-
-    private fun hideStateProgress() {
-        states_loading_progress_indicator.visibility = View.GONE
-        state_input_container.isEnabled = true
-    }
-
-    private fun enableStateInput() {
-        state_input_container.isEnabled = true
-        state_input_container.hint = getString(R.string.domain_contact_information_state_hint)
-    }
-
-    private fun disableStateInput() {
-        state_input_container.isEnabled = false
-        state_input_container.hint = getString(R.string.domain_contact_information_state_not_available_hint)
+    private fun toggleStateInputEnabledState(enabled: Boolean) {
+        state_input_container.isEnabled = enabled
+        if (enabled) {
+            state_input_container.hint = getString(R.string.domain_contact_information_state_hint)
+        } else {
+            state_input_container.hint = getString(R.string.domain_contact_information_state_not_available_hint)
+        }
     }
 
     private fun showDomainRegistrationProgressDialog() {
