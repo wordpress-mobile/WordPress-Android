@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.StringDef;
+
+import androidx.annotation.StringDef;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
@@ -31,7 +32,6 @@ public class WellSqlConfig extends DefaultWellConfig {
     @StringDef({ADDON_WOOCOMMERCE})
     @Target(ElementType.PARAMETER)
     public @interface AddOn {}
-
     public static final String ADDON_WOOCOMMERCE = "WC";
 
     public WellSqlConfig(Context context) {
@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 67;
+        return 69;
     }
 
     @Override
@@ -508,6 +508,16 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 66:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
+                oldVersion++;
+            case 67:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 68:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
@@ -540,6 +550,22 @@ public class WellSqlConfig extends DefaultWellConfig {
             db.execSQL(table.createStatement());
         }
     }
+
+    /**
+     * Recreates all the tables in this database - similar to the above but can be used from onDowngrade where we can't
+     * call giveMeWritableDb (attempting to do so results in "IllegalStateException: getDatabase called recursively")
+     */
+    @SuppressWarnings("unused")
+    public void reset(WellTableManager helper) {
+        AppLog.d(T.DB, "resetting tables");
+        for (Class<? extends Identifiable> table : mTables) {
+            AppLog.d(T.DB, "dropping table " + table.getSimpleName());
+            helper.dropTable(table);
+            AppLog.d(T.DB, "creating table " + table.getSimpleName());
+            helper.createTable(table);
+        }
+    }
+
 
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
@@ -757,7 +783,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CARRIER_LINK TEXT NOT NULL,"
                                + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
-                case 66:
+                 case 67:
+                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                     db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
+                     break;
+                case 68:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderModel ADD DATE_MODIFIED TEXT");
                     db.execSQL("CREATE TABLE WCOrderSummaryModel (LOCAL_SITE_ID INTEGER,REMOTE_ORDER_ID INTEGER,"
