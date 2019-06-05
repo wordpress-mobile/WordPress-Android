@@ -1,6 +1,9 @@
 package org.wordpress.android.fluxc.store.stats.time
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers.Unconfined
@@ -17,7 +20,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.VisitsAndViewsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,7 +37,7 @@ private val DATE = Date(0)
 class VisitsAndViewsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: VisitAndViewsRestClient
-    @Mock lateinit var sqlUtils: TimeStatsSqlUtils
+    @Mock lateinit var sqlUtils: VisitsAndViewsSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: VisitsAndViewsStore
     @Before
@@ -53,13 +56,28 @@ class VisitsAndViewsStoreTest {
                 VISITS_AND_VIEWS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
-        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
+    }
+
+    @Test
+    fun `returns cached data per site`() = test {
+        whenever(sqlUtils.hasFreshRequest(site, DAYS, DATE, ITEMS_TO_LOAD)).thenReturn(true)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
+        val model = mock<VisitsAndViewsModel>()
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
+
+        val forced = false
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
+
+        assertThat(responseModel.model).isEqualTo(model)
+        assertThat(responseModel.cached).isTrue()
+        verify(sqlUtils, never()).insert(any(), any(), any(), any(), isNull())
     }
 
     @Test
@@ -68,7 +86,7 @@ class VisitsAndViewsStoreTest {
         val fetchInsightsPayload = FetchStatsPayload(
                 VISITS_AND_VIEWS_RESPONSE
         )
-        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
         val emptyModel = VisitsAndViewsModel("", emptyList())
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(emptyModel)
 
@@ -84,7 +102,7 @@ class VisitsAndViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitsAndViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
 
@@ -96,7 +114,7 @@ class VisitsAndViewsStoreTest {
 
     @Test
     fun `returns data from db`() {
-        whenever(sqlUtils.selectVisitsAndViews(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
         val model = mock<VisitsAndViewsModel>()
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 

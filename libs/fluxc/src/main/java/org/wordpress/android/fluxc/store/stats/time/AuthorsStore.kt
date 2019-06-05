@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.AuthorsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -21,7 +21,7 @@ import kotlin.coroutines.CoroutineContext
 class AuthorsStore
 @Inject constructor(
     private val restClient: AuthorsRestClient,
-    private val sqlUtils: TimeStatsSqlUtils,
+    private val sqlUtils: AuthorsSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
@@ -32,11 +32,14 @@ class AuthorsStore
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
+        if (!forced && sqlUtils.hasFreshRequest(site, period, date, limitMode.limit)) {
+            return@withContext OnStatsFetched(getAuthors(site, period, limitMode, date), cached = true)
+        }
         val payload = restClient.fetchAuthors(site, period, date, limitMode.limit + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, period, date)
+                sqlUtils.insert(site, payload.response, period, date, limitMode.limit)
                 OnStatsFetched(timeStatsMapper.map(payload.response, limitMode))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
@@ -44,6 +47,6 @@ class AuthorsStore
     }
 
     fun getAuthors(site: SiteModel, period: StatsGranularity, limitMode: LimitMode, date: Date): AuthorsModel? {
-        return sqlUtils.selectAuthors(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
+        return sqlUtils.select(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }

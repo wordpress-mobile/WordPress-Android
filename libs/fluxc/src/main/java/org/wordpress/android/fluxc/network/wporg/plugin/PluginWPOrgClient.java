@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.network.wporg.plugin;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
