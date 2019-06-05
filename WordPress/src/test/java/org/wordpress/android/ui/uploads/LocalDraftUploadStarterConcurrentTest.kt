@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.uploads
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 /**
@@ -75,6 +76,7 @@ class LocalDraftUploadStarterConcurrentTest {
             bgDispatcher = Dispatchers.Default,
             ioDispatcher = Dispatchers.IO,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+            postUtilsWrapper = createMockedPostUtilsWrapper(),
             connectionStatus = mock(),
             uploadServiceFacade = uploadServiceFacade
     )
@@ -86,6 +88,10 @@ class LocalDraftUploadStarterConcurrentTest {
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
             on { isPostUploadingOrQueued(any()) } doReturn false
+        }
+
+        fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
+            on { isPublishable(any()) } doReturn true
         }
     }
 }

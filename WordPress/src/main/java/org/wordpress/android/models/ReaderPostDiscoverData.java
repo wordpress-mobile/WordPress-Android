@@ -1,10 +1,11 @@
 package org.wordpress.android.models;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

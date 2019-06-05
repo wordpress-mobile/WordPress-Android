@@ -36,7 +36,7 @@
             tools:visibility="visible"/>
 
         <!-- this coordinator exists only for snackbars -->
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts
 
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils

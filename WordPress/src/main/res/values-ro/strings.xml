@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-14 19:33:14+0000
+Translation-Revision-Date: 2019-05-24 07:25:45+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="history_fetching_revisions">Aduc reviziile…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Inserarea elementului media a eșuat.\nTe rog atinge pentru a reîncerca.</string>
+    <string name="editor_uploading_draft">Ciorna ta se încarcă acum</string>
+    <string name="post_uploading_draft">Încarc ciorna</string>
     <string name="post_list_drafts">Ciorne</string>
     <string name="post_list_published">Publicat</string>
     <string name="post_list_author_everyone">Toată lumea</string>
@@ -93,7 +98,6 @@ Language: ro
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloc neacceptat</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Plasează URL-ul</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ALEGE O IMAGINE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Șterge toate setările</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Text alternativ</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Bibliotecă media WordPress</string>

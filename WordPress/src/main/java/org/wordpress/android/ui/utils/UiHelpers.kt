@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.utils
 
 import android.content.Context
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.ui.utils.UiDimen.UIDimenDPInt
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes

@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
@@ -138,9 +138,9 @@ class UiModelMapper
 
     private fun getErrorMessage(): Int {
         return if (networkUtilsWrapper.isNetworkAvailable()) {
-            string.stats_loading_error
+            R.string.stats_loading_error
         } else {
-            string.no_network_title
+            R.string.no_network_title
         }
     }
 }

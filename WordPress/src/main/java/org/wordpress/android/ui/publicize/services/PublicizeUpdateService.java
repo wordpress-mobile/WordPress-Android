@@ -2,8 +2,9 @@ package org.wordpress.android.ui.publicize.services;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;

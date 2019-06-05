@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 06:54:10+0000
+Translation-Revision-Date: 2019-05-23 17:29:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="history_fetching_revisions">Revisionen werden abgerufen…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Medien hochladen fehlgeschlagen.\nBitte tippen für Optionen.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Medien einfügen fehlgeschlagen.\nBitte tippen für neuen Versuch.</string>
+    <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
+    <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
     <string name="post_list_drafts">Entwürfe</string>
     <string name="post_list_published">Veröffentlicht</string>
     <string name="post_list_author_everyone">Jeder</string>
@@ -93,7 +98,6 @@ Language: de
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Nicht unterstützter Block</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL einfügen</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WÄHLE EIN BILD AUS</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Das Einfügen von Medien ist fehlgeschlagen.\nBitte tippe hier für Optionen.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Alle Einstellungen löschen</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-Text</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress-Mediathek</string>
@@ -269,6 +273,7 @@ Language: de
     <string name="stats_followers_count_message">%1$s-Follower insgesamt: %2$s</string>
     <string name="stats_followers_email">E-Mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_manage_insights">Einsichten verwalten</string>
     <string name="stats_empty_insights_title">Noch keine Einsichten hinzugefügt</string>
     <string name="stats_no_data_yet">Noch keine Daten</string>
     <string name="menu_debug">Debug-Menü</string>
@@ -376,9 +381,13 @@ Language: de
     <string name="reader_empty_followed_tags_subtitle">Füge hier Tags hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
     <string name="install_jetpack_retry">Erneut versuchen</string>
+    <string name="install_jetpack_continue">Weiter</string>
+    <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
     <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
     <string name="jetpack_installed">Jetpack installiert</string>
+    <string name="installing_jetpack_message">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern</string>
     <string name="installing_jetpack">Jetpack installieren</string>
+    <string name="install_jetpack_message">Deine Website-Anmeldedaten werden nicht gespeichert und werden verwendet, um Jetpack zu installieren</string>
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
@@ -1043,6 +1052,8 @@ Language: de
     <string name="editor_dropped_text_error">Beim Ablegen des Textes ist ein Fehler aufgetreten</string>
     <string name="editor_dropped_html_images_not_allowed">Im HTML-Modus können keine Bilder abgelegt werden</string>
     <string name="editor_content_hint">Erzähle deine Geschichte hier …</string>
+    <string name="post_list_trashed">Im Papierkorb</string>
+    <string name="post_list_scheduled">Geplant</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Entwurf</string>
     <string name="post_status_pending_review">Ausstehender Review</string>

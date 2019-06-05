@@ -1,13 +1,14 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
-import android.arch.lifecycle.LiveData;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
-import android.support.v4.app.Fragment;
 import android.text.Spanned;
 import android.view.DragEvent;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 

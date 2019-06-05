@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-09 10:07:28+0000
+Translation-Revision-Date: 2019-05-24 11:28:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="history_fetching_revisions">Po sillen rishikimet…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">S’u arrit të futej media.\nJu lutemi, prekeni që të riprovohet.</string>
+    <string name="editor_uploading_draft">Skica juaj po ngarkohet</string>
+    <string name="post_uploading_draft">Po ngarkohet skicë</string>
     <string name="post_list_drafts">Skica</string>
     <string name="post_list_published">Të botuar</string>
     <string name="post_list_author_everyone">Cilido</string>
     <string name="post_list_author_me">Unë</string>
     <string name="error_restoring_post">Ndodhi një gabim gjatë rikthimit të postimit</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Objektet e treguar më sipër do të shfaqen te skeda juaj Prirje. Për t’i përshtatur, tërhiqini dhe vendosini.</string>
     <string name="stats_insights_add_insights_header">Shtoni Tendencë</string>
     <string name="stats_insights_management_title">Shihni vetëm statistikat më me peshë. Shtoni dhe sistemoni më poshtë tendencat tuaja.</string>
     <string name="stats_insights_social">Shoqërore</string>
     <string name="stats_insights_annual_site_stats">Statistika Vjetore Sajti</string>
     <string name="stats_view_follower_totals">Ndjekës Gjithsej</string>
+    <string name="suggestion_fetch_error">S’u ngarkuan dot sugjerime statistikash</string>
     <string name="suggestions_search_hint">Për më tepër ide, shtypni një fjalëkyç</string>
     <string name="suggestions_empty_list">S’u gjetën sugjerime</string>
     <string name="choose_domain">Zgjidhni Përkatësi</string>
@@ -24,6 +31,20 @@ Language: sq_AL
     <string name="stats_menu_remove">Hiqe prej tendencave</string>
     <string name="stats_menu_move_down">Ule poshtë </string>
     <string name="stats_menu_move_up">Ngjite sipër</string>
+    <string name="stats_item_settings">Rregullime zëri statistikash</string>
+    <string name="post_moving_to_draft">Postimi po shpihet te skicat</string>
+    <string name="post_restoring">Postimi po rikthehet</string>
+    <string name="post_restored">Postimi u rikthye</string>
+    <string name="post_trashing">Postimi po shpihet te hedhurinat</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej ndryshimet vendore, jeni i sigurt se doni të vazhdohet?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Ndryshime vendore</string>
+    <string name="button_move_to_draft">Kaloje te Skica</string>
+    <string name="post_list_toggle_item_layout_list_view">Kalo te pamja listë</string>
+    <string name="post_list_toggle_item_layout_cards_view">Kalo te pamja karta</string>
+    <string name="posts_trashed_empty">S’keni postime të shpëna te hedhurinat</string>
+    <string name="posts_draft_empty">S’keni ndonjë postim skicë</string>
+    <string name="posts_scheduled_empty">S’keni postime të planifikuara për botim</string>
+    <string name="posts_published_empty">S’keni botuar ende ndonjë postim</string>
     <string name="notification_wpcom_username_needed">Ju lutemi, bëni hyrjen me emrin tuaj të përdoruesit dhe fjalëkalimin.</string>
     <string name="login_invalid_site_url">Adresa e sajtit që dhatë është e pavlefshme. Ju lutemi, rijepeni.</string>
     <string name="error_user_username_instead_of_email">Ju lutemi, hyni duke përdorur emrin tuaj të përdoruesit WordPress.com, në vend se adresën tuaj email.</string>
@@ -76,7 +97,6 @@ Language: sq_AL
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bllok i Pambuluar</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Hidhni URL-në</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ZGJIDHNI FIGURË</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Dështoi në futje mediash.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Pastro Krejt Rregullimet</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Tekst Alternativ</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Mediatekë WordPress</string>

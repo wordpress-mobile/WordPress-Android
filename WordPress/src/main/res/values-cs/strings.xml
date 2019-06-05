@@ -51,7 +51,6 @@ Language: cs_CZ
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Nepodporovaný blok</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte adresu URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ZVOLIT OBRÁZEK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Vložení média se nezdařilo .\nKlepněte na nastavení.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Vymazat všechna nastavení</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Zarovnání textu</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress knihovna médií</string>

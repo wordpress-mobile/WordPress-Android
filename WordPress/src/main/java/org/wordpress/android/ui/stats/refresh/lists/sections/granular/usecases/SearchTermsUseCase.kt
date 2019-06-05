@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -96,7 +95,7 @@ constructor(
         if (domainModel.searchTerms.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(string.stats_search_terms_label, string.stats_search_terms_views_label))
+            items.add(Header(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label))
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
                 ListItemWithIcon(
@@ -121,7 +120,7 @@ constructor(
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = create(statsGranularity, this::onViewMoreClick)
                         )
                 )
