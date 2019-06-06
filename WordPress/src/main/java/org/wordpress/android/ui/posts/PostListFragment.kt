@@ -39,6 +39,7 @@ import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
+private const val EXTRA_IS_SEACH = "is_search"
 private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
 
 class PostListFragment : Fragment() {
@@ -59,6 +60,7 @@ class PostListFragment : Fragment() {
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
+    private var isSearch: Boolean = false
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
@@ -97,15 +99,16 @@ class PostListFragment : Fragment() {
         } else {
             this.site = site
         }
+
+        isSearch = requireNotNull(arguments).getBoolean(EXTRA_IS_SEACH, false)
     }
+
+    lateinit var mainViewModel: PostListMainViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
-                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
-        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
@@ -125,9 +128,28 @@ class PostListFragment : Fragment() {
                 postListAdapter.updateItemLayoutType(layoutType)
             }
         })
+
+        if (isSearch) {
+            mainViewModel.searchQuery.observe(this, Observer {
+                setViewModel(it)
+            })
+        }
+
+        setViewModel()
+    }
+
+    private fun setViewModel(searchQuery: String? = null) {
+        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
+                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
+        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+
+        viewModelStore.clear()
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
+
+        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType), searchQuery)
+
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
@@ -241,13 +263,15 @@ class PostListFragment : Fragment() {
         fun newInstance(
             site: SiteModel,
             authorFilter: AuthorFilterSelection,
-            postListType: PostListType
+            postListType: PostListType,
+            isSearch: Boolean = false
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_AUTHOR_FILTER, authorFilter)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
+            bundle.putBoolean(EXTRA_IS_SEACH, isSearch)
             fragment.arguments = bundle
             return fragment
         }
