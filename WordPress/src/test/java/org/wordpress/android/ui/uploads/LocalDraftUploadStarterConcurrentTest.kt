@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.uploads
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -15,7 +15,9 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 /**
@@ -39,6 +41,9 @@ class LocalDraftUploadStarterConcurrentTest {
 
     private val postStore = mock<PostStore> {
         on { getLocalDraftPosts(eq(site)) } doReturn posts
+    }
+    private val pageStore = mock<PageStore> {
+        onBlocking { getLocalDraftPages(any()) } doReturn emptyList()
     }
 
     @Test
@@ -66,10 +71,12 @@ class LocalDraftUploadStarterConcurrentTest {
     private fun createLocalDraftUploadStarter(uploadServiceFacade: UploadServiceFacade) = LocalDraftUploadStarter(
             context = mock(),
             postStore = postStore,
+            pageStore = pageStore,
             siteStore = mock(),
             bgDispatcher = Dispatchers.Default,
             ioDispatcher = Dispatchers.IO,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
+            postUtilsWrapper = createMockedPostUtilsWrapper(),
             connectionStatus = mock(),
             uploadServiceFacade = uploadServiceFacade
     )
@@ -81,6 +88,10 @@ class LocalDraftUploadStarterConcurrentTest {
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
             on { isPostUploadingOrQueued(any()) } doReturn false
+        }
+
+        fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
+            on { isPublishable(any()) } doReturn true
         }
     }
 }

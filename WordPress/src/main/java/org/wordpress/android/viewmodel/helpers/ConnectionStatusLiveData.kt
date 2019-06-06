@@ -1,11 +1,11 @@
 package org.wordpress.android.viewmodel.helpers
 
-import android.arch.lifecycle.LiveData
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import androidx.lifecycle.LiveData
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE

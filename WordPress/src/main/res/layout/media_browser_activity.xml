@@ -16,7 +16,7 @@
         layout="@layout/toolbar" >
     </include>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:background="@color/primary"
         android:elevation="@dimen/tabs_elevation"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         app:tabIndicatorColor="@android:color/white"
         app:tabMode="scrollable" >
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
     <RelativeLayout
         android:id="@+id/quota_bar"

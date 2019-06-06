@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader.models;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

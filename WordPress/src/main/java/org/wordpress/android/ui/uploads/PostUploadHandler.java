@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -54,8 +56,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class PostUploadHandler implements UploadHandler<PostModel> {
     private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();

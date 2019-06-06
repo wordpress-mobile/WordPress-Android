@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS

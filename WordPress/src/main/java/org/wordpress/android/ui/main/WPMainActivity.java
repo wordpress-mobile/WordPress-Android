@@ -2,7 +2,6 @@ package org.wordpress.android.ui.main;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,19 +9,22 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.RemoteInput;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.RemoteInput;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +66,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -108,9 +109,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
-import static android.arch.lifecycle.Lifecycle.State.STARTED;
+import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
@@ -728,12 +727,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private void jumpNewPost(Intent data) {
-        if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
-            ActivityLauncher.addNewPostForResult(this, mSelectedSite, false);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -778,7 +771,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 AppPrefs.setQuickStartNoticeRequired(false);
 
                 setSite(data);
-                jumpNewPost(data);
                 showQuickStartDialog();
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -810,7 +802,6 @@ public class WPMainActivity extends AppCompatActivity implements
                     }
 
                     setSite(data);
-                    jumpNewPost(data);
 
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
@@ -978,16 +969,19 @@ public class WPMainActivity extends AppCompatActivity implements
 
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
         mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
         mBottomNav.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
         updateConnectionBar(event.isConnected());
     }

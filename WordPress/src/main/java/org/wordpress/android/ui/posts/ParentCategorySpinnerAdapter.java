@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import androidx.core.view.ViewCompat;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;

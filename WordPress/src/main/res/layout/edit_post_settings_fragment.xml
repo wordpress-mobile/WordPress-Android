@@ -14,7 +14,7 @@
 
         <!--Status-->
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             style="@style/PostSettingsCardView"
             card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/default_cardview_radius">
@@ -67,11 +67,11 @@
                         android:hint="@string/post_settings_not_set"/>
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <!--Categories & Tags-->
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             style="@style/PostSettingsCardView"
             android:id="@+id/post_categories_and_tags_card"
             card_view:cardBackgroundColor="@android:color/white"
@@ -114,11 +114,11 @@
                         android:hint="@string/post_settings_not_set"/>
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <!--Featured Image-->
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/post_featured_image_card_view"
             style="@style/PostSettingsCardView"
             card_view:cardBackgroundColor="@android:color/white"
@@ -152,11 +152,11 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <!--More Options-->
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             style="@style/PostSettingsCardView"
             card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/default_cardview_radius">
@@ -234,7 +234,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </ScrollView>

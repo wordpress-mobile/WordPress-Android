@@ -2,11 +2,13 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.VolleyError;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -20,9 +22,6 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
-
 
 public abstract class StatsAbstractFragment extends Fragment {
     public static final String TAG = StatsAbstractFragment.class.getSimpleName();

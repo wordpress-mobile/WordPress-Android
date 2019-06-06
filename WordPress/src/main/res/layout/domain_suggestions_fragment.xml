@@ -113,12 +113,12 @@
         android:clipToPadding="false"
         android:padding="@dimen/margin_large">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/chose_domain_button"
             style="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/domains_suggestions_choose_domain">
-        </android.support.v7.widget.AppCompatButton>
+        </androidx.appcompat.widget.AppCompatButton>
     </RelativeLayout>
 </RelativeLayout>
