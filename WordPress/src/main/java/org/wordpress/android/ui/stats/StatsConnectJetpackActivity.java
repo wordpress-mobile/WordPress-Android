@@ -6,11 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -95,7 +97,9 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
                 WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, FAQ_URL);
             }
         });
-        View jetpackTermsAndConditions = findViewById(R.id.jetpack_terms_and_conditions);
+        TextView jetpackTermsAndConditions = findViewById(R.id.jetpack_terms_and_conditions);
+        jetpackTermsAndConditions.setText(Html.fromHtml(String.format(
+                getResources().getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>")));
         jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 WPWebViewActivity.openURL(StatsConnectJetpackActivity.this,

@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:textAlignment="center"
-                    android:text="@string/stats_jetpack_connection_terms_and_conditions"
+                    tools:text="@string/jetpack_connection_terms_and_conditions"
                     style="@style/JetpackTermsAndConditionsButton"/>
 
                 <Button
