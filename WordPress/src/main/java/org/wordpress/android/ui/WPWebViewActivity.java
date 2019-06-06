@@ -343,7 +343,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     public void onWebViewReceivedError() {
-        mViewModel.onError();
+        mViewModel.onReceivedError();
     }
 
     @Override

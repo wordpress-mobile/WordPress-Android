@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -12,13 +12,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.test
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 
 @RunWith(MockitoJUnitRunner::class)
 class WPWebViewViewModelTest {
@@ -54,7 +54,7 @@ class WPWebViewViewModelTest {
     @Test
     fun `error shown on error failure`() {
         viewModel.start()
-        viewModel.onError()
+        viewModel.onReceivedError()
         Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
