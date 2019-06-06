@@ -40,8 +40,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/tos_explanation"
                     style="@style/DomainRegistrationFormSubTitle"
-                    android:paddingTop="4dp"
-                    android:text="@string/domain_registration_privacy_protection_tos"/>
+                    tools:text="@string/domain_registration_privacy_protection_tos"/>
 
                 <RadioGroup
                     android:id="@+id/domain_privacy_options_radiogroup"

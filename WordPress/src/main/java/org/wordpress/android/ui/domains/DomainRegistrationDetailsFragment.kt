@@ -6,11 +6,9 @@ import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.text.SpannableString
+import android.text.Html
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -168,37 +166,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
             }
         }
 
-        // make link to ToS clickable
-        val spannableTosString = SpannableString(tos_explanation.text)
-        val tosUnderlineSpan = spannableTosString.getSpans(
-                0,
-                spannableTosString.length,
-                UnderlineSpan::class.java
+        tos_explanation.text = Html.fromHtml(
+                String.format(
+                        resources.getString(R.string.domain_registration_privacy_protection_tos), "<u>", "</u>"
+                )
         )
-
-        if (tosUnderlineSpan.size == 1) {
-            val tosClickableSpan = object : ClickableSpan() {
-                override fun onClick(widget: View?) {
-                    ActivityLauncher.openUrlExternal(context, WPUrlUtils.buildTermsOfServiceUrl(context))
-                }
-            }
-
-            val spanStart = spannableTosString.getSpanStart(tosUnderlineSpan[0])
-            val spanEnd = spannableTosString.getSpanEnd(tosUnderlineSpan[0])
-
-            spannableTosString.setSpan(
-                    tosClickableSpan,
-                    spanStart,
-                    spanEnd,
-                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            tos_explanation.text = spannableTosString
-            tos_explanation.movementMethod = LinkMovementMethod.getInstance()
-        } else {
-            tos_explanation.setOnClickListener {
-                ActivityLauncher.openUrlExternal(context, WPUrlUtils.buildTermsOfServiceUrl(context))
-            }
+        tos_explanation.movementMethod = LinkMovementMethod.getInstance()
+        tos_explanation.setOnClickListener {
+            ActivityLauncher.openUrlExternal(context, WPUrlUtils.buildTermsOfServiceUrl(context))
         }
 
         if (supportedStates == null || supportedStates!!.isEmpty()) {
