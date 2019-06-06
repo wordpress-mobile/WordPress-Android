@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.sitecreation.services
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.GENERIC_ERRO
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType.SITE_NAME_EXISTS
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceManager.SiteCreationServiceManagerListener
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.FAILURE
@@ -52,6 +53,7 @@ class SiteCreationServiceManagerTest {
     @Mock lateinit var useCase: CreateSiteUseCase
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var serviceListener: SiteCreationServiceManagerListener
+    @Mock lateinit var tracker: SiteCreationTracker
 
     private lateinit var manager: SiteCreationServiceManager
 
@@ -61,7 +63,7 @@ class SiteCreationServiceManagerTest {
 
     @Before
     fun setUp() {
-        manager = SiteCreationServiceManager(useCase, dispatcher, TEST_DISPATCHER)
+        manager = SiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
         successEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
         siteExistsErrorEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")

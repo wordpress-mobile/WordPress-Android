@@ -1,9 +1,10 @@
 package org.wordpress.android.editor;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * An EditText with support for {@link org.wordpress.android.editor.OnImeBackListener} and typeface setting

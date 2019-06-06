@@ -1,4 +1,6 @@
 {
+    "scenarioName": "auth",
+    "newScenarioState": "logged-in",
     "request": {
         "urlPath": "/rest/v1.3/auth/send-login-email/",
         "method": "POST"

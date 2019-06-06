@@ -35,7 +35,7 @@
         android:text="@string/domain_registration_result_description"
         android:textSize="@dimen/text_sz_large"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/continue_button"
         style="@style/WordPress.Button.Primary"
         android:layout_width="match_parent"

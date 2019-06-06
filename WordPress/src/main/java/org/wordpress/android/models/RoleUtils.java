@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.RoleModel;

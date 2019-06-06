@@ -17,11 +17,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.util.SparseArrayCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
@@ -46,7 +41,13 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.collection.SparseArrayCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.android.volley.VolleyError;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang3.ArrayUtils;

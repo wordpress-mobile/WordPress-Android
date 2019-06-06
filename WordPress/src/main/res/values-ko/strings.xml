@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 08:54:10+0000
+Translation-Revision-Date: 2019-05-28 15:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="history_fetching_revisions">리비전을 가져오는 중…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">미디어를 삽입하지 못했습니다.\n눌러서 다시 시도하세요.</string>
+    <string name="editor_uploading_draft">임시글을 업로드하고 있습니다.</string>
+    <string name="post_uploading_draft">임시글 업로드 중</string>
     <string name="post_list_drafts">임시글</string>
     <string name="post_list_published">게시됨</string>
     <string name="post_list_author_everyone">모두 볼 수 있음</string>
@@ -92,7 +97,6 @@ Language: ko_KR
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">지원되지 않는 블록</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL 붙여 넣기</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">이미지 선택</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">모든 설정 지우기</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">대체 텍스트</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">워드프레스 미디어 라이브러리</string>
@@ -206,6 +210,10 @@ Language: ko_KR
     <string name="dialog_confirm_load_remote_post_body_2">로컬\n%s에 저장됨\n\n웹\n%s에 저장됨\n</string>
     <string name="dialog_confirm_load_remote_post_body">이 글에 있는 두 가지 버전이 서로 충돌합니다. 취소할 버전을 선택하세요.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">동기화 충돌 문제 해결</string>
+    <string name="local_changes_discarding_no_connection">이 작업을 수행하려면 연결이 필수입니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
+    <string name="preference_strip_image_location">미디어에서 위치 제거</string>
+    <string name="stats_cannot_be_started">지금은 통계를 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="site_creation_label_domain_selection">웹에서 회원님을 찾을 수 있도록 하려면 사용 가능한 주소를 선택하세요.</string>
     <string name="giphy_powered_by_giphy">GIPHY 제공</string>
     <string name="giphy_picker_endless_scroll_network_error">네트워크 오류로 인해 일부 미디어를 로드하지 못했습니다.</string>

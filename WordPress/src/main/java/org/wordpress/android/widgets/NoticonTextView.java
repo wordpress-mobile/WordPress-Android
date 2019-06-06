@@ -1,8 +1,9 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * TextView that uses noticon icon font

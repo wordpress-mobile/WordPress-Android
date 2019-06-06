@@ -3,14 +3,15 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ValidationUtils;

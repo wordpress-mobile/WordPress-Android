@@ -60,7 +60,7 @@
         android:clipToPadding="false"
         tools:ignore="InconsistentLayout">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/LoginTheme.Button.Secondary"
             android:id="@+id/login_enter_password"
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:gravity="start|center_vertical"
             android:text="@string/enter_your_password_instead"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/LoginTheme.Button.Primary"
             android:id="@+id/login_request_magic_link"
             android:layout_width="wrap_content"
