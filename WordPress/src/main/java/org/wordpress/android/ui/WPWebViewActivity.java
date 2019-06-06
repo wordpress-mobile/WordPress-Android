@@ -138,7 +138,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private void initRetryButton() {
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View v) {
-                    mViewModel.load();
+                    mViewModel.loadIfNecessary();
                 }
         });
     }

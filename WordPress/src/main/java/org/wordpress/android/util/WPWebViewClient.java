@@ -40,7 +40,8 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
         this(site, token, null, listener);
     }
 
-    public WPWebViewClient(SiteModel site, String token, List<String> urls, ErrorManagedWebViewClientListener listener) {
+    public WPWebViewClient(SiteModel site, String token, List<String> urls,
+                           ErrorManagedWebViewClientListener listener) {
         super(urls, listener);
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         mSite = site;
