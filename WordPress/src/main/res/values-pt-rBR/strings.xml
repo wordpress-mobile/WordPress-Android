@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-11 17:36:13+0000
+Translation-Revision-Date: 2019-05-24 19:52:56+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="history_fetching_revisions">Coletando revisões…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Falha ao inserir a mídia.\nClique para ver mais opções.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nClique para ver tentar novamente.</string>
+    <string name="editor_uploading_draft">Seu rascunho está sendo enviado para o site</string>
+    <string name="post_uploading_draft">Enviando rascunho</string>
     <string name="post_list_drafts">Rascunhos</string>
     <string name="post_list_published">Publicado</string>
     <string name="post_list_author_everyone">Todos</string>
@@ -93,7 +98,6 @@ Language: pt_BR
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Bloco não suportado</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Colar URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ESCOLHER A IMAGEM</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Falha ao inserir a mídia.\nClique para ver as opções.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Limpar todas as configurações</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Texto alternativo</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteca de mídia do WordPress</string>

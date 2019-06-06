@@ -41,12 +41,12 @@
         android:layout_height="wrap_content" />
 
     <!-- CoordinatorLayout required: https://code.google.com/p/android/issues/detail?id=175330 -->
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,6 +57,6 @@
             android:contentDescription="@string/add"
             app:borderWidth="0dp" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

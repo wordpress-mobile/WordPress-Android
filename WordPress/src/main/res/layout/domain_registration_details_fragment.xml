@@ -99,10 +99,10 @@
                     android:layout_marginBottom="@dimen/margin_medium"
                     android:text="@string/domain_contact_information_description"/>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/first_name_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -111,12 +111,12 @@
                         android:inputType="textPersonName"
                         tools:ignore="HardcodedText"
                         tools:text="John"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/last_name_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -124,24 +124,24 @@
                         android:imeOptions="actionNext"
                         android:inputType="textPersonName"
                         tools:text="Smith"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/organization_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_organization_hint"
                         android:imeOptions="actionNext"
                         android:inputType="text"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/email_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -149,12 +149,12 @@
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         tools:text="email@wordpress.com"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/country_code_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -164,12 +164,12 @@
                         android:maxLength="3"
                         tools:text="44"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/phone_number_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -178,12 +178,12 @@
                         android:inputType="number"
                         tools:text="3127924444"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/country_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -191,12 +191,12 @@
                         android:hint="@string/domain_contact_information_country_hint"
                         android:inputType="none"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/address_first_line_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -204,12 +204,12 @@
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/address_second_line_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -217,36 +217,36 @@
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"/>
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/city_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_city_hint"
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/state_input_container"
                         style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                        <android.support.design.widget.TextInputEditText
+                        <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/state_input"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusable="false"
                             android:hint="@string/domain_contact_information_state_hint"
                             android:inputType="none"/>
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <ProgressBar
                         android:id="@+id/states_loading_progress_indicator"
@@ -262,18 +262,18 @@
                 </RelativeLayout>
 
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/postal_code_input_container"
                     style="@style/DomainRegistrationDetailsFormTextInputLayout">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/postal_code_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/domain_contact_information_postal_code_hint"
                         android:imeOptions="actionNext"
                         android:inputType="textPostalAddress"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -298,13 +298,13 @@
         android:padding="@dimen/margin_large">
 
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/register_domain_button"
             style="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/domain_contact_information_register_domain_button">
-        </android.support.v7.widget.AppCompatButton>
+        </androidx.appcompat.widget.AppCompatButton>
     </RelativeLayout>
 
     <RelativeLayout

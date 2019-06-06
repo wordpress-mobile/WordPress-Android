@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.support.v7.util.DiffUtil.Callback
+import androidx.recyclerview.widget.DiffUtil.Callback
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.EXPAND_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_BAR_CHANGED

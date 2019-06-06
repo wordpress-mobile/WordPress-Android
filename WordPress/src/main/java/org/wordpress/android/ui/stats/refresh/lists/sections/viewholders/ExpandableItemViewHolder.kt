@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import org.wordpress.android.R
 import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 
 class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_list_item
+        R.layout.stats_block_list_item
 ) {
     private val iconContainer = itemView.findViewById<LinearLayout>(id.icon_container)
     private val text = itemView.findViewById<TextView>(id.text)

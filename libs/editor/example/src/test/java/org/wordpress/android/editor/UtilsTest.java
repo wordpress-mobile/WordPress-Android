@@ -25,9 +25,9 @@ import static org.wordpress.android.editor.Utils.buildMapFromKeyValuePairs;
 import static org.wordpress.android.editor.Utils.decodeHtml;
 import static org.wordpress.android.editor.Utils.escapeHtml;
 import static org.wordpress.android.editor.Utils.getChangeMapFromSets;
+import static org.wordpress.android.editor.Utils.getUrlFromClipboard;
 import static org.wordpress.android.editor.Utils.splitDelimitedString;
 import static org.wordpress.android.editor.Utils.splitValuePairDelimitedString;
-import static org.wordpress.android.editor.Utils.getUrlFromClipboard;
 
 @Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)

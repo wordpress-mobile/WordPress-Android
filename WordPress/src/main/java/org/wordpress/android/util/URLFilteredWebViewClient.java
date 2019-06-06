@@ -19,12 +19,12 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
     private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
 
-    public URLFilteredWebViewClient(String url, BaseWebViewClientListener listener) {
+    public URLFilteredWebViewClient(String url, ErrorManagedWebViewClientListener listener) {
         super(listener);
         mAllowedURLs.add(url);
     }
 
-    public URLFilteredWebViewClient(Collection<String> urls, BaseWebViewClientListener listener) {
+    public URLFilteredWebViewClient(Collection<String> urls, ErrorManagedWebViewClientListener listener) {
         super(listener);
         if (urls == null || urls.size() == 0) {
             AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! HTTP Links in the"

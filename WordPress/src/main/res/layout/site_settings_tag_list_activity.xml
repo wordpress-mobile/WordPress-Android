@@ -13,7 +13,7 @@
         android:layout_width="match_parent" >
     </org.wordpress.android.ui.prefs.EmptyViewRecyclerView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_button"
         android:contentDescription="@string/fab_add_tag_desc"
         android:layout_alignParentBottom="true"
@@ -26,7 +26,7 @@
         app:borderWidth="0dp"
         android:src="@drawable/ic_plus_white_24dp"
         tools:visibility="visible" >
-    </android.support.design.widget.FloatingActionButton>
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"

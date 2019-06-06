@@ -1,8 +1,9 @@
 package org.wordpress.android.ui;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.webkit.WebView;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ErrorManagedWebViewClient;
@@ -33,7 +34,7 @@ class JetpackConnectionWebViewClient extends ErrorManagedWebViewClient {
     private String mRedirectPage;
 
     JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener jetpackConnectionListener,
-                                   @NonNull BaseWebViewClientListener baseListener,
+                                   @NonNull ErrorManagedWebViewClientListener baseListener,
                                    String siteUrl) {
         super(baseListener);
         mJetpackConnectionListener = jetpackConnectionListener;

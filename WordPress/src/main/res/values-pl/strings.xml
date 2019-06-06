@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-19 15:55:36+0000
+Translation-Revision-Date: 2019-05-30 16:14:27+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="history_fetching_revisions">Pobieranie wersji…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Nie udało się wstawić plików mediów.\nStuknij aby spróbować ponownie. </string>
+    <string name="editor_uploading_draft">Twój szkic jest przesyłany</string>
+    <string name="post_uploading_draft">Przesyłanie wpisu</string>
     <string name="post_list_drafts">Szkice</string>
     <string name="post_list_published">Opublikowane</string>
     <string name="post_list_author_everyone">Każdy</string>
@@ -93,7 +98,6 @@ Language: pl
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Niewspierany blok</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Wklej adres URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WYBIERZ OBRAZEK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Błąd podczas osadzania pliku mediów.\nStuknij aby dostać się do opcji.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Wyczyść wszystkie ustawienia</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Tekst alternatywny</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteka mediów WordPress</string>

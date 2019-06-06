@@ -7,7 +7,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 
 open class ErrorManagedWebViewClient(
-    private val baseWebViewClientListener: BaseWebViewClientListener
+    private val baseWebViewClientListener: ErrorManagedWebViewClientListener
 ) : WebViewClient() {
     private var errorReceived = false
     private var requestedUrl: String? = null
@@ -37,7 +37,7 @@ open class ErrorManagedWebViewClient(
         }
     }
 
-    interface BaseWebViewClientListener {
+    interface ErrorManagedWebViewClientListener {
         fun onWebViewPageLoaded()
         fun onWebViewReceivedError()
     }

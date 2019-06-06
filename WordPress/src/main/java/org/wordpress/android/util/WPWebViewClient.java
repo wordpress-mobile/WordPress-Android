@@ -36,11 +36,11 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     private String mToken;
     @Inject protected MemorizingTrustManager mMemorizingTrustManager;
 
-    public WPWebViewClient(SiteModel site, String token, BaseWebViewClientListener listener) {
+    public WPWebViewClient(SiteModel site, String token, ErrorManagedWebViewClientListener listener) {
         this(site, token, null, listener);
     }
 
-    public WPWebViewClient(SiteModel site, String token, List<String> urls, BaseWebViewClientListener listener) {
+    public WPWebViewClient(SiteModel site, String token, List<String> urls, ErrorManagedWebViewClientListener listener) {
         super(urls, listener);
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         mSite = site;
