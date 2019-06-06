@@ -326,7 +326,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        checkAndRequestCameraAndStoragePermissions(requestCode);
+        if (PermissionUtils.checkCameraAndStoragePermissions(this.getActivity())) {
+            if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCapturePhotoClicked();
+            } else if (requestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCaptureVideoClicked();
+            }
+        }
     }
 
     private void setEditorProgressBarVisibility(boolean shown) {
