@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -153,6 +154,8 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
         mTabLayout.setupWithViewPager(viewPager);
 
         TextView jetpackTermsAndConditions = view.findViewById(R.id.jetpack_terms_and_conditions);
+        jetpackTermsAndConditions.setText(Html.fromHtml(String.format(
+                getResources().getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>")));
         jetpackTermsAndConditions.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
                 WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(getContext()));
