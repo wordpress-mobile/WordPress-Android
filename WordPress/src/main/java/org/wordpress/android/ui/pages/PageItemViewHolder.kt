@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.pages
 
-import android.support.annotation.LayoutRes
-import android.support.v4.widget.CompoundButtonCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +9,9 @@ import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.core.widget.CompoundButtonCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider

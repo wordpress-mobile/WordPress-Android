@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel.giphy
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.paging.PositionalDataSource
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.PositionalDataSource
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.core.models.enums.MediaType.gif
 import com.giphy.sdk.core.network.api.GPHApiClient

@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel

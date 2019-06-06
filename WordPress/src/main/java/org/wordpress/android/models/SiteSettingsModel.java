@@ -2,8 +2,9 @@ package org.wordpress.android.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
+
+import androidx.collection.SparseArrayCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;

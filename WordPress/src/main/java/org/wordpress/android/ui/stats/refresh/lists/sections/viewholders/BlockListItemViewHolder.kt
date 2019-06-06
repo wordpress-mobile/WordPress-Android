@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.content.res.ColorStateList
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR

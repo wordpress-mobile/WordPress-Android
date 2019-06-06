@@ -2,14 +2,15 @@ package org.wordpress.android.util.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.view.ViewCompat;
 
 /**
  * Text view that auto adjusts text size to fit within the view.

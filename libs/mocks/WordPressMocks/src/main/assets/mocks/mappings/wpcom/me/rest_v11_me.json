@@ -1,4 +1,5 @@
 {
+    "scenarioName": "auth",
     "request": {
         "urlPath": "/rest/v1.1/me/",
         "method": "GET"

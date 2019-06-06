@@ -7,13 +7,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -27,9 +20,20 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -95,8 +99,6 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
@@ -1007,6 +1009,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         EventBus.getDefault().removeStickyEvent(event);
@@ -1030,6 +1033,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOADED);
         EventBus.getDefault().removeStickyEvent(event);

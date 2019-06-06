@@ -39,6 +39,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.C
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ManagementControlUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ManagementNewsCardUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
@@ -85,7 +87,9 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
-        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
+        managementControlUseCase: ManagementControlUseCase,
+        managementNewsCardUseCase: ManagementNewsCardUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
@@ -98,7 +102,9 @@ class StatsModule {
                 publicizeUseCaseFactory.build(BLOCK),
                 postingActivityUseCase,
                 followerTotalsUseCase,
-                annualSiteStatsUseCaseFactory.build(BLOCK)
+                annualSiteStatsUseCaseFactory.build(BLOCK),
+                managementControlUseCase,
+                managementNewsCardUseCase
         )
     }
 
@@ -203,7 +209,7 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCases,
-                { statsStore.getAddedInsights(statsSiteProvider.siteModel) },
+                { statsStore.getInsightTypes(statsSiteProvider.siteModel) },
                 uiModelMapper::mapInsights
         )
     }

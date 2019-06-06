@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 09:54:10+0000
+Translation-Revision-Date: 2019-05-31 04:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="history_fetching_revisions">変更を取得しています…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">メディアを挿入できませんでした。\nタップしてオプションを表示してください。</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">メディアを挿入できませんでした。\nタップして再試行してください。</string>
+    <string name="editor_uploading_draft">下書きをアップロードしています</string>
+    <string name="post_uploading_draft">下書きをアップロードしています</string>
     <string name="post_list_drafts">下書き</string>
     <string name="post_list_published">公開済み</string>
     <string name="post_list_author_everyone">すべてのユーザー</string>
@@ -92,7 +97,6 @@ Language: ja_JP
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">サポート対象外のブロック</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL を貼り付け</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">画像を選択</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">メディアを挿入できませんでした。\nタップすると、オプションが表示されます。</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">すべての設定を解除</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">代替テキスト</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress メディアライブラリ</string>

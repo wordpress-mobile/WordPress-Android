@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-08 14:55:45+0000
+Translation-Revision-Date: 2019-05-23 17:56:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="history_fetching_revisions">Hämtar versioner…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Det gick inte att lägga in media.\nTryck här för alternativ.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Det gick inte att lägga in media.\nKnacka här för att försöka igen.</string>
+    <string name="editor_uploading_draft">Ditt utkast laddas upp</string>
+    <string name="post_uploading_draft">Laddar upp utkast</string>
     <string name="post_list_drafts">Utkast</string>
     <string name="post_list_published">Publicerat</string>
     <string name="post_list_author_everyone">Alla</string>
@@ -93,7 +98,6 @@ Language: sv_SE
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Block utan stöd</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Klistra in URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">VÄLJ BILD</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Rensa alla inställningar</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-text</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress mediabibliotek</string>

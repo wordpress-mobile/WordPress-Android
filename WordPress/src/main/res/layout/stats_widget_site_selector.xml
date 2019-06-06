@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/margin_extra_large">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/stats_widget_dialog_list_height"

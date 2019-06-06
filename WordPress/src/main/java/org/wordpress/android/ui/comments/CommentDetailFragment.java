@@ -5,12 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
@@ -24,7 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import org.apache.commons.text.StringEscapeUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -87,8 +89,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -522,6 +522,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
         if (event.mRemoteBlogId != 0 && mSite != null

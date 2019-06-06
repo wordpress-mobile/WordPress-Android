@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -11,19 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.design.widget.TabLayout.OnTabSelectedListener;
-import android.support.design.widget.TabLayout.Tab;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -40,6 +24,25 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.ListPopupWindow;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
+import com.google.android.material.tabs.TabLayout.Tab;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -127,8 +130,6 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
@@ -458,7 +459,7 @@ public class ReaderPostListFragment extends Fragment
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
 
         reloadTags();
 
@@ -512,6 +513,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             // reload the tag filter since tags have changed
@@ -526,6 +528,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
         // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
@@ -771,7 +774,7 @@ public class ReaderPostListFragment extends Fragment
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
-        View view = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        View view = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
         if (view instanceof AutoCompleteTextView) {
             ((AutoCompleteTextView) view).setThreshold(1);
         }
@@ -1097,6 +1100,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
         if (!isAdded()) {
             return;
@@ -1108,6 +1112,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
         if (!isAdded()) {
             return;
@@ -1776,6 +1781,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.UpdatePostsStarted event) {
         if (!isAdded()) {
             return;
@@ -1786,6 +1792,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.UpdatePostsEnded event) {
         if (!isAdded()) {
             return;

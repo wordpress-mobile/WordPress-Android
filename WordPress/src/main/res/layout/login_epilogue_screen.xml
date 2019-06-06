@@ -6,7 +6,7 @@
   android:layout_height="match_parent"
   app:theme="@style/LoginTheme">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,14 +38,14 @@
         android:padding="@dimen/margin_large"
         android:clipToPadding="false">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:theme="@style/WordPress.Button"
             android:id="@+id/secondary_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/connect_more" />
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/WordPress.Button.Primary"
             android:id="@+id/primary_button"
             android:layout_width="match_parent"

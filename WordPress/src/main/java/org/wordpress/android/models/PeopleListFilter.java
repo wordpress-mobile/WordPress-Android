@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;

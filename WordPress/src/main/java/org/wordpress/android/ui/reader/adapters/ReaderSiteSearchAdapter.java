@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;

@@ -4,16 +4,20 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -25,16 +29,14 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class PublicizeListActivity extends AppCompatActivity
         implements
@@ -286,6 +288,7 @@ public class PublicizeListActivity extends AppCompatActivity
      * list of available services or list of connections has changed
      */
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(PublicizeEvents.ConnectionsChanged event) {
         reloadListFragment();
     }
@@ -294,6 +297,7 @@ public class PublicizeListActivity extends AppCompatActivity
      * request from fragment to connect/disconnect/reconnect completed
      */
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(PublicizeEvents.ActionCompleted event) {
         if (isFinishing()) {
             return;
@@ -322,6 +326,7 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(PublicizeEvents.ActionAccountChosen event) {
         if (isFinishing()) {
             return;
@@ -334,6 +339,7 @@ public class PublicizeListActivity extends AppCompatActivity
         mProgressDialog.show();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(PublicizeEvents.ActionRequestChooseAccount event) {
         if (isFinishing()) {
             return;

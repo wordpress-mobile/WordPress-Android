@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 
@@ -12,10 +12,10 @@ enum class PostListType(val postStatuses: List<PostStatus>) {
 
     val titleResId: Int
         get() = when (this) {
-            PUBLISHED -> string.post_list_published
-            DRAFTS -> string.post_list_drafts
-            SCHEDULED -> string.post_list_scheduled
-            TRASHED -> string.post_list_trashed
+            PUBLISHED -> R.string.post_list_published
+            DRAFTS -> R.string.post_list_drafts
+            SCHEDULED -> R.string.post_list_scheduled
+            TRASHED -> R.string.post_list_trashed
         }
 
     companion object {

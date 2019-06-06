@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -23,10 +22,10 @@ class OverviewMapper
     private val resourceProvider: ResourceProvider
 ) {
     private val units = listOf(
-            string.stats_views,
-            string.stats_visitors,
-            string.stats_likes,
-            string.stats_comments
+            R.string.stats_views,
+            R.string.stats_visitors,
+            R.string.stats_likes,
+            R.string.stats_comments
     )
 
     fun buildTitle(
