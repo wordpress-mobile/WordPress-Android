@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -35,7 +36,7 @@ class WPWebViewViewModel
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
         connectionStatus.observe(this, Observer {
             if (it == AVAILABLE) {
-                load()
+                loadIfNecessary()
             }
         })
     }
@@ -78,14 +79,22 @@ class WPWebViewViewModel
      * Update the ui state if the Loading or Success screen is being shown.
      */
     fun onReceivedError() {
+        if (uiState.value is WebPreviewContentUiState) {
+            CrashLoggingUtils.log(
+                    IllegalStateException(
+                            "WPWebViewViewModel.onReceivedError() called with uiState WebPreviewContentUiState"
+                    )
+            )
+            return
+        }
         if (uiState.value !is WebPreviewFullscreenErrorUiState) {
             updateUiState(WebPreviewFullscreenErrorUiState)
         }
         _loadNeeded.value = false
     }
 
-    fun load() {
-        if (uiState.value !is WebPreviewFullscreenProgressUiState) {
+    fun loadIfNecessary() {
+        if (uiState.value !is WebPreviewFullscreenProgressUiState && uiState.value !is WebPreviewContentUiState) {
             updateUiState(WebPreviewFullscreenProgressUiState)
             _loadNeeded.value = true
         }
