@@ -10,24 +10,23 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.WidgetSettingsModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.WidgetSettingsModel
 
-class ViewsWidgetViewModelTest : BaseUnitTest() {
+class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
-    private lateinit var viewModel: ViewsWidgetViewModel
+    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
     private val siteId = 15L
     private val siteName = "WordPress"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
     @Before
     fun setUp() {
-        viewModel = ViewsWidgetViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
+        viewModel = StatsViewsWidgetConfigureViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
         whenever(site.siteId).thenReturn(siteId)
         whenever(site.name).thenReturn(siteName)
         whenever(site.url).thenReturn(siteUrl)
@@ -37,7 +36,7 @@ class ViewsWidgetViewModelTest : BaseUnitTest() {
     @Test
     fun `loads site and view mode from app prefs on start`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(Color.DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(DARK.ordinal)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(siteId)
         whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
 
@@ -51,13 +50,13 @@ class ViewsWidgetViewModelTest : BaseUnitTest() {
         assertThat(settingsModel).isNotNull
         assertThat(settingsModel!!.buttonEnabled).isTrue()
         assertThat(settingsModel!!.siteTitle).isEqualTo(siteName)
-        assertThat(settingsModel!!.color).isEqualTo(Color.DARK)
+        assertThat(settingsModel!!.color).isEqualTo(DARK)
     }
 
     @Test
     fun `button is disabled when site not set`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(Color.DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(DARK.ordinal)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(-1)
 
         var settingsModel: WidgetSettingsModel? = null
@@ -70,7 +69,7 @@ class ViewsWidgetViewModelTest : BaseUnitTest() {
         assertThat(settingsModel).isNotNull
         assertThat(settingsModel!!.buttonEnabled).isFalse()
         assertThat(settingsModel!!.siteTitle).isNull()
-        assertThat(settingsModel!!.color).isEqualTo(Color.DARK)
+        assertThat(settingsModel!!.color).isEqualTo(DARK)
     }
 
     @Test

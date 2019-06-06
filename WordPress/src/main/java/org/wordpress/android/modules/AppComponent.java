@@ -136,6 +136,8 @@ import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -453,6 +455,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(DomainSuggestionsFragment object);
 
     void inject(DomainRegistrationDetailsFragment object);
+
+    void inject(StatsViewsWidget object);
+
+    void inject(ViewsWidgetListProvider object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

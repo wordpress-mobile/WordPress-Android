@@ -11,19 +11,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ColorSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ViewsWidgetViewModel
+    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(ViewsWidgetViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(StatsViewsWidgetConfigureViewModel::class.java)
         val alertDialogBuilder = AlertDialog.Builder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->

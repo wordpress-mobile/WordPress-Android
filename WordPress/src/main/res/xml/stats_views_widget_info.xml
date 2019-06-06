@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
                     android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureActivity"
-                    android:initialKeyguardLayout="@layout/stats_views_widget_configure_fragment"
-                    android:initialLayout="@layout/stats_views_widget_configure_fragment"
-                    android:minHeight="110dp"
-                    android:minResizeWidth="50dp"
+                    android:initialKeyguardLayout="@layout/stats_views_widget_light"
+                    android:initialLayout="@layout/stats_views_widget_light"
+                    android:minHeight="80dp"
+                    android:minResizeWidth="150dp"
                     android:minResizeHeight="50dp"
-                    android:minWidth="110dp"
+                    android:minWidth="250dp"
                     android:previewImage="@drawable/stats_widget_preview"
                     android:resizeMode="horizontal|vertical"
-                    android:updatePeriodMillis="86400000"
+                    android:updatePeriodMillis="600000"
                     android:widgetCategory="home_screen">
 </appwidget-provider>

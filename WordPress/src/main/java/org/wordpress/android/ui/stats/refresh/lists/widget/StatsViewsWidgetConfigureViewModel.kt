@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -17,11 +17,11 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class ViewsWidgetViewModel
+class StatsViewsWidgetConfigureViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper
+    internal val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableSelectedSite = MutableLiveData<SiteUiModel>()
     private val mutableViewMode = MutableLiveData<Color>()
