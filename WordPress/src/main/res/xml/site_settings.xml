@@ -83,6 +83,7 @@
             android:key="@string/pref_key_site_password"
             android:maxLength="@integer/max_length_password"
             android:title="@string/site_settings_password_title"
+            android:dialogTitle="@string/site_settings_password_dialog_title"
             app:longClickHint="@string/site_settings_password_hint"
             app:maxSummaryLines="2"
             app:summaryLines="1"/>

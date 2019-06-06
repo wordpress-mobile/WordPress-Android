@@ -540,7 +540,8 @@
     <string name="site_settings_privacy_title" translatable="false">@string/privacy</string>
     <string name="site_settings_language_title" translatable="false">@string/language</string>
     <string name="site_settings_username_title" translatable="false">@string/username</string>
-    <string name="site_settings_password_title">Update password</string>
+    <string name="site_settings_password_title" translatable="false">@string/password</string>
+    <string name="site_settings_password_dialog_title">Update password</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_tags_empty_button">Create a tag</string>
     <string name="site_settings_tags_empty_subtitle">Add your frequently used tags here so they can be quickly selected when tagging your posts</string>
