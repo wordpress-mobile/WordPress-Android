@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
