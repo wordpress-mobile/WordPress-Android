@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;

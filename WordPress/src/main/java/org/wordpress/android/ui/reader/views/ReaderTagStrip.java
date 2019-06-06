@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;

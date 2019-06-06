@@ -1,8 +1,8 @@
 package org.wordpress.android.widgets
 
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.R
 
 // PostListButton.java types - from attrs.xml

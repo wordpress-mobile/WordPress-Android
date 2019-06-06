@@ -1,12 +1,12 @@
 package org.wordpress.android.e2e.pages;
 
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import org.wordpress.android.R;
 
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.scrollToAndClickOnTextInRecyclerView;
-
-import org.wordpress.android.R;
 
 public class PostsListPage {
     public PostsListPage() {}

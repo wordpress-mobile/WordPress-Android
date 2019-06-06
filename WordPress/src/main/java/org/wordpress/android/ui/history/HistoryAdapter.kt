@@ -2,9 +2,9 @@ package org.wordpress.android.ui.history
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.history.HistoryListItem.Footer
 import org.wordpress.android.ui.history.HistoryListItem.Header

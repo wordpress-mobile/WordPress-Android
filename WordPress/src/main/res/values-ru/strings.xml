@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-08 12:13:40+0000
+Translation-Revision-Date: 2019-05-23 16:12:06+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="history_fetching_revisions">Получение редакций…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Ошибка вставки медиафайла.\nНажмите для выбора вариантов.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Ошибка вставки медиафайла.\nНажмите для повтора.</string>
+    <string name="editor_uploading_draft">Выполняется загрузка черновика</string>
+    <string name="post_uploading_draft">Загрузка черновика</string>
     <string name="post_list_drafts">Черновики</string>
     <string name="post_list_published">Опубликовано</string>
     <string name="post_list_author_everyone">Все</string>
@@ -93,7 +98,6 @@ Language: ru
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Неподдерживаемый блок</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Вставить URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ВЫБЕРИТЕ ИЗОБРАЖЕНИЕ</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Невозможно вставить медиафайл.\nНажмите для выбора вариантов.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Очистить все настройки</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Текст атрибута alt</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Медиатека WordPress</string>

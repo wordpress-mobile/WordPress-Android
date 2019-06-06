@@ -2,7 +2,8 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.media.MediaCodecInfo;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import org.m4m.AudioFormat;
 import org.m4m.MediaComposer;

@@ -2,16 +2,15 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.AppCompatDialogFragment
 import android.widget.RadioGroup
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
@@ -27,7 +26,7 @@ class ColorSelectionDialogFragment : AppCompatDialogFragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(StatsViewsWidgetConfigureViewModel::class.java)
         val alertDialogBuilder = AlertDialog.Builder(activity)
-        val view = activity!!.layoutInflater.inflate(layout.stats_color_selector, null) as RadioGroup
+        val view = activity!!.layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
             checkedId.toColor()?.let { viewModel.colorClicked(it) }
         }

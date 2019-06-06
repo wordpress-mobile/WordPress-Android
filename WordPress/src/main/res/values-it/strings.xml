@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 13:54:09+0000
+Translation-Revision-Date: 2019-05-28 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="history_fetching_revisions">Recupero delle revisioni in corso…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Inserimento file multimediali non riuscito.\nTocca per le opzioni.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Inserimento file multimediali non riuscito.\nTocca per riprovare.</string>
+    <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
+    <string name="post_uploading_draft">Caricamento della bozza</string>
     <string name="post_list_drafts">Bozze</string>
     <string name="post_list_author_everyone">Tutti</string>
     <string name="post_list_author_me">Io</string>
@@ -82,7 +87,6 @@ Language: it
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Blocco non supportato</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Incolla URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">SCEGLI IMMAGINE</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Inserimento file multimediali non riuscito.\nTocca per ulteriori opzioni.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Cancella tutte le impostazioni</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Testo Alt</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Libreria multimediale WordPress</string>

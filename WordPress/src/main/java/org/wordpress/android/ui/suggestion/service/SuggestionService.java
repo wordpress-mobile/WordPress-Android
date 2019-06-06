@@ -8,6 +8,7 @@ import android.os.IBinder;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -18,8 +19,6 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
