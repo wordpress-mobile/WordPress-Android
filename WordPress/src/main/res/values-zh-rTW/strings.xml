@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 08:54:10+0000
+Translation-Revision-Date: 2019-05-30 01:54:36+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="history_fetching_revisions">正在擷取修訂版本…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">無法插入媒體。\n請點選以顯示選項。</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
+    <string name="editor_uploading_draft">你的草稿正在上傳中…</string>
+    <string name="post_uploading_draft">正在上傳草稿</string>
     <string name="post_list_drafts">草稿</string>
     <string name="post_list_published">已發佈</string>
     <string name="post_list_author_everyone">所有人</string>
@@ -92,7 +97,6 @@ Language: zh_TW
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">不支援此區塊</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">貼上 URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">選擇圖片</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">無法插入媒體。\n請點選以顯示選項。</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">清除所有設定</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">替代文字</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress 媒體庫</string>
@@ -164,6 +168,48 @@ Language: zh_TW
     <string name="stats_insights_popular">最熱門的時間</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="new_site_creation_site_preview_content_description">顯示預覽網站</string>
+    <string name="new_site_creation_clear_all_content_description">清除</string>
+    <string name="site_created_but_not_fetched_snackbar_message">你的網路連線速度似乎過慢。如果你在清單中沒有看到新網站，請嘗試重新整理。</string>
+    <string name="cancel_new_site_wizard_content_description">取消網站建立精靈</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">我們正在建立你的新網站</string>
+    <string name="notification_new_site_creation_failed">發生問題</string>
+    <string name="notification_new_site_creation_title">建立網站</string>
+    <string name="new_site_creation_create_site_button">建立網站</string>
+    <string name="new_site_creation_search_domain_input_hint">搜尋網域</string>
+    <string name="new_site_creation_domain_header_subtitle">這是人們在網際網路上找到你的地方。</string>
+    <string name="new_site_creation_domain_header_title">選擇網站的網域名稱</string>
+    <string name="new_site_creation_empty_domain_list_message">找不到你搜尋的網址</string>
+    <string name="site_creation_error_generic_subtitle">與伺服器通訊時發生錯誤，請再試一次</string>
+    <string name="site_creation_error_generic_title">發生問題</string>
+    <string name="new_site_creation_verticals_custom_subtitle">自訂類別</string>
+    <string name="new_site_creation_button_skip">略過</string>
+    <string name="new_site_creation_tag_line_description">標語為顯示在標題正下方的一小段文字。</string>
+    <string name="new_site_creation_tag_line_hint">標語</string>
+    <string name="new_site_creation_site_title_hint">網站標題</string>
+    <string name="new_site_creation_site_info_header_subtitle">請告訴我們更多資訊，以便瞭解你正在建立的網站。</string>
+    <string name="new_site_creation_site_info_header_title">基本資訊</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">發生問題</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">沒有連線</string>
+    <string name="site_creation_segments_subtitle">這會協助我們向你推薦相關選項。但你不應裹足不前，所有網站都會不斷進步！</string>
+    <string name="site_creation_segments_title">告訴我們你希望建立什麼類型的網站</string>
+    <string name="new_site_creation_preview_title">你的網站已建立！</string>
+    <string name="new_site_creation_screen_title_step_count">第 %1$d 步 (共 %2$d 步)</string>
+    <string name="new_site_creation_screen_title_general">建立網站</string>
+    <string name="suggestions_updated_content_description">已更新建議</string>
+    <string name="site_picker_failed_selecting_added_site">無法選取最新建立的自助託管網站。</string>
+    <string name="local_post_is_conflicted">版本衝突</string>
+    <string name="preference_crash_reports_summary">允許自動當機報告，以協助我們改善應用程式的效能。</string>
+    <string name="preference_crash_reports">當機報告</string>
+    <string name="snackbar_conflict_undo">復原</string>
+    <string name="snackbar_conflict_web_version_discarded">已捨棄網頁版</string>
+    <string name="snackbar_conflict_local_version_discarded">已捨棄本機版</string>
+    <string name="toast_conflict_updating_post">正在更新文章</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">捨棄網頁版</string>
+    <string name="dialog_confirm_load_remote_post_discard_local">捨棄本機版</string>
+    <string name="dialog_confirm_load_remote_post_body_2">本機\n已儲存於 %s\n\n網頁\n已儲存於 %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body">此文章的兩個版本有所衝突。選取你要捨棄的版本。\n\n</string>
+    <string name="dialog_confirm_load_remote_post_title">解決同步衝突</string>
     <string name="local_changes_discarding_no_connection">需要網路連線才能執行此動作。請檢查你的連線並再試一次。</string>
     <string name="stats_no_data_for_period">此期間沒有資料</string>
     <string name="preference_strip_image_location">從媒體移除位置資訊</string>

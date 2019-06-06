@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 09:54:10+0000
+Translation-Revision-Date: 2019-05-28 11:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="history_fetching_revisions">מביא את גרסאות…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">שילוב פירטי המדיה נכשל.\nיש להקיש כדי לנסות שוב.</string>
+    <string name="editor_uploading_draft">אנחנו מעלים את הטיוטה שלך</string>
+    <string name="post_uploading_draft">מעלה את הטיוטה</string>
     <string name="post_list_drafts">טיוטות</string>
     <string name="post_list_published">פורסם</string>
     <string name="post_list_author_everyone">כולם</string>
@@ -92,7 +97,6 @@ Language: he_IL
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">בלוק לא נתמך</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">להדביק את כתובת ה-URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">בחירת תמונה</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">ניקוי כל ההגדרות</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">טקסט חלופי</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">ספריית המדיה של WordPress</string>

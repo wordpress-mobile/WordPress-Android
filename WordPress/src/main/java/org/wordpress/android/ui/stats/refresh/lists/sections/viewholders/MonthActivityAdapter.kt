@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 
 class MonthActivityAdapter : Adapter<DayViewHolder>() {

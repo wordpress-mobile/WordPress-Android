@@ -1,3 +1,6 @@
+12.7
+-----
+
 12.6
 -----
 * Add Insights management introductory card

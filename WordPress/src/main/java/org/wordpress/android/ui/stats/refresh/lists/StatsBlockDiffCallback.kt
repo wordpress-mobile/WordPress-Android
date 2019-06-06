@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import android.support.v7.util.DiffUtil.Callback
+import androidx.recyclerview.widget.DiffUtil.Callback
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading

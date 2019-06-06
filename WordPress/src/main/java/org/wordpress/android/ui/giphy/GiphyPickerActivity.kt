@@ -1,22 +1,21 @@
 package org.wordpress.android.ui.giphy
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -200,7 +199,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         emptyView.run {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
             bottomImage.setImageResource(R.drawable.img_giphy_100dp)
-            bottomImage.contentDescription = getString(string.giphy_powered_by_giphy)
+            bottomImage.contentDescription = getString(R.string.giphy_powered_by_giphy)
         }
 
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
@@ -318,9 +317,9 @@ class GiphyPickerActivity : AppCompatActivity() {
             state ?: return@Observer
 
             val searchClearButton =
-                    search_view.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as ImageView
+                    search_view.findViewById(androidx.appcompat.R.id.search_close_btn) as ImageView
             val searchEditText =
-                    search_view.findViewById(android.support.v7.appcompat.R.id.search_src_text)
+                    search_view.findViewById(androidx.appcompat.R.id.search_src_text)
                             as SearchView.SearchAutoComplete
 
             val isIdle = state == State.IDLE

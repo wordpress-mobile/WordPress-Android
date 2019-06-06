@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.content.ActivityNotFoundException;
-import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;

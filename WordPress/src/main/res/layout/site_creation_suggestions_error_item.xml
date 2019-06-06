@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:id="@+id/container"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="wrap_content"
-                                             android:background="@android:color/white"
-                                             android:foreground="?selectableItemBackground"
-                                             android:minHeight="@dimen/one_line_list_item_height">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/container"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:background="@android:color/white"
+                                                   android:foreground="?selectableItemBackground"
+                                                   android:minHeight="@dimen/one_line_list_item_height">
 
     <TextView
         android:id="@+id/error_text"
@@ -40,4 +40,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UnusedAttribute"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

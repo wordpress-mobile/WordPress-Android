@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.news
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
