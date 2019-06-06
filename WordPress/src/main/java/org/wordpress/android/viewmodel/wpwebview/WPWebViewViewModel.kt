@@ -77,7 +77,7 @@ class WPWebViewViewModel
     /**
      * Update the ui state if the Loading or Success screen is being shown.
      */
-    fun onError() {
+    fun onReceivedError() {
         if (uiState.value !is WebPreviewFullscreenErrorUiState) {
             updateUiState(WebPreviewFullscreenErrorUiState)
         }

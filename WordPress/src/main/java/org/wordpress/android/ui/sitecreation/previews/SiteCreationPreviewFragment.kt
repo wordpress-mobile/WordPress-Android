@@ -34,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
@@ -58,6 +59,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
     private lateinit var sitePreviewWebView: WebView
+    private lateinit var sitePreviewWebError: ViewGroup
     private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
 
@@ -101,6 +103,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
+        sitePreviewWebError = rootView.findViewById(R.id.sitePreviewWebError)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
@@ -118,6 +121,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             uiState?.let {
                 when (uiState) {
                     is SitePreviewContentUiState -> updateContentLayout(uiState.data)
+                    is SitePreviewWebErrorUiState -> updateContentLayout(uiState.data)
                     is SitePreviewLoadingShimmerState -> updateContentLayout(uiState.data)
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
@@ -125,6 +129,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
                 uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
+                uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
                 uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
             }
@@ -280,7 +285,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun onWebViewReceivedError() {
-        viewModel.showFullscreenErrorWithDelay()
+        viewModel.onWebViewError()
     }
 
     // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
