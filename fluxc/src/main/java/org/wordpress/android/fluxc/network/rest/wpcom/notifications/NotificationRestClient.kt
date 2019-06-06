@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.store.NotificationStore.NotificationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDeviceResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.UnregisterDeviceResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
 import java.util.Date
@@ -72,12 +74,20 @@ class NotificationRestClient constructor(
         val url = WPCOMREST.devices.new_.urlV1
         val request = WPComGsonRequest.buildPostRequest(
                 url, params, RegisterDeviceRestResponse::class.java,
-                { response ->
-                    response.id?.takeIf { it.isNotEmpty() }?.let {
-                        val payload = RegisterDeviceResponsePayload(it)
-                        dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
+                { response: RegisterDeviceRestResponse? ->
+                    response?.let {
+                        if (!it.id.isNullOrEmpty()) {
+                            val payload = RegisterDeviceResponsePayload(it.id)
+                            dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
+                        } else {
+                            val registrationError =
+                                    DeviceRegistrationError(DeviceRegistrationErrorType.MISSING_DEVICE_ID)
+                            val payload = RegisterDeviceResponsePayload(registrationError)
+                            dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
+                        }
                     } ?: run {
-                        val registrationError = DeviceRegistrationError(DeviceRegistrationErrorType.MISSING_DEVICE_ID)
+                        AppLog.e(T.API, "Response for url $url with param $params is null: $response")
+                        val registrationError = DeviceRegistrationError(DeviceRegistrationErrorType.INVALID_RESPONSE)
                         val payload = RegisterDeviceResponsePayload(registrationError)
                         dispatcher.dispatch(NotificationActionBuilder.newRegisteredDeviceAction(payload))
                     }

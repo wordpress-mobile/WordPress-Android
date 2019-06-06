@@ -5,7 +5,8 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.StringDef;
+
+import androidx.annotation.StringDef;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
@@ -43,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 67;
+        return 68;
     }
 
     @Override
@@ -511,6 +512,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                         "CREATE TABLE InsightTypes (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "REMOTE_SITE_ID INTEGER,INSIGHT_TYPE TEXT NOT NULL,POSITION INTEGER,STATUS TEXT NOT NULL)");
                 oldVersion++;
+            case 67:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -774,6 +779,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CARRIER_LINK TEXT NOT NULL,"
                                + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
+                 case 67:
+                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                     db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
+                     break;
             }
         }
     }

@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.MediaModelTable;
 import com.wellsql.generated.MediaUploadModelTable;
