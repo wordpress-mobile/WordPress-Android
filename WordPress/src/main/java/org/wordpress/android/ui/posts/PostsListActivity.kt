@@ -32,9 +32,11 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -164,7 +166,7 @@ class PostsListActivity : AppCompatActivity(),
             return@setOnLongClickListener true
         }
 
-        val searchFragment = PostSearchListFragment.newInstance()
+        val searchFragment = PostListFragment.newInstance(site, EVERYONE, PUBLISHED, true)
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.search_container, searchFragment)
@@ -343,12 +345,12 @@ class PostsListActivity : AppCompatActivity(),
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    if (restorePreviousSearch) {
-                        restorePreviousSearch = false
-//                        searchView.setQuery(viewModel.lastSearchQuery, false)
-                    } else {
-                        viewModel.onSearchQueryInput(newText)
-                    }
+//                    if (restorePreviousSearch) {
+//                        restorePreviousSearch = false
+////                        searchView.setQuery(viewModel.lastSearchQuery, false)
+//                    } else {
+                    viewModel.onSearchQueryInput(newText)
+//                    }
                     return true
                 }
             })
@@ -358,7 +360,7 @@ class PostsListActivity : AppCompatActivity(),
             (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                     .apply { this.leftMargin = DisplayUtils.dpToPx(this@PostsListActivity, -8) }
 
-            viewModel.isSearchExpanded.observe(this, Observer {isExpanded ->
+            viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
                 if (isExpanded == true) {
                     showSearchList(toggleSearchMenuItem)
                 } else {
@@ -369,7 +371,7 @@ class PostsListActivity : AppCompatActivity(),
         return true
     }
 
-     private fun hideSearchList(myActionMenuItem: MenuItem) {
+    private fun hideSearchList(myActionMenuItem: MenuItem) {
         pager.visibility = View.VISIBLE
         findViewById<View>(R.id.tabContainer).visibility = View.VISIBLE
         findViewById<View>(R.id.search_container).visibility = View.GONE
