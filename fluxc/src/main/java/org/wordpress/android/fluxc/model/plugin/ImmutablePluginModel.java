@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.model.plugin;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.StringUtils;
 
