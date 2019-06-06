@@ -5,9 +5,15 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
+import android.widget.ImageView.ScaleType.FIT_CENTER
+import android.widget.ImageView.ScaleType.FIT_END
+import android.widget.ImageView.ScaleType.FIT_START
+import android.widget.ImageView.ScaleType.FIT_XY
+import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.FragmentActivity
@@ -16,7 +22,11 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
+import com.bumptech.glide.signature.ObjectKey
 import org.wordpress.android.WordPress
+import org.wordpress.android.modules.GlideApp
+import org.wordpress.android.modules.GlideRequest
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 
