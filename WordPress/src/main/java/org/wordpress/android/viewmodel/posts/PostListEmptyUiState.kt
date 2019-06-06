@@ -1,6 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR

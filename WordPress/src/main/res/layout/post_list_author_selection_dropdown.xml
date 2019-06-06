@@ -14,7 +14,7 @@
     <!-- UnusedAttribute is ignored since foreground was added in API 23, however the impact of the missing foreground
          on lower APIs will be minimal -->
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/post_list_author_selection_image"
         android:layout_width="@dimen/posts_list_spinner_avatar_size"
         android:layout_height="@dimen/posts_list_spinner_avatar_size"
@@ -25,7 +25,7 @@
         tools:src="@drawable/bg_oval_neutral_300_multiple_users_white_40dp"
         tools:tint="@color/neutral_500"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/post_list_author_selection_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

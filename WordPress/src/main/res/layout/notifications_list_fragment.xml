@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,7 +15,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </org.wordpress.android.widgets.WPViewPager>
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:background="@android:color/white"
         android:elevation="@dimen/appbar_elevation"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:background="@color/primary"
             android:layout_height="@dimen/toolbar_height"
@@ -31,9 +31,9 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:background="@color/primary"
             android:layout_gravity="start"
@@ -45,9 +45,9 @@
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="@android:color/white"
             app:theme="@style/Base.Widget.Design.TabLayout">
-        </android.support.design.widget.TabLayout>
+        </com.google.android.material.tabs.TabLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/connect_jetpack"
@@ -59,7 +59,7 @@
         android:visibility="invisible"
         tools:visibility="visible">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             tools:ignore="UselessParent">
@@ -88,14 +88,14 @@
                     app:fixWidowWords="true">
                 </org.wordpress.android.widgets.WPTextView>
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/jetpack_setup"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:layout_width="wrap_content"
                     android:text="@string/stats_jetpack_connection_setup"
                     android:theme="@style/JetpackConnectionButton">
-                </android.support.v7.widget.AppCompatButton>
+                </androidx.appcompat.widget.AppCompatButton>
 
                 <TextView
                     android:id="@+id/jetpack_terms_and_conditions"
@@ -118,8 +118,8 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

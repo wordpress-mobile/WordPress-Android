@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:id="@+id/container"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="wrap_content"
-                                             android:background="@android:color/white"
-                                             android:foreground="?selectableItemBackground"
-                                             android:minHeight="@dimen/one_line_list_item_height"
-                                             android:paddingStart="@dimen/margin_large"
-                                             tools:ignore="RtlSymmetry">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/container"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:background="@android:color/white"
+                                                   android:foreground="?selectableItemBackground"
+                                                   android:minHeight="@dimen/one_line_list_item_height"
+                                                   android:paddingStart="@dimen/margin_large"
+                                                   tools:ignore="RtlSymmetry">
 
-    <android.support.v7.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/domain_suggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,4 +30,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

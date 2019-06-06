@@ -42,7 +42,7 @@
                     android:text="@string/stats_jetpack_connection_setup_info"
                     android:textAlignment="center" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/jetpack_setup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

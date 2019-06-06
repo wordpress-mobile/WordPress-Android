@@ -1,7 +1,8 @@
 package org.wordpress.android.widgets;
 
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 /*
  * ViewPager transformation animation invoked when a visible/attached page is scrolled - before

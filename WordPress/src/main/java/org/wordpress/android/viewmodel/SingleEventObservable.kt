@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 /**
  * A lifecycle-aware observable that sends only new updates after subscription, used for events like

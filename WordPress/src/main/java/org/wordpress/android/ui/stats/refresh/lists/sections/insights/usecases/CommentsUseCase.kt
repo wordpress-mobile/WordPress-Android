@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -96,7 +95,7 @@ class CommentsUseCase
             if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
@@ -107,7 +106,7 @@ class CommentsUseCase
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_view_comments, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_view_comments, menuAction = this::onMenuClick)
 
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
