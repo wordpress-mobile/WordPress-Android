@@ -286,7 +286,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             showChangePasswordProgressDialog(false);
 
             if (event.isError()) {
-                ToastUtils.showToast(getActivity(), event.error.message, ToastUtils.Duration.LONG);
+                // We usually rely on event.error.type and provide our own localized message.
+                // This case is exceptional because:
+                // 1. The server-side error type is generic, but patching this server-side is quite involved
+                // 2. We know the error string return from the server has decent localization
+                String errorMessage = !TextUtils.isEmpty(event.error.message) ? event.error.message
+                        : getString(R.string.error_post_account_settings);
+                ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);
                 AppLog.e(T.SETTINGS, event.error.message);
             } else {
                 ToastUtils.showToast(getActivity(), R.string.change_password_confirmation, ToastUtils.Duration.LONG);
