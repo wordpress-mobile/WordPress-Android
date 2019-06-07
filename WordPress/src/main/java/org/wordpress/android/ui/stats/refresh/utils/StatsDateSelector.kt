@@ -52,11 +52,7 @@ constructor(
         currentState: DateSelectorUiModel?,
         updatedState: DateSelectorUiModel
     ) {
-        if (currentState == null ||
-                currentState.isVisible != updatedState.isVisible ||
-                currentState.date != updatedState.date ||
-                currentState.enableSelectNext != updatedState.enableSelectNext ||
-                currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
+        if (currentState != updatedState) {
             _dateSelectorUiModel.value = updatedState
         }
     }
