@@ -16,6 +16,8 @@ import kotlin.test.assertNull
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 class PostSqlUtilsTest {
+    private val postSqlUtils = PostSqlUtils()
+
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
@@ -39,18 +41,18 @@ class PostSqlUtilsTest {
         post.localSiteId = site.id
         post.remotePostId = remotePostId
 
-        post = PostSqlUtils.insertPostForResult(post)
+        post = postSqlUtils.insertPostForResult(post)
 
         assertNull(post.autoSaveModified)
         assertNull(post.autoSavePreviewUrl)
         assertEquals(0, post.autoSaveRevisionId)
 
-        PostSqlUtils.updatePostsAutoSave(
+        postSqlUtils.updatePostsAutoSave(
                 site,
                 PostRemoteAutoSaveModel(revisionId, remotePostId, modifiedDate, previewUrl)
         )
 
-        val postsForSite = PostSqlUtils.getPostsForSite(site, false)
+        val postsForSite = postSqlUtils.getPostsForSite(site, false)
 
         assertEquals(1, postsForSite.size)
         assertEquals(revisionId, postsForSite.first().autoSaveRevisionId)

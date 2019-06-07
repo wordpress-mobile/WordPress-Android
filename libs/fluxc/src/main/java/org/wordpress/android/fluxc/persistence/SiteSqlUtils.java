@@ -2,7 +2,8 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.PostFormatModelTable;
@@ -285,7 +286,7 @@ public class SiteSqlUtils {
      * @param sites
      *  list of sites to keep in local database
      */
-    public static int removeWPComRestSitesAbsentFromList(@NonNull List<SiteModel> sites) {
+    public static int removeWPComRestSitesAbsentFromList(PostSqlUtils postSqlUtils, @NonNull List<SiteModel> sites) {
         // get all local WP.com+Jetpack sites
         List<SiteModel> localSites = WellSql.select(SiteModel.class)
                 .where()
@@ -299,7 +300,7 @@ public class SiteSqlUtils {
                 SiteModel localSite = localIterator.next();
 
                 // don't remove sites with local changes
-                if (PostSqlUtils.getSiteHasLocalChanges(localSite)) {
+                if (postSqlUtils.getSiteHasLocalChanges(localSite)) {
                     localIterator.remove();
                 } else {
                     // don't remove local site if the remote ID matches a given site's ID
