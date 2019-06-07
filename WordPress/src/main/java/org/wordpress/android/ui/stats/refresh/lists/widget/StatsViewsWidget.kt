@@ -194,6 +194,7 @@ class StatsViewsWidget : AppWidgetProvider() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
+            intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
             return PendingIntent.getActivity(
                     context,
                     Random(localSiteId).nextInt(),

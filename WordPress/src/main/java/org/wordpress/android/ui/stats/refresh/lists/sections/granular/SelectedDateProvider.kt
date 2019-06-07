@@ -28,8 +28,6 @@ class SelectedDateProvider
 
     private val selectedDateChanged = MutableLiveData<Event<SectionChange>>()
 
-    private var initialSelectedPeriod: Pair<StatsGranularity, String>? = null
-
     fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<Event<SectionChange>> {
         return selectedDateChanged.filter { it.peekContent().selectedSection == statsGranularity.toStatsSection() }
     }
@@ -67,7 +65,7 @@ class SelectedDateProvider
     private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
         val currentDate = mutableDates[statsSection]
         mutableDates[statsSection] = selectedDate
-        if (selectedDate.hasUpdatedDate(currentDate)) {
+        if (selectedDate != currentDate) {
             selectedDateChanged.postValue(Event(SectionChange(statsSection)))
         }
     }
@@ -76,15 +74,6 @@ class SelectedDateProvider
         val updatedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
         val selectedDate = getSelectedDateState(statsGranularity)
         updateSelectedDate(selectedDate.copy(dateValue = updatedDate), statsGranularity.toStatsSection())
-    }
-
-    fun getInitialSelectedPeriod(statsSection: StatsGranularity): String? {
-//        val initialValue = initialSelectedPeriod
-//        if (initialValue?.first == statsSection) {
-//            initialSelectedPeriod = null
-//            return initialValue.second
-//        }
-        return null
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity): Date? {
@@ -129,10 +118,7 @@ class SelectedDateProvider
     }
 
     fun onDateLoadingFailed(statsGranularity: StatsGranularity) {
-        onDateLoadingFailed(statsGranularity.toStatsSection())
-    }
-
-    fun onDateLoadingFailed(statsSection: StatsSection) {
+        val statsSection = statsGranularity.toStatsSection()
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.dateValue != null && !selectedDate.error) {
             updateSelectedDate(selectedDate.copy(error = true, loading = false), statsSection)
@@ -159,15 +145,11 @@ class SelectedDateProvider
     fun clear() {
         mutableDates.clear()
         selectedDateChanged.value = null
-        initialSelectedPeriod = null
     }
 
     fun clear(statsSection: StatsSection) {
         mutableDates[statsSection] = SelectedDate(loading = true)
         selectedDateChanged.value = null
-        if (initialSelectedPeriod?.first?.toStatsSection() == statsSection) {
-            initialSelectedPeriod = null
-        }
     }
 
     data class SelectedDate(
@@ -178,15 +160,6 @@ class SelectedDateProvider
     ) {
         fun hasData(): Boolean = dateValue != null && availableDates.contains(dateValue)
         fun getDate() = dateValue!!
-        fun hasUpdatedDate(selectedDate: SelectedDate?): Boolean {
-            return if (selectedDate == null) {
-                hasData()
-            } else if (hasData() && selectedDate.hasData()) {
-                getDate() != selectedDate.getDate()
-            } else {
-                dateValue != selectedDate.dateValue
-            }
-        }
         fun getDateIndex(): Int {
             return availableDates.indexOf(dateValue)
         }

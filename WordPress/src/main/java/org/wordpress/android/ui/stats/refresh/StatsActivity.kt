@@ -73,7 +73,7 @@ class StatsActivity : AppCompatActivity() {
             return buildIntent(context, site.id)
         }
 
-        fun buildIntent(
+        private fun buildIntent(
             context: Context,
             localSiteId: Int,
             statsTimeframe: StatsTimeframe? = null,
