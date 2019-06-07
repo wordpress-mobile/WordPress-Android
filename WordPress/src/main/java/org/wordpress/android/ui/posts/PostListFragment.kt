@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
+import android.os.Handler
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +62,8 @@ class PostListFragment : Fragment() {
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
-    private var isSearch: Boolean = false
+
+    private val searchHandler = Handler()
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
@@ -99,8 +102,6 @@ class PostListFragment : Fragment() {
         } else {
             this.site = site
         }
-
-        isSearch = requireNotNull(arguments).getBoolean(EXTRA_IS_SEACH, false)
     }
 
     lateinit var mainViewModel: PostListMainViewModel
@@ -129,16 +130,30 @@ class PostListFragment : Fragment() {
             }
         })
 
-        if (isSearch) {
-            mainViewModel.searchQuery.observe(this, Observer {
-                setViewModel(it)
-            })
-        }
+        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
 
-        setViewModel()
+        if (postListType == PostListType.SEARCH) {
+            mainViewModel.searchQuery.observe(this, Observer {
+                searchHandler.removeCallbacksAndMessages(null)
+                if (TextUtils.isEmpty(it)) {
+                    actionableEmptyView?.let { emptyView ->
+                        emptyView.visibility = View.VISIBLE
+                        uiHelpers.setTextOrHide(emptyView.title, R.string.post_list_search)
+                        uiHelpers.setImageOrHide(emptyView.image, null)
+                        setupButtonOrHide(emptyView.button, null, null)
+                    }
+                } else {
+                    searchHandler.postDelayed({
+                        setViewModel()
+                    }, 500)
+                }
+            })
+        } else {
+            setViewModel()
+        }
     }
 
-    private fun setViewModel(searchQuery: String? = null) {
+    private fun setViewModel() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
@@ -148,7 +163,7 @@ class PostListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PostListViewModel>(PostListViewModel::class.java)
 
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType), searchQuery)
+        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
 
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
@@ -263,15 +278,13 @@ class PostListFragment : Fragment() {
         fun newInstance(
             site: SiteModel,
             authorFilter: AuthorFilterSelection,
-            postListType: PostListType,
-            isSearch: Boolean = false
+            postListType: PostListType
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
             bundle.putSerializable(EXTRA_POST_LIST_AUTHOR_FILTER, authorFilter)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
-            bundle.putBoolean(EXTRA_IS_SEACH, isSearch)
             fragment.arguments = bundle
             return fragment
         }

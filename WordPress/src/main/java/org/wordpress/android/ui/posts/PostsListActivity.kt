@@ -36,13 +36,14 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.posts.PostListType.PUBLISHED
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -166,7 +167,7 @@ class PostsListActivity : AppCompatActivity(),
             return@setOnLongClickListener true
         }
 
-        val searchFragment = PostListFragment.newInstance(site, EVERYONE, PUBLISHED, true)
+        val searchFragment = PostListFragment.newInstance(site, EVERYONE, SEARCH)
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.search_container, searchFragment)
@@ -323,50 +324,54 @@ class PostsListActivity : AppCompatActivity(),
             })
 
             val toggleSearchMenuItem = it.findItem(R.id.toggle_post_search)
-            toggleSearchMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                    toggleViewLayoutMenuItem.isVisible = false
-                    viewModel.onSearchExpanded(restorePreviousSearch)
-                    return true
-                }
+            if (SiteUtils.isAccessedViaWPComRest(site)) {
+                toggleSearchMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
+                    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                        toggleViewLayoutMenuItem.isVisible = false
+                        viewModel.onSearchExpanded(restorePreviousSearch)
+                        return true
+                    }
 
-                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                    toggleViewLayoutMenuItem.isVisible = true
-                    viewModel.onSearchCollapsed()
-                    return true
-                }
-            })
+                    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                        toggleViewLayoutMenuItem.isVisible = true
+                        viewModel.onSearchCollapsed()
+                        return true
+                    }
+                })
 
-            val searchView = toggleSearchMenuItem.actionView as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    viewModel.onSearchQueryInput(query)
-                    return true
-                }
+                val searchView = toggleSearchMenuItem.actionView as SearchView
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        viewModel.onSearchQueryInput(query)
+                        return true
+                    }
 
-                override fun onQueryTextChange(newText: String): Boolean {
+                    override fun onQueryTextChange(newText: String): Boolean {
 //                    if (restorePreviousSearch) {
 //                        restorePreviousSearch = false
 ////                        searchView.setQuery(viewModel.lastSearchQuery, false)
 //                    } else {
-                    viewModel.onSearchQueryInput(newText)
+                        viewModel.onSearchQueryInput(newText)
 //                    }
-                    return true
-                }
-            })
+                        return true
+                    }
+                })
 
-            // fix the search view margins to match the action bar
-            val searchEditFrame = toggleSearchMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
-            (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
-                    .apply { this.leftMargin = DisplayUtils.dpToPx(this@PostsListActivity, -8) }
+                // fix the search view margins to match the action bar
+                val searchEditFrame = toggleSearchMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
+                (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+                        .apply { this.leftMargin = DisplayUtils.dpToPx(this@PostsListActivity, -8) }
 
-            viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
-                if (isExpanded == true) {
-                    showSearchList(toggleSearchMenuItem)
-                } else {
-                    hideSearchList(toggleSearchMenuItem)
-                }
-            })
+                viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
+                    if (isExpanded == true) {
+                        showSearchList(toggleSearchMenuItem)
+                    } else {
+                        hideSearchList(toggleSearchMenuItem)
+                    }
+                })
+            } else {
+                toggleSearchMenuItem.setVisible(false)
+            }
         }
         return true
     }

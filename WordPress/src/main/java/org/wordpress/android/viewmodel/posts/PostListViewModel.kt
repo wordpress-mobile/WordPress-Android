@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -22,6 +23,7 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
@@ -116,7 +118,7 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(postListViewModelConnector: PostListViewModelConnector, searchQuery: String?) {
+    fun start(postListViewModelConnector: PostListViewModelConnector) {
         if (isStarted) {
             return
         }
@@ -132,15 +134,19 @@ class PostListViewModel @Inject constructor(
                     site = connector.site,
                     statusList = connector.postListType.postStatuses,
                     author = author,
-                    searchQuery = searchQuery
+                    searchQuery = postListViewModelConnector.searchQuery
             )
         } else {
             PostListDescriptorForXmlRpcSite(site = connector.site, statusList = connector.postListType.postStatuses)
         }
 
         isStarted = true
+        if (TextUtils.isEmpty(connector.searchQuery) && connector.postListType == SEARCH) {
+            return
+        }
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
         fetchFirstPage()
+        emptyViewState.hasObservers()
     }
 
     override fun onCleared() {
