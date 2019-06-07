@@ -8,6 +8,7 @@ import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -116,6 +117,7 @@ private fun createEmptyListUiState(postListType: PostListType, newPost: () -> Un
                 UiStringRes(R.string.posts_empty_list_button),
                 newPost
         )
+        SEARCH -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.post_list_search_nothing_found))
         TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
     }
 }
