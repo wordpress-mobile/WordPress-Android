@@ -72,6 +72,7 @@ constructor(
     ) : OnChangedError
 
     enum class DeviceRegistrationErrorType {
+        INVALID_RESPONSE,
         MISSING_DEVICE_ID,
         GENERIC_ERROR;
 
@@ -290,6 +291,8 @@ constructor(
                         AppLog.e(T.NOTIFS, "Server response missing device_id - registration skipped!")
                     DeviceRegistrationErrorType.GENERIC_ERROR ->
                         AppLog.e(T.NOTIFS, "Error trying to register device: ${error.type} - ${error.message}")
+                    DeviceRegistrationErrorType.INVALID_RESPONSE ->
+                        AppLog.e(T.NOTIFS, "Server response missing response object: ${error.type} - ${error.message}")
                 }
                 onDeviceRegistered.error = payload.error
             } else {

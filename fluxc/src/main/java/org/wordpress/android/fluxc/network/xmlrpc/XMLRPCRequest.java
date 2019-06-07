@@ -1,7 +1,8 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
-import android.support.annotation.NonNull;
 import android.util.Xml;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -28,6 +29,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
+
 
 // TODO: Would be great to use generics / return POJO or model direclty (see GSON code?)
 public class XMLRPCRequest extends BaseRequest<Object> {
