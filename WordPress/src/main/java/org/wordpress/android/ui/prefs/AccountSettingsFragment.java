@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -299,8 +300,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                                 ToastUtils.Duration.LONG);
                         break;
                     case SETTINGS_POST_ERROR:
-                        ToastUtils.showToast(getActivity(), R.string.error_post_account_settings,
-                                ToastUtils.Duration.LONG);
+                        // We usually rely on event.error.type and provide our own localized message.
+                        // This case is exceptional because:
+                        // 1. The server-side error type is generic, but patching this server-side is quite involved
+                        // 2. We know the error string return from the server has decent localization
+                        String errorMessage = !TextUtils.isEmpty(event.error.message) ? event.error.message
+                                : getString(R.string.error_post_account_settings);
+                        ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);
                         // we optimistically show the email change snackbar, if that request fails, we should
                         // remove the snackbar
                         checkIfEmailChangeIsPending();
