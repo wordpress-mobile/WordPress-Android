@@ -1,9 +1,10 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.LocalDiffModelTable;
 import com.wellsql.generated.LocalRevisionModelTable;
@@ -27,8 +28,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.Reusable;
+
+@Reusable
 public class PostSqlUtils {
-    public static int insertOrUpdatePost(PostModel post, boolean overwriteLocalChanges) {
+    @Inject
+    public PostSqlUtils() {
+    }
+
+    public int insertOrUpdatePost(PostModel post, boolean overwriteLocalChanges) {
         if (post == null) {
             return 0;
         }
@@ -73,15 +83,15 @@ public class PostSqlUtils {
         return 0;
     }
 
-    public static int insertOrUpdatePostKeepingLocalChanges(PostModel post) {
+    public int insertOrUpdatePostKeepingLocalChanges(PostModel post) {
         return insertOrUpdatePost(post, false);
     }
 
-    public static int insertOrUpdatePostOverwritingLocalChanges(PostModel post) {
+    public int insertOrUpdatePostOverwritingLocalChanges(PostModel post) {
         return insertOrUpdatePost(post, true);
     }
 
-    public static List<PostModel> getPostsForSite(SiteModel site, boolean getPages) {
+    public List<PostModel> getPostsForSite(SiteModel site, boolean getPages) {
         if (site == null) {
             return Collections.emptyList();
         }
@@ -96,7 +106,7 @@ public class PostSqlUtils {
                 .getAsModel();
     }
 
-    public static List<PostModel> getPostsForSiteWithFormat(SiteModel site, List<String> postFormat, boolean getPages) {
+    public List<PostModel> getPostsForSiteWithFormat(SiteModel site, List<String> postFormat, boolean getPages) {
         if (site == null) {
             return Collections.emptyList();
         }
@@ -112,7 +122,7 @@ public class PostSqlUtils {
                 .getAsModel();
     }
 
-    public static List<PostModel> getUploadedPostsForSite(SiteModel site, boolean getPages) {
+    public List<PostModel> getUploadedPostsForSite(SiteModel site, boolean getPages) {
         if (site == null) {
             return Collections.emptyList();
         }
@@ -128,7 +138,7 @@ public class PostSqlUtils {
                 .getAsModel();
     }
 
-    public static List<PostModel> getLocalDrafts(@NonNull Integer localSiteId, boolean isPage) {
+    public List<PostModel> getLocalDrafts(@NonNull Integer localSiteId, boolean isPage) {
         return WellSql.select(PostModel.class)
                       .where()
                       .beginGroup()
@@ -140,7 +150,7 @@ public class PostSqlUtils {
                       .getAsModel();
     }
 
-    public static List<PostModel> getPostsByRemoteIds(@Nullable List<Long> remoteIds, int localSiteId) {
+    public List<PostModel> getPostsByRemoteIds(@Nullable List<Long> remoteIds, int localSiteId) {
         if (remoteIds != null && remoteIds.size() > 0) {
             return WellSql.select(PostModel.class)
                           .where().isIn(PostModelTable.REMOTE_POST_ID, remoteIds)
@@ -150,7 +160,7 @@ public class PostSqlUtils {
         return Collections.emptyList();
     }
 
-    public static List<PostModel> getPostsByLocalOrRemotePostIds(
+    public List<PostModel> getPostsByLocalOrRemotePostIds(
             @NonNull List<? extends LocalOrRemoteId> localOrRemoteIds, int localSiteId) {
         if (localOrRemoteIds.isEmpty()) {
             return Collections.emptyList();
@@ -180,13 +190,13 @@ public class PostSqlUtils {
         return whereQuery.endGroup().endWhere().getAsModel();
     }
 
-    public static PostModel insertPostForResult(PostModel post) {
+    public PostModel insertPostForResult(PostModel post) {
         WellSql.insert(post).asSingleTransaction(true).execute();
 
         return post;
     }
 
-    public static int deletePost(PostModel post) {
+    public int deletePost(PostModel post) {
         if (post == null) {
             return 0;
         }
@@ -200,7 +210,7 @@ public class PostSqlUtils {
                 .execute();
     }
 
-    public static int deleteUploadedPostsForSite(SiteModel site, boolean pages) {
+    public int deleteUploadedPostsForSite(SiteModel site, boolean pages) {
         if (site == null) {
             return 0;
         }
@@ -216,11 +226,11 @@ public class PostSqlUtils {
                 .execute();
     }
 
-    public static int deleteAllPosts() {
+    public int deleteAllPosts() {
         return WellSql.delete(PostModel.class).execute();
     }
 
-    public static boolean getSiteHasLocalChanges(SiteModel site) {
+    public boolean getSiteHasLocalChanges(SiteModel site) {
         return site != null && WellSql.select(PostModel.class)
                 .where().beginGroup()
                 .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
@@ -231,7 +241,7 @@ public class PostSqlUtils {
                 .endGroup().endGroup().endWhere().getAsCursor().getCount() > 0;
     }
 
-    public static int getNumLocalChanges() {
+    public int getNumLocalChanges() {
         return WellSql.select(PostModel.class)
                 .where().beginGroup()
                 .equals(PostModelTable.IS_LOCAL_DRAFT, true)
@@ -241,8 +251,7 @@ public class PostSqlUtils {
                 .getAsCursor().getCount();
     }
 
-
-    public static int updatePostsAutoSave(SiteModel site, final PostRemoteAutoSaveModel autoSaveModel) {
+    public int updatePostsAutoSave(SiteModel site, final PostRemoteAutoSaveModel autoSaveModel) {
         return WellSql.update(PostModel.class)
                .where().beginGroup()
                .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
@@ -261,7 +270,7 @@ public class PostSqlUtils {
                }).execute();
     }
 
-    public static void insertOrUpdateLocalRevision(LocalRevisionModel revision, List<LocalDiffModel> diffs) {
+    public void insertOrUpdateLocalRevision(LocalRevisionModel revision, List<LocalDiffModel> diffs) {
         int localRevisionModels =
                 WellSql.select(LocalRevisionModel.class)
                         .where().beginGroup()
@@ -294,7 +303,7 @@ public class PostSqlUtils {
         }
     }
 
-    public static List<LocalRevisionModel> getLocalRevisions(SiteModel site, PostModel post) {
+    public List<LocalRevisionModel> getLocalRevisions(SiteModel site, PostModel post) {
         return WellSql.select(LocalRevisionModel.class)
                 .where().beginGroup()
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
@@ -302,7 +311,7 @@ public class PostSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
-    public static List<LocalDiffModel> getLocalRevisionDiffs(LocalRevisionModel revision) {
+    public List<LocalDiffModel> getLocalRevisionDiffs(LocalRevisionModel revision) {
         return WellSql.select(LocalDiffModel.class)
                 .where().beginGroup()
                 .equals(LocalDiffModelTable.POST_ID, revision.getPostId())
@@ -311,7 +320,7 @@ public class PostSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
-    public static void deleteLocalRevisionAndDiffs(LocalRevisionModel revision) {
+    public void deleteLocalRevisionAndDiffs(LocalRevisionModel revision) {
         WellSql.delete(LocalRevisionModel.class)
                 .where().beginGroup()
                 .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
@@ -327,7 +336,7 @@ public class PostSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
-    public static void deleteLocalRevisionAndDiffsOfAPostOrPage(PostModel post) {
+    public void deleteLocalRevisionAndDiffsOfAPostOrPage(PostModel post) {
         WellSql.delete(LocalRevisionModel.class)
                 .where().beginGroup()
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
@@ -341,7 +350,7 @@ public class PostSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
-    public static List<LocalId> getLocalPostIdsForFilter(SiteModel site, boolean isPage, String searchQuery,
+    public List<LocalId> getLocalPostIdsForFilter(SiteModel site, boolean isPage, String searchQuery,
                                                          String orderBy, @Order int order) {
         ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
                 WellSql.select(PostModel.class)

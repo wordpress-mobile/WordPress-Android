@@ -18,7 +18,7 @@
 
 package org.wordpress.android.fluxc.network;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.Response.Listener;

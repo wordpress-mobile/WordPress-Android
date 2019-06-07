@@ -1,7 +1,9 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
-import android.support.annotation.NonNull;
+import android.database.sqlite.SQLiteDatabase;
+
+import androidx.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.SubscriptionModelTable;
@@ -24,18 +26,29 @@ public class AccountSqlUtils {
     }
 
     public static int insertOrUpdateAccount(AccountModel account, int localId) {
-        if (account == null) return 0;
-        account.setId(localId);
-        List<AccountModel> accountResults = WellSql.select(AccountModel.class)
-                .where()
-                .equals(AccountModelTable.ID, localId)
-                .endWhere().getAsModel();
-        if (accountResults.isEmpty()) {
-            WellSql.insert(account).execute();
+        if (account == null) {
             return 0;
-        } else {
-            ContentValues cv = new UpdateAllExceptId<>(AccountModel.class).toCv(account);
-            return updateAccount(accountResults.get(0).getId(), cv);
+        }
+        account.setId(localId);
+        SQLiteDatabase db = WellSql.giveMeWritableDb();
+        db.beginTransaction();
+        try {
+            List<AccountModel> accountResults = WellSql.select(AccountModel.class)
+                                                       .where()
+                                                       .equals(AccountModelTable.ID, localId)
+                                                       .endWhere().getAsModel();
+            if (accountResults.isEmpty()) {
+                WellSql.insert(account).execute();
+                db.setTransactionSuccessful();
+                return 0;
+            } else {
+                ContentValues cv = new UpdateAllExceptId<>(AccountModel.class).toCv(account);
+                int result = updateAccount(accountResults.get(0).getId(), cv);
+                db.setTransactionSuccessful();
+                return result;
+            }
+        } finally {
+            db.endTransaction();
         }
     }
 
