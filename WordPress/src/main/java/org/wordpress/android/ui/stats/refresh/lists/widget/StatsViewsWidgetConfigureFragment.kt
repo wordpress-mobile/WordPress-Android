@@ -16,7 +16,9 @@ import kotlinx.android.synthetic.main.stats_views_widget_configure_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class StatsViewsWidgetConfigureFragment : DaggerFragment() {
@@ -24,6 +26,8 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Inject lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.stats_views_widget_configure_fragment, container, false)
@@ -75,7 +79,9 @@ class StatsViewsWidgetConfigureFragment : DaggerFragment() {
                         appWidgetId,
                         appPrefsWrapper,
                         siteStore,
-                        imageManager
+                        imageManager,
+                        networkUtilsWrapper,
+                        resourceProvider
                 )
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

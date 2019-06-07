@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
