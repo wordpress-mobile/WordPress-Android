@@ -1,6 +1,7 @@
 12.7
 -----
 * Show upload in progress notification when retrying
+* Fix issue where two identical drafts were created
 
 12.6
 -----
