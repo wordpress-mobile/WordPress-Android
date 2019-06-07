@@ -541,6 +541,7 @@
     <string name="site_settings_language_title" translatable="false">@string/language</string>
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
+    <string name="site_settings_password_dialog_title">Update password</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_tags_empty_button">Create a tag</string>
     <string name="site_settings_tags_empty_subtitle">Add your frequently used tags here so they can be quickly selected when tagging your posts</string>
@@ -585,6 +586,8 @@
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
+    <string name="site_settings_password_updated">Password updated</string>
+    <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -759,7 +762,7 @@
 
     <!-- Errors -->
     <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
-    <string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
+    <string name="site_settings_disconnected_toast">No connection. Editing is disabled.</string>
 
     <!--               -->
     <!-- Site Settings -->
@@ -1486,7 +1489,7 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
-    <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
+    <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
     <string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
@@ -1519,6 +1522,8 @@
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
+    <string name="error_browser_no_network">Unable to load this page right now.</string>
+    <string name="error_network_connection">Check your network connection and try again.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>

@@ -118,7 +118,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         if (titleView != null) {
             TextView titleText = (TextView) titleView.findViewById(R.id.title);
             if (titleText != null) {
-                titleText.setText(getTitle());
+                titleText.setText(getDialogTitle());
             }
 
             builder.setCustomTitle(titleView);

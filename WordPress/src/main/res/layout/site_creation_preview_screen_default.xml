@@ -13,7 +13,7 @@
         tools:visibility="gone"/>
 
     <include
-        layout="@layout/site_creation_progress"
+        layout="@layout/progress_layout"
         tools:visibility="gone"/>
 
     <RelativeLayout
