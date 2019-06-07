@@ -1489,7 +1489,7 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
-    <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
+    <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
     <string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
@@ -1522,6 +1522,8 @@
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
+    <string name="error_browser_no_network">Unable to load this page right now.</string>
+    <string name="error_network_connection">Check your network connection and try again.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>
