@@ -448,7 +448,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         if (user == null) {
             try {
                 throw new AnalyticsException("Trying to track analytics with an null user!");
-                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+                // TODO add Crash Logging Exception or track this error in Nosara by using a special test user.
             } catch (AnalyticsException e) {
                 AppLog.e(AppLog.T.STATS, e);
             }
@@ -710,6 +710,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_button_pressed";
             case POST_LIST_ITEM_SELECTED:
                 return "post_list_item_selected";
+            case POST_LIST_AUTHOR_FILTER_CHANGED:
+                return "post_list_author_filter_changed";
+            case POST_LIST_TAB_CHANGED:
+                return "post_list_tab_changed";
+            case POST_LIST_VIEW_LAYOUT_TOGGLED:
+                return "post_list_view_layout_toggled";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
@@ -971,6 +977,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_access_error";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
+                return "stats_insights_management_hint_dismissed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED:
+                return "stats_insights_management_hint_clicked";
+            case STATS_INSIGHTS_MANAGEMENT_ACCESSED:
+                return "stats_insights_management_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:
@@ -1031,6 +1043,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_bar_chart_tapped";
             case STATS_OVERVIEW_TYPE_TAPPED:
                 return "stats_overview_type_tapped";
+            case STATS_DETAIL_POST_TAPPED:
+                return "stats_detail_post_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
                 return "stats_scrolled_to_bottom";
             case STATS_WIDGET_ADDED:
@@ -1199,20 +1213,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_success";
             case SIGNUP_SOCIAL_TO_LOGIN:
                 return "signup_social_to_login";
-            case SITE_CREATION_ACCESSED:
-                return "site_creation_accessed";
-            case SITE_CREATION_CATEGORY_VIEWED:
-                return "site_creation_category_viewed";
-            case SITE_CREATION_THEME_VIEWED:
-                return "site_creation_theme_viewed";
-            case SITE_CREATION_DETAILS_VIEWED:
-                return "site_creation_details_viewed";
-            case SITE_CREATION_DOMAIN_VIEWED:
-                return "site_creation_domain_viewed";
-            case SITE_CREATION_CREATING_VIEWED:
-                return "site_creation_creating_viewed";
-            case SITE_CREATION_SUCCESS_VIEWED:
-                return "site_creation_success_viewed";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
             case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
@@ -1241,12 +1241,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_success_preview_viewed";
             case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED:
                 return "enhanced_site_creation_success_preview_loaded";
-            case ENHANCED_SITE_CREATION_COMPLETED:
-                return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED:
+                return "enhanced_site_creation_preview_ok_button_tapped";
             case ENHANCED_SITE_CREATION_EXITED:
                 return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
+            case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
+                return "enhanced_site_creation_background_service_updated";
+            case SITE_CREATED:
+                return "site_created";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -1321,10 +1325,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "themes_details_accessed";
             case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 return "account_settings_language_changed";
-            case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
-                return "site_creation_background_service_update";
-            case NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
-                return "new_site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
@@ -1475,6 +1475,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_rewind_started";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_OPENED:
+                return "support_opened";
             case SUPPORT_IDENTITY_FORM_VIEWED:
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:

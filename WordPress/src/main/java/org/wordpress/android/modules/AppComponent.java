@@ -23,18 +23,8 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
-import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
-import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
-import org.wordpress.android.ui.accounts.signup.SiteCreationDomainAdapter;
-import org.wordpress.android.ui.accounts.signup.SiteCreationDomainFragment;
-import org.wordpress.android.ui.accounts.signup.SiteCreationDomainLoaderFragment;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService;
-import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
-import org.wordpress.android.ui.accounts.signup.SiteCreationThemeAdapter;
-import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
-import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
@@ -45,6 +35,8 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
+import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -94,6 +86,7 @@ import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
+import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -128,13 +121,13 @@ import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment;
-import org.wordpress.android.ui.sitecreation.previews.NewSiteCreationPreviewFragment;
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
-import org.wordpress.android.ui.sitecreation.services.NewSiteCreationService;
-import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFragment;
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
+import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
+import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
+import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
+import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -173,12 +166,12 @@ import dagger.android.support.AndroidSupportInjectionModule;
         AndroidSupportInjectionModule.class,
         ViewModelModule.class,
         StatsModule.class,
+        SupportModule.class,
+        ThreadModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
-        LoginServiceModule.class,
-        SupportModule.class,
-        ThreadModule.class
+        LoginServiceModule.class
 })
 public interface AppComponent extends AndroidInjector<WordPress> {
     @Override
@@ -187,8 +180,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(WPMainActivity object);
 
     void inject(SiteCreationService object);
-
-    void inject(NewSiteCreationService object);
 
     void inject(UploadService object);
 
@@ -210,33 +201,15 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SiteCreationActivity object);
 
-    void inject(SiteCreationCategoryFragment object);
+    void inject(SiteCreationSegmentsFragment object);
 
-    void inject(SiteCreationThemeFragment object);
+    void inject(SiteCreationSiteInfoFragment object);
 
-    void inject(SiteCreationThemeLoaderFragment object);
+    void inject(SiteCreationDomainsFragment object);
 
-    void inject(SiteCreationThemeAdapter object);
+    void inject(SiteCreationVerticalsFragment object);
 
-    void inject(SiteCreationSiteDetailsFragment object);
-
-    void inject(SiteCreationDomainFragment object);
-
-    void inject(SiteCreationDomainLoaderFragment object);
-
-    void inject(SiteCreationDomainAdapter object);
-
-    void inject(NewSiteCreationActivity object);
-
-    void inject(NewSiteCreationSegmentsFragment object);
-
-    void inject(NewSiteCreationSiteInfoFragment object);
-
-    void inject(NewSiteCreationDomainsFragment object);
-
-    void inject(NewSiteCreationVerticalsFragment object);
-
-    void inject(NewSiteCreationPreviewFragment object);
+    void inject(SiteCreationPreviewFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
 
@@ -356,6 +329,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PostsListActivity object);
 
+    void inject(AuthorSelectionAdapter object);
+
     void inject(PostListFragment object);
 
     void inject(HistoryListFragment object);
@@ -471,6 +446,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PlansListAdapter object);
 
     void inject(PlanDetailsFragment object);
+
+    void inject(DomainSuggestionsFragment object);
+
+    void inject(DomainRegistrationDetailsFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

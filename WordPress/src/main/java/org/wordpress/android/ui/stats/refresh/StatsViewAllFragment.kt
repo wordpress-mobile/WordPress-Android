@@ -1,22 +1,21 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.AppBarLayout.LayoutParams
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout.OnTabSelectedListener
-import android.support.design.widget.TabLayout.Tab
-import android.support.v4.app.FragmentActivity
-import android.support.v4.view.ViewCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout.LayoutParams
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayout.Tab
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
@@ -85,23 +84,23 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
         recyclerView.layoutManager = layoutManager
-        loadingRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        loadingRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
 
-        select_next_date.setOnClickListener {
+        nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
-        select_previous_date.setOnClickListener {
+        previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
     }
@@ -174,8 +173,8 @@ class StatsViewAllFragment : DaggerFragment() {
             if (it != null) {
                 recyclerView.visibility = if (it is StatsBlock.Success) View.VISIBLE else View.GONE
                 loadingContainer.visibility = if (it is StatsBlock.Loading) View.VISIBLE else View.GONE
-                actionable_error_view.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
-                actionable_empty_view.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
+                statsErrorView.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
+                statsEmptyView.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
                 when (it) {
                     is StatsBlock.Success -> {
                         loadData(recyclerView, prepareLayout(it.data, it.type))
@@ -184,7 +183,7 @@ class StatsViewAllFragment : DaggerFragment() {
                         loadData(loadingRecyclerView, prepareLayout(it.data, it.type))
                     }
                     is StatsBlock.Error -> {
-                        actionable_error_view.button.setOnClickListener {
+                        statsErrorView.button.setOnClickListener {
                             viewModel.onRetryClick()
                         }
                     }
@@ -202,14 +201,14 @@ class StatsViewAllFragment : DaggerFragment() {
             if (date_selection_toolbar.visibility != dateSelectorVisibility) {
                 date_selection_toolbar.visibility = dateSelectorVisibility
             }
-            selected_date.text = dateSelectorUiModel?.date ?: ""
+            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
             val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (select_previous_date.isEnabled != enablePreviousButton) {
-                select_previous_date.isEnabled = enablePreviousButton
+            if (previousDateButton.isEnabled != enablePreviousButton) {
+                previousDateButton.isEnabled = enablePreviousButton
             }
             val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (select_next_date.isEnabled != enableNextButton) {
-                select_next_date.isEnabled = enableNextButton
+            if (nextDateButton.isEnabled != enableNextButton) {
+                nextDateButton.isEnabled = enableNextButton
             }
         })
 
@@ -220,14 +219,22 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.selectedDate.observe(this, Observer { event ->
-            if (event?.hasBeenHandled == false) {
+            if (event?.getContentIfNotHandled() != null) {
                 viewModel.onDateChanged()
             }
         })
 
         viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
-            val elevation = if (hasShadow == true) resources.getDimension(R.dimen.appbar_elevation) else 0f
-            app_bar_layout.postDelayed({ ViewCompat.setElevation(app_bar_layout, elevation) }, 100)
+            app_bar_layout.postDelayed({
+                if (app_bar_layout != null) {
+                    val elevation = if (hasShadow == true) {
+                        resources.getDimension(R.dimen.appbar_elevation)
+                    } else {
+                        0f
+                    }
+                    ViewCompat.setElevation(app_bar_layout, elevation)
+                }
+            }, 100)
         })
     }
 
@@ -254,8 +261,8 @@ class StatsViewAllFragment : DaggerFragment() {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
 
-            (toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL.or(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+            (toolbar.layoutParams as LayoutParams).scrollFlags =
+                    LayoutParams.SCROLL_FLAG_SCROLL.or(LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
             tabLayout.visibility = View.VISIBLE
 
             data.filter { it !is TabsItem }
@@ -284,11 +291,11 @@ class StatsViewAllFragment : DaggerFragment() {
 
             override fun onTabSelected(tab: Tab) {
                 item.onTabSelected(tab.position)
-                activity?.intent?.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, tab.position)
+                activity?.intent?.putExtra(SELECTED_TAB_KEY, tab.position)
             }
         })
 
-        val selectedTab = activity?.intent?.getIntExtra(StatsViewAllFragment.SELECTED_TAB_KEY, 0) ?: 0
+        val selectedTab = activity?.intent?.getIntExtra(SELECTED_TAB_KEY, 0) ?: 0
         tabLayout.getTabAt(selectedTab)?.select()
     }
 }

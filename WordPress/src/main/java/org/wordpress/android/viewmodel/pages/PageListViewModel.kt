@@ -1,15 +1,15 @@
 package org.wordpress.android.viewmodel.pages
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -79,10 +79,10 @@ class PageListViewModel @Inject constructor(
         }
         val title: Int
             get() = when (this) {
-                PUBLISHED -> string.pages_published
-                DRAFTS -> string.pages_drafts
-                SCHEDULED -> string.pages_scheduled
-                TRASHED -> string.pages_trashed
+                PUBLISHED -> R.string.pages_published
+                DRAFTS -> R.string.pages_drafts
+                SCHEDULED -> R.string.pages_scheduled
+                TRASHED -> R.string.pages_trashed
             }
     }
 
@@ -160,13 +160,21 @@ class PageListViewModel @Inject constructor(
     private fun displayListItems(newPages: List<PageItem>) {
         if (newPages.isEmpty()) {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
-                _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
+                _pages.postValue(
+                        listOf(
+                                Empty(
+                                        R.string.pages_fetching,
+                                        isButtonVisible = false,
+                                        isImageVisible = false
+                                )
+                        )
+                )
             } else {
                 when (listType) {
-                    PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
-                    SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
-                    DRAFTS -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
-                    TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
+                    PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
+                    SCHEDULED -> _pages.postValue(listOf(Empty(R.string.pages_empty_scheduled)))
+                    DRAFTS -> _pages.postValue(listOf(Empty(R.string.pages_empty_drafts)))
+                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed, isButtonVisible = false)))
                 }
             }
         } else {
@@ -207,9 +215,9 @@ class PageListViewModel @Inject constructor(
                 .map {
                     val labels = mutableListOf<Int>()
                     if (it.status == PageStatus.PRIVATE)
-                        labels.add(string.pages_private)
+                        labels.add(R.string.pages_private)
                     if (it.hasLocalChanges)
-                        labels.add(string.local_changes)
+                        labels.add(R.string.local_changes)
 
                     PublishedPage(it.remoteId, it.title, it.date, labels, getPageItemIndent(it),
                             getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
@@ -232,9 +240,9 @@ class PageListViewModel @Inject constructor(
         return pages.map {
             val labels = mutableListOf<Int>()
             if (it.status == PageStatus.PENDING)
-                labels.add(string.pages_pending)
+                labels.add(R.string.pages_pending)
             if (it.hasLocalChanges)
-                labels.add(string.local_draft)
+                labels.add(R.string.local_draft)
 
             DraftPage(it.remoteId, it.title, it.date, labels,
                     getFeaturedImageUrl(it.featuredImageId), actionsEnabled)
@@ -276,6 +284,7 @@ class PageListViewModel @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())

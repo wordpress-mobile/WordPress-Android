@@ -1,18 +1,52 @@
+12.7
+-----
+* Show upload in progress notification when retrying
+* Fix issue where two identical drafts were created
+
+12.6
+-----
+* Add Insights management introductory card
+* Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
+
+* Block Editor: A new block is available: video block.
+* Block Editor: Added UI to display a warning when a block has invalid content.
+* Block Editor: Fixed issue with link settings where “Open in New Tab” was always OFF on open.
+
+12.5
+-----
+* Local Drafts will be automatically uploaded to the server as soon as internet connection is available.
+* Make current day difference grey in Stats Overview.
+* Add link to the Post from the Post stats.
+
+12.4
+-----
+* Reduce number of network calls in Stats and improve performance
+* Added support for displaying posts in tabs based on their status
+* Added ability to filter posts by their author
+* Added ability to toggle to compact view type for blog posts list
+* Fixed several bugs on the blog posts screen
+* Fixed bug that prevented audio playing in the reader
+* New Insights Management for selecting the most relevant stats
+* App download size is now much smaller.
+
 12.3
 -----
 * Updated primary button color to pink
 * Redirect to username/password login when WordPress.com reports email login not allowed
 * Updated notifications list to Material guidelines
 * Updated snackbar design to Material guidelines
+* New Follower totals insights in the Stats
 * Fixed crash when viewing Notifications tab
 * Add "This Year" card to Stats Insights screen
 * The Site → Blog Posts → View WebView will no longer show any Calypso UI
 * Fixed an issue with Twitter publicize connections
 * Fixed an issue where the site icon wasn't updating correctly after switching to another site
 * Fixes an issue which can result in missing posts in the Reader
+* Fixed crash when editing a post with a previously cancelled image upload
 
 12.2
 -----
+* Fixed padding of some icons on devices running Android Lollipop
 * Added an action to share sites in the Reader
 * Updated color scheme to Classic Bright
 * Adds support for .blog subdomains for the new site creation flow
@@ -34,12 +68,3 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
-
-11.9
------
-* Introduced new site creation wizard
-* Make "<em>" the default markup for italic in the editor
-* Updated Plans with new design
-* Fixed an issue where posts show up as scheduled even after they are published
-* Add Visitors overlay to the Overview block in Stats
-* Change Stats design to flat on smaller devices

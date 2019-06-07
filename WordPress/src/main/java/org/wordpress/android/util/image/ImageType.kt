@@ -17,5 +17,6 @@ enum class ImageType {
     THEME,
     UNKNOWN,
     VIDEO,
-    ICON
+    ICON,
+    NO_PLACEHOLDER
 }

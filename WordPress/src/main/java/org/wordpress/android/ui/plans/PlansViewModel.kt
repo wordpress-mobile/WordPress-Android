@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.plans
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -102,7 +102,7 @@ class PlansViewModel @Inject constructor(
             _plans.value = emptyList()
             AppLog.e(T.API, "An error occurred while fetching plans. Cache is not available.")
         } else {
-            _listStatus.value = PlansListStatus.DONE
+            _listStatus.value = DONE
             _plans.value = event.planOffers
         }
     }

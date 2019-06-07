@@ -5,21 +5,19 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 
 class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_four_columns_item
+        R.layout.stats_block_four_columns_item
 ) {
     private val columnLayouts = listOf<LinearLayout>(
-            itemView.findViewById(id.column1),
-            itemView.findViewById(id.column2),
-            itemView.findViewById(id.column3),
-            itemView.findViewById(id.column4)
+            itemView.findViewById(R.id.column1),
+            itemView.findViewById(R.id.column2),
+            itemView.findViewById(R.id.column3),
+            itemView.findViewById(R.id.column4)
     )
 
     fun bind(

@@ -5,10 +5,6 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.OnLifecycleEvent;
-import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -21,22 +17,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.multidex.MultiDexApplication;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.multidex.MultiDexApplication;
+import androidx.work.WorkManager;
+
 import com.android.volley.RequestQueue;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -75,23 +77,26 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.util.QuickStartUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.UploadWorker;
+import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.io.File;
@@ -108,8 +113,6 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import de.greenrobot.event.EventBus;
-import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {
@@ -143,6 +146,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject LocalDraftUploadStarter mLocalDraftUploadStarter;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -223,12 +227,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        if (CrashlyticsUtils.shouldEnableCrashlytics(this)) {
-            Fabric.with(this, new Crashlytics());
-        }
+        CrashLoggingUtils.startCrashLogging(getContext());
 
-        // Init WellSql
-        WellSql.init(new WellSqlConfig(getApplicationContext()));
+        initWellSql();
 
         // Init Dagger
         initDaggerComponent();
@@ -249,7 +250,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
                   .append(tag.toString()).append(": ").append(message);
-                CrashlyticsUtils.log(sb.toString());
+                CrashLoggingUtils.log(sb.toString());
             }
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");
@@ -281,6 +282,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mApplicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
+        // Make the UploadStarter observe the app process so it can auto-start uploads
+        mLocalDraftUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
+
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
         createNotificationChannelsOnSdk26();
@@ -310,6 +314,24 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+
+        initWorkManager();
+
+        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
+        // It will upload local draft or published posts with local changes to the server.
+        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+    }
+
+    protected void initWorkManager() {
+        UploadWorker.Factory factory = new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
+        androidx.work.Configuration config =
+                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
+        WorkManager.initialize(this, config);
+    }
+
+    // note that this is overridden in WordPressDebug
+    protected void initWellSql() {
+        WellSql.init(new WellSqlConfig(getApplicationContext()));
     }
 
     protected void initDaggerComponent() {
@@ -797,7 +819,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     AppLog.d(T.MAIN, "ConnectionChangeReceiver successfully unregistered");
                 } catch (IllegalArgumentException e) {
                     AppLog.e(T.MAIN, "ConnectionChangeReceiver was already unregistered");
-                    Crashlytics.logException(e);
+                    CrashLoggingUtils.log(e);
                 }
             }
         }

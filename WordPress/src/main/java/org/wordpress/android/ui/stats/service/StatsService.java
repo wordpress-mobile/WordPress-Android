@@ -4,13 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
-import de.greenrobot.event.EventBus;
-
 
 /**
  * Background service to retrieve Stats.

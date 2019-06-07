@@ -1,13 +1,13 @@
 package org.wordpress.android.widgets
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatTextView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.ADD

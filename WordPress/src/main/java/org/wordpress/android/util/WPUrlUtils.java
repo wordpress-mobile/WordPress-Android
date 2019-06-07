@@ -1,5 +1,9 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+
+import org.wordpress.android.Constants;
+
 import java.net.URI;
 import java.net.URL;
 
@@ -39,5 +43,9 @@ public class WPUrlUtils {
             return false;
         }
         return url.getHost().equals("gravatar.com") || url.getHost().endsWith(".gravatar.com");
+    }
+
+    public static String buildTermsOfServiceUrl(Context context) {
+        return Constants.URL_TOS + "?locale=" + LanguageUtils.getPatchedCurrentDeviceLanguage(context);
     }
 }

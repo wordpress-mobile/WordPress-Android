@@ -1,6 +1,6 @@
 package org.wordpress.android.ui
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
@@ -56,7 +56,7 @@ class JetpackRemoteInstallViewModelTest {
     @Before
     fun setUp() {
         whenever(site.id).thenReturn(siteId)
-        viewModel = JetpackRemoteInstallViewModel(jetpackStore, dispatcher, accountStore, siteStore)
+        viewModel = JetpackRemoteInstallViewModel(dispatcher, accountStore, siteStore, jetpackStore)
         viewModel.liveViewState.observeForever { if (it != null) viewStates.add(it) }
         viewModel.liveActionOnResult.observeForever { if (it != null) jetpackResultActionData = it }
         actionCaptor = argumentCaptor()

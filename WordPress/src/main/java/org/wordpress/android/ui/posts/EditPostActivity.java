@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,19 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -46,6 +32,25 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -139,7 +144,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -177,6 +182,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -187,8 +193,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
@@ -280,12 +284,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsConfigChange = false;
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -296,8 +300,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private PostModel mPost;
     private PostModel mPostForUndo;
-    private PostModel mOriginalPost;
-    private boolean mOriginalPostHadLocalChangesOnOpen;
+    // mPostSnapshotWhenEditorOpened should not be updated after the post editor session start
+    private @Nullable PostModel mPostSnapshotWhenEditorOpened;
 
     private Revision mRevision;
 
@@ -527,14 +531,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
-        if (savedInstanceState == null) {
-            // Bump the stat the first time the editor is opened.
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+        // Bump post created analytics only once, first time the editor is opened
+        if (mIsNewPost && savedInstanceState == null) {
+            trackEditorCreatedPost(action, getIntent());
         }
 
-        if (mIsNewPost) {
-            trackEditorCreatedPost(action, getIntent());
-        } else {
+        if (!mIsNewPost) {
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mPost);
@@ -592,8 +594,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void initializePostObject() {
         if (mPost != null) {
-            mOriginalPost = mPost.clone();
-            mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
+            mPostSnapshotWhenEditorOpened = mPost.clone();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
                 try {
@@ -714,6 +715,11 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().register(this);
 
         reattachUploadingMediaForAztec();
+
+        // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
+        PostUtils.trackOpenEditorAnalytics(mPost, mSite);
+
+        mIsConfigChange = false;
     }
 
     private void reattachUploadingMediaForAztec() {
@@ -757,6 +763,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
     }
 
     @Override protected void onStop() {
@@ -774,7 +782,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPostEditorAnalyticsSession.end();
             }
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+
         mDispatcher.unregister(this);
         if (mHandler != null) {
             mHandler.removeCallbacks(mSave);
@@ -1226,7 +1234,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         showDiscardChanges = true;
                     } else {
                         // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+                        showDiscardChanges = mPostSnapshotWhenEditorOpened != null
+                                             && mPostSnapshotWhenEditorOpened.isLocallyChanged();
                     }
                 }
                 discardChanges.setVisible(showDiscardChanges);
@@ -1298,11 +1307,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         hidePhotoPicker();
-        boolean userCanPublishPosts = userCanPublishPosts();
 
-        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
-            if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
-                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
+        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts())) {
+            if (shouldShowAsyncPromoDialog()) {
                 showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
@@ -1357,12 +1364,19 @@ public class EditPostActivity extends AppCompatActivity implements
                         return false;
                     }
 
-                    if (status == PostStatus.SCHEDULED && isNewPost()) {
-                        // if user pressed `Save as draft` on a new, Scheduled Post, re-convert it to draft.
-                        if (mEditPostSettingsFragment != null) {
-                            mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
-                            ToastUtils.showToast(EditPostActivity.this,
-                                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                    if (status == PostStatus.SCHEDULED || status == PostStatus.PUBLISHED) {
+                        if (isNewPost()) {
+                            // if user pressed `Save as draft` on a new, Scheduled (or set to Publish) Post,
+                            // so re-convert it to draft.
+                            if (mEditPostSettingsFragment != null) {
+                                mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+                                ToastUtils.showToast(EditPostActivity.this,
+                                        getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+                            }
+                        } else {
+                            // user pressed `Publish Now` on a non-new, Scheduled Post. Let's confirm and publish!
+                            showPublishConfirmationDialog();
+                            return false;
                         }
                     }
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
@@ -1492,7 +1506,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
-            publishPost();
+            publishPost(false);
         }
     }
 
@@ -1684,22 +1698,20 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
                 @Override
                 public void log(String s) {
-                    // For now, we're wrapping up the actual log into a Crashlytics exception to reduce possibility
-                    // of information not travelling to Crashlytics (Crashlytics rolls logs up to 8
-                    // entries and 64kb max, and they only travel with the next crash happening, so logging an
-                    // Exception assures us to have this information sent in the next batch).
+                    // For now, we're wrapping up the actual log into an exception to reduce possibility
+                    // of information not travelling to our Crash Logging Service.
                     // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
+                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable) {
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
+                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
                 }
 
                 @Override
                 public void logException(Throwable throwable, String s) {
-                    CrashlyticsUtils.logException(
+                    CrashLoggingUtils.logException(
                             new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
                 }
             });
@@ -1741,7 +1753,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
-                publishPost(PostStatus.fromPost(mPost) == PostStatus.DRAFT);
+                publishPost(true);
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
@@ -1750,7 +1762,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
-                publishPost(PostStatus.fromPost(mPost) == PostStatus.DRAFT);
+                publishPost(true);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1803,9 +1815,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private synchronized void savePostToDb() {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
-
-        // update the original post object, so we'll know of new changes
-        mOriginalPost = mPost.clone();
 
         if (mShowAztecEditor) {
             // update the list of uploading ids
@@ -1921,11 +1930,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
-                // If no changes have been made to the post, set it back to the original - don't save it
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mOriginalPost));
-                return false;
-            } else {
+            if (PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost)) {
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
@@ -1968,11 +1973,7 @@ public class EditPostActivity extends AppCompatActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void publishPost() {
-        publishPost(false);
-    }
-
-    private void publishPost(final boolean isDraftToPublish) {
+    private void publishPost(final boolean isPublishConfirmed) {
         AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
         if (!account.getEmailVerified()) {
@@ -2016,11 +2017,22 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 boolean isFirstTimePublish = isFirstTimePublish();
-                if (isDraftToPublish) {
+                if (isPublishConfirmed) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
+                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                    if (PostStatus.fromPost(mPost) == PostStatus.SCHEDULED) {
+                        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+                    }
                     mPost.setStatus(PostStatus.PUBLISHED.toString());
                     mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
+                } else {
+                    // particular case: if user is submitting for review (that is,
+                    // can't publish posts directly to this site), update the status
+                    if (!userCanPublishPosts()) {
+                        mPost.setStatus(PostStatus.PENDING.toString());
+                    }
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
                 boolean postUpdateSuccessful = updatePostObject();
@@ -2049,17 +2061,19 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                         } else {
-                            mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                             savePostOnlineAndFinishAsync(isFirstTimePublish, true);
                         }
                     } else {
-                        mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                         savePostLocallyAndFinishAsync(true);
                     }
                 } else {
                     // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
                     // original post's status as we could not proceed with the action
-                    mPost.setStatus(mOriginalPost.getStatus());
+                    if (mPostSnapshotWhenEditorOpened != null) {
+                        mPost.setStatus(mPostSnapshotWhenEditorOpened.getStatus());
+                    } else {
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                    }
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -2145,14 +2159,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean shouldSavePost() {
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
-        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+        boolean hasChanges = PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
         boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
                                                    || PostStatus.fromPost(mPost) == PostStatus.PENDING)
                                                       && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
-        return (mOriginalPost != null && hasChanges)
+        return (mPostSnapshotWhenEditorOpened != null && hasChanges)
                              || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
     }
 
@@ -2163,8 +2177,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isFirstTimePublish() {
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mOriginalPost) == PostStatus.PENDING);
+               && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
     }
 
     /**
@@ -2198,7 +2213,7 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     @Override
     public void onReflectionFailure(ReflectionException e) {
-        CrashlyticsUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
+        CrashLoggingUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
         // Disable visual editor and show an error message
         AppPrefs.setVisualEditorEnabled(false);
         ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
@@ -2600,7 +2615,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
+                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
@@ -2635,7 +2651,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setContent(content);
         }
 
-        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
+                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
@@ -2973,6 +2990,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     handleMediaPickerResult(data);
                     // No need to bump analytics here. Bumped later in
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
@@ -3102,7 +3120,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 } catch (IllegalStateException e) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                     AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-                    CrashlyticsUtils
+                    CrashLoggingUtils
                             .logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
                                                              + " See issue #5823");
                     didAnyFail = true;
@@ -3141,7 +3159,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // if the user selected multiple items and they're all images, show the insert media
         // dialog so the user can choose whether to insert them individually or as a gallery
-        if (ids.size() > 1 && allAreImages) {
+        if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
             for (Long id : ids) {
@@ -3368,15 +3386,22 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-        } else if (mShowGutenbergEditor) {
-            // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
-        } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
+    }
+
+    @Override
+    public void onAddMediaImageClicked() {
+        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
+    }
+
+    @Override
+    public void onAddMediaVideoClicked() {
+        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
@@ -3387,6 +3412,16 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onCapturePhotoClicked() {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+    }
+
+    @Override
+    public void onAddVideoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+    }
+
+    @Override
+    public void onCaptureVideoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
     }
 
     @Override
@@ -3691,7 +3726,7 @@ public class EditPostActivity extends AppCompatActivity implements
             ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
-                    CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
+                    CrashLoggingUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
                                                   T.EDITOR,
                                                   String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
                                                                 message));
@@ -3925,6 +3960,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
         if (!isFinishing()) {
             // use upload progress rather than optimizer progress since the former includes upload+optimization
@@ -3934,6 +3970,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
         if (!isFinishing()
             && event.mediaModelList != null
@@ -3944,6 +3981,30 @@ public class EditPostActivity extends AppCompatActivity implements
                         ? EditorFragmentAbstract.MediaType.VIDEO : EditorFragmentAbstract.MediaType.IMAGE;
                 mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
+        }
+    }
+
+    private boolean shouldShowAsyncPromoDialog() {
+        // To make sure the behavior matches what we're communicating to the user as available options,
+        // the same conditions as per `getSaveButtonText()` apply:
+        //  if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
+        //  else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
+        if (!AppPrefs.isAsyncPromoRequired() || !userCanPublishPosts()) return false;
+
+        switch (PostStatus.fromPost(mPost)) {
+            case DRAFT:
+            case PUBLISHED:
+                // we check for both DRAFT _AND_ PUBLISHED posts here because the user can have a isNewPost() and
+                // they may edit the Post settings and change the status to Publish
+                return isNewPost() && mPost.isLocalDraft();
+            case UNKNOWN:
+                return mPost.isLocalDraft();
+            case SCHEDULED:
+            case PRIVATE:
+            case PENDING:
+            case TRASHED:
+            default:
+                return false;
         }
     }
 

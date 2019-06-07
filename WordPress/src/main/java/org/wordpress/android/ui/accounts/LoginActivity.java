@@ -5,19 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
@@ -61,14 +62,14 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -99,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private enum SmartLockHelperState {
         NOT_TRIGGERED,
         TRIGGER_FILL_IN_ON_CONNECT,
+        FINISH_ON_CONNECT,
         FINISHED
     }
 
@@ -324,17 +326,30 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
+        initSmartLockIfNotFinished(true);
+
+        if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
+            startLogin();
+        }
+    }
+
+    /**
+     * @param triggerFillInOnConnect set to true, if you want to show an account chooser dialog when the user has
+     *                               stored their credentials in the past. Set to false, if you just want to
+     *                               initialize SmartLock eg. when you want to use it just to save users credentials.
+     */
+    private void initSmartLockIfNotFinished(boolean triggerFillInOnConnect) {
         if (mSmartLockHelperState == SmartLockHelperState.NOT_TRIGGERED) {
             if (initSmartLockHelperConnection()) {
-                mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
+                if (triggerFillInOnConnect) {
+                    mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
+                } else {
+                    mSmartLockHelperState = SmartLockHelperState.FINISH_ON_CONNECT;
+                }
             } else {
                 // just shortcircuit the attempt to use SmartLockHelper
                 mSmartLockHelperState = SmartLockHelperState.FINISHED;
             }
-        }
-
-        if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
-            startLogin();
         }
     }
 
@@ -406,13 +421,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onSignupSheetTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
-        // Get device locale and remove region to pass only language.
-        String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
-        int pos = locale.indexOf("_");
-        if (pos > -1) {
-            locale = locale.substring(0, pos);
-        }
-        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
+        ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
     }
 
     @Override
@@ -431,6 +440,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void gotWpcomEmail(String email) {
+        initSmartLockIfNotFinished(false);
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
                     email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
@@ -667,7 +677,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             // bail if we are on the selfhosted flow since we haven't initialized SmartLock-for-Passwords for it.
             // Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364
-            // There might be more circumstances that lead to this crash though. Not all Crashlytics reports seem to
+            // There might be more circumstances that lead to this crash though. Not all crash reports seem to
             // originate from the site-picker.
             return;
         }
@@ -676,7 +686,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
             // log some data to help us debug https://github.com/wordpress-mobile/WordPress-Android/issues/7182
             final String loginModeStr = "LoginMode: " + (getLoginMode() != null ? getLoginMode().name() : "null");
             AppLog.w(AppLog.T.NUX, "Internal inconsistency error! mSmartLockHelper found null!" + loginModeStr);
-            CrashlyticsUtils.logException(
+            CrashLoggingUtils.logException(
                     new RuntimeException("Internal inconsistency error! mSmartLockHelper found null!"),
                     AppLog.T.NUX,
                     loginModeStr);
@@ -710,6 +720,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 mSmartLockHelper.disableAutoSignIn();
 
                 mSmartLockHelper.smartLockAutoFill(this);
+                break;
+            case FINISH_ON_CONNECT:
+                mSmartLockHelperState = SmartLockHelperState.FINISHED;
                 break;
             case FINISHED:
                 // don't do anything special. We're reconnecting the GoogleApiClient on rotation.

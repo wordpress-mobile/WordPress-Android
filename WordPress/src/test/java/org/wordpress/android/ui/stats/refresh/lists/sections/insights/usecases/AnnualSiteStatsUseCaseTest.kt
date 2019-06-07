@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -16,50 +18,151 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.Event
+import java.util.Calendar
+import java.util.Locale
 
 class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var annualStatsMapper: AnnualStatsMapper
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    private val year2019 = YearInsights(null, null, null, null, 0, 0, 0, 0, 0, "2019")
+    private val year2018 = year2019.copy(year = "2018")
     private lateinit var useCase: AnnualSiteStatsUseCase
     @Before
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                statsSiteProvider
+                statsSiteProvider,
+                selectedDateProvider,
+                annualStatsMapper,
+                localeManagerWrapper,
+                popupMenuHandler,
+                BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
     fun `maps full most popular insights to UI model`() = test {
         val forced = false
         val refresh = true
-        val model = YearsInsightsModel(
-                listOf(
-                        YearInsights(
-                                2.567,
-                                1.5,
-                                578.1,
-                                53678.8,
-                                155,
-                                89,
-                                746,
-                                12,
-                                237462847,
-                                "2019"
-                        )
+        val model = YearsInsightsModel(listOf(year2019))
+        whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
+        whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
+                OnStatsFetched(
+                        model
                 )
+        )
+        whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(Empty()))
+
+        val result = loadMostPopularInsights(refresh, forced)
+
+        assertThat(result.state).isEqualTo(SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(2)
+            assertTitle(this[0])
+            assertThat(this[1] is Empty).isTrue()
+        }
+        val selectedDate = Calendar.getInstance()
+        selectedDate.timeInMillis = 0
+        selectedDate.set(Calendar.YEAR, 2019)
+        selectedDate.set(Calendar.MONTH, Calendar.DECEMBER)
+        selectedDate.set(Calendar.DAY_OF_MONTH, 31)
+        verify(selectedDateProvider, times(2)).selectDate(0, listOf(selectedDate.time), ANNUAL_STATS)
+    }
+
+    @Test
+    fun `show the view more button when more years are available`() = test {
+        val forced = false
+        val refresh = true
+        val model = YearsInsightsModel(listOf(year2018, year2019))
+        whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
+        whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
+                OnStatsFetched(
+                        model
+                )
+        )
+        whenever(annualStatsMapper.mapYearInBlock(year2019)).thenReturn(listOf(Empty()))
+
+        val result = loadMostPopularInsights(refresh, forced)
+
+        assertThat(result.state).isEqualTo(SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(3)
+            assertTitle(this[0])
+            assertThat(this[1] is Empty).isTrue()
+            assertThat(this[2] is Link).isTrue()
+            var navigationEvent: Event<NavigationTarget>? = null
+            useCase.navigationTarget.observeForever { navigationEvent = it }
+            (this[2] as Link).navigateAction.click()
+            assertThat(navigationEvent).isNotNull
+            val navigationTarget = navigationEvent?.getContentIfNotHandled()
+            assertThat(navigationTarget is NavigationTarget.ViewAnnualStats).isTrue()
+        }
+    }
+
+    @Test
+    fun `hide title and view more block in view all mode`() = test {
+        useCase = AnnualSiteStatsUseCase(
+                Dispatchers.Unconfined,
+                insightsStore,
+                statsSiteProvider,
+                selectedDateProvider,
+                annualStatsMapper,
+                localeManagerWrapper,
+                popupMenuHandler,
+                VIEW_ALL
+        )
+        val forced = false
+        val refresh = true
+        val model = YearsInsightsModel(listOf(year2018, year2019))
+        whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
+        whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
+                OnStatsFetched(
+                        model
+                )
+        )
+        whenever(annualStatsMapper.mapYearInViewAll(year2019)).thenReturn(listOf(Empty()))
+
+        val result = loadMostPopularInsights(refresh, forced)
+
+        assertThat(result.state).isEqualTo(SUCCESS)
+        result.data!!.apply {
+            assertThat(this).hasSize(1)
+            assertThat(this[0] is Empty).isTrue()
+        }
+    }
+
+    @Test
+    fun `maps empty result to UI model`() = test {
+        val forced = false
+        val refresh = true
+        val model = YearsInsightsModel(
+                listOf()
         )
         whenever(insightsStore.getYearsInsights(site)).thenReturn(model)
         whenever(insightsStore.fetchYearsInsights(site, forced)).thenReturn(
@@ -70,33 +173,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        Assertions.assertThat(result.state).isEqualTo(SUCCESS)
-        result.data!!.apply {
-            Assertions.assertThat(this).hasSize(5)
-            assertTitle(this[0])
-            assertQuickScanItem(this[1], R.string.stats_insights_year, "2019", R.string.stats_insights_posts, "12")
-            assertQuickScanItem(
-                    this[2],
-                    R.string.stats_insights_total_comments,
-                    "155",
-                    R.string.stats_insights_average_comments,
-                    "2.6"
-            )
-            assertQuickScanItem(
-                    this[3],
-                    R.string.stats_insights_total_likes,
-                    "746",
-                    R.string.stats_insights_average_likes,
-                    "578.1"
-            )
-            assertQuickScanItem(
-                    this[4],
-                    R.string.stats_insights_total_words,
-                    "237M",
-                    R.string.stats_insights_average_words,
-                    "53k"
-            )
-        }
+        assertThat(result.state).isEqualTo(UseCaseState.EMPTY)
     }
 
     @Test
@@ -112,27 +189,12 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
 
         val result = loadMostPopularInsights(refresh, forced)
 
-        Assertions.assertThat(result.state).isEqualTo(ERROR)
+        assertThat(result.state).isEqualTo(ERROR)
     }
 
     private fun assertTitle(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_this_year_site_stats)
-    }
-
-    private fun assertQuickScanItem(
-        blockListItem: BlockListItem,
-        startLabel: Int,
-        startValue: String,
-        endLabel: Int,
-        endValue: String
-    ) {
-        Assertions.assertThat(blockListItem.type).isEqualTo(QUICK_SCAN_ITEM)
-        val item = blockListItem as QuickScanItem
-        Assertions.assertThat(item.startColumn.label).isEqualTo(startLabel)
-        Assertions.assertThat(item.startColumn.value).isEqualTo(startValue)
-        Assertions.assertThat(item.endColumn.label).isEqualTo(endLabel)
-        Assertions.assertThat(item.endColumn.value).isEqualTo(endValue)
+        assertThat(item.type).isEqualTo(TITLE)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_this_year_site_stats)
     }
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): UseCaseModel {

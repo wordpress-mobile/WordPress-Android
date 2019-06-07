@@ -1,10 +1,14 @@
 package org.wordpress.android.ui.posts
 
+import android.app.Activity
 import android.content.Intent
+import android.view.View
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadUtils
 
 sealed class PostUploadAction {
     class EditPostResult(
@@ -35,4 +39,52 @@ sealed class PostUploadAction {
      * Cancel all post and media uploads related to this post
      */
     class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
+}
+
+fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAttachView: View) {
+    when (action) {
+        is PostUploadAction.EditPostResult -> {
+            UploadUtils.handleEditPostResultSnackbars(
+                    activity,
+                    snackbarAttachView,
+                    action.data,
+                    action.post,
+                    action.site
+            ) {
+                action.publishAction()
+            }
+        }
+        is PostUploadAction.PublishPost -> {
+            UploadUtils.publishPost(
+                    activity,
+                    action.post,
+                    action.site,
+                    action.dispatcher
+            )
+        }
+        is PostUploadAction.PostUploadedSnackbar -> {
+            UploadUtils.onPostUploadedSnackbarHandler(
+                    activity,
+                    snackbarAttachView,
+                    action.isError,
+                    action.post,
+                    action.errorMessage,
+                    action.site,
+                    action.dispatcher
+            )
+        }
+        is PostUploadAction.MediaUploadedSnackbar -> {
+            UploadUtils.onMediaUploadedSnackbarHandler(
+                    activity,
+                    snackbarAttachView,
+                    action.isError,
+                    action.mediaList,
+                    action.site,
+                    action.message
+            )
+        }
+        is PostUploadAction.CancelPostAndMediaUpload -> {
+            UploadService.cancelQueuedPostUploadAndRelatedMedia(activity, action.post)
+        }
+    }
 }

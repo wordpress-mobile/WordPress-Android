@@ -1,6 +1,6 @@
 package org.wordpress.android.util;
 
-import android.graphics.Bitmap;
+
 import android.net.http.SslError;
 import android.text.TextUtils;
 import android.webkit.SslErrorHandler;
@@ -36,26 +36,17 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     private String mToken;
     @Inject protected MemorizingTrustManager mMemorizingTrustManager;
 
-    public WPWebViewClient(SiteModel site, String token) {
-        this(site, token, null);
+    public WPWebViewClient(SiteModel site, String token, ErrorManagedWebViewClientListener listener) {
+        this(site, token, null, listener);
     }
 
-    public WPWebViewClient(SiteModel site, String token, List<String> urls) {
-        super(urls);
+    public WPWebViewClient(SiteModel site, String token, List<String> urls,
+                           ErrorManagedWebViewClientListener listener) {
+        super(urls, listener);
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         mSite = site;
         mToken = token;
     }
-
-    @Override
-    public void onPageFinished(WebView view, String url) {
-    }
-
-    @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        super.onPageStarted(view, url, favicon);
-    }
-
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {

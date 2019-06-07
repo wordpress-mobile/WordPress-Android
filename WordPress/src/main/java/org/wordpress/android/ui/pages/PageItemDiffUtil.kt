@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.pages
 
-import android.support.v7.util.DiffUtil.Callback
+import androidx.recyclerview.widget.DiffUtil.Callback
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 

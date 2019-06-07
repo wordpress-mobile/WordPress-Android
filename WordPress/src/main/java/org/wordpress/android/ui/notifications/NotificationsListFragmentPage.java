@@ -3,20 +3,24 @@ package org.wordpress.android.ui.notifications;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -40,7 +44,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -48,8 +52,6 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION;
@@ -194,7 +196,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     @Override
     public void onDataLoaded(int itemsCount) {
         if (!isAdded()) {
-            CrashlyticsUtils.log("NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.");
+            CrashLoggingUtils.log("NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.");
         }
 
         if (itemsCount > 0) {
@@ -247,7 +249,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -533,6 +535,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NoteLikeOrModerationStatusChanged event) {
         NotificationsActions.downloadNoteAndUpdateDB(
             event.noteId,
@@ -556,6 +559,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationsChanged event) {
         if (!isAdded()) {
             return;
@@ -569,6 +573,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(final NotificationsRefreshCompleted event) {
         if (!isAdded()) {
             return;
@@ -579,6 +584,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationsRefreshError error) {
         if (isAdded()) {
             mSwipeToRefreshHelper.setRefreshing(false);
@@ -586,6 +592,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationsUnseenStatus event) {
         if (!isAdded()) {
             return;

@@ -37,7 +37,7 @@
         android:layout_alignParentBottom="true"
         android:clipToPadding="false">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/LoginTheme.Button.Secondary"
             android:id="@+id/secondary_button"
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
             android:gravity="start|center_vertical"
             tools:text="Secondary action"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/LoginTheme.Button.Primary"
             android:id="@+id/primary_button"
             android:layout_width="wrap_content"

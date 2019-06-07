@@ -1,22 +1,22 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout.OnTabSelectedListener
-import android.support.design.widget.TabLayout.Tab
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayout.Tab
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
@@ -36,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -49,15 +50,12 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    @Inject lateinit var navigator: StatsNavigator
 
     private var restorePreviousSearch = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.stats_fragment, container, false)
     }
 
@@ -125,8 +123,7 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun getInitialTimeFrame(activity: FragmentActivity): StatsSection? {
-        val initialTimeFrame = activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)
-        return when (initialTimeFrame) {
+        return when (activity.intent.getSerializableExtra(ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> INSIGHTS
             DAY -> DAYS
             WEEK -> WEEKS
@@ -174,6 +171,12 @@ class StatsFragment : DaggerFragment() {
 
         viewModel.siteChanged.observe(this, Observer {
             viewModel.refreshData()
+        })
+
+        viewModel.hideToolbar.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { hideToolbar ->
+                app_bar_layout.setExpanded(!hideToolbar, true)
+            }
         })
     }
 }

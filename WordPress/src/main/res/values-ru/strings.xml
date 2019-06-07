@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-03-26 16:45:05+0000
+Translation-Revision-Date: 2019-05-23 16:12:06+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="history_fetching_revisions">Получение редакций…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Ошибка вставки медиафайла.\nНажмите для выбора вариантов.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Ошибка вставки медиафайла.\nНажмите для повтора.</string>
+    <string name="editor_uploading_draft">Выполняется загрузка черновика</string>
+    <string name="post_uploading_draft">Загрузка черновика</string>
+    <string name="post_list_drafts">Черновики</string>
+    <string name="post_list_published">Опубликовано</string>
+    <string name="post_list_author_everyone">Все</string>
+    <string name="post_list_author_me">Моё</string>
+    <string name="error_restoring_post">Возникла ошибка при восстановлении записи</string>
+    <string name="backdated_for">Датировано задним числом для: %s</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Элементы выше будут показаны на вкладке статистики. Тащите и отпустите для настройки.</string>
+    <string name="stats_insights_add_insights_header">Добавить данные</string>
+    <string name="stats_insights_management_title">Смотрите только нужную статистику, добавьте и отсортируйте данные ниже.</string>
+    <string name="stats_insights_social">Социальные</string>
+    <string name="stats_insights_annual_site_stats">Данные по сайту за год</string>
+    <string name="stats_view_follower_totals">Всего подписчиков</string>
+    <string name="suggestion_fetch_error">Предложения по доменам не могут быть загружены</string>
+    <string name="suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
+    <string name="suggestions_empty_list">Нет предложений</string>
+    <string name="choose_domain">Выберите домен</string>
+    <string name="register_domain">Зарегистрировать домен</string>
+    <string name="jetpack_installed_message">Теперь, когда Jetpack установлен, нам нужно настроить, это займет всего минуту.</string>
+    <string name="stats_menu_remove">Удалить с вкладки</string>
+    <string name="stats_menu_move_down">Вниз</string>
+    <string name="stats_menu_move_up">Вверх</string>
+    <string name="stats_item_settings">Настройка элементов статистики</string>
+    <string name="post_moving_to_draft">Запись перемещается в черновики</string>
+    <string name="post_restoring">Запись восстанавливается</string>
+    <string name="post_restored">Запись восстановлена</string>
+    <string name="post_trashing">Запись удаляется в корзину</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_title">Локальные изменения</string>
+    <string name="button_move_to_draft">Переместить в черновики</string>
+    <string name="post_list_toggle_item_layout_list_view">Переключиться на просмотр списком</string>
+    <string name="post_list_toggle_item_layout_cards_view">Переключиться на просмотр плиткой</string>
+    <string name="posts_trashed_empty">У вас нет записей удаленных в корзину</string>
+    <string name="posts_draft_empty">У вас нет черновиков записей</string>
+    <string name="posts_scheduled_empty">У вас нет запланированных записей</string>
+    <string name="posts_published_empty">У вас нет опубликрованных записей</string>
+    <string name="notification_wpcom_username_needed">Пожалуйста, войдите указав имя пользователя и пароль.</string>
+    <string name="login_invalid_site_url">Вы ввели неверный адрес сайта, пожалуйста, введите ещё раз.</string>
+    <string name="error_user_username_instead_of_email">Пожалуйста, войдите с именем пользователя на WordPress.com вместо email адреса.</string>
+    <string name="stats_insights_average_words">В среднем слов на запись</string>
+    <string name="stats_insights_total_words">Всего слов</string>
+    <string name="stats_insights_average_likes">В среднем отметок \"нравится\" на запись</string>
+    <string name="stats_insights_total_likes">Всего отметок \"нравится\"</string>
+    <string name="stats_insights_average_comments">В среднем комментариев/записей</string>
+    <string name="stats_insights_total_comments">Всего комментариев</string>
+    <string name="stats_insights_posts">Записи</string>
+    <string name="stats_insights_year">Год</string>
+    <string name="stats_insights_this_year_site_stats">За этот год</string>
+    <string name="no_site_error">Сайт по этому адресу не использует WordPress. Вы можете подключиться только к сайтам на WordPress.</string>
+    <string name="plugin_check_domain_credit_error">Ошибка проверки возможности покупки домена</string>
+    <string name="plugin_check_domain_credits_progress_dialog_message">Проверка возможности покупки домена</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Зарегистрировать домен</string>
+    <string name="plugin_install_custom_domain_required_dialog_message">Для установки плагинов требуется привязать к сайту ваш пользовательский домен.</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Установка плагина</string>
     <string name="new_site_creation_preview_subtitle">Вы сможете настроить внешний вид вашего сайта позже</string>
     <string name="publish_on">Опубликовать в: %s</string>
     <string name="schedule_for">Запланировать на: %s</string>
@@ -40,7 +98,6 @@ Language: ru
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Неподдерживаемый блок</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Вставить URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ВЫБЕРИТЕ ИЗОБРАЖЕНИЕ</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Невозможно вставить медиафайл.\nНажмите для выбора вариантов.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Очистить все настройки</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Текст атрибута alt</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Медиатека WordPress</string>
@@ -216,8 +273,7 @@ Language: ru
     <string name="stats_followers_count_message">Всего %1$s Подписчики: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Настроить статистику</string>
-    <string name="stats_empty_insights_description">Настройте вашу статистику и узнайте важное то, чем живет ваш сайт.</string>
+    <string name="stats_manage_insights">Настроить статистику</string>
     <string name="stats_empty_insights_title">Еще нет статистики</string>
     <string name="stats_no_data_yet">Пока нет данных</string>
     <string name="menu_debug">Меню отладки</string>
@@ -325,14 +381,13 @@ Language: ru
     <string name="reader_empty_followed_tags_subtitle">Добавьте метки здесь, чтобы найти записи по вашим любимым темам</string>
     <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
     <string name="install_jetpack_retry">Повторить</string>
-    <string name="install_jetpack_continue">Продолжить</string>
-    <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен</string>
+    <string name="install_jetpack_continue">Продолжить установку</string>
+    <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен.</string>
     <string name="jetpack_installation_problem">Возникла проблема</string>
-    <string name="jetpack_installed_message">Jetpack установлен на вашем сайте. Поздравляем!</string>
     <string name="jetpack_installed">Jetpack установлен</string>
-    <string name="installing_jetpack_message">Установка Jetpack на сайт. Это может занять пару минут</string>
+    <string name="installing_jetpack_message">Установка Jetpack на сайт. Это может занять пару минут.</string>
     <string name="installing_jetpack">Устанавливается Jetpack</string>
-    <string name="install_jetpack_message">Данные для входа на ваш сайт не будут сохранены и будут использоваться только для установки Jetpack</string>
+    <string name="install_jetpack_message">Данные для входа на ваш сайт не будут сохранены и будут использоваться только для установки Jetpack.</string>
     <string name="install_jetpack">Установить Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -633,7 +688,6 @@ Language: ru
     <string name="dialog_confirm_publish_message_page">Эта страница будет опубликована немедленно.</string>
     <string name="dialog_confirm_publish_message_post">Эта запись будет опубликована немедленно.</string>
     <string name="dialog_confirm_publish_title">Готовы опубликовать?</string>
-    <string name="dialog_confirm_delete_post">Эта запись будет удалена в корзину</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">не загружено %1$d страниц/записей</string>
     <string name="media_file_pages_plural_only_not_uploaded">не загружено %1$d страниц</string>
     <string name="media_file_page_singular_only_not_uploaded">не загружена 1 страница</string>
@@ -940,7 +994,6 @@ Language: ru
     <string name="async_promo_title_publish">Публикуйте уверенно</string>
     <string name="editor_uploading_post">Выполняется загрузка записи</string>
     <string name="uploading_media">Выполняется загрузка медиафайлов…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Продолжить? Если удалить эту запись, загрузка медиафайлов будет отменена.</string>
     <string name="page_scheduled">Страница запланирована</string>
     <string name="post_scheduled">Публикация записи запланирована</string>
     <string name="button_retry">Повторить попытку</string>
@@ -999,8 +1052,8 @@ Language: ru
     <string name="editor_dropped_text_error">При перетаскивании текста произошла ошибка.</string>
     <string name="editor_dropped_html_images_not_allowed">Перетаскивание изображений в режиме HTML не разрешено.</string>
     <string name="editor_content_hint">Поделитесь своей историей здесь…</string>
-    <string name="post_status_trashed">Удалена</string>
-    <string name="post_status_scheduled">Запланирована</string>
+    <string name="post_list_trashed">Удалено</string>
+    <string name="post_list_scheduled">Запланировано</string>
     <string name="post_status_post_private">Личная</string>
     <string name="post_status_draft">Черновик</string>
     <string name="post_status_pending_review">Ожидает проверки</string>
@@ -1162,7 +1215,6 @@ Language: ru
     <string name="error_media_not_found">Медиасодержимое не найдено</string>
     <string name="error_media_insufficient_fs_permissions">Для просмотра медиафайла необходимы соответствующие права</string>
     <string name="site_settings_optimize_images">Оптимизировать изображения</string>
-    <string name="no_site_error">Не удалось подключиться к сайту WordPress. По указанному адресу нет действующего сайта WordPress\n . Проверьте адрес сайта (URL-адрес).</string>
     <string name="media_generic_error">Проблема с медиафайлом</string>
     <string name="media_upload_error">Ошибка при загрузке медиафайла на сайт</string>
     <string name="retry">Повторить попытку</string>
@@ -1602,10 +1654,8 @@ Language: ru
     <string name="button_preview">Просмотреть</string>
     <string name="button_trash">Корзина</string>
     <string name="button_stats">Статистика</string>
-    <string name="button_back">Назад</string>
     <string name="stats_no_activity_this_period">Нет активности за указанный период</string>
     <string name="post_trashed">Запись помещена в корзину</string>
-    <string name="post_deleted">Запись удалена</string>
     <string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому сайту.</string>
     <string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот сайт.</string>
     <string name="undo">Назад</string>
@@ -1754,7 +1804,7 @@ Language: ru
     <string name="error_refresh_unauthorized_posts">У вас нет прав на просмотр или редактирование записей.</string>
     <string name="error_publish_empty_post">Нельзя опубликовать пустую запись.</string>
     <string name="reader_title_photo_viewer">%1$d из %2$d</string>
-    <string name="reader_label_comments_closed">Обсуждение закрыто</string>
+    <string name="reader_label_comments_closed">Комментарии закрыты</string>
     <string name="reader_label_liked_by">Кому понравилось:</string>
     <string name="reader_label_like">Нравится</string>
     <string name="reader_label_view_original">Просмотреть исходную публикацию</string>

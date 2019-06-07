@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel.pages
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
@@ -36,7 +35,10 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
@@ -74,6 +76,8 @@ class PagesViewModel
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
+    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -140,14 +144,18 @@ class PagesViewModel
 
     private var searchJob: Job? = null
     private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
-    private var currentPageType = PageListType.PUBLISHED
+    private var currentPageType = PUBLISHED
 
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
             _site = site
 
+            eventBusWrapper.register(this)
+
             loadPagesAsync()
+
+            localDraftUploadStarter.queueUploadFromSite(site)
         }
     }
 
@@ -157,6 +165,7 @@ class PagesViewModel
 
     override fun onCleared() {
         dispatcher.unregister(this)
+        eventBusWrapper.unregister(this)
 
         actionPerfomer.onCleanup()
     }
@@ -176,18 +185,18 @@ class PagesViewModel
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
         if (performIfNetworkAvailableAsync {
-            _listState.setOnUi(state)
+                    _listState.setOnUi(state)
 
-            val result = pageStore.requestPagesFromServer(site)
-            if (result.isError) {
-                _listState.setOnUi(ERROR)
-                showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
-                AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
-            } else {
-                _listState.setOnUi(DONE)
-            }
-            refreshPages()
-        }) else {
+                    val result = pageStore.requestPagesFromServer(site)
+                    if (result.isError) {
+                        _listState.setOnUi(ERROR)
+                        showSnackbar(SnackbarMessageHolder(R.string.error_refresh_pages))
+                        AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+                    } else {
+                        _listState.setOnUi(DONE)
+                    }
+                    refreshPages()
+                }) else {
             _listState.setOnUi(DONE)
         }
     }
@@ -196,16 +205,9 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(remotePageId: Long, wasPageUpdated: Boolean) {
+    fun onPageEditFinished() {
         launch {
             refreshPages() // show local changes immediately
-
-            if (wasPageUpdated) {
-                performIfNetworkAvailableAsync {
-                    waitForPageUpdate(remotePageId)
-                    reloadPages()
-                }
-            }
         }
     }
 
@@ -245,7 +247,7 @@ class PagesViewModel
 
     fun checkIfNewPageButtonShouldBeVisible() {
         val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
-        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
+        val hasNoExceptions = !currentPageType.pageStatuses.contains(TRASHED) &&
                 _isSearchExpanded.value != true
         _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
     }
@@ -273,7 +275,7 @@ class PagesViewModel
             if (page != null) {
                 _scrollToPage.postValue(page)
             } else {
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.pages_open_page_error))
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.pages_open_page_error))
             }
         } else {
             scrollToPageId = remotePageId
@@ -289,12 +291,12 @@ class PagesViewModel
                 Comparator { previous, next ->
                     when {
                         previous == next -> 0
-                        previous == PageListType.PUBLISHED -> -1
-                        next == PageListType.PUBLISHED -> 1
-                        previous == PageListType.DRAFTS -> -1
-                        next == PageListType.DRAFTS -> 1
-                        previous == PageListType.SCHEDULED -> -1
-                        next == PageListType.SCHEDULED -> 1
+                        previous == PUBLISHED -> -1
+                        next == PUBLISHED -> 1
+                        previous == DRAFTS -> -1
+                        next == DRAFTS -> 1
+                        previous == SCHEDULED -> -1
+                        next == SCHEDULED -> 1
                         else -> throw IllegalArgumentException("Unexpected page type")
                     }
                 })
@@ -327,8 +329,8 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> deletePage(page)
         }
@@ -419,6 +421,8 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
+        localDraftUploadStarter.queueUploadFromSite(site)
+
         launch {
             reloadPages(FETCHING)
         }
@@ -451,9 +455,9 @@ class PagesViewModel
 
                 showSnackbar(
                         if (action.undo != null) {
-                            SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo!!)
+                            SnackbarMessageHolder(R.string.page_parent_changed, R.string.undo, action.undo!!)
                         } else {
-                            SnackbarMessageHolder(string.page_parent_changed)
+                            SnackbarMessageHolder(R.string.page_parent_changed)
                         }
                 )
             }
@@ -462,7 +466,7 @@ class PagesViewModel
             launch(defaultDispatcher) {
                 refreshPages()
 
-                showSnackbar(SnackbarMessageHolder(string.page_parent_change_error))
+                showSnackbar(SnackbarMessageHolder(R.string.page_parent_change_error))
             }
         }
 
@@ -503,14 +507,14 @@ class PagesViewModel
                 delay(ACTION_DELAY)
                 reloadPages()
 
-                showSnackbar(SnackbarMessageHolder(string.page_permanently_deleted))
+                showSnackbar(SnackbarMessageHolder(R.string.page_permanently_deleted))
             }
         }
         action.onError = {
             launch(defaultDispatcher) {
                 refreshPages()
 
-                showSnackbar(SnackbarMessageHolder(string.page_delete_error))
+                showSnackbar(SnackbarMessageHolder(R.string.page_delete_error))
             }
         }
 
@@ -571,11 +575,11 @@ class PagesViewModel
                     launch(defaultDispatcher) {
                         action.undo?.let { it() }
 
-                        showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
+                        showSnackbar(SnackbarMessageHolder(R.string.page_status_change_error))
                     }
                 }
 
-            launch {
+                launch {
                     _arePageActionsEnabled = false
                     actionPerfomer.performAction(action)
                     _arePageActionsEnabled = true
@@ -594,15 +598,15 @@ class PagesViewModel
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
-            PageStatus.DRAFT -> string.page_moved_to_draft
-            PageStatus.PUBLISHED -> string.page_moved_to_published
-            PageStatus.TRASHED -> string.page_moved_to_trash
-            PageStatus.SCHEDULED -> string.page_moved_to_scheduled
+            PageStatus.DRAFT -> R.string.page_moved_to_draft
+            PageStatus.PUBLISHED -> R.string.page_moved_to_published
+            PageStatus.TRASHED -> R.string.page_moved_to_trash
+            PageStatus.SCHEDULED -> R.string.page_moved_to_scheduled
             else -> throw NotImplementedError("Status change to ${newStatus.getTitle()} not supported")
         }
 
         return if (undo != null) {
-            SnackbarMessageHolder(message, string.undo, undo)
+            SnackbarMessageHolder(message, R.string.undo, undo)
         } else {
             SnackbarMessageHolder(message)
         }
@@ -614,6 +618,7 @@ class PagesViewModel
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     fun onPostUploaded(event: OnPostUploaded) {
         var id = 0L
         if (!pageUpdateContinuations.contains(id)) {
@@ -623,6 +628,21 @@ class PagesViewModel
         pageUpdateContinuations[id]?.let { cont ->
             pageUpdateContinuations.remove(id)
             cont.resume(Unit)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
+        if (!event.post.isPage) {
+            return
+        }
+
+        launch {
+            performIfNetworkAvailableAsync {
+                waitForPageUpdate(event.post.remotePostId)
+                reloadPages()
+            }
         }
     }
 
@@ -640,11 +660,11 @@ class PagesViewModel
 
 @StringRes fun PageStatus.getTitle(): Int {
     return when (this) {
-        PageStatus.PUBLISHED -> string.pages_published
-        PageStatus.DRAFT -> string.pages_drafts
-        PageStatus.SCHEDULED -> string.pages_scheduled
-        PageStatus.TRASHED -> string.pages_trashed
-        PageStatus.PENDING -> string.pages_pending
-        PageStatus.PRIVATE -> string.pages_private
+        PageStatus.PUBLISHED -> R.string.pages_published
+        PageStatus.DRAFT -> R.string.pages_drafts
+        PageStatus.SCHEDULED -> R.string.pages_scheduled
+        PageStatus.TRASHED -> R.string.pages_trashed
+        PageStatus.PENDING -> R.string.pages_pending
+        PageStatus.PRIVATE -> R.string.pages_private
     }
 }

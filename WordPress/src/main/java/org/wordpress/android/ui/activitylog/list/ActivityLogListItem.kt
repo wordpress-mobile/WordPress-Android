@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.activitylog.list
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY
@@ -78,7 +78,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         NEUTRAL("", R.drawable.bg_oval_neutral_300);
 
         companion object {
-            private val map = Status.values().associateBy(Status::value)
+            private val map = values().associateBy(Status::value)
             fun fromValue(value: String?) = map[value] ?: NEUTRAL
         }
     }
@@ -113,7 +113,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         DEFAULT("", R.drawable.ic_notice_white_24dp);
 
         companion object {
-            private val map = Icon.values().associateBy(Icon::value)
+            private val map = values().associateBy(Icon::value)
             fun fromValue(value: String?) = map[value] ?: DEFAULT
         }
     }

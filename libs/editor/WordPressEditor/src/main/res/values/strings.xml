@@ -106,6 +106,8 @@
     <string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
     <!-- Aztec -->
     <string name="editor_content_hint">Share your story here&#8230;</string>

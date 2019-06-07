@@ -3,8 +3,8 @@ package org.wordpress.android.ui.accounts
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.help_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -30,10 +30,10 @@ class HelpActivity : AppCompatActivity() {
     @Inject lateinit var zendeskHelper: ZendeskHelper
 
     private val originFromExtras by lazy {
-        (intent.extras?.get(HelpActivity.ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
+        (intent.extras?.get(ORIGIN_KEY) as Origin?) ?: Origin.UNKNOWN
     }
     private val extraTagsFromExtras by lazy {
-        intent.extras?.getStringArrayList(HelpActivity.EXTRA_TAGS_KEY)
+        intent.extras?.getStringArrayList(EXTRA_TAGS_KEY)
     }
     private val selectedSiteFromExtras by lazy {
         intent.extras?.get(WordPress.SITE) as SiteModel?
@@ -147,15 +147,11 @@ class HelpActivity : AppCompatActivity() {
         RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
-        SITE_CREATION_CATEGORY("origin:site-create-site-category"),
-        SITE_CREATION_THEME("origin:site-create-site-theme"),
-        SITE_CREATION_DETAILS("origin:site-create-site-details"),
-        SITE_CREATION_DOMAIN("origin:site-create-site-domain"),
         SITE_CREATION_CREATING("origin:site-create-creating"),
-        NEW_SITE_CREATION_SEGMENTS("origin:new-site-create-site-segments"),
-        NEW_SITE_CREATION_VERTICALS("origin:new-site-create-site-verticals"),
-        NEW_SITE_CREATION_DOMAINS("origin:new-site-create-domains"),
-        NEW_SITE_CREATION_SITE_INFO("origin:new-site-create-site-info");
+        SITE_CREATION_SEGMENTS("origin:site-create-site-segments"),
+        SITE_CREATION_VERTICALS("origin:site-create-site-verticals"),
+        SITE_CREATION_DOMAINS("origin:site-create-domains"),
+        SITE_CREATION_SITE_INFO("origin:site-create-site-info");
 
         override fun toString(): String {
             return stringValue
@@ -174,7 +170,7 @@ class HelpActivity : AppCompatActivity() {
             extraSupportTags: List<String>?
         ): Intent {
             val intent = Intent(context, HelpActivity::class.java)
-            intent.putExtra(HelpActivity.ORIGIN_KEY, origin)
+            intent.putExtra(ORIGIN_KEY, origin)
             if (selectedSite != null) {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
@@ -195,8 +191,8 @@ class HelpActivity : AppCompatActivity() {
                 extraSupportTags as ArrayList<String>?
             }
 
-            if (tagsList != null && !tagsList.isEmpty()) {
-                intent.putStringArrayListExtra(HelpActivity.EXTRA_TAGS_KEY, tagsList)
+            if (tagsList != null && tagsList.isNotEmpty()) {
+                intent.putStringArrayListExtra(EXTRA_TAGS_KEY, tagsList)
             }
 
             return intent

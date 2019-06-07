@@ -1,17 +1,18 @@
 package org.wordpress.android.modules;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
+import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel;
-import org.wordpress.android.ui.sitecreation.previews.NewSitePreviewViewModel;
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
+import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
+import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -20,10 +21,13 @@ import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
+import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -33,6 +37,7 @@ import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -132,43 +137,53 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(InsightsManagementViewModel.class)
+    abstract ViewModel insightsManagementViewModel(InsightsManagementViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewSiteCreationSegmentsViewModel.class)
-    abstract ViewModel siteCreationSegmentsViewModel(NewSiteCreationSegmentsViewModel viewModel);
+    @ViewModelKey(SiteCreationSegmentsViewModel.class)
+    abstract ViewModel siteCreationSegmentsViewModel(SiteCreationSegmentsViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewSiteCreationVerticalsViewModel.class)
-    abstract ViewModel siteCreationVerticalsViewModel(NewSiteCreationVerticalsViewModel viewModel);
+    @ViewModelKey(SiteCreationVerticalsViewModel.class)
+    abstract ViewModel siteCreationVerticalsViewModel(SiteCreationVerticalsViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewSiteCreationDomainsViewModel.class)
-    abstract ViewModel siteCreationDomainsViewModel(NewSiteCreationDomainsViewModel viewModel);
+    @ViewModelKey(SiteCreationDomainsViewModel.class)
+    abstract ViewModel siteCreationDomainsViewModel(SiteCreationDomainsViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewSiteCreationSiteInfoViewModel.class)
-    abstract ViewModel siteCreationSiteInfoViewModel(NewSiteCreationSiteInfoViewModel viewModel);
+    @ViewModelKey(SiteCreationSiteInfoViewModel.class)
+    abstract ViewModel siteCreationSiteInfoViewModel(SiteCreationSiteInfoViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewSiteCreationMainVM.class)
-    abstract ViewModel newSiteCreationMainVM(NewSiteCreationMainVM viewModel);
+    @ViewModelKey(SiteCreationMainVM.class)
+    abstract ViewModel siteCreationMainVM(SiteCreationMainVM viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewSitePreviewViewModel.class)
-    abstract ViewModel newSitePreviewViewModel(NewSitePreviewViewModel viewModel);
+    @ViewModelKey(SitePreviewViewModel.class)
+    abstract ViewModel newSitePreviewViewModel(SitePreviewViewModel viewModel);
 
     @Binds
     @IntoMap
     @ViewModelKey(PostListViewModel.class)
     abstract ViewModel postListViewModel(PostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostListMainViewModel.class)
+    abstract ViewModel postListMainViewModel(PostListMainViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -179,6 +194,21 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PlansViewModel.class)
     abstract ViewModel plansViewModel(PlansViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainSuggestionsViewModel.class)
+    abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WPWebViewViewModel.class)
+    abstract ViewModel wpWebViewViewModel(WPWebViewViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainRegistrationDetailsViewModel.class)
+    abstract ViewModel domainRegistrationDetailsViewModel(DomainRegistrationDetailsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
