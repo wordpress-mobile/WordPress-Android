@@ -39,10 +39,10 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             val views = a.getInt(R.styleable.statsWidget_viewType, -1)
             viewType = when (views) {
                 -1 -> throw IllegalArgumentException("The view type needs to be specified on the fragment")
-                0 -> ViewType.WEEK_VIEWS
-                1 -> ViewType.ALL_TIME_VIEWS
+                0 -> WEEK_VIEWS
+                1 -> ALL_TIME_VIEWS
                 else -> {
-                    throw IllegalArgumentException("The view type with the value $views needs to be specified in the attrs.xml file")
+                    throw IllegalArgumentException("The view type with the value $views needs to be specified")
                 }
             }
             a.recycle()
@@ -92,12 +92,12 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         viewModel.widgetAdded.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                when(it.viewType) {
+                when (it.viewType) {
                     WEEK_VIEWS -> {
                         viewsWidgetUpdater.updateAppWidget(
                                 context!!,
-                                    appWidgetId = it.appWidgetId
-                            )
+                                appWidgetId = it.appWidgetId
+                        )
                     }
                     ALL_TIME_VIEWS -> TODO()
                 }
