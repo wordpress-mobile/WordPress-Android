@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
 import android.text.TextUtils
 import android.text.TextWatcher
