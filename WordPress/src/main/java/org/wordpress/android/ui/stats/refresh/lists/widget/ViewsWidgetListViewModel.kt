@@ -33,18 +33,20 @@ class ViewsWidgetListViewModel
     private var siteId: Long? = null
     private var colorModeId: Int? = null
     private var showChangeColumn: Boolean = true
+    private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<ListItemUiModel>()
     val data: List<ListItemUiModel> = mutableData
-    fun start(siteId: Long, colorModeId: Int, showChangeColumn: Boolean) {
+    fun start(siteId: Long, colorModeId: Int, showChangeColumn: Boolean, appWidgetId: Int) {
         this.siteId = siteId
         this.colorModeId = colorModeId
         this.showChangeColumn = showChangeColumn
+        this.appWidgetId = appWidgetId
     }
 
-    fun onDataSetChanged() {
-        siteId?.let {
-            val site = siteStore.getSiteBySiteId(it)
-            site?.let {
+    fun onDataSetChanged(onError: (appWidgetId: Int, showChangeColumn: Boolean) -> Unit) {
+        siteId?.apply {
+            val site = siteStore.getSiteBySiteId(this)
+            if (site != null) {
                 val currentDate = Date()
                 runBlocking {
                     visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
@@ -62,6 +64,10 @@ class ViewsWidgetListViewModel
                 if (uiModels != data) {
                     mutableData.clear()
                     mutableData.addAll(uiModels)
+                }
+            } else {
+                appWidgetId?.let { nonNullAppWidgetId ->
+                    onError(nonNullAppWidgetId, showChangeColumn)
                 }
             }
         }
@@ -114,7 +120,5 @@ class ViewsWidgetListViewModel
         val period: String,
         val localSiteId: Int,
         val showDivider: Boolean = !isPositiveChangeVisible && !isNegativeChangeVisible && !isNeutralChangeVisible
-    ) {
-        enum class ChangeVisible { POSITIVE, NEGATIVE, NEUTRAL, NONE }
-    }
+    )
 }

@@ -283,7 +283,6 @@
 
     <style name="StatsWidgetErrorMessage" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="StatsWidgetErrorMessage.Light">
@@ -296,7 +295,6 @@
 
     <style name="StatsWidgetRetryButton" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/wp_blue_medium</item>
     </style>
 

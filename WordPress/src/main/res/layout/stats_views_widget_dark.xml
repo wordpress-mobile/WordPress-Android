@@ -19,7 +19,8 @@
             android:layout_width="@dimen/stats_widget_list_item_height"
             android:layout_height="@dimen/stats_widget_list_item_height"
             android:contentDescription="@string/my_site_icon_content_description"
-            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
+            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
 
         <TextView
             android:id="@+id/widget_title"
@@ -35,15 +36,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@null"
-        android:dividerHeight="0dp"
-        android:visibility="gone"/>
+        android:dividerHeight="0dp"/>
 
     <LinearLayout
         android:id="@+id/widget_error"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="?attr/selectableItemBackground"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
@@ -58,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:gravity="center_horizontal"
             android:text="@string/stats_widget_error_no_data"/>
 
         <TextView

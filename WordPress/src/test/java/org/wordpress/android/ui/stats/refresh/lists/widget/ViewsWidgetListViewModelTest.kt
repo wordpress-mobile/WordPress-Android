@@ -38,6 +38,9 @@ class ViewsWidgetListViewModelTest {
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: ViewsWidgetListViewModel
     private val siteId: Long = 15
+    private val appWidgetId: Int = 1
+    private val color = Color.LIGHT
+    private val showChangeColumn = true
     @Before
     fun setUp() {
         viewModel = ViewsWidgetListViewModel(
@@ -47,13 +50,11 @@ class ViewsWidgetListViewModelTest {
                 resourceProvider,
                 statsDateFormatter
         )
-        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
     }
 
     @Test
     fun `builds light ui model and shows change`() {
-        val color = Color.LIGHT
-        val showChangeColumn = true
+        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
         val firstViews: Long = 5
         val todayViews: Long = 20
         val dates = listOf(
@@ -95,9 +96,9 @@ class ViewsWidgetListViewModelTest {
                 )
         ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL))
 
-        viewModel.start(siteId, color.ordinal, showChangeColumn)
+        viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
 
-        viewModel.onDataSetChanged()
+        viewModel.onDataSetChanged { _, _ ->  }
 
         viewModel.data.let { data ->
             assertThat(data).hasSize(dates.size)
@@ -121,5 +122,22 @@ class ViewsWidgetListViewModelTest {
             assertThat(data[2].change).isEqualTo(change)
             assertThat(data[2].showDivider).isFalse()
         }
+    }
+
+    @Test
+    fun `on missing site triggers error callback`() {
+        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(null)
+
+        viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
+
+        var errorCallbackTriggered = false
+
+        viewModel.onDataSetChanged { appWidgetId, showChangeColumn ->
+            assertThat(appWidgetId).isEqualTo(this.appWidgetId)
+            assertThat(showChangeColumn).isEqualTo(this.showChangeColumn)
+            errorCallbackTriggered = true
+        }
+
+        assertThat(errorCallbackTriggered).isTrue()
     }
 }
