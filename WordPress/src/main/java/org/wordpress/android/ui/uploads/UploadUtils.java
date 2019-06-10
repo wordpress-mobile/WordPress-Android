@@ -123,8 +123,7 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
+            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
             return;
         }
 

@@ -33,6 +33,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
@@ -177,6 +178,13 @@ class SitePreviewViewModelTest {
         initViewModel()
         viewModel.onUrlLoaded()
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewContentUiState::class.java)
+    }
+
+    @Test
+    fun `show webview empty screen on WebViewError`() {
+        initViewModel()
+        viewModel.onWebViewError()
+        assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewWebErrorUiState::class.java)
     }
 
     @Test
