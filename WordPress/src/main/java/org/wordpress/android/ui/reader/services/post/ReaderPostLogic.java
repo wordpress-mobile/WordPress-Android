@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -23,8 +24,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
-
-import de.greenrobot.event.EventBus;
 
 public class ReaderPostLogic {
     private ServiceCompletionListener mCompletionListener;
@@ -232,7 +231,7 @@ public class ReaderPostLogic {
                                 int numServerPosts = serverPosts.size();
                                 if (numServerPosts >= 2
                                     && ReaderPostTable.getNumPostsWithTag(tag) > 0
-                                    && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                    && !ReaderPostTable.hasOverlap(serverPosts, tag)) {
                                     // treat the second to last server post as having a gap
                                     postWithGap = serverPosts.get(numServerPosts - 2);
                                     // remove the last server post to deal with the edge case of

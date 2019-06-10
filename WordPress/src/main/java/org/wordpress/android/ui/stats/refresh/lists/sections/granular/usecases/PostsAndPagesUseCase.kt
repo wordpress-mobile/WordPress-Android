@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -11,7 +10,7 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsT
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.POSTS_AND_PAGES
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
@@ -96,7 +95,7 @@ constructor(
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_posts_and_pages))
+            items.add(Title(R.string.stats_posts_and_pages))
         }
 
         if (domainModel.views.isEmpty()) {
@@ -122,7 +121,7 @@ constructor(
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = create(statsGranularity, this::onViewMoreClicked)
                         )
                 )

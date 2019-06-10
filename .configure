@@ -1,6 +1,6 @@
 {
   "branch": "master",
-  "pinned_hash": "8864a42fc96052c822f8d4607650dacaeb6bd3ce",
+  "pinned_hash": "d300c2a2663c8baf3923112d13568f0a085e6207",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
@@ -9,6 +9,10 @@
     {
       "file": "android/WPAndroid/google-services.json",
       "destination": "WordPress/google-services.json"
+    },
+    {
+      "file": "android/WPAndroid/sentry.properties",
+      "destination": "sentry.properties"
     }
   ],
   "file_dependencies": [

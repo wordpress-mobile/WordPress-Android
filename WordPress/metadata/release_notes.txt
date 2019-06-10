@@ -1,3 +1,2 @@
-* You can now create a site with .blog subdomain right from the app.
-* The whole app has a fresh, updated color scheme. Modern!
-* We fixed a bug that caused the “unread” badge to stick around when you swiped between notifications to read them.
+* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.
+* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.

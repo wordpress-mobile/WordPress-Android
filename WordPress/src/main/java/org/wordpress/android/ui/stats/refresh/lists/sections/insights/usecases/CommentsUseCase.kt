@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -40,6 +41,7 @@ class CommentsUseCase
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
@@ -52,7 +54,8 @@ class CommentsUseCase
             error != null -> State.Error(error.message ?: error.type.name)
             model != null && (model.authors.isNotEmpty() || model.posts.isNotEmpty()) -> State.Data(
                     model,
-                    cached = response.cached)
+                    cached = response.cached
+            )
             else -> State.Empty()
         }
     }
@@ -64,11 +67,15 @@ class CommentsUseCase
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
 
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return listOf(buildTitle(), Empty())
+    }
+
     override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_view_comments))
+            items.add(buildTitle())
         }
 
         if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
@@ -88,7 +95,7 @@ class CommentsUseCase
             if (model.hasMoreAuthors && uiState == 0 || model.hasMorePosts && uiState == 1) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = NavigationAction.create(uiState, this::onLinkClick)
                         )
                 )
@@ -98,6 +105,8 @@ class CommentsUseCase
         }
         return items
     }
+
+    private fun buildTitle() = Title(R.string.stats_view_comments, menuAction = this::onMenuClick)
 
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
@@ -140,12 +149,17 @@ class CommentsUseCase
         navigateTo(ViewCommentsStats(selectedTab))
     }
 
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
+    }
+
     class CommentsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val commentsStore: CommentsStore,
         private val statsSiteProvider: StatsSiteProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 CommentsUseCase(
@@ -153,6 +167,7 @@ class CommentsUseCase
                         commentsStore,
                         statsSiteProvider,
                         analyticsTracker,
+                        popupMenuHandler,
                         useCaseMode
                 )
     }

@@ -11,21 +11,18 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_122"
+msgctxt "release_note_126"
 msgid ""
-"12.2:\n"
-"* You can now create a site with .blog subdomain right from the app.\n"
-"* The whole app has a fresh, updated color scheme. Modern!\n"
-"* We fixed a bug that caused the “unread” badge to stick around when you swiped between notifications to read them.\n"
+"12.6:\n"
+"* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.\n"
+"* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.\n"
 msgstr ""
 
-msgctxt "release_note_121"
+msgctxt "release_note_125"
 msgid ""
-"12.1:\n"
-"* Navigating notifications: now you can swipe between tabs.\n"
-"* Design details: seemingly-small visual tweaks make site creation smoother.\n"
-"* Clearer data: changes and visual updates to Stats make most stats easier to understand.\n"
-"* Speedy posting: sharing pictures to WordPress automatically opens the Block editor.\n"
+"12.5:\n"
+"Better offline support: If you draft offline, drafts automatically upload to the server when you log in.\n"
+"Clearer stats: Navigate to a post’s detailed data by clicking on its title on the Stats screen. The current day’s stats appear in gray to help you remember that they’re not final.\n"
 msgstr ""
 
 msgctxt "sample_post_content"
@@ -116,7 +113,7 @@ msgstr ""
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_1"
 msgid ""
-"<strong>Create </strong>beautiful\n"
+"<strong>Create</strong> beautiful\n"
 "posts and pages\n"
 msgstr ""
 
@@ -124,7 +121,7 @@ msgstr ""
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_2"
 msgid ""
-"<strong>Track </strong> what your\n"
+"<strong>Track</strong> what your\n"
 "visitors love\n"
 msgstr ""
 
@@ -132,15 +129,15 @@ msgstr ""
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_3"
 msgid ""
-"<strong>Check </strong>what's\n"
-"happening in real time\n"
+"<strong>Check</strong> what's\n"
+"happening in real-time\n"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_4"
 msgid ""
-"<strong>Share </strong>\n"
+"<strong>Share</strong>\n"
 "from anywhere\n"
 msgstr ""
 
@@ -148,7 +145,7 @@ msgstr ""
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_5"
 msgid ""
-"<strong>Capture </strong>ideas\n"
+"<strong>Capture</strong> ideas\n"
 "on the go\n"
 msgstr ""
 
@@ -156,5 +153,13 @@ msgstr ""
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_6"
 msgid "<strong>Write</strong> without compromises"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
+#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
+msgctxt "enhanced_app_store_screenshot_7"
+msgid ""
+"<strong>Build</strong> and manage\n"
+"your website\n"
 msgstr ""
 

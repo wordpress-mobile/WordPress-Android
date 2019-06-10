@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager
@@ -20,7 +20,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
 
-    private val onTagChanged: Observer<NewsItem?> = Observer { it: NewsItem? -> _newsItemSourceMediator.value = it }
+    private val onTagChanged: Observer<NewsItem?> = Observer { _newsItemSourceMediator.value = it }
 
     /**
      * First tag for which the card was shown.

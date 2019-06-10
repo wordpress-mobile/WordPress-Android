@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -501,6 +503,12 @@ public class AnalyticsUtils {
     public static void trackAnalyticsAccountCreated(String username, String email) {
         AnalyticsUtils.refreshMetadataNewUser(username, email);
         AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
+    }
+
+    public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("post_list_view_layout_type", viewLayoutType.toString());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.POST_LIST_VIEW_LAYOUT_TOGGLED, properties);
     }
 
     /**

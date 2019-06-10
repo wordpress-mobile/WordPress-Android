@@ -172,6 +172,21 @@ platform :android do
       File.rename( entry, newfilename.downcase )
     }
 
+    locales = SUPPORTED_LOCALES
+      .select { |hsh| hsh[:promo_config] != false }
+      .map { |hsh| hsh[:google_play] }
+
+    # Remove locales we're not interested in
+    Pathname(repaired_screenshot_directory)
+        .children
+        .select(&:directory?)
+        .select { |dir|
+        !locales.include? File.basename(dir)
+    }
+    .each { |dir|
+        FileUtils.rm_rf(dir)
+    }
+
     # Run screenshots generator tool 
     promo_screenshots(
       orig_folder: repaired_screenshot_directory,

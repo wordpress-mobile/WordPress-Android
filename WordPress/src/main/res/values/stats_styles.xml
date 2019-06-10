@@ -116,6 +116,11 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="StatsBlockBigTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    </style>
+
     <style name="StatsBlockItem" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/neutral_700</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
@@ -200,6 +205,11 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="StatsInsightManagementList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="StatsActivityBox">
         <item name="android:layout_width">@dimen/stats_activity_box_size</item>
         <item name="android:layout_height">@dimen/stats_activity_box_size</item>
@@ -231,5 +241,10 @@
         <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="StatsTag" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 </resources>

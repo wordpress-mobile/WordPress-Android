@@ -2,13 +2,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.VIDEOS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.VIDEOS
 import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
@@ -54,7 +53,7 @@ constructor(
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_videos))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): VideoPlaysModel? {
         return store.getVideoPlays(
@@ -87,13 +86,13 @@ constructor(
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_videos))
+            items.add(Title(R.string.stats_videos))
         }
 
         if (domainModel.plays.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(string.stats_videos_title_label, string.stats_videos_views_label))
+            items.add(Header(R.string.stats_videos_title_label, R.string.stats_videos_views_label))
             items.addAll(domainModel.plays.mapIndexed { index, videoPlays ->
                 ListItemWithIcon(
                         text = videoPlays.title,
@@ -106,7 +105,7 @@ constructor(
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = NavigationAction.create(statsGranularity, this::onViewMoreClick)
                         )
                 )

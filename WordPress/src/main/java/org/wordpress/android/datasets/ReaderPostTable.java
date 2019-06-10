@@ -4,8 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -20,7 +21,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.Locale;
@@ -376,6 +377,14 @@ public class ReaderPostTable {
                                      args);
     }
 
+    private static boolean postExistsForReaderTag(long blogId, long postId, ReaderTag readerTag) {
+        String[] args = {Long.toString(blogId), Long.toString(postId), readerTag.getTagSlug(),
+                Integer.toString(readerTag.tagType.toInt())};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT 1 FROM tbl_posts WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?",
+                args);
+    }
+
     /*
      * returns whether any of the passed posts are new or changed - used after posts are retrieved
      */
@@ -398,11 +407,11 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns true if any posts in the passed list exist in this list
+     * returns true if any posts in the passed list exist in this list for the given tag
      */
-    public static boolean hasOverlap(ReaderPostList posts) {
+    public static boolean hasOverlap(ReaderPostList posts, ReaderTag tag) {
         for (ReaderPost post : posts) {
-            if (postExists(post.blogId, post.postId)) {
+            if (postExistsForReaderTag(post.blogId, post.postId, tag)) {
                 return true;
             }
         }
@@ -1082,7 +1091,7 @@ public class ReaderPostTable {
                 } while (cursor.moveToNext());
             }
         } catch (IllegalStateException e) {
-            CrashlyticsUtils.logException(e);
+            CrashLoggingUtils.log(e);
             AppLog.e(AppLog.T.READER, e);
         }
         return posts;

@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -51,7 +52,8 @@ public class AppLog {
         ACTIVITY_LOG,
         JETPACK_REMOTE_INSTALL,
         SUPPORT,
-        SITE_CREATION
+        SITE_CREATION,
+        DOMAIN_REGISTRATION
     }
 
     public static final String TAG = "WordPress";

@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.helpers
 
 import android.content.Context
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString

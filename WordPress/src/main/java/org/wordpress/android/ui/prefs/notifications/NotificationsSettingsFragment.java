@@ -13,16 +13,18 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
@@ -67,8 +69,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionEmailCommentAction;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionEmailPostAction;
@@ -864,7 +864,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
             if (getActivity() != null) {
                 SharedPreferences prefs =
-                        android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        androidx.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
                 boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
                 if (shouldNotifyOfPendingDrafts) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);

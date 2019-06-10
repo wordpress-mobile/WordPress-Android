@@ -1,12 +1,12 @@
 package org.wordpress.android.e2e.pages;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import org.wordpress.android.R;
 
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.scrollToAndClickOnTextInRecyclerView;
-
 
 public class PostsListPage {
     public PostsListPage() {}
@@ -16,6 +16,7 @@ public class PostsListPage {
     }
 
     private static RecyclerView getRecyclerView() {
-        return (RecyclerView) getCurrentActivity().findViewById(R.id.recycler_view);
+        ViewPager pager = getCurrentActivity().findViewById(R.id.postPager);
+        return (RecyclerView) pager.getChildAt(pager.getCurrentItem()).findViewById(R.id.recycler_view);
     }
 }

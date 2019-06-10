@@ -1,8 +1,9 @@
 package org.wordpress.android.editor;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
@@ -118,16 +119,16 @@ public class GutenbergContainerFragment extends Fragment {
         return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
     }
 
-    public void appendMediaFile(int mediaId, final String mediaUrl) {
-        mWPAndroidGlueCode.appendMediaFile(mediaId, mediaUrl);
+    public void appendMediaFile(int mediaId, final String mediaUrl, final boolean isVideo) {
+        mWPAndroidGlueCode.appendMediaFile(mediaId, mediaUrl, isVideo);
     }
 
     public void showDevOptionsDialog() {
         mWPAndroidGlueCode.showDevOptionsDialog();
     }
 
-    public void appendUploadMediaFile(final int mediaId, final String mediaUri) {
-        mWPAndroidGlueCode.appendUploadMediaFile(mediaId, mediaUri);
+    public void appendUploadMediaFile(final int mediaId, final String mediaUri, final boolean isVideo) {
+        mWPAndroidGlueCode.appendUploadMediaFile(mediaId, mediaUri, isVideo);
     }
 
     public void mediaFileUploadProgress(final int mediaId, final float progress) {

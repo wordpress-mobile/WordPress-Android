@@ -10,12 +10,13 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.view.ContextThemeWrapper;
 import android.view.ViewConfiguration;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -442,7 +443,7 @@ public class WPMediaUtils {
         } catch (IllegalStateException e) {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
             AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-            CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
+            CrashLoggingUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
                                                              + " See issue #5823");
 
             return null;

@@ -97,6 +97,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
       enhanced_app_store_screenshot_4: prj_folder + "/WordPress/metadata/enhanced_screenshot_4.html",
       enhanced_app_store_screenshot_5: prj_folder + "/WordPress/metadata/enhanced_screenshot_5.html",
       enhanced_app_store_screenshot_6: prj_folder + "/WordPress/metadata/enhanced_screenshot_6.html",
+      enhanced_app_store_screenshot_7: prj_folder + "/WordPress/metadata/enhanced_screenshot_7.html",
     }
 
     android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 

@@ -26,7 +26,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:contentDescription="@string/content_description_people_looking_charts"
                 android:src="@drawable/ic_plans_white_24dp"
-                android:tint="@color/jetpack"/>
+                tools:tint="@color/jetpack"/>
 
             <TextView
                 android:id="@+id/jetpack_install_title"
@@ -47,7 +47,7 @@
                 android:text="@string/install_jetpack_message"
                 android:textAlignment="center"/>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/jetpack_install_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

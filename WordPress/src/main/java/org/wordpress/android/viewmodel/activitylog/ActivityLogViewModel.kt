@@ -1,12 +1,11 @@
 package org.wordpress.android.viewmodel.activitylog
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
@@ -71,7 +70,7 @@ class ActivityLogViewModel @Inject constructor(
         get() = _showSnackbarMessage
 
     private val isLoadingInProgress: Boolean
-        get() = eventListStatus.value == ActivityLogListStatus.LOADING_MORE ||
+        get() = eventListStatus.value == LOADING_MORE ||
                 eventListStatus.value == ActivityLogListStatus.FETCHING
 
     private val isRewindProgressItemShown: Boolean
@@ -133,13 +132,13 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: ActivityLogListItem) {
-        if (item is ActivityLogListItem.Event) {
+        if (item is Event) {
             _showItemDetail.value = item
         }
     }
 
     fun onActionButtonClicked(item: ActivityLogListItem) {
-        if (item is ActivityLogListItem.Event) {
+        if (item is Event) {
             _showRewindDialog.value = item
         }
     }
@@ -156,7 +155,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun updateRewindState(status: Status?) {
         lastRewindStatus = status
         if (status == RUNNING && !isRewindProgressItemShown) {
-            reloadEvents(true, true)
+            reloadEvents(disableActions = true, displayProgressItem = true)
         } else if (status != RUNNING && isRewindProgressItemShown) {
             requestEventsUpdate(false)
         }
@@ -173,15 +172,15 @@ class ActivityLogViewModel @Inject constructor(
         val rewindFinished = isRewindProgressItemShown && !displayProgressItem
         if (displayProgressItem) {
             val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
-            items.add(Header(resourceProvider.getString(string.now)))
+            items.add(Header(resourceProvider.getString(R.string.now)))
             items.add(getRewindProgressItem(activityLogModel))
             moveToTop = eventListStatus.value != LOADING_MORE
         }
         eventList.forEach { model ->
-            val currentItem = ActivityLogListItem.Event(model, disableActions)
+            val currentItem = Event(model, disableActions)
             val lastItem = items.lastOrNull() as? Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
-                items.add(ActivityLogListItem.Header(currentItem.formattedDate))
+                items.add(Header(currentItem.formattedDate))
             }
             items.add(currentItem)
         }
@@ -240,7 +239,7 @@ class ActivityLogViewModel @Inject constructor(
         rewindStatusService.rewindingActivity?.let {
             val event = Event(it)
             _showSnackbarMessage.value = resourceProvider.getString(
-                    string.activity_log_rewind_started_snackbar_message,
+                    R.string.activity_log_rewind_started_snackbar_message,
                     event.formattedDate,
                     event.formattedTime
             )
@@ -252,12 +251,12 @@ class ActivityLogViewModel @Inject constructor(
         if (item != null) {
             val event = Event(item)
             _showSnackbarMessage.value =
-                    resourceProvider.getString(string.activity_log_rewind_finished_snackbar_message,
+                    resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message,
                             event.formattedDate,
                             event.formattedTime)
         } else {
             _showSnackbarMessage.value =
-                    resourceProvider.getString(string.activity_log_rewind_finished_snackbar_message_no_dates)
+                    resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
         }
     }
 
@@ -283,7 +282,7 @@ class ActivityLogViewModel @Inject constructor(
         if (event.canLoadMore) {
             _eventListStatus.value = ActivityLogListStatus.CAN_LOAD_MORE
         } else {
-            _eventListStatus.value = ActivityLogListStatus.DONE
+            _eventListStatus.value = DONE
         }
     }
 }

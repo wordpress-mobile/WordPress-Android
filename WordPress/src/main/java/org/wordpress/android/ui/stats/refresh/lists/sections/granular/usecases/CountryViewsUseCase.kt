@@ -2,13 +2,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.COUNTRIES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.COUNTRIES
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
@@ -102,7 +101,7 @@ constructor(
                 stringBuilder.append("['").append(country.countryCode).append("',").append(country.views).append("],")
             }
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
-            items.add(Header(string.stats_country_label, string.stats_country_views_label))
+            items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
                         ListItemWithIcon(
@@ -117,7 +116,7 @@ constructor(
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = create(statsGranularity, this::onViewMoreClick)
                         )
                 )

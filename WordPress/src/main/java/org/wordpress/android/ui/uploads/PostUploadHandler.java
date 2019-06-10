@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -32,6 +34,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
@@ -54,8 +57,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
 public class PostUploadHandler implements UploadHandler<PostModel> {
     private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
@@ -72,6 +73,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
+    @Inject UiHelpers mUiHelpers;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -569,8 +571,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                               + event.error.message);
             Context context = WordPress.getContext();
-            String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post.isPage(), event.error);
+            String errorMessage = mUiHelpers.getTextOfUiString(context,
+                    UploadUtils.getErrorMessageResIdFromPostError(event.post.isPage(), event.error));
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
+            mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
+                    mMediaStore.getMediaForPost(event.post));
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
             sFirstPublishPosts.remove(event.post.getId());
@@ -585,10 +590,19 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
                 }
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
-                                                PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
+                        PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
-                                                    mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
-                                                    sCurrentUploadingPostAnalyticsProperties);
+                        mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
+                        sCurrentUploadingPostAnalyticsProperties);
+            }
+            synchronized (sQueuedPostsList) {
+                for (PostModel post : sQueuedPostsList) {
+                    if (post.getId() == event.post.getId()) {
+                        // Check if a new version of the post we've just uploaded is in the queue and update its state
+                        post.setRemotePostId(event.post.getRemotePostId());
+                        post.setIsLocalDraft(false);
+                    }
+                }
             }
         }
 

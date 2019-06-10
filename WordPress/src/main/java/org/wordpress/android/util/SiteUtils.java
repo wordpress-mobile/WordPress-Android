@@ -1,7 +1,8 @@
 package org.wordpress.android.util;
 
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -79,7 +80,7 @@ public class SiteUtils {
             } catch (IllegalArgumentException e) {
                 String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
                 AppLog.e(AppLog.T.UTILS, errorStr, e);
-                CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
+                CrashLoggingUtils.logException(e, AppLog.T.UTILS, errorStr);
                 return true;
             }
         }

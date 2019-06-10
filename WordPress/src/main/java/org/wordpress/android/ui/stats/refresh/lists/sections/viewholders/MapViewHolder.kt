@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.annotation.SuppressLint
 import android.net.http.SslError
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.SslErrorHandler
@@ -12,20 +11,21 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.color
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_web_view_item
+        R.layout.stats_block_web_view_item
 ) {
-    val webView = itemView.findViewById<WebView>(id.web_view)
+    val webView: WebView? = itemView.findViewById(R.id.web_view)
+    @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
         GlobalScope.launch {
             delay(100)
@@ -33,8 +33,8 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
             // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, color.accent_50) and 0xffffff)
-            val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, color.accent) and 0xffffff)
+            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_50) and 0xffffff)
+            val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent) and 0xffffff)
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
@@ -62,37 +62,39 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val width = itemView.width
             val height = width * 3 / 4
 
-            val params = webView.layoutParams as LayoutParams
-            val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT
-            params.height = height
-            wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            wrapperParams.height = height
+            if (webView != null) {
+                val params = webView.layoutParams as LayoutParams
+                val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT
+                params.height = height
+                wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+                wrapperParams.height = height
 
-            launch(Dispatchers.Main) {
-                webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                launch(Dispatchers.Main) {
+                    webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
 
-                webView.layoutParams = params
-                itemView.layoutParams = wrapperParams
+                    webView.layoutParams = params
+                    itemView.layoutParams = wrapperParams
 
-                webView.webViewClient = object : WebViewClient() {
-                    override fun onReceivedError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        error: WebResourceError
-                    ) {
-                        super.onReceivedError(view, request, error)
-                        itemView.visibility = View.GONE
+                    webView.webViewClient = object : WebViewClient() {
+                        override fun onReceivedError(
+                            view: WebView?,
+                            request: WebResourceRequest?,
+                            error: WebResourceError
+                        ) {
+                            super.onReceivedError(view, request, error)
+                            itemView.visibility = View.GONE
+                        }
+
+                        override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                            super.onReceivedSslError(view, handler, error)
+                            itemView.visibility = View.GONE
+                        }
                     }
-
-                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                        super.onReceivedSslError(view, handler, error)
-                        itemView.visibility = View.GONE
-                    }
+                    webView.settings.javaScriptEnabled = true
+                    webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                    webView.loadData(htmlPage, "text/html", "UTF-8")
                 }
-                webView.settings.javaScriptEnabled = true
-                webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-                webView.loadData(htmlPage, "text/html", "UTF-8")
             }
         }
     }

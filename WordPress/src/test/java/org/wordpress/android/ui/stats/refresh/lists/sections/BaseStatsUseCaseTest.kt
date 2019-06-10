@@ -8,9 +8,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
@@ -27,7 +27,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     private lateinit var block: TestUseCase
     private val result = mutableListOf<UseCaseModel?>()
-    private val loadingData = listOf<BlockListItem>(Title(string.stats_insights_all_time))
+    private val loadingData = listOf<BlockListItem>(Title(R.string.stats_insights_all_time))
     private val loadingBlock = UseCaseModel(
             ALL_TIME_STATS,
             data = null,

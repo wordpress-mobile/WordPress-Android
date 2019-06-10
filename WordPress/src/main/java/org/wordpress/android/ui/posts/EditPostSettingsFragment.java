@@ -5,13 +5,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.view.menu.MenuPopupHelper;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
@@ -25,6 +18,14 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -754,10 +755,14 @@ public class EditPostSettingsFragment extends Fragment {
                 labelToUse = getString(R.string.scheduled_for, formattedDate);
             } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
                 labelToUse = getString(R.string.published_on, formattedDate);
-            } else if (postModel.isLocalDraft() && PostUtils.shouldPublishImmediately(postModel)) {
-                // only show Publish "Immediate" label if it's a local draft. If it's also saved online,
-                // then show the back-date appropriately.
-                labelToUse = getString(R.string.immediately);
+            } else if (postModel.isLocalDraft()) {
+                if (PostUtils.isPublishDateInThePast(postModel)) {
+                    labelToUse = getString(R.string.backdated_for, formattedDate);
+                } else if (PostUtils.shouldPublishImmediately(postModel)) {
+                    labelToUse = getString(R.string.immediately);
+                } else {
+                    labelToUse = getString(R.string.publish_on, formattedDate);
+                }
             } else if (PostUtils.isPublishDateInTheFuture(postModel)) {
                 labelToUse = getString(R.string.schedule_for, formattedDate);
             } else {

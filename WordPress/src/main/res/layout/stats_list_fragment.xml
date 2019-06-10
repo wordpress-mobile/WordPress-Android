@@ -17,28 +17,27 @@
         android:layout_weight="1"/>
 
     <include
-        layout="@layout/stats_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        layout="@layout/stats_empty_view" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/loadingContainer"
         style="@style/StatsList"
         android:visibility="gone">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/loadingRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
+            android:descendantFocusability="beforeDescendants"
             android:scrollbars="vertical"/>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         style="@style/StatsList"
         android:clipToPadding="false"
+        android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"/>
 
 </LinearLayout>

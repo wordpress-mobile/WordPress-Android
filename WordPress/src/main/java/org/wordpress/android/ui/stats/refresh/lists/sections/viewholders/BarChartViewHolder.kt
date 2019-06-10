@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Description
@@ -21,9 +21,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.util.DisplayUtils
@@ -34,11 +31,11 @@ private const val MIN_VALUE = 5f
 
 class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_block_bar_chart_item
+        R.layout.stats_block_bar_chart_item
 ) {
-    private val chart = itemView.findViewById<BarChart>(id.chart)
-    private val labelStart = itemView.findViewById<TextView>(id.label_start)
-    private val labelEnd = itemView.findViewById<TextView>(id.label_end)
+    private val chart = itemView.findViewById<BarChart>(R.id.chart)
+    private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
+    private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
 
     fun bind(
         item: BarChartItem,
@@ -85,11 +82,11 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         data = BarData(dataSets)
         val greyColor = ContextCompat.getColor(
                 context,
-                color.neutral_300
+                R.color.neutral_300
         )
         val lightGreyColor = ContextCompat.getColor(
                 context,
-                color.neutral_50
+                R.color.neutral_50
         )
         axisLeft.apply {
             valueFormatter = object : LargeValueFormatter() {
@@ -233,7 +230,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                color.accent_400
+                R.color.accent_400
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -256,7 +253,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                color.accent_700
+                R.color.accent_700
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -282,7 +279,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                color.accent_400
+                R.color.accent_400
         )
         dataSet.setDrawValues(false)
         dataSet.highLightAlpha = 51

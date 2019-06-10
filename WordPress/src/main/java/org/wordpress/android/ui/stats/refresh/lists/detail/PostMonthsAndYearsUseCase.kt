@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailTypes
+import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
@@ -33,7 +33,7 @@ class PostMonthsAndYearsUseCase(
     private val postDetailMapper: PostDetailMapper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedYearUiState>(
-        PostDetailTypes.MONTHS_AND_YEARS,
+        PostDetailType.MONTHS_AND_YEARS,
         mainDispatcher,
         ExpandedYearUiState()
 ) {
@@ -65,12 +65,12 @@ class PostMonthsAndYearsUseCase(
     override fun buildUiModel(domainModel: PostDetailStatsModel, uiState: ExpandedYearUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (useCaseMode == BLOCK) {
-            items.add(Title(string.stats_detail_months_and_years))
+            items.add(Title(R.string.stats_detail_months_and_years))
         }
         items.add(
                 Header(
-                        string.stats_months_and_years_period_label,
-                        string.stats_months_and_years_views_label
+                        R.string.stats_months_and_years_period_label,
+                        R.string.stats_months_and_years_views_label
                 )
         )
         val shownYears = domainModel.yearsTotal.sortedByDescending { it.year }.takeLast(itemsToLoad)
@@ -80,7 +80,7 @@ class PostMonthsAndYearsUseCase(
         if (useCaseMode == BLOCK && domainModel.yearsTotal.size > itemsToLoad) {
             items.add(
                     Link(
-                            text = string.stats_insights_view_more,
+                            text = R.string.stats_insights_view_more,
                             navigateAction = NavigationAction.create(this::onLinkClick)
                     )
             )
@@ -93,7 +93,7 @@ class PostMonthsAndYearsUseCase(
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
-        return listOf(Title(string.stats_detail_months_and_years))
+        return listOf(Title(R.string.stats_detail_months_and_years))
     }
 
     class PostMonthsAndYearsUseCaseFactory

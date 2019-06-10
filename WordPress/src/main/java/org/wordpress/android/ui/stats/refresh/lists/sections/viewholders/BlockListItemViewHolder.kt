@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.content.res.ColorStateList
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
@@ -78,25 +78,25 @@ open class BlockListItemViewHolder(
         val avatar = findViewById<ImageView>(R.id.avatar)
         val icon = findViewById<ImageView>(R.id.icon)
         val hasIcon = item.icon != null || item.iconUrl != null
-        if (hasIcon) {
-            this.visibility = View.VISIBLE
-            when (item.iconStyle) {
-                NORMAL -> {
-                    findViewById<ImageView>(R.id.avatar).visibility = View.GONE
-                    icon.setImageOrLoad(item, imageManager)
-                }
-                AVATAR -> {
-                    icon.visibility = View.GONE
-                    avatar.setAvatarOrLoad(item, imageManager)
-                }
-                EMPTY_SPACE -> {
-                    this.visibility = View.INVISIBLE
+        when {
+            hasIcon -> {
+                this.visibility = View.VISIBLE
+                when (item.iconStyle) {
+                    NORMAL -> {
+                        findViewById<ImageView>(R.id.avatar).visibility = View.GONE
+                        icon.setImageOrLoad(item, imageManager)
+                    }
+                    AVATAR -> {
+                        icon.visibility = View.GONE
+                        avatar.setAvatarOrLoad(item, imageManager)
+                    }
+                    EMPTY_SPACE -> {
+                        this.visibility = View.INVISIBLE
+                    }
                 }
             }
-        } else if (item.iconStyle == EMPTY_SPACE) {
-            this.visibility = View.INVISIBLE
-        } else {
-            this.visibility = View.GONE
+            item.iconStyle == EMPTY_SPACE -> this.visibility = View.INVISIBLE
+            else -> this.visibility = View.GONE
         }
     }
 }
