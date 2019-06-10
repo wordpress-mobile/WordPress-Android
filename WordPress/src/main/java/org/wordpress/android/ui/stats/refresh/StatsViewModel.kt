@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -71,10 +72,11 @@ class StatsViewModel
 
     val siteChanged = statsSiteProvider.siteChanged
 
-    private val _toolbarHasShadow = MutableLiveData<Boolean>()
-    val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
+    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
 
     val hideToolbar = newsCardHandler.hideToolbar
+
+    val selectedSection = statsSectionManager.liveSelectedSection
 
     fun start(intent: Intent) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
@@ -116,7 +118,6 @@ class StatsViewModel
             if (initialGranularity != null && initialSelectedPeriod != null) {
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
-            _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
 
@@ -155,14 +156,10 @@ class StatsViewModel
         }
     }
 
-    fun getSelectedSection() = statsSectionManager.getSelectedSection()
-
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
 
         listUseCases[statsSection]?.onListSelected()
-
-        _toolbarHasShadow.value = statsSection == INSIGHTS
 
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
