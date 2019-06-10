@@ -5,21 +5,21 @@
     android:layout_height="match_parent"
     android:padding="?attr/dialogPreferredPadding">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         app:theme="@style/LoginTheme.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <!-- use singleLine (even if deprecated) to have a scrolling single line. -->
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_http_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:hint="@string/httpuser"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         app:theme="@style/LoginTheme.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,11 +27,11 @@
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/login_input_password_icon_color">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_http_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:hint="@string/httppassword"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

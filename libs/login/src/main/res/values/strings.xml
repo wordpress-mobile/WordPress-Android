@@ -139,4 +139,6 @@
     <!-- Placeholder for notification channel to be used by login service notification.
      This resource must be overwritten in the host project with a real notification channel id it has configured. -->
     <string name="login_notification_channel_id">placeholder</string>
+
+    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
 </resources>
