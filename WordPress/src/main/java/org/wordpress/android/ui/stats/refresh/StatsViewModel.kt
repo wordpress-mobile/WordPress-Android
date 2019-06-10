@@ -125,9 +125,14 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
         }
-        statsSiteProvider.start(localSiteId)
-        if (launchedFromWidget) {
-            refreshData()
+        val siteChanged = statsSiteProvider.start(localSiteId)
+        if (launchedFromWidget && siteChanged) {
+            launch {
+                listUseCases.forEach { useCase ->
+                    useCase.value.onCleared()
+                    useCase.value.refreshData(true)
+                }
+            }
         }
     }
 
@@ -148,7 +153,9 @@ class StatsViewModel
         statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
             loadData {
-                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
+                val baseListUseCase = listUseCases[statsSectionManager.getSelectedSection()]
+                baseListUseCase?.refreshTypes()
+                baseListUseCase?.refreshData(true)
             }
         } else {
             _isRefreshing.value = false
@@ -167,7 +174,8 @@ class StatsViewModel
             WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
             MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
             YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
-            ANNUAL_STATS, DETAIL -> { }
+            ANNUAL_STATS, DETAIL -> {
+            }
         }
     }
 
