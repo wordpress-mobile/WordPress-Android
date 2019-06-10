@@ -98,7 +98,7 @@ class ViewsWidgetListViewModelTest {
 
         viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
 
-        viewModel.onDataSetChanged { _, _ ->  }
+        viewModel.onDataSetChanged { _, _ -> }
 
         viewModel.data.let { data ->
             assertThat(data).hasSize(dates.size)
