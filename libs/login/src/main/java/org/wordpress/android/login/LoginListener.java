@@ -26,6 +26,7 @@ public interface LoginListener {
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
     void addGoogleLoginFragment();
+    void showHelpFindingConnectedEmail();
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);

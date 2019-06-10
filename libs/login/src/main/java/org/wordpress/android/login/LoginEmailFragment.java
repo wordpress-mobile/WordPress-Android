@@ -233,6 +233,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     }
                 }
             });
+        } else if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            secondaryButton.setText(getResources().getString(R.string.login_need_help_finding_connected_email));
+            secondaryButton.setOnClickListener(new OnClickListener() {
+                public void onClick(View view) {
+                    mLoginListener.showHelpFindingConnectedEmail();
+                }
+            });
         } else {
             secondaryButton.setVisibility(View.GONE);
         }
