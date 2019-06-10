@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        aztecVersion = 'v1.3.27'
+        aztecVersion = '794497db64e63a5751265f484ea07a2fa5d0b0d0'
     }
 
     repositories {
