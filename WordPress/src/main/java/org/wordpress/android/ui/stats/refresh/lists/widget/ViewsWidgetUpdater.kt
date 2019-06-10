@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -62,6 +63,15 @@ class ViewsWidgetUpdater
             showError(views, appWidgetId, networkAvailable, resourceProvider, context)
         }
         appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
+
+    fun updateAllWidgets(context: Context) {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val viewsWidget = ComponentName(context, StatsViewsWidget::class.java)
+        val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
+        for (appWidgetId in allWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId)
+        }
     }
 
     private fun showList(
