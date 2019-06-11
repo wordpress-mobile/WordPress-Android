@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.AdapterView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -41,7 +40,6 @@ import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.WPSnackbar
@@ -69,6 +67,7 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: androidx.viewpager.widget.ViewPager
     private lateinit var fab: FloatingActionButton
+    private lateinit var searchActionButton: MenuItem
 
     private var restorePreviousSearch = false
 
@@ -114,6 +113,7 @@ class PostsListActivity : AppCompatActivity(),
         site = if (savedInstanceState == null) {
             intent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
+            restorePreviousSearch = true
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
@@ -248,6 +248,14 @@ class PostsListActivity : AppCompatActivity(),
                 )
             }
         })
+
+        viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
+            if (isExpanded == true) {
+                showSearchList()
+            } else {
+                hideSearchList()
+            }
+        })
     }
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
@@ -323,74 +331,64 @@ class PostsListActivity : AppCompatActivity(),
                 }
             })
 
-            val toggleSearchMenuItem = it.findItem(R.id.toggle_post_search)
-            if (SiteUtils.isAccessedViaWPComRest(site)) {
-                toggleSearchMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-                    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                        toggleViewLayoutMenuItem.isVisible = false
-                        viewModel.onSearchExpanded(restorePreviousSearch)
-                        return true
-                    }
-
-                    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                        toggleViewLayoutMenuItem.isVisible = true
-                        viewModel.onSearchCollapsed()
-                        return true
-                    }
-                })
-
-                val searchView = toggleSearchMenuItem.actionView as SearchView
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String): Boolean {
-                        viewModel.onSearchQueryInput(query)
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String): Boolean {
-//                    if (restorePreviousSearch) {
-//                        restorePreviousSearch = false
-////                        searchView.setQuery(viewModel.lastSearchQuery, false)
-//                    } else {
-                        viewModel.onSearchQueryInput(newText)
-//                    }
-                        return true
-                    }
-                })
-
-                // fix the search view margins to match the action bar
-                val searchEditFrame = toggleSearchMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
-                (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
-                        .apply { this.leftMargin = DisplayUtils.dpToPx(this@PostsListActivity, -8) }
-
-                viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
-                    if (isExpanded == true) {
-                        showSearchList(toggleSearchMenuItem)
-                    } else {
-                        hideSearchList(toggleSearchMenuItem)
-                    }
-                })
-            } else {
-                toggleSearchMenuItem.setVisible(false)
-            }
+            searchActionButton = it.findItem(R.id.toggle_post_search)
+            initializeSearchView()
         }
         return true
     }
 
-    private fun hideSearchList(myActionMenuItem: MenuItem) {
+    private fun initializeSearchView() {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) {
+            searchActionButton.isVisible = false
+            return
+        }
+
+        searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded(restorePreviousSearch)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
+
+        val searchView = searchActionButton.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (restorePreviousSearch) {
+                    restorePreviousSearch = false
+                    searchView.setQuery(viewModel.searchQuery.value, false)
+                } else {
+                    viewModel.onSearch(newText)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun hideSearchList() {
         pager.visibility = View.VISIBLE
         findViewById<View>(R.id.tabContainer).visibility = View.VISIBLE
         findViewById<View>(R.id.search_container).visibility = View.GONE
-        if (myActionMenuItem.isActionViewExpanded) {
-            myActionMenuItem.collapseActionView()
+        if (searchActionButton.isActionViewExpanded) {
+            searchActionButton.collapseActionView()
         }
     }
 
-    private fun showSearchList(myActionMenuItem: MenuItem) {
+    private fun showSearchList() {
         pager.visibility = View.GONE
         findViewById<View>(R.id.tabContainer).visibility = View.GONE
         findViewById<View>(R.id.search_container).visibility = View.VISIBLE
-        if (!myActionMenuItem.isActionViewExpanded) {
-            myActionMenuItem.expandActionView()
+        if (!searchActionButton.isActionViewExpanded) {
+            searchActionButton.expandActionView()
         }
     }
 
