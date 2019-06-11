@@ -14,8 +14,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
@@ -254,7 +254,7 @@ class PostListMainViewModel @Inject constructor(
 
     fun onSearchExpanded(restorePreviousSearch: Boolean) {
         if (isSearchExpanded.value != true) {
-            AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
+            AnalyticsUtils.trackWithSiteDetails(POST_LIST_SEARCH_ACCESSED, site)
 
             if (!restorePreviousSearch) {
                 clearSearch()
