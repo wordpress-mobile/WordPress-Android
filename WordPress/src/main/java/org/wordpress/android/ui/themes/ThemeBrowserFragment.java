@@ -395,12 +395,12 @@ public class ThemeBrowserFragment extends Fragment
         boolean hasVisibleThemes = getAdapter().getCount() > 0;
         boolean hasNoMatchingThemes = hasThemes && !hasVisibleThemes;
 
-        mEmptyView.setVisibility(!hasThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
+        mEmptyView.setVisibility(!hasThemes ? View.VISIBLE : View.GONE);
         if (!hasThemes && !NetworkUtils.isNetworkAvailable(getActivity())) {
             mEmptyTextView.setText(R.string.no_network_title);
         }
-        mGridView.setVisibility(hasVisibleThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
-        mActionableEmptyView.setVisibility(hasNoMatchingThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
+        mGridView.setVisibility(hasVisibleThemes ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.setVisibility(hasNoMatchingThemes ? View.VISIBLE : View.GONE);
     }
 
     private List<ThemeModel> fetchThemes() {
