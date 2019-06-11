@@ -1502,7 +1502,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // the user tapped on it accidentally
         PostStatus status = PostStatus.fromPost(mPost);
         if (userCanPublishPosts() && (status == PostStatus.DRAFT || status == PostStatus.UNKNOWN)
-            && mPost.isLocalDraft()) {
+            && mPost.isLocalDraft() && isNewPost()) {
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
