@@ -248,14 +248,6 @@ class PostsListActivity : AppCompatActivity(),
                 )
             }
         })
-
-        viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
-            if (isExpanded == true) {
-                showSearchList()
-            } else {
-                hideSearchList()
-            }
-        })
     }
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
@@ -372,23 +364,30 @@ class PostsListActivity : AppCompatActivity(),
                 return true
             }
         })
+
+        viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
+            toggleSearch(isExpanded)
+        })
     }
 
-    private fun hideSearchList() {
-        pager.visibility = View.VISIBLE
-        findViewById<View>(R.id.tabContainer).visibility = View.VISIBLE
-        findViewById<View>(R.id.search_container).visibility = View.GONE
-        if (searchActionButton.isActionViewExpanded) {
-            searchActionButton.collapseActionView()
-        }
-    }
+    private fun toggleSearch(isExpanded: Boolean) {
+        val tabContainer = findViewById<View>(R.id.tabContainer)
+        val searchContainer = findViewById<View>(R.id.search_container)
 
-    private fun showSearchList() {
-        pager.visibility = View.GONE
-        findViewById<View>(R.id.tabContainer).visibility = View.GONE
-        findViewById<View>(R.id.search_container).visibility = View.VISIBLE
-        if (!searchActionButton.isActionViewExpanded) {
-            searchActionButton.expandActionView()
+        if (isExpanded) {
+            pager.visibility = View.GONE
+            tabContainer.visibility = View.GONE
+            searchContainer.visibility = View.VISIBLE
+            if (!searchActionButton.isActionViewExpanded) {
+                searchActionButton.expandActionView()
+            }
+        } else {
+            pager.visibility = View.VISIBLE
+            tabContainer.visibility = View.VISIBLE
+            searchContainer.visibility = View.GONE
+            if (searchActionButton.isActionViewExpanded) {
+                searchActionButton.collapseActionView()
+            }
         }
     }
 
