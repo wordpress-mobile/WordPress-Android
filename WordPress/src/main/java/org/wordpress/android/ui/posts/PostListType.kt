@@ -13,10 +13,11 @@ enum class PostListType(val postStatuses: List<PostStatus>) {
 
     val titleResId: Int
         get() = when (this) {
-            PUBLISHED, SEARCH -> R.string.post_list_published
+            PUBLISHED -> R.string.post_list_published
             DRAFTS -> R.string.post_list_drafts
             SCHEDULED -> R.string.post_list_scheduled
             TRASHED -> R.string.post_list_trashed
+            SEARCH -> 0 // we don't have title for search list
         }
 
     companion object {

@@ -68,6 +68,7 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var pager: androidx.viewpager.widget.ViewPager
     private lateinit var fab: FloatingActionButton
     private lateinit var searchActionButton: MenuItem
+    private lateinit var toggleViewLayoutMenuItem: MenuItem
 
     private var restorePreviousSearch = false
 
@@ -315,7 +316,7 @@ class PostsListActivity : AppCompatActivity(),
         super.onCreateOptionsMenu(menu)
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
-            val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
+            toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
             viewModel.viewLayoutTypeMenuUiState.observe(this, Observer { menuUiState ->
                 menuUiState?.let {
                     updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
@@ -366,12 +367,13 @@ class PostsListActivity : AppCompatActivity(),
         })
 
         viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
+            toggleViewLayoutMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
         })
     }
 
     private fun toggleSearch(isExpanded: Boolean) {
-        val tabContainer = findViewById<View>(R.id.tabContainer)
+        val tabContainer = findViewById<View>(R.id.tab_container)
         val searchContainer = findViewById<View>(R.id.search_container)
 
         if (isExpanded) {

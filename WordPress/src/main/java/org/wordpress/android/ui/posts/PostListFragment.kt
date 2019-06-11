@@ -35,7 +35,6 @@ import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
-import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -61,7 +60,6 @@ class PostListFragment : Fragment() {
     private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
     private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
 
-    private lateinit var postListViewModelConnector: PostListViewModelConnector
     private lateinit var postListType: PostListType
 
     private lateinit var nonNullActivity: FragmentActivity
@@ -137,7 +135,6 @@ class PostListFragment : Fragment() {
                 searchHandler.removeCallbacksAndMessages(null)
                 searchHandler.postDelayed({
                     viewModelStore.clear() // clear ViewModel's attached to this fragment
-
                     setViewModel() // restart ViewModel
                 }, SEARCH_DELAY_MS)
             })
@@ -149,7 +146,7 @@ class PostListFragment : Fragment() {
     private fun setViewModel() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+       val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(postListViewModelConnector)

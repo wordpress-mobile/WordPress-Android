@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
@@ -86,10 +85,8 @@ class PostListViewModel @Inject constructor(
         }
         result
     }
-    val emptyViewState: LiveData<PostListEmptyUiState>
-        get() = _emptyViewState
 
-    private val _emptyViewState: MutableLiveData<PostListEmptyUiState> by lazy {
+    val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
             createListSpecificEmptyUiState()
@@ -171,7 +168,7 @@ class PostListViewModel @Inject constructor(
         fetchFirstPage()
     }
 
-    public override fun onCleared() {
+    override fun onCleared() {
         lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
         super.onCleared()
     }

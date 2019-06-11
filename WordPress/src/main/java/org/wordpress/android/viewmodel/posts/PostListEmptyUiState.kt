@@ -129,7 +129,7 @@ private fun createEmptyListUiState(
         )
         SEARCH -> {
             val messageResId = if (isSearchPromptRequired) {
-                R.string.post_list_search
+                R.string.post_list_search_prompt
             } else {
                 R.string.post_list_search_nothing_found
             }
