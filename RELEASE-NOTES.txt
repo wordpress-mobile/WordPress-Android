@@ -2,7 +2,7 @@
 -----
 * Show upload in progress notification when retrying
 * Fix issue where two identical drafts were created
-
+* Fix issue where post with "Publish" status got automatically published
 12.6
 -----
 * Add Insights management introductory card
