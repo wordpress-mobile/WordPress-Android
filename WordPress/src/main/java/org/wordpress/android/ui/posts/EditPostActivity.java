@@ -1312,7 +1312,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (shouldShowAsyncPromoDialog()) {
                 showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
-                showPublishConfirmationOrUpdateIfNotLocalDraft();
+                showPublishConfirmationForNewLocalDraftOrUpdate();
             }
         } else {
             // Disable other action bar buttons while a media upload is in progress
@@ -1497,8 +1497,8 @@ public class EditPostActivity extends AppCompatActivity implements
         publishConfirmationDialog.show(getSupportFragmentManager(), TAG_PUBLISH_CONFIRMATION_DIALOG);
     }
 
-    private void showPublishConfirmationOrUpdateIfNotLocalDraft() {
-        // if post is a draft, first make sure to confirm the PUBLISH action, in case
+    private void showPublishConfirmationForNewLocalDraftOrUpdate() {
+        // if post is a new draft, first make sure to confirm the PUBLISH action, in case
         // the user tapped on it accidentally
         PostStatus status = PostStatus.fromPost(mPost);
         if (userCanPublishPosts() && (status == PostStatus.DRAFT || status == PostStatus.UNKNOWN)
