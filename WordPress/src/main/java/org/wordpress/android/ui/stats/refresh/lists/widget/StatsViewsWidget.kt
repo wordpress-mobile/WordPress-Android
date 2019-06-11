@@ -6,17 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
 
 const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
 const val COLOR_MODE_KEY = "color_mode_key"
 const val SITE_ID_KEY = "site_id_key"
 
-private const val MIN_WIDTH = 250
-
 class StatsViewsWidget : AppWidgetProvider() {
-    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -34,13 +30,10 @@ class StatsViewsWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         (context.applicationContext as WordPress).component().inject(this)
         for (appWidgetId in appWidgetIds) {
-            val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
-                    .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
             viewsWidgetUpdater.updateAppWidget(
                     context,
                     appWidgetManager,
-                    appWidgetId,
-                    minWidth > MIN_WIDTH
+                    appWidgetId
             )
         }
     }
@@ -48,8 +41,7 @@ class StatsViewsWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         (context.applicationContext as WordPress).component().inject(this)
         for (appWidgetId in appWidgetIds) {
-            appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
-            appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
+            viewsWidgetUpdater.delete(appWidgetId)
         }
     }
 
@@ -60,15 +52,11 @@ class StatsViewsWidget : AppWidgetProvider() {
         newOptions: Bundle?
     ) {
         if (context != null) {
-            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
-
-            val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
             (context.applicationContext as WordPress).component().inject(this)
             viewsWidgetUpdater.updateAppWidget(
                     context,
                     appWidgetManager,
-                    appWidgetId,
-                    minWidth > MIN_WIDTH
+                    appWidgetId
             )
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)

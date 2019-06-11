@@ -10,15 +10,21 @@ import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
@@ -28,13 +34,14 @@ import kotlin.random.Random
 
 private const val MIN_WIDTH = 250
 
-class ViewsWidgetUpdater
+class AllTimeWidgetUpdater
 @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
     private val imageManager: ImageManager,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val allTimeStore: AllTimeInsightsStore
 ) {
     fun updateAppWidget(
         context: Context,
@@ -43,15 +50,23 @@ class ViewsWidgetUpdater
     ) {
         val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
                 .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
-        val showChangeColumn = minWidth > MIN_WIDTH
+        val showColumns = minWidth > MIN_WIDTH
         val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val layout = when (colorModeId) {
-            DARK.ordinal -> R.layout.stats_views_widget_dark
-            LIGHT.ordinal -> R.layout.stats_views_widget_light
-            else -> R.layout.stats_views_widget_light
+        val layout = if (showColumns) {
+            when (colorModeId) {
+                DARK.ordinal -> R.layout.stats_all_time_widget_dark
+                LIGHT.ordinal -> R.layout.stats_all_time_widget_light
+                else -> R.layout.stats_all_time_widget_light
+            }
+        } else {
+            when (colorModeId) {
+                DARK.ordinal -> R.layout.stats_views_widget_dark
+                LIGHT.ordinal -> R.layout.stats_views_widget_light
+                else -> R.layout.stats_views_widget_light
+            }
         }
         val views = RemoteViews(context.packageName, layout)
         val siteIconUrl = siteModel?.iconUrl
@@ -62,7 +77,11 @@ class ViewsWidgetUpdater
             views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
         }
         if (networkAvailable && siteModel != null) {
-            showList(views, context, appWidgetId, showChangeColumn, colorModeId, siteId)
+            if (showColumns) {
+                showColumns(views, siteModel)
+            } else {
+                showList(views, context, appWidgetId, showColumns, colorModeId, siteId)
+            }
         } else {
             showError(views, appWidgetId, networkAvailable, resourceProvider, context)
         }
@@ -71,11 +90,36 @@ class ViewsWidgetUpdater
 
     fun updateAllWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        val viewsWidget = ComponentName(context, StatsViewsWidget::class.java)
+        val viewsWidget = ComponentName(context, StatsAllTimeWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
         for (appWidgetId in allWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
+    }
+
+    private fun showColumns(
+        views: RemoteViews,
+        site: SiteModel
+    ) {
+        loadCachedAllTimeInsights(site, views)
+        GlobalScope.launch {
+            runBlocking { allTimeStore.fetchAllTimeInsights(site) }
+            loadCachedAllTimeInsights(site, views)
+        }
+    }
+
+    private fun loadCachedAllTimeInsights(
+        site: SiteModel,
+        views: RemoteViews
+    ) {
+        val allTimeInsights = allTimeStore.getAllTimeInsights(site)
+        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: "0")
+        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: "0")
+        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: "0")
+        views.setTextViewText(
+                R.id.widget_best_views,
+                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: "0"
+        )
     }
 
     private fun showList(
@@ -117,7 +161,7 @@ class ViewsWidgetUpdater
                 R.id.widget_error_message,
                 resourceProvider.getString(errorMessage)
         )
-        val intentSync = Intent(context, StatsViewsWidget::class.java)
+        val intentSync = Intent(context, StatsAllTimeWidget::class.java)
         intentSync.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
 
         intentSync.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

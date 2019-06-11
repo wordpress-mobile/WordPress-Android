@@ -26,6 +26,7 @@ import javax.inject.Inject
 class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
+    @Inject lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
@@ -94,12 +95,11 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             event?.getContentIfNotHandled()?.let {
                 when (it.viewType) {
                     WEEK_VIEWS -> {
-                        viewsWidgetUpdater.updateAppWidget(
-                                context!!,
-                                appWidgetId = it.appWidgetId
-                        )
+                        viewsWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
-                    ALL_TIME_VIEWS -> TODO()
+                    ALL_TIME_VIEWS -> {
+                        allTimeWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
+                    }
                 }
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

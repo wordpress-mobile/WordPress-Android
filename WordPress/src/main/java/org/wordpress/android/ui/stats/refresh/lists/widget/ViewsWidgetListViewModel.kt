@@ -43,7 +43,7 @@ class ViewsWidgetListViewModel
         this.appWidgetId = appWidgetId
     }
 
-    fun onDataSetChanged(onError: (appWidgetId: Int, showChangeColumn: Boolean) -> Unit) {
+    fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit) {
         siteId?.apply {
             val site = siteStore.getSiteBySiteId(this)
             if (site != null) {
@@ -67,7 +67,7 @@ class ViewsWidgetListViewModel
                 }
             } else {
                 appWidgetId?.let { nonNullAppWidgetId ->
-                    onError(nonNullAppWidgetId, showChangeColumn)
+                    onError(nonNullAppWidgetId)
                 }
             }
         }
