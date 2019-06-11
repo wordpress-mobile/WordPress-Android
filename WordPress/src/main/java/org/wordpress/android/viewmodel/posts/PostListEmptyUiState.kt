@@ -76,7 +76,7 @@ fun createEmptyUiState(
             )
             isLoadingData -> {
                 // don't show intermediate screen when loading search results
-                if (postListType == SEARCH && isLoadingData) {
+                if (postListType == SEARCH) {
                     PostListEmptyUiState.DataShown
                 } else {
                     PostListEmptyUiState.Loading
