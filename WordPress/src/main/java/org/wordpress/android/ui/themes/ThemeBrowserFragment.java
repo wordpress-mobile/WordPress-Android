@@ -92,14 +92,14 @@ public class ThemeBrowserFragment extends Fragment
     private String mLastSearch;
 
     private HeaderGridView mGridView;
-    private RelativeLayout mNoThemesView;
-    private ActionableEmptyView mNoMatchesView;
+    private RelativeLayout mEmptyView;
+    private ActionableEmptyView mActionableEmptyView;
     private TextView mCurrentThemeTextView;
     private View mHeaderCustomizeButton;
 
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
-    private TextView mNoThemesText;
+    private TextView mEmptyTextView;
     private SiteModel mSite;
 
     private MenuItem mSearchMenuItem;
@@ -155,9 +155,9 @@ public class ThemeBrowserFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
-        mNoMatchesView = view.findViewById(R.id.no_matches_view);
-        mNoThemesText = view.findViewById(R.id.no_themes_text);
-        mNoThemesView = view.findViewById(R.id.no_themes_view);
+        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
+        mEmptyTextView = view.findViewById(R.id.text_empty);
+        mEmptyView = view.findViewById(R.id.empty_view);
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
@@ -307,7 +307,7 @@ public class ThemeBrowserFragment extends Fragment
                         }
                         if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
-                            mNoThemesText.setText(R.string.no_network_title);
+                            mEmptyTextView.setText(R.string.no_network_title);
                             return;
                         }
                         setRefreshing(true);
@@ -395,12 +395,12 @@ public class ThemeBrowserFragment extends Fragment
         boolean hasVisibleThemes = getAdapter().getCount() > 0;
         boolean hasNoMatchingThemes = hasThemes && !hasVisibleThemes;
 
-        mNoThemesView.setVisibility(!hasThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
+        mEmptyView.setVisibility(!hasThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
         if (!hasThemes && !NetworkUtils.isNetworkAvailable(getActivity())) {
-            mNoThemesText.setText(R.string.no_network_title);
+            mEmptyTextView.setText(R.string.no_network_title);
         }
         mGridView.setVisibility(hasVisibleThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
-        mNoMatchesView.setVisibility(hasNoMatchingThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
+        mActionableEmptyView.setVisibility(hasNoMatchingThemes ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
     }
 
     private List<ThemeModel> fetchThemes() {

@@ -8,7 +8,7 @@
                 android:layout_height="match_parent">
 
     <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/no_matches_view"
+        android:id="@+id/actionable_empty_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_theme_browser_top"
@@ -36,7 +36,7 @@
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <RelativeLayout
-        android:id="@+id/no_themes_view"
+        android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -53,7 +53,7 @@
             android:src="@drawable/drake_empty_results_400dp"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/no_themes_text"
+            android:id="@+id/text_empty"
             style="@style/WordPress.EmptyList.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
