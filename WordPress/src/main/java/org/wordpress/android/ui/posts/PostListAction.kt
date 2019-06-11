@@ -14,7 +14,7 @@ sealed class PostListAction {
     class RetryUpload(
         val post: PostModel,
         val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post),
-        val publish: Boolean = false,
+        val makePublishable: Boolean = false,
         val retry: Boolean = true
     ) : PostListAction()
 
@@ -40,7 +40,7 @@ fun handlePostListAction(activity: FragmentActivity, action: PostListAction) {
                     activity,
                     action.post,
                     action.trackAnalytics,
-                    action.publish,
+                    action.makePublishable,
                     action.retry
             )
             activity.startService(intent)

@@ -52,7 +52,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 public class UploadService extends Service {
-    private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
+    private static final String KEY_SHOULD_MAKE_PUBLISHABLE = "shouldPublish";
     private static final String KEY_SHOULD_RETRY = "shouldRetry";
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_UPLOAD_MEDIA_FROM_EDITOR = "mediaFromEditor";
@@ -237,7 +237,7 @@ public class UploadService extends Service {
 
             // if the user tapped on the PUBLISH quick action, make this Post publishable and track
             // analytics before starting the upload process.
-            if (intent.getBooleanExtra(KEY_SHOULD_PUBLISH, false)) {
+            if (intent.getBooleanExtra(KEY_SHOULD_MAKE_PUBLISHABLE, false)) {
                 makePostPublishable(post);
                 PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
             }
@@ -304,11 +304,11 @@ public class UploadService extends Service {
 
 
     public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
-                                                    boolean publish, boolean isRetry) {
+                                                    boolean makePublishable, boolean isRetry) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
-        intent.putExtra(KEY_SHOULD_PUBLISH, publish);
+        intent.putExtra(KEY_SHOULD_MAKE_PUBLISHABLE, makePublishable);
         intent.putExtra(KEY_SHOULD_RETRY, isRetry);
         return intent;
     }
