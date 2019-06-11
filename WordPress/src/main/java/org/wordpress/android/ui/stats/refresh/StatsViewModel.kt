@@ -78,14 +78,14 @@ class StatsViewModel
 
     val selectedSection = statsSectionManager.liveSelectedSection
 
-    fun start(intent: Intent) {
+    fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
         val launchedFrom = intent.getSerializableExtra(OldStatsActivity.ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
-        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod)
+        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
@@ -103,13 +103,14 @@ class StatsViewModel
         localSiteId: Int,
         launchedFromWidget: Boolean,
         initialSection: StatsSection?,
-        initialSelectedPeriod: String?
+        initialSelectedPeriod: String?,
+        restart: Boolean
     ) {
-        if (launchedFromWidget) {
+        if (restart) {
             selectedDateProvider.clear()
         }
         // Check if VM is not already initialized
-        if (!isInitialized || launchedFromWidget) {
+        if (!isInitialized || restart) {
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
@@ -126,7 +127,7 @@ class StatsViewModel
             }
         }
         val siteChanged = statsSiteProvider.start(localSiteId)
-        if (launchedFromWidget && siteChanged) {
+        if (restart && siteChanged) {
             launch {
                 listUseCases.forEach { useCase ->
                     useCase.value.onCleared()

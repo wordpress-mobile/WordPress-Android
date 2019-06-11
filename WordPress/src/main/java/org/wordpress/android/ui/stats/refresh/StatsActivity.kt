@@ -50,7 +50,7 @@ class StatsActivity : AppCompatActivity() {
             val siteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, -1)
             if (siteId > -1) {
                 viewModel = ViewModelProviders.of(this, viewModelFactory).get(StatsViewModel::class.java)
-                viewModel.start(intent)
+                viewModel.start(intent, restart = true)
             }
         }
         super.onNewIntent(intent)
