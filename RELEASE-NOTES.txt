@@ -12,6 +12,7 @@
 * Fixed issue where text appeared behind list of themes on the theme screen
 * Domain Registration functionality for Business plan customers on a site without a custom domain during plugin installation
 
+* Fix issue where post with "Publish" status got automatically published
 12.6
 -----
 * Add Insights management introductory card
