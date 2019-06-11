@@ -73,7 +73,9 @@ class PostListViewModel @Inject constructor(
         listStore.getList(listDescriptor, dataSource, lifecycle)
     }
 
-    val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
+    val isFetchingFirstPage: LiveData<Boolean> by lazy {
+        pagedListWrapper.isFetchingFirstPage
+    }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
     val pagedListData: LiveData<PagedPostList> by lazy {
         val result = MediatorLiveData<PagedPostList>()

@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
@@ -146,7 +147,7 @@ class PostListFragment : Fragment() {
     private fun setViewModel() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-       val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(postListViewModelConnector)
@@ -163,7 +164,9 @@ class PostListFragment : Fragment() {
             })
 
             viewModel.isFetchingFirstPage.observe(this, Observer {
-                swipeRefreshLayout?.isRefreshing = it == true
+                if (postListType != SEARCH) {
+                    swipeRefreshLayout?.isRefreshing = it == true
+                }
             })
             viewModel.isLoadingMore.observe(this, Observer {
                 progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE

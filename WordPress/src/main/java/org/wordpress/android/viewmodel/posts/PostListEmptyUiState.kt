@@ -68,12 +68,20 @@ fun createEmptyUiState(
 ): PostListEmptyUiState {
     return if (isListEmpty) {
         when {
-            error != null -> createErrorListUiState(
+            // no special error handling for search lists
+            error != null && postListType != SEARCH -> createErrorListUiState(
                     isNetworkAvailable = isNetworkAvailable,
                     error = error,
                     fetchFirstPage = fetchFirstPage
             )
-            isLoadingData -> PostListEmptyUiState.Loading
+            isLoadingData -> {
+                // don't show intermediate screen when loading search results
+                if (postListType == SEARCH && isLoadingData) {
+                    PostListEmptyUiState.DataShown
+                } else {
+                    PostListEmptyUiState.Loading
+                }
+            }
             else -> createEmptyListUiState(
                     postListType = postListType,
                     newPost = newPost,
