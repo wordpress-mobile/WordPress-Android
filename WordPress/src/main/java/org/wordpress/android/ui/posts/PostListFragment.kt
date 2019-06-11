@@ -137,7 +137,8 @@ class PostListFragment : Fragment() {
                 searchHandler.removeCallbacksAndMessages(null)
                 searchHandler.postDelayed({
                     viewModelStore.clear() // clear ViewModel's attached to this fragment
-                    setViewModel()
+
+                    setViewModel() // restart ViewModel
                 }, SEARCH_DELAY_MS)
             })
         } else {
@@ -149,6 +150,7 @@ class PostListFragment : Fragment() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(postListViewModelConnector)
 
@@ -156,6 +158,8 @@ class PostListFragment : Fragment() {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
 
+        // since most of the LiveData in PostListViewModel is lazily initialized, we don't wan't to trigger if for
+        // initial empty state of search list
         if (!postListViewModelConnector.isEmptySearch()) {
             viewModel.pagedListData.observe(this, Observer {
                 it?.let { pagedListData -> updatePagedListData(pagedListData) }

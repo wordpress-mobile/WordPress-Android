@@ -94,6 +94,7 @@ class PostListViewModel @Inject constructor(
         val update = {
             createListSpecificEmptyUiState()
         }
+        // we don't wan't to init pagedListWrapper for initial empty search list
         if (!connector.isEmptySearch()) {
             result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
             result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
