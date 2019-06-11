@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import android.os.Handler
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,19 +35,21 @@ import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
+import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
-private const val EXTRA_IS_SEACH = "is_search"
 private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
+private const val SEARCH_DELAY_MS = 500L
 
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PostListViewModel
+    private lateinit var mainViewModel: PostListMainViewModel
 
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
 
@@ -59,6 +60,9 @@ class PostListFragment : Fragment() {
 
     private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
     private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
+
+    private lateinit var postListViewModelConnector: PostListViewModelConnector
+    private lateinit var postListType: PostListType
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
@@ -104,14 +108,12 @@ class PostListFragment : Fragment() {
         }
     }
 
-    lateinit var mainViewModel: PostListMainViewModel
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
 
         mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
-
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
                 when (layoutType) {
@@ -130,23 +132,13 @@ class PostListFragment : Fragment() {
             }
         })
 
-        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
-
         if (postListType == PostListType.SEARCH) {
             mainViewModel.searchQuery.observe(this, Observer {
                 searchHandler.removeCallbacksAndMessages(null)
-                if (TextUtils.isEmpty(it)) {
-                    actionableEmptyView?.let { emptyView ->
-                        emptyView.visibility = View.VISIBLE
-                        uiHelpers.setTextOrHide(emptyView.title, R.string.post_list_search)
-                        uiHelpers.setImageOrHide(emptyView.image, null)
-                        setupButtonOrHide(emptyView.button, null, null)
-                    }
-                } else {
-                    searchHandler.postDelayed({
-                        setViewModel()
-                    }, 500)
-                }
+                searchHandler.postDelayed({
+                    viewModelStore.clear() // clear ViewModel's attached to this fragment
+                    setViewModel()
+                }, SEARCH_DELAY_MS)
             })
         } else {
             setViewModel()
@@ -156,32 +148,31 @@ class PostListFragment : Fragment() {
     private fun setViewModel() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
+        postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
+        viewModel.start(postListViewModelConnector)
 
-        viewModelStore.clear()
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PostListViewModel>(PostListViewModel::class.java)
-
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
-
-        viewModel.pagedListData.observe(this, Observer {
-            it?.let { pagedListData -> updatePagedListData(pagedListData) }
-        })
         viewModel.emptyViewState.observe(this, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
-        viewModel.isFetchingFirstPage.observe(this, Observer {
-            swipeRefreshLayout?.isRefreshing = it == true
-        })
-        viewModel.isLoadingMore.observe(this, Observer {
-            progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
-        })
-        viewModel.scrollToPosition.observe(this, Observer {
-            it?.let { index ->
-                recyclerView?.scrollToPosition(index)
-            }
-        })
+
+        if (!postListViewModelConnector.isEmptySearch()) {
+            viewModel.pagedListData.observe(this, Observer {
+                it?.let { pagedListData -> updatePagedListData(pagedListData) }
+            })
+
+            viewModel.isFetchingFirstPage.observe(this, Observer {
+                swipeRefreshLayout?.isRefreshing = it == true
+            })
+            viewModel.isLoadingMore.observe(this, Observer {
+                progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
+            })
+            viewModel.scrollToPosition.observe(this, Observer {
+                it?.let { index ->
+                    recyclerView?.scrollToPosition(index)
+                }
+            })
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

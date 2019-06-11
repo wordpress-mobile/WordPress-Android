@@ -1,12 +1,12 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.annotation.SuppressLint
-import android.text.TextUtils
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
-import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
@@ -87,24 +86,22 @@ class PostListViewModel @Inject constructor(
         }
         result
     }
+    val emptyViewState: LiveData<PostListEmptyUiState>
+        get() = _emptyViewState
 
-    val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
+    private val _emptyViewState: MutableLiveData<PostListEmptyUiState> by lazy {
         val result = MediatorLiveData<PostListEmptyUiState>()
         val update = {
-            createEmptyUiState(
-                    postListType = connector.postListType,
-                    isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                    isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
-                            pagedListWrapper.data.value == null,
-                    isListEmpty = pagedListWrapper.isEmpty.value ?: true,
-                    error = pagedListWrapper.listError.value,
-                    fetchFirstPage = this::fetchFirstPage,
-                    newPost = connector.postActionHandler::newPost
-            )
+            createListSpecificEmptyUiState()
         }
-        result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
-        result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
-        result.addSource(pagedListWrapper.listError) { result.value = update() }
+        if (!connector.isEmptySearch()) {
+            result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
+            result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
+            result.addSource(pagedListWrapper.listError) { result.value = update() }
+        } else {
+            result.value = update()
+        }
+
         result
     }
 
@@ -116,6 +113,33 @@ class PostListViewModel @Inject constructor(
             retryOnConnectionAvailableAfterRefreshError()
         })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
+    }
+
+    private fun createListSpecificEmptyUiState(): PostListEmptyUiState {
+        if (!connector.isEmptySearch()) {
+            return createEmptyUiState(
+                    postListType = connector.postListType,
+                    isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+                    isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
+                            pagedListWrapper.data.value == null,
+                    isListEmpty = pagedListWrapper.isEmpty.value ?: true,
+                    isSearchPromptRequired = false,
+                    error = pagedListWrapper.listError.value,
+                    fetchFirstPage = this::fetchFirstPage,
+                    newPost = connector.postActionHandler::newPost
+            )
+        } else {
+            return createEmptyUiState(
+                    postListType = connector.postListType,
+                    isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+                    isLoadingData = false,
+                    isListEmpty = true,
+                    isSearchPromptRequired = true,
+                    error = null,
+                    fetchFirstPage = {},
+                    newPost = {}
+            )
+        }
     }
 
     fun start(postListViewModelConnector: PostListViewModelConnector) {
@@ -141,15 +165,12 @@ class PostListViewModel @Inject constructor(
         }
 
         isStarted = true
-        if (TextUtils.isEmpty(connector.searchQuery) && connector.postListType == SEARCH) {
-            return
-        }
+
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
         fetchFirstPage()
-        emptyViewState.hasObservers()
     }
 
-    override fun onCleared() {
+    public override fun onCleared() {
         lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
         super.onCleared()
     }

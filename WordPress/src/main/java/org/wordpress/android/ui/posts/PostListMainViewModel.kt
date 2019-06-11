@@ -275,7 +275,7 @@ class PostListMainViewModel @Inject constructor(
         _viewState.value = _viewState.value?.copy(isFabVisible = true)
     }
 
-    fun onSearchQueryInput(searchQuery: String) {
+    fun onSearch(searchQuery: String) {
         _searchQuery.value = searchQuery
     }
 
