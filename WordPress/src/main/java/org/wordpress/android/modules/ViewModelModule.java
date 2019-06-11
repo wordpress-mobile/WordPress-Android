@@ -26,6 +26,7 @@ import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
@@ -36,6 +37,7 @@ import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -197,6 +199,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DomainSuggestionsViewModel.class)
     abstract ViewModel domainSuggestionsViewModel(DomainSuggestionsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WPWebViewViewModel.class)
+    abstract ViewModel wpWebViewViewModel(WPWebViewViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainRegistrationDetailsViewModel.class)
+    abstract ViewModel domainRegistrationDetailsViewModel(DomainRegistrationDetailsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

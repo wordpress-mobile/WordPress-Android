@@ -40,8 +40,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/tos_explanation"
                     style="@style/DomainRegistrationFormSubTitle"
-                    android:paddingTop="4dp"
-                    android:text="@string/domain_registration_privacy_protection_tos"/>
+                    tools:text="@string/domain_registration_privacy_protection_tos"/>
 
                 <RadioGroup
                     android:id="@+id/domain_privacy_options_radiogroup"
@@ -49,8 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
                     android:checkedButton="@+id/domain_privacy_on_radio_button"
-                    tools:ignore="UnusedAttribute"
-                    tools:visibility="visible">
+                    tools:ignore="UnusedAttribute">
 
                     <RadioButton
                         android:id="@+id/domain_privacy_on_radio_button"
@@ -81,6 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
+                android:animateLayoutChanges="true"
                 android:background="@color/background"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/margin_extra_large"
@@ -232,6 +231,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
+                    android:id="@+id/state_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -257,7 +257,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignTop="@+id/state_input_container"
                         android:layout_centerInParent="true"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         />
                 </RelativeLayout>
 
@@ -312,6 +312,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_default"
+        android:visibility="gone"
         tools:visibility="gone">
 
         <ProgressBar

@@ -45,7 +45,19 @@
             android:id="@+id/sitePreviewWebView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="insideInset"/>
+            android:scrollbarStyle="insideInset"
+            tools:visibility="gone"/>
+
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/sitePreviewWebError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_default"
+            android:visibility="gone"
+            app:aevImage="@drawable/img_illustration_cloud_off_152dp"
+            app:aevTitle="@string/error_browser_no_network"
+            tools:visibility="visible">
+        </org.wordpress.android.ui.ActionableEmptyView>
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/sitePreviewWebViewShimmerLayout"

@@ -5,6 +5,8 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
@@ -48,6 +50,12 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract StatsDetailFragment contributeStatsDetailFragment();
+
+    @ContributesAndroidInjector
+    abstract CountryPickerDialogFragment contributeCountryPickerDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract StatePickerDialogFragment contributeCStatePickerDialogFragment();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(SiteCreationStepsProvider stepsProvider) {
