@@ -63,7 +63,7 @@ class StatsViewModelTest : BaseUnitTest() {
                 newsCardHandler
         )
 
-        viewModel.start(1, false, null, null)
+        viewModel.start(1, false, null, null, false)
     }
 
     @Test
