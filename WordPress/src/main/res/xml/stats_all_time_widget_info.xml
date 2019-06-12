@@ -5,7 +5,7 @@
     android:initialKeyguardLayout="@layout/stats_widget_all_time_blocks_light"
     android:initialLayout="@layout/stats_widget_all_time_blocks_light"
     android:minHeight="110dp"
-    android:minResizeWidth="110dp"
+    android:minResizeWidth="150dp"
     android:minWidth="250dp"
     android:previewImage="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
     android:resizeMode="horizontal"
