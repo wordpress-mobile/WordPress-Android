@@ -750,6 +750,14 @@ public class UploadService extends Service {
             aztecRegisterFailedMediaForThisPost(post);
         }
 
+        // On retry, if the post is a local draft and the status is published, this means already
+        // tried to publish this post and something failed. "Retry" being generic term, we want to force
+        // the DRAFT status to make sure the user doesn't publish unexpectedly.
+        PostStatus status = PostStatus.fromPost(post);
+        if (post.isLocalDraft() && status == PostStatus.PUBLISHED) {
+            post.setStatus(PostStatus.DRAFT.toString());
+        }
+
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
         if (!failedMedia.isEmpty()) {
