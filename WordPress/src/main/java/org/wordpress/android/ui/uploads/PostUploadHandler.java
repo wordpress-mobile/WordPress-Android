@@ -574,6 +574,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = mUiHelpers.getTextOfUiString(context,
                     UploadUtils.getErrorMessageResIdFromPostError(event.post.isPage(), event.error));
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
+            mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
+                    mMediaStore.getMediaForPost(event.post));
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
             sFirstPublishPosts.remove(event.post.getId());
@@ -588,10 +590,19 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
                 }
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
-                                                PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
+                        PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
-                                                    mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
-                                                    sCurrentUploadingPostAnalyticsProperties);
+                        mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
+                        sCurrentUploadingPostAnalyticsProperties);
+            }
+            synchronized (sQueuedPostsList) {
+                for (PostModel post : sQueuedPostsList) {
+                    if (post.getId() == event.post.getId()) {
+                        // Check if a new version of the post we've just uploaded is in the queue and update its state
+                        post.setRemotePostId(event.post.getRemotePostId());
+                        post.setIsLocalDraft(false);
+                    }
+                }
             }
         }
 
