@@ -63,7 +63,7 @@ class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteVi
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
-        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
+        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.INSIGHTS)
         intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
         rv.setOnClickFillInIntent(R.id.container, intent)
         return rv

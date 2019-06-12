@@ -75,12 +75,13 @@ class AllTimeWidgetUpdater
         imageManager.load(awt, context, ICON, siteIconUrl ?: "", FIT_START)
         siteModel?.let {
             views.setOnClickPendingIntent(R.id.widget_title, getPendingSelfIntent(context, siteModel.id))
-            views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
         }
         if (networkAvailable && siteModel != null) {
             if (showColumns) {
+                views.setOnClickPendingIntent(R.id.widget_content, getPendingSelfIntent(context, siteModel.id))
                 showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
+                views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
                 showList(appWidgetManager, views, context, appWidgetId, showColumns, colorModeId, siteId)
             }
         } else {
@@ -190,7 +191,7 @@ class AllTimeWidgetUpdater
         val intent = Intent(context, StatsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
+        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.INSIGHTS)
         intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
         return PendingIntent.getActivity(
                 context,
