@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
     @Inject lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
+    @Inject lateinit var todayWidgetUpdater: TodayWidgetUpdater
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
@@ -42,6 +44,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                 -1 -> throw IllegalArgumentException("The view type needs to be specified on the fragment")
                 0 -> WEEK_VIEWS
                 1 -> ALL_TIME_VIEWS
+                2 -> TODAY_VIEWS
                 else -> {
                     throw IllegalArgumentException("The view type with the value $views needs to be specified")
                 }
@@ -100,6 +103,9 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                     ALL_TIME_VIEWS -> {
                         allTimeWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
+                    TODAY_VIEWS -> {
+                        todayWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
+                    }
                 }
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
@@ -111,5 +117,5 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         viewModel.start(appWidgetId, viewType)
     }
 
-    enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS }
+    enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
 }

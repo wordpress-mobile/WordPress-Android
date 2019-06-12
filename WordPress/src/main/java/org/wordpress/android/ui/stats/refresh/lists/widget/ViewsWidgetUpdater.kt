@@ -50,11 +50,12 @@ class ViewsWidgetUpdater
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val layout = when (colorModeId) {
-            DARK.ordinal -> R.layout.stats_widget_views_dark
-            LIGHT.ordinal -> R.layout.stats_widget_views_light
-            else -> R.layout.stats_widget_views_light
+            DARK.ordinal -> R.layout.stats_widget_list_dark
+            LIGHT.ordinal -> R.layout.stats_widget_list_light
+            else -> R.layout.stats_widget_list_light
         }
         val views = RemoteViews(context.packageName, layout)
+        views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_widget_views_title))
         val siteIconUrl = siteModel?.iconUrl
         val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
         imageManager.load(awt, context, ICON, siteIconUrl ?: "", FIT_START)

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/stats_widget_list_item_height"
-    android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"
+    android:background="@drawable/bg_rectangle_gray_0_top_radius_4dp"
     android:orientation="horizontal"
-    tools:showIn="@layout/stats_widget_all_time_blocks_dark">
+    tools:showIn="@layout/stats_widget_blocks_light">
 
     <ImageView
         android:id="@+id/widget_site_icon"
@@ -19,8 +19,8 @@
 
     <TextView
         android:id="@+id/widget_title"
-        style="@style/StatsWidgetTitle.Dark"
+        style="@style/StatsWidgetTitle.Light"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/stats_widget_list_item_height"
-        android:text="@string/stats_widget_all_time_title"/>
+        android:text="@string/loading"/>
 </LinearLayout>

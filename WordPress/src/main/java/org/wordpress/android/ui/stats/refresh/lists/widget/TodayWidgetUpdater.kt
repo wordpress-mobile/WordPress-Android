@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
@@ -12,32 +10,27 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.OldStatsActivity
-import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import kotlin.random.Random
 
 private const val MIN_WIDTH = 250
 
-class AllTimeWidgetUpdater
+class TodayWidgetUpdater
 @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
     private val imageManager: ImageManager,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val allTimeStore: AllTimeInsightsStore,
+    private val todayInsightsStore: TodayInsightsStore,
     private val widgetUtils: WidgetUtils
 ) : WidgetUpdater {
     override fun updateAppWidget(
@@ -54,16 +47,19 @@ class AllTimeWidgetUpdater
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val layout = widgetUtils.getLayout(showColumns, colorModeId)
         val views = RemoteViews(context.packageName, layout)
-        views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
+        views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
         val siteIconUrl = siteModel?.iconUrl
         val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
         imageManager.load(awt, context, ICON, siteIconUrl ?: "", FIT_START)
         siteModel?.let {
-            views.setOnClickPendingIntent(R.id.widget_title, getPendingSelfIntent(context, siteModel.id))
+            views.setOnClickPendingIntent(R.id.widget_title, widgetUtils.getPendingSelfIntent(context, siteModel.id))
         }
         if (networkAvailable && siteModel != null) {
             if (showColumns) {
-                views.setOnClickPendingIntent(R.id.widget_content, getPendingSelfIntent(context, siteModel.id))
+                views.setOnClickPendingIntent(
+                        R.id.widget_content,
+                        widgetUtils.getPendingSelfIntent(context, siteModel.id)
+                )
                 showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
                 widgetUtils.showList(appWidgetManager, views, context, appWidgetId, colorModeId, siteId)
@@ -91,7 +87,7 @@ class AllTimeWidgetUpdater
         loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         GlobalScope.launch {
             runBlocking {
-                allTimeStore.fetchAllTimeInsights(site)
+                todayInsightsStore.fetchTodayInsights(site)
             }
             loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         }
@@ -103,33 +99,16 @@ class AllTimeWidgetUpdater
         site: SiteModel,
         views: RemoteViews
     ) {
-        val allTimeInsights = allTimeStore.getAllTimeInsights(site)
+        val todayInsights = todayInsightsStore.getTodayInsights(site)
         views.setTextViewText(R.id.first_block_title, resourceProvider.getString(R.string.stats_views))
-        views.setTextViewText(R.id.first_block_value, allTimeInsights?.views?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.first_block_value, todayInsights?.views?.toFormattedString() ?: "-")
         views.setTextViewText(R.id.second_block_title, resourceProvider.getString(R.string.stats_visitors))
-        views.setTextViewText(R.id.second_block_value, allTimeInsights?.visitors?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.second_block_value, todayInsights?.visitors?.toFormattedString() ?: "-")
         views.setTextViewText(R.id.third_block_title, resourceProvider.getString(R.string.posts))
-        views.setTextViewText(R.id.third_block_value, allTimeInsights?.posts?.toFormattedString() ?: "-")
-        views.setTextViewText(R.id.fourth_block_title, resourceProvider.getString(R.string.stats_insights_best_ever))
-        views.setTextViewText(
-                R.id.fourth_block_value,
-                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: "-"
-        )
+        views.setTextViewText(R.id.third_block_value, todayInsights?.posts?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.fourth_block_title, resourceProvider.getString(R.string.stats_comments))
+        views.setTextViewText(R.id.fourth_block_value, todayInsights?.comments?.toFormattedString() ?: "-")
         appWidgetManager.updateAppWidget(appWidgetId, views)
-    }
-
-    private fun getPendingSelfIntent(context: Context, localSiteId: Int): PendingIntent {
-        val intent = Intent(context, StatsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.INSIGHTS)
-        intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
-        return PendingIntent.getActivity(
-                context,
-                Random(localSiteId).nextInt(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        )
     }
 
     override fun delete(appWidgetId: Int) {

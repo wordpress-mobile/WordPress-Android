@@ -2,8 +2,8 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureActivity"
-    android:initialKeyguardLayout="@layout/stats_widget_views_light"
-    android:initialLayout="@layout/stats_widget_views_light"
+    android:initialKeyguardLayout="@layout/stats_widget_list_light"
+    android:initialLayout="@layout/stats_widget_list_light"
     android:minHeight="80dp"
     android:minResizeHeight="50dp"
     android:minResizeWidth="150dp"
