@@ -496,7 +496,8 @@ public class AccountStore extends Store {
 
     public enum AccountErrorType {
         ACCOUNT_FETCH_ERROR,
-        SETTINGS_FETCH_ERROR,
+        SETTINGS_FETCH_GENERIC_ERROR,
+        SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR,
         SETTINGS_POST_ERROR,
         SEND_VERIFICATION_EMAIL_ERROR,
         GENERIC_ERROR
@@ -946,7 +947,7 @@ public class AccountStore extends Store {
 
     private void handleFetchSettingsCompleted(AccountRestPayload payload) {
         if (!hasAccessToken()) {
-            emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
+            emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR);
             return;
         }
         if (!checkError(payload, "Error fetching Account Settings via REST API (/me/settings)")) {
@@ -955,10 +956,16 @@ public class AccountStore extends Store {
         } else {
             if (payload.error != null) {
                 OnAccountChanged accountChanged = new OnAccountChanged();
-                accountChanged.error = new AccountError(AccountErrorType.SETTINGS_FETCH_ERROR, payload.error.message);
+                AccountErrorType errorType;
+                if (payload.error.apiError.equals("reauthorization_required")) {
+                    errorType = AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR;
+                } else {
+                    errorType = AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR;
+                }
+                accountChanged.error = new AccountError(errorType, payload.error.message);
                 emitChange(accountChanged);
             } else {
-                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
+                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR);
             }
         }
     }
