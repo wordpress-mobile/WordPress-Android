@@ -131,7 +131,7 @@ class PostListFragment : Fragment() {
             }
         })
 
-        if (postListType == PostListType.SEARCH) {
+        if (postListType == SEARCH) {
             mainViewModel.searchQuery.observe(this, Observer {
                 searchHandler.removeCallbacksAndMessages(null)
                 searchHandler.postDelayed({
@@ -157,26 +157,30 @@ class PostListFragment : Fragment() {
         })
 
         // since most of the LiveData in PostListViewModel is lazily initialized, we don't wan't to trigger if for
-        // initial empty state of search list
-        if (!postListViewModelConnector.isEmptySearch()) {
-            viewModel.pagedListData.observe(this, Observer {
-                it?.let { pagedListData -> updatePagedListData(pagedListData) }
-            })
-
-            viewModel.isFetchingFirstPage.observe(this, Observer {
-                if (postListType != SEARCH) {
-                    swipeRefreshLayout?.isRefreshing = it == true
-                }
-            })
-            viewModel.isLoadingMore.observe(this, Observer {
-                progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
-            })
-            viewModel.scrollToPosition.observe(this, Observer {
-                it?.let { index ->
-                    recyclerView?.scrollToPosition(index)
-                }
-            })
+        // initial empty state of search list. We have to clear the list manually, to avoid results from previous
+        // search appearing for a brief moment in some instances
+        if (postListViewModelConnector.isEmptySearch()) {
+            postListAdapter.submitList(null)
+            return
         }
+
+        viewModel.pagedListData.observe(this, Observer {
+            it?.let { pagedListData -> updatePagedListData(pagedListData) }
+        })
+
+        viewModel.isFetchingFirstPage.observe(this, Observer {
+            if (postListType != SEARCH) {
+                swipeRefreshLayout?.isRefreshing = it == true
+            }
+        })
+        viewModel.isLoadingMore.observe(this, Observer {
+            progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
+        })
+        viewModel.scrollToPosition.observe(this, Observer {
+            it?.let { index ->
+                recyclerView?.scrollToPosition(index)
+            }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
