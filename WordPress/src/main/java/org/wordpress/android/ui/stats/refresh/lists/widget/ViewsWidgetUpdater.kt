@@ -17,6 +17,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -35,10 +36,10 @@ class ViewsWidgetUpdater
     private val imageManager: ImageManager,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider
-) {
-    fun updateAppWidget(
+) : WidgetUpdater {
+    override fun updateAppWidget(
         context: Context,
-        appWidgetManager: AppWidgetManager = AppWidgetManager.getInstance(context),
+        appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
         val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
@@ -49,9 +50,9 @@ class ViewsWidgetUpdater
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val layout = when (colorModeId) {
-            DARK.ordinal -> R.layout.stats_views_widget_dark
-            LIGHT.ordinal -> R.layout.stats_views_widget_light
-            else -> R.layout.stats_views_widget_light
+            DARK.ordinal -> R.layout.stats_widget_views_dark
+            LIGHT.ordinal -> R.layout.stats_widget_views_light
+            else -> R.layout.stats_widget_views_light
         }
         val views = RemoteViews(context.packageName, layout)
         val siteIconUrl = siteModel?.iconUrl
@@ -69,7 +70,7 @@ class ViewsWidgetUpdater
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    fun updateAllWidgets(context: Context) {
+    override fun updateAllWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val viewsWidget = ComponentName(context, StatsViewsWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
@@ -92,6 +93,7 @@ class ViewsWidgetUpdater
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
         listIntent.putExtra(COLOR_MODE_KEY, colorModeId)
+        listIntent.putExtra(VIEW_TYPE_KEY, ViewType.WEEK_VIEWS.ordinal)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.data = Uri.parse(
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
@@ -150,7 +152,7 @@ class ViewsWidgetUpdater
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    fun delete(appWidgetId: Int) {
+    override fun delete(appWidgetId: Int) {
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }
