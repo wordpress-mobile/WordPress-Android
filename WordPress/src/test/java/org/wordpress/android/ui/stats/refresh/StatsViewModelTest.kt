@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -17,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
@@ -42,10 +45,13 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var newsCardHandler: NewsCardHandler
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: StatsViewModel
+    private val _liveSelectedSection = MutableLiveData<StatsSection>()
+    private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(statsSectionManager.liveSelectedSection).thenReturn(liveSelectedSection)
         viewModel = StatsViewModel(
                 mapOf(DAYS to baseListUseCase),
                 Dispatchers.Unconfined,
@@ -56,9 +62,8 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSiteProvider,
                 newsCardHandler
         )
-        whenever(statsSectionManager.getSelectedSection()).thenReturn(INSIGHTS)
 
-        viewModel.start(1, false, null, null)
+        viewModel.start(1, false, null, null, false)
     }
 
     @Test
@@ -99,5 +104,22 @@ class StatsViewModelTest : BaseUnitTest() {
 
         verify(statsSectionManager).setSelectedSection(YEARS)
         verify(analyticsTracker).trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+    }
+
+    @Test
+    fun `shows shadow on the insights tab`() {
+        var toolbarHasShadow: Boolean? = null
+
+        viewModel.toolbarHasShadow.observeForever { toolbarHasShadow = it }
+
+        assertThat(toolbarHasShadow).isNull()
+
+        _liveSelectedSection.value = INSIGHTS
+
+        assertThat(toolbarHasShadow).isTrue()
+
+        _liveSelectedSection.value = DAYS
+
+        assertThat(toolbarHasShadow).isFalse()
     }
 }

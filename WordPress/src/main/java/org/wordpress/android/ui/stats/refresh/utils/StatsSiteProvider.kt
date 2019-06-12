@@ -31,7 +31,7 @@ class StatsSiteProvider
         dispatcher.register(this)
     }
 
-    fun start(localSiteId: Int) {
+    fun start(localSiteId: Int): Boolean {
         if (localSiteId != 0) {
             val siteChanged = localSiteId != siteModel.id
             siteStore.getSiteByLocalId(localSiteId)?.let { site ->
@@ -40,7 +40,9 @@ class StatsSiteProvider
             if (siteChanged) {
                 mutableSiteChanged.postValue(Event(localSiteId))
             }
+            return siteChanged
         }
+        return false
     }
 
     fun reset() {

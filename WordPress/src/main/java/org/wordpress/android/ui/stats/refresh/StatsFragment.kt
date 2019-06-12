@@ -22,7 +22,9 @@ import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
@@ -38,6 +40,8 @@ class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    private val selectedTabListener: SelectedTabListener
+        get() = SelectedTabListener(viewModel)
 
     private var restorePreviousSearch = false
 
@@ -64,18 +68,7 @@ class StatsFragment : DaggerFragment() {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
         statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-        statsPager.setCurrentItem(viewModel.getSelectedSection().ordinal, false)
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabReselected(tab: Tab?) {
-            }
-
-            override fun onTabUnselected(tab: Tab?) {
-            }
-
-            override fun onTabSelected(tab: Tab) {
-                viewModel.onSectionSelected(statsSections[tab.position])
-            }
-        })
+        tabLayout.addOnTabSelectedListener(selectedTabListener)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
@@ -147,6 +140,27 @@ class StatsFragment : DaggerFragment() {
                 app_bar_layout.setExpanded(!hideToolbar, true)
             }
         })
+
+        viewModel.selectedSection.observe(this, Observer { selectedSection ->
+            selectedSection?.let {
+                val position = when (selectedSection) {
+                    INSIGHTS -> 0
+                    DAYS -> 1
+                    WEEKS -> 2
+                    MONTHS -> 3
+                    YEARS -> 4
+                    DETAIL -> null
+                    ANNUAL_STATS -> null
+                }
+                position?.let {
+                    if (statsPager.currentItem != position) {
+                        tabLayout.removeOnTabSelectedListener(selectedTabListener)
+                        statsPager.setCurrentItem(position, false)
+                        tabLayout.addOnTabSelectedListener(selectedTabListener)
+                    }
+                }
+            }
+        })
     }
 }
 
@@ -159,5 +173,17 @@ class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : Fragmen
 
     override fun getPageTitle(position: Int): CharSequence? {
         return context.getString(statsSections[position].titleRes)
+    }
+}
+
+private class SelectedTabListener(val viewModel: StatsViewModel) : OnTabSelectedListener {
+    override fun onTabReselected(tab: Tab?) {
+    }
+
+    override fun onTabUnselected(tab: Tab?) {
+    }
+
+    override fun onTabSelected(tab: Tab) {
+        viewModel.onSectionSelected(statsSections[tab.position])
     }
 }

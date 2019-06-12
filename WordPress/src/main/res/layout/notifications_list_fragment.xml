@@ -102,8 +102,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:layout_width="@dimen/jetpack_terms_and_conditions_width"
-                    android:text="@string/stats_jetpack_connection_terms_and_conditions"
                     android:textAlignment="center"
+                    tools:text="@string/jetpack_connection_terms_and_conditions"
                     style="@style/JetpackTermsAndConditionsButton">
                 </TextView>
 

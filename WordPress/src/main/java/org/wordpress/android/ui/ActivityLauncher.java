@@ -278,25 +278,23 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, null);
-    }
-
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
                                                   int localSiteId) {
         StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
-    public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        StatsViewAllActivity.startForInsights(context, statsType);
+    public static void viewAllInsightsStats(Context context, StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
+                                            int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
     }
 
-    public static void viewInsightsManagement(Context context) {
+    public static void viewInsightsManagement(Context context, int localSiteId) {
         Intent intent = new Intent(context, InsightsManagementActivity.class);
+        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
         context.startActivity(intent);
     }
 

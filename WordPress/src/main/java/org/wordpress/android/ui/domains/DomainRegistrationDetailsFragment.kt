@@ -5,12 +5,10 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
-import android.text.SpannableString
+import android.text.Html
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -152,36 +150,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     // make link to ToS clickable
     private fun setupTosLink() {
-        val spannableTosString = SpannableString(tos_explanation.text)
-        val tosUnderlineSpan = spannableTosString.getSpans(
-                0,
-                spannableTosString.length,
-                UnderlineSpan::class.java
+        tos_explanation.text = Html.fromHtml(
+                String.format(
+                        resources.getString(R.string.domain_registration_privacy_protection_tos), "<u>", "</u>"
+                )
         )
-
-        if (tosUnderlineSpan.size == 1) {
-            val tosClickableSpan = object : ClickableSpan() {
-                override fun onClick(widget: View?) {
-                    viewModel.onTosLinkClicked()
-                }
-            }
-
-            val spanStart = spannableTosString.getSpanStart(tosUnderlineSpan[0])
-            val spanEnd = spannableTosString.getSpanEnd(tosUnderlineSpan[0])
-
-            spannableTosString.setSpan(
-                    tosClickableSpan,
-                    spanStart,
-                    spanEnd,
-                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            tos_explanation.text = spannableTosString
-            tos_explanation.movementMethod = LinkMovementMethod.getInstance()
-        } else {
-            tos_explanation.setOnClickListener {
-                viewModel.onTosLinkClicked()
-            }
+        tos_explanation.movementMethod = LinkMovementMethod.getInstance()
+        tos_explanation.setOnClickListener {
+            viewModel.onTosLinkClicked()
         }
     }
 
