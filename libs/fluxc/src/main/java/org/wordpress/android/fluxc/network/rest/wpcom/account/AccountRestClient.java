@@ -71,8 +71,8 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     private final AppSecrets mAppSecrets;
 
-    public static class AccountRestPayload extends Payload<BaseNetworkError> {
-        public AccountRestPayload(AccountModel account, BaseNetworkError error) {
+    public static class AccountRestPayload extends Payload<WPComGsonNetworkError> {
+        public AccountRestPayload(AccountModel account, WPComGsonNetworkError error) {
             this.account = account;
             this.error = error;
         }
