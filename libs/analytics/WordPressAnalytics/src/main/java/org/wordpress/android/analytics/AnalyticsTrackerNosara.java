@@ -935,8 +935,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
-            case CREATED_SITE:
-                return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
             case SHARED_ITEM_READER:

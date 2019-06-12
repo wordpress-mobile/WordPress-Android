@@ -278,7 +278,6 @@ public final class AnalyticsTracker {
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         CREATED_ACCOUNT,
-        CREATED_SITE,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
         SHARED_ITEM_READER,
