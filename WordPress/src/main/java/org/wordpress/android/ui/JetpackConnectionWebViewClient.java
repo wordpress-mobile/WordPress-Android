@@ -2,16 +2,16 @@ package org.wordpress.android.ui;
 
 import android.net.Uri;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ErrorManagedWebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-class JetpackConnectionWebViewClient extends WebViewClient {
+class JetpackConnectionWebViewClient extends ErrorManagedWebViewClient {
     interface JetpackConnectionWebViewClientListener {
         void onRequiresWPComLogin(WebView webView, String redirectPage);
         void onRequiresJetpackLogin();
@@ -29,12 +29,15 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
     private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JETPACK_CONNECTION_DEEPLINK);
 
-    private final @NonNull JetpackConnectionWebViewClientListener mListener;
+    private final @NonNull JetpackConnectionWebViewClientListener mJetpackConnectionListener;
     private final String mSiteUrl;
     private String mRedirectPage;
 
-    JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener listener, String siteUrl) {
-        mListener = listener;
+    JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener jetpackConnectionListener,
+                                   @NonNull ErrorManagedWebViewClientListener baseListener,
+                                   String siteUrl) {
+        super(baseListener);
+        mJetpackConnectionListener = jetpackConnectionListener;
         mSiteUrl = siteUrl;
     }
 
@@ -53,7 +56,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 && loadedPath.contains(LOGIN_PATH)
                 && stringUrl.contains(REDIRECT_PARAMETER)) {
                 extractRedirect(stringUrl);
-                mListener.onRequiresWPComLogin(view, mRedirectPage);
+                mJetpackConnectionListener.onRequiresWPComLogin(view, mRedirectPage);
                 return true;
             } else if (loadedHost.equals(currentSiteHost)
                        && loadedPath != null
@@ -67,11 +70,11 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                        && (loadedPath.equals(WPCOM_LOG_IN_PATH_1) || loadedPath.equals(WPCOM_LOG_IN_PATH_2))
                        && stringUrl.contains(REDIRECT_PARAMETER)) {
                 extractRedirect(stringUrl);
-                mListener.onRequiresJetpackLogin();
+                mJetpackConnectionListener.onRequiresJetpackLogin();
                 return true;
             } else if (loadedHost.equals(JETPACK_DEEPLINK_URI.getHost())
                        && uri.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
-                mListener.onJetpackSuccessfullyConnected(uri);
+                mJetpackConnectionListener.onJetpackSuccessfullyConnected(uri);
                 return true;
             }
         } catch (UnsupportedEncodingException e) {

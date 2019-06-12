@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -71,19 +72,20 @@ class StatsViewModel
 
     val siteChanged = statsSiteProvider.siteChanged
 
-    private val _toolbarHasShadow = MutableLiveData<Boolean>()
-    val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
+    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
 
     val hideToolbar = newsCardHandler.hideToolbar
 
-    fun start(intent: Intent) {
+    val selectedSection = statsSectionManager.liveSelectedSection
+
+    fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
         val launchedFrom = intent.getSerializableExtra(OldStatsActivity.ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
-        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod)
+        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
@@ -101,13 +103,14 @@ class StatsViewModel
         localSiteId: Int,
         launchedFromWidget: Boolean,
         initialSection: StatsSection?,
-        initialSelectedPeriod: String?
+        initialSelectedPeriod: String?,
+        restart: Boolean
     ) {
-        if (launchedFromWidget) {
+        if (restart) {
             selectedDateProvider.clear()
         }
         // Check if VM is not already initialized
-        if (!isInitialized || launchedFromWidget) {
+        if (!isInitialized || restart) {
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
@@ -116,7 +119,6 @@ class StatsViewModel
             if (initialGranularity != null && initialSelectedPeriod != null) {
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
-            _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
 
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
 
@@ -124,9 +126,14 @@ class StatsViewModel
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
         }
-        statsSiteProvider.start(localSiteId)
-        if (launchedFromWidget) {
-            refreshData()
+        val siteChanged = statsSiteProvider.start(localSiteId)
+        if (restart && siteChanged) {
+            launch {
+                listUseCases.forEach { useCase ->
+                    useCase.value.onCleared()
+                    useCase.value.refreshData(true)
+                }
+            }
         }
     }
 
@@ -147,7 +154,9 @@ class StatsViewModel
         statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
             loadData {
-                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
+                val baseListUseCase = listUseCases[statsSectionManager.getSelectedSection()]
+                baseListUseCase?.refreshTypes()
+                baseListUseCase?.refreshData(true)
             }
         } else {
             _isRefreshing.value = false
@@ -155,14 +164,10 @@ class StatsViewModel
         }
     }
 
-    fun getSelectedSection() = statsSectionManager.getSelectedSection()
-
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
 
         listUseCases[statsSection]?.onListSelected()
-
-        _toolbarHasShadow.value = statsSection == INSIGHTS
 
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
@@ -170,7 +175,8 @@ class StatsViewModel
             WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
             MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
             YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
-            ANNUAL_STATS, DETAIL -> { }
+            ANNUAL_STATS, DETAIL -> {
+            }
         }
     }
 

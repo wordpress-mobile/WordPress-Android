@@ -81,58 +81,104 @@ class StatsNavigator
                         target.postId,
                         postType = target.postType,
                         postTitle = target.postTitle,
-                        postUrl = target.postUrl)
+                        postUrl = target.postUrl
+                )
             }
             is ViewFollowersStats -> {
-                ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, target.selectedTab)
+                ActivityLauncher.viewAllTabbedInsightsStats(
+                        activity,
+                        FOLLOWERS,
+                        target.selectedTab,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewCommentsStats -> {
-                ActivityLauncher.viewAllTabbedInsightsStats(activity, COMMENTS, target.selectedTab)
+                ActivityLauncher.viewAllTabbedInsightsStats(
+                        activity,
+                        COMMENTS,
+                        target.selectedTab,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewTagsAndCategoriesStats -> {
-                ActivityLauncher.viewAllInsightsStats(activity, TAGS_AND_CATEGORIES)
+                ActivityLauncher.viewAllInsightsStats(activity, TAGS_AND_CATEGORIES, siteProvider.siteModel.id)
             }
             is ViewMonthsAndYearsStats -> {
-                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_MONTHS_AND_YEARS)
+                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_MONTHS_AND_YEARS, siteProvider.siteModel.id)
             }
             is ViewRecentWeeksStats -> {
-                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_RECENT_WEEKS)
+                ActivityLauncher.viewAllInsightsStats(activity, DETAIL_RECENT_WEEKS, siteProvider.siteModel.id)
             }
             is ViewTag -> {
                 ActivityLauncher.openStatsUrl(activity, target.link)
             }
             is ViewPublicizeStats -> {
-                ActivityLauncher.viewAllInsightsStats(activity, PUBLICIZE)
+                ActivityLauncher.viewAllInsightsStats(activity, PUBLICIZE, siteProvider.siteModel.id)
             }
             is ViewPostsAndPages -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, TOP_POSTS_AND_PAGES)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        TOP_POSTS_AND_PAGES,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewReferrers -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, REFERRERS)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        REFERRERS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewClicks -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, CLICKS)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        CLICKS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewCountries -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, GEOVIEWS)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        GEOVIEWS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewVideoPlays -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, VIDEO_PLAYS)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        VIDEO_PLAYS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewSearchTerms -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, SEARCH_TERMS)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        SEARCH_TERMS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewAuthors -> {
-                ActivityLauncher.viewAllGranularStats(activity, target.statsGranularity, AUTHORS)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        AUTHORS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewAnnualStats -> {
-                ActivityLauncher.viewAllGranularStats(activity, YEARS, ANNUAL_STATS)
+                ActivityLauncher.viewAllGranularStats(activity, YEARS, ANNUAL_STATS, siteProvider.siteModel.id)
             }
             is ViewUrl -> {
                 WPWebViewActivity.openURL(activity, target.url)
             }
             is ViewInsightsManagement -> {
-                ActivityLauncher.viewInsightsManagement(activity)
+                ActivityLauncher.viewInsightsManagement(activity, siteProvider.siteModel.id)
             }
         }
     }
