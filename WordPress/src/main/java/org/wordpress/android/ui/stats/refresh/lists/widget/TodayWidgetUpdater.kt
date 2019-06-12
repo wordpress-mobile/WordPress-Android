@@ -3,9 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
-import com.bumptech.glide.request.target.AppWidgetTarget
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -14,20 +12,17 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-
-private const val MIN_WIDTH = 250
 
 class TodayWidgetUpdater
 @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
-    private val imageManager: ImageManager,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val todayInsightsStore: TodayInsightsStore,
@@ -38,31 +33,40 @@ class TodayWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
-                .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
-        val showColumns = minWidth > MIN_WIDTH
+        val showColumns = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val layout = widgetUtils.getLayout(showColumns, colorModeId)
-        val views = RemoteViews(context.packageName, layout)
+        val views = RemoteViews(context.packageName, widgetUtils.getLayout(showColumns, colorModeId))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
-        val siteIconUrl = siteModel?.iconUrl
-        val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
-        imageManager.load(awt, context, ICON, siteIconUrl ?: "", FIT_START)
+        widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
-            views.setOnClickPendingIntent(R.id.widget_title, widgetUtils.getPendingSelfIntent(context, siteModel.id))
+            views.setOnClickPendingIntent(
+                    R.id.widget_title, widgetUtils.getPendingSelfIntent(
+                    context,
+                    siteModel.id,
+                    StatsTimeframe.INSIGHTS
+            )
+            )
         }
         if (networkAvailable && siteModel != null) {
             if (showColumns) {
                 views.setOnClickPendingIntent(
                         R.id.widget_content,
-                        widgetUtils.getPendingSelfIntent(context, siteModel.id)
+                        widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
                 )
                 showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
-                widgetUtils.showList(appWidgetManager, views, context, appWidgetId, colorModeId, siteId)
+                widgetUtils.showList(
+                        appWidgetManager,
+                        views,
+                        context,
+                        appWidgetId,
+                        colorModeId,
+                        siteId,
+                        ViewType.TODAY_VIEWS
+                )
             }
         } else {
             widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
@@ -71,7 +75,7 @@ class TodayWidgetUpdater
 
     override fun updateAllWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        val viewsWidget = ComponentName(context, StatsAllTimeWidget::class.java)
+        val viewsWidget = ComponentName(context, StatsTodayWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
         for (appWidgetId in allWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
