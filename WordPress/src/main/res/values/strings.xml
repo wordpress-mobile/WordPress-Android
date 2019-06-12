@@ -851,6 +851,8 @@
     <string name="stats_widget_color_dark">Dark</string>
     <string name="stats_widget_select_your_site">Select your site</string>
     <string name="stats_widget_select_color">Color</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_error_no_network">No network available</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>

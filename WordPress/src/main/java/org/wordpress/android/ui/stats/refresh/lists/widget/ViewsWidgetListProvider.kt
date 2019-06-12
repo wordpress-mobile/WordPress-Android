@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.view.View
@@ -15,22 +16,30 @@ import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject lateinit var viewModel: ViewsWidgetListViewModel
-    private var showChangeColumn: Boolean = intent.getBooleanExtra(SHOW_CHANGE_VALUE_KEY, true)
-    private var colorModeId: Int = intent.getIntExtra(COLOR_MODE_KEY, Color.LIGHT.ordinal)
-    private var siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
+    @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
+    private val showChangeColumn: Boolean = intent.getBooleanExtra(SHOW_CHANGE_VALUE_KEY, true)
+    private val colorModeId: Int = intent.getIntExtra(COLOR_MODE_KEY, Color.LIGHT.ordinal)
+    private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
+    private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
 
     override fun onCreate() {
-        viewModel.start(siteId, colorModeId, showChangeColumn)
+        viewModel.start(siteId, colorModeId, showChangeColumn, appWidgetId)
     }
 
     override fun getLoadingView(): RemoteViews? = null
 
     override fun onDataSetChanged() {
-        viewModel.onDataSetChanged()
+        viewModel.onDataSetChanged { appWidgetId, showChangeColumn ->
+            viewsWidgetUpdater.updateAppWidget(
+                    context,
+                    appWidgetId = appWidgetId,
+                    showChangeColumn = showChangeColumn
+            )
+        }
     }
 
     override fun hasStableIds(): Boolean = true
