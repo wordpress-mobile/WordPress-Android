@@ -215,7 +215,8 @@ class PostListMainViewModel @Inject constructor(
 
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
-                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
+                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
+                        isSearchExpanded.value != true,
                 isAuthorFilterVisible = isFilteringByAuthorSupported,
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
