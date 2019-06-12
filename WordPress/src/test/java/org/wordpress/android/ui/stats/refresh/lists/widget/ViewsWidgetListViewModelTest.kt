@@ -98,7 +98,7 @@ class ViewsWidgetListViewModelTest {
 
         viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
 
-        viewModel.onDataSetChanged { _, _ -> }
+        viewModel.onDataSetChanged { }
 
         viewModel.data.let { data ->
             assertThat(data).hasSize(dates.size)
@@ -132,9 +132,8 @@ class ViewsWidgetListViewModelTest {
 
         var errorCallbackTriggered = false
 
-        viewModel.onDataSetChanged { appWidgetId, showChangeColumn ->
+        viewModel.onDataSetChanged { appWidgetId ->
             assertThat(appWidgetId).isEqualTo(this.appWidgetId)
-            assertThat(showChangeColumn).isEqualTo(this.showChangeColumn)
             errorCallbackTriggered = true
         }
 

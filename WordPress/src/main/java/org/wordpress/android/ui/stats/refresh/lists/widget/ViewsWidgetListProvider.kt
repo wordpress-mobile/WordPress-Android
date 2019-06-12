@@ -33,11 +33,10 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     override fun getLoadingView(): RemoteViews? = null
 
     override fun onDataSetChanged() {
-        viewModel.onDataSetChanged { appWidgetId, showChangeColumn ->
+        viewModel.onDataSetChanged { appWidgetId ->
             viewsWidgetUpdater.updateAppWidget(
                     context,
-                    appWidgetId = appWidgetId,
-                    showChangeColumn = showChangeColumn
+                    appWidgetId = appWidgetId
             )
         }
     }

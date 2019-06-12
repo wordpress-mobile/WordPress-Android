@@ -362,4 +362,30 @@
     <style name="StatsChange.NegativeDark" parent="StatsChange">
         <item name="android:textColor">@color/hot_red_400</item>
     </style>
+
+    <style name="StatsWidgetBlockKey" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+
+    <style name="StatsWidgetBlockKey.Dark">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatsWidgetBlockKey.Light">
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
+
+    <style name="StatsWidgetBlockValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+    </style>
+
+    <style name="StatsWidgetBlockValue.Dark">
+        <item name="android:textColor">@color/gray_200</item>
+    </style>
+
+    <style name="StatsWidgetBlockValue.Light">
+        <item name="android:textColor">@color/gray_500</item>
+    </style>
 </resources>
