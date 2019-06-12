@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/margin_extra_large"
     android:scrollbars="vertical">
 
-    <android.support.v7.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/stats_widget_light_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
@@ -19,7 +19,7 @@
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
         android:text="@string/stats_widget_color_light"/>
 
-    <android.support.v7.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/stats_widget_dark_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"

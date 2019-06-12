@@ -37,13 +37,18 @@ class StatsViewAllActivity : AppCompatActivity() {
 
     companion object {
         @JvmStatic
-        fun startForGranularStats(context: Context, statsType: StatsViewType, granularity: StatsGranularity) {
-            start(context, statsType, granularity)
+        fun startForGranularStats(
+            context: Context,
+            statsType: StatsViewType,
+            granularity: StatsGranularity,
+            localSiteId: Int
+        ) {
+            start(context, statsType, granularity, localSiteId = localSiteId)
         }
 
         @JvmStatic
-        fun startForInsights(context: Context, statsType: StatsViewType) {
-            start(context, statsType)
+        fun startForInsights(context: Context, statsType: StatsViewType, localSiteId: Int) {
+            start(context, statsType, localSiteId = localSiteId)
         }
 
         @JvmStatic
@@ -51,7 +56,7 @@ class StatsViewAllActivity : AppCompatActivity() {
             context: Context,
             statsType: StatsViewType,
             selectedTab: Int,
-            localSiteId: Int?
+            localSiteId: Int
         ) {
             start(context, statsType, selectedTab = selectedTab, localSiteId = localSiteId)
         }
@@ -61,7 +66,7 @@ class StatsViewAllActivity : AppCompatActivity() {
             statsType: StatsViewType,
             granularity: StatsGranularity? = null,
             selectedTab: Int? = null,
-            localSiteId: Int? = null
+            localSiteId: Int
         ) {
             val intent = Intent(context, StatsViewAllActivity::class.java)
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType)
@@ -71,9 +76,7 @@ class StatsViewAllActivity : AppCompatActivity() {
             granularity?.let {
                 intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity)
             }
-            localSiteId?.let {
-                intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-            }
+            intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             AnalyticsTracker.track(Stat.STATS_VIEW_ALL_ACCESSED)
             context.startActivity(intent)
         }

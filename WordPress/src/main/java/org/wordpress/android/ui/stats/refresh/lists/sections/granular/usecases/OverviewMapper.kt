@@ -100,7 +100,7 @@ class OverviewMapper
         onBarSelected: (String?) -> Unit,
         onBarChartDrawn: (visibleBarCount: Int) -> Unit,
         selectedType: Int,
-        selectedPosition: Int
+        selectedItemPeriod: String
     ): List<BlockListItem> {
         val chartItems = dates.map {
             val value = when (selectedType) {
@@ -136,7 +136,7 @@ class OverviewMapper
         result.add(BarChartItem(
                 chartItems,
                 overlappingEntries = overlappingItems,
-                selectedItem = dates[selectedPosition].period,
+                selectedItem = selectedItemPeriod,
                 onBarSelected = onBarSelected,
                 onBarChartDrawn = onBarChartDrawn
         ))

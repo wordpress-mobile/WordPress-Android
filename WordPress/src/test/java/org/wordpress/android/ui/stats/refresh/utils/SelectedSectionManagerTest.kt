@@ -8,13 +8,12 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 
-@RunWith(MockitoJUnitRunner::class)
-class SelectedSectionManagerTest {
+class SelectedSectionManagerTest : BaseUnitTest() {
     @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
     private lateinit var selectedSectionManager: SelectedSectionManager
@@ -28,11 +27,16 @@ class SelectedSectionManagerTest {
     fun `inserts tab selection into shared prefs`() {
         whenever(sharedPreferencesEditor.putString(any(), any())).thenReturn(sharedPreferencesEditor)
 
+        var selectedSection: StatsSection? = null
+        selectedSectionManager.liveSelectedSection.observeForever { selectedSection = it }
+
         selectedSectionManager.setSelectedSection(MONTHS)
 
         val inOrder = inOrder(sharedPreferencesEditor)
         inOrder.verify(sharedPreferencesEditor).putString(SELECTED_SECTION_KEY, "MONTHS")
         inOrder.verify(sharedPreferencesEditor).apply()
+
+        assertThat(selectedSection).isEqualTo(MONTHS)
     }
 
     @Test

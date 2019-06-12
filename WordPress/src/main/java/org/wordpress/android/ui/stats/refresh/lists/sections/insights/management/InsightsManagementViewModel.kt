@@ -52,10 +52,13 @@ class InsightsManagementViewModel @Inject constructor(
     private lateinit var insights: List<InsightModel>
     private var isInitialized = false
 
-    fun start() {
+    fun start(localSiteId: Int?) {
         if (!isInitialized) {
             isInitialized = true
             _isMenuVisible.value = false
+            localSiteId?.let {
+                siteProvider.start(localSiteId)
+            }
             loadInsights()
         }
     }

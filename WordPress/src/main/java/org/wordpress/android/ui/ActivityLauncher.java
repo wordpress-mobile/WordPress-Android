@@ -91,7 +91,6 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -236,8 +235,7 @@ public class ActivityLauncher {
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = new Intent(context, StatsActivity.class);
-        statsIntent.putExtra(WordPress.SITE, site);
+        Intent statsIntent = StatsActivity.buildIntent(context, site);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
@@ -276,14 +274,8 @@ public class ActivityLauncher {
                                   );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
+            StatsActivity.start(context, site);
         }
-    }
-
-    public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, null);
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
@@ -291,16 +283,18 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
-    public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        StatsViewAllActivity.startForInsights(context, statsType);
+    public static void viewAllInsightsStats(Context context, StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
+                                            int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
     }
 
-    public static void viewInsightsManagement(Context context) {
+    public static void viewInsightsManagement(Context context, int localSiteId) {
         Intent intent = new Intent(context, InsightsManagementActivity.class);
+        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
         context.startActivity(intent);
     }
 
@@ -316,10 +310,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, site.getId());
-        intent.putExtra(LOGGED_INTO_JETPACK, true);
-        context.startActivity(intent);
+        StatsActivity.start(context, site);
     }
 
     public static void viewConnectJetpackForStats(Context context, SiteModel site) {

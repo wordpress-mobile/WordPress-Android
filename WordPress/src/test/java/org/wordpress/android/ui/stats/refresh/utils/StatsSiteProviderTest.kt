@@ -63,7 +63,7 @@ class StatsSiteProviderTest : BaseUnitTest() {
 
         statsSiteProvider.onSiteChanged(OnSiteChanged(1))
 
-        assertThat(statsSiteProvider.siteModel).isEqualTo(selectedSite)
+        assertThat(statsSiteProvider.siteModel).isEqualTo(secondSite)
     }
 
     @Test

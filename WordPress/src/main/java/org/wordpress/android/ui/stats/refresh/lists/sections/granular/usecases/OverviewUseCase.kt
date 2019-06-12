@@ -47,6 +47,7 @@ constructor(
             onUiState()
         }
     }
+
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
                     ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
@@ -91,25 +92,23 @@ constructor(
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            val periodFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
             val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
-            val availablePeriods = domainModel.dates.takeLast(visibleBarCount)
-            val availableDates = availablePeriods.map {
+            val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
                         it.period
                 )
             }
-            val selectedDate = periodFromProvider ?: availableDates.last()
+            val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
-                    index,
-                    availableDates,
+                    selectedDate,
+                    availableDates.takeLast(visibleBarCount),
                     statsGranularity
             )
-            val shiftedIndex = index + domainModel.dates.size - visibleBarCount
-            val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
+            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
             val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
                     overviewMapper.buildTitle(
@@ -126,7 +125,7 @@ constructor(
                             this::onBarSelected,
                             this::onBarChartDrawn,
                             uiState.selectedPosition,
-                            shiftedIndex
+                            selectedItem.period
                     )
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
