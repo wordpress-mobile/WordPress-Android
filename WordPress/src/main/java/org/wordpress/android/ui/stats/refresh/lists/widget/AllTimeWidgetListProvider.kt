@@ -16,7 +16,6 @@ import javax.inject.Inject
 class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject lateinit var viewModel: AllTimeWidgetListViewModel
     @Inject lateinit var widgetUpdated: AllTimeWidgetUpdater
-    private val showChangeColumn: Boolean = intent.getBooleanExtra(SHOW_CHANGE_VALUE_KEY, true)
     private val colorModeId: Int = intent.getIntExtra(COLOR_MODE_KEY, Color.LIGHT.ordinal)
     private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -26,7 +25,7 @@ class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteVi
     }
 
     override fun onCreate() {
-        viewModel.start(siteId, colorModeId, showChangeColumn, appWidgetId)
+        viewModel.start(siteId, colorModeId, appWidgetId)
     }
 
     override fun getLoadingView(): RemoteViews? = null

@@ -21,14 +21,12 @@ class AllTimeWidgetListViewModel
 ) {
     private var siteId: Long? = null
     private var colorModeId: Int? = null
-    private var showChangeColumn: Boolean = true
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<AllTimeItemUiModel>()
     val data: List<AllTimeItemUiModel> = mutableData
-    fun start(siteId: Long, colorModeId: Int, showChangeColumn: Boolean, appWidgetId: Int) {
+    fun start(siteId: Long, colorModeId: Int, appWidgetId: Int) {
         this.siteId = siteId
         this.colorModeId = colorModeId
-        this.showChangeColumn = showChangeColumn
         this.appWidgetId = appWidgetId
     }
 
@@ -40,7 +38,7 @@ class AllTimeWidgetListViewModel
                     allTimeStore.fetchAllTimeInsights(site)
                 }
                 allTimeStore.getAllTimeInsights(site)?.let { visitsAndViewsModel ->
-                    val uiModels = buildListItemUiModel(visitsAndViewsModel, site.id)
+                    val uiModels = buildListItemUiModel(visitsAndViewsModel, this)
                     if (uiModels != data) {
                         mutableData.clear()
                         mutableData.addAll(uiModels)
@@ -56,7 +54,7 @@ class AllTimeWidgetListViewModel
 
     private fun buildListItemUiModel(
         domainModel: InsightsAllTimeModel,
-        localSiteId: Int
+        localSiteId: Long
     ): List<AllTimeItemUiModel> {
         val layout = when (colorModeId) {
             Color.DARK.ordinal -> R.layout.stats_views_widget_item_dark
@@ -93,7 +91,7 @@ class AllTimeWidgetListViewModel
 
     data class AllTimeItemUiModel(
         @LayoutRes val layout: Int,
-        val localSiteId: Int,
+        val localSiteId: Long,
         val key: String,
         val value: String
     )

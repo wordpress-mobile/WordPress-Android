@@ -119,12 +119,12 @@ class AllTimeWidgetUpdater
         views: RemoteViews
     ) {
         val allTimeInsights = allTimeStore.getAllTimeInsights(site)
-        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: "0")
-        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: "0")
-        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: "0")
+        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: "-")
         views.setTextViewText(
                 R.id.widget_best_views,
-                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: "0"
+                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: "-"
         )
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
