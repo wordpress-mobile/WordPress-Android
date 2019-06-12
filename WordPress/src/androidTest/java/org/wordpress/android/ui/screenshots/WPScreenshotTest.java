@@ -3,7 +3,7 @@ package org.wordpress.android.ui.screenshots;
 import androidx.test.espresso.Espresso;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.ClassRule;
 import org.junit.Rule;

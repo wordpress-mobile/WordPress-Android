@@ -2,7 +2,7 @@ package org.wordpress.android.support
 
 import android.os.ParcelFileDescriptor
 import android.os.ParcelFileDescriptor.AutoCloseInputStream
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
