@@ -5,7 +5,7 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/link_dialog_margin_inner"
@@ -21,9 +21,9 @@
             android:imeOptions="actionNext"
             android:inputType="textUri"
             tools:ignore="HardcodedText" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/link_dialog_margin_outer"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/link_enter_url_text"
             android:inputType="text" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
     <CheckBox
         android:id="@+id/openInNewWindow"
         android:text="@string/link_open_new_window"

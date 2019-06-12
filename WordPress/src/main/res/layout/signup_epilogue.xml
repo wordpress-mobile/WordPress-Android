@@ -32,7 +32,7 @@
                 style="@style/LoginTheme.Heading" >
             </org.wordpress.android.widgets.WPTextView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/user_details_card"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
@@ -110,7 +110,7 @@
 
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
                 android:id="@+id/signup_epilogue_input_display"
@@ -190,13 +190,13 @@
         android:layout_width="match_parent"
         android:padding="@dimen/margin_large" >
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/primary_button"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/login_continue"
             style="@style/WordPress.Button.Primary" >
-        </android.support.v7.widget.AppCompatButton>
+        </androidx.appcompat.widget.AppCompatButton>
 
     </RelativeLayout>
 

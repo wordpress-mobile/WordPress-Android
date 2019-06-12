@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -102,7 +101,7 @@ constructor(
                 stringBuilder.append("['").append(country.countryCode).append("',").append(country.views).append("],")
             }
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
-            items.add(Header(string.stats_country_label, string.stats_country_views_label))
+            items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
                         ListItemWithIcon(
@@ -117,7 +116,7 @@ constructor(
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = create(statsGranularity, this::onViewMoreClick)
                         )
                 )

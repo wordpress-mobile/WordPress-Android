@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;

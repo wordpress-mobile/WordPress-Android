@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.support.v7.widget.ListPopupWindow
 import android.view.View
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -13,7 +13,7 @@
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium" >
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signup_tos"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
@@ -21,9 +21,9 @@
         android:padding="@dimen/margin_extra_large"
         android:text="@string/signup_terms_of_service_text"
         style="@style/LoginTheme.Button.Secondary" >
-    </android.support.v7.widget.AppCompatButton>
+    </androidx.appcompat.widget.AppCompatButton>
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signup_email"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
@@ -31,15 +31,15 @@
         android:layout_width="match_parent"
         android:text="@string/signup_with_email_button"
         android:theme="@style/LoginTheme.Button" >
-    </android.support.v7.widget.AppCompatButton>
+    </androidx.appcompat.widget.AppCompatButton>
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signup_google"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_width="match_parent"
         android:text="@string/signup_with_google_button"
         android:theme="@style/LoginTheme.Button" >
-    </android.support.v7.widget.AppCompatButton>
+    </androidx.appcompat.widget.AppCompatButton>
 
 </LinearLayout>

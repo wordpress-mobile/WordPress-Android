@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import android.support.v4.util.LongSparseArray;
+import androidx.collection.LongSparseArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;

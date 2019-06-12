@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.news
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import org.wordpress.android.models.news.NewsItem
 
 interface NewsService {

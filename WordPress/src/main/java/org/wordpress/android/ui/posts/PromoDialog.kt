@@ -2,9 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.v7.app.AppCompatDialog
-import android.support.v7.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +9,9 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
-
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
