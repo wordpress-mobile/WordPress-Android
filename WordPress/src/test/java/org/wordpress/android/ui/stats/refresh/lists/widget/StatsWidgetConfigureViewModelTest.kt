@@ -41,7 +41,7 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Test
     fun `loads site and view mode from app prefs on start`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColor(appWidgetId)).thenReturn(DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColor(appWidgetId)).thenReturn(DARK)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(siteId)
         whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
 
@@ -61,7 +61,7 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Test
     fun `button is disabled when site not set`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColor(appWidgetId)).thenReturn(DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColor(appWidgetId)).thenReturn(DARK)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(-1)
 
         var settingsModel: WidgetSettingsModel? = null
@@ -140,7 +140,7 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Test
     fun `on add clicked sets up widget on started widget`() {
         val appWidgetId = 10
-        whenever(appPrefsWrapper.getAppWidgetColor(appWidgetId)).thenReturn(DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetColor(appWidgetId)).thenReturn(DARK)
         whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(siteId)
         whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
 
@@ -152,7 +152,7 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
         viewModel.addWidget()
 
         verify(appPrefsWrapper).setAppWidgetSiteId(siteId, appWidgetId)
-        verify(appPrefsWrapper).setAppWidgetColor(DARK.ordinal, appWidgetId)
+        verify(appPrefsWrapper).setAppWidgetColor(DARK, appWidgetId)
 
         val widgetAdded: WidgetAdded? = event?.getContentIfNotHandled()
         assertThat(widgetAdded).isNotNull

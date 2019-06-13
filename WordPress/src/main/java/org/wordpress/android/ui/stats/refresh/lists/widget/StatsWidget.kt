@@ -9,9 +9,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.modules.AppComponent
 
 const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
-const val COLOR_MODE_KEY = "color_mode_key"
 const val SITE_ID_KEY = "site_id_key"
-const val VIEW_TYPE_KEY = "view_type_key"
 
 abstract class StatsWidget : AppWidgetProvider() {
     abstract val widgetUpdater: WidgetUpdater

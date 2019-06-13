@@ -92,8 +92,8 @@ class ViewsWidgetUpdater
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
-        listIntent.putExtra(COLOR_MODE_KEY, colorMode.ordinal)
-        listIntent.putExtra(VIEW_TYPE_KEY, ViewType.WEEK_VIEWS.ordinal)
+        listIntent.putColorMode(colorMode)
+        listIntent.putViewType(ViewType.WEEK_VIEWS)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.data = Uri.parse(
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)

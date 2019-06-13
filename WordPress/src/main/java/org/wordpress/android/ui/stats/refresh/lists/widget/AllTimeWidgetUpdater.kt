@@ -35,6 +35,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 private const val MIN_WIDTH = 250
+private const val EMPTY_VALUE = "-"
 
 class AllTimeWidgetUpdater
 @Inject constructor(
@@ -119,12 +120,12 @@ class AllTimeWidgetUpdater
         views: RemoteViews
     ) {
         val allTimeInsights = allTimeStore.getAllTimeInsights(site)
-        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: "-")
-        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: "-")
-        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: EMPTY_VALUE)
+        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: EMPTY_VALUE)
+        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: EMPTY_VALUE)
         views.setTextViewText(
                 R.id.widget_best_views,
-                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: "-"
+                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: EMPTY_VALUE
         )
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
@@ -143,8 +144,8 @@ class AllTimeWidgetUpdater
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
-        listIntent.putExtra(COLOR_MODE_KEY, colorMode.ordinal)
-        listIntent.putExtra(VIEW_TYPE_KEY, ViewType.ALL_TIME_VIEWS.ordinal)
+        listIntent.putColorMode(colorMode)
+        listIntent.putViewType(ViewType.ALL_TIME_VIEWS)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.data = Uri.parse(
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
