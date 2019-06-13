@@ -11,14 +11,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject lateinit var viewModel: ViewsWidgetListViewModel
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
     private val showChangeColumn: Boolean = intent.getBooleanExtra(SHOW_CHANGE_VALUE_KEY, true)
-    private val colorModeId: Int = intent.getIntExtra(COLOR_MODE_KEY, Color.LIGHT.ordinal)
+    private val colorMode = intent.getColorMode()
     private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
@@ -27,7 +26,7 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     }
 
     override fun onCreate() {
-        viewModel.start(siteId, colorModeId, showChangeColumn, appWidgetId)
+        viewModel.start(siteId, colorMode.ordinal, showChangeColumn, appWidgetId)
     }
 
     override fun getLoadingView(): RemoteViews? = null
