@@ -75,9 +75,7 @@ class PostListViewModel @Inject constructor(
         listStore.getList(listDescriptor, dataSource, lifecycle)
     }
 
-    val isFetchingFirstPage: LiveData<Boolean> by lazy {
-        pagedListWrapper.isFetchingFirstPage
-    }
+    val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
     val pagedListData: LiveData<PagedPostList> by lazy {
         val result = MediatorLiveData<PagedPostList>()
@@ -102,7 +100,25 @@ class PostListViewModel @Inject constructor(
 
     val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
         val result = MediatorLiveData<PostListEmptyUiState>()
-        val update = { createEmptyUiState() }
+        val update = {
+            val isListEmpty = when {
+                consumeEmptySearchListEvent && connector.postListType == SEARCH && !connector.isEmptySearch() -> false
+                connector.isEmptySearch() -> true
+                else -> pagedListWrapper.isEmpty.value ?: true
+            }
+
+            createEmptyUiState(
+                    postListType = connector.postListType,
+                    isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+                    isLoadingData = !connector.isEmptySearch() && (pagedListWrapper.isFetchingFirstPage.value ?: false ||
+                            pagedListWrapper.data.value == null),
+                    isListEmpty = isListEmpty,
+                    isSearchPromptRequired = connector.isEmptySearch(),
+                    error = pagedListWrapper.listError.value,
+                    fetchFirstPage = this::fetchFirstPage,
+                    newPost = connector.postActionHandler::newPost
+            )
+        }
 
         if (connector.postListType == SEARCH) {
             if (!connector.isEmptySearch()) {
@@ -130,31 +146,10 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    private fun createEmptyUiState(): PostListEmptyUiState {
-        val isListEmpty = when {
-            consumeEmptySearchListEvent && connector.postListType == SEARCH && !connector.isEmptySearch() -> false
-            connector.isEmptySearch() -> true
-            else -> pagedListWrapper.isEmpty.value ?: true
-        }
-
-        return createEmptyUiState(
-                postListType = connector.postListType,
-                isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                isLoadingData = !connector.isEmptySearch() && (pagedListWrapper.isFetchingFirstPage.value ?: false ||
-                        pagedListWrapper.data.value == null),
-                isListEmpty = isListEmpty,
-                isSearchPromptRequired = connector.isEmptySearch(),
-                error = pagedListWrapper.listError.value,
-                fetchFirstPage = this::fetchFirstPage,
-                newPost = connector.postActionHandler::newPost
-        )
-    }
-
     fun start(postListViewModelConnector: PostListViewModelConnector) {
         if (isStarted) {
             return
         }
-
         connector = postListViewModelConnector
 
         this.listDescriptor = if (connector.site.isUsingWpComRestApi) {
@@ -174,7 +169,6 @@ class PostListViewModel @Inject constructor(
         }
 
         isStarted = true
-
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
         fetchFirstPage()
     }
