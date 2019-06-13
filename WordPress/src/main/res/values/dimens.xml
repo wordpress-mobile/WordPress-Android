@@ -223,6 +223,7 @@
     <dimen name="stats_widget_five_cells">320dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
+    <dimen name="stats_widget_content_height">108dp</dimen>
 
     <!-- stats refreshed widget-->
     <dimen name="stats_widget_dialog_icon_top_bottom_margin">20dp</dimen>

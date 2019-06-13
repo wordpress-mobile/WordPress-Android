@@ -718,12 +718,29 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_views_widget_info"/>
         </receiver>
+        <receiver android:name=".ui.stats.refresh.lists.widget.StatsAllTimeWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_all_time_widget_info"/>
+        </receiver>
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.StatsAllTimeWidgetConfigureActivity"
             android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>

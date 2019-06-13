@@ -23,7 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -98,7 +98,7 @@ class ViewsWidgetListViewModelTest {
 
         viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
 
-        viewModel.onDataSetChanged { _, _ -> }
+        viewModel.onDataSetChanged { }
 
         viewModel.data.let { data ->
             assertThat(data).hasSize(dates.size)
@@ -132,9 +132,8 @@ class ViewsWidgetListViewModelTest {
 
         var errorCallbackTriggered = false
 
-        viewModel.onDataSetChanged { appWidgetId, showChangeColumn ->
+        viewModel.onDataSetChanged { appWidgetId ->
             assertThat(appWidgetId).isEqualTo(this.appWidgetId)
-            assertThat(showChangeColumn).isEqualTo(this.showChangeColumn)
             errorCallbackTriggered = true
         }
 

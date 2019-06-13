@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget
 
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -10,23 +11,27 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.WidgetSettingsModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.WidgetAdded
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.WidgetSettingsModel
+import org.wordpress.android.viewmodel.Event
 
-class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
+class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
-    private lateinit var viewModel: StatsViewsWidgetConfigureViewModel
+    private lateinit var viewModel: StatsWidgetConfigureViewModel
     private val siteId = 15L
     private val siteName = "WordPress"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
+    private val viewType = ViewType.WEEK_VIEWS
     @Before
     fun setUp() {
-        viewModel = StatsViewsWidgetConfigureViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
+        viewModel = StatsWidgetConfigureViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
         whenever(site.siteId).thenReturn(siteId)
         whenever(site.name).thenReturn(siteName)
         whenever(site.url).thenReturn(siteUrl)
@@ -45,7 +50,7 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
             settingsModel = it
         }
 
-        viewModel.start(appWidgetId)
+        viewModel.start(appWidgetId, viewType)
 
         assertThat(settingsModel).isNotNull
         assertThat(settingsModel!!.buttonEnabled).isTrue()
@@ -64,7 +69,7 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
             settingsModel = it
         }
 
-        viewModel.start(appWidgetId)
+        viewModel.start(appWidgetId, viewType)
 
         assertThat(settingsModel).isNotNull
         assertThat(settingsModel!!.buttonEnabled).isFalse()
@@ -130,5 +135,28 @@ class StatsViewsWidgetConfigureViewModelTest : BaseUnitTest() {
         viewModel.colorClicked(LIGHT)
 
         assertThat(settingsModel!!.color).isEqualTo(LIGHT)
+    }
+
+    @Test
+    fun `on add clicked sets up widget on started widget`() {
+        val appWidgetId = 10
+        whenever(appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)).thenReturn(DARK.ordinal)
+        whenever(appPrefsWrapper.getAppWidgetSiteId(appWidgetId)).thenReturn(siteId)
+        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
+
+        viewModel.start(appWidgetId, viewType)
+
+        var event: Event<WidgetAdded>? = null
+        viewModel.widgetAdded.observeForever { event = it }
+
+        viewModel.addWidget()
+
+        verify(appPrefsWrapper).setAppWidgetSiteId(siteId, appWidgetId)
+        verify(appPrefsWrapper).setAppWidgetColorModeId(DARK.ordinal, appWidgetId)
+
+        val widgetAdded: WidgetAdded? = event?.getContentIfNotHandled()
+        assertThat(widgetAdded).isNotNull
+        assertThat(widgetAdded!!.viewType).isEqualTo(viewType)
+        assertThat(widgetAdded.appWidgetId).isEqualTo(appWidgetId)
     }
 }

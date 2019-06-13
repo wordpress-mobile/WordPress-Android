@@ -9,7 +9,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -17,11 +18,11 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class StatsViewsWidgetConfigureViewModel
+class StatsWidgetConfigureViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore,
-    internal val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableSelectedSite = MutableLiveData<SiteUiModel>()
     private val mutableViewMode = MutableLiveData<Color>()
@@ -43,9 +44,11 @@ class StatsViewsWidgetConfigureViewModel
     val hideSiteDialog: LiveData<Event<Unit>> = mutableHideSiteDialog
 
     private var appWidgetId: Int = -1
+    private lateinit var viewType: ViewType
 
-    fun start(appWidgetId: Int) {
+    fun start(appWidgetId: Int, viewType: ViewType) {
         this.appWidgetId = appWidgetId
+        this.viewType = viewType
         val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
         if (colorModeId >= 0) {
             mutableViewMode.postValue(Color.values()[colorModeId])
@@ -65,7 +68,7 @@ class StatsViewsWidgetConfigureViewModel
         if (appWidgetId != -1 && selectedSite != null) {
             appPrefsWrapper.setAppWidgetSiteId(selectedSite.siteId, appWidgetId)
             appPrefsWrapper.setAppWidgetColorModeId((mutableViewMode.value ?: LIGHT).ordinal, appWidgetId)
-            mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId)))
+            mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId, viewType)))
         }
     }
 
@@ -103,7 +106,7 @@ class StatsViewsWidgetConfigureViewModel
         val buttonEnabled: Boolean = siteTitle != null
     )
 
-    data class WidgetAdded(val appWidgetId: Int)
+    data class WidgetAdded(val appWidgetId: Int, val viewType: ViewType)
 
     data class SiteUiModel(
         val siteId: Long,

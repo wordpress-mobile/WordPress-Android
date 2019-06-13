@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbar"
-            app:viewType="views"
+            app:viewType="allTime"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.google.android.material.appbar.AppBarLayout
@@ -35,7 +35,7 @@
                 app:layout_scrollFlags="enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/stats_widget_views_title"/>
+                app:title="@string/stats_widget_all_time_title"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 

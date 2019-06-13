@@ -8,19 +8,15 @@ import android.os.Bundle
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-const val SHOW_CHANGE_VALUE_KEY = "show_change_value_key"
-const val COLOR_MODE_KEY = "color_mode_key"
-const val SITE_ID_KEY = "site_id_key"
-
-class StatsViewsWidget : AppWidgetProvider() {
-    @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
+class StatsAllTimeWidget : AppWidgetProvider() {
+    @Inject lateinit var widgetUpdater: AllTimeWidgetUpdater
 
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
         (context.applicationContext as WordPress).component().inject(this)
         val appWidgetId = intent?.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1) ?: -1
         if (appWidgetId > -1) {
-            viewsWidgetUpdater.updateAppWidget(
+            widgetUpdater.updateAppWidget(
                     context,
                     appWidgetId = appWidgetId
             )
@@ -30,7 +26,7 @@ class StatsViewsWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         (context.applicationContext as WordPress).component().inject(this)
         for (appWidgetId in appWidgetIds) {
-            viewsWidgetUpdater.updateAppWidget(
+            widgetUpdater.updateAppWidget(
                     context,
                     appWidgetManager,
                     appWidgetId
@@ -41,7 +37,7 @@ class StatsViewsWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         (context.applicationContext as WordPress).component().inject(this)
         for (appWidgetId in appWidgetIds) {
-            viewsWidgetUpdater.delete(appWidgetId)
+            widgetUpdater.delete(appWidgetId)
         }
     }
 
@@ -53,7 +49,7 @@ class StatsViewsWidget : AppWidgetProvider() {
     ) {
         if (context != null) {
             (context.applicationContext as WordPress).component().inject(this)
-            viewsWidgetUpdater.updateAppWidget(
+            widgetUpdater.updateAppWidget(
                     context,
                     appWidgetManager,
                     appWidgetId

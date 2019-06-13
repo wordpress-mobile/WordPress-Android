@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rectangle_gray_800_radius_4dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stats_widget_list_item_height"
+        android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/widget_site_icon"
+            style="@style/StatsWidgetSiteIcon"
+            android:layout_width="@dimen/stats_widget_list_item_height"
+            android:layout_height="@dimen/stats_widget_list_item_height"
+            android:contentDescription="@string/my_site_icon_content_description"
+            android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
+
+        <TextView
+            android:id="@+id/widget_title"
+            style="@style/StatsWidgetTitle.Dark"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/stats_widget_list_item_height"
+            android:text="@string/stats_widget_all_time_title"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large">
+
+            <TextView
+                style="@style/StatsWidgetBlockKey.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_views"/>
+
+            <TextView
+                android:id="@+id/widget_views"
+                style="@style/StatsWidgetBlockValue.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="20,345"/>
+
+            <TextView
+                style="@style/StatsWidgetBlockKey.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/posts"/>
+
+            <TextView
+                android:id="@+id/widget_posts"
+                style="@style/StatsWidgetBlockValue.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="139"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large">
+
+            <TextView
+                style="@style/StatsWidgetBlockKey.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_visitors"/>
+
+            <TextView
+                android:id="@+id/widget_visitors"
+                style="@style/StatsWidgetBlockValue.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="2409"/>
+
+            <TextView
+                style="@style/StatsWidgetBlockKey.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_insights_best_ever"/>
+
+            <TextView
+                android:id="@+id/widget_best_views"
+                style="@style/StatsWidgetBlockValue.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="1239"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_error"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stats_widget_content_height"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/widget_error_message"
+            style="@style/StatsWidgetErrorMessage.Dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_horizontal"
+            android:text="@string/stats_widget_error_no_data"/>
+
+        <TextView
+            android:id="@+id/widget_retry_button"
+            style="@style/StatsWidgetRetryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/retry"/>
+    </LinearLayout>
+</LinearLayout>
