@@ -1480,6 +1480,7 @@
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+    <string name="error_disabled_apis">Could not fetch settings: Some APIs are disabled for this account + client ID combination.</string>
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
