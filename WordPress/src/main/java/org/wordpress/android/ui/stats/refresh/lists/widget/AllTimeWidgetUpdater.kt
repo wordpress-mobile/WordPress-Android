@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -52,21 +53,19 @@ class AllTimeWidgetUpdater
         val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
                 .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
         val showColumns = minWidth > MIN_WIDTH
-        val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
+        val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val layout = if (showColumns) {
-            when (colorModeId) {
-                DARK.ordinal -> R.layout.stats_widget_all_time_blocks_dark
-                LIGHT.ordinal -> R.layout.stats_widget_all_time_blocks_light
-                else -> R.layout.stats_widget_all_time_blocks_light
+            when (colorMode) {
+                DARK -> R.layout.stats_widget_all_time_blocks_dark
+                LIGHT -> R.layout.stats_widget_all_time_blocks_light
             }
         } else {
-            when (colorModeId) {
-                DARK.ordinal -> R.layout.stats_widget_all_time_list_dark
-                LIGHT.ordinal -> R.layout.stats_widget_all_time_list_light
-                else -> R.layout.stats_widget_all_time_list_light
+            when (colorMode) {
+                DARK -> R.layout.stats_widget_all_time_list_dark
+                LIGHT -> R.layout.stats_widget_all_time_list_light
             }
         }
         val views = RemoteViews(context.packageName, layout)
@@ -82,7 +81,7 @@ class AllTimeWidgetUpdater
                 showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
                 views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
-                showList(appWidgetManager, views, context, appWidgetId, showColumns, colorModeId, siteId)
+                showList(appWidgetManager, views, context, appWidgetId, showColumns, colorMode, siteId)
             }
         } else {
             showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
@@ -136,7 +135,7 @@ class AllTimeWidgetUpdater
         context: Context,
         appWidgetId: Int,
         showChangeColumn: Boolean,
-        colorModeId: Int,
+        colorMode: Color,
         siteId: Long
     ) {
         views.setViewVisibility(R.id.widget_content, View.VISIBLE)
@@ -144,7 +143,7 @@ class AllTimeWidgetUpdater
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
-        listIntent.putExtra(COLOR_MODE_KEY, colorModeId)
+        listIntent.putExtra(COLOR_MODE_KEY, colorMode.ordinal)
         listIntent.putExtra(VIEW_TYPE_KEY, ViewType.ALL_TIME_VIEWS.ordinal)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.data = Uri.parse(
