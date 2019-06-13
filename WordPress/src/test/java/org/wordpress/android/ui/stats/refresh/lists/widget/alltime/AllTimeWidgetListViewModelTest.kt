@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
-import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListViewModel.AllTimeItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.viewmodel.ResourceProvider
