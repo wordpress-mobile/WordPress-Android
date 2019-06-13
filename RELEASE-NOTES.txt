@@ -5,6 +5,7 @@
 * Block Editor: Fixed keyboard flickering issue after pressing Enter repeatedly on the Post Title.
 * Block Editor: New blocks are available: video/quote/more
 * Block Editor: performance improvements
+* Fixed issue where text appeared behind list of themes on the theme screen
 
 12.6
 -----
