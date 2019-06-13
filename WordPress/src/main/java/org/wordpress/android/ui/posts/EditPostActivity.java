@@ -855,40 +855,60 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private String getSaveButtonText() {
+    private enum MainAction {
+        SUBMIT_FOR_REVIEW,
+        SCHEDULE_POST,
+        PUBLISH_POST,
+        UPDATE_POST,
+        SAVE_DRAFT
+    }
+
+    private MainAction getMainAction() {
         if (!userCanPublishPosts()) {
-            return getString(R.string.submit_for_review);
+            return MainAction.SUBMIT_FOR_REVIEW;
         }
 
         switch (PostStatus.fromPost(mPost)) {
             case SCHEDULED:
-                return getString(R.string.schedule_verb);
+                return MainAction.SCHEDULE_POST;
             case PUBLISHED:
             case UNKNOWN:
                 if (mPost.isLocalDraft()) {
-                    return getString(R.string.post_status_publish_post);
+                    return MainAction.PUBLISH_POST;
                 } else {
-                    return getString(R.string.update_verb);
+                    return MainAction.UPDATE_POST;
                 }
             case DRAFT:
                 if (isNewPost() && mPost.isLocalDraft()) {
-                    return getString(R.string.post_status_publish_post);
+                    return MainAction.PUBLISH_POST;
                 } else {
-                    return handleDefaultForSaveButtonText();
+                    return MainAction.SAVE_DRAFT;
                 }
             case PRIVATE:
             case PENDING:
             case TRASHED:
             default:
-                return handleDefaultForSaveButtonText();
+                if (mPost.isLocalDraft()) {
+                    return MainAction.SAVE_DRAFT;
+                } else {
+                    return MainAction.UPDATE_POST;
+                }
         }
     }
 
-    private String handleDefaultForSaveButtonText() {
-        if (mPost.isLocalDraft()) {
-            return getString(R.string.save);
-        } else {
-            return getString(R.string.update_verb);
+    private String getSaveButtonText() {
+        switch (getMainAction()) {
+            case SUBMIT_FOR_REVIEW:
+                return getString(R.string.submit_for_review);
+            case SCHEDULE_POST:
+                return getString(R.string.schedule_verb);
+            case PUBLISH_POST:
+                return getString(R.string.post_status_publish_post);
+            case UPDATE_POST:
+                return getString(R.string.update_verb);
+            case SAVE_DRAFT:
+            default:
+                return getString(R.string.save);
         }
     }
 
@@ -1312,7 +1332,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (shouldShowAsyncPromoDialog()) {
                 showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
-                showPublishConfirmationForNewLocalDraftOrUpdate();
+                showPublishConfirmationIfNeeded();
             }
         } else {
             // Disable other action bar buttons while a media upload is in progress
@@ -1355,7 +1375,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         return false;
                     }
-                    showPublishConfirmationDialog();
+                    showPublishConfirmationDialogAndPublishPost();
                 } else {
                     // this is a new post, save as draft
                     if (isDiscardable()) {
@@ -1375,7 +1395,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             }
                         } else {
                             // user pressed `Publish Now` on a non-new, Scheduled Post. Let's confirm and publish!
-                            showPublishConfirmationDialog();
+                            showPublishConfirmationDialogAndPublishPost();
                             return false;
                         }
                     }
@@ -1484,29 +1504,44 @@ public class EditPostActivity extends AppCompatActivity implements
                 mHtmlModeMenuStateOn ? Editor.HTML : (isGutenberg ? Editor.GUTENBERG : Editor.CLASSIC));
     }
 
-    private void showPublishConfirmationDialog() {
-        BasicFragmentDialog publishConfirmationDialog = new BasicFragmentDialog();
-        publishConfirmationDialog.initialize(
-                TAG_PUBLISH_CONFIRMATION_DIALOG,
-                getString(R.string.dialog_confirm_publish_title),
+    private void showUpdateConfirmationDialogAndPublishPost() {
+        showConfirmationDialogAndUploadPost(getString(R.string.dialog_confirm_update_title),
+                mPost.isPage() ? getString(R.string.dialog_confirm_update_message_page)
+                        : getString(R.string.dialog_confirm_update_message_post),
+                getString(R.string.dialog_confirm_update_yes),
+                getString(R.string.keep_editing));
+    }
+
+    private void showPublishConfirmationDialogAndPublishPost() {
+        showConfirmationDialogAndUploadPost(getString(R.string.dialog_confirm_publish_title),
                 mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                         : getString(R.string.dialog_confirm_publish_message_post),
                 getString(R.string.dialog_confirm_publish_yes),
-                getString(R.string.keep_editing),
-                null);
+                getString(R.string.keep_editing));
+    }
+
+    private void showConfirmationDialogAndUploadPost(@NonNull String title, @NonNull String description,
+                                                     @NonNull String positiveButton, @NonNull String negativeButton) {
+        BasicFragmentDialog publishConfirmationDialog = new BasicFragmentDialog();
+        publishConfirmationDialog
+                .initialize(TAG_PUBLISH_CONFIRMATION_DIALOG, title, description, positiveButton, negativeButton, null);
         publishConfirmationDialog.show(getSupportFragmentManager(), TAG_PUBLISH_CONFIRMATION_DIALOG);
     }
 
-    private void showPublishConfirmationForNewLocalDraftOrUpdate() {
-        // if post is a new draft, first make sure to confirm the PUBLISH action, in case
-        // the user tapped on it accidentally
-        PostStatus status = PostStatus.fromPost(mPost);
-        if (userCanPublishPosts() && (status == PostStatus.DRAFT || status == PostStatus.UNKNOWN)
-            && mPost.isLocalDraft() && isNewPost()) {
-            showPublishConfirmationDialog();
-        } else {
-            // otherwise, if they're updating a Post, just go ahead and save it to the server
-            publishPost(false);
+    private void showPublishConfirmationIfNeeded() {
+        switch (getMainAction()) {
+            case PUBLISH_POST:
+                showPublishConfirmationDialogAndPublishPost();
+                return;
+            case UPDATE_POST:
+                showUpdateConfirmationDialogAndPublishPost();
+                return;
+            // In other cases, we'll upload the post and don't change its status
+            case SUBMIT_FOR_REVIEW:
+            case SCHEDULE_POST:
+            case SAVE_DRAFT:
+            default:
+                uploadPost(false);
         }
     }
 
@@ -1753,7 +1788,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
-                publishPost(true);
+                uploadPost(true);
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
@@ -1762,7 +1797,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_DIALOG_TAG:
-                publishPost(true);
+                uploadPost(true);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1973,7 +2008,7 @@ public class EditPostActivity extends AppCompatActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void publishPost(final boolean isPublishConfirmed) {
+    private void uploadPost(final boolean publishPost) {
         AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
         if (!account.getEmailVerified()) {
@@ -2017,7 +2052,7 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 boolean isFirstTimePublish = isFirstTimePublish();
-                if (isPublishConfirmed) {
+                if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
                     // also re-set the published date in case it was SCHEDULED and they want to publish NOW
