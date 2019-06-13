@@ -106,12 +106,13 @@ class PostListViewModel @Inject constructor(
                 connector.isEmptySearch() -> true
                 else -> pagedListWrapper.isEmpty.value ?: true
             }
+            val isLoadingData = !connector.isEmptySearch() &&
+                    (pagedListWrapper.isFetchingFirstPage.value ?: false || pagedListWrapper.data.value == null)
 
             createEmptyUiState(
                     postListType = connector.postListType,
                     isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                    isLoadingData = !connector.isEmptySearch() && (pagedListWrapper.isFetchingFirstPage.value ?: false ||
-                            pagedListWrapper.data.value == null),
+                    isLoadingData = isLoadingData,
                     isListEmpty = isListEmpty,
                     isSearchPromptRequired = connector.isEmptySearch(),
                     error = pagedListWrapper.listError.value,
