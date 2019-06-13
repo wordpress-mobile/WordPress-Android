@@ -36,17 +36,16 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         activity?.let {
-            val a = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
-            val views = a.getInt(R.styleable.statsWidget_viewType, -1)
+            val styledAttributes = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
+            val views = styledAttributes.getInt(R.styleable.statsWidget_viewType, -1)
             viewType = when (views) {
-                -1 -> throw IllegalArgumentException("The view type needs to be specified on the fragment")
                 0 -> WEEK_VIEWS
                 1 -> ALL_TIME_VIEWS
                 else -> {
                     throw IllegalArgumentException("The view type with the value $views needs to be specified")
                 }
             }
-            a.recycle()
+            styledAttributes.recycle()
         }
     }
 
