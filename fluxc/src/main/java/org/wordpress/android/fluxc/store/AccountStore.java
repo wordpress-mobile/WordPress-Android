@@ -954,19 +954,15 @@ public class AccountStore extends Store {
             mAccount.copyAccountSettingsAttributes(payload.account);
             updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
         } else {
-            if (payload.error != null) {
-                OnAccountChanged accountChanged = new OnAccountChanged();
-                AccountErrorType errorType;
-                if (payload.error.apiError.equals("reauthorization_required")) {
-                    errorType = AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR;
-                } else {
-                    errorType = AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR;
-                }
-                accountChanged.error = new AccountError(errorType, payload.error.message);
-                emitChange(accountChanged);
+            OnAccountChanged accountChanged = new OnAccountChanged();
+            AccountErrorType errorType;
+            if (payload.error.apiError.equals("reauthorization_required")) {
+                errorType = AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR;
             } else {
-                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR);
+                errorType = AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR;
             }
+            accountChanged.error = new AccountError(errorType, payload.error.message);
+            emitChange(accountChanged);
         }
     }
 
