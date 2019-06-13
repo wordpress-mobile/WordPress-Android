@@ -43,6 +43,7 @@ private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
 private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
 private const val SEARCH_DELAY_MS = 500L
+private const val SEARCH_PROGRESS_INDICATOR_DELAY_MS = 1000L
 
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
@@ -133,11 +134,10 @@ class PostListFragment : Fragment() {
 
         if (postListType == SEARCH) {
             mainViewModel.searchQuery.observe(this, Observer {
-                searchHandler.removeCallbacksAndMessages(null)
-                searchHandler.postDelayed({
-                    viewModelStore.clear() // clear ViewModel's attached to this fragment
-                    setViewModel() // restart ViewModel
-                }, SEARCH_DELAY_MS)
+                searchHandler.removeCallbacks(searchRunnable)
+                searchHandler.removeCallbacks(searchProgressRunnable)
+                // clear ViewModel's attached to this fragment and restart it
+                searchHandler.postDelayed(searchRunnable, SEARCH_DELAY_MS)
             })
         } else {
             setViewModel()
@@ -156,6 +156,21 @@ class PostListFragment : Fragment() {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
 
+        viewModel.isFetchingFirstPage.observe(this, Observer {
+            if (postListType != SEARCH) {
+                swipeRefreshLayout?.isRefreshing = it == true
+            } else {
+                // most of the time search is pretty fast, so we don't need to show any progress indication
+                // we delay progress indicator in case request takes longer then expected
+                if (it == true) {
+                    searchHandler.postDelayed(searchProgressRunnable, SEARCH_PROGRESS_INDICATOR_DELAY_MS)
+                } else {
+                    searchHandler.removeCallbacks(searchProgressRunnable)
+                    swipeRefreshLayout?.isRefreshing = false
+                }
+            }
+        })
+
         // since most of the LiveData in PostListViewModel is lazily initialized, we don't wan't to trigger if for
         // initial empty state of search list. We have to clear the list manually, to avoid results from previous
         // search appearing for a brief moment in some instances
@@ -168,11 +183,6 @@ class PostListFragment : Fragment() {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
 
-        viewModel.isFetchingFirstPage.observe(this, Observer {
-            if (postListType != SEARCH) {
-                swipeRefreshLayout?.isRefreshing = it == true
-            }
-        })
         viewModel.isLoadingMore.observe(this, Observer {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
@@ -181,6 +191,15 @@ class PostListFragment : Fragment() {
                 recyclerView?.scrollToPosition(index)
             }
         })
+    }
+
+    private val searchRunnable = Runnable {
+        viewModelStore.clear()
+        setViewModel()
+    }
+
+    private val searchProgressRunnable = Runnable {
+        swipeRefreshLayout?.isRefreshing = true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
