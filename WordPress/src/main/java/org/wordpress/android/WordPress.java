@@ -77,7 +77,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetUpdater;
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
@@ -148,7 +148,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject MediaStore mMediaStore;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject LocalDraftUploadStarter mLocalDraftUploadStarter;
-    @Inject ViewsWidgetUpdater mViewsWidgetUpdater;
+    @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -613,7 +613,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
         StatsWidgetProvider.refreshAllWidgets(context, mSiteStore);
-        mViewsWidgetUpdater.updateAllWidgets(context);
+        mStatsWidgetUpdaters.update(context);
 
         // Reset Notifications Data
         NotificationsTable.reset();
