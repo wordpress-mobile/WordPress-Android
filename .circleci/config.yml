@@ -48,7 +48,7 @@ jobs:
             if [ -n "$GITHUB_API_TOKEN" ]; then
               ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
             else
-              echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
+              echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found."
             fi 
       - android/save-gradle-cache
       - android/save-lint-results
