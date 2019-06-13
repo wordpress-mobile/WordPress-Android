@@ -20,13 +20,13 @@ class TodayWidgetListViewModel
     private val resourceProvider: ResourceProvider
 ) {
     private var siteId: Long? = null
-    private var colorModeId: Int? = null
+    private var colorMode: Color = Color.LIGHT
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<TodayItemUiModel>()
     val data: List<TodayItemUiModel> = mutableData
-    fun start(siteId: Long, colorModeId: Int, appWidgetId: Int) {
+    fun start(siteId: Long, colorMode: Color, appWidgetId: Int) {
         this.siteId = siteId
-        this.colorModeId = colorModeId
+        this.colorMode = colorMode
         this.appWidgetId = appWidgetId
     }
 
@@ -56,10 +56,9 @@ class TodayWidgetListViewModel
         domainModel: VisitsModel,
         localSiteId: Long
     ): List<TodayItemUiModel> {
-        val layout = when (colorModeId) {
-            Color.DARK.ordinal -> R.layout.stats_views_widget_item_dark
-            Color.LIGHT.ordinal -> R.layout.stats_views_widget_item_light
-            else -> R.layout.stats_views_widget_item_light
+        val layout = when (colorMode) {
+            Color.DARK -> R.layout.stats_views_widget_item_dark
+            Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
         return listOf(
                 TodayItemUiModel(

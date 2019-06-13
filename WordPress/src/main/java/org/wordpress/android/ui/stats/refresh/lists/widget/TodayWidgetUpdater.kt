@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -34,11 +35,11 @@ class TodayWidgetUpdater
         appWidgetId: Int
     ) {
         val showColumns = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
-        val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
+        val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: Color.LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val views = RemoteViews(context.packageName, widgetUtils.getLayout(showColumns, colorModeId))
+        val views = RemoteViews(context.packageName, widgetUtils.getLayout(showColumns, colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
@@ -63,7 +64,7 @@ class TodayWidgetUpdater
                         views,
                         context,
                         appWidgetId,
-                        colorModeId,
+                        colorMode,
                         siteId,
                         ViewType.TODAY_VIEWS
                 )

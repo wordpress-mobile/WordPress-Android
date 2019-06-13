@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.image.ImageManager
@@ -38,18 +39,16 @@ class WidgetUtils
         return minWidth > minWidthLimit
     }
 
-    fun getLayout(showColumns: Boolean, colorModeId: Int): Int {
+    fun getLayout(showColumns: Boolean, colorMode: Color): Int {
         return if (showColumns) {
-            when (colorModeId) {
-                DARK.ordinal -> R.layout.stats_widget_blocks_dark
-                LIGHT.ordinal -> R.layout.stats_widget_blocks_light
-                else -> R.layout.stats_widget_blocks_light
+            when (colorMode) {
+                DARK -> R.layout.stats_widget_blocks_dark
+                LIGHT -> R.layout.stats_widget_blocks_light
             }
         } else {
-            when (colorModeId) {
-                DARK.ordinal -> R.layout.stats_widget_list_dark
-                LIGHT.ordinal -> R.layout.stats_widget_list_light
-                else -> R.layout.stats_widget_list_light
+            when (colorMode) {
+                DARK -> R.layout.stats_widget_list_dark
+                LIGHT -> R.layout.stats_widget_list_light
             }
         }
     }
@@ -102,7 +101,7 @@ class WidgetUtils
         views: RemoteViews,
         context: Context,
         appWidgetId: Int,
-        colorModeId: Int,
+        colorMode: Color,
         siteId: Long,
         viewType: ViewType,
         showChangeColumn: Boolean? = null
@@ -112,8 +111,8 @@ class WidgetUtils
         views.setViewVisibility(R.id.widget_error, View.GONE)
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        listIntent.putExtra(COLOR_MODE_KEY, colorModeId)
-        listIntent.putExtra(VIEW_TYPE_KEY, viewType.ordinal)
+        listIntent.putColorMode(colorMode)
+        listIntent.putViewType(viewType)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         showChangeColumn?.let {
             listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
