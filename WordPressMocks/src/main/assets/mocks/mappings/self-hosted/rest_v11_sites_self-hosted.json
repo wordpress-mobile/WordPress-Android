@@ -1,0 +1,19 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/rest/v1.1/sites/([0-9]+(.[0-9]+)+|localhost|.*.mystagingwebsite.com)(:[0-9]*)?/?($|\\?.*)"
+    },
+    "response": {
+        "status": 403,
+        "jsonBody": {
+            "error": "unauthorized",
+            "message": "API calls to this blog have been disabled."
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0",
+            "Link": "<{{request.requestLine.baseUrl}}/wp-json/>; rel=\"https://api.w.org/\""
+        }
+    }
+}
