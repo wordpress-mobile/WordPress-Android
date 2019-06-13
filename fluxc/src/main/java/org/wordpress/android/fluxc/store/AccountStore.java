@@ -955,6 +955,8 @@ public class AccountStore extends Store {
             updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
         } else {
             OnAccountChanged accountChanged = new OnAccountChanged();
+            accountChanged.causeOfChange = AccountAction.FETCH_SETTINGS;
+
             AccountErrorType errorType;
             if (payload.error.apiError.equals("reauthorization_required")) {
                 errorType = AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR;
@@ -962,6 +964,7 @@ public class AccountStore extends Store {
                 errorType = AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR;
             }
             accountChanged.error = new AccountError(errorType, payload.error.message);
+
             emitChange(accountChanged);
         }
     }
