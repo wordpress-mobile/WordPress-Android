@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-01 15:55:46+0000
+Translation-Revision-Date: 2019-05-09 06:50:22+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="stats_insights_average_words">Průměr slov/příspěvek</string>
+    <string name="stats_insights_total_words">Celkem slov</string>
+    <string name="stats_insights_average_likes">Průměr to se mi líbí/příspěvek</string>
+    <string name="stats_insights_total_likes">Celkem to se mi líbí</string>
+    <string name="stats_insights_average_comments">Průměr komentářů/příspěvek</string>
+    <string name="stats_insights_total_comments">Celkem komentářů</string>
+    <string name="stats_insights_posts">Příspěvky</string>
+    <string name="stats_insights_year">Rok</string>
+    <string name="stats_insights_this_year_site_stats">Tento rok</string>
+    <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrace domény</string>
+    <string name="plugin_install_custom_domain_required_dialog_title">Instalovat plugin</string>
     <string name="new_site_creation_preview_subtitle">Později budete moci přizpůsobit zobrazení a vzhled svých stránek</string>
     <string name="publish_on">Publikovat na: %s</string>
     <string name="schedule_for">Naplánováno na: %s</string>
@@ -40,7 +51,6 @@ Language: cs_CZ
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Nepodporovaný blok</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Vložte adresu URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">ZVOLIT OBRÁZEK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Vložení média se nezdařilo .\nKlepněte na nastavení.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Vymazat všechna nastavení</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Zarovnání textu</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress knihovna médií</string>
@@ -58,6 +68,13 @@ Language: cs_CZ
     <string name="exit">exit</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
+    <string name="new_site_creation_clear_all_content_description">Vyčistit</string>
+    <string name="notification_new_site_creation_title">Vytvořit stránku</string>
+    <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
+    <string name="new_site_creation_search_domain_input_hint">Prohledat domény</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Vlastní rubrika</string>
+    <string name="new_site_creation_button_skip">Přeskočít</string>
+    <string name="new_site_creation_site_title_hint">Název stránky</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvořit webovou stránku</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
@@ -112,7 +129,7 @@ Language: cs_CZ
     <string name="stats_followers_count_message">Celkem %1$s fanoušků: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_button_manage_insights">Správa přehledů</string>
+    <string name="stats_manage_insights">Správa přehledů</string>
     <string name="stats_no_data_yet">Zatím žádná data</string>
     <string name="menu_debug">Debug Menu</string>
     <string name="change_password_dialog_message">Změna hesla…</string>
@@ -500,7 +517,6 @@ Language: cs_CZ
     <string name="dialog_confirm_publish_message_page">Tato stránka bude publikována okamžitě.</string>
     <string name="dialog_confirm_publish_message_post">Tento příspěvek bude publikován okamžitě.</string>
     <string name="dialog_confirm_publish_title">Připraveno k publikování?</string>
-    <string name="dialog_confirm_delete_post">Tento příspěvek bude smazán a přesunut do koše.</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d příspěvků / stránek se nenahrálo</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránek se nenahrálo</string>
     <string name="media_file_page_singular_only_not_uploaded">1 stránka se nenahrála</string>
@@ -805,7 +821,6 @@ Language: cs_CZ
     <string name="async_promo_link">Jak to funguje?</string>
     <string name="editor_uploading_post">Příspěvek se nahrává</string>
     <string name="uploading_media">Nahrávám média…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Opravdu? Smazání tohoto příspěvku zruší také nahrávání médií.</string>
     <string name="page_scheduled">Stránka naplánována</string>
     <string name="post_scheduled">Příspěvek naplánován</string>
     <string name="button_retry">Opakovat</string>
@@ -864,8 +879,8 @@ Language: cs_CZ
     <string name="editor_dropped_text_error">Při odstraňování textu došlo k chybě</string>
     <string name="editor_dropped_html_images_not_allowed">Odstraňování obrázků v režimu HTML není povoleno</string>
     <string name="editor_content_hint">Sdílejte svůj příběh zde…</string>
-    <string name="post_status_trashed">Smazáno</string>
-    <string name="post_status_scheduled">Naplánovat</string>
+    <string name="post_list_trashed">Smazáno</string>
+    <string name="post_list_scheduled">Naplánovat</string>
     <string name="post_status_post_private">Soukromé</string>
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Čeká na schválení</string>
@@ -1027,7 +1042,6 @@ Language: cs_CZ
     <string name="error_media_not_found">Média nebyla nalezena</string>
     <string name="error_media_insufficient_fs_permissions">Oprávnění ke čtení médií v zařízení byla odepřena</string>
     <string name="site_settings_optimize_images">Optimalizovat obrázky</string>
-    <string name="no_site_error">Nelze se připojit k WordPress webu. Není platná adresa WordPress stránky. \n         Zkontrolujte zadanou URL adresu.</string>
     <string name="media_generic_error">Chyba médií</string>
     <string name="media_upload_error">Došlo k chybě nahrávání médií</string>
     <string name="retry">Znovu</string>
@@ -1466,10 +1480,8 @@ Language: cs_CZ
     <string name="button_preview">Náhled</string>
     <string name="button_trash">Koš</string>
     <string name="button_stats">Statistiky</string>
-    <string name="button_back">Zpět</string>
     <string name="stats_no_activity_this_period">Žádná aktivita v tomto období</string>
     <string name="post_trashed">Příspěvek byl přesunut do koše</string>
-    <string name="post_deleted">Příspěvek byl odstraněn</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
     <string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
     <string name="undo">Zpět</string>

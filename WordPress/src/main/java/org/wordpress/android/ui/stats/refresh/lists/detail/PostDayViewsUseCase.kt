@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
@@ -87,7 +87,13 @@ class PostDayViewsUseCase
         val previousItem = domainModel.dayViews.getOrNull(domainModel.dayViews.indexOf(selectedItem) - 1)
 
         val items = mutableListOf<BlockListItem>()
-        items.add(postDayViewsMapper.buildTitle(selectedItem, previousItem))
+        items.add(
+                postDayViewsMapper.buildTitle(
+                        selectedItem,
+                        previousItem,
+                        isLast = selectedItem == domainModel.dayViews.last()
+                )
+        )
         items.addAll(
                 postDayViewsMapper.buildChart(
                         domainModel.dayViews,
@@ -100,7 +106,7 @@ class PostDayViewsUseCase
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
-        return listOf(ValueItem(value = 0.toFormattedString(), unit = string.stats_views, isFirst = true))
+        return listOf(ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true))
     }
 
     private fun onBarSelected(period: String?) {

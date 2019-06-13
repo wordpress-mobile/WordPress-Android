@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.viewholders
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
@@ -18,7 +18,7 @@ class LoadingViewHolder(parent: ViewGroup, val imageManager: ImageManager) : Bas
         super.bind(statsType, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
-            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+            list.layoutManager = LinearLayoutManager(list.context, RecyclerView.VERTICAL, false)
             list.adapter = BlockListAdapter(imageManager)
         }
         (list.adapter as BlockListAdapter).update(items)

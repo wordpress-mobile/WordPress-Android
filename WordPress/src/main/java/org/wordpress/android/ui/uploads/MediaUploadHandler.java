@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.uploads;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
@@ -30,8 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizer.VideoOptimizationListener {
     private static List<MediaModel> sPendingUploads = new ArrayList<>();
@@ -317,6 +316,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     // App events
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(PostEvents.PostMediaCanceled event) {
         if (event.post == null) {
             return;

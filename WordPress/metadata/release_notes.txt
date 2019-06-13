@@ -1,3 +1,2 @@
-* Better sharing: You can now share entire sites from the Reader, not just posts.
-* Better Stats: Insights includes a new “This Year” section, and stats have better RTL support.
-* Fixes: Issues with missing posts in the Reader and site icons that didn’t updating properly when switching sites have been resolved.
+* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.
+* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.

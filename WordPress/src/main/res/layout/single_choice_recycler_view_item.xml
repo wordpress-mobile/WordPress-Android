@@ -13,7 +13,7 @@
     android:orientation="horizontal"
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_large"
-    tools:ignore="RtlHardcoded" >
+    tools:ignore="RtlHardcoded,UnusedAttribute" >
 
     <RadioButton
         android:id="@+id/radio"

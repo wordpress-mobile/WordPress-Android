@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications.blocks;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -10,6 +9,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;

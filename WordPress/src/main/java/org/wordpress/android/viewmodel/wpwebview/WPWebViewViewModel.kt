@@ -1,0 +1,120 @@
+package org.wordpress.android.viewmodel.wpwebview
+
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import org.wordpress.android.util.CrashLoggingUtils
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
+import javax.inject.Inject
+
+class WPWebViewViewModel
+@Inject constructor(
+    private val networkUtils: NetworkUtilsWrapper,
+    connectionStatus: LiveData<ConnectionStatus>
+) : ViewModel(), LifecycleOwner {
+    private var isStarted = false
+
+    private val _uiState: MutableLiveData<WebPreviewUiState> = MutableLiveData()
+    val uiState: LiveData<WebPreviewUiState> = _uiState
+    private val _loadNeeded = SingleLiveEvent<Boolean>()
+    val loadNeeded: LiveData<Boolean> = _loadNeeded
+
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
+    init {
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        connectionStatus.observe(this, Observer {
+            if (it == AVAILABLE) {
+                loadIfNecessary()
+            }
+        })
+    }
+
+    fun start() {
+        if (isStarted) {
+            return
+        }
+        isStarted = true
+        // If there is no internet show the error screen
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiState(WebPreviewFullscreenProgressUiState)
+        } else {
+            updateUiState(WebPreviewFullscreenErrorUiState)
+        }
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
+    }
+
+    override fun onCleared() {
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        super.onCleared()
+    }
+
+    private fun updateUiState(uiState: WebPreviewUiState) {
+        _uiState.value = uiState
+    }
+
+    /**
+     * Update the ui state if the Loading or Error screen is being shown.
+     * In other words don't update it after a configuration change.
+     */
+    fun onUrlLoaded() {
+        if (uiState.value !is WebPreviewContentUiState) {
+            updateUiState(WebPreviewContentUiState)
+        }
+        _loadNeeded.value = false
+    }
+
+    /**
+     * Update the ui state if the Loading or Success screen is being shown.
+     */
+    fun onReceivedError() {
+        if (uiState.value is WebPreviewContentUiState) {
+            CrashLoggingUtils.log(
+                    IllegalStateException(
+                            "WPWebViewViewModel.onReceivedError() called with uiState WebPreviewContentUiState"
+                    )
+            )
+            return
+        }
+        if (uiState.value !is WebPreviewFullscreenErrorUiState) {
+            updateUiState(WebPreviewFullscreenErrorUiState)
+        }
+        _loadNeeded.value = false
+    }
+
+    fun loadIfNecessary() {
+        if (uiState.value !is WebPreviewFullscreenProgressUiState && uiState.value !is WebPreviewContentUiState) {
+            updateUiState(WebPreviewFullscreenProgressUiState)
+            _loadNeeded.value = true
+        }
+    }
+
+    sealed class WebPreviewUiState(
+        val fullscreenProgressLayoutVisibility: Boolean = false,
+        val webViewVisibility: Boolean = false,
+        val actionableEmptyView: Boolean = false
+    ) {
+        object WebPreviewContentUiState : WebPreviewUiState(
+                webViewVisibility = true
+        )
+
+        object WebPreviewFullscreenProgressUiState : WebPreviewUiState(
+                fullscreenProgressLayoutVisibility = true
+        )
+
+        object WebPreviewFullscreenErrorUiState : WebPreviewUiState(
+                actionableEmptyView = true
+        )
+    }
+}

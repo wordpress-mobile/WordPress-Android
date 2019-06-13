@@ -1,14 +1,14 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
-import android.arch.paging.PagedList
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
@@ -24,6 +24,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
+import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -44,6 +45,7 @@ class PostListViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val localDraftUploadStarter: LocalDraftUploadStarter,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
@@ -147,8 +149,9 @@ class PostListViewModel @Inject constructor(
 
     // Public Methods
 
-    fun fetchFirstPage() {
-        pagedListWrapper.fetchFirstPage()
+    fun swipeToRefresh() {
+        localDraftUploadStarter.queueUploadFromSite(connector.site)
+        fetchFirstPage()
     }
 
     fun scrollToPost(localPostId: LocalPostId) {
@@ -162,6 +165,10 @@ class PostListViewModel @Inject constructor(
     }
 
     // Utils
+
+    private fun fetchFirstPage() {
+        pagedListWrapper.fetchFirstPage()
+    }
 
     private fun onDataUpdated(data: PagedPostList) {
         val localPostId = scrollToLocalPostId

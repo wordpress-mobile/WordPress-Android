@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.Observer;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,19 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -46,6 +32,25 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -189,8 +194,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
@@ -281,12 +284,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsConfigChange = false;
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -297,8 +300,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private PostModel mPost;
     private PostModel mPostForUndo;
-    private PostModel mOriginalPost;
-    private boolean mOriginalPostHadLocalChangesOnOpen;
+    // mPostSnapshotWhenEditorOpened should not be updated after the post editor session start
+    private @Nullable PostModel mPostSnapshotWhenEditorOpened;
 
     private Revision mRevision;
 
@@ -528,14 +531,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
 
-        if (savedInstanceState == null) {
-            // Bump the stat the first time the editor is opened.
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+        // Bump post created analytics only once, first time the editor is opened
+        if (mIsNewPost && savedInstanceState == null) {
+            trackEditorCreatedPost(action, getIntent());
         }
 
-        if (mIsNewPost) {
-            trackEditorCreatedPost(action, getIntent());
-        } else {
+        if (!mIsNewPost) {
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mPost);
@@ -593,8 +594,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void initializePostObject() {
         if (mPost != null) {
-            mOriginalPost = mPost.clone();
-            mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
+            mPostSnapshotWhenEditorOpened = mPost.clone();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
             if (mShowAztecEditor) {
                 try {
@@ -715,6 +715,11 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().register(this);
 
         reattachUploadingMediaForAztec();
+
+        // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
+        PostUtils.trackOpenEditorAnalytics(mPost, mSite);
+
+        mIsConfigChange = false;
     }
 
     private void reattachUploadingMediaForAztec() {
@@ -758,6 +763,8 @@ public class EditPostActivity extends AppCompatActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
     }
 
     @Override protected void onStop() {
@@ -775,7 +782,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPostEditorAnalyticsSession.end();
             }
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+
         mDispatcher.unregister(this);
         if (mHandler != null) {
             mHandler.removeCallbacks(mSave);
@@ -1227,7 +1234,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         showDiscardChanges = true;
                     } else {
                         // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+                        showDiscardChanges = mPostSnapshotWhenEditorOpened != null
+                                             && mPostSnapshotWhenEditorOpened.isLocallyChanged();
                     }
                 }
                 discardChanges.setVisible(showDiscardChanges);
@@ -1808,9 +1816,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private synchronized void savePostToDb() {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
 
-        // update the original post object, so we'll know of new changes
-        mOriginalPost = mPost.clone();
-
         if (mShowAztecEditor) {
             // update the list of uploading ids
             mMediaMarkedUploadingOnStartIds =
@@ -1925,11 +1930,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
-                // If no changes have been made to the post, set it back to the original - don't save it
-                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mOriginalPost));
-                return false;
-            } else {
+            if (PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost)) {
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
@@ -2068,7 +2069,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
                     // original post's status as we could not proceed with the action
-                    mPost.setStatus(mOriginalPost.getStatus());
+                    if (mPostSnapshotWhenEditorOpened != null) {
+                        mPost.setStatus(mPostSnapshotWhenEditorOpened.getStatus());
+                    } else {
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                    }
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -2154,14 +2159,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean shouldSavePost() {
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
-        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+        boolean hasChanges = PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
         boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
                                                    || PostStatus.fromPost(mPost) == PostStatus.PENDING)
                                                       && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
-        return (mOriginalPost != null && hasChanges)
+        return (mPostSnapshotWhenEditorOpened != null && hasChanges)
                              || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
     }
 
@@ -2172,8 +2177,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isFirstTimePublish() {
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mOriginalPost) == PostStatus.PENDING);
+               && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
     }
 
     /**
@@ -2609,7 +2615,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
+                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
@@ -2644,7 +2651,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setContent(content);
         }
 
-        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
+                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
 
         if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
@@ -3151,7 +3159,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // if the user selected multiple items and they're all images, show the insert media
         // dialog so the user can choose whether to insert them individually or as a gallery
-        if (ids.size() > 1 && allAreImages) {
+        if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
             for (Long id : ids) {
@@ -3378,16 +3386,22 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-        } else if (mShowGutenbergEditor) {
-            // show the WP media library with pictures only, since that's the only mode currently
-            // integrated in Gutenberg-mobile
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_EDITOR_PICKER);
-        } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
+    }
+
+    @Override
+    public void onAddMediaImageClicked() {
+        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
+    }
+
+    @Override
+    public void onAddMediaVideoClicked() {
+        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
@@ -3398,6 +3412,16 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onCapturePhotoClicked() {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+    }
+
+    @Override
+    public void onAddVideoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+    }
+
+    @Override
+    public void onCaptureVideoClicked() {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
     }
 
     @Override
@@ -3936,6 +3960,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(VideoOptimizer.ProgressEvent event) {
         if (!isFinishing()) {
             // use upload progress rather than optimizer progress since the former includes upload+optimization
@@ -3945,6 +3970,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaRetryEvent event) {
         if (!isFinishing()
             && event.mediaModelList != null

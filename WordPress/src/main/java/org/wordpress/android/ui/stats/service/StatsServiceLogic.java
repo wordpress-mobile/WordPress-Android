@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -49,9 +50,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
-
 
 /**
  * Background service to retrieve Stats.

@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.posts
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import de.greenrobot.event.EventBus
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
@@ -27,38 +27,13 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-
-fun listenForPostListEvents(
-    lifecycle: Lifecycle,
-    dispatcher: Dispatcher,
-    postStore: PostStore,
-    site: SiteModel,
-    postActionHandler: PostActionHandler,
-    handlePostUpdatedWithoutError: () -> Unit,
-    handlePostUploadedWithoutError: (LocalId) -> Unit,
-    triggerPostUploadAction: (PostUploadAction) -> Unit,
-    invalidateUploadStatus: (List<Int>) -> Unit,
-    invalidateFeaturedMedia: (List<Long>) -> Unit
-) {
-    PostListEventListener(
-            lifecycle = lifecycle,
-            dispatcher = dispatcher,
-            postStore = postStore,
-            site = site,
-            postActionHandler = postActionHandler,
-            handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
-            handlePostUploadedWithoutError = handlePostUploadedWithoutError,
-            triggerPostUploadAction = triggerPostUploadAction,
-            invalidateUploadStatus = invalidateUploadStatus,
-            invalidateFeaturedMedia = invalidateFeaturedMedia
-    )
-}
+import javax.inject.Inject
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
  * you see fit.
  */
-private class PostListEventListener(
+class PostListEventListener(
     private val lifecycle: Lifecycle,
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
@@ -88,7 +63,7 @@ private class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
             // Fetched post list event will be handled by OnListChanged
@@ -130,7 +105,7 @@ private class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
             featuredMediaChanged(*event.mediaList.map { it.mediaId }.toLongArray())
@@ -139,7 +114,7 @@ private class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
@@ -151,7 +126,7 @@ private class PostListEventListener(
     }
 
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = BACKGROUND)
     fun onMediaUploaded(event: OnMediaUploaded) {
         if (event.isError || event.canceled) {
             return
@@ -167,6 +142,7 @@ private class PostListEventListener(
     // EventBus Events
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadErrorEvent) {
         EventBus.getDefault().removeStickyEvent(event)
         if (event.post != null) {
@@ -177,6 +153,7 @@ private class PostListEventListener(
     }
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaSuccessEvent) {
         EventBus.getDefault().removeStickyEvent(event)
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
@@ -190,6 +167,7 @@ private class PostListEventListener(
      * Upload started, reload so correct status on uploading post appears
      */
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
             uploadStatusChanged(event.post.id)
@@ -200,6 +178,7 @@ private class PostListEventListener(
      * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
      */
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
             uploadStatusChanged(event.post.id)
@@ -207,11 +186,13 @@ private class PostListEventListener(
     }
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
         uploadStatusChanged(event.media.localPostId)
     }
 
     @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status
@@ -226,5 +207,33 @@ private class PostListEventListener(
 
     private fun featuredMediaChanged(vararg featuredImageIds: Long) {
         invalidateFeaturedMedia.invoke(featuredImageIds.toList())
+    }
+
+    class Factory @Inject constructor() {
+        fun createAndStartListening(
+            lifecycle: Lifecycle,
+            dispatcher: Dispatcher,
+            postStore: PostStore,
+            site: SiteModel,
+            postActionHandler: PostActionHandler,
+            handlePostUpdatedWithoutError: () -> Unit,
+            handlePostUploadedWithoutError: (LocalId) -> Unit,
+            triggerPostUploadAction: (PostUploadAction) -> Unit,
+            invalidateUploadStatus: (List<Int>) -> Unit,
+            invalidateFeaturedMedia: (List<Long>) -> Unit
+        ) {
+            PostListEventListener(
+                    lifecycle = lifecycle,
+                    dispatcher = dispatcher,
+                    postStore = postStore,
+                    site = site,
+                    postActionHandler = postActionHandler,
+                    handlePostUpdatedWithoutError = handlePostUpdatedWithoutError,
+                    handlePostUploadedWithoutError = handlePostUploadedWithoutError,
+                    triggerPostUploadAction = triggerPostUploadAction,
+                    invalidateUploadStatus = invalidateUploadStatus,
+                    invalidateFeaturedMedia = invalidateFeaturedMedia
+            )
+        }
     }
 }

@@ -7,7 +7,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
@@ -175,7 +174,7 @@ class FollowersUseCase(
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_view_followers, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
 
     private fun loadMore() {
         GlobalScope.launch(bgDispatcher) {
@@ -190,7 +189,7 @@ class FollowersUseCase(
             mutableItems.add(
                     Information(
                             resourceProvider.getString(
-                                    string.stats_followers_count_message,
+                                    R.string.stats_followers_count_message,
                                     resourceProvider.getString(label),
                                     model.totalCount
                             )
