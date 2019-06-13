@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import android.app.AlertDialog
 import android.app.Dialog

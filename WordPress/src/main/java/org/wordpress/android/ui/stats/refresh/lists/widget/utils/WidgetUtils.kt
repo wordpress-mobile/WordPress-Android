@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.utils
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -15,10 +15,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.SHOW_CHANGE_VALUE_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider

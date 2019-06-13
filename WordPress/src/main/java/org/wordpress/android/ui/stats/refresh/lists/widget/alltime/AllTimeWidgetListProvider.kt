@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -10,7 +10,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import javax.inject.Inject
 
 class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.views
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -11,6 +11,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.SHOW_CHANGE_VALUE_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {

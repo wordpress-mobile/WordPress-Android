@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 

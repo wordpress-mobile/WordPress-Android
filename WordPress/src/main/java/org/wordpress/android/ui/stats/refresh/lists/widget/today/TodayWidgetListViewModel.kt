@@ -1,6 +1,6 @@
 @file:JvmName("StatsWidgetConfigureViewModelKt")
 
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.today
 
 import androidx.annotation.LayoutRes
 import kotlinx.coroutines.runBlocking
@@ -8,7 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject

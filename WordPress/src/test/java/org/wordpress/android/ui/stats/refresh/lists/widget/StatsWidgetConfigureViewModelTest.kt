@@ -11,12 +11,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.WidgetAdded
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.WidgetSettingsModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.SiteUiModel
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.WidgetAdded
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.WidgetSettingsModel
 import org.wordpress.android.viewmodel.Event
 
 class StatsWidgetConfigureViewModelTest : BaseUnitTest() {

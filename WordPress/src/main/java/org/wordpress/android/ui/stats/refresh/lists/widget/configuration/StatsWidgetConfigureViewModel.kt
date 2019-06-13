@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -9,8 +9,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event

@@ -23,7 +23,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.LIST_ITEM_COUNT
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider

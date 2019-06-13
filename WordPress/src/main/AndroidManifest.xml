@@ -709,7 +709,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.StatsViewsWidget">
+        <receiver android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -718,7 +718,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_views_widget_info"/>
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.StatsAllTimeWidget">
+        <receiver android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -727,7 +727,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_all_time_widget_info"/>
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.StatsTodayWidget">
+        <receiver android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -741,7 +741,7 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
-            android:name=".ui.stats.refresh.lists.widget.StatsViewsWidgetConfigureActivity"
+            android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
             android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -749,7 +749,7 @@
         </activity>
 
         <activity
-            android:name=".ui.stats.refresh.lists.widget.StatsAllTimeWidgetConfigureActivity"
+            android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
             android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
@@ -757,7 +757,7 @@
         </activity>
 
         <activity
-            android:name=".ui.stats.refresh.lists.widget.StatsTodayWidgetConfigureActivity"
+            android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidgetConfigureActivity"
             android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
