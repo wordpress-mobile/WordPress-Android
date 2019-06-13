@@ -39,7 +39,8 @@ class PostListViewModelTest {
                 getUploadStatus = mock(),
                 doesPostHaveUnhandledConflict = mock(),
                 getFeaturedImageUrl = mock(),
-                postFetcher = mock()
+                postFetcher = mock(),
+                searchQuery = null
         )
 
         fun createPostListViewModel(localDraftUploadStarter: LocalDraftUploadStarter): PostListViewModel {

@@ -95,9 +95,9 @@ class PostListViewModel @Inject constructor(
 
     private fun isResultDeliverable(): Boolean {
         return connector.postListType != SEARCH ||
-                (connector.postListType == SEARCH
-                        && pagedListWrapper.isFetchingFirstPage.value != null
-                        && isFetchingFirstPage.value != true)
+                (connector.postListType == SEARCH &&
+                        pagedListWrapper.isFetchingFirstPage.value != null &&
+                        isFetchingFirstPage.value != true)
     }
 
     val emptyViewState: LiveData<PostListEmptyUiState> by lazy {
