@@ -104,6 +104,8 @@ class AllTimeWidgetUpdater
         views: RemoteViews,
         site: SiteModel
     ) {
+        views.setViewVisibility(R.id.widget_content, View.VISIBLE)
+        views.setViewVisibility(R.id.widget_error, View.GONE)
         loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         GlobalScope.launch {
             runBlocking {
