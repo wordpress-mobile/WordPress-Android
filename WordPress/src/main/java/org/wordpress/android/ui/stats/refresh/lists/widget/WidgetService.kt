@@ -14,7 +14,7 @@ class WidgetService : RemoteViewsService() {
             when (ViewType.values()[viewTypeOrdinal]) {
                 WEEK_VIEWS -> ViewsWidgetListProvider(this.applicationContext, intent)
                 ALL_TIME_VIEWS -> AllTimeWidgetListProvider(this.applicationContext, intent)
-                TODAY_VIEWS -> TODO()
+                TODAY_VIEWS -> TodayWidgetListProvider(this.applicationContext, intent)
             }
         } else {
             ViewsWidgetListProvider(this.applicationContext, intent)

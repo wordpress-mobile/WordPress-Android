@@ -141,6 +141,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.AllTimeWidgetListProv
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsAllTimeWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsTodayWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsViewsWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.TodayWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.ViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
@@ -469,6 +470,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ViewsWidgetListProvider object);
 
     void inject(AllTimeWidgetListProvider object);
+
+    void inject(TodayWidgetListProvider object);
 
     void inject(StatsActivity object);
 
