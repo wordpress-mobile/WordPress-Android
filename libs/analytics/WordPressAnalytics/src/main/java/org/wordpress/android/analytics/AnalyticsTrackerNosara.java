@@ -568,6 +568,8 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         switch (stat) {
             case APPLICATION_OPENED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "application_opened";
             case APPLICATION_CLOSED:
                 return "application_closed";
@@ -932,9 +934,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case CREATE_ACCOUNT_FAILED:
                 return "account_create_failed";
             case CREATED_ACCOUNT:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
-            case CREATED_SITE:
-                return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
             case SHARED_ITEM_READER:
@@ -1148,6 +1150,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PAGES_SEARCH_ACCESSED:
                 return "site_pages_search_accessed";
             case SIGNUP_BUTTON_TAPPED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "signup_button_tapped";
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
@@ -1252,6 +1256,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
                 return "enhanced_site_creation_background_service_updated";
             case SITE_CREATED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "site_created";
             case PERSON_REMOVED:
                 return "people_management_person_removed";

@@ -20,6 +20,8 @@ public final class AnalyticsTracker {
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
     public enum Stat {
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
         APPLICATION_INSTALLED,
@@ -274,8 +276,9 @@ public final class AnalyticsTracker {
         CREATE_ACCOUNT_EMAIL_EXISTS,
         CREATE_ACCOUNT_USERNAME_EXISTS,
         CREATE_ACCOUNT_FAILED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         CREATED_ACCOUNT,
-        CREATED_SITE,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
         SHARED_ITEM_READER,
@@ -341,6 +344,8 @@ public final class AnalyticsTracker {
         PAGES_TAB_PRESSED,
         PAGES_OPTIONS_PRESSED,
         PAGES_SEARCH_ACCESSED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SIGNUP_BUTTON_TAPPED,
         SIGNUP_EMAIL_BUTTON_TAPPED,
         SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED,
@@ -393,6 +398,8 @@ public final class AnalyticsTracker {
         ENHANCED_SITE_CREATION_EXITED,
         ENHANCED_SITE_CREATION_ERROR_SHOWN,
         ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SITE_CREATED,
         MEDIA_LIBRARY_ADDED_PHOTO,
         MEDIA_LIBRARY_ADDED_VIDEO,

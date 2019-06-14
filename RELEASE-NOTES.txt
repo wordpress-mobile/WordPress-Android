@@ -3,6 +3,7 @@
 * Added Post search
 * Show upload in progress notification when retrying
 * Fix issue where two identical drafts were created
+* Fixed issue where text appeared behind list of themes on the theme screen
 
 12.6
 -----
