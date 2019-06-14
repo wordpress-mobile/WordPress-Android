@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -132,25 +133,29 @@ class PostListFragment : Fragment() {
             }
         })
 
-        if (postListType == SEARCH) {
-            mainViewModel.searchQuery.observe(this, Observer {
-                searchHandler.removeCallbacks(searchRunnable)
-                searchHandler.removeCallbacks(searchProgressRunnable)
-                // clear ViewModel's attached to this fragment and restart it
-                searchHandler.postDelayed(searchRunnable, SEARCH_DELAY_MS)
-            })
-        } else {
-            setViewModel()
-        }
-    }
-
-    private fun setViewModel() {
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
         viewModel.start(postListViewModelConnector)
+
+        initObservers()
+    }
+
+    private fun initObservers() {
+        if (postListType == SEARCH) {
+            mainViewModel.searchQuery.observe(this, Observer {
+                if (TextUtils.isEmpty(it)) {
+                    postListAdapter.submitList(null)
+                }
+
+                searchHandler.removeCallbacksAndMessages(null)
+                searchHandler.postDelayed({
+                    viewModel.search(it)
+                }, SEARCH_DELAY_MS)
+            })
+        }
 
         viewModel.emptyViewState.observe(this, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
@@ -171,14 +176,6 @@ class PostListFragment : Fragment() {
             }
         })
 
-        // since most of the LiveData in PostListViewModel is lazily initialized, we don't wan't to trigger if for
-        // initial empty state of search list. We have to clear the list manually, to avoid results from previous
-        // search appearing for a brief moment in some instances
-        if (postListViewModelConnector.isEmptySearch()) {
-            postListAdapter.submitList(null)
-            return
-        }
-
         viewModel.pagedListData.observe(this, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
@@ -191,11 +188,6 @@ class PostListFragment : Fragment() {
                 recyclerView?.scrollToPosition(index)
             }
         })
-    }
-
-    private val searchRunnable = Runnable {
-        viewModelStore.clear()
-        setViewModel()
     }
 
     private val searchProgressRunnable = Runnable {

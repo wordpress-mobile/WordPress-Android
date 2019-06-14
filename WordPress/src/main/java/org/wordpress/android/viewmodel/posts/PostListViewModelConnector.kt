@@ -1,12 +1,10 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.text.TextUtils
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostActionHandler
 import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListType.SEARCH
 
 class PostListViewModelConnector(
     val site: SiteModel,
@@ -21,9 +19,5 @@ class PostListViewModelConnector(
 ) {
     fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
         return getFeaturedImageUrl.invoke(site, featuredImageId, postContent)
-    }
-
-    fun isEmptySearch(): Boolean {
-        return postListType == SEARCH && TextUtils.isEmpty(searchQuery)
     }
 }
