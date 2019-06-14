@@ -71,13 +71,6 @@ android {
         }
     }
 
-    // We need specific packagingOptions in order to build the
-    // Gutenberg with newest jsc-android dependency(241213.1.0)
-    packagingOptions {
-        pickFirst '**/libjsc.so'
-        pickFirst '**/libc++_shared.so'
-    }
-
     flavorDimensions "buildType"
 
     productFlavors {
