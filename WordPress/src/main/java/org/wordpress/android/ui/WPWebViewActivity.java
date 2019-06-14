@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
@@ -291,6 +292,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     protected void configureWebView() {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 
         final Bundle extras = getIntent().getExtras();
 
