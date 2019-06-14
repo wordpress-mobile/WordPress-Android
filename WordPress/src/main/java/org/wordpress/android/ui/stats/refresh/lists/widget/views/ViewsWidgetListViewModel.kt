@@ -1,5 +1,3 @@
-@file:JvmName("StatsWidgetConfigureViewModelKt")
-
 package org.wordpress.android.ui.stats.refresh.lists.widget.views
 
 import androidx.annotation.LayoutRes
