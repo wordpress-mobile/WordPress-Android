@@ -1,12 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/158396482/media(/)?($|\\?.*)",
-        "queryParameters": {
-            "number": {
-                "equalTo": "100"
-            }
-        }
+        "urlPattern": "/rest/v1.1/sites/158396482/media(/)?($|\\?.*)"
     },
     "response": {
         "status": 200,
