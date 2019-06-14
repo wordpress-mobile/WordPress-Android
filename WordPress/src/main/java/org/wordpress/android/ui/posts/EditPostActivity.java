@@ -241,6 +241,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
+    private static final String TAG_UPDATE_CONFIRMATION_DIALOG = "tag_update_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
     private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
 
@@ -856,7 +857,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private enum MainAction {
-        SUBMIT_FOR_REVIEW,
+        SUBMIT_POST_FOR_REVIEW,
         SCHEDULE_POST,
         PUBLISH_POST,
         UPDATE_POST,
@@ -865,7 +866,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private MainAction getMainAction() {
         if (!userCanPublishPosts()) {
-            return MainAction.SUBMIT_FOR_REVIEW;
+            return MainAction.SUBMIT_POST_FOR_REVIEW;
         }
 
         switch (PostStatus.fromPost(mPost)) {
@@ -898,7 +899,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private String getSaveButtonText() {
         switch (getMainAction()) {
-            case SUBMIT_FOR_REVIEW:
+            case SUBMIT_POST_FOR_REVIEW:
                 return getString(R.string.submit_for_review);
             case SCHEDULE_POST:
                 return getString(R.string.schedule_verb);
@@ -1505,8 +1506,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 mHtmlModeMenuStateOn ? Editor.HTML : (isGutenberg ? Editor.GUTENBERG : Editor.CLASSIC));
     }
 
-    private void showUpdateConfirmationDialogAndPublishPost() {
-        showConfirmationDialogAndUploadPost(getString(R.string.dialog_confirm_update_title),
+    private void showUpdateConfirmationDialogAndUploadPost() {
+        showConfirmationDialogAndUploadPost(TAG_UPDATE_CONFIRMATION_DIALOG,
+                getString(R.string.dialog_confirm_update_title),
                 mPost.isPage() ? getString(R.string.dialog_confirm_update_message_page)
                         : getString(R.string.dialog_confirm_update_message_post),
                 getString(R.string.dialog_confirm_update_yes),
@@ -1514,19 +1516,20 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showPublishConfirmationDialogAndPublishPost() {
-        showConfirmationDialogAndUploadPost(getString(R.string.dialog_confirm_publish_title),
+        showConfirmationDialogAndUploadPost(TAG_PUBLISH_CONFIRMATION_DIALOG,
+                getString(R.string.dialog_confirm_publish_title),
                 mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                         : getString(R.string.dialog_confirm_publish_message_post),
                 getString(R.string.dialog_confirm_publish_yes),
                 getString(R.string.keep_editing));
     }
 
-    private void showConfirmationDialogAndUploadPost(@NonNull String title, @NonNull String description,
-                                                     @NonNull String positiveButton, @NonNull String negativeButton) {
+    private void showConfirmationDialogAndUploadPost(@NonNull String identifier, @NonNull String title,
+                                                     @NonNull String description, @NonNull String positiveButton,
+                                                     @NonNull String negativeButton) {
         BasicFragmentDialog publishConfirmationDialog = new BasicFragmentDialog();
-        publishConfirmationDialog
-                .initialize(TAG_PUBLISH_CONFIRMATION_DIALOG, title, description, positiveButton, negativeButton, null);
-        publishConfirmationDialog.show(getSupportFragmentManager(), TAG_PUBLISH_CONFIRMATION_DIALOG);
+        publishConfirmationDialog.initialize(identifier, title, description, positiveButton, negativeButton, null);
+        publishConfirmationDialog.show(getSupportFragmentManager(), identifier);
     }
 
     private void showPublishConfirmationIfNeeded() {
@@ -1535,10 +1538,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 showPublishConfirmationDialogAndPublishPost();
                 return;
             case UPDATE_POST:
-                showUpdateConfirmationDialogAndPublishPost();
+                showUpdateConfirmationDialogAndUploadPost();
                 return;
             // In other cases, we'll upload the post and don't change its status
-            case SUBMIT_FOR_REVIEW:
+            case SUBMIT_POST_FOR_REVIEW:
             case SCHEDULE_POST:
             case SAVE_DRAFT:
             default:
@@ -1766,6 +1769,7 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
+            case TAG_UPDATE_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 break;
             default:
@@ -1787,6 +1791,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
+                break;
+            case TAG_UPDATE_CONFIRMATION_DIALOG:
+                uploadPost(false);
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 uploadPost(true);
