@@ -467,7 +467,7 @@ public class ActivityLauncher {
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl);
             } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
                 // Show self-hosted sites as authenticated since we should have the username & password
-                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{siteUrl});
+                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false);
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
@@ -585,7 +585,8 @@ public class ActivityLauncher {
             // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
+            WPWebViewActivity
+                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true);
         }
     }
 

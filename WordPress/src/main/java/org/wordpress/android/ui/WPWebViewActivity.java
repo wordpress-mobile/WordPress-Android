@@ -196,7 +196,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
-                                                     String[] listOfAllowedURLs) {
+                                                     String[] listOfAllowedURLs, boolean disableLinks) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -220,7 +220,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
-        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
         intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
