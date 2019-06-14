@@ -23,7 +23,7 @@ class TodayWidgetListViewModel
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<TodayItemUiModel>()
     val data: List<TodayItemUiModel> = mutableData
-    fun  start(siteId: Long, colorMode: Color, appWidgetId: Int) {
+    fun start(siteId: Long, colorMode: Color, appWidgetId: Int) {
         this.siteId = siteId
         this.colorMode = colorMode
         this.appWidgetId = appWidgetId
