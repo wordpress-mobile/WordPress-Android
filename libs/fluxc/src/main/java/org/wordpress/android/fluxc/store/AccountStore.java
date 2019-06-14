@@ -959,6 +959,11 @@ public class AccountStore extends Store {
 
             AccountErrorType errorType;
             if (payload.error.apiError.equals("reauthorization_required")) {
+                // This error will always occur for 2FA accounts when using a non-production WordPress.com OAuth client.
+                // Essentially, some APIs around account management are disabled in those cases for security reasons.
+                // The error is a bit generic from the server-side - it essentially means the user isn't privileged to
+                // do the action and needs to reauthorize. For bearer token-based login, there is no escalation of
+                // privileges possible, so the request just fails at that point.
                 errorType = AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR;
             } else {
                 errorType = AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR;
