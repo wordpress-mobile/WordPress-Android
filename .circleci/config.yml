@@ -87,18 +87,18 @@ jobs:
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
-  wordpress_android:
-    jobs:
-      - strings-check
-      - test
-      - lint
+  # wordpress_android:
+  #   jobs:
+  #     - strings-check
+  #     - test
+  #     - lint
   nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - develop
+    # triggers:
+    #   - schedule:
+    #       cron: "0 0 * * *"
+    #       filters:
+    #         branches:
+    #           only:
+    #             - develop
     jobs:
       - connected-tests
