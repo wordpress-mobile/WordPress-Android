@@ -11,10 +11,10 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -33,7 +33,7 @@ class ViewsWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val showChangeColumn = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
@@ -61,7 +61,7 @@ class ViewsWidgetUpdater
                     colorMode,
                     siteId,
                     WEEK_VIEWS,
-                    showChangeColumn
+                    wideView
             )
         } else {
             widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)

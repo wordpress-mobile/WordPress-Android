@@ -32,7 +32,8 @@ class OverviewMapper
         selectedItem: PeriodData?,
         previousItem: PeriodData?,
         selectedPosition: Int,
-        isLast: Boolean
+        isLast: Boolean,
+        startValue: Int = MILLION
     ): ValueItem {
         val value = selectedItem?.getValue(selectedPosition) ?: 0
         val previousValue = previousItem?.getValue(selectedPosition)
@@ -56,7 +57,7 @@ class OverviewMapper
             else -> State.NEGATIVE
         }
         return ValueItem(
-                value = value.toFormattedString(MILLION),
+                value = value.toFormattedString(startValue),
                 unit = units[selectedPosition],
                 isFirst = true,
                 change = change,
