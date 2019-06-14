@@ -8,6 +8,8 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.e2e.flows.LoginFlow;
@@ -38,14 +40,16 @@ public class BaseTest {
                                                     .build();
     }
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(
+    public WireMockRule mWireMockRule = new WireMockRule(
             options().port(WIREMOCK_PORT)
                      .fileSource(new AssetFileSource(InstrumentationRegistry.getContext().getAssets()))
                      .extensions(new ResponseTemplateTransformer(true))
                      .notifier(new AndroidNotifier()));
-    @Rule
+
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+
+    @Rule
+    public TestRule ruleChain = RuleChain.outerRule(mActivityTestRule).around(mWireMockRule);
 
     private void logout() {
         boolean isSelfHosted = new MePage().go().isSelfHosted();
