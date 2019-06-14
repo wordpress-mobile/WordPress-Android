@@ -856,92 +856,90 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private enum MainAction {
-        SUBMIT_POST_FOR_REVIEW,
-        SCHEDULE_POST,
-        PUBLISH_POST,
-        UPDATE_POST,
-        SAVE_DRAFT
+    private enum PrimaryAction {
+        SUBMIT_FOR_REVIEW,
+        SCHEDULE,
+        UPDATE,
+        SAVE
     }
 
-    private MainAction getMainAction() {
+    private enum SecondaryAction {
+        SAVE_AS_DRAFT,
+        PUBLISH_NOW,
+        NONE
+    }
+
+    private PrimaryAction getPrimaryAction() {
         if (!userCanPublishPosts()) {
-            return MainAction.SUBMIT_POST_FOR_REVIEW;
+            return PrimaryAction.SUBMIT_FOR_REVIEW;
+        }
+
+        if (mPost.isLocalDraft()) {
+            return PrimaryAction.SAVE;
         }
 
         switch (PostStatus.fromPost(mPost)) {
             case SCHEDULED:
-                return MainAction.SCHEDULE_POST;
-            case PUBLISHED:
-            case UNKNOWN:
-                if (mPost.isLocalDraft()) {
-                    return MainAction.PUBLISH_POST;
-                } else {
-                    return MainAction.UPDATE_POST;
-                }
+                return PrimaryAction.SCHEDULE;
             case DRAFT:
-                if (isNewPost() && mPost.isLocalDraft()) {
-                    return MainAction.PUBLISH_POST;
-                } else {
-                    return MainAction.SAVE_DRAFT;
-                }
-            case PRIVATE:
             case PENDING:
             case TRASHED:
+                return PrimaryAction.SAVE;
+            case PRIVATE:
+            case PUBLISHED:
+            case UNKNOWN:
             default:
-                if (mPost.isLocalDraft()) {
-                    return MainAction.SAVE_DRAFT;
-                } else {
-                    return MainAction.UPDATE_POST;
-                }
+                return PrimaryAction.UPDATE;
         }
     }
 
-    private String getSaveButtonText() {
-        switch (getMainAction()) {
-            case SUBMIT_POST_FOR_REVIEW:
+    private String getPrimaryActionText() {
+        switch (getPrimaryAction()) {
+            case SUBMIT_FOR_REVIEW:
                 return getString(R.string.submit_for_review);
-            case SCHEDULE_POST:
+            case SCHEDULE:
                 return getString(R.string.schedule_verb);
-            case PUBLISH_POST:
-                return getString(R.string.post_status_publish_post);
-            case UPDATE_POST:
+            case UPDATE:
                 return getString(R.string.update_verb);
-            case SAVE_DRAFT:
+            case SAVE:
             default:
                 return getString(R.string.save);
         }
     }
 
-    private String getSaveAsADraftButtonText() {
+    private SecondaryAction getSecondaryAction() {
         if (!userCanPublishPosts()) {
-            return getString(R.string.submit_for_review);
+            return SecondaryAction.NONE;
         }
 
-        if (isNewPost()) {
-            return getString(R.string.menu_save_as_draft);
+        if (mPost.isLocalDraft()) {
+            return SecondaryAction.PUBLISH_NOW;
         }
 
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
             case PENDING:
-                return getString(R.string.menu_publish_now);
+            case SCHEDULED:
+                return SecondaryAction.PUBLISH_NOW;
             case PUBLISHED:
-            case UNKNOWN:
-                if (mPost.isLocalDraft()) {
-                    return getString(R.string.menu_publish_now);
-                } else {
-                    return getString(R.string.update_verb);
-                }
+                return SecondaryAction.NONE;
             case PRIVATE:
             case TRASHED:
-            case SCHEDULED:
+            case UNKNOWN:
             default:
-                if (!isNewPost()) {
-                    return getString(R.string.menu_publish_now);
-                } else {
-                    return getString(R.string.menu_save_as_draft);
-                }
+                return SecondaryAction.SAVE_AS_DRAFT;
+        }
+    }
+
+    private String getSecondaryActionText() {
+        switch (getSecondaryAction()) {
+            case SAVE_AS_DRAFT:
+                return getString(R.string.menu_save_as_draft);
+            case PUBLISH_NOW:
+                return getString(R.string.menu_publish_now);
+            case NONE:
+            default:
+                throw new IllegalStateException("Undefined switch case");
         }
     }
 
@@ -1158,7 +1156,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
 
-        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
+        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_secondary_action);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
@@ -1166,12 +1164,11 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
         if (saveAsDraftMenuItem != null && mPost != null) {
-            if (PostStatus.fromPost(mPost) == PostStatus.PRIVATE
-                || PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
+            if (getSecondaryAction() == SecondaryAction.NONE) {
                 saveAsDraftMenuItem.setVisible(false);
             } else {
                 saveAsDraftMenuItem.setVisible(showMenuItems);
-                saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
+                saveAsDraftMenuItem.setTitle(getSecondaryActionText());
             }
         }
 
@@ -1199,9 +1196,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Set text of the save button in the ActionBar
         if (mPost != null) {
-            MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
+            MenuItem saveMenuItem = menu.findItem(R.id.menu_primary_action);
             if (saveMenuItem != null) {
-                saveMenuItem.setTitle(getSaveButtonText());
+                saveMenuItem.setTitle(getPrimaryActionText());
                 saveMenuItem.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
             }
         }
@@ -1330,7 +1327,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         hidePhotoPicker();
 
-        if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts())) {
+        if (itemId == R.id.menu_primary_action || (itemId == R.id.menu_secondary_action && !userCanPublishPosts())) {
             if (shouldShowAsyncPromoDialog()) {
                 showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
@@ -1357,54 +1354,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
-            } else if (itemId == R.id.menu_save_as_draft_or_publish) {
-                // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
-                //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
-
-                if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
-                    ToastUtils.showToast(EditPostActivity.this,
-                            getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
-                    return false;
-                }
-
-                // we update the mPost object first, so we can pre-check Post publishability and inform the user
-                updatePostObject();
-                PostStatus status = PostStatus.fromPost(mPost);
-                if (!isNewPost() && (status == PostStatus.DRAFT || status == PostStatus.PENDING)) {
-                    if (isDiscardable()) {
-                        String message = getString(
-                                mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
-                        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
-                        return false;
-                    }
-                    showPublishConfirmationDialogAndPublishPost();
-                } else {
-                    // this is a new post, save as draft
-                    if (isDiscardable()) {
-                        ToastUtils.showToast(EditPostActivity.this,
-                                getString(R.string.error_save_empty_draft), Duration.SHORT);
-                        return false;
-                    }
-
-                    if (status == PostStatus.SCHEDULED || status == PostStatus.PUBLISHED) {
-                        if (isNewPost()) {
-                            // if user pressed `Save as draft` on a new, Scheduled (or set to Publish) Post,
-                            // so re-convert it to draft.
-                            if (mEditPostSettingsFragment != null) {
-                                mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
-                                ToastUtils.showToast(EditPostActivity.this,
-                                        getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
-                            }
-                        } else {
-                            // user pressed `Publish Now` on a non-new, Scheduled Post. Let's confirm and publish!
-                            showPublishConfirmationDialogAndPublishPost();
-                            return false;
-                        }
-                    }
-                    UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
-                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                    savePostAndOptionallyFinish(false);
-                }
+            } else if (itemId == R.id.menu_secondary_action) {
+                return secondaryAction();
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
@@ -1455,6 +1406,52 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
         return false;
+    }
+
+    private void showEmptyPostErrorForSecondaryAction() {
+        String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+        if (getSecondaryAction() == SecondaryAction.SAVE_AS_DRAFT) {
+            message = getString(R.string.error_save_empty_draft);
+        }
+        ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+    }
+
+    private void saveAsDraft() {
+        mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+        ToastUtils.showToast(EditPostActivity.this,
+                getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
+        UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
+        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+        savePostAndOptionallyFinish(false);
+    }
+
+    private boolean secondaryAction() {
+        if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
+            ToastUtils.showToast(EditPostActivity.this,
+                    getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
+            return false;
+        }
+
+        // we update the mPost object first, so we can pre-check Post publishability and inform the user
+        updatePostObject();
+        if (isDiscardable()) {
+            showEmptyPostErrorForSecondaryAction();
+            return false;
+        }
+
+        switch (getSecondaryAction()) {
+            case SAVE_AS_DRAFT:
+                // Force the new Draft status
+                saveAsDraft();
+                return true;
+            case PUBLISH_NOW:
+                showPublishConfirmationDialogAndPublishPost();
+                return true;
+            case NONE:
+            default:
+                // Error: noop
+                return false;
+        }
     }
 
     private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
@@ -1533,17 +1530,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showPublishConfirmationIfNeeded() {
-        switch (getMainAction()) {
-            case PUBLISH_POST:
-                showPublishConfirmationDialogAndPublishPost();
-                return;
-            case UPDATE_POST:
+        switch (getPrimaryAction()) {
+            case UPDATE:
                 showUpdateConfirmationDialogAndUploadPost();
                 return;
             // In other cases, we'll upload the post and don't change its status
-            case SUBMIT_POST_FOR_REVIEW:
-            case SCHEDULE_POST:
-            case SAVE_DRAFT:
+            case SUBMIT_FOR_REVIEW:
+            case SCHEDULE:
+            case SAVE:
             default:
                 uploadPost(false);
         }
@@ -4029,7 +4023,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean shouldShowAsyncPromoDialog() {
         // To make sure the behavior matches what we're communicating to the user as available options,
-        // the same conditions as per `getSaveButtonText()` apply:
+        // the same conditions as per `getPrimaryActionText()` apply:
         //  if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
         //  else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
         if (!AppPrefs.isAsyncPromoRequired() || !userCanPublishPosts()) return false;

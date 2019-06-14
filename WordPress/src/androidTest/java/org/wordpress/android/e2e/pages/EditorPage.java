@@ -26,7 +26,7 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.withIndex;
 
 public class EditorPage {
-    private static ViewInteraction publishButton = onView(withId(R.id.menu_save_post));
+    private static ViewInteraction publishButton = onView(withId(R.id.menu_primary_action));
     private static ViewInteraction editor = onView(withId(R.id.aztec));
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
