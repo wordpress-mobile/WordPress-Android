@@ -49,7 +49,7 @@ public class BaseTest {
     public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
     @Rule
-    public TestRule ruleChain = RuleChain.outerRule(mActivityTestRule).around(mWireMockRule);
+    public TestRule ruleChain = RuleChain.outerRule(mWireMockRule).around(mActivityTestRule);
 
     private void logout() {
         boolean isSelfHosted = new MePage().go().isSelfHosted();
