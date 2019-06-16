@@ -271,12 +271,12 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    fun onSearchCollapsed() {
+    fun onSearchCollapsed(delay: Long = SEARCH_COLLAPSE_DELAY) {
         _isSearchExpanded.value = false
         clearSearch()
 
         launch {
-            delay(SEARCH_COLLAPSE_DELAY)
+            delay(delay)
         }
         _viewState.value = _viewState.value?.copy(isFabVisible = true)
     }
