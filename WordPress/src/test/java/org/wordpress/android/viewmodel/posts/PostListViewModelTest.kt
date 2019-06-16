@@ -1,27 +1,79 @@
 package org.wordpress.android.viewmodel.posts
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 
-class PostListViewModelTest {
+class PostListViewModelTest : BaseUnitTest() {
+    @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var localDraftUploadStarter: LocalDraftUploadStarter
+
+    private lateinit var viewModel: PostListViewModel
+
+    @Before
+    fun setUp() {
+        val listStore = mock<ListStore>()
+        val postList = mock<PagedListWrapper<PostListItemType>>()
+
+        whenever(
+                postList.listError
+        ).thenReturn(mock())
+
+        whenever(
+                postList.isFetchingFirstPage
+        ).thenReturn(mock())
+
+        whenever(
+                postList.isEmpty
+        ).thenReturn(mock())
+
+        whenever(
+                postList.data
+        ).thenReturn(mock())
+
+        whenever(
+                postList.isLoadingMore
+        ).thenReturn(mock())
+
+        whenever(
+                listStore.getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(
+                        any(),
+                        any(),
+                        any()
+                )
+        ).thenReturn(postList)
+
+        viewModel = PostListViewModel(
+                dispatcher = mock(),
+                listStore = listStore,
+                postStore = mock(),
+                accountStore = mock(),
+                listItemUiStateHelper = mock(),
+                networkUtilsWrapper = mock(),
+                localDraftUploadStarter = localDraftUploadStarter,
+                connectionStatus = mock()
+        )
+    }
+
     @Test
     fun `when swiping to refresh, it uploads all local drafts`() {
-        // Given
-        val site = SiteModel()
-        val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
-
-        val viewModel = createPostListViewModel(localDraftUploadStarter = localDraftUploadStarter)
-        viewModel.start(createPostListViewModelConnector(site = site))
+        viewModel.start(createPostListViewModelConnector(site = site, postListType = DRAFTS))
 
         // When
         viewModel.swipeToRefresh()
@@ -30,10 +82,26 @@ class PostListViewModelTest {
         verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
 
+    @Test
+    fun `empty search query should show search prompt`() {
+        viewModel.start(createPostListViewModelConnector(site = site, postListType = SEARCH))
+
+        val emptyViewStateResults = mutableListOf<PostListEmptyUiState>()
+
+        viewModel.emptyViewState.observeForever {
+            emptyViewStateResults.add(it)
+        }
+
+        viewModel.search(null)
+
+        assertThat(emptyViewStateResults.size).isEqualTo(2) // initial state + state after search
+        assertThat(emptyViewStateResults[1].emptyViewVisible).isTrue()
+    }
+
     private companion object {
-        fun createPostListViewModelConnector(site: SiteModel) = PostListViewModelConnector(
+        fun createPostListViewModelConnector(site: SiteModel, postListType: PostListType) = PostListViewModelConnector(
                 site = site,
-                postListType = DRAFTS,
+                postListType = postListType,
                 authorFilter = mock(),
                 postActionHandler = mock(),
                 getUploadStatus = mock(),
@@ -42,28 +110,5 @@ class PostListViewModelTest {
                 postFetcher = mock(),
                 searchQuery = null
         )
-
-        fun createPostListViewModel(localDraftUploadStarter: LocalDraftUploadStarter): PostListViewModel {
-            val listStore = mock<ListStore> {
-                on {
-                    getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(
-                            any(),
-                            any(),
-                            any()
-                    )
-                } doReturn mock()
-            }
-
-            return PostListViewModel(
-                    dispatcher = mock(),
-                    listStore = listStore,
-                    postStore = mock(),
-                    accountStore = mock(),
-                    listItemUiStateHelper = mock(),
-                    networkUtilsWrapper = mock(),
-                    localDraftUploadStarter = localDraftUploadStarter,
-                    connectionStatus = mock()
-            )
-        }
     }
 }

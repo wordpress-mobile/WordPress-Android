@@ -111,7 +111,7 @@ class PostListViewModel @Inject constructor(
         val pagedListWrapper = listStore.getList(listDescriptor, dataSource, lifecycle)
         listenToEmptyViewStateLiveData(pagedListWrapper)
         if (!isEmptySearch()) {
-            listenToPagedListDate(pagedListWrapper)
+            listenToPagedListData(pagedListWrapper)
             listenToFetchingFirstPage(pagedListWrapper)
             listenToIsLoadingMore(pagedListWrapper)
         }
@@ -161,7 +161,7 @@ class PostListViewModel @Inject constructor(
         isFetchingFirstPage.removeSource(pagedListWrapper.isFetchingFirstPage)
     }
 
-    private fun listenToPagedListDate(pagedListWrapper: PagedListWrapper<PostListItemType>) {
+    private fun listenToPagedListData(pagedListWrapper: PagedListWrapper<PostListItemType>) {
         val pagedListData: MediatorLiveData<PagedPostList> = pagedListData as MediatorLiveData<PagedPostList>
         pagedListData.addSource(pagedListWrapper.data) { pagedPostList ->
             pagedPostList?.let {
