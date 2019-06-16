@@ -107,8 +107,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 getUploadStatus = mock(),
                 doesPostHaveUnhandledConflict = mock(),
                 getFeaturedImageUrl = mock(),
-                postFetcher = mock(),
-                searchQuery = null
+                postFetcher = mock()
         )
     }
 }

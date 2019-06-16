@@ -253,7 +253,6 @@ class PostListMainViewModel @Inject constructor(
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 postFetcher = postFetcher,
-                searchQuery = searchQuery.value,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
     }

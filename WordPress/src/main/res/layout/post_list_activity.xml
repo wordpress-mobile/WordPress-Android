@@ -25,7 +25,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <RelativeLayout
-            android:id="@+id/tab_container"
+            android:id="@+id/tabContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height">
 

@@ -322,7 +322,7 @@ class PostsListActivity : AppCompatActivity(),
             viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
                 if (isAvailable) {
                     initSearchFragment()
-                    initializeSearchView()
+                    initSearchView()
                     searchActionButton.isVisible = true
                 } else {
                     searchActionButton.isVisible = false
@@ -347,7 +347,7 @@ class PostsListActivity : AppCompatActivity(),
                 .commit()
     }
 
-    private fun initializeSearchView() {
+    private fun initSearchView() {
         searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
@@ -385,7 +385,7 @@ class PostsListActivity : AppCompatActivity(),
     }
 
     private fun toggleSearch(isExpanded: Boolean) {
-        val tabContainer = findViewById<View>(R.id.tab_container)
+        val tabContainer = findViewById<View>(R.id.tabContainer)
         val searchContainer = findViewById<View>(R.id.search_container)
 
         if (isExpanded) {
