@@ -41,7 +41,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -325,17 +324,20 @@ class PostsListActivity : AppCompatActivity(),
             })
 
             searchActionButton = it.findItem(R.id.toggle_post_search)
-            initializeSearchView()
+
+            viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
+                if (isAvailable) {
+                    initializeSearchView()
+                    searchActionButton.isVisible = true
+                } else {
+                    searchActionButton.isVisible = false
+                }
+            })
         }
         return true
     }
 
     private fun initializeSearchView() {
-        if (!SiteUtils.isAccessedViaWPComRest(site)) {
-            searchActionButton.isVisible = false
-            return
-        }
-
         searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)

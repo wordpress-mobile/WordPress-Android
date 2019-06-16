@@ -41,6 +41,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.Standard
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -117,6 +118,9 @@ class PostListMainViewModel @Inject constructor(
 
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
+
+    private val _isSearchAvailable = MutableLiveData<Boolean>()
+    val isSearchAvailable: LiveData<Boolean> = _isSearchAvailable
 
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
@@ -213,6 +217,7 @@ class PostListMainViewModel @Inject constructor(
                 }
         )
 
+        _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
         _updatePostsPager.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
