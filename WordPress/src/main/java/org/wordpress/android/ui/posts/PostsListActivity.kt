@@ -166,12 +166,6 @@ class PostsListActivity : AppCompatActivity(),
             Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
-
-        val searchFragment = PostListFragment.newInstance(site, EVERYONE, SEARCH)
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.search_container, searchFragment)
-                .commit()
     }
 
     private fun initViewModel() {
@@ -327,6 +321,7 @@ class PostsListActivity : AppCompatActivity(),
 
             viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
                 if (isAvailable) {
+                    initSearchFragment()
                     initializeSearchView()
                     searchActionButton.isVisible = true
                 } else {
@@ -335,6 +330,21 @@ class PostsListActivity : AppCompatActivity(),
             })
         }
         return true
+    }
+
+    private fun initSearchFragment() {
+        val searchFragmentTag = "search_fragment"
+
+        var searchFragment = supportFragmentManager.findFragmentByTag(searchFragmentTag)
+
+        if (searchFragment == null) {
+            searchFragment = PostListFragment.newInstance(site, EVERYONE, SEARCH)
+        }
+
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.search_container, searchFragment, searchFragmentTag)
+                .commit()
     }
 
     private fun initializeSearchView() {
