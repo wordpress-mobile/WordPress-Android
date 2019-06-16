@@ -180,7 +180,8 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun listenToEmptyViewStateLiveData(pagedListWrapper: PagedListWrapper<PostListItemType>) {
-        val emptyViewState: MediatorLiveData<PostListEmptyUiState> = emptyViewState as MediatorLiveData<PostListEmptyUiState>
+        val emptyViewState: MediatorLiveData<PostListEmptyUiState> =
+                emptyViewState as MediatorLiveData<PostListEmptyUiState>
         val update = {
             val isListEmpty = when {
                 consumeEmptySearchListEvent && connector.postListType == SEARCH && !isEmptySearch() -> false
@@ -217,7 +218,8 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun clearEmptyViewStateLiveData(pagedListWrapper: PagedListWrapper<PostListItemType>) {
-        val emptyViewState: MediatorLiveData<PostListEmptyUiState> = emptyViewState as MediatorLiveData<PostListEmptyUiState>
+        val emptyViewState: MediatorLiveData<PostListEmptyUiState> =
+                emptyViewState as MediatorLiveData<PostListEmptyUiState>
         emptyViewState.removeSource(pagedListData)
         emptyViewState.removeSource(pagedListWrapper.isEmpty)
         emptyViewState.removeSource(pagedListWrapper.isFetchingFirstPage)
