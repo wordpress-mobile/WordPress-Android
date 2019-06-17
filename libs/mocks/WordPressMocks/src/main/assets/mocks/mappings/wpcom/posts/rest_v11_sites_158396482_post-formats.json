@@ -1,6 +1,6 @@
 {
     "request": {
-        "urlPath": "/rest/v1.1/sites/158396482/post-formats/",
+        "urlPattern": "/rest/v1.1/sites/158396482/post-formats.*",
         "method": "GET"
     },
     "response": {

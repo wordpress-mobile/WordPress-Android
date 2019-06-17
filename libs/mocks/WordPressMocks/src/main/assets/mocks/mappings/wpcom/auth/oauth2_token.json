@@ -7,10 +7,10 @@
                 "matches": ".*username=[^&]+.*"
             },
             {
-                "matches": ".*password=[^&]+.*"
+                "matches": ".*password=((?!invalidPswd)[^&])+(&.*|$)"
             },
             {
-                "matches": ".*client_secret=[^&]+.*"
+                "matches": ".*client_secret=.*"
             }
         ]
     },
