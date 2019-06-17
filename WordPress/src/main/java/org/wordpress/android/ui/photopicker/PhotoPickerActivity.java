@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,8 +16,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -27,7 +24,6 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -38,7 +34,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -54,7 +49,6 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
-    private static final String EXTRA_SHOW_PROGRESS_DIALOG = "show_progress_dialog";
 
     public static final String EXTRA_MEDIA_URI = "media_uri";
     public static final String EXTRA_MEDIA_ID = "media_id";
@@ -72,8 +66,6 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     // note that the local post id isn't required (default value is EMPTY_LOCAL_POST_ID)
     private Integer mLocalPostId;
-
-    private ProgressDialog mProgressDialog;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -125,9 +117,6 @@ public class PhotoPickerActivity extends AppCompatActivity
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mLocalPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
-            if (savedInstanceState.getBoolean(EXTRA_SHOW_PROGRESS_DIALOG)) {
-                showUploadProgressDialog();
-            }
         }
 
         PhotoPickerFragment fragment = getPickerFragment();
@@ -172,9 +161,6 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
-        }
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            outState.putBoolean(EXTRA_SHOW_PROGRESS_DIALOG, true);
         }
     }
 
@@ -350,59 +336,6 @@ public class PhotoPickerActivity extends AppCompatActivity
             case STOCK_MEDIA:
                 launchStockMediaPicker();
                 break;
-        }
-    }
-
-    /*
-     * called when the selected media needs to be uploaded before returning
-     */
-    private void uploadMedia(@NonNull Uri mediaUri) {
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
-
-        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, mediaUri, null, mMediaStore, mSite.getId());
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-
-        showUploadProgressDialog();
-
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-        ArrayList<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        UploadService.uploadMedia(this, mediaList);
-    }
-
-    private void showUploadProgressDialog() {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setMessage(getString(R.string.uploading_media));
-        mProgressDialog.show();
-    }
-
-    private void hideUploadProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.isError()) {
-            hideUploadProgressDialog();
-            String errorMessage = WPMediaUtils.getErrorMessage(this, event.media, event.error);
-            if (errorMessage != null) {
-                ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
-            } else {
-                ToastUtils.showToast(this, R.string.media_upload_error);
-            }
-        } else if (event.completed && event.media != null) {
-            hideUploadProgressDialog();
-            doMediaIdSelected(event.media.getMediaId(), PhotoPickerMediaSource.WP_MEDIA_PICKER);
         }
     }
 }
