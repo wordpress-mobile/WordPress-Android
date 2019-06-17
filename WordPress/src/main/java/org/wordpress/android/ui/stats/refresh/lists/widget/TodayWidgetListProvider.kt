@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject lateinit var viewModel: TodayWidgetListViewModel
-    @Inject lateinit var widgetUpdated: TodayWidgetUpdater
+    @Inject lateinit var widgetUpdater: TodayWidgetUpdater
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -32,7 +32,7 @@ class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteView
 
     override fun onDataSetChanged() {
         viewModel.onDataSetChanged { appWidgetId ->
-            widgetUpdated.updateAppWidget(
+            widgetUpdater.updateAppWidget(
                     context,
                     appWidgetId = appWidgetId
             )

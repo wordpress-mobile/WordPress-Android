@@ -5,6 +5,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 import androidx.annotation.LayoutRes
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OVERVIEW_ITEMS_TO_LOAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -49,12 +51,12 @@ class ViewsWidgetListViewModel
             if (site != null) {
                 val currentDate = Date()
                 runBlocking {
-                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
+                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD), currentDate)
                 }
                 val visitsAndViewsModel = visitsAndViewsStore.getVisits(
                         site,
                         DAYS,
-                        Top(LIST_ITEM_COUNT + 1),
+                        LimitMode.All,
                         currentDate
                 )
                 val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
