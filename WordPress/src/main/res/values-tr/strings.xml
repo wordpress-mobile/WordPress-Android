@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-29 13:54:10+0000
+Translation-Revision-Date: 2019-06-08 21:06:50+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">Site ayrıntılarınızı güncellerken hata oluştu: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Alan adı iletişim bilgileri alınırken hata oluştu: %s</string>
+    <string name="domain_registration_error_registering_domain">Alan adı kaydedilirken hata oluştu: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
+    <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
+    <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
+    <string name="domain_registration_result_continue_button">devam</string>
+    <string name="domain_registration_result_description">Alan adınız &lt;b>%s&lt;/b> kuruluyor. Siteniz heyecanla takla atıyor!</string>
+    <string name="domain_registration_result_title">Tebrikler</string>
+    <string name="domain_contact_information_register_domain_button">Alan adı kaydet</string>
+    <string name="domain_contact_information_postal_code_hint">Posta kodu</string>
+    <string name="domain_contact_information_state_hint">Eyalet</string>
+    <string name="domain_contact_information_city_hint">Şehir</string>
+    <string name="domain_contact_information_address_hint_two">Adres 2</string>
+    <string name="domain_contact_information_address_hint">Adres</string>
+    <string name="domain_contact_information_country_hint">Ülke</string>
+    <string name="domain_contact_information_country_code_hint">Ülke kodu</string>
+    <string name="domain_contact_information_phone_number_hint">Telefon</string>
+    <string name="domain_contact_information_organization_hint">Kuruluş (isteğe bağlı)</string>
+    <string name="domain_contact_information_description">Size kolaylık olması için, WordPress.com iletişim bilgilerinizi önceden doldurduk. Lütfen bu bilgilerin bu alan adında kullanmak istediğiniz doğru bilgiler olduğundan emin olmak için gözden geçirin.</string>
+    <string name="domain_contact_information_title">Alan adı iletişim bilgileri</string>
+    <string name="domain_privacy_option_off_title">Herkese açık olarak kaydet</string>
+    <string name="domain_privacy_option_on_title">Gizlilik koruması ile özel olarak kaydet</string>
+    <string name="domain_registration_privacy_protection_tos">Bu alan adını kaydettirerek şunu kabul etmiş olursunuz</string>
+    <string name="domain_registration_privacy_protection_description">Alan adı sahiplerinin, tüm alan adlarının herkese açık bir veritabanında iletişim bilgilerini paylaşmaları gerekir. Privacy Protection özelliğiyle sizin bilgileriniz yerine kendi bilgilerimizi yayımlıyoruz ve her türlü iletişimi size gizlice iletiyoruz.</string>
+    <string name="domain_registration_privacy_protection_title">Gizlilik koruması</string>
+    <string name="domain_registration_contact_form_input_error">Lütfen geçerli bir %s girin</string>
+    <string name="domains_suggestions_choose_domain">Alan adını seç</string>
+    <string name="stats_management_new">Yeni</string>
+    <string name="stats_management_edit">Düzenle</string>
+    <string name="stats_management_dismiss_insights_news_card">Kapat</string>
+    <string name="stats_management_try_it_now">Şimdi deneyin</string>
+    <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Tek bakışta\" altındaki %1$s öğesine dokunun.</string>
+    <string name="stats_manage_your_stats">İstatistiklerinizi yönetin</string>
     <string name="history_fetching_revisions">Eski srümler getiriliyor…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Ortam ekleme başarısız.\nSeçenekler için dokunun.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Ortam eklenemedi.\nTekrar denemek için lütfen dokunun.</string>
@@ -23,10 +58,9 @@ Language: tr
     <string name="stats_insights_social">Sosyal</string>
     <string name="stats_insights_annual_site_stats">Yıllık Site İstatistikleri</string>
     <string name="stats_view_follower_totals">Toplam Takipçi Sayısı</string>
-    <string name="suggestion_fetch_error">Alan adı teklifleri yüklenemedi</string>
-    <string name="suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
-    <string name="suggestions_empty_list">Teklif bulunamadı</string>
-    <string name="choose_domain">Alan Adını Seç</string>
+    <string name="domain_suggestions_fetch_error">Alan adı önerileri yüklenemedi</string>
+    <string name="domain_suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
+    <string name="domains_suggestions_empty_list">Hiçir öneri bulunamadı</string>
     <string name="register_domain">Alan Adını Kaydet</string>
     <string name="jetpack_installed_message">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
     <string name="stats_menu_remove">İçgörülerden çıkar</string>
@@ -215,7 +249,6 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="site_creation_label_domain_selection">İnsanların sizi webde bulabilmesini sağlamak için mevcut bir adres seçin.</string>
     <string name="giphy_powered_by_giphy">GIPHY tarafından sağlanır</string>
     <string name="giphy_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
     <string name="giphy_picker_empty_search_list">Aramanızla eşleşen bir ortam yok</string>
@@ -541,7 +574,6 @@ Language: tr
     <string name="content_description_people_looking_charts">Grafiklere ve çizelgelere bakan kişiler</string>
     <string name="comment_title">%s, %s üzerinde</string>
     <string name="dialog_confirm_delete_permanently_post">Bu yazıyı kalıcı olarak silmek istediğinizden emin misiniz?</string>
-    <string name="notification_site_creation_title_in_progress">Site oluşturuluyor… Bu işlem birkaç dakika sürebilir.</string>
     <string name="notification_channel_important_title">Önemli</string>
     <string name="notification_channel_general_title">Genel</string>
     <string name="photo_picker_use_photo">Bu fotoğrafı kullan</string>
@@ -554,10 +586,6 @@ Language: tr
     <string name="site_settings_quota_space_unlimited">%1$s / sınırsız</string>
     <string name="preview_count">Önizleme %d</string>
     <string name="add_count">Ekle %d</string>
-    <string name="site_creation_domain_selection_title">Yeni slayt oluşturma - 4. Adım</string>
-    <string name="site_creation_site_details_title">Yeni slayt oluşturma - 3. Adım</string>
-    <string name="site_creation_theme_selection_title">Yeni slayt oluşturma - 2. Adım</string>
-    <string name="site_creation_category_title">Yeni slayt oluşturma - 1. Adım</string>
     <string name="stats_followers_many_desc">%d takipçi</string>
     <string name="stats_followers_one_desc">bir takipçi</string>
     <string name="stats_followers_zero_desc">sıfır takipçi</string>
@@ -655,7 +683,6 @@ Language: tr
     <string name="help_screen_title">Yardım ve destek</string>
     <string name="license_screen_title">Lisans</string>
     <string name="release_notes_screen_title">Sürüm notları</string>
-    <string name="site_creation_creating_failed_extended">Beklenmedik bir sorunla karşılaştık. Bir kez daha denemek ister misiniz?</string>
     <string name="signup_epilogue_error_avatar_view">Avatarınız yüklendi ve kısa süre içinde kullanılabilir olacak.</string>
     <string name="email_not_registered_wpcom">Bu e-posta hesabına bağlı bir WordPress.com hesabı bulamıyoruz. Site adresinizi kullanarak oturum açmak için aşağıdaki bağlantıyı deneyin.</string>
     <string name="permissions_denied_message">Görünen o ki bu özellik için gerekli izinleri kapatmışsınız.&lt;br/>&lt;br/>Bunu değiştirmek için izinlerinizi düzenleyin ve &lt;strong>%s&lt;/strong> izninin etkin olduğundan emin olun.</string>
@@ -707,44 +734,7 @@ Language: tr
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">İlk yazıyı yazın</string>
-    <string name="site_creation_epilogue_configure">Yapılandır</string>
-    <string name="site_creation_epilogue_congrats">Tebrikler!\nSiteniz hazır.</string>
-    <string name="site_creation_creating_modal">Lütfen site oluşturma tamamlanıncaya kadar bekleyin.</string>
-    <string name="site_creation_creating_retry">Tekrar deneyin</string>
-    <string name="site_creation_creating_failed">Bir sorun oluştu…</string>
-    <string name="site_creation_creating_preparing_frontend">Ön uç hazırlanıyor…</string>
-    <string name="site_creation_creating_configuring_theme">Site tarzınız yapılandırılıyor…</string>
-    <string name="site_creation_creating_configuring_content">Site içeriği yapılandırılıyor…</string>
-    <string name="site_creation_creating_fetching_info">Site bilgileri alınıyor…</string>
-    <string name="site_creation_creating_laying_foundation">Site temeli oluşturuluyor…</string>
-    <string name="site_creation_empty_site_title">Lütfen bir site başlığı girin</string>
-    <string name="site_creation_tagline_helper">Slogan, çoğu temada başlığın hemen altında gösterilen kısa metin satırıdır ve arama motorlarında site meta veri görevi görür.</string>
-    <string name="site_creation_tagline_hint">Site sloganı (isteğe bağlı)</string>
-    <string name="site_creation_title_hint">Site başlığı</string>
     <string name="site_creation_domain_finish_button">Site oluştur</string>
-    <string name="site_creation_domain_keywords_hint">Daha fazla fikir için anahtar sözcük yazın</string>
-    <string name="site_creation_label_domain_selection_title">Adım 4/4</string>
-    <string name="site_creation_label_site_details">Bize oluşturduğunuzdan daha çok bahsedin. Başlık ve etiket satırı nedir?</string>
-    <string name="site_creation_label_site_details_title">Adım 3/4</string>
-    <string name="site_creation_label_theme_loading">Temalar yüklenirken lütfen bekleyin</string>
-    <string name="site_creation_label_theme_selection">Popüler temalarımızdan biriyle hızlı bir başlangıç yapın. Siteniz oluşturulduktan sonra diğer yüzlercesine göz atabilir ve aralarından seçim yapabilirsiniz.</string>
-    <string name="site_creation_label_theme_selection_title">Adım 2/4</string>
-    <string name="site_creation_subtitle_portfolio">Yaratıcı projelerinizi göze hitap eden bir biçimde sergilemek için.</string>
-    <string name="site_creation_title_portfolio">Bir portfolyo ile başlayın</string>
-    <string name="site_creation_subtitle_website">İşinizi veya markanızı tanıtmak ve kitlenizle bağlantı kurmak için.</string>
-    <string name="site_creation_title_website">Bir web sitesi ile başlayın</string>
-    <string name="site_creation_subtitle_blog">Düşüncelerinizi, hikayelerinizi ve fotoğraflarınızı takipçilerinizle paylaşmak için.</string>
-    <string name="site_creation_title_blog">Bir blog ile başlayın</string>
-    <string name="site_creation_label_category">Ne tür bir siteye ihtiyacınız var?\nBir seçenek seçin:</string>
-    <string name="site_creation_label_category_title">Adım 1/4</string>
-    <string name="site_creation_title">Yeni Site Oluştur</string>
-    <string name="notification_site_creation_failed">Bir hata oluştu.</string>
-    <string name="notification_site_creation_title_stopped">Site oluşturma durduruldu</string>
-    <string name="notification_site_creation_step_theme">Adım 4/4</string>
-    <string name="notification_site_creation_step_tagline">Adım 3/4</string>
-    <string name="notification_site_creation_step_fetching">Adım 2/4</string>
-    <string name="notification_site_creation_step_creating">Adım 1/4</string>
     <string name="notification_site_creation_created">Devam etmek için dokunun.</string>
     <string name="notification_site_creation_title_success">Site oluşturuldu!</string>
     <string name="google_error_timeout">Google çok uzun sürede cevap verdi. Daha hızlı bir internet bağlantınız oluncaya kadar beklemeniz gerekebilir.</string>

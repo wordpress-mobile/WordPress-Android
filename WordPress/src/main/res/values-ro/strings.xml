@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-24 07:25:45+0000
+Translation-Revision-Date: 2019-06-07 12:04:27+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">A apărut o eroare la actualizarea detaliilor site-ului: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">A apărut o eroare la aducerea informațiilor de contact pentru domeniu: %s</string>
+    <string name="domain_registration_error_registering_domain">A apărut o eroare în timpul înregistrării domeniului: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Înregistrez numele de domeniu…</string>
+    <string name="domain_registration_state_picker_dialog_title">Selectează județul (provincia, statul)</string>
+    <string name="domain_registration_country_picker_dialog_title">Selectează țara</string>
+    <string name="domain_registration_result_continue_button">continuă</string>
+    <string name="domain_registration_result_description">domeniul tău &lt;b>%s&lt;/b> este inițializat acum. Situl tău\n        face tumbe de bucurie!</string>
+    <string name="domain_registration_result_title">Felicitări</string>
+    <string name="domain_contact_information_register_domain_button">Înregistrează domeniul</string>
+    <string name="domain_contact_information_postal_code_hint">Cod poștal</string>
+    <string name="domain_contact_information_state_hint">Județ (provincie, stat)</string>
+    <string name="domain_contact_information_city_hint">Oraș</string>
+    <string name="domain_contact_information_address_hint_two">Adresă 2</string>
+    <string name="domain_contact_information_address_hint">Adresă</string>
+    <string name="domain_contact_information_country_hint">Țară</string>
+    <string name="domain_contact_information_country_code_hint">Cod țară</string>
+    <string name="domain_contact_information_phone_number_hint">Telefon</string>
+    <string name="domain_contact_information_organization_hint">Organizație (opțional)</string>
+    <string name="domain_contact_information_description">Pentru comoditate, ți-am completat informațiile de contact\n        din WordPress.com. Te rog să le verifici pentru a te asigura că sunt informațiile corecte pe care vrei să le folosești pentru acest domeniu.</string>
+    <string name="domain_contact_information_title">Informații de contact domeniu</string>
+    <string name="domain_privacy_option_off_title">Înregistrează-l public</string>
+    <string name="domain_privacy_option_on_title">Înregistrează-l privat cu protecție de confidențialitate</string>
+    <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu</string>
+    <string name="domain_registration_privacy_protection_description">Proprietarii de domenii trebuie să partajeze informațiile de contact într-o bază de date publică a tuturor domeniilor.\n        Cu protecția de confidențialitate, publicăm propriile informații în loc de ale tale și îți trimitem privat toate comunicările.</string>
+    <string name="domain_registration_privacy_protection_title">Protecție de confidențialitate</string>
+    <string name="domain_registration_contact_form_input_error">Te rog introdu un %s valid</string>
+    <string name="domains_suggestions_choose_domain">Alege domeniul</string>
+    <string name="stats_management_new">Nou</string>
+    <string name="stats_management_edit">Editează</string>
+    <string name="stats_management_dismiss_insights_news_card">Renunță</string>
+    <string name="stats_management_try_it_now">Încearcă-l acum</string>
+    <string name="stats_management_news_card_message">Alegi ce statistici să vezi și te axezi asupra datelor care te interesează cel mai mult. Atinge %1$s în partea de jos a ecranului Perspective pentru a-ți personaliza statisticile.</string>
+    <string name="stats_manage_your_stats">Administrează-ți statisticile</string>
     <string name="history_fetching_revisions">Aduc reviziile…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Inserarea elementului media a eșuat.\nTe rog atinge pentru a reîncerca.</string>
@@ -23,10 +58,9 @@ Language: ro
     <string name="stats_insights_social">Sociale</string>
     <string name="stats_insights_annual_site_stats">Statistici sit anuale</string>
     <string name="stats_view_follower_totals">Total urmăritori</string>
-    <string name="suggestion_fetch_error">Sugestiile pentru domeniu nu au putut fi încărcate</string>
-    <string name="suggestions_search_hint">Introdu un cuvânt cheie pentru mai multe idei</string>
-    <string name="suggestions_empty_list">Nicio sugestie găsită</string>
-    <string name="choose_domain">Alege domeniul</string>
+    <string name="domain_suggestions_fetch_error">Sugestiile pentru domeniu nu au putut fi încărcate</string>
+    <string name="domain_suggestions_search_hint">Introdu un cuvânt cheie pentru mai multe idei</string>
+    <string name="domains_suggestions_empty_list">Nicio sugestie găsită</string>
     <string name="register_domain">Înregistrează domeniul</string>
     <string name="jetpack_installed_message">Acum, după ce ai instalat Jetpack, trebuie doar să te pregătim pentru inițializare. Nu va dura decât un minut.</string>
     <string name="stats_menu_remove">Înlătură din perspective</string>
@@ -215,7 +249,6 @@ Language: ro
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
     <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
-    <string name="site_creation_label_domain_selection">Alege o adresă disponibilă pentru a permite oamenilor să te găsească pe web.</string>
     <string name="giphy_powered_by_giphy">Propulsat de GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Unele elemente media au eșuat la încărcare din cauza unei erori de rețea.</string>
     <string name="giphy_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
@@ -541,7 +574,6 @@ Language: ro
     <string name="content_description_people_looking_charts">Oameni care se uită la grafice și diagrame</string>
     <string name="comment_title">%s pe %s</string>
     <string name="dialog_confirm_delete_permanently_post">Sigur vrei să ștergi definitiv acest articol?</string>
-    <string name="notification_site_creation_title_in_progress">Creez situl… Poate dura câteva minute.</string>
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_general_title">General</string>
     <string name="photo_picker_use_photo">Folosește această fotografie</string>
@@ -554,10 +586,6 @@ Language: ro
     <string name="site_settings_quota_space_unlimited">%1$s din nelimitat</string>
     <string name="preview_count">Previzualizează %d</string>
     <string name="add_count">Adaugă %d</string>
-    <string name="site_creation_domain_selection_title">Creează sit nou - pasul 4</string>
-    <string name="site_creation_site_details_title">Creează sit nou - pasul 3</string>
-    <string name="site_creation_theme_selection_title">Creează sit nou - pasul 2</string>
-    <string name="site_creation_category_title">Creează sit nou - pasul 1</string>
     <string name="stats_followers_many_desc">%d urmăritori</string>
     <string name="stats_followers_one_desc">un urmăritor</string>
     <string name="stats_followers_zero_desc">niciun urmăritor</string>
@@ -655,7 +683,6 @@ Language: ro
     <string name="help_screen_title">Ajutor și suport</string>
     <string name="license_screen_title">Licență</string>
     <string name="release_notes_screen_title">Note de lansare</string>
-    <string name="site_creation_creating_failed_extended">Ne-am lovit de o problemă neașteptată. Nu vrei să încerci încă o dată?</string>
     <string name="signup_epilogue_error_avatar_view">Avatarul tău a fost încărcat și va fi disponibil în scurt timp.</string>
     <string name="email_not_registered_wpcom">Hm, nu putem găsi un cont WordPress.com conectat la această adresă de email. Încearcă legătura de mai jos pentru a te autentifica folosind adresa sitului.</string>
     <string name="permissions_denied_message">Se pare că ai dezactivat permisiunile necesare pentru această funcționalitate.&lt;br/>&lt;br/>Pentru a modifica asta, editează-ți permisiunile și asigură-te că &lt;strong>%s&lt;/strong> este activată.</string>
@@ -707,44 +734,7 @@ Language: ro
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Scrie primul articol</string>
-    <string name="site_creation_epilogue_configure">Configurează</string>
-    <string name="site_creation_epilogue_congrats">Felicitări!\nSitul tău este gata.</string>
-    <string name="site_creation_creating_modal">Te rog așteaptă până când crearea sitului este finalizată.</string>
-    <string name="site_creation_creating_retry">Încearcă din nou</string>
-    <string name="site_creation_creating_failed">Ceva nu a mers bine…</string>
-    <string name="site_creation_creating_preparing_frontend">Pregătesc partea din față…</string>
-    <string name="site_creation_creating_configuring_theme">Configurez stilul sitului…</string>
-    <string name="site_creation_creating_configuring_content">Configurez conținutul sitului…</string>
-    <string name="site_creation_creating_fetching_info">Preiau informațiile sitului…</string>
-    <string name="site_creation_creating_laying_foundation">Construiesc fundația sitului…</string>
-    <string name="site_creation_empty_site_title">Te rog introdu un titlu pentru sit</string>
-    <string name="site_creation_tagline_helper">Sloganul este o linie scurtă de text afișată, în majoritatea temelor, chiar sub titlul și acționează ca o metadată de sit pentru motoarele de căutare.</string>
-    <string name="site_creation_tagline_hint">Slogan sit (opțional)</string>
-    <string name="site_creation_title_hint">Titlu sit</string>
     <string name="site_creation_domain_finish_button">Creează situl</string>
-    <string name="site_creation_domain_keywords_hint">Tastează un cuvânt cheie pentru mai multe idei</string>
-    <string name="site_creation_label_domain_selection_title">Pasul 4 din 4</string>
-    <string name="site_creation_label_site_details">Spune-ne mai multe despre ceea ce creezi. Care este titlul și sloganul?</string>
-    <string name="site_creation_label_site_details_title">Pasul 3 din 4</string>
-    <string name="site_creation_label_theme_loading">Te rog așteaptă cât timp se încarcă temele</string>
-    <string name="site_creation_label_theme_selection">Începe rapid cu una dintre temele noastre populare. Odată ce situl tău este creat, poți răsfoi și alege din alte sute de teme.</string>
-    <string name="site_creation_label_theme_selection_title">Pasul 2 din 4</string>
-    <string name="site_creation_subtitle_portfolio">Pentru a-ți prezenta proiectele creative printr-o exemplificare vizuală.</string>
-    <string name="site_creation_title_portfolio">Începe cu un portofoliu</string>
-    <string name="site_creation_subtitle_website">Pentru a-ți promova afacerea sau brandul și pentru a te conecta cu publicul.</string>
-    <string name="site_creation_title_website">Începe cu un sit web</string>
-    <string name="site_creation_subtitle_blog">Pentru a-ți partaja ideile, povestirile și fotografiile cu urmăritorii tăi.</string>
-    <string name="site_creation_title_blog">Începe cu un blog</string>
-    <string name="site_creation_label_category">De ce fel de sit ai nevoie?\nAlege o opțiune de mai jos:</string>
-    <string name="site_creation_label_category_title">Pasul 1 din 4</string>
-    <string name="site_creation_title">Creează un sit nou</string>
-    <string name="notification_site_creation_failed">A apărut o eroare.</string>
-    <string name="notification_site_creation_title_stopped">Crearea sitului s-a oprit</string>
-    <string name="notification_site_creation_step_theme">Pasul 4 din 4</string>
-    <string name="notification_site_creation_step_tagline">Pasul 3 din 4</string>
-    <string name="notification_site_creation_step_fetching">Pasul 2 din 4</string>
-    <string name="notification_site_creation_step_creating">Pasul 1 din 4</string>
     <string name="notification_site_creation_created">Atinge pentru a continua.</string>
     <string name="notification_site_creation_title_success">Sit creat!</string>
     <string name="google_error_timeout">A durat prea mult până a răspuns Google. Va trebui să aștepți până când ai o conexiune la internet mai bună.</string>
