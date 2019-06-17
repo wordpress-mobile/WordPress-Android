@@ -888,9 +888,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case PRIVATE:
             case PUBLISHED:
             case UNKNOWN:
-            default:
                 return PrimaryAction.UPDATE;
         }
+        return PrimaryAction.SAVE;
     }
 
     private String getPrimaryActionText() {
@@ -902,9 +902,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case UPDATE:
                 return getString(R.string.update_verb);
             case SAVE:
-            default:
                 return getString(R.string.save);
         }
+        return getString(R.string.save);
     }
 
     private SecondaryAction getSecondaryAction() {
@@ -921,14 +921,14 @@ public class EditPostActivity extends AppCompatActivity implements
             case PENDING:
             case SCHEDULED:
                 return SecondaryAction.PUBLISH_NOW;
+            case PRIVATE:
             case PUBLISHED:
                 return SecondaryAction.NONE;
-            case PRIVATE:
             case TRASHED:
             case UNKNOWN:
-            default:
                 return SecondaryAction.SAVE_AS_DRAFT;
         }
+        return SecondaryAction.NONE;
     }
 
     private String getSecondaryActionText() {
@@ -938,9 +938,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case PUBLISH_NOW:
                 return getString(R.string.menu_publish_now);
             case NONE:
-            default:
-                throw new IllegalStateException("Undefined switch case");
+                throw new IllegalStateException("getSecondaryActionText shouldn't be called with that case");
         }
+        throw new IllegalStateException("getSecondaryActionText shouldn't be called with that case");
     }
 
     private boolean isPhotoPickerShowing() {
@@ -1155,7 +1155,6 @@ public class EditPostActivity extends AppCompatActivity implements
             showMenuItems = false;
         }
 
-
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_secondary_action);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
@@ -1164,11 +1163,15 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
         if (saveAsDraftMenuItem != null && mPost != null) {
-            if (getSecondaryAction() == SecondaryAction.NONE) {
-                saveAsDraftMenuItem.setVisible(false);
-            } else {
-                saveAsDraftMenuItem.setVisible(showMenuItems);
-                saveAsDraftMenuItem.setTitle(getSecondaryActionText());
+            switch (getSecondaryAction()) {
+                case SAVE_AS_DRAFT:
+                case PUBLISH_NOW:
+                    saveAsDraftMenuItem.setVisible(showMenuItems);
+                    saveAsDraftMenuItem.setTitle(getSecondaryActionText());
+                    break;
+                case NONE:
+                    saveAsDraftMenuItem.setVisible(false);
+                    break;
             }
         }
 
@@ -1448,10 +1451,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 showPublishConfirmationDialogAndPublishPost();
                 return true;
             case NONE:
-            default:
                 // Error: noop
                 return false;
         }
+        return false;
     }
 
     private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
@@ -1538,7 +1541,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case SUBMIT_FOR_REVIEW:
             case SCHEDULE:
             case SAVE:
-            default:
                 uploadPost(false);
         }
     }
