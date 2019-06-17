@@ -32,13 +32,13 @@ class ViewsWidgetListViewModel
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) {
-    private var siteId: Long? = null
+    private var siteId: Int? = null
     private var colorModeId: Int? = null
     private var showChangeColumn: Boolean = true
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<ListItemUiModel>()
     val data: List<ListItemUiModel> = mutableData
-    fun start(siteId: Long, colorModeId: Int, showChangeColumn: Boolean, appWidgetId: Int) {
+    fun start(siteId: Int, colorModeId: Int, showChangeColumn: Boolean, appWidgetId: Int) {
         this.siteId = siteId
         this.colorModeId = colorModeId
         this.showChangeColumn = showChangeColumn
@@ -47,7 +47,7 @@ class ViewsWidgetListViewModel
 
     fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit) {
         siteId?.apply {
-            val site = siteStore.getSiteBySiteId(this)
+            val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
                 val currentDate = Date()
                 runBlocking {

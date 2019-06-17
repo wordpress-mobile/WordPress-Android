@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
 import kotlinx.coroutines.GlobalScope
@@ -16,7 +14,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -62,14 +59,13 @@ class AllTimeWidgetUpdater
                 )
                 showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
-                views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
                 widgetUtils.showList(
                         appWidgetManager,
                         views,
                         context,
                         appWidgetId,
                         colorMode,
-                        siteId,
+                        siteModel.id,
                         ALL_TIME_VIEWS,
                         showColumns
                 )
@@ -124,12 +120,6 @@ class AllTimeWidgetUpdater
                 allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: EMPTY_VALUE
         )
         appWidgetManager.updateAppWidget(appWidgetId, views)
-    }
-
-    private fun getPendingTemplate(context: Context): PendingIntent {
-        val intent = Intent(context, StatsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun delete(appWidgetId: Int) {

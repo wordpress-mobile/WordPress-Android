@@ -17,7 +17,7 @@ class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     @Inject lateinit var viewModel: TodayWidgetListViewModel
     @Inject lateinit var widgetUpdater: TodayWidgetUpdater
     private val colorMode: Color = intent.getColorMode()
-    private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
+    private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
     init {

@@ -19,12 +19,12 @@ class TodayWidgetListViewModel
     private val todayInsightsStore: TodayInsightsStore,
     private val resourceProvider: ResourceProvider
 ) {
-    private var siteId: Long? = null
+    private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<TodayItemUiModel>()
     val data: List<TodayItemUiModel> = mutableData
-    fun start(siteId: Long, colorMode: Color, appWidgetId: Int) {
+    fun start(siteId: Int, colorMode: Color, appWidgetId: Int) {
         this.siteId = siteId
         this.colorMode = colorMode
         this.appWidgetId = appWidgetId
@@ -32,7 +32,7 @@ class TodayWidgetListViewModel
 
     fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit) {
         siteId?.apply {
-            val site = siteStore.getSiteBySiteId(this)
+            val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
                 runBlocking {
                     todayInsightsStore.fetchTodayInsights(site)
@@ -54,7 +54,7 @@ class TodayWidgetListViewModel
 
     private fun buildListItemUiModel(
         domainModel: VisitsModel,
-        localSiteId: Long
+        localSiteId: Int
     ): List<TodayItemUiModel> {
         val layout = when (colorMode) {
             Color.DARK -> R.layout.stats_views_widget_item_dark
@@ -90,7 +90,7 @@ class TodayWidgetListViewModel
 
     data class TodayItemUiModel(
         @LayoutRes val layout: Int,
-        val localSiteId: Long,
+        val localSiteId: Int,
         val key: String,
         val value: String
     )

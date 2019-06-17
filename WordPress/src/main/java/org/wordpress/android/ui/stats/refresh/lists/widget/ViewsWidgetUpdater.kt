@@ -49,7 +49,7 @@ class ViewsWidgetUpdater
                     context,
                     appWidgetId,
                     colorMode,
-                    siteId,
+                    siteModel.id,
                     WEEK_VIEWS,
                     showChangeColumn
             )

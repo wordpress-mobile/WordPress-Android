@@ -19,12 +19,12 @@ class AllTimeWidgetListViewModel
     private val allTimeStore: AllTimeInsightsStore,
     private val resourceProvider: ResourceProvider
 ) {
-    private var siteId: Long? = null
+    private var siteId: Int? = null
     private var colorModeId: Int? = null
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<AllTimeItemUiModel>()
     val data: List<AllTimeItemUiModel> = mutableData
-    fun start(siteId: Long, colorModeId: Int, appWidgetId: Int) {
+    fun start(siteId: Int, colorModeId: Int, appWidgetId: Int) {
         this.siteId = siteId
         this.colorModeId = colorModeId
         this.appWidgetId = appWidgetId
@@ -32,7 +32,7 @@ class AllTimeWidgetListViewModel
 
     fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit) {
         siteId?.apply {
-            val site = siteStore.getSiteBySiteId(this)
+            val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
                 runBlocking {
                     allTimeStore.fetchAllTimeInsights(site)
@@ -54,7 +54,7 @@ class AllTimeWidgetListViewModel
 
     private fun buildListItemUiModel(
         domainModel: InsightsAllTimeModel,
-        localSiteId: Long
+        localSiteId: Int
     ): List<AllTimeItemUiModel> {
         val layout = when (colorModeId) {
             Color.DARK.ordinal -> R.layout.stats_views_widget_item_dark
@@ -91,7 +91,7 @@ class AllTimeWidgetListViewModel
 
     data class AllTimeItemUiModel(
         @LayoutRes val layout: Int,
-        val localSiteId: Long,
+        val localSiteId: Int,
         val key: String,
         val value: String
     )
