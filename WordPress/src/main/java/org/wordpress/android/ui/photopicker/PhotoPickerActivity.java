@@ -131,18 +131,6 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
-    }
-
     private PhotoPickerFragment getPickerFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
         if (fragment != null) {
