@@ -30,7 +30,6 @@ Language: nl
     <string name="domain_contact_information_title">Contactgegevens domein</string>
     <string name="domain_privacy_option_off_title">Openbaar registreren</string>
     <string name="domain_privacy_option_on_title">Privé registreren met privacybescherming</string>
-    <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze </string>
     <string name="domain_registration_privacy_protection_description">Domeineigenaren moeten contactgegevens delen in een openbare database met alle domeinen.\n Met Privacybescherming publiceren we onze eigen informatie in plaats van die van jou en sturen we berichten privé naar je door.</string>
     <string name="domain_registration_privacy_protection_title">Privacybescherming</string>
     <string name="domain_registration_contact_form_input_error">Voer een geldige %s in</string>

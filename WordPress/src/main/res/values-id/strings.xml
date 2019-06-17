@@ -30,7 +30,6 @@ Language: id
     <string name="domain_contact_information_title">Informasi kontak domain</string>
     <string name="domain_privacy_option_off_title">Daftarkan secara publik</string>
     <string name="domain_privacy_option_on_title">Daftarkan secara pribadi dengan Perlindungan Privasi</string>
-    <string name="domain_registration_privacy_protection_tos">Dengan mendaftarkan domain ini, Anda menyetujui </string>
     <string name="domain_registration_privacy_protection_description">Pemilik domain harus berbagi informasi kontak di database publik semua domain.\n Dengan Perlindungan Privasi, kami memublikasikan informasi kami sendiri, bukan informasi Anda, dan meneruskan segala komunikasi kepada Anda secara pribadi.</string>
     <string name="domain_registration_privacy_protection_title">Perlindungan Privasi</string>
     <string name="domain_registration_contact_form_input_error">Masukkan %s yang valid</string>

@@ -1,3 +1,7 @@
+12.8
+-----
+
+
 12.7
 -----
 * Show upload in progress notification when retrying
@@ -73,3 +77,4 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
+
