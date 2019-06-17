@@ -30,7 +30,6 @@ Language: es
     <string name="domain_contact_information_title">Información de contacto del dominio</string>
     <string name="domain_privacy_option_off_title">Registrar públicamente</string>
     <string name="domain_privacy_option_on_title">Registrar privadamente con protección de privacidad</string>
-    <string name="domain_registration_privacy_protection_tos">Al registrar este dominio aceptas nuestra</string>
     <string name="domain_registration_privacy_protection_description">Lo propietarios de dominios tienen que compartir información en una base de datos pública de todos los dominios.\n   Con la protección de privacidad publicamos nuestra propia información en vez de la tuya, y te redirigiremos de forma privada cualquier comunicación dirigida a ti. </string>
     <string name="domain_registration_privacy_protection_title">Protección de privacidad</string>
     <string name="domain_registration_contact_form_input_error">Por favor, introduce un %s válido</string>
