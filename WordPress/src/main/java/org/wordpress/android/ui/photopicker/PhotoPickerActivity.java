@@ -34,6 +34,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -49,6 +50,8 @@ import javax.inject.Inject;
 
 public class PhotoPickerActivity extends AppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
+    private static final int EMPTY_LOCAL_POST_ID = -1;
+
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
     private static final String EXTRA_SHOW_PROGRESS_DIALOG = "show_progress_dialog";
@@ -59,11 +62,16 @@ public class PhotoPickerActivity extends AppCompatActivity
     // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
 
+    public static final String LOCAL_POST_ID = "local_post_id";
+
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
 
     // note that the site isn't required and may be null
     private SiteModel mSite;
+
+    // note that the local post id isn't required (default value is EMPTY_LOCAL_POST_ID)
+    private Integer mLocalPostId;
 
     private ProgressDialog mProgressDialog;
 
@@ -112,9 +120,11 @@ public class PhotoPickerActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(PhotoPickerFragment.ARG_BROWSER_TYPE);
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mLocalPostId = getIntent().getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         } else {
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mLocalPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
             if (savedInstanceState.getBoolean(EXTRA_SHOW_PROGRESS_DIALOG)) {
                 showUploadProgressDialog();
             }
@@ -156,6 +166,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE, mBrowserType);
+        outState.putInt(LOCAL_POST_ID, mLocalPostId);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -266,11 +277,14 @@ public class PhotoPickerActivity extends AppCompatActivity
     private void doMediaUriSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+            final String mimeType = getContentResolver().getType(mediaUri);
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
                                              new WPMediaUtils.MediaFetchDoNext() {
                                                  @Override
                                                  public void doNext(Uri uri) {
-                                                     uploadMedia(uri);
+                                                     queueFeaturedImageForUpload(uri, mimeType);
+                                                     setResult(RESULT_OK);
+                                                     finish();
                                                  }
                                              });
         } else {
@@ -281,6 +295,30 @@ public class PhotoPickerActivity extends AppCompatActivity
             finish();
         }
     }
+
+    private void queueFeaturedImageForUpload(Uri uri, String mimeType) {
+        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        if (mLocalPostId != EMPTY_LOCAL_POST_ID) {
+            media.setLocalPostId(mLocalPostId);
+        } else {
+            AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.");
+        }
+        media.setFeatured(true);
+
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        addMediaToUploadService(media);
+    }
+
+    private void addMediaToUploadService(@NonNull MediaModel media) {
+        ArrayList<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(media);
+        UploadService.uploadMedia(this, mediaList);
+    }
+
 
     private void doMediaIdSelected(long mediaId, @NonNull PhotoPickerMediaSource source) {
         Intent data = new Intent()

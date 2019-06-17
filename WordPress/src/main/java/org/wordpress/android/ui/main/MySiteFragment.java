@@ -1066,7 +1066,7 @@ public class MySiteFragment extends Fragment implements
             case TAG_ADD_SITE_ICON_DIALOG:
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
-                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
+                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite(), null);
                 break;
             case TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG:
                 // no-op

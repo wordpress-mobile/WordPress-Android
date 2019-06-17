@@ -1531,9 +1531,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void onUploadSuccess(MediaModel media) {
-        if (mEditorMediaUploadListener != null && media != null) {
+        // TODO Should this statement check media.getLocalPostId() == mPost.getId()?
+        if (media != null && !media.getFeatured() && mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                                              FluxCUtils.mediaFileFromMediaModel(media));
+                    FluxCUtils.mediaFileFromMediaModel(media));
+        } else if (media != null && media.getFeatured() && media.getLocalPostId() == mPost.getId()) {
+            setFeaturedImageId(media.getMediaId());
         }
     }
 

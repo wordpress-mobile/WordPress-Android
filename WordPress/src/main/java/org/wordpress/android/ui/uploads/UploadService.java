@@ -436,7 +436,11 @@ public class UploadService extends Service {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
             Set<MediaModel> completedMedia = sInstance.mUploadStore.getCompletedMediaForPost(post);
             for (MediaModel media : completedMedia) {
-                post = updatePostWithMediaUrl(post, media, processor);
+                if (media.getFeatured()) {
+                    post = updatePostWithNewFeaturedImg(post, media.getMediaId());
+                } else {
+                    post = updatePostWithMediaUrl(post, media, processor);
+                }
             }
 
             if (completedMedia != null && !completedMedia.isEmpty()) {
@@ -559,6 +563,14 @@ public class UploadService extends Service {
         }
     }
 
+    private static synchronized PostModel updatePostWithNewFeaturedImg(PostModel post, Long remoteMediaId) {
+        if (post != null && remoteMediaId != null) {
+            post.setFeaturedImageId(remoteMediaId);
+            post.setIsLocallyChanged(true);
+            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        }
+        return post;
+    }
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
