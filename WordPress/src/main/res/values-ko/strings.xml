@@ -30,7 +30,6 @@ Language: ko_KR
     <string name="domain_contact_information_title">도메인 연락처 정보</string>
     <string name="domain_privacy_option_off_title">공개적으로 등록</string>
     <string name="domain_privacy_option_on_title">개인정보 보호를 통해 비공개로 등록</string>
-    <string name="domain_registration_privacy_protection_tos">이 도메인을 등록하면 다음에 동의하는 것입니다. </string>
     <string name="domain_registration_privacy_protection_description">도메인 소유자는 모든 도메인의 공개 데이터베이스에 있는 연락처 정보를 공유해야 합니다.\n 개인정보 보호에 따라 회원님의 정보가 아닌 당사의 정보를 공개하며, 회원님이 받을 커뮤니케이션은 비공개적으로 전달합니다.</string>
     <string name="domain_registration_privacy_protection_title">개인정보 보호</string>
     <string name="domain_registration_contact_form_input_error">유효한 %s(을)를 입력하세요.</string>

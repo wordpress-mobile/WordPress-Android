@@ -30,7 +30,6 @@ Language: sv_SE
     <string name="domain_contact_information_title">Kontaktinformation för domän</string>
     <string name="domain_privacy_option_off_title">Registrera publikt</string>
     <string name="domain_privacy_option_on_title">Registrera privat med integritetsskydd</string>
-    <string name="domain_registration_privacy_protection_tos">Genom att registrera denna domän accepterar du vår</string>
     <string name="domain_registration_privacy_protection_description">Domänägare måste uppge kontaktinformation i en publik databas som omfattar alla domäner. Med integritetsskydd publicerar vi våra uppgifter istället för dina, och vidarebefordrar sedan privat eventuella meddelanden till dig.</string>
     <string name="domain_registration_privacy_protection_title">Integritetsskydd</string>
     <string name="domain_registration_contact_form_input_error">Ange en giltig %s</string>

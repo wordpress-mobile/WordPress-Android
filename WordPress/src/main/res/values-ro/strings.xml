@@ -30,7 +30,6 @@ Language: ro
     <string name="domain_contact_information_title">Informații de contact domeniu</string>
     <string name="domain_privacy_option_off_title">Înregistrează-l public</string>
     <string name="domain_privacy_option_on_title">Înregistrează-l privat cu protecție de confidențialitate</string>
-    <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu</string>
     <string name="domain_registration_privacy_protection_description">Proprietarii de domenii trebuie să partajeze informațiile de contact într-o bază de date publică a tuturor domeniilor.\n        Cu protecția de confidențialitate, publicăm propriile informații în loc de ale tale și îți trimitem privat toate comunicările.</string>
     <string name="domain_registration_privacy_protection_title">Protecție de confidențialitate</string>
     <string name="domain_registration_contact_form_input_error">Te rog introdu un %s valid</string>

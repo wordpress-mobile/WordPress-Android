@@ -30,7 +30,6 @@ Language: ja_JP
     <string name="domain_contact_information_title">ドメインの連絡先情報</string>
     <string name="domain_privacy_option_off_title">公開として登録</string>
     <string name="domain_privacy_option_on_title">プライバシー保護付きで非公開として登録</string>
-    <string name="domain_registration_privacy_protection_tos">このドメインを登録することで、弊社の利用規約に合意したことになります。</string>
     <string name="domain_registration_privacy_protection_description">ドメイン所有者は、すべてのドメインのパブリックデータベースで連絡先情報を共有する必要があります。\nプライバシー保護として、お客様に関する情報の代わりに弊社に関する情報を公開し、お客様には個別でコミュニケーションを転送します。</string>
     <string name="domain_registration_privacy_protection_title">プライバシー保護</string>
     <string name="domain_registration_contact_form_input_error">有効な%sを入力してください</string>
