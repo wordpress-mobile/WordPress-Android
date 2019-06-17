@@ -2,10 +2,10 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsAllTimeWidgetConfigureActivity"
-    android:initialKeyguardLayout="@layout/stats_all_time_widget_light"
-    android:initialLayout="@layout/stats_all_time_widget_light"
+    android:initialKeyguardLayout="@layout/stats_widget_all_time_blocks_light"
+    android:initialLayout="@layout/stats_widget_all_time_blocks_light"
     android:minHeight="110dp"
-    android:minResizeWidth="110dp"
+    android:minResizeWidth="150dp"
     android:minWidth="250dp"
     android:previewImage="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
     android:resizeMode="horizontal"

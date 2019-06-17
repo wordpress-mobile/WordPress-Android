@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_rectangle_gray_800_radius_4dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rectangle_white_radius_4dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/stats_widget_list_item_height"
-        android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"
+        android:background="@drawable/bg_rectangle_gray_0_top_radius_4dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/widget_title"
-            style="@style/StatsWidgetTitle.Dark"
+            style="@style/StatsWidgetTitle.Light"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/stats_widget_list_item_height"
             android:text="@string/stats_widget_views_title"
@@ -38,34 +38,5 @@
         android:divider="@null"
         android:dividerHeight="0dp"/>
 
-    <LinearLayout
-        android:id="@+id/widget_error"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/widget_error_message"
-            style="@style/StatsWidgetErrorMessage.Dark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:gravity="center_horizontal"
-            android:text="@string/stats_widget_error_no_data"/>
-
-        <TextView
-            android:id="@+id/widget_retry_button"
-            style="@style/StatsWidgetRetryButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/retry"/>
-    </LinearLayout>
+    <include layout="@layout/stats_widget_error_light"/>
 </LinearLayout>

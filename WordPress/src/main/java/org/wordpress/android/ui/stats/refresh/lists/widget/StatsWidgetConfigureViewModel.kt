@@ -49,9 +49,9 @@ class StatsWidgetConfigureViewModel
     fun start(appWidgetId: Int, viewType: ViewType) {
         this.appWidgetId = appWidgetId
         this.viewType = viewType
-        val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
-        if (colorModeId >= 0) {
-            mutableViewMode.postValue(Color.values()[colorModeId])
+        val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId)
+        if (colorMode != null) {
+            mutableViewMode.postValue(colorMode)
         }
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         if (siteId > -1) {
@@ -67,7 +67,7 @@ class StatsWidgetConfigureViewModel
         val selectedSite = mutableSelectedSite.value
         if (appWidgetId != -1 && selectedSite != null) {
             appPrefsWrapper.setAppWidgetSiteId(selectedSite.siteId, appWidgetId)
-            appPrefsWrapper.setAppWidgetColorModeId((mutableViewMode.value ?: LIGHT).ordinal, appWidgetId)
+            appPrefsWrapper.setAppWidgetColor(mutableViewMode.value ?: LIGHT, appWidgetId)
             mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId, viewType)))
         }
     }

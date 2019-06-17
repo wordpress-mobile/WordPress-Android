@@ -22,6 +22,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -33,6 +35,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 private const val MIN_WIDTH = 250
+private const val EMPTY_VALUE = "-"
 
 class AllTimeWidgetUpdater
 @Inject constructor(
@@ -42,30 +45,28 @@ class AllTimeWidgetUpdater
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val allTimeStore: AllTimeInsightsStore
-) {
-    fun updateAppWidget(
+) : WidgetUpdater {
+    override fun updateAppWidget(
         context: Context,
-        appWidgetManager: AppWidgetManager = AppWidgetManager.getInstance(context),
+        appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
         val minWidth = appWidgetManager.getAppWidgetOptions(appWidgetId)
                 .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 300)
         val showColumns = minWidth > MIN_WIDTH
-        val colorModeId = appPrefsWrapper.getAppWidgetColorModeId(appWidgetId)
+        val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val layout = if (showColumns) {
-            when (colorModeId) {
-                DARK.ordinal -> R.layout.stats_all_time_widget_dark
-                LIGHT.ordinal -> R.layout.stats_all_time_widget_light
-                else -> R.layout.stats_all_time_widget_light
+            when (colorMode) {
+                DARK -> R.layout.stats_widget_all_time_blocks_dark
+                LIGHT -> R.layout.stats_widget_all_time_blocks_light
             }
         } else {
-            when (colorModeId) {
-                DARK.ordinal -> R.layout.stats_views_widget_dark
-                LIGHT.ordinal -> R.layout.stats_views_widget_light
-                else -> R.layout.stats_views_widget_light
+            when (colorMode) {
+                DARK -> R.layout.stats_widget_all_time_list_dark
+                LIGHT -> R.layout.stats_widget_all_time_list_light
             }
         }
         val views = RemoteViews(context.packageName, layout)
@@ -74,21 +75,21 @@ class AllTimeWidgetUpdater
         imageManager.load(awt, context, ICON, siteIconUrl ?: "", FIT_START)
         siteModel?.let {
             views.setOnClickPendingIntent(R.id.widget_title, getPendingSelfIntent(context, siteModel.id))
-            views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
         }
         if (networkAvailable && siteModel != null) {
             if (showColumns) {
-                showColumns(views, siteModel)
+                views.setOnClickPendingIntent(R.id.widget_content, getPendingSelfIntent(context, siteModel.id))
+                showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
-                showList(views, context, appWidgetId, showColumns, colorModeId, siteId)
+                views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
+                showList(appWidgetManager, views, context, appWidgetId, showColumns, colorMode, siteId)
             }
         } else {
-            showError(views, appWidgetId, networkAvailable, resourceProvider, context)
+            showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
         }
-        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    fun updateAllWidgets(context: Context) {
+    override fun updateAllWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val viewsWidget = ComponentName(context, StatsAllTimeWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
@@ -98,36 +99,46 @@ class AllTimeWidgetUpdater
     }
 
     private fun showColumns(
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
         views: RemoteViews,
         site: SiteModel
     ) {
-        loadCachedAllTimeInsights(site, views)
+        views.setViewVisibility(R.id.widget_content, View.VISIBLE)
+        views.setViewVisibility(R.id.widget_error, View.GONE)
+        loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         GlobalScope.launch {
-            runBlocking { allTimeStore.fetchAllTimeInsights(site) }
-            loadCachedAllTimeInsights(site, views)
+            runBlocking {
+                allTimeStore.fetchAllTimeInsights(site)
+            }
+            loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         }
     }
 
     private fun loadCachedAllTimeInsights(
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
         site: SiteModel,
         views: RemoteViews
     ) {
         val allTimeInsights = allTimeStore.getAllTimeInsights(site)
-        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: "0")
-        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: "0")
-        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: "0")
+        views.setTextViewText(R.id.widget_views, allTimeInsights?.views?.toFormattedString() ?: EMPTY_VALUE)
+        views.setTextViewText(R.id.widget_visitors, allTimeInsights?.visitors?.toFormattedString() ?: EMPTY_VALUE)
+        views.setTextViewText(R.id.widget_posts, allTimeInsights?.posts?.toFormattedString() ?: EMPTY_VALUE)
         views.setTextViewText(
                 R.id.widget_best_views,
-                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: "0"
+                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: EMPTY_VALUE
         )
+        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     private fun showList(
+        appWidgetManager: AppWidgetManager,
         views: RemoteViews,
         context: Context,
         appWidgetId: Int,
         showChangeColumn: Boolean,
-        colorModeId: Int,
+        colorMode: Color,
         siteId: Long
     ) {
         views.setViewVisibility(R.id.widget_content, View.VISIBLE)
@@ -135,15 +146,18 @@ class AllTimeWidgetUpdater
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
-        listIntent.putExtra(COLOR_MODE_KEY, colorModeId)
+        listIntent.putColorMode(colorMode)
+        listIntent.putViewType(ViewType.ALL_TIME_VIEWS)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.data = Uri.parse(
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )
         views.setRemoteAdapter(R.id.widget_content, listIntent)
+        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     private fun showError(
+        appWidgetManager: AppWidgetManager,
         views: RemoteViews,
         appWidgetId: Int,
         networkAvailable: Boolean,
@@ -172,13 +186,14 @@ class AllTimeWidgetUpdater
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
         views.setOnClickPendingIntent(R.id.widget_error, pendingSync)
+        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     private fun getPendingSelfIntent(context: Context, localSiteId: Int): PendingIntent {
         val intent = Intent(context, StatsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
+        intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.INSIGHTS)
         intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
         return PendingIntent.getActivity(
                 context,
@@ -194,7 +209,7 @@ class AllTimeWidgetUpdater
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    fun delete(appWidgetId: Int) {
+    override fun delete(appWidgetId: Int) {
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }
