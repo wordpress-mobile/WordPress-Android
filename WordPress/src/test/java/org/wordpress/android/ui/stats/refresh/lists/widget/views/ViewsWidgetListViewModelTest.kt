@@ -12,7 +12,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode.Top
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -37,7 +37,7 @@ class ViewsWidgetListViewModelTest {
     @Mock private lateinit var statsDateFormatter: StatsDateFormatter
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: ViewsWidgetListViewModel
-    private val siteId: Long = 15
+    private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
     private val showChangeColumn = true
@@ -54,7 +54,7 @@ class ViewsWidgetListViewModelTest {
 
     @Test
     fun `builds light ui model and shows change`() {
-        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         val firstViews: Long = 5
         val todayViews: Long = 20
         val dates = listOf(
@@ -62,7 +62,7 @@ class ViewsWidgetListViewModelTest {
                 PeriodData("2019-01-07", firstViews, 0, 0, 0, 0, 0),
                 PeriodData("2019-01-08", todayViews, 0, 0, 0, 0, 0)
         )
-        whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(Top(LIST_ITEM_COUNT + 1)), any())).thenReturn(
+        whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(LimitMode.All), any())).thenReturn(
                 VisitsAndViewsModel("2019-01-08", dates)
         )
         val todayString = "Today"
@@ -126,7 +126,7 @@ class ViewsWidgetListViewModelTest {
 
     @Test
     fun `on missing site triggers error callback`() {
-        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(null)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null)
 
         viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
 

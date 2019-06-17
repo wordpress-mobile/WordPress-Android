@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Date
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -106,7 +107,7 @@ class WidgetUtils
         context: Context,
         appWidgetId: Int,
         colorMode: Color,
-        siteId: Long,
+        siteId: Int,
         viewType: ViewType,
         showChangeColumn: Boolean? = null
     ) {
@@ -140,7 +141,7 @@ class WidgetUtils
         intent.putExtra(OldStatsActivity.ARG_LAUNCHED_FROM, OldStatsActivity.StatsLaunchedFrom.STATS_WIDGET)
         return PendingIntent.getActivity(
                 context,
-                Random(localSiteId).nextInt(),
+                getRandomId(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -149,6 +150,15 @@ class WidgetUtils
     private fun getPendingTemplate(context: Context): PendingIntent {
         val intent = Intent(context, StatsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(
+                context,
+                getRandomId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun getRandomId(): Int {
+        return Random(Date().time).nextInt()
     }
 }

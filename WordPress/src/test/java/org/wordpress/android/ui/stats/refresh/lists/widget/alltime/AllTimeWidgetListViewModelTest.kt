@@ -23,7 +23,7 @@ class AllTimeWidgetListViewModelTest {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: AllTimeWidgetListViewModel
-    private val siteId: Long = 15
+    private val siteId: Int = 15
     private val appWidgetId: Int = 1
     private val color = Color.LIGHT
     @Before
@@ -34,7 +34,7 @@ class AllTimeWidgetListViewModelTest {
 
     @Test
     fun `builds ui model`() {
-        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         val viewsKey = "Views"
         val visitorsKey = "Visitors"
         val postsKey = "Posts"
@@ -49,7 +49,7 @@ class AllTimeWidgetListViewModelTest {
         whenever(resourceProvider.getString(R.string.stats_insights_best_ever)).thenReturn(bestKey)
         whenever(allTimeStore.getAllTimeInsights(site)).thenReturn(
                 InsightsAllTimeModel(
-                        siteId,
+                        150L,
                         null,
                         visitors,
                         views,
@@ -70,7 +70,7 @@ class AllTimeWidgetListViewModelTest {
 
     @Test
     fun `shows error when site is missing`() {
-        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(null)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null)
 
         var onError: Int? = null
         viewModel.onDataSetChanged { onError = it }

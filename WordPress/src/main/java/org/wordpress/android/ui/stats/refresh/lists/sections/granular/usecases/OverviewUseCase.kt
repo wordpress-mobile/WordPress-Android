@@ -25,7 +25,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val ITEMS_TO_LOAD = 15
+const val OVERVIEW_ITEMS_TO_LOAD = 15
 
 class OverviewUseCase
 constructor(
@@ -66,7 +66,7 @@ constructor(
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.Top(ITEMS_TO_LOAD),
+                LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
                 selectedDateProvider.getCurrentDate(),
                 forced
         )
