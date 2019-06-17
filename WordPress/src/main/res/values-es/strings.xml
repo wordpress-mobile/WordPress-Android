@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-24 16:33:25+0000
+Translation-Revision-Date: 2019-06-05 15:23:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">Ocurrió un error al actualizar los detalles de tu sitio: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Ocurrió un error al recuperar la información de contacto del dominio: %s</string>
+    <string name="domain_registration_error_registering_domain">Ocurrió un error al registrar el dominio: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando el nombre de dominio…</string>
+    <string name="domain_registration_state_picker_dialog_title">Selecciona la provincia</string>
+    <string name="domain_registration_country_picker_dialog_title">Selecciona el país</string>
+    <string name="domain_registration_result_continue_button">seguir</string>
+    <string name="domain_registration_result_description">tu nuevo dominio &lt;b>%s&lt;/b> se está configurando. ¡Tu sitio está\n    dando saltos mortales de emoción!</string>
+    <string name="domain_registration_result_title">Enhorabuena</string>
+    <string name="domain_contact_information_register_domain_button">Registrar dominio</string>
+    <string name="domain_contact_information_postal_code_hint">Código postal</string>
+    <string name="domain_contact_information_state_hint">Provincia</string>
+    <string name="domain_contact_information_city_hint">Ciudad</string>
+    <string name="domain_contact_information_address_hint_two">Dirección 2</string>
+    <string name="domain_contact_information_address_hint">Dirección</string>
+    <string name="domain_contact_information_country_hint">País</string>
+    <string name="domain_contact_information_country_code_hint">Código del país</string>
+    <string name="domain_contact_information_phone_number_hint">Teléfono</string>
+    <string name="domain_contact_information_organization_hint">Organización (opcional)</string>
+    <string name="domain_contact_information_description">Para tu comodidad, hemos precompletado tu información de contacto\n de WordPress.com. Por favor, comprueba que es la información correcta que quieres usar para este dominio.</string>
+    <string name="domain_contact_information_title">Información de contacto del dominio</string>
+    <string name="domain_privacy_option_off_title">Registrar públicamente</string>
+    <string name="domain_privacy_option_on_title">Registrar privadamente con protección de privacidad</string>
+    <string name="domain_registration_privacy_protection_description">Lo propietarios de dominios tienen que compartir información en una base de datos pública de todos los dominios.\n   Con la protección de privacidad publicamos nuestra propia información en vez de la tuya, y te redirigiremos de forma privada cualquier comunicación dirigida a ti. </string>
+    <string name="domain_registration_privacy_protection_title">Protección de privacidad</string>
+    <string name="domain_registration_contact_form_input_error">Por favor, introduce un %s válido</string>
+    <string name="domains_suggestions_choose_domain">Elegir dominio</string>
+    <string name="stats_management_new">Nuevo</string>
+    <string name="stats_management_edit">Editar</string>
+    <string name="stats_management_dismiss_insights_news_card">Descartar</string>
+    <string name="stats_management_try_it_now">Pruébalo ahora</string>
+    <string name="stats_management_news_card_message">Elige qué estadísticas ver, y céntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
+    <string name="stats_manage_your_stats">Gestiona tus estadísticas</string>
     <string name="history_fetching_revisions">Recuperando revisiones…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Fallo al insertar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo al insertar los medios.\nPor favor, toca para volver a intentarlo.</string>
@@ -23,10 +57,9 @@ Language: es
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
     <string name="stats_view_follower_totals">Total de seguidores</string>
-    <string name="suggestion_fetch_error">No se pudieron cargar las sugerencias de dominios</string>
-    <string name="suggestions_search_hint">Teclea una palabra clave para más ideas</string>
-    <string name="suggestions_empty_list">No se han encontrado sugerencias</string>
-    <string name="choose_domain">Elegir dominio</string>
+    <string name="domain_suggestions_fetch_error">No se pudieron cargar las sugerencias de dominios</string>
+    <string name="domain_suggestions_search_hint">Teclea una palabra clave para más ideas</string>
+    <string name="domains_suggestions_empty_list">No se han encontrado sugerencias</string>
     <string name="register_domain">Registrar dominio</string>
     <string name="jetpack_installed_message">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo te llevará un minuto.</string>
     <string name="stats_menu_remove">Quitar de los detalles</string>
@@ -215,7 +248,6 @@ Language: es
     <string name="stats_no_data_for_period">No hay datos en este periodo</string>
     <string name="preference_strip_image_location">Eliminar la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
-    <string name="site_creation_label_domain_selection">Elige una dirección disponible para que la gente te encuentre en la web.</string>
     <string name="giphy_powered_by_giphy">Creado por GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Algunos medios no se cargaron debido a un error de red.</string>
     <string name="giphy_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
@@ -541,7 +573,6 @@ Language: es
     <string name="content_description_people_looking_charts">Gente mirando gráficos y tablas</string>
     <string name="comment_title">%s en %s</string>
     <string name="dialog_confirm_delete_permanently_post">¿Seguro que quieres eliminar definitivamente esta publicación?</string>
-    <string name="notification_site_creation_title_in_progress">Creando sitio… Puede tardar unos minutos.</string>
     <string name="notification_channel_important_title">Importante</string>
     <string name="notification_channel_general_title">General</string>
     <string name="photo_picker_use_photo">Utilizar esta foto</string>
@@ -554,10 +585,6 @@ Language: es
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
     <string name="preview_count">Vista previa %d</string>
     <string name="add_count">Añadir %d</string>
-    <string name="site_creation_domain_selection_title">Crea un nuevo sitio paso 4</string>
-    <string name="site_creation_site_details_title">Crea un nuevo sitio paso 3</string>
-    <string name="site_creation_theme_selection_title">Crea un nuevo sitio paso 2</string>
-    <string name="site_creation_category_title">Crea un nuevo sitio paso 1</string>
     <string name="stats_followers_many_desc">%d seguidores</string>
     <string name="stats_followers_one_desc">un seguidor</string>
     <string name="stats_followers_zero_desc">cero seguidores</string>
@@ -655,7 +682,6 @@ Language: es
     <string name="help_screen_title">Ayuda y soporte</string>
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Notas de la versión</string>
-    <string name="site_creation_creating_failed_extended">Nos hemos metido en un problema inesperado. ¿Que te parecería darle otra oportunidad?</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
     <string name="email_not_registered_wpcom">Umm, no encontramos una cuenta WordPress.com conectada a esta dirección de correo. Prueba con el enlace de abajo para acceder usando la dirección de tu sitio.</string>
     <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta funcionalidad.&lt;br/>&lt;br/>Si deseas usarla, edita tus permisos y comprueba que &lt;strong>%s&lt;/strong> se ha habilitado.</string>
@@ -707,44 +733,7 @@ Language: es
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Escribe tu primera entrada</string>
-    <string name="site_creation_epilogue_configure">Configura</string>
-    <string name="site_creation_epilogue_congrats">¡Enhorabuena!\nTu sitio está listo.</string>
-    <string name="site_creation_creating_modal">Por favor, espera a que se complete la creación del sitio.</string>
-    <string name="site_creation_creating_retry">Inténtalo de nuevo</string>
-    <string name="site_creation_creating_failed">Algo fue mal…</string>
-    <string name="site_creation_creating_preparing_frontend">Preparando la portada…</string>
-    <string name="site_creation_creating_configuring_theme">Configurando el estilo del sitio…</string>
-    <string name="site_creation_creating_configuring_content">Configurando el contenido del sitio…</string>
-    <string name="site_creation_creating_fetching_info">Recuperando la información del sitio…</string>
-    <string name="site_creation_creating_laying_foundation">Estableciendo las bases del sitio…</string>
-    <string name="site_creation_empty_site_title">Por favor, introduce un título para el sitio</string>
-    <string name="site_creation_tagline_helper">La descripción corta es una breve línea de texto mostrada justo debajo del título en la mayoría de los temas, y actúa como metadatos del sitio en los motores de búsqueda.</string>
-    <string name="site_creation_tagline_hint">Descripción corta del sitio (opcional)</string>
-    <string name="site_creation_title_hint">Título del sitio</string>
     <string name="site_creation_domain_finish_button">Crear sitio</string>
-    <string name="site_creation_domain_keywords_hint">Teclea una palabra clave para más ideas</string>
-    <string name="site_creation_label_domain_selection_title">Paso 4 de 4</string>
-    <string name="site_creation_label_site_details">Cuéntanos más sobre lo que estás creando. ¿Cuáles son el título y la descripción corta?</string>
-    <string name="site_creation_label_site_details_title">Paso 3 de 4</string>
-    <string name="site_creation_label_theme_loading">Por favor, espera mientras se cargan los temas</string>
-    <string name="site_creation_label_theme_selection">Empieza rápido con uno de nuestros temas populares. Una vez esté creado el sitio podrás buscar y elegir entre cientos más.</string>
-    <string name="site_creation_label_theme_selection_title">Paso 2 de 4</string>
-    <string name="site_creation_subtitle_portfolio">Par presentar tus proyectos creativos en un escaparate visual.</string>
-    <string name="site_creation_title_portfolio">Empieza con un porfolio</string>
-    <string name="site_creation_subtitle_website">Para promocionar tu negocio o marca y conectar con tu audiencia.</string>
-    <string name="site_creation_title_website">Empieza con una web</string>
-    <string name="site_creation_subtitle_blog">Para compartir tus ideas, historias y fotografías con tus seguidores.</string>
-    <string name="site_creation_title_blog">Empieza con un blog</string>
-    <string name="site_creation_label_category">¿Qué tipo de sitio necesitas?\nElige una de las siguientes opciones:</string>
-    <string name="site_creation_label_category_title">Paso 1 de 4</string>
-    <string name="site_creation_title">Crear un nuevo sitio</string>
-    <string name="notification_site_creation_failed">Ocurrió un error.</string>
-    <string name="notification_site_creation_title_stopped">Creación del sitio parada</string>
-    <string name="notification_site_creation_step_theme">Paso 4 de 4</string>
-    <string name="notification_site_creation_step_tagline">Paso 3 de 4</string>
-    <string name="notification_site_creation_step_fetching">Paso 2 de 4</string>
-    <string name="notification_site_creation_step_creating">Paso 1 de 4</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
     <string name="notification_site_creation_title_success">¡Sitio creado!</string>
     <string name="google_error_timeout">A Google le llevó demasiado tiempo responder. Puede que tengas que esperar hasta que tengas una conexión a internet más rápida.</string>

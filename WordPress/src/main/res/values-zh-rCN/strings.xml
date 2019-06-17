@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-28 16:07:47+0000
+Translation-Revision-Date: 2019-06-11 10:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">更新站点详细信息时出现错误：%s</string>
+    <string name="domain_registration_error_fetching_contact_information">抓取域联系信息时出现错误：%s</string>
+    <string name="domain_registration_error_registering_domain">域注册期间出现错误：%s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">正在注册域名…</string>
+    <string name="domain_registration_state_picker_dialog_title">选择州/省/自治区/直辖市</string>
+    <string name="domain_registration_country_picker_dialog_title">选择国家/地区</string>
+    <string name="domain_registration_result_continue_button">继续</string>
+    <string name="domain_registration_result_description">您的新域 &lt;b>%s&lt;/b> 正在设置中。您的站点\n真是太棒了！</string>
+    <string name="domain_registration_result_title">恭喜</string>
+    <string name="domain_contact_information_register_domain_button">注册域</string>
+    <string name="domain_contact_information_postal_code_hint">邮政编码</string>
+    <string name="domain_contact_information_state_hint">州/省/自治区/直辖市</string>
+    <string name="domain_contact_information_city_hint">城市</string>
+    <string name="domain_contact_information_address_hint_two">地址 2</string>
+    <string name="domain_contact_information_address_hint">地址</string>
+    <string name="domain_contact_information_country_hint">国家/地区</string>
+    <string name="domain_contact_information_country_code_hint">国家/地区代码</string>
+    <string name="domain_contact_information_phone_number_hint">电话</string>
+    <string name="domain_contact_information_organization_hint">组织（可选）</string>
+    <string name="domain_contact_information_description">为了方便起见，我们已预先填充您的 WordPress.com\n联系信息。请检查此信息，以确保这是您想在此域上使用的正确信息。</string>
+    <string name="domain_contact_information_title">域联系信息</string>
+    <string name="domain_privacy_option_off_title">公开注册</string>
+    <string name="domain_privacy_option_on_title">通过隐私保护功能私密注册</string>
+    <string name="domain_registration_privacy_protection_description">域所有者必须在所有域的公共数据库中共享联系信息。\n通过隐私保护功能，我们会发布自己的信息（而不是您的信息），并以私密方式将所有邮件转发给您。</string>
+    <string name="domain_registration_privacy_protection_title">隐私保护</string>
+    <string name="domain_registration_contact_form_input_error">请输入有效的“%s”</string>
+    <string name="domains_suggestions_choose_domain">选择域</string>
+    <string name="stats_management_new">新增</string>
+    <string name="stats_management_edit">编辑</string>
+    <string name="stats_management_dismiss_insights_news_card">忽略</string>
+    <string name="stats_management_try_it_now">立即试用</string>
+    <string name="stats_management_news_card_message">选择要查看的统计数据，重点关注您最关心的数据。点按“数据分析”底部的“%1$s”，以自定义您的统计数据。</string>
+    <string name="stats_manage_your_stats">管理您的统计数据</string>
     <string name="history_fetching_revisions">正在获取修订版…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">无法插入媒体。\n请轻点以查看选项。</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">无法插入媒体。\n请轻点以重试。</string>
@@ -23,10 +57,6 @@ Language: zh_CN
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度站点统计信息</string>
     <string name="stats_view_follower_totals">粉丝总数</string>
-    <string name="suggestion_fetch_error">无法加载域建议</string>
-    <string name="suggestions_search_hint">请输入关键字以获取更多想法</string>
-    <string name="suggestions_empty_list">未找到任何建议</string>
-    <string name="choose_domain">选择域</string>
     <string name="register_domain">注册域</string>
     <string name="jetpack_installed_message">安装 Jetpack 后，我们只需进行设置即可。这只需要一分钟时间。</string>
     <string name="stats_menu_remove">从见解中删除</string>
@@ -208,7 +238,6 @@ Language: zh_CN
     <string name="stats_no_data_for_period">没有此时间段的数据</string>
     <string name="preference_strip_image_location">从媒体删除位置信息</string>
     <string name="stats_cannot_be_started">我们现在无法打开统计信息。请稍后重试</string>
-    <string name="site_creation_label_domain_selection">选择一个可用的地址，以便人们在网络上找到您。</string>
     <string name="giphy_powered_by_giphy">由 GIPHY 提供支持</string>
     <string name="giphy_picker_endless_scroll_network_error">由于网络错误，无法加载某些媒体。</string>
     <string name="giphy_picker_empty_search_list">没有与您的搜索匹配的媒体</string>
@@ -516,7 +545,6 @@ Language: zh_CN
     <string name="content_description_people_looking_charts">用户正在查看图形和图表</string>
     <string name="comment_title">%s 对 %s 的评论</string>
     <string name="dialog_confirm_delete_permanently_post">是否确定要永久删除此文章？</string>
-    <string name="notification_site_creation_title_in_progress">正在创建站点…这可能需要几分钟的时间。</string>
     <string name="notification_channel_important_title">重要提示</string>
     <string name="notification_channel_general_title">常规</string>
     <string name="photo_picker_use_photo">使用此照片</string>
@@ -529,10 +557,6 @@ Language: zh_CN
     <string name="site_settings_quota_space_unlimited">%1$s/无限</string>
     <string name="preview_count">预览 %d</string>
     <string name="add_count">添加 %d</string>
-    <string name="site_creation_domain_selection_title">创建新站点（第 4 步）</string>
-    <string name="site_creation_site_details_title">创建新站点（第 3 步）</string>
-    <string name="site_creation_theme_selection_title">创建新站点（第 2 步）</string>
-    <string name="site_creation_category_title">创建新站点（第 1 步）</string>
     <string name="stats_followers_many_desc">%d 位关注者</string>
     <string name="stats_followers_one_desc">1 位关注者</string>
     <string name="stats_followers_zero_desc">关注者人数为 0</string>
@@ -630,7 +654,6 @@ Language: zh_CN
     <string name="help_screen_title">帮助与支持</string>
     <string name="license_screen_title">许可</string>
     <string name="release_notes_screen_title">版本说明</string>
-    <string name="site_creation_creating_failed_extended">我们遇到了意外的问题。再试一次如何？</string>
     <string name="signup_epilogue_error_avatar_view">您的头像已上传，很快便会显示。</string>
     <string name="email_not_registered_wpcom">找不到与此电子邮件地址关联的 WordPress.com 帐户。请尝试使用您的站点地址通过以下链接登录。</string>
     <string name="permissions_denied_message">您似乎关闭了此功能所需的权限。&lt;br/>&lt;br/>要对此进行更改，请编辑您的权限并确保已启用&lt;strong>%s&lt;/strong>。</string>
@@ -682,44 +705,7 @@ Language: zh_CN
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s，%2$s</string>
     <string name="latitude_longitude">%1$f，%2$f</string>
-    <string name="site_creation_epilogue_write">撰写第一篇文章</string>
-    <string name="site_creation_epilogue_configure">配置</string>
-    <string name="site_creation_epilogue_congrats">恭喜！\n您的站点已准备就绪。</string>
-    <string name="site_creation_creating_modal">请等待站点创建完成。</string>
-    <string name="site_creation_creating_retry">请重试</string>
-    <string name="site_creation_creating_failed">出现错误…</string>
-    <string name="site_creation_creating_preparing_frontend">正在准备前端…</string>
-    <string name="site_creation_creating_configuring_theme">正在配置站点风格…</string>
-    <string name="site_creation_creating_configuring_content">正在配置站点内容…</string>
-    <string name="site_creation_creating_fetching_info">正在检索站点信息…</string>
-    <string name="site_creation_creating_laying_foundation">正在对站点执行初步设置…</string>
-    <string name="site_creation_empty_site_title">请输入站点标题</string>
-    <string name="site_creation_tagline_helper">该标语是在大多数主题的标题正下方显示的一行短文本，并用作搜索引擎上的站点元数据。</string>
-    <string name="site_creation_tagline_hint">站点标语（可选）</string>
-    <string name="site_creation_title_hint">站点标题</string>
     <string name="site_creation_domain_finish_button">创建站点</string>
-    <string name="site_creation_domain_keywords_hint">请输入关键字以获取更多想法</string>
-    <string name="site_creation_label_domain_selection_title">第 4 步（共 4 步）</string>
-    <string name="site_creation_label_site_details">告诉我们有关您正在创建的站点的更多信息。标题和标语是什么？</string>
-    <string name="site_creation_label_site_details_title">第 3 步（共 4 步）</string>
-    <string name="site_creation_label_theme_loading">正在加载主题，请稍候</string>
-    <string name="site_creation_label_theme_selection">使用我们的热门主题之一快速着手。创建站点后，您便可以浏览数百个主题并从中选择。</string>
-    <string name="site_creation_label_theme_selection_title">第 2 步（共 4 步）</string>
-    <string name="site_creation_subtitle_portfolio">以可视化陈列窗的形式展现您的创意项目。</string>
-    <string name="site_creation_title_portfolio">从作品集入手</string>
-    <string name="site_creation_subtitle_website">推广您的业务或品牌，并与您的读者建立联系。</string>
-    <string name="site_creation_title_website">从网站入手</string>
-    <string name="site_creation_subtitle_blog">与粉丝共享您的想法、故事和照片。</string>
-    <string name="site_creation_title_blog">从博客入手</string>
-    <string name="site_creation_label_category">您需要何种类型的站点？\n从下方选择一个选项：</string>
-    <string name="site_creation_label_category_title">第 1 步（共 4 步）</string>
-    <string name="site_creation_title">创建新站点</string>
-    <string name="notification_site_creation_failed">出现错误。</string>
-    <string name="notification_site_creation_title_stopped">已停止站点创建</string>
-    <string name="notification_site_creation_step_theme">第 4 步（共 4 步）</string>
-    <string name="notification_site_creation_step_tagline">第 3 步（共 4 步）</string>
-    <string name="notification_site_creation_step_fetching">第 2 步（共 4 步）</string>
-    <string name="notification_site_creation_step_creating">第 1 步（共 4 步）</string>
     <string name="notification_site_creation_created">轻点以继续。</string>
     <string name="notification_site_creation_title_success">站点已创建！</string>
     <string name="google_error_timeout">Google 响应时间过长。您可能需要等到网络连接状况更好时才能继续。</string>

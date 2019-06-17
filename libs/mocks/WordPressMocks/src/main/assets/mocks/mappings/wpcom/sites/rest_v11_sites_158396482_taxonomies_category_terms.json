@@ -18,9 +18,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:android-test",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:android-test/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:android-test",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:android-test/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
                         }
                     }
                 },
@@ -34,9 +34,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:ios-test",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:ios-test/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:ios-test",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:ios-test/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
                         }
                     }
                 },
@@ -50,9 +50,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
                         }
                     }
                 }
