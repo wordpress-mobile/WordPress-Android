@@ -763,6 +763,14 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
             android:permission="android.permission.INSTALL_PACKAGES"

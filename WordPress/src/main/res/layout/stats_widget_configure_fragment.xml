@@ -66,6 +66,37 @@
             android:text="@string/stats_widget_color_light"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/data_type_container"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/two_line_list_item_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/color_container">
+
+        <TextView
+            android:id="@+id/data_type_title"
+            style="@style/StatsWidgetConfigureTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:text="@string/stats_widget_select_type"/>
+
+        <TextView
+            android:id="@+id/data_type_value"
+            style="@style/StatsWidgetConfigureValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/stats_widget_type_caption"/>
+    </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_widget_button"
         style="@style/WordPress.Button.Primary"
