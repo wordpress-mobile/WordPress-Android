@@ -17,9 +17,9 @@
                     "feed_url": "https://e2eflowtestingmobile.wordpress.com/tag/tag/feed/",
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/tags/slug:tag",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/tags/slug:tag/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/tags/slug:tag",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/tags/slug:tag/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
                         }
                     }
                 }

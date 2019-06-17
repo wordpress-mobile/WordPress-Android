@@ -9,15 +9,15 @@
             "default": {
                 "following": {
                     "title": "Followed Sites",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/following"
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/following"
                 },
                 "discover": {
                     "title": "Discover",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024/posts"
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/sites/53424024/posts"
                 },
                 "liked": {
                     "title": "My Likes",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/liked"
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/liked"
                 }
             },
             "subscribed": [],
@@ -25,7 +25,7 @@
                 "116": {
                     "ID": 116,
                     "title": "Religion",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/religion/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/religion/posts",
                     "slug": "religion",
                     "display_name": "religion",
                     "type": "tag"
@@ -33,7 +33,7 @@
                 "178": {
                     "ID": 178,
                     "title": "Books",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/books/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/books/posts",
                     "slug": "books",
                     "display_name": "books",
                     "type": "tag"
@@ -41,7 +41,7 @@
                 "200": {
                     "ID": 200,
                     "title": "Travel",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/travel/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/travel/posts",
                     "slug": "travel",
                     "display_name": "travel",
                     "type": "tag"
@@ -49,7 +49,7 @@
                 "376": {
                     "ID": 376,
                     "title": "Humor",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/humor/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/humor/posts",
                     "slug": "humor",
                     "display_name": "humor",
                     "type": "tag"
@@ -57,7 +57,7 @@
                 "406": {
                     "ID": 406,
                     "title": "Family",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/family/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/family/posts",
                     "slug": "family",
                     "display_name": "family",
                     "type": "tag"
@@ -65,7 +65,7 @@
                 "436": {
                     "ID": 436,
                     "title": "Photography",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/photography/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/photography/posts",
                     "slug": "photography",
                     "display_name": "photography",
                     "type": "tag"
@@ -73,7 +73,7 @@
                 "586": {
                     "ID": 586,
                     "title": "Food",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/food/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/food/posts",
                     "slug": "food",
                     "display_name": "food",
                     "type": "tag"
@@ -81,7 +81,7 @@
                 "676": {
                     "ID": 676,
                     "title": "Websites",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/websites/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/websites/posts",
                     "slug": "websites",
                     "display_name": "websites",
                     "type": "tag"
@@ -89,7 +89,7 @@
                 "1098": {
                     "ID": 1098,
                     "title": "Culture",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/culture/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/culture/posts",
                     "slug": "culture",
                     "display_name": "culture",
                     "type": "tag"
@@ -97,7 +97,7 @@
                 "2806": {
                     "ID": 2806,
                     "title": "Art &amp; Design",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/art-design/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/art-design/posts",
                     "slug": "art-design",
                     "display_name": "art-design",
                     "type": "tag"
@@ -105,7 +105,7 @@
                 "3750": {
                     "ID": 3750,
                     "title": "Magazines",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/magazines/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/magazines/posts",
                     "slug": "magazines",
                     "display_name": "magazines",
                     "type": "tag"
@@ -113,7 +113,7 @@
                 "13985": {
                     "ID": 13985,
                     "title": "Health &amp; Wellness",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/health-wellness/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/health-wellness/posts",
                     "slug": "health-wellness",
                     "display_name": "health-wellness",
                     "type": "tag"
@@ -121,7 +121,7 @@
                 "26879": {
                     "ID": 26879,
                     "title": "Portfolios",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/portfolios/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/portfolios/posts",
                     "slug": "portfolios",
                     "display_name": "portfolios",
                     "type": "tag"
@@ -129,7 +129,7 @@
                 "38881": {
                     "ID": 38881,
                     "title": "Science &amp; Nature",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/science-nature/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/science-nature/posts",
                     "slug": "science-nature",
                     "display_name": "science-nature",
                     "type": "tag"
@@ -137,7 +137,7 @@
                 "84776": {
                     "ID": 84776,
                     "title": "News &amp; Current Events",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/news-current-events/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/news-current-events/posts",
                     "slug": "news-current-events",
                     "display_name": "news-current-events",
                     "type": "tag"
@@ -145,7 +145,7 @@
                 "258845": {
                     "ID": 258845,
                     "title": "Business &amp; Technology",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/business-technology/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/business-technology/posts",
                     "slug": "business-technology",
                     "display_name": "business-technology",
                     "type": "tag"
@@ -153,7 +153,7 @@
                 "960817": {
                     "ID": 960817,
                     "title": "Fiction &amp; Poetry",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/fiction-poetry/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/fiction-poetry/posts",
                     "slug": "fiction-poetry",
                     "display_name": "fiction-poetry",
                     "type": "tag"
@@ -161,7 +161,7 @@
                 "998458": {
                     "ID": 998458,
                     "title": "Writing &amp; Blogging",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/writing-blogging/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/writing-blogging/posts",
                     "slug": "writing-blogging",
                     "display_name": "writing-blogging",
                     "type": "tag"
@@ -169,7 +169,7 @@
                 "1446729": {
                     "ID": 1446729,
                     "title": "Sports &amp; Gaming",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/sports-gaming/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/sports-gaming/posts",
                     "slug": "sports-gaming",
                     "display_name": "sports-gaming",
                     "type": "tag"
@@ -177,7 +177,7 @@
                 "10016773": {
                     "ID": 10016773,
                     "title": "Musings &amp; Personal",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/musings-personal/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/musings-personal/posts",
                     "slug": "musings-personal",
                     "display_name": "musings-personal",
                     "type": "tag"
@@ -185,7 +185,7 @@
                 "35328892": {
                     "ID": 35328892,
                     "title": "Longreads",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/longreads/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/longreads/posts",
                     "slug": "longreads",
                     "display_name": "longreads",
                     "type": "tag"
@@ -193,7 +193,7 @@
                 "63611190": {
                     "ID": 63611190,
                     "title": "Crafts &amp; Fashion",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/crafts-fashion/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/crafts-fashion/posts",
                     "slug": "crafts-fashion",
                     "display_name": "crafts-fashion",
                     "type": "tag"
@@ -201,7 +201,7 @@
                 "87210105": {
                     "ID": 87210105,
                     "title": "Popular Culture &amp; Entertainment",
-                    "URL": "https://public-api.wordpress.com/rest/v1.2/read/tags/popular-culture-entertainment/posts",
+                    "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/tags/popular-culture-entertainment/posts",
                     "slug": "popular-culture-entertainment",
                     "display_name": "popular-culture-entertainment",
                     "type": "tag"
