@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.views
 import androidx.annotation.LayoutRes
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -11,6 +12,7 @@ import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OVERVIEW_ITEMS_TO_LOAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
@@ -30,13 +32,13 @@ class ViewsWidgetListViewModel
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) {
-    private var siteId: Long? = null
+    private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
     private var wideView: Boolean = true
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<ListItemUiModel>()
     val data: List<ListItemUiModel> = mutableData
-    fun start(siteId: Long, colorMode: Color, wideView: Boolean, appWidgetId: Int) {
+    fun start(siteId: Int, colorMode: Color, wideView: Boolean, appWidgetId: Int) {
         this.siteId = siteId
         this.colorMode = colorMode
         this.wideView = wideView
@@ -45,16 +47,16 @@ class ViewsWidgetListViewModel
 
     fun onDataSetChanged(onError: (appWidgetId: Int) -> Unit) {
         siteId?.apply {
-            val site = siteStore.getSiteBySiteId(this)
+            val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
                 val currentDate = Date()
                 runBlocking {
-                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(LIST_ITEM_COUNT + 1), currentDate)
+                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD), currentDate)
                 }
                 val visitsAndViewsModel = visitsAndViewsStore.getVisits(
                         site,
                         DAYS,
-                        Top(LIST_ITEM_COUNT + 1),
+                        LimitMode.All,
                         currentDate
                 )
                 val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()

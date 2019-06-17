@@ -21,7 +21,7 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
     private val wideView: Boolean = intent.getBooleanExtra(WIDE_VIEW_KEY, true)
     private val colorMode = intent.getColorMode()
-    private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
+    private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
     init {
