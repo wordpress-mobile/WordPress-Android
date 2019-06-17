@@ -1,3 +1,7 @@
+12.8
+-----
+
+
 12.7
 -----
 * Show upload in progress notification when retrying
@@ -6,6 +10,7 @@
 * Block Editor: New blocks are available: video/quote/more
 * Block Editor: performance improvements
 * Fixed issue where text appeared behind list of themes on the theme screen
+* Domain Registration functionality for Business plan customers on a site without a custom domain during plugin installation
 
 12.6
 -----
@@ -72,3 +77,4 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
+

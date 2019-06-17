@@ -7,18 +7,6 @@ Language: da_DK
 -->
 <resources>
     <string name="signup_magic_link_title">Magisk link sendt</string>
-    <string name="site_creation_epilogue_write">Skriv første indlæg</string>
-    <string name="site_creation_epilogue_configure">Konfigurer</string>
-    <string name="site_creation_epilogue_congrats">Tillykke!\nDit websted er færdigt.</string>
-    <string name="site_creation_creating_modal">Vent venligst indtil webstedet er færdigt.</string>
-    <string name="site_creation_creating_retry">Prøv igen</string>
-    <string name="site_creation_creating_failed">Noget gik galt…</string>
-    <string name="site_creation_creating_preparing_frontend">Klargør brugersiden…</string>
-    <string name="site_creation_creating_configuring_theme">Konfigurer webstedets stil…</string>
-    <string name="site_creation_creating_configuring_content">Konfigurerer webstedets indhold…</string>
-    <string name="site_creation_creating_fetching_info">Udtrækker webstedets information…</string>
-    <string name="site_creation_creating_laying_foundation">Lægger fundamentet til webstedet…</string>
-    <string name="site_creation_empty_site_title">Vær venlig at give webstedet en titel</string>
     <string name="error_media_save">Kunne ikke gemme medie</string>
     <string name="editor_draft_saved_locally">Kladde gemt på enheden</string>
     <string name="editor_draft_saved_online">Kladde gemt online</string>
