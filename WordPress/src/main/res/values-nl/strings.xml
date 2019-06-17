@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-27 14:54:09+0000
+Translation-Revision-Date: 2019-06-11 13:54:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">Fout opgetreden bij het bijwerken van je sitegegevens: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Fout opgetreden bij het ophalen van contactgegevens voor je domein: %s</string>
+    <string name="domain_registration_error_registering_domain">Fout opgetreden tijdens domeinregistratie: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd …</string>
+    <string name="domain_registration_state_picker_dialog_title">Staat selecteren</string>
+    <string name="domain_registration_country_picker_dialog_title">Land selecteren</string>
+    <string name="domain_registration_result_continue_button">doorgaan</string>
+    <string name="domain_registration_result_description">je nieuwe domein &lt;b>%s&lt;/b> wordt ingesteld. Je site\n maakt salto\'s uit vreugde!</string>
+    <string name="domain_registration_result_title">Gefeliciteerd</string>
+    <string name="domain_contact_information_register_domain_button">Registreer domein</string>
+    <string name="domain_contact_information_postal_code_hint">Postcode</string>
+    <string name="domain_contact_information_state_hint">Provincie</string>
+    <string name="domain_contact_information_city_hint">Plaats</string>
+    <string name="domain_contact_information_address_hint_two">Adres 2</string>
+    <string name="domain_contact_information_address_hint">Adres</string>
+    <string name="domain_contact_information_country_hint">Land</string>
+    <string name="domain_contact_information_country_code_hint">Landcode</string>
+    <string name="domain_contact_information_phone_number_hint">Telefoonnummer</string>
+    <string name="domain_contact_information_organization_hint">Organisatie (optioneel)</string>
+    <string name="domain_contact_information_description">Om je op weg te helpen, hebben je contactgegevens van WordPress.com\n alvast ingevuld. Controleer of dit de juiste gegevens zijn die je voor dit domein wilt gebruiken.</string>
+    <string name="domain_contact_information_title">Contactgegevens domein</string>
+    <string name="domain_privacy_option_off_title">Openbaar registreren</string>
+    <string name="domain_privacy_option_on_title">Privé registreren met privacybescherming</string>
+    <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze </string>
+    <string name="domain_registration_privacy_protection_description">Domeineigenaren moeten contactgegevens delen in een openbare database met alle domeinen.\n Met Privacybescherming publiceren we onze eigen informatie in plaats van die van jou en sturen we berichten privé naar je door.</string>
+    <string name="domain_registration_privacy_protection_title">Privacybescherming</string>
+    <string name="domain_registration_contact_form_input_error">Voer een geldige %s in</string>
+    <string name="domains_suggestions_choose_domain">Ander domein kiezen</string>
+    <string name="stats_management_new">Nieuw</string>
+    <string name="stats_management_edit">Bewerken</string>
+    <string name="stats_management_dismiss_insights_news_card">Negeren</string>
+    <string name="stats_management_try_it_now">Probeer het nu</string>
+    <string name="stats_management_news_card_message">Kies welke statistieken je wilt bekijken en richt je op de gegevens die voor jou het belangrijkst zijn. Tik op %1$s onderaan Inzichten om je statistieken te personaliseren.</string>
+    <string name="stats_manage_your_stats">Je statistieken beheren</string>
     <string name="history_fetching_revisions">Revisies worden opgehaald…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Invoegen van media mislukt.\nTik voor opties.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Invoegen van media mislukt.\nTik om het opnieuw te proberen.</string>
@@ -23,10 +58,6 @@ Language: nl
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
     <string name="stats_view_follower_totals">Aantal volgers</string>
-    <string name="suggestion_fetch_error">Domeinsuggesties konden niet geladen worden</string>
-    <string name="suggestions_search_hint">Voer een trefwoord in voor meer ideeën</string>
-    <string name="suggestions_empty_list">Geen suggesties gevonden</string>
-    <string name="choose_domain">Ander domein kiezen</string>
     <string name="register_domain">Registreer domein</string>
     <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
     <string name="stats_menu_remove">Verwijderen uit inzichten</string>
@@ -467,7 +498,6 @@ Language: nl
     <string name="content_description_people_looking_charts">Mensen die naar grafieken en tabellen kijken</string>
     <string name="comment_title">%s op %s</string>
     <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
-    <string name="notification_site_creation_title_in_progress">Site wordt aangemaakt. Dit kan een paar minuten duren.</string>
     <string name="notification_channel_important_title">Belangrijk</string>
     <string name="notification_channel_general_title">Algemeen</string>
     <string name="photo_picker_use_photo">Gebruik deze foto</string>
@@ -480,10 +510,6 @@ Language: nl
     <string name="site_settings_quota_space_unlimited">%1$s van onbeperkt</string>
     <string name="preview_count">Voorbeeld van %d bekijken</string>
     <string name="add_count">%d toevoegen</string>
-    <string name="site_creation_domain_selection_title">Nieuwe site maken, stap 4</string>
-    <string name="site_creation_site_details_title">Nieuwe site maken, stap 3</string>
-    <string name="site_creation_theme_selection_title">Nieuwe site maken, stap 2</string>
-    <string name="site_creation_category_title">Nieuwe site maken, stap 1</string>
     <string name="stats_followers_many_desc">%d volgers</string>
     <string name="stats_followers_one_desc">een volger</string>
     <string name="stats_followers_zero_desc">nul volgers</string>
@@ -581,7 +607,6 @@ Language: nl
     <string name="help_screen_title">Help en support</string>
     <string name="license_screen_title">Licentie</string>
     <string name="release_notes_screen_title">Release-opmerkingen</string>
-    <string name="site_creation_creating_failed_extended">Er is een onverwacht probleem opgetreden. Wil je het nog eens proberen?</string>
     <string name="signup_epilogue_error_avatar_view">Je avatar is geüpload en binnenkort beschikbaar.</string>
     <string name="email_not_registered_wpcom">We kunnen geen WordPress.com-account vinden dat is gekoppeld aan dit e-mailadres. Probeer de link hieronder om in te loggen met je site-adres.</string>
     <string name="permissions_denied_message">Het lijkt erop dat je de vereiste machtigingen voor deze functie hebt uitgeschakeld.&lt;br/>&lt;br/>Om dit te wijzigen, moet je je machtigingen bewerken en zorgen dat &lt;strong>%s&lt;/strong> is ingeschakeld.</string>
@@ -633,33 +658,7 @@ Language: nl
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Schrijf eerste bericht</string>
-    <string name="site_creation_epilogue_configure">Configureer</string>
-    <string name="site_creation_epilogue_congrats">Gefeliciteerd!\nJouw site is klaar.</string>
-    <string name="site_creation_creating_modal">Een moment geduld tot de site creatie voltooid is. </string>
-    <string name="site_creation_creating_retry">Probeer opnieuw</string>
-    <string name="site_creation_creating_failed">Er ging iets mis…</string>
-    <string name="site_creation_creating_preparing_frontend">Frontend voorbereiden…</string>
-    <string name="site_creation_creating_configuring_theme">Site stijl configureren…</string>
-    <string name="site_creation_creating_configuring_content">site content configureren…</string>
-    <string name="site_creation_creating_fetching_info">Ophalen van site informatie…</string>
-    <string name="site_creation_creating_laying_foundation">Site fundament storten…</string>
-    <string name="site_creation_empty_site_title">Vul een site titel in</string>
-    <string name="site_creation_title_hint">Site titel</string>
     <string name="site_creation_domain_finish_button">Creëer site </string>
-    <string name="site_creation_label_domain_selection_title">Stap 4 van 4</string>
-    <string name="site_creation_label_site_details_title">Stap 3 van 4</string>
-    <string name="site_creation_label_theme_selection_title">Stap 2 van 4</string>
-    <string name="site_creation_title_portfolio">Start met een portfolio</string>
-    <string name="site_creation_title_website">Start met een website</string>
-    <string name="site_creation_title_blog">Start met een blog</string>
-    <string name="site_creation_label_category">Wat voor site heb je nodig? \nKies hieronder een optie:</string>
-    <string name="site_creation_label_category_title">Stap 1 van 4</string>
-    <string name="site_creation_title">Creëer een nieuwe site</string>
-    <string name="notification_site_creation_step_theme">Stap 4 van 4</string>
-    <string name="notification_site_creation_step_tagline">Stap 3 van 4</string>
-    <string name="notification_site_creation_step_fetching">Stap 2 van 4</string>
-    <string name="notification_site_creation_step_creating">Stap 1 van 4</string>
     <string name="notification_site_creation_created">Klik om door te gaan.</string>
     <string name="username_changer_title">Verander gebruikersnaam</string>
     <string name="username_changer_action">Opslaan</string>

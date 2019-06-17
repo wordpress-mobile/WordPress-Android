@@ -6,7 +6,6 @@ Generator: GlotPress/2.4.0-alpha
 Language: uz
 -->
 <resources>
-    <string name="site_creation_creating_retry">Qayta urinib ko\'ring</string>
     <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda…</string>
     <string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
     <string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
