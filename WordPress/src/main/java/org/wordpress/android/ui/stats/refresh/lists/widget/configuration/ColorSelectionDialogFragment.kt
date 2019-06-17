@@ -11,28 +11,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ColorSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: StatsWidgetConfigureViewModel
+    private lateinit var viewModel: StatsColorSelectionViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(StatsWidgetConfigureViewModel::class.java)
+                .get(StatsColorSelectionViewModel::class.java)
         val alertDialogBuilder = AlertDialog.Builder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
             checkedId.toColor()?.let { viewModel.colorClicked(it) }
         }
         alertDialogBuilder.setView(view)
-        viewModel.settingsModel.observe(this, Observer {
-            val updatedColor = it?.color
+        viewModel.viewMode.observe(this, Observer { updatedColor ->
             val currentColor = view.checkedRadioButtonId.toColor()
             if (updatedColor != currentColor) {
                 updatedColor?.let { view.check(updatedColor.toViewId()) }
