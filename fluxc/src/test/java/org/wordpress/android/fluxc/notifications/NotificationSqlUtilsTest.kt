@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.notification.NoteIdSet
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationApiResponse
 import org.wordpress.android.fluxc.persistence.NotificationSqlUtils
 import org.wordpress.android.fluxc.persistence.NotificationSqlUtils.NotificationModelBuilder
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -28,7 +29,10 @@ class NotificationSqlUtilsTest {
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
-        val config = SingleStoreWellSqlConfigForTests(appContext, listOf(NotificationModelBuilder::class.java))
+        val config = SingleStoreWellSqlConfigForTests(
+                appContext,
+                listOf(NotificationModelBuilder::class.java, SiteModel::class.java),
+                "")
         WellSql.init(config)
         config.reset()
     }
@@ -397,5 +401,40 @@ class NotificationSqlUtilsTest {
 
         // Verify notification not in database
         assertNull(notificationSqlUtils.getNotificationByRemoteId(noteId))
+    }
+
+    @Test
+    fun testDeleteSiteCascadesToNotificationTable() {
+        // Assemble:
+        // - Insert a [SiteModel] record into the database
+        // - Insert notification records with [local_site_id] matching above [SiteModel] into the database
+        val site = SiteModel().apply {
+            name = "Unit Test Site"
+            url = "https://www.mytestsite.com"
+        }
+        val siteRowsAffected = SiteSqlUtils.insertOrUpdateSite(site)
+        assertEquals(1, siteRowsAffected)
+        val savedSite = SiteSqlUtils.getSitesByNameOrUrlMatching(site.name).firstOrNull()
+        assertNotNull(savedSite)
+        assertEquals(site.name, savedSite.name)
+
+        val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
+        val jsonString = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
+        val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
+        val notesList = apiResponse.notes?.map {
+            NotificationApiResponse.notificationResponseToNotificationModel(it, savedSite.id)
+        } ?: emptyList()
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(6, inserted)
+
+        // Act:
+        // - Delete the site from the database
+        SiteSqlUtils.deleteSite(savedSite)
+
+        // Assert:
+        // - Verify all the notifications have also been deleted from the database
+        val savedNotifs = notificationSqlUtils.getNotifications()
+        assertEquals(0, savedNotifs.size)
     }
 }
