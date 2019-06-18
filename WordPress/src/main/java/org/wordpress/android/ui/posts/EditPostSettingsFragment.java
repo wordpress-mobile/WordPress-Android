@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -56,6 +58,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -65,6 +68,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -119,6 +123,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPublishDateTextView;
     private ImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
+    private ProgressBar mFeaturedImageProgress;
 
     private PostLocation mPostLocation;
 
@@ -245,11 +250,19 @@ public class EditPostSettingsFragment extends Fragment {
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
+        mFeaturedImageProgress = rootView.findViewById(R.id.post_featured_image_progress);
+
         CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    view.showContextMenu();
+                }
+            });
+            mFeaturedImageProgress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     view.showContextMenu();
@@ -359,13 +372,23 @@ public class EditPostSettingsFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
+                cancelFeaturedImageUpload();
                 launchFeaturedMediaPicker();
                 return true;
             case REMOVE_FEATURED_IMAGE_MENU_ID:
+                cancelFeaturedImageUpload();
                 clearFeaturedImage();
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void cancelFeaturedImageUpload() {
+        if () {
+            //TODO move this into upload service + remove the media from queues
+            ClearMediaPayload clearMediaPayload = new ClearMediaPayload(getPost(), );
+            mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
         }
     }
 
@@ -894,9 +917,12 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostModel postModel = getPost();
+        if (UploadService.hasPendingOrInProgressFeaturedImageUploadForPost(postModel)) {
+            showFeaturedImageProgress();
+            return;
+        }
         if (!postModel.hasFeaturedImage()) {
-            mFeaturedImageView.setVisibility(View.GONE);
-            mFeaturedImageButton.setVisibility(View.VISIBLE);
+            showFeaturedImageButton();
             return;
         }
 
@@ -906,8 +932,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        mFeaturedImageView.setVisibility(View.VISIBLE);
-        mFeaturedImageButton.setVisibility(View.GONE);
+        showFeaturedImage();
 
         // Get max width for photon thumbnail
         int width = DisplayUtils.getDisplayPixelWidth(getActivity());
@@ -1112,5 +1137,24 @@ public class EditPostSettingsFragment extends Fragment {
             // no op, icons won't show
         }
         popupMenu.show();
+    }
+
+    private void showFeaturedImage() {
+        mFeaturedImageView.setVisibility(View.VISIBLE);
+        mFeaturedImageButton.setVisibility(View.GONE);
+        mFeaturedImageProgress.setVisibility(View.GONE);
+    }
+
+
+    private void showFeaturedImageButton() {
+        mFeaturedImageView.setVisibility(View.GONE);
+        mFeaturedImageButton.setVisibility(View.VISIBLE);
+        mFeaturedImageProgress.setVisibility(View.GONE);
+    }
+
+    private void showFeaturedImageProgress() {
+        mFeaturedImageView.setVisibility(View.GONE);
+        mFeaturedImageButton.setVisibility(View.GONE);
+        mFeaturedImageProgress.setVisibility(View.VISIBLE);
     }
 }

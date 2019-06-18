@@ -643,12 +643,18 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (useAztec) {
                     if (!AztecEditorFragment.isMediaInPostBody(this,
                             mPost.getContent(), String.valueOf(media.getId()))) {
-                        mediaToDeleteAssociationFor.add(media);
+                        // don't delete featured image uploads
+                        if (!media.getFeatured()) {
+                            mediaToDeleteAssociationFor.add(media);
+                        }
                     }
                 } else if (useGutenberg) {
                     if (!PostUtils.isMediaInGutenbergPostBody(
                             mPost.getContent(), String.valueOf(media.getId()))) {
-                        mediaToDeleteAssociationFor.add(media);
+                        // don't delete featured image uploads
+                        if (!media.getFeatured()) {
+                            mediaToDeleteAssociationFor.add(media);
+                        }
                     }
                 }
             }
@@ -2990,7 +2996,8 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO
+                              || requestCode == RequestCodes.PHOTO_PICKER))) {
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
@@ -2999,6 +3006,10 @@ public class EditPostActivity extends AppCompatActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
+                    if (mEditPostSettingsFragment != null) {
+                        mEditPostSettingsFragment.refreshViews();
+                    }
+                    break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     // user chose a featured image
                     if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
