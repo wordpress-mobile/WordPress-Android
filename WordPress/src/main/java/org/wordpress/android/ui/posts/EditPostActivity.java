@@ -858,6 +858,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private enum PrimaryAction {
         SUBMIT_FOR_REVIEW,
+        PUBLISH_NOW,
         SCHEDULE,
         UPDATE,
         SAVE
@@ -865,6 +866,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private enum SecondaryAction {
         SAVE_AS_DRAFT,
+        SAVE,
         PUBLISH_NOW,
         NONE
     }
@@ -874,14 +876,11 @@ public class EditPostActivity extends AppCompatActivity implements
             return PrimaryAction.SUBMIT_FOR_REVIEW;
         }
 
-        if (mPost.isLocalDraft()) {
-            return PrimaryAction.SAVE;
-        }
-
         switch (PostStatus.fromPost(mPost)) {
             case SCHEDULED:
                 return PrimaryAction.SCHEDULE;
             case DRAFT:
+                return PrimaryAction.PUBLISH_NOW;
             case PENDING:
             case TRASHED:
                 return PrimaryAction.SAVE;
@@ -897,6 +896,8 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (getPrimaryAction()) {
             case SUBMIT_FOR_REVIEW:
                 return getString(R.string.submit_for_review);
+            case PUBLISH_NOW:
+                return getString(R.string.button_publish);
             case SCHEDULE:
                 return getString(R.string.schedule_verb);
             case UPDATE:
@@ -912,12 +913,9 @@ public class EditPostActivity extends AppCompatActivity implements
             return SecondaryAction.NONE;
         }
 
-        if (mPost.isLocalDraft()) {
-            return SecondaryAction.PUBLISH_NOW;
-        }
-
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
+                return SecondaryAction.SAVE;
             case PENDING:
             case SCHEDULED:
                 return SecondaryAction.PUBLISH_NOW;
@@ -935,6 +933,8 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (getSecondaryAction()) {
             case SAVE_AS_DRAFT:
                 return getString(R.string.menu_save_as_draft);
+            case SAVE:
+                return getString(R.string.save);
             case PUBLISH_NOW:
                 return getString(R.string.menu_publish_now);
             case NONE:
@@ -1165,6 +1165,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (saveAsDraftMenuItem != null && mPost != null) {
             switch (getSecondaryAction()) {
                 case SAVE_AS_DRAFT:
+                case SAVE:
                 case PUBLISH_NOW:
                     saveAsDraftMenuItem.setVisible(showMenuItems);
                     saveAsDraftMenuItem.setTitle(getSecondaryActionText());
@@ -1413,7 +1414,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void showEmptyPostErrorForSecondaryAction() {
         String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
-        if (getSecondaryAction() == SecondaryAction.SAVE_AS_DRAFT) {
+        if (getSecondaryAction() == SecondaryAction.SAVE_AS_DRAFT || getSecondaryAction() == SecondaryAction.SAVE) {
             message = getString(R.string.error_save_empty_draft);
         }
         ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
@@ -1446,6 +1447,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case SAVE_AS_DRAFT:
                 // Force the new Draft status
                 saveAsDraft();
+                return true;
+            case SAVE:
+                uploadPost(false);
                 return true;
             case PUBLISH_NOW:
                 showPublishConfirmationDialogAndPublishPost();
