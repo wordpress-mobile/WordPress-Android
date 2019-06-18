@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 69;
+        return 70;
     }
 
     @Override
@@ -518,6 +518,15 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 68:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS NotificationModel");
+                db.execSQL("CREATE TABLE NotificationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "REMOTE_NOTE_ID INTEGER,LOCAL_SITE_ID INTEGER,NOTE_HASH INTEGER,TYPE TEXT,"
+                           + "SUBTYPE TEXT,READ INTEGER,ICON TEXT,NOTICON TEXT,TIMESTAMP TEXT,URL TEXT,"
+                           + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT, "
+                           + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)");
+                oldVersion++;
+            case 69:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
@@ -787,7 +796,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                      AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                      db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
                      break;
-                case 68:
+                 case 69:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderModel ADD DATE_MODIFIED TEXT");
                     db.execSQL("CREATE TABLE WCOrderSummaryModel (LOCAL_SITE_ID INTEGER,REMOTE_ORDER_ID INTEGER,"
