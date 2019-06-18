@@ -68,7 +68,7 @@ constructor(
         )
 
         val params = mapOf(
-                "temporary" to "true",
+                "temporary" to true,
                 "products" to arrayOf(domainProduct)
         )
 
