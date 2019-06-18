@@ -128,7 +128,6 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDomainContactFetched(event: OnDomainContactFetched) {
-        _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
         if (event.isError) {
             _showErrorMessage.value = event.error.message
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
@@ -149,6 +148,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 )
             }
         }
+        _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -276,7 +276,10 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     }
 
     fun onDomainContactDetailsChanged(domainContactModel: DomainContactModel) {
-        if (uiState.value?.isFormProgressIndicatorVisible == false) {
+        val isFormBusy = uiState.value?.isFormProgressIndicatorVisible == true ||
+                uiState.value?.isRegistrationProgressIndicatorVisible == true
+
+        if (!isFormBusy) {
             _domainContactDetails.value = domainContactModel
         }
     }
