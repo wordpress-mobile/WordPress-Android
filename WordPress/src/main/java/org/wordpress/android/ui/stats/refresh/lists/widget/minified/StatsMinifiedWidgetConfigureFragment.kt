@@ -67,6 +67,8 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
             return
         }
 
+        viewModel.start(appWidgetId, siteSelectionViewModel, colorSelectionViewModel, dataTypeSelectionViewModel)
+
         site_container.setOnClickListener {
             StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
         }
@@ -104,8 +106,6 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
                 activity?.finish()
             }
         })
-
-        viewModel.start(appWidgetId, siteSelectionViewModel, colorSelectionViewModel, dataTypeSelectionViewModel)
     }
 
     enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }

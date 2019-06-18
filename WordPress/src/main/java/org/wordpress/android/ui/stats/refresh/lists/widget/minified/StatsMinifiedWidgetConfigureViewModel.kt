@@ -22,16 +22,18 @@ class StatsMinifiedWidgetConfigureViewModel
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
-    val settingsModel: LiveData<WidgetSettingsModel> = merge(
-            siteSelectionViewModel.selectedSite,
-            colorSelectionViewModel.viewMode,
-            dataTypeSelectionViewModel.dataType
-    ) { selectedSite, viewMode, dataType ->
-        WidgetSettingsModel(
-                selectedSite?.title,
-                viewMode ?: LIGHT,
-                dataType
-        )
+    val settingsModel: LiveData<WidgetSettingsModel> by lazy {
+        merge(
+                siteSelectionViewModel.selectedSite,
+                colorSelectionViewModel.viewMode,
+                dataTypeSelectionViewModel.dataType
+        ) { selectedSite, viewMode, dataType ->
+            WidgetSettingsModel(
+                    selectedSite?.title,
+                    viewMode ?: LIGHT,
+                    dataType
+            )
+        }
     }
     private val mutableWidgetAdded = MutableLiveData<Event<WidgetAdded>>()
     val widgetAdded: LiveData<Event<WidgetAdded>> = mutableWidgetAdded
