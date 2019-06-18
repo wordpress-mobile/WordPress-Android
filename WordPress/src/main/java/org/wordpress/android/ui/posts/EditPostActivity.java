@@ -251,7 +251,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_HISTORY = 3;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
-    private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
+    private static final String ASYNC_PROMO_PUBLISH_DIALOG_TAG = "ASYNC_PROMO_PUBLISH_DIALOG_TAG";
+    private static final String ASYNC_PROMO_SCHEDULE_DIALOG_TAG = "ASYNC_PROMO_SCHEDULE_DIALOG_TAG";
 
     private static final String WHAT_IS_NEW_IN_MOBILE_URL =
             "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
@@ -1331,12 +1332,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         hidePhotoPicker();
 
-        if (itemId == R.id.menu_primary_action || (itemId == R.id.menu_secondary_action && !userCanPublishPosts())) {
-            if (shouldShowAsyncPromoDialog()) {
-                showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
-            } else {
-                showPublishConfirmationIfNeeded();
-            }
+        if (itemId == R.id.menu_primary_action) {
+            primaryAction();
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
@@ -1536,14 +1533,27 @@ public class EditPostActivity extends AppCompatActivity implements
         publishConfirmationDialog.show(getSupportFragmentManager(), identifier);
     }
 
-    private void showPublishConfirmationIfNeeded() {
+    private void primaryAction() {
         switch (getPrimaryAction()) {
             case UPDATE:
                 showUpdateConfirmationDialogAndUploadPost();
                 return;
-            // In other cases, we'll upload the post and don't change its status
-            case SUBMIT_FOR_REVIEW:
+            case PUBLISH_NOW:
+                if (AppPrefs.isAsyncPromoRequired()) {
+                    showAsyncPromoDialog(mPost.isPage(), false);
+                } else {
+                    showPublishConfirmationDialogAndPublishPost();
+                }
+                return;
             case SCHEDULE:
+                if (AppPrefs.isAsyncPromoRequired()) {
+                    showAsyncPromoDialog(mPost.isPage(), true);
+                } else {
+                    uploadPost(false);
+                }
+                return;
+            // In other cases, we'll upload the post without changing its status
+            case SUBMIT_FOR_REVIEW:
             case SAVE:
                 uploadPost(false);
         }
@@ -1765,7 +1775,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
-            case ASYNC_PROMO_DIALOG_TAG:
+            case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
+            case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
@@ -1804,8 +1815,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Clear failed uploads
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
-            case ASYNC_PROMO_DIALOG_TAG:
+            case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
                 uploadPost(true);
+                break;
+            case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
+                uploadPost(false);
                 break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
@@ -1819,7 +1833,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onLinkClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
-            case ASYNC_PROMO_DIALOG_TAG:
+            case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
+            case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
                 startActivity(ReleaseNotesActivity.createIntent(EditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
                         null, mSite));
                 break;
@@ -4027,30 +4042,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean shouldShowAsyncPromoDialog() {
-        // To make sure the behavior matches what we're communicating to the user as available options,
-        // the same conditions as per `getPrimaryActionText()` apply:
-        //  if status is DRAFT and isNewPost() && mPost.isLocalDraft() --> PUBLISH;
-        //  else if UNKNOWN and mPost.isLocalDraft() --> PUBLISH
-        if (!AppPrefs.isAsyncPromoRequired() || !userCanPublishPosts()) return false;
-
-        switch (PostStatus.fromPost(mPost)) {
-            case DRAFT:
-            case PUBLISHED:
-                // we check for both DRAFT _AND_ PUBLISHED posts here because the user can have a isNewPost() and
-                // they may edit the Post settings and change the status to Publish
-                return isNewPost() && mPost.isLocalDraft();
-            case UNKNOWN:
-                return mPost.isLocalDraft();
-            case SCHEDULED:
-            case PRIVATE:
-            case PENDING:
-            case TRASHED:
-            default:
-                return false;
-        }
-    }
-
     private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
         int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
         int description = isScheduled
@@ -4059,7 +4050,7 @@ public class EditPostActivity extends AppCompatActivity implements
         int button = isScheduled ? R.string.async_promo_schedule_now : R.string.async_promo_publish_now;
 
         final PromoDialog asyncPromoDialog = new PromoDialog();
-        asyncPromoDialog.initialize(ASYNC_PROMO_DIALOG_TAG,
+        asyncPromoDialog.initialize(isScheduled ? ASYNC_PROMO_SCHEDULE_DIALOG_TAG : ASYNC_PROMO_PUBLISH_DIALOG_TAG,
                 getString(title),
                 getString(description),
                 getString(button),
@@ -4067,7 +4058,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
 
-        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        asyncPromoDialog.show(getSupportFragmentManager(),
+                isScheduled ? ASYNC_PROMO_SCHEDULE_DIALOG_TAG : ASYNC_PROMO_PUBLISH_DIALOG_TAG);
 
         AppPrefs.setAsyncPromoRequired(false);
     }
