@@ -133,8 +133,11 @@ constructor(
         val products: List<Product>?
     ) : Response {
         data class Product(
-            val product_id: String?,
-            val meta: String?
+            val product_id: Int,
+            val meta: String?,
+            val extra: Extra
         )
+
+        data class Extra(val privacy: Boolean)
     }
 }
