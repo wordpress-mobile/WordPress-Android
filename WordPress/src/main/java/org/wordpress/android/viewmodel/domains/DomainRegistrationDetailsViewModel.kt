@@ -129,10 +129,12 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDomainContactFetched(event: OnDomainContactFetched) {
         if (event.isError) {
+            _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
             _showErrorMessage.value = event.error.message
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
         } else {
             _domainContactDetails.value = event.contactModel
+            _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
 
             if (event.contactModel != null && !TextUtils.isEmpty(event.contactModel?.countryCode)) {
                 _uiState.value =
@@ -148,7 +150,6 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 )
             }
         }
-        _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
