@@ -265,6 +265,13 @@
         <item name="android:paddingTop">10dp</item>
     </style>
 
+    <style name="StatsMinifiedWidgetSiteIcon">
+        <item name="android:paddingBottom">17dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_large</item>
+        <item name="android:paddingTop">17dp</item>
+    </style>
+
     <style name="StatsWidgetTitle" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:gravity">center_vertical</item>
@@ -317,6 +324,20 @@
     </style>
 
     <style name="StatsWidgetKey.Dark">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetKey" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetKey.Light">
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetKey.Dark">
         <item name="android:textColor">@color/white</item>
     </style>
 
