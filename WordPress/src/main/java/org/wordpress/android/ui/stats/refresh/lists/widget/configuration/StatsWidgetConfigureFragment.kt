@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import android.app.Activity.RESULT_OK
 import android.appwidget.AppWidgetManager
@@ -18,9 +18,12 @@ import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 

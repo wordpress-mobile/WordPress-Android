@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.alltime
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -10,14 +10,16 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import javax.inject.Inject
 
-class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
-    @Inject lateinit var viewModel: TodayWidgetListViewModel
-    @Inject lateinit var widgetUpdater: TodayWidgetUpdater
+class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
+    @Inject lateinit var viewModel: AllTimeWidgetListViewModel
+    @Inject lateinit var widgetUpdated: AllTimeWidgetUpdater
     private val colorMode: Color = intent.getColorMode()
-    private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
+    private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, -1)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
     init {
@@ -25,14 +27,14 @@ class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     }
 
     override fun onCreate() {
-        viewModel.start(siteId, colorMode, appWidgetId)
+        viewModel.start(siteId, colorMode.ordinal, appWidgetId)
     }
 
     override fun getLoadingView(): RemoteViews? = null
 
     override fun onDataSetChanged() {
         viewModel.onDataSetChanged { appWidgetId ->
-            widgetUpdater.updateAppWidget(
+            widgetUpdated.updateAppWidget(
                     context,
                     appWidgetId = appWidgetId
             )

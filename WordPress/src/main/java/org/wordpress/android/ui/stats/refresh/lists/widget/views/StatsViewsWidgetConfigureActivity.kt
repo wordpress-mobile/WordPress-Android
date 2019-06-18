@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.widget
+package org.wordpress.android.ui.stats.refresh.lists.widget.views
 
 import android.content.Context
 import android.os.Bundle
@@ -8,11 +8,11 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.util.LocaleManager
 
-class StatsTodayWidgetConfigureActivity : AppCompatActivity() {
+class StatsViewsWidgetConfigureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.stats_today_widget_configure_activity)
+        setContentView(R.layout.stats_views_widget_configure_activity)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {

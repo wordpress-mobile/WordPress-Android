@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.StatsAllTimeWidgetConfigureActivity"
+    android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/stats_widget_blocks_light"
     android:initialLayout="@layout/stats_widget_blocks_light"
     android:minHeight="110dp"

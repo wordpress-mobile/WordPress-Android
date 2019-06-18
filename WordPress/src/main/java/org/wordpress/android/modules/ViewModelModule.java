@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;

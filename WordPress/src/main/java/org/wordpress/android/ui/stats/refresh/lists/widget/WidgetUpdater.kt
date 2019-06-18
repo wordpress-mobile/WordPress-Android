@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
 import javax.inject.Inject
 
 interface WidgetUpdater {
