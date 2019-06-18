@@ -797,9 +797,9 @@
     <string name="stats_default_number_zero" translatable="false">0</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="stats_jetpack_connection_setup">Install Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our <u>terms and conditions</u></string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
+    <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
@@ -1480,6 +1480,7 @@
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+    <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
@@ -1989,7 +1990,7 @@
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.
         With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
-    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our <u>terms and conditions</u></string>
+    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our %1$sterms and conditions%2$s</string>
     <string name="domain_privacy_option_on_title">Register privately with Privacy Protection</string>
     <string name="domain_privacy_option_off_title">Register publicly</string>
     <string name="domain_contact_information_title">Domain contact information</string>

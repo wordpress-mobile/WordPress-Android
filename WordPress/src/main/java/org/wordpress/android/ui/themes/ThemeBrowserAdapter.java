@@ -89,6 +89,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         return mFilteredThemes.size();
     }
 
+    public int getUnfilteredCount() {
+        return mAllThemes.size();
+    }
+
     @Override
     public Object getItem(int position) {
         return mFilteredThemes.get(position);

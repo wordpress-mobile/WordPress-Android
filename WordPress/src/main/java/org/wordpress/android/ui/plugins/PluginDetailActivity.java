@@ -574,7 +574,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
     }
 
     private boolean isCustomDomainRequired() {
-        return mSite.getUrl().contains(".wordpress.com") && BuildConfig.DOMAIN_REGISTRATION_ENABLED;
+        return mSite.getUrl().contains(".wordpress.com");
     }
 
     private void refreshViews() {

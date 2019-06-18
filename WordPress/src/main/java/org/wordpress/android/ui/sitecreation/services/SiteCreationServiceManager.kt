@@ -82,6 +82,8 @@ class SiteCreationServiceManager @Inject constructor(
             }
             SUCCESS -> {
                 updateServiceState(SUCCESS, newSiteRemoteId)
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 tracker.trackSiteCreated()
             }
             FAILURE -> {

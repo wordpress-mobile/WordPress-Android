@@ -381,6 +381,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void doStartSignup() {
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
         mSignupSheet = new SignupBottomSheetDialog(this, this);
         mSignupSheet.show();
