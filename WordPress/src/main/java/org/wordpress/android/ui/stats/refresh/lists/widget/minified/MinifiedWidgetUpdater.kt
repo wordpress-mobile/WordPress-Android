@@ -83,6 +83,7 @@ class MinifiedWidgetUpdater
         dataType: DataType,
         wideView: Boolean
     ) {
+        loadValue(appWidgetManager, appWidgetId, site, views, dataType, wideView)
         GlobalScope.launch {
             runBlocking {
                 todayInsightsStore.fetchTodayInsights(site)

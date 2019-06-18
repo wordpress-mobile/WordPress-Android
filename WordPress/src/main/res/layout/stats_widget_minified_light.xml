@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:minWidth="118dp"
     android:layout_height="@dimen/stats_minified_widget_height"
-    android:gravity="center_vertical"
     android:background="@drawable/bg_rectangle_white_radius_4dp"
+    android:gravity="center_vertical"
+    android:minWidth="118dp"
     android:orientation="horizontal">
 
     <ImageView
@@ -19,10 +19,10 @@
 
     <LinearLayout
         android:id="@+id/widget_content"
-        android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_large"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
