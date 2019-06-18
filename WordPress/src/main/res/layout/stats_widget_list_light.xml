@@ -6,7 +6,7 @@
     android:background="@drawable/bg_rectangle_white_radius_4dp"
     android:orientation="vertical">
 
-    <include layout="@layout/stats_widget_all_time_title_light"/>
+    <include layout="@layout/stats_widget_title_light"/>
 
     <ListView
         android:id="@+id/widget_content"

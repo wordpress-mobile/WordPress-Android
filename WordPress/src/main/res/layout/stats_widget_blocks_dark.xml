@@ -7,7 +7,7 @@
     android:background="@drawable/bg_rectangle_gray_800_radius_4dp"
     android:orientation="vertical">
 
-    <include layout="@layout/stats_widget_all_time_title_dark"/>
+    <include layout="@layout/stats_widget_title_dark"/>
 
     <LinearLayout
         android:id="@+id/widget_content"
@@ -24,26 +24,26 @@
             android:paddingStart="@dimen/margin_extra_large">
 
             <TextView
+                android:id="@+id/first_block_title"
                 style="@style/StatsWidgetBlockKey.Dark"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stats_views"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/widget_views"
+                android:id="@+id/first_block_value"
                 style="@style/StatsWidgetBlockValue.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="20,345"/>
 
             <TextView
+                android:id="@+id/third_block_title"
                 style="@style/StatsWidgetBlockKey.Dark"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/posts"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/widget_posts"
+                android:id="@+id/third_block_value"
                 style="@style/StatsWidgetBlockValue.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,26 +59,26 @@
             android:paddingStart="@dimen/margin_extra_large">
 
             <TextView
+                android:id="@+id/second_block_title"
                 style="@style/StatsWidgetBlockKey.Dark"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stats_visitors"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/widget_visitors"
+                android:id="@+id/second_block_value"
                 style="@style/StatsWidgetBlockValue.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="2409"/>
 
             <TextView
+                android:id="@+id/fourth_block_title"
                 style="@style/StatsWidgetBlockKey.Dark"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/stats_insights_best_ever"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/widget_best_views"
+                android:id="@+id/fourth_block_value"
                 style="@style/StatsWidgetBlockValue.Dark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

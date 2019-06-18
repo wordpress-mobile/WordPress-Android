@@ -17,7 +17,7 @@ class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteVi
     @Inject lateinit var viewModel: AllTimeWidgetListViewModel
     @Inject lateinit var widgetUpdated: AllTimeWidgetUpdater
     private val colorMode: Color = intent.getColorMode()
-    private val siteId: Long = intent.getLongExtra(SITE_ID_KEY, 0L)
+    private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, -1)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
 
     init {

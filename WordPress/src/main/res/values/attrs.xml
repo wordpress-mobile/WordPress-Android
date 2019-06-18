@@ -154,6 +154,7 @@
         <attr name="viewType" format="enum">
             <enum name="views" value="0"/>
             <enum name="allTime" value="1"/>
+            <enum name="today" value="2"/>
         </attr>
     </declare-styleable>
 </resources>

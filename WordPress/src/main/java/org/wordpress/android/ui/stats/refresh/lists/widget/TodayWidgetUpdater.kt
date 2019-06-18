@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.view.View
 import android.widget.RemoteViews
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -11,25 +10,23 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-private const val EMPTY_VALUE = "-"
-
-class AllTimeWidgetUpdater
+class TodayWidgetUpdater
 @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val allTimeStore: AllTimeInsightsStore,
+    private val todayInsightsStore: TodayInsightsStore,
     private val widgetUtils: WidgetUtils
 ) : WidgetUpdater {
     override fun updateAppWidget(
@@ -38,24 +35,27 @@ class AllTimeWidgetUpdater
         appWidgetId: Int
     ) {
         val showColumns = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
-        val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
+        val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: Color.LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(showColumns, colorMode))
-        views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
+        views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
             views.setOnClickPendingIntent(
-                    R.id.widget_title,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                    R.id.widget_title, widgetUtils.getPendingSelfIntent(
+                    context,
+                    siteModel.id,
+                    StatsTimeframe.INSIGHTS
+            )
             )
         }
         if (networkAvailable && siteModel != null) {
             if (showColumns) {
                 views.setOnClickPendingIntent(
                         R.id.widget_content,
-                        widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                        widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
                 )
                 showColumns(appWidgetManager, appWidgetId, views, siteModel)
             } else {
@@ -66,8 +66,7 @@ class AllTimeWidgetUpdater
                         appWidgetId,
                         colorMode,
                         siteModel.id,
-                        ALL_TIME_VIEWS,
-                        showColumns
+                        TODAY_VIEWS
                 )
             }
         } else {
@@ -77,7 +76,7 @@ class AllTimeWidgetUpdater
 
     override fun updateAllWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        val viewsWidget = ComponentName(context, StatsAllTimeWidget::class.java)
+        val viewsWidget = ComponentName(context, StatsTodayWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
         for (appWidgetId in allWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -90,12 +89,10 @@ class AllTimeWidgetUpdater
         views: RemoteViews,
         site: SiteModel
     ) {
-        views.setViewVisibility(R.id.widget_content, View.VISIBLE)
-        views.setViewVisibility(R.id.widget_error, View.GONE)
         loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         GlobalScope.launch {
             runBlocking {
-                allTimeStore.fetchAllTimeInsights(site)
+                todayInsightsStore.fetchTodayInsights(site)
             }
             loadCachedAllTimeInsights(appWidgetManager, appWidgetId, site, views)
         }
@@ -107,18 +104,15 @@ class AllTimeWidgetUpdater
         site: SiteModel,
         views: RemoteViews
     ) {
-        val allTimeInsights = allTimeStore.getAllTimeInsights(site)
+        val todayInsights = todayInsightsStore.getTodayInsights(site)
         views.setTextViewText(R.id.first_block_title, resourceProvider.getString(R.string.stats_views))
-        views.setTextViewText(R.id.first_block_value, allTimeInsights?.views?.toFormattedString() ?: EMPTY_VALUE)
+        views.setTextViewText(R.id.first_block_value, todayInsights?.views?.toFormattedString() ?: "-")
         views.setTextViewText(R.id.second_block_title, resourceProvider.getString(R.string.stats_visitors))
-        views.setTextViewText(R.id.second_block_value, allTimeInsights?.visitors?.toFormattedString() ?: EMPTY_VALUE)
+        views.setTextViewText(R.id.second_block_value, todayInsights?.visitors?.toFormattedString() ?: "-")
         views.setTextViewText(R.id.third_block_title, resourceProvider.getString(R.string.posts))
-        views.setTextViewText(R.id.third_block_value, allTimeInsights?.posts?.toFormattedString() ?: EMPTY_VALUE)
-        views.setTextViewText(R.id.fourth_block_title, resourceProvider.getString(R.string.stats_insights_best_ever))
-        views.setTextViewText(
-                R.id.fourth_block_value,
-                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: EMPTY_VALUE
-        )
+        views.setTextViewText(R.id.third_block_value, todayInsights?.posts?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.fourth_block_title, resourceProvider.getString(R.string.stats_comments))
+        views.setTextViewText(R.id.fourth_block_value, todayInsights?.comments?.toFormattedString() ?: "-")
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 

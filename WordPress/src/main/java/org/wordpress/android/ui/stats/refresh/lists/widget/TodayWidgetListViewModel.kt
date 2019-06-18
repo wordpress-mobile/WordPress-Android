@@ -5,28 +5,28 @@ package org.wordpress.android.ui.stats.refresh.lists.widget
 import androidx.annotation.LayoutRes
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
+import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.stats.refresh.lists.widget.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class AllTimeWidgetListViewModel
+class TodayWidgetListViewModel
 @Inject constructor(
     private val siteStore: SiteStore,
-    private val allTimeStore: AllTimeInsightsStore,
+    private val todayInsightsStore: TodayInsightsStore,
     private val resourceProvider: ResourceProvider
 ) {
     private var siteId: Int? = null
-    private var colorModeId: Int? = null
+    private var colorMode: Color = Color.LIGHT
     private var appWidgetId: Int? = null
-    private val mutableData = mutableListOf<AllTimeItemUiModel>()
-    val data: List<AllTimeItemUiModel> = mutableData
-    fun start(siteId: Int, colorModeId: Int, appWidgetId: Int) {
+    private val mutableData = mutableListOf<TodayItemUiModel>()
+    val data: List<TodayItemUiModel> = mutableData
+    fun start(siteId: Int, colorMode: Color, appWidgetId: Int) {
         this.siteId = siteId
-        this.colorModeId = colorModeId
+        this.colorMode = colorMode
         this.appWidgetId = appWidgetId
     }
 
@@ -35,9 +35,9 @@ class AllTimeWidgetListViewModel
             val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
                 runBlocking {
-                    allTimeStore.fetchAllTimeInsights(site)
+                    todayInsightsStore.fetchTodayInsights(site)
                 }
-                allTimeStore.getAllTimeInsights(site)?.let { visitsAndViewsModel ->
+                todayInsightsStore.getTodayInsights(site)?.let { visitsAndViewsModel ->
                     val uiModels = buildListItemUiModel(visitsAndViewsModel, this)
                     if (uiModels != data) {
                         mutableData.clear()
@@ -53,43 +53,42 @@ class AllTimeWidgetListViewModel
     }
 
     private fun buildListItemUiModel(
-        domainModel: InsightsAllTimeModel,
+        domainModel: VisitsModel,
         localSiteId: Int
-    ): List<AllTimeItemUiModel> {
-        val layout = when (colorModeId) {
-            Color.DARK.ordinal -> R.layout.stats_views_widget_item_dark
-            Color.LIGHT.ordinal -> R.layout.stats_views_widget_item_light
-            else -> R.layout.stats_views_widget_item_light
+    ): List<TodayItemUiModel> {
+        val layout = when (colorMode) {
+            Color.DARK -> R.layout.stats_views_widget_item_dark
+            Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
         return listOf(
-                AllTimeItemUiModel(
+                TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_views),
                         domainModel.views.toFormattedString()
                 ),
-                AllTimeItemUiModel(
+                TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_visitors),
                         domainModel.visitors.toFormattedString()
                 ),
-                AllTimeItemUiModel(
+                TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.posts),
                         domainModel.posts.toFormattedString()
                 ),
-                AllTimeItemUiModel(
+                TodayItemUiModel(
                         layout,
                         localSiteId,
-                        resourceProvider.getString(R.string.stats_insights_best_ever),
-                        domainModel.viewsBestDayTotal.toFormattedString()
+                        resourceProvider.getString(R.string.stats_comments),
+                        domainModel.comments.toFormattedString()
                 )
         )
     }
 
-    data class AllTimeItemUiModel(
+    data class TodayItemUiModel(
         @LayoutRes val layout: Int,
         val localSiteId: Int,
         val key: String,
