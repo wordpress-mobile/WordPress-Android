@@ -8,6 +8,7 @@ import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
+import com.yarolegovich.wellsql.core.annotation.RawConstraints
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.notification.NoteIdSet
@@ -207,6 +208,10 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     }
 
     @Table(name = "NotificationModel")
+    @RawConstraints(
+            "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE",
+            "UNIQUE (REMOTE_NOTE_ID, LOCAL_SITE_ID) ON CONFLICT REPLACE"
+    )
     data class NotificationModelBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var remoteNoteId: Long,
