@@ -38,10 +38,7 @@ class SelectedDateProvider
 
     fun selectDate(date: Date, statsSection: StatsSection) {
         val selectedDate = getSelectedDateState(statsSection)
-        val selectedDateIndex = selectedDate.availableDates.indexOf(date)
-        if (selectedDate.getDate() != date && selectedDateIndex > -1) {
-            updateSelectedDate(selectedDate.copy(dateValue = date), statsSection)
-        }
+        updateSelectedDate(selectedDate.copy(dateValue = date), statsSection)
     }
 
     fun selectDate(date: Date, statsGranularity: StatsGranularity) {
