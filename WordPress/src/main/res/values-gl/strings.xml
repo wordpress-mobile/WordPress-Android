@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-02 14:17:01+0000
+Translation-Revision-Date: 2019-06-07 18:11:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="domain_contact_information_postal_code_hint">Código Postal</string>
+    <string name="domain_contact_information_city_hint">Cidade</string>
+    <string name="domain_contact_information_address_hint_two">Enderezo 2</string>
     <string name="history_fetching_revisions">Recuperando revisións…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Fallo ao insertar os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo ao insertar os medios.\nPor favor, toca para volver a intentalo.</string>
@@ -23,10 +26,9 @@ Language: gl_ES
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
     <string name="stats_view_follower_totals">Total de seguidores</string>
-    <string name="suggestion_fetch_error">Non se puideron cargar as suxerencias de dominios</string>
-    <string name="suggestions_search_hint">Teclea unha palabra clave para máis ideas</string>
-    <string name="suggestions_empty_list">Non se encontraron suxerencias</string>
-    <string name="choose_domain">Elixir dominio</string>
+    <string name="domain_suggestions_fetch_error">Non se puideron cargar as suxerencias de dominios</string>
+    <string name="domain_suggestions_search_hint">Teclea unha palabra clave para máis ideas</string>
+    <string name="domains_suggestions_empty_list">Non se encontraron suxerencias</string>
     <string name="register_domain">Rexistrar dominio</string>
     <string name="jetpack_installed_message">Agora que está instalado Jetpack, só necesitamos que o configures. Isto só che levará un minuto.</string>
     <string name="stats_menu_remove">Quitar dos detalles</string>
