@@ -1,21 +1,20 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.support.v7.widget.TooltipCompat
 import android.view.ViewGroup
 import android.widget.TextView
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
+import androidx.appcompat.widget.TooltipCompat
+import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 
 class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
-        layout.stats_quick_scan_item
+        R.layout.stats_quick_scan_item
 ) {
-    private val startLabel = itemView.findViewById<TextView>(id.start_label)
-    private val startValue = itemView.findViewById<TextView>(id.start_value)
-    private val endLabel = itemView.findViewById<TextView>(id.end_label)
-    private val endValue = itemView.findViewById<TextView>(id.end_value)
+    private val startLabel = itemView.findViewById<TextView>(R.id.start_label)
+    private val startValue = itemView.findViewById<TextView>(R.id.start_value)
+    private val endLabel = itemView.findViewById<TextView>(R.id.end_label)
+    private val endValue = itemView.findViewById<TextView>(R.id.end_value)
 
     fun bind(item: QuickScanItem) {
         bindColumn(item.startColumn, startLabel, startValue)

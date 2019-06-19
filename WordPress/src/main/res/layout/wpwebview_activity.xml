@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/webview_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
+
+    <include
+        layout="@layout/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        tools:visibility="gone"/>
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_default"
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone"
+        app:aevButton="@string/retry"
+        app:aevImage="@drawable/img_illustration_cloud_off_152dp"
+        app:aevTitle="@string/error_browser_no_network"
+        app:aevSubtitle="@string/error_network_connection"
+        tools:visibility="visible">
+    </org.wordpress.android.ui.ActionableEmptyView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/progress_bar_height"
+        android:indeterminate="false"
+        android:layout_alignTop="@+id/webView"
+        android:progressDrawable="@drawable/progressbar_horizontal" />
+
+</RelativeLayout>

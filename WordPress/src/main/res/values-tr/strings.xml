@@ -30,7 +30,6 @@ Language: tr
     <string name="domain_contact_information_title">Alan adı iletişim bilgileri</string>
     <string name="domain_privacy_option_off_title">Herkese açık olarak kaydet</string>
     <string name="domain_privacy_option_on_title">Gizlilik koruması ile özel olarak kaydet</string>
-    <string name="domain_registration_privacy_protection_tos">Bu alan adını kaydettirerek şunu kabul etmiş olursunuz</string>
     <string name="domain_registration_privacy_protection_description">Alan adı sahiplerinin, tüm alan adlarının herkese açık bir veritabanında iletişim bilgilerini paylaşmaları gerekir. Privacy Protection özelliğiyle sizin bilgileriniz yerine kendi bilgilerimizi yayımlıyoruz ve her türlü iletişimi size gizlice iletiyoruz.</string>
     <string name="domain_registration_privacy_protection_title">Gizlilik koruması</string>
     <string name="domain_registration_contact_form_input_error">Lütfen geçerli bir %s girin</string>

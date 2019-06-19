@@ -1,15 +1,17 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.Snackbar.SnackbarLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.snackbar.Snackbar.SnackbarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -39,9 +41,9 @@ public class WPDialogSnackbar {
         snackbarLayout.setBackground(context.getDrawable(R.drawable.bg_snackbar));
 
         // Hide underlying snackbar text and action.
-        TextView snackbarText = snackbarLayout.findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackbarText = snackbarLayout.findViewById(com.google.android.material.R.id.snackbar_text);
         snackbarText.setVisibility(View.INVISIBLE);
-        TextView snackbarAction = snackbarLayout.findViewById(android.support.design.R.id.snackbar_action);
+        TextView snackbarAction = snackbarLayout.findViewById(com.google.android.material.R.id.snackbar_action);
         snackbarAction.setVisibility(View.INVISIBLE);
 
         mContentView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_snackbar, null);

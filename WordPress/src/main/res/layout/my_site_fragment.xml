@@ -27,7 +27,7 @@
             android:animateLayoutChanges="true"
             tools:ignore="UselessParent">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +69,8 @@
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
-                            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp" />
+                            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+                            tools:ignore="UnusedAttribute" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -115,7 +116,7 @@
                         android:minHeight="@dimen/min_touch_target_sz"
                         android:orientation="horizontal"
                         android:paddingStart="@dimen/my_site_list_row_padding_left_switch"
-                        tools:ignore="RtlSymmetry" >
+                        tools:ignore="RtlSymmetry,UnusedAttribute" >
 
                         <ImageView
                             android:importantForAccessibility="no"
@@ -139,10 +140,10 @@
 
                 </RelativeLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <!--Quick Start-->
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/quick_start"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
@@ -266,7 +267,7 @@
 
                 </RelativeLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <!--Stats-->
             <LinearLayout

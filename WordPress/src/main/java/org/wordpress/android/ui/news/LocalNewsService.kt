@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.news
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.models.news.LocalNewsItem
 import org.wordpress.android.models.news.NewsItem
 import javax.inject.Inject

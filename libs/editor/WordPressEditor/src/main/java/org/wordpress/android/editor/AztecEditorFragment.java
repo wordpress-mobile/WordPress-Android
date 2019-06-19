@@ -1,7 +1,6 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
-import android.arch.lifecycle.LiveData;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -20,10 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -47,6 +42,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;

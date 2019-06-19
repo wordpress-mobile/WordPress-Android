@@ -16,9 +16,9 @@ package org.wordpress.android.util
  * limitations under the License.
  */
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 
 /**
  * LiveData that propagates only distinct emissions.

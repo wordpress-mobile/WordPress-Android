@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.AztecEditorFragment;

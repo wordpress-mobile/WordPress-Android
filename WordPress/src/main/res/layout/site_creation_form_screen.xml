@@ -39,7 +39,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/WordPress.Button.Primary"
             android:id="@+id/primary_button"
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/WordPress.Button.Primary"
             android:id="@+id/finish_button"
             android:layout_width="match_parent"

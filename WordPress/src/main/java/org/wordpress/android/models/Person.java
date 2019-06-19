@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONException;

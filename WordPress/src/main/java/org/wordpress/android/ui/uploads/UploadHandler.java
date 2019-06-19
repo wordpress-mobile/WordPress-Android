@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 interface UploadHandler<T> {
     void upload(@NonNull T object);

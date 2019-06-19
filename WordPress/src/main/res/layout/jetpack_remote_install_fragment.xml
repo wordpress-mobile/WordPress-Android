@@ -47,7 +47,7 @@
                 android:text="@string/install_jetpack_message"
                 android:textAlignment="center"/>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/jetpack_install_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

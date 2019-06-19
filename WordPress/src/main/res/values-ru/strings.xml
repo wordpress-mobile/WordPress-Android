@@ -30,7 +30,6 @@ Language: ru
     <string name="domain_contact_information_title">Контактная информация домена</string>
     <string name="domain_privacy_option_off_title">Зарегистрировать открыто</string>
     <string name="domain_privacy_option_on_title">Зарегистрировать как личный с защитой персональных данных</string>
-    <string name="domain_registration_privacy_protection_tos">Регистрируя домен вы соглашаетесь с</string>
     <string name="domain_registration_privacy_protection_description">Владельцы доменов должны делиться контактной информацией для публичной базы данных по всем доменам. С защитой персональных данных мы публикуем нашу информацию вместо вашей и перенаправляем вам все сообщения приватным образом.</string>
     <string name="domain_registration_privacy_protection_title">Защита персональных данных</string>
     <string name="domain_registration_contact_form_input_error">Введите правильный %s</string>

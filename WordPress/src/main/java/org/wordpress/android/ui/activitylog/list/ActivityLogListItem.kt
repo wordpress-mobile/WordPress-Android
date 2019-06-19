@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.activitylog.list
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY

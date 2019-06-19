@@ -13,9 +13,10 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.AppLog.T;
 

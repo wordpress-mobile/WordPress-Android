@@ -1,13 +1,13 @@
 package org.wordpress.android.ui
 
 import android.content.Context
-import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatButton
 import org.wordpress.android.R
 import org.wordpress.android.widgets.WPTextView
 

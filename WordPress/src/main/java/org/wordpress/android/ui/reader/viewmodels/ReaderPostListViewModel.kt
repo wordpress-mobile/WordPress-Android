@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager

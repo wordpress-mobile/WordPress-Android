@@ -1,26 +1,27 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import android.animation.LayoutTransition
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.insights_management_fragment.*
-import javax.inject.Inject
-import android.animation.LayoutTransition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
+import javax.inject.Inject
 
 class InsightsManagementFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -65,8 +66,8 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun initializeViews() {
-        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        removedInsights.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+        addedInsights.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {

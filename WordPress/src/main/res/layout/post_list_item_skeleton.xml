@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/skeleton_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -85,6 +85,6 @@
                     style="@style/PostListRowSkeletonButton"
                     wp:wpPostButtonType="more"/>
             </LinearLayout>
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 </FrameLayout>
