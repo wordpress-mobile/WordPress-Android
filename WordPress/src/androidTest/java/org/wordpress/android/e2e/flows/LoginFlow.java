@@ -12,7 +12,7 @@ import org.hamcrest.Matchers;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -76,7 +76,7 @@ public class LoginFlow {
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("wordpress://magic-login?token=valid_token"))
-                .setPackage(getTargetContext().getPackageName());
+                .setPackage(getApplicationContext().getPackageName());
         magicLinkActivityTestRule.launchActivity(intent);
     }
 
