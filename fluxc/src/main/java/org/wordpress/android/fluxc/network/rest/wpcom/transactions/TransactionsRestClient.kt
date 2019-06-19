@@ -55,7 +55,7 @@ constructor(
 
     suspend fun createShoppingCart(
         site: SiteModel,
-        productId: String,
+        productId: Int,
         domainName: String,
         isPrivacyProtectionEnabled: Boolean
     ): CreatedShoppingCartPayload {
@@ -68,7 +68,7 @@ constructor(
         )
 
         val params = mapOf(
-                "temporary" to "true",
+                "temporary" to true,
                 "products" to arrayOf(domainProduct)
         )
 
@@ -133,8 +133,11 @@ constructor(
         val products: List<Product>?
     ) : Response {
         data class Product(
-            val product_id: String?,
-            val meta: String?
+            val product_id: Int,
+            val meta: String?,
+            val extra: Extra
         )
+
+        data class Extra(val privacy: Boolean)
     }
 }
