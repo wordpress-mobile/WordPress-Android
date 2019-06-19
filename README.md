@@ -9,6 +9,8 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 ## Build Instructions ##
 
 1. Make sure you've installed [Android Studio](https://developer.android.com/studio/index.html).
+1. `brew install imagemagick@6` to install the correct ImageMagick formula.
+1. `export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"`
 1. `git clone git@github.com:wordpress-mobile/WordPress-Android.git` in the folder of your preference.
 1. `cd WordPress-Android` to enter the working directory.
 1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
