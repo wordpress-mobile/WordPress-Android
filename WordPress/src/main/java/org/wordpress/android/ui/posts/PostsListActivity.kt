@@ -339,12 +339,11 @@ class PostsListActivity : AppCompatActivity(),
 
         if (searchFragment == null) {
             searchFragment = PostListFragment.newInstance(site, EVERYONE, SEARCH)
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.search_container, searchFragment, searchFragmentTag)
+                    .commit()
         }
-
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.search_container, searchFragment, searchFragmentTag)
-                .commit()
     }
 
     private fun initSearchView() {
