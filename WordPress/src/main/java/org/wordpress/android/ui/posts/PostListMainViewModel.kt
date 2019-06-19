@@ -276,8 +276,10 @@ class PostListMainViewModel @Inject constructor(
 
         launch {
             delay(delay)
+            withContext(mainDispatcher) {
+                _viewState.value = _viewState.value?.copy(isFabVisible = true)
+            }
         }
-        _viewState.value = _viewState.value?.copy(isFabVisible = true)
     }
 
     fun onSearch(searchQuery: String) {
