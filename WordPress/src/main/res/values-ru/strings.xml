@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-23 16:12:06+0000
+Translation-Revision-Date: 2019-06-05 15:34:41+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">Возникла ошибка при обновлении информации о сайте: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Возникла ошибка при получении контактной информации домена: %s</string>
+    <string name="domain_registration_error_registering_domain">Возникла ошибка при регистрации доменного имени: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Регистрация доменного имени…</string>
+    <string name="domain_registration_state_picker_dialog_title">Выберите округ/область</string>
+    <string name="domain_registration_country_picker_dialog_title">Выберите страну</string>
+    <string name="domain_registration_result_continue_button">продолжить</string>
+    <string name="domain_registration_result_description">Ваш новый домен &lt;b>%s&lt;/b> настраивается\n   Ваш сайт замер в нетерпении!</string>
+    <string name="domain_registration_result_title">Поздравляем!</string>
+    <string name="domain_contact_information_register_domain_button">Зарегистрировать домен</string>
+    <string name="domain_contact_information_postal_code_hint">Почтовый индекс</string>
+    <string name="domain_contact_information_state_hint">Округ/Область</string>
+    <string name="domain_contact_information_city_hint">Город</string>
+    <string name="domain_contact_information_address_hint_two">Адрес 2</string>
+    <string name="domain_contact_information_address_hint">Адрес</string>
+    <string name="domain_contact_information_country_hint">Страна</string>
+    <string name="domain_contact_information_country_code_hint">Код страны</string>
+    <string name="domain_contact_information_phone_number_hint">Телефон</string>
+    <string name="domain_contact_information_organization_hint">Организация (необязательно)</string>
+    <string name="domain_contact_information_description">Для вашего удобства, мы заполнили вашу контактную информацию WordPress.com. Пожалуйста, перепроверьте её на корректность, действительно ли вы хотите использовать её для этого домена.</string>
+    <string name="domain_contact_information_title">Контактная информация домена</string>
+    <string name="domain_privacy_option_off_title">Зарегистрировать открыто</string>
+    <string name="domain_privacy_option_on_title">Зарегистрировать как личный с защитой персональных данных</string>
+    <string name="domain_registration_privacy_protection_tos">Регистрируя домен вы соглашаетесь с</string>
+    <string name="domain_registration_privacy_protection_description">Владельцы доменов должны делиться контактной информацией для публичной базы данных по всем доменам. С защитой персональных данных мы публикуем нашу информацию вместо вашей и перенаправляем вам все сообщения приватным образом.</string>
+    <string name="domain_registration_privacy_protection_title">Защита персональных данных</string>
+    <string name="domain_registration_contact_form_input_error">Введите правильный %s</string>
+    <string name="domains_suggestions_choose_domain">Выберите домен</string>
+    <string name="stats_management_new">Новый</string>
+    <string name="stats_management_edit">Редактировать</string>
+    <string name="stats_management_dismiss_insights_news_card">Закрыть</string>
+    <string name="stats_management_try_it_now">Попробуйте прямо сейчас!</string>
+    <string name="stats_management_news_card_message">Выберите статистику для просмотра, акцентируйте те данные, которые вам наиболее интересны. Нажмите %1$s внизу статистики для её настройки.</string>
+    <string name="stats_manage_your_stats">Управление статистикой</string>
     <string name="history_fetching_revisions">Получение редакций…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Ошибка вставки медиафайла.\nНажмите для выбора вариантов.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Ошибка вставки медиафайла.\nНажмите для повтора.</string>
@@ -23,10 +58,9 @@ Language: ru
     <string name="stats_insights_social">Социальные</string>
     <string name="stats_insights_annual_site_stats">Данные по сайту за год</string>
     <string name="stats_view_follower_totals">Всего подписчиков</string>
-    <string name="suggestion_fetch_error">Предложения по доменам не могут быть загружены</string>
-    <string name="suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
-    <string name="suggestions_empty_list">Нет предложений</string>
-    <string name="choose_domain">Выберите домен</string>
+    <string name="domain_suggestions_fetch_error">Предложения по доменам не могут быть загружены</string>
+    <string name="domain_suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
+    <string name="domains_suggestions_empty_list">Нет предложений</string>
     <string name="register_domain">Зарегистрировать домен</string>
     <string name="jetpack_installed_message">Теперь, когда Jetpack установлен, нам нужно настроить, это займет всего минуту.</string>
     <string name="stats_menu_remove">Удалить с вкладки</string>
@@ -215,7 +249,6 @@ Language: ru
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
-    <string name="site_creation_label_domain_selection">Выберите доступный адрес для вашего сайта.</string>
     <string name="giphy_powered_by_giphy">Работает с GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
     <string name="giphy_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
@@ -541,7 +574,6 @@ Language: ru
     <string name="content_description_people_looking_charts">Люди, смотрящие на графики и диаграммы</string>
     <string name="comment_title">%s в %s</string>
     <string name="dialog_confirm_delete_permanently_post">Точно хотите навсегда удалить эту запись?</string>
-    <string name="notification_site_creation_title_in_progress">Создание сайта… Это займет пару минут.</string>
     <string name="notification_channel_important_title">Важное</string>
     <string name="notification_channel_general_title">Общее</string>
     <string name="photo_picker_use_photo">Использовать это фото</string>
@@ -554,10 +586,6 @@ Language: ru
     <string name="site_settings_quota_space_unlimited">%1$s / неограничено</string>
     <string name="preview_count">Предпросмотр %d</string>
     <string name="add_count">Добавить %d</string>
-    <string name="site_creation_domain_selection_title">Создание нового сайта, Шаг 5</string>
-    <string name="site_creation_site_details_title">Создание нового сайта, Шаг 3</string>
-    <string name="site_creation_theme_selection_title">Создание нового сайта, Шаг 2</string>
-    <string name="site_creation_category_title">Создание нового сайта, Шаг 1</string>
     <string name="stats_followers_many_desc">%d подписчиков</string>
     <string name="stats_followers_one_desc">1 подписчик</string>
     <string name="stats_followers_zero_desc">нет подписчиков</string>
@@ -655,7 +683,6 @@ Language: ru
     <string name="help_screen_title">Помощь и поддержка</string>
     <string name="license_screen_title">Лицензия</string>
     <string name="release_notes_screen_title">Заметки о выпуске</string>
-    <string name="site_creation_creating_failed_extended">Возникла непредвиденная проблема. Как насчет того, чтобы попробовать еще раз?</string>
     <string name="signup_epilogue_error_avatar_view">Ваш аватар загружен и скоро станет доступен.</string>
     <string name="email_not_registered_wpcom">Хм, мы не можем найти учетную запись WordPress.com по указанному email адресу. Попробуйте войти по ссылке ниже указав адрес сайта.</string>
     <string name="permissions_denied_message">Похоже что были отключены разрешения, требуемые данной возможостью.&lt;br/>&lt;br/>Отредактируйте разрешения и убедитесь что &lt;strong>%s&lt;/strong> включено.</string>
@@ -707,44 +734,7 @@ Language: ru
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Напишите первую запись</string>
-    <string name="site_creation_epilogue_configure">Настроить</string>
-    <string name="site_creation_epilogue_congrats">Поздравляем!\nВаш сайт готов.</string>
-    <string name="site_creation_creating_modal">Пожалуйста подождите завершения создания сайта.</string>
-    <string name="site_creation_creating_retry">Попробуйте снова</string>
-    <string name="site_creation_creating_failed">Что-то пошло не так…</string>
-    <string name="site_creation_creating_preparing_frontend">Подготовка сайта для посетителей…</string>
-    <string name="site_creation_creating_configuring_theme">Настройка стиля…</string>
-    <string name="site_creation_creating_configuring_content">Настройка содержимого…</string>
-    <string name="site_creation_creating_fetching_info">Получение информации о сайте…</string>
-    <string name="site_creation_creating_laying_foundation">Закладка фундамента…</string>
-    <string name="site_creation_empty_site_title">Введите название сайта</string>
-    <string name="site_creation_tagline_helper">Слоган - короткая строка текста, показываемая сразу после названия в большинстве тем. Также служит метаданными сайта для поисковых систем.</string>
-    <string name="site_creation_tagline_hint">Слоган сайта (необязательно)</string>
-    <string name="site_creation_title_hint">Название сайта</string>
     <string name="site_creation_domain_finish_button">Создать сайт</string>
-    <string name="site_creation_domain_keywords_hint">Введите ключевое слово для большего количества идей</string>
-    <string name="site_creation_label_domain_selection_title">Шаг 4 из 4</string>
-    <string name="site_creation_label_site_details">Расскажите нам больше о том, что создаете. Какое будет название и слоган?</string>
-    <string name="site_creation_label_site_details_title">Шаг 3 из 4</string>
-    <string name="site_creation_label_theme_loading">Пожалуйста подождите, загружаем темы</string>
-    <string name="site_creation_label_theme_selection">Быстро начните с одной из наших популярных тем. Как только вы создадите сайт, вы сможете просмотреть и выбрать из сотен других.</string>
-    <string name="site_creation_label_theme_selection_title">Шаг 2 из 4</string>
-    <string name="site_creation_subtitle_portfolio">Чтобы представить ваши творческие проекты для визуальной демонстрации.</string>
-    <string name="site_creation_title_portfolio">Начните с создания портфолио</string>
-    <string name="site_creation_subtitle_website">Для того, чтобы продвигать ваш бизнес или торговую марку и общаться с аудиторией.</string>
-    <string name="site_creation_title_website">Начните с создания вебсайта</string>
-    <string name="site_creation_subtitle_blog">Для того, чтобы делиться идеями, историями и фотографиями с вашими подписчиками.</string>
-    <string name="site_creation_title_blog">Создать блог</string>
-    <string name="site_creation_label_category">Какой тип сайта вам нужен?\nВыберите из списка ниже:</string>
-    <string name="site_creation_label_category_title">Шаг 1 из 4</string>
-    <string name="site_creation_title">Создать новый сайт</string>
-    <string name="notification_site_creation_failed">Произошла ошибка.</string>
-    <string name="notification_site_creation_title_stopped">Создание сайта остановлено</string>
-    <string name="notification_site_creation_step_theme">Шаг 4 из 4</string>
-    <string name="notification_site_creation_step_tagline">Шаг 3 из 4</string>
-    <string name="notification_site_creation_step_fetching">Шаг 2 из 4</string>
-    <string name="notification_site_creation_step_creating">Шаг 1 из 4</string>
     <string name="notification_site_creation_created">Нажмите для продолжения.</string>
     <string name="notification_site_creation_title_success">Сайт создан!</string>
     <string name="google_error_timeout">Google отвечает слишком долго. Возможно вам стоит подождать пока ваше подключение к Интернет станет лучше.</string>
