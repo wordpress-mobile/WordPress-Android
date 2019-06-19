@@ -34,7 +34,7 @@ class ViewsWidgetUpdater
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val layout = widgetUtils.getLayout(showColumns = false, colorMode = colorMode)
+        val layout = widgetUtils.getLayout(colorMode = colorMode)
         val views = RemoteViews(context.packageName, layout)
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_views))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
