@@ -3,11 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView;

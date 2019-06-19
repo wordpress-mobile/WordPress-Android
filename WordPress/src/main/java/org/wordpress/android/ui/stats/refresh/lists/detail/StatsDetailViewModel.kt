@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
@@ -77,7 +77,7 @@ class StatsDetailViewModel
             refresh()
         } else {
             _isRefreshing.value = false
-            _showSnackbarMessage.value = SnackbarMessageHolder(string.no_network_title)
+            _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
         }
     }
 }

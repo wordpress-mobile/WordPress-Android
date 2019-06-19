@@ -2,7 +2,6 @@ package org.wordpress.android.ui.publicize;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;

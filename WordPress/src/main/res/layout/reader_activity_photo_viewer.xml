@@ -28,7 +28,7 @@
         android:paddingStart="@dimen/margin_large"
         android:layout_marginStart="@dimen/margin_small"/>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -39,6 +39,6 @@
         app:contentInsetStart="@dimen/toolbar_content_offset"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 </RelativeLayout>

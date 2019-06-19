@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.history
 
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 
 class HistoryDiffCallback(

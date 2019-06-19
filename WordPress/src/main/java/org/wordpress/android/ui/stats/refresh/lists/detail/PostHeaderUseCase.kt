@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.modules.UI_THREAD
@@ -42,7 +42,7 @@ class PostHeaderUseCase
         } else {
             null
         }
-        return listOf(ReferredItem(string.showing_stats_for, domainModel, navigationAction))
+        return listOf(ReferredItem(R.string.showing_stats_for, domainModel, navigationAction))
     }
 
     private fun click(clickParams: ClickParams) {

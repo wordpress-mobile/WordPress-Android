@@ -1,9 +1,9 @@
 package org.wordpress.android.util
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 

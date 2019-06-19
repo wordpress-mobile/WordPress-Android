@@ -30,7 +30,6 @@ Language: zh_CN
     <string name="domain_contact_information_title">域联系信息</string>
     <string name="domain_privacy_option_off_title">公开注册</string>
     <string name="domain_privacy_option_on_title">通过隐私保护功能私密注册</string>
-    <string name="domain_registration_privacy_protection_tos">注册此域即表示，您同意我们的</string>
     <string name="domain_registration_privacy_protection_description">域所有者必须在所有域的公共数据库中共享联系信息。\n通过隐私保护功能，我们会发布自己的信息（而不是您的信息），并以私密方式将所有邮件转发给您。</string>
     <string name="domain_registration_privacy_protection_title">隐私保护</string>
     <string name="domain_registration_contact_form_input_error">请输入有效的“%s”</string>

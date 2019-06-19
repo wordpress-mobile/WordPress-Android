@@ -5,15 +5,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -212,7 +215,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 mEmailSnackbar = Snackbar
                         .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.button_discard), clickListener);
-                TextView textView = mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView =
+                        mEmailSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
                 textView.setMaxLines(4);
             }
             // instead of creating a new snackbar, update the current one to avoid the jumping animation
@@ -282,7 +286,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             showChangePasswordProgressDialog(false);
 
             if (event.isError()) {
-                ToastUtils.showToast(getActivity(), event.error.message, ToastUtils.Duration.LONG);
+                // We usually rely on event.error.type and provide our own localized message.
+                // This case is exceptional because:
+                // 1. The server-side error type is generic, but patching this server-side is quite involved
+                // 2. We know the error string return from the server has decent localization
+                String errorMessage = !TextUtils.isEmpty(event.error.message) ? event.error.message
+                        : getString(R.string.error_post_account_settings);
+                ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);
                 AppLog.e(T.SETTINGS, event.error.message);
             } else {
                 ToastUtils.showToast(getActivity(), R.string.change_password_confirmation, ToastUtils.Duration.LONG);
@@ -291,13 +301,22 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         } else {
             if (event.isError()) {
                 switch (event.error.type) {
-                    case SETTINGS_FETCH_ERROR:
+                    case SETTINGS_FETCH_GENERIC_ERROR:
                         ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings,
                                 ToastUtils.Duration.LONG);
                         break;
-                    case SETTINGS_POST_ERROR:
-                        ToastUtils.showToast(getActivity(), R.string.error_post_account_settings,
+                    case SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR:
+                        ToastUtils.showToast(getActivity(), R.string.error_disabled_apis,
                                 ToastUtils.Duration.LONG);
+                        break;
+                    case SETTINGS_POST_ERROR:
+                        // We usually rely on event.error.type and provide our own localized message.
+                        // This case is exceptional because:
+                        // 1. The server-side error type is generic, but patching this server-side is quite involved
+                        // 2. We know the error string return from the server has decent localization
+                        String errorMessage = !TextUtils.isEmpty(event.error.message) ? event.error.message
+                                : getString(R.string.error_post_account_settings);
+                        ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);
                         // we optimistically show the email change snackbar, if that request fails, we should
                         // remove the snackbar
                         checkIfEmailChangeIsPending();

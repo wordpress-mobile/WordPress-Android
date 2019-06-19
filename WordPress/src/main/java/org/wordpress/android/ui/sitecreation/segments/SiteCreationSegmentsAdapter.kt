@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.segments
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState

@@ -4,12 +4,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.content.Context;
 import android.graphics.Paint;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +13,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;

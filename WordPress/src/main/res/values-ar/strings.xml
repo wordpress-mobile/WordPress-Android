@@ -30,7 +30,6 @@ Language: ar
     <string name="domain_contact_information_title">معلومات الاتصال الخاصة بالنطاق</string>
     <string name="domain_privacy_option_off_title">التسجيل بشكل علني</string>
     <string name="domain_privacy_option_on_title">التسجيل بشكل خاص مع ميزة الحماية من الخصوصية</string>
-    <string name="domain_registration_privacy_protection_tos">من خلال تسجيل هذا النطاق، فإنك توافق على</string>
     <string name="domain_registration_privacy_protection_description">يتعين على مالكي النطاق مشاركة معلومات الاتصال في قاعدة بيانات عامة لجميع النطاقات.\n        مع ميزة حماية الخصوصية، ننشر معلوماتنا الخاصة بدلاً من معلوماتك، وإعادة توجيه أي اتصال إليك بشكل سري.</string>
     <string name="domain_registration_privacy_protection_title">حماية الخصوصية</string>
     <string name="domain_registration_contact_form_input_error">الرجاء إدخال عنوان %s صالح</string>

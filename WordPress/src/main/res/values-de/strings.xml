@@ -30,7 +30,6 @@ Language: de
     <string name="domain_contact_information_title">Domain-Kontaktdaten</string>
     <string name="domain_privacy_option_off_title">Öffentlich registrieren</string>
     <string name="domain_privacy_option_on_title">Privat mit Datenschutz registrieren</string>
-    <string name="domain_registration_privacy_protection_tos">Wenn du diese Domain registrierst, stimmst du Folgendem zu: </string>
     <string name="domain_registration_privacy_protection_description">Domain-Eigentümer müssen ihre Kontaktinformationen in einer öffentlichen Datenbank aller Domains veröffentlichen.\n Durch den Datenschutz veröffentlichen wir unsere eigenen Informationen anstatt deinen und leiten sämtliche Kommunikation vertraulich an dich weiter.</string>
     <string name="domain_registration_privacy_protection_title">Datenschutz</string>
     <string name="domain_registration_contact_form_input_error">Bitte gib eine gültige %s ein</string>

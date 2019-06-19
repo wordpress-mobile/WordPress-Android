@@ -1,8 +1,9 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 public class AutoCompleteEmptyTextView extends AppCompatAutoCompleteTextView {
     public AutoCompleteEmptyTextView(Context context) {

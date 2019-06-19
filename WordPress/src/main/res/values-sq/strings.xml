@@ -30,7 +30,6 @@ Language: sq_AL
     <string name="domain_contact_information_title">Të dhëna kontakti përkatësie</string>
     <string name="domain_privacy_option_off_title">Regjistroje publikisht</string>
     <string name="domain_privacy_option_on_title">Regjistroje publikisht me Mbrojtje Privatësie</string>
-    <string name="domain_registration_privacy_protection_tos">Duke regjistruar këtë përkatësi pajtoheni me</string>
     <string name="domain_registration_privacy_protection_description">Të zotëve të përkatësive u duhet të ndajnë me të tjerët të dhëna kontakti, në një bazë publike të dhënash të krejt përkatësive.\n        Me Mbrojtje Privatësie, ne botojmë të dhënat tona, në vend se tuajat, dhe ju përcjellim privatisht çfarëdo komunikimi.</string>
     <string name="domain_registration_privacy_protection_title">Mbrojtje Privatësie</string>
     <string name="domain_registration_contact_form_input_error">Ju lutemi, jepni një %s të vlefshëm</string>

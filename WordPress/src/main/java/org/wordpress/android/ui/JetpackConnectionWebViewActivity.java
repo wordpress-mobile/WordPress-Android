@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.JetpackConnectionWebViewClient.JetpackConnectionWebViewClientListener;
 import org.wordpress.android.ui.accounts.LoginActivity;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * Use one of the static factory methods to start the flow.
  */
 public class JetpackConnectionWebViewActivity extends WPWebViewActivity
-        implements JetpackConnectionWebViewClient.JetpackConnectionWebViewClientListener {
+        implements JetpackConnectionWebViewClientListener {
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
     private static final String TRACKING_SOURCE_KEY = "tracking_source";
 
@@ -84,7 +85,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
 
     @Override
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
-        mWebViewClient = new JetpackConnectionWebViewClient(this, mSite.getUrl());
+        mWebViewClient = new JetpackConnectionWebViewClient(this, this, mSite.getUrl());
         return mWebViewClient;
     }
 

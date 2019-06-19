@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.uploads
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Lifecycle.Event
-import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ProcessLifecycleOwner
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.Event
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.clearInvocations

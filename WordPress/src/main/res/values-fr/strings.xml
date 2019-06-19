@@ -30,7 +30,6 @@ Language: fr
     <string name="domain_contact_information_title">Coordonnées du domaine</string>
     <string name="domain_privacy_option_off_title">S\'inscrire publiquement</string>
     <string name="domain_privacy_option_on_title">S\'inscrire en privé avec protection de la vie privée</string>
-    <string name="domain_registration_privacy_protection_tos">En enregistrant ce domaine, vous acceptez nos </string>
     <string name="domain_registration_privacy_protection_description">Les propriétaires de domaines sont tenus de partager leurs informations de contact dans une base de données publique de domaines.\n Grâce à la fonction de protection de la vie privée, nous publions nos propres informations à la place des vôtres et vous transmettons les communications en privé.</string>
     <string name="domain_registration_privacy_protection_title">Protection de la vie privée</string>
     <string name="domain_registration_contact_form_input_error">Veuillez saisir un(e) %s valide</string>

@@ -3,10 +3,12 @@ package org.wordpress.android.ui.uploads;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -121,8 +123,7 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
+            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
             return;
         }
 

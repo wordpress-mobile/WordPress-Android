@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED
@@ -103,7 +102,7 @@ class LatestPostSummaryUseCase
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
 
     private fun InsightsLatestPostModel.hasData() =
             this.postViewsCount > 0 || this.postCommentCount > 0 || this.postLikeCount > 0

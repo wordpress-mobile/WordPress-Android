@@ -2,7 +2,6 @@ package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.arch.lifecycle.LiveData;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
@@ -16,12 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -37,6 +30,14 @@ import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 

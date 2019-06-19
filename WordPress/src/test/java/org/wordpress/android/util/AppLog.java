@@ -1,6 +1,6 @@
 package org.wordpress.android.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * simple wrapper for Android log calls, enables recording and displaying log
@@ -38,7 +38,8 @@ public class AppLog {
         ACTIVITY_LOG,
         JETPACK_REMOTE_INSTALL,
         SUPPORT,
-        SITE_CREATION
+        SITE_CREATION,
+        DOMAIN_REGISTRATION
     }
 
     public static final String TAG = "WordPress";
