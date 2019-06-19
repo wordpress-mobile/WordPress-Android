@@ -75,7 +75,13 @@ class TodayWidgetBlockListViewModelTest {
         verify(todayWidgetUpdater).updateAppWidget(eq(context), any(), isNull())
     }
 
-    private fun assertListItem(listItem: BlockItemUiModel, startKey: String, startValue: Int, endKey: String, endValue: Int) {
+    private fun assertListItem(
+        listItem: BlockItemUiModel,
+        startKey: String,
+        startValue: Int,
+        endKey: String,
+        endValue: Int
+    ) {
         Assertions.assertThat(listItem.layout).isEqualTo(R.layout.stats_widget_block_item_light)
         Assertions.assertThat(listItem.localSiteId).isEqualTo(siteId)
         Assertions.assertThat(listItem.startKey).isEqualTo(startKey)
