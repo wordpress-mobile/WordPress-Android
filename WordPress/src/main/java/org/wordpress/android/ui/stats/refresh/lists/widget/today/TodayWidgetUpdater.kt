@@ -26,10 +26,14 @@ class TodayWidgetUpdater
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
+        appWidgetId: Int,
+        appWidgetManager: AppWidgetManager?
     ) {
-        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val widgetManager = appWidgetManager ?: AppWidgetManager.getInstance(context)
+        val wideView = widgetUtils.isWidgetWiderThanLimit(
+                widgetManager,
+                appWidgetId
+        )
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: Color.LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
@@ -45,7 +49,7 @@ class TodayWidgetUpdater
         }
         if (networkAvailable && siteModel != null) {
             widgetUtils.showList(
-                    appWidgetManager,
+                    widgetManager,
                     views,
                     context,
                     appWidgetId,
@@ -55,7 +59,7 @@ class TodayWidgetUpdater
                     wideView
             )
         } else {
-            widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
+            widgetUtils.showError(widgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
         }
     }
 
@@ -64,7 +68,7 @@ class TodayWidgetUpdater
         val viewsWidget = ComponentName(context, StatsTodayWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
         for (appWidgetId in allWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            updateAppWidget(context, appWidgetId)
         }
     }
 

@@ -9,8 +9,8 @@ import javax.inject.Inject
 interface WidgetUpdater {
     fun updateAppWidget(
         context: Context,
-        appWidgetManager: AppWidgetManager = AppWidgetManager.getInstance(context),
-        appWidgetId: Int
+        appWidgetId: Int,
+        appWidgetManager: AppWidgetManager? = null
     )
 
     fun updateAllWidgets(context: Context)

@@ -31,8 +31,8 @@ abstract class StatsWidget : AppWidgetProvider() {
         for (appWidgetId in appWidgetIds) {
             widgetUpdater.updateAppWidget(
                     context,
-                    appWidgetManager,
-                    appWidgetId
+                    appWidgetId,
+                    appWidgetManager
             )
         }
     }
@@ -54,8 +54,8 @@ abstract class StatsWidget : AppWidgetProvider() {
             inject((context.applicationContext as WordPress).component())
             widgetUpdater.updateAppWidget(
                     context,
-                    appWidgetManager,
-                    appWidgetId
+                    appWidgetId,
+                    appWidgetManager
             )
         }
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
