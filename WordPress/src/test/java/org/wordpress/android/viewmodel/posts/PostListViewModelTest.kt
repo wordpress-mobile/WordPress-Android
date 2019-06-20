@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -27,6 +28,7 @@ class PostListViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: PostListViewModel
 
+    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         val listStore = mock<ListStore>()
