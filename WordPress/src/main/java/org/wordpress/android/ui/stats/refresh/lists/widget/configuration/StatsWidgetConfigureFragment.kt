@@ -36,6 +36,8 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsWidgetConfigureViewModel
+    private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
+    private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var viewType: ViewType
 
     override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
@@ -63,6 +65,10 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(StatsWidgetConfigureViewModel::class.java)
+        siteSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(StatsSiteSelectionViewModel::class.java)
+        colorSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(StatsColorSelectionViewModel::class.java)
         activity?.setResult(AppCompatActivity.RESULT_CANCELED)
 
         val appWidgetId = activity?.intent?.extras?.getInt(
@@ -74,6 +80,8 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             activity?.finish()
             return
         }
+
+        viewModel.start(appWidgetId, viewType, siteSelectionViewModel, colorSelectionViewModel)
 
         site_container.setOnClickListener {
             StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
@@ -115,8 +123,6 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                 activity?.finish()
             }
         })
-
-        viewModel.start(appWidgetId, viewType)
     }
 
     enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
