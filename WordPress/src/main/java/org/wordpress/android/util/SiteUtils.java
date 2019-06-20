@@ -94,4 +94,12 @@ public class SiteUtils {
     public static boolean hasNonJetpackBusinessPlan(SiteModel site) {
         return site.getPlanId() == PlansConstants.BUSINESS_PLAN_ID;
     }
+
+    public static boolean onFreePlan(SiteModel site) {
+        return site.getPlanId() == PlansConstants.FREE_PLAN_ID;
+    }
+
+    public static boolean hasCustomDomain(SiteModel site) {
+        return !site.getUrl().contains(".wordpress.com");
+    }
 }

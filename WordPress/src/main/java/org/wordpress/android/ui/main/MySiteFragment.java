@@ -113,7 +113,7 @@ public class MySiteFragment extends Fragment implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
-        OnConfirmListener, OnDismissListener, OnClickListener {
+        OnConfirmListener, OnDismissListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -126,8 +126,8 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
     public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
-    public static final String KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE = "KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE";
-    public static final String KEY_DOMAIN_REGISTRATION_CTA_SITE_ID = "KEY_DOMAIN_REGISTRATION_CTA_SITE_ID";
+    public static final String KEY_IS_DOMAIN_CREDIT_AVAILABLE = "KEY_IS_DOMAIN_CREDIT_AVAILABLE";
+    public static final String KEY_PLANS_CHECKED = "KEY_PLANS_CHECKED";
 
     private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -167,8 +167,8 @@ public class MySiteFragment extends Fragment implements
     private String mToolbarTitle;
 
     private int mBlavatarSz;
-    private boolean mIsDomainRegistrationCtaVisible = false;
-    private int mDomainRegistrationCtaSiteId = -1;
+    private boolean mIsDomainCreditAvailable = false;
+    private boolean mPlansChecked = false;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -196,10 +196,8 @@ public class MySiteFragment extends Fragment implements
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
-            mIsDomainRegistrationCtaVisible =
-                    savedInstanceState.getBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, false);
-            mDomainRegistrationCtaSiteId =
-                    savedInstanceState.getInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, -1);
+            mIsDomainCreditAvailable = savedInstanceState.getBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, false);
+            mPlansChecked = savedInstanceState.getBoolean(KEY_PLANS_CHECKED, false);
         }
     }
 
@@ -234,7 +232,6 @@ public class MySiteFragment extends Fragment implements
         }
 
         showQuickStartNoticeIfNecessary();
-        fetchPlansIfNecessary(site);
     }
 
     private void showQuickStartNoticeIfNecessary() {
@@ -303,8 +300,8 @@ public class MySiteFragment extends Fragment implements
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
-        outState.putBoolean(KEY_IS_DOMAIN_REGISTRATION_CTA_VISIBLE, mIsDomainRegistrationCtaVisible);
-        outState.putInt(KEY_DOMAIN_REGISTRATION_CTA_SITE_ID, mDomainRegistrationCtaSiteId);
+        outState.putBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, mIsDomainCreditAvailable);
+        outState.putBoolean(KEY_PLANS_CHECKED, mPlansChecked);
     }
 
     private void updateSiteSettingsIfNecessary() {
@@ -367,7 +364,6 @@ public class MySiteFragment extends Fragment implements
         mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title);
         mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more);
         mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta);
-        updateDomainRegistrationCta();
 
         setupClickListeners(rootView);
 
@@ -401,7 +397,12 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(this);
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewDomainRegistrationActivity(getActivity(), getSelectedSite());
+            }
+        });
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -566,13 +567,6 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.row_register_domain) {
-            ActivityLauncher.viewDomainRegistrationActivity(this, getSelectedSite());
-        }
     }
 
     @Override
@@ -743,6 +737,8 @@ public class MySiteFragment extends Fragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
+
+                    mIsDomainCreditAvailable = false;
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
@@ -800,13 +796,6 @@ public class MySiteFragment extends Fragment implements
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
-                }
-                break;
-            case RequestCodes.REGISTER_DOMAIN:
-                if (resultCode == Activity.RESULT_OK) {
-                    mIsDomainRegistrationCtaVisible = false;
-                    mDomainRegistrationCtaSiteId = -1;
-                    fetchPlansIfNecessary(getSelectedSite());
                 }
                 break;
         }
@@ -920,6 +909,17 @@ public class MySiteFragment extends Fragment implements
             }
 
             return;
+        }
+
+        if (SiteUtils.onFreePlan(site)) {
+            mIsDomainCreditAvailable = false;
+            toggleDomainRegistrationCtaVisibility();
+        } else {
+            if (!SiteUtils.hasCustomDomain(site) && !mPlansChecked) {
+                fetchPlansIfNecessary(site);
+            } else {
+                toggleDomainRegistrationCtaVisibility();
+            }
         }
 
         mScrollView.setVisibility(View.VISIBLE);
@@ -1039,6 +1039,12 @@ public class MySiteFragment extends Fragment implements
      * called yet.
      */
     public void onSiteChanged(SiteModel site) {
+        // we are trying to be  careful with domain credit
+        // so whenever site changes we hide CTA and check for credit again in refreshSelectedSiteDetails()
+        mPlansChecked = false;
+        mIsDomainCreditAvailable = false;
+        toggleDomainRegistrationCtaVisibility();
+
         refreshSelectedSiteDetails(site);
         showSiteIconProgressBar(false);
     }
@@ -1140,9 +1146,9 @@ public class MySiteFragment extends Fragment implements
         updateQuickStartContainer();
     }
 
-    private void updateDomainRegistrationCta() {
+    private void toggleDomainRegistrationCtaVisibility() {
         // only show the Domain Registration CTA if domain registration is enabled
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainRegistrationCtaVisible) {
+        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainCreditAvailable) {
             mDomainRegistrationCta.setVisibility(View.VISIBLE);
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);
@@ -1235,25 +1241,23 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void fetchPlansIfNecessary(@Nullable SiteModel site) {
-        // plans only need to be fetched if domain registration is enabled
-        // AND site has been changed to something that is non-null
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && site != null && site.getId() != mDomainRegistrationCtaSiteId) {
-            mIsDomainRegistrationCtaVisible = false;
-            mDomainRegistrationCtaSiteId = site.getId();
-
-            updateDomainRegistrationCta();
-
+        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
             mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlansFetched(OnPlansFetched event) {
+        if (AppPrefs.getSelectedSite() != event.site.getId()) {
+            return;
+        }
+
         if (event.isError()) {
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message);
         } else {
-            mIsDomainRegistrationCtaVisible = isDomainCreditAvailable(event.plans);
-            updateDomainRegistrationCta();
+            mPlansChecked = true;
+            mIsDomainCreditAvailable = isDomainCreditAvailable(event.plans);
+            toggleDomainRegistrationCtaVisibility();
         }
     }
 

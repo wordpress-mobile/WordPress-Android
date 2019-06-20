@@ -414,12 +414,6 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewDomainRegistrationActivity(Fragment fragment, SiteModel site) {
-        Intent intent = new Intent(fragment.getContext(), DomainRegistrationActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        fragment.startActivityForResult(intent, RequestCodes.REGISTER_DOMAIN);
-    }
-
     public static void viewActivityLogList(Activity activity, SiteModel site) {
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
