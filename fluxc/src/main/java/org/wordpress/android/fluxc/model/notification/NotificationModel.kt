@@ -9,8 +9,8 @@ data class NotificationModel(
     val remoteNoteId: Long = 0L,
     var localSiteId: Int = 0,
     var noteHash: Long = 0L,
-    val type: Kind = NotificationModel.Kind.UNKNOWN,
-    val subtype: Subkind? = NotificationModel.Subkind.NONE,
+    val type: Kind = Kind.UNKNOWN,
+    val subtype: Subkind? = Subkind.NONE,
     var read: Boolean = false,
     val icon: String? = null,
     val noticon: String? = null,
@@ -36,7 +36,7 @@ data class NotificationModel(
         UNKNOWN;
 
         companion object {
-            private val reverseMap = Kind.values().associateBy(
+            private val reverseMap = values().associateBy(
                     Kind::name)
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
         }
@@ -49,7 +49,7 @@ data class NotificationModel(
         NONE;
 
         companion object {
-            private val reverseMap = Subkind.values().associateBy(
+            private val reverseMap = values().associateBy(
                     Subkind::name)
             fun fromString(type: String): Subkind {
                 return if (type.isEmpty()) {
