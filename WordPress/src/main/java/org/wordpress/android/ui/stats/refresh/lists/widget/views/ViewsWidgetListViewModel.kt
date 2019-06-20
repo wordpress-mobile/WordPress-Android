@@ -15,6 +15,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OVERVIEW_ITEMS_TO_LOAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
+import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -31,15 +33,15 @@ class ViewsWidgetListViewModel
     private val statsDateFormatter: StatsDateFormatter
 ) {
     private var siteId: Int? = null
-    private var colorModeId: Int? = null
-    private var showChangeColumn: Boolean = true
+    private var colorMode: Color = Color.LIGHT
+    private var wideView: Boolean = true
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<ListItemUiModel>()
     val data: List<ListItemUiModel> = mutableData
-    fun start(siteId: Int, colorModeId: Int, showChangeColumn: Boolean, appWidgetId: Int) {
+    fun start(siteId: Int, colorMode: Color, wideView: Boolean, appWidgetId: Int) {
         this.siteId = siteId
-        this.colorModeId = colorModeId
-        this.showChangeColumn = showChangeColumn
+        this.colorMode = colorMode
+        this.wideView = wideView
         this.appWidgetId = appWidgetId
     }
 
@@ -79,23 +81,23 @@ class ViewsWidgetListViewModel
         periods: List<PeriodData>,
         localSiteId: Int
     ): ListItemUiModel {
-        val layout = when (colorModeId) {
-            Color.DARK.ordinal -> R.layout.stats_views_widget_item_dark
-            Color.LIGHT.ordinal -> R.layout.stats_views_widget_item_light
-            else -> R.layout.stats_views_widget_item_light
+        val layout = when (colorMode) {
+            Color.DARK -> R.layout.stats_views_widget_item_dark
+            Color.LIGHT -> R.layout.stats_views_widget_item_light
         }
         val previousItem = periods.getOrNull(position + 1)
         val isCurrentDay = position == 0
-        val uiModel = overviewMapper.buildTitle(selectedItem, previousItem, 0, isCurrentDay)
+        val startValue = if (wideView) MILLION else ONE_THOUSAND
+        val uiModel = overviewMapper.buildTitle(selectedItem, previousItem, 0, isCurrentDay, startValue)
 
         val key = if (isCurrentDay) {
             resourceProvider.getString(R.string.stats_insights_today_stats)
         } else {
             statsDateFormatter.printDate(periods[position].period)
         }
-        val isPositiveChangeVisible = uiModel.state == POSITIVE && showChangeColumn && !uiModel.change.isNullOrEmpty()
-        val isNegativeChangeVisible = uiModel.state == NEGATIVE && showChangeColumn && !uiModel.change.isNullOrEmpty()
-        val isNeutralChangeVisible = uiModel.state == NEUTRAL && showChangeColumn && !uiModel.change.isNullOrEmpty()
+        val isPositiveChangeVisible = uiModel.state == POSITIVE && wideView && !uiModel.change.isNullOrEmpty()
+        val isNegativeChangeVisible = uiModel.state == NEGATIVE && wideView && !uiModel.change.isNullOrEmpty()
+        val isNeutralChangeVisible = uiModel.state == NEUTRAL && wideView && !uiModel.change.isNullOrEmpty()
         return ListItemUiModel(
                 layout,
                 key,

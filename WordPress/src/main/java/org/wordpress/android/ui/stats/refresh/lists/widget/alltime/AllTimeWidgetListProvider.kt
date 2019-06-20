@@ -27,7 +27,7 @@ class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteVi
     }
 
     override fun onCreate() {
-        viewModel.start(siteId, colorMode.ordinal, appWidgetId)
+        viewModel.start(siteId, colorMode, appWidgetId)
     }
 
     override fun getLoadingView(): RemoteViews? = null

@@ -29,7 +29,7 @@ class AllTimeWidgetListViewModelTest {
     @Before
     fun setUp() {
         viewModel = AllTimeWidgetListViewModel(siteStore, allTimeStore, resourceProvider)
-        viewModel.start(siteId, color.ordinal, appWidgetId)
+        viewModel.start(siteId, color, appWidgetId)
     }
 
     @Test

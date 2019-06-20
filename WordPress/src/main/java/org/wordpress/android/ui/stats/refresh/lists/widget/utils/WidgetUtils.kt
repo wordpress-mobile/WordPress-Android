@@ -15,8 +15,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.lists.widget.SHOW_CHANGE_VALUE_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
@@ -109,7 +109,7 @@ class WidgetUtils
         colorMode: Color,
         siteId: Int,
         viewType: ViewType,
-        showChangeColumn: Boolean? = null
+        wideView: Boolean
     ) {
         views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
         views.setViewVisibility(R.id.widget_content, View.VISIBLE)
@@ -119,9 +119,7 @@ class WidgetUtils
         listIntent.putColorMode(colorMode)
         listIntent.putViewType(viewType)
         listIntent.putExtra(SITE_ID_KEY, siteId)
-        showChangeColumn?.let {
-            listIntent.putExtra(SHOW_CHANGE_VALUE_KEY, showChangeColumn)
-        }
+        listIntent.putExtra(WIDE_VIEW_KEY, wideView)
         listIntent.data = Uri.parse(
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -39,12 +40,12 @@ class AllTimeWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val showColumns = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val views = RemoteViews(context.packageName, widgetUtils.getLayout(showColumns, colorMode))
+        val views = RemoteViews(context.packageName, widgetUtils.getLayout(wideView, colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
@@ -54,7 +55,7 @@ class AllTimeWidgetUpdater
             )
         }
         if (networkAvailable && siteModel != null) {
-            if (showColumns) {
+            if (wideView) {
                 views.setOnClickPendingIntent(
                         R.id.widget_content,
                         widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
@@ -69,7 +70,7 @@ class AllTimeWidgetUpdater
                         colorMode,
                         siteModel.id,
                         ALL_TIME_VIEWS,
-                        showColumns
+                        wideView
                 )
             }
         } else {
@@ -111,16 +112,17 @@ class AllTimeWidgetUpdater
     ) {
         val allTimeInsights = allTimeStore.getAllTimeInsights(site)
         views.setTextViewText(R.id.first_block_title, resourceProvider.getString(R.string.stats_views))
-        views.setTextViewText(R.id.first_block_value, allTimeInsights?.views?.toFormattedString() ?: EMPTY_VALUE)
+        val viewsValue = allTimeInsights?.views?.toFormattedString(MILLION) ?: EMPTY_VALUE
+        views.setTextViewText(R.id.first_block_value, viewsValue)
         views.setTextViewText(R.id.second_block_title, resourceProvider.getString(R.string.stats_visitors))
-        views.setTextViewText(R.id.second_block_value, allTimeInsights?.visitors?.toFormattedString() ?: EMPTY_VALUE)
+        val visitorsValue = allTimeInsights?.visitors?.toFormattedString(MILLION) ?: EMPTY_VALUE
+        views.setTextViewText(R.id.second_block_value, visitorsValue)
         views.setTextViewText(R.id.third_block_title, resourceProvider.getString(R.string.posts))
-        views.setTextViewText(R.id.third_block_value, allTimeInsights?.posts?.toFormattedString() ?: EMPTY_VALUE)
+        val postsValue = allTimeInsights?.posts?.toFormattedString(MILLION) ?: EMPTY_VALUE
+        views.setTextViewText(R.id.third_block_value, postsValue)
         views.setTextViewText(R.id.fourth_block_title, resourceProvider.getString(R.string.stats_insights_best_ever))
-        views.setTextViewText(
-                R.id.fourth_block_value,
-                allTimeInsights?.viewsBestDayTotal?.toFormattedString() ?: EMPTY_VALUE
-        )
+        val bestDayValue = allTimeInsights?.viewsBestDayTotal?.toFormattedString(MILLION) ?: EMPTY_VALUE
+        views.setTextViewText(R.id.fourth_block_value, bestDayValue)
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 

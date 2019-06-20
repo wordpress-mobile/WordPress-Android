@@ -29,7 +29,7 @@ class ViewsWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val showChangeColumn = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
@@ -53,7 +53,7 @@ class ViewsWidgetUpdater
                     colorMode,
                     siteModel.id,
                     WEEK_VIEWS,
-                    showChangeColumn
+                    wideView
             )
         } else {
             widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)

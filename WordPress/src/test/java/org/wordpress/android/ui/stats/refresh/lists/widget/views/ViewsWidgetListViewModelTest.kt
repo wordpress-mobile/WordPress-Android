@@ -76,6 +76,7 @@ class ViewsWidgetListViewModelTest {
                         eq(dates[0]),
                         isNull(),
                         any(),
+                        any(),
                         any()
                 )
         ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE))
@@ -83,6 +84,7 @@ class ViewsWidgetListViewModelTest {
                 overviewMapper.buildTitle(
                         eq(dates[1]),
                         eq(dates[0]),
+                        any(),
                         any(),
                         any()
                 )
@@ -92,11 +94,12 @@ class ViewsWidgetListViewModelTest {
                         eq(dates[2]),
                         eq(dates[1]),
                         any(),
+                        any(),
                         any()
                 )
         ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL))
 
-        viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
+        viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 
         viewModel.onDataSetChanged { }
 
@@ -128,7 +131,7 @@ class ViewsWidgetListViewModelTest {
     fun `on missing site triggers error callback`() {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null)
 
-        viewModel.start(siteId, color.ordinal, showChangeColumn, appWidgetId)
+        viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 
         var errorCallbackTriggered = false
 

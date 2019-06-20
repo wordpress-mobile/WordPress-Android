@@ -13,10 +13,11 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -36,12 +37,12 @@ class TodayWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val showColumns = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: Color.LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val views = RemoteViews(context.packageName, widgetUtils.getLayout(showColumns, colorMode))
+        val views = RemoteViews(context.packageName, widgetUtils.getLayout(wideView, colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
@@ -54,7 +55,7 @@ class TodayWidgetUpdater
             )
         }
         if (networkAvailable && siteModel != null) {
-            if (showColumns) {
+            if (wideView) {
                 views.setOnClickPendingIntent(
                         R.id.widget_content,
                         widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
@@ -68,7 +69,8 @@ class TodayWidgetUpdater
                         appWidgetId,
                         colorMode,
                         siteModel.id,
-                        TODAY_VIEWS
+                        TODAY_VIEWS,
+                        wideView
                 )
             }
         } else {
@@ -108,13 +110,13 @@ class TodayWidgetUpdater
     ) {
         val todayInsights = todayInsightsStore.getTodayInsights(site)
         views.setTextViewText(R.id.first_block_title, resourceProvider.getString(R.string.stats_views))
-        views.setTextViewText(R.id.first_block_value, todayInsights?.views?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.first_block_value, todayInsights?.views?.toFormattedString(MILLION) ?: "-")
         views.setTextViewText(R.id.second_block_title, resourceProvider.getString(R.string.stats_visitors))
-        views.setTextViewText(R.id.second_block_value, todayInsights?.visitors?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.second_block_value, todayInsights?.visitors?.toFormattedString(MILLION) ?: "-")
         views.setTextViewText(R.id.third_block_title, resourceProvider.getString(R.string.posts))
-        views.setTextViewText(R.id.third_block_value, todayInsights?.posts?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.third_block_value, todayInsights?.posts?.toFormattedString(MILLION) ?: "-")
         views.setTextViewText(R.id.fourth_block_title, resourceProvider.getString(R.string.stats_comments))
-        views.setTextViewText(R.id.fourth_block_value, todayInsights?.comments?.toFormattedString() ?: "-")
+        views.setTextViewText(R.id.fourth_block_value, todayInsights?.comments?.toFormattedString(MILLION) ?: "-")
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 

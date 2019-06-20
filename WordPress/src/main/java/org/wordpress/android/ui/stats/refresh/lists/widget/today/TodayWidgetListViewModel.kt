@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
+import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -63,25 +64,25 @@ class TodayWidgetListViewModel
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_views),
-                        domainModel.views.toFormattedString()
+                        domainModel.views.toFormattedString(ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_visitors),
-                        domainModel.visitors.toFormattedString()
+                        domainModel.visitors.toFormattedString(ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.posts),
-                        domainModel.posts.toFormattedString()
+                        domainModel.posts.toFormattedString(ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,
                         localSiteId,
                         resourceProvider.getString(R.string.stats_comments),
-                        domainModel.comments.toFormattedString()
+                        domainModel.comments.toFormattedString(ONE_THOUSAND)
                 )
         )
     }
