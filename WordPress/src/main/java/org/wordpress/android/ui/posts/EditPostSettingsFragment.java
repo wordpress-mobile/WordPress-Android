@@ -43,9 +43,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.TaxonomyAction;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
-import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -54,11 +54,11 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
-import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -385,10 +385,10 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void cancelFeaturedImageUpload() {
-        if () {
-            //TODO move this into upload service + remove the media from queues
-            ClearMediaPayload clearMediaPayload = new ClearMediaPayload(getPost(), );
-            mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+        MediaModel mediaModel = UploadService.getPendingOrInProgressFeaturedImageUploadForPost(getPost())
+        if (mediaModel != null) {
+            CancelMediaPayload payload = new CancelMediaPayload(getSite(), mediaModel, true);
+            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
         }
     }
 
@@ -917,7 +917,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostModel postModel = getPost();
-        if (UploadService.hasPendingOrInProgressFeaturedImageUploadForPost(postModel)) {
+        if (UploadService.getPendingOrInProgressFeaturedImageUploadForPost(postModel) != null) {
             showFeaturedImageProgress();
             return;
         }

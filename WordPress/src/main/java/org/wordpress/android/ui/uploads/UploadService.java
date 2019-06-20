@@ -478,8 +478,8 @@ public class UploadService extends Service {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
     }
 
-    public static boolean hasPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
-        return MediaUploadHandler.hasPendingOrInProgressFeaturedImageUploadForPost(postModel);
+    public static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+        return MediaUploadHandler.getPendingOrInProgressFeaturedImageUploadForPost(postModel);
     }
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post) {
