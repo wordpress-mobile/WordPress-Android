@@ -68,8 +68,7 @@ fun createEmptyUiState(
 ): PostListEmptyUiState {
     return if (isListEmpty) {
         when {
-            // no special error handling for search lists
-            error != null && postListType != SEARCH -> createErrorListUiState(
+            error != null -> createErrorListUiState(
                     isNetworkAvailable = isNetworkAvailable,
                     error = error,
                     fetchFirstPage = fetchFirstPage
