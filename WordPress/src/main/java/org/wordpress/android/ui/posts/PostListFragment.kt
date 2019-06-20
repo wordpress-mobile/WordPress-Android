@@ -115,23 +115,31 @@ class PostListFragment : Fragment() {
 
         mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
-        mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
-            optionaLayoutType?.let { layoutType ->
-                when (layoutType) {
-                    STANDARD -> {
-                        recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
-                        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
-                    }
-                    COMPACT -> {
-                        recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
-                        recyclerView?.addItemDecoration(itemDecorationCompactLayout)
-                    }
-                }
 
-                recyclerView?.scrollToPosition(0)
-                postListAdapter.updateItemLayoutType(layoutType)
-            }
-        })
+        // PostListMainViewModel is not aware about list style preferences of individual fragments
+        // se we have to set SEARCH list to compact style manually
+        if (postListType != SEARCH) {
+            mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
+                optionaLayoutType?.let { layoutType ->
+                    when (layoutType) {
+                        STANDARD -> {
+                            recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
+                            recyclerView?.addItemDecoration(itemDecorationStandardLayout)
+                        }
+                        COMPACT -> {
+                            recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
+                            recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+                        }
+                    }
+
+                    recyclerView?.scrollToPosition(0)
+                    postListAdapter.updateItemLayoutType(layoutType)
+                }
+            })
+        } else {
+            recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+            postListAdapter.updateItemLayoutType(COMPACT)
+        }
 
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
