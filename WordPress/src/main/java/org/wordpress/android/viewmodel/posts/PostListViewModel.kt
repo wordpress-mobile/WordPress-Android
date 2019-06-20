@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
@@ -61,6 +62,7 @@ class PostListViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localDraftUploadStarter: LocalDraftUploadStarter,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
 ) : ScopedViewModel(uiDispatcher), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
@@ -89,7 +91,11 @@ class PostListViewModel @Inject constructor(
     private val _pagedListData = MediatorLiveData<PagedPostList>()
     val pagedListData: LiveData<PagedPostList> = _pagedListData
 
-    private val _emptyViewState = ThrottleLiveData<PostListEmptyUiState>(coroutineScope = this)
+    private val _emptyViewState = ThrottleLiveData<PostListEmptyUiState>(
+            coroutineScope = this,
+            mainDispatcher = uiDispatcher,
+            backgroundDispatcher = bgDispatcher
+    )
     val emptyViewState: LiveData<PostListEmptyUiState> = _emptyViewState
 
     private val _isLoadingMore = MediatorLiveData<Boolean>()

@@ -6,13 +6,13 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
@@ -28,7 +28,7 @@ class PostListViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: PostListViewModel
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
+    @UseExperimental(InternalCoroutinesApi::class)
     @Before
     fun setUp() {
         val listStore = mock<ListStore>()
@@ -71,7 +71,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 networkUtilsWrapper = mock(),
                 localDraftUploadStarter = localDraftUploadStarter,
                 connectionStatus = mock(),
-                uiDispatcher = Dispatchers.Unconfined
+                uiDispatcher = TEST_DISPATCHER,
+                bgDispatcher = TEST_DISPATCHER
         )
     }
 
@@ -96,7 +97,7 @@ class PostListViewModelTest : BaseUnitTest() {
             emptyViewStateResults.add(it)
         }
 
-        viewModel.search(null)
+        viewModel.search(null, 0)
 
         assertThat(emptyViewStateResults.size).isEqualTo(2) // initial state + state after search
         assertThat(emptyViewStateResults[1].emptyViewVisible).isTrue()
