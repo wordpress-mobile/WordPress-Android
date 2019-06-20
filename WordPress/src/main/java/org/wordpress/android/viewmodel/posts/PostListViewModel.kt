@@ -51,6 +51,7 @@ import javax.inject.Named
 typealias PagedPostList = PagedList<PostListItemType>
 
 private const val SEARCH_DELAY_MS = 500L
+private const val EMPTY_VIEW_THROTTLE = 250L
 
 @SuppressLint("UseSparseArrays")
 class PostListViewModel @Inject constructor(
@@ -72,7 +73,6 @@ class PostListViewModel @Inject constructor(
     private lateinit var connector: PostListViewModelConnector
 
     private var scrollToLocalPostId: LocalPostId? = null
-    private var consumeEmptySearchListEvent: Boolean = true
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
@@ -92,6 +92,7 @@ class PostListViewModel @Inject constructor(
     val pagedListData: LiveData<PagedPostList> = _pagedListData
 
     private val _emptyViewState = ThrottleLiveData<PostListEmptyUiState>(
+            offset = EMPTY_VIEW_THROTTLE,
             coroutineScope = this,
             mainDispatcher = uiDispatcher,
             backgroundDispatcher = bgDispatcher
@@ -137,7 +138,6 @@ class PostListViewModel @Inject constructor(
             _pagedListData.addSource(pagedListWrapper.data) { pagedPostList ->
                 pagedPostList?.let {
                     if (isSearchResultDeliverable()) {
-                        consumeEmptySearchListEvent = false
                         onDataUpdated(it)
                         _pagedListData.value = it
                     }
@@ -188,19 +188,12 @@ class PostListViewModel @Inject constructor(
 
     private fun listenToEmptyViewStateLiveData(pagedListWrapper: PagedListWrapper<PostListItemType>) {
         val update = {
-            val isListEmpty = when {
-                consumeEmptySearchListEvent && connector.postListType == SEARCH && !isEmptySearch() -> false
-                isEmptySearch() -> true
-                else -> pagedListWrapper.isEmpty.value ?: true
-            }
-            val isLoadingData = !isEmptySearch() &&
-                    (pagedListWrapper.isFetchingFirstPage.value ?: false || pagedListWrapper.data.value == null)
-
             createEmptyUiState(
                     postListType = connector.postListType,
                     isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
-                    isLoadingData = isLoadingData,
-                    isListEmpty = isListEmpty,
+                    isLoadingData = pagedListWrapper.isFetchingFirstPage.value ?: false ||
+                            pagedListWrapper.data.value == null,
+                    isListEmpty = pagedListWrapper.isEmpty.value ?: true,
                     isSearchPromptRequired = isEmptySearch(),
                     error = pagedListWrapper.listError.value,
                     fetchFirstPage = this::fetchFirstPage,
@@ -208,18 +201,9 @@ class PostListViewModel @Inject constructor(
             )
         }
 
-        if (connector.postListType == SEARCH) {
-            if (!isEmptySearch()) {
-                _emptyViewState.addSource(pagedListData) { _emptyViewState.postValue(update()) }
-                _emptyViewState.addSource(pagedListWrapper.isEmpty) { _emptyViewState.postValue(update()) }
-            } else {
-                _emptyViewState.postValue(update())
-            }
-        } else {
-            _emptyViewState.addSource(pagedListWrapper.isEmpty) { _emptyViewState.postValue(update()) }
-            _emptyViewState.addSource(pagedListWrapper.isFetchingFirstPage) { _emptyViewState.postValue(update()) }
-            _emptyViewState.addSource(pagedListWrapper.listError) { _emptyViewState.postValue(update()) }
-        }
+        _emptyViewState.addSource(pagedListWrapper.isEmpty) { _emptyViewState.postValue(update()) }
+        _emptyViewState.addSource(pagedListWrapper.isFetchingFirstPage) { _emptyViewState.postValue(update()) }
+        _emptyViewState.addSource(pagedListWrapper.listError) { _emptyViewState.postValue(update()) }
     }
 
     // used to filter out dataset changes that might trigger empty view when performing search
@@ -247,11 +231,29 @@ class PostListViewModel @Inject constructor(
             delay(delay)
             searchJob = null
             if (isActive) {
-                consumeEmptySearchListEvent = true
-                initList(query, dataSource, lifecycle)
-                fetchFirstPage()
+                if (TextUtils.isEmpty(query)) {
+                    clearLiveDataSources()
+                    pagedListWrapper = null
+                    showEmptySearchPrompt()
+                } else {
+                    initList(query, dataSource, lifecycle)
+                    fetchFirstPage()
+                }
             }
         }
+    }
+
+    private fun showEmptySearchPrompt() {
+        _emptyViewState.value = createEmptyUiState(
+                postListType = SEARCH,
+                isNetworkAvailable = networkUtilsWrapper.isNetworkAvailable(),
+                isLoadingData = false,
+                isListEmpty = true,
+                isSearchPromptRequired = true,
+                error = null,
+                fetchFirstPage = this@PostListViewModel::fetchFirstPage,
+                newPost = connector.postActionHandler::newPost
+        )
     }
 
     override fun onCleared() {
