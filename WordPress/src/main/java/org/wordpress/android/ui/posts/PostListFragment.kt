@@ -68,7 +68,7 @@ class PostListFragment : Fragment() {
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
 
-    private val searchHandler = Handler()
+    private val searchProgressHandler = Handler()
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
@@ -149,11 +149,7 @@ class PostListFragment : Fragment() {
                 if (TextUtils.isEmpty(it)) {
                     postListAdapter.submitList(null)
                 }
-
-                searchHandler.removeCallbacksAndMessages(null)
-                searchHandler.postDelayed({
-                    viewModel.search(it)
-                }, SEARCH_DELAY_MS)
+                viewModel.search(it)
             })
         }
 
@@ -165,12 +161,12 @@ class PostListFragment : Fragment() {
             if (postListType != SEARCH) {
                 swipeRefreshLayout?.isRefreshing = it == true
             } else {
+                searchProgressHandler.removeCallbacksAndMessages(null)
                 // most of the time search is pretty fast, so we don't need to show any progress indication
                 // we delay progress indicator in case request takes longer then expected
                 if (it == true) {
-                    searchHandler.postDelayed(searchProgressRunnable, SEARCH_PROGRESS_INDICATOR_DELAY_MS)
+                    searchProgressHandler.postDelayed(searchProgressRunnable, SEARCH_PROGRESS_INDICATOR_DELAY_MS)
                 } else {
-                    searchHandler.removeCallbacks(searchProgressRunnable)
                     swipeRefreshLayout?.isRefreshing = false
                 }
             }
