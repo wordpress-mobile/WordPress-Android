@@ -1,141 +1,32 @@
 package org.wordpress.android.util
 
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.wordpress.android.fluxc.model.PlanModel
-import org.wordpress.android.ui.plans.getCurrentPlan
-import org.wordpress.android.ui.plans.isDomainCreditAvailable
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
+import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 
 class SiteUtilsTest {
     @Test
-    fun `get current plan returns the current plan`() {
-        val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = true,
-                        hasDomainCredit = false
-                )
-        )
+    fun `onFreePlan returns true when site is on free plan`() {
+        val site = SiteModel()
+        site.planId = FREE_PLAN_ID
 
-        assertEquals(2, getCurrentPlan(plans)?.productId)
+        assertTrue(SiteUtils.onFreePlan(site))
+
+        site.planId = PREMIUM_PLAN_ID
+        assertFalse(SiteUtils.onFreePlan(site))
     }
 
     @Test
-    fun `get current plan returns null when there are no current plans`() {
-        val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                )
-        )
+    fun `hasCustomDomain returns true when site has custom domain`() {
+        val site = SiteModel()
+        site.url = "http://wordpress.com"
 
-        assertNull(getCurrentPlan(plans))
-    }
+        assertTrue(SiteUtils.hasCustomDomain(site))
 
-    @Test
-    fun `get current plan returns null when there are no plans`() {
-        assertNull(getCurrentPlan(listOf()))
-    }
-
-    @Test
-    fun `get current plan returns null when plans is null`() {
-        assertNull(getCurrentPlan(null))
-    }
-
-    @Test
-    fun `is domain credit available returns true when there is a current plan with domain credit available`() {
-        val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = true,
-                        hasDomainCredit = true
-                )
-        )
-
-        assert(isDomainCreditAvailable(plans))
-    }
-
-    @Test
-    fun `is domain credit available return false when current plan has no domain credit`() {
-        val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = true,
-                        hasDomainCredit = false
-                )
-        )
-
-        assertFalse(isDomainCreditAvailable(plans))
-    }
-
-    @Test
-    fun `is domain credit available returns false when there are no current plans`() {
-        val plans = listOf(
-                PlanModel(
-                        1,
-                        "product-1",
-                        "Product 1",
-                        isCurrentPlan = false,
-                        hasDomainCredit = false
-                ),
-                PlanModel(
-                        2,
-                        "product-2",
-                        "Product 2",
-                        isCurrentPlan = false,
-                        hasDomainCredit = true
-                )
-        )
-
-        assertFalse(isDomainCreditAvailable(plans))
-    }
-
-    @Test
-    fun `is domain credit available returns false when there are no plans`() {
-        assertFalse(isDomainCreditAvailable(listOf()))
-    }
-
-    @Test
-    fun `is domain credit available returns false when plans is null`() {
-        assertFalse(isDomainCreditAvailable(null))
+        site.url = "https://***.wordpress.com"
+        assertFalse(SiteUtils.hasCustomDomain(site))
     }
 }
