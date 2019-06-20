@@ -1,2 +1,3 @@
-* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.
-* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.
+* Quote and More blocks are now available, and we fixed an issue that caused the keyboard in the editor to flicker if you repeatedly pressed Enter on a post title.
+* Business plan customers can register a custom domain when installing a plugin.
+* Sometimes when you started a new draft, the app would create two. Fixed!
