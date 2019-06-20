@@ -1,7 +1,7 @@
 {
     "scenarioName": "auth",
     "request": {
-        "urlPath": "/rest/v1.1/me/",
+        "urlPattern": "/rest/v1.1/me(\\?|/|$).*",
         "method": "GET"
     },
     "response": {
@@ -32,10 +32,10 @@
             "phone_account": false,
             "meta": {
                 "links": {
-                    "self": "https://public-api.wordpress.com/rest/v1.1/me",
-                    "help": "https://public-api.wordpress.com/rest/v1.1/me/help",
-                    "site": "https://public-api.wordpress.com/rest/v1.1/sites/5836086",
-                    "flags": "https://public-api.wordpress.com/rest/v1.1/me/flags"
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/me",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/me/help",
+                    "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/5836086",
+                    "flags": "{{request.requestLine.baseUrl}}/rest/v1.1/me/flags"
                 }
             },
             "is_valid_google_apps_country": true,

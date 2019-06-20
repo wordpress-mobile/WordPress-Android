@@ -1,6 +1,6 @@
 {
     "request": {
-        "urlPath": "/rest/v1.1/me/sites/",
+        "urlPattern": "/rest/v1.(1|2)/me/sites(\\?|/|$).*",
         "method": "GET"
     },
     "response": {
@@ -55,11 +55,11 @@
                         "blog_public": 1,
                         "videopress_enabled": false,
                         "upgraded_filetypes_enabled": false,
-                        "login_url": "https://lowtestingmobile.wordpress.com/wp-login.php",
-                        "admin_url": "https://lowtestingmobile.wordpress.com/wp-admin/",
+                        "login_url": "https://e2eflowtestingmobile.wordpress.com/wp-login.php",
+                        "admin_url": "https://e2eflowtestingmobile.wordpress.com/wp-admin/",
                         "is_mapped_domain": false,
                         "is_redirect": false,
-                        "unmapped_url": "https://lowtestingmobile.wordpress.com",
+                        "unmapped_url": "https://e2eflowtestingmobile.wordpress.com",
                         "featured_images_enabled": false,
                         "theme_slug": "pub/independent-publisher-2",
                         "header_image": false,
@@ -194,7 +194,7 @@
                             "help": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/help",
                             "posts": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/",
                             "comments": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
-                            "xmlrpc": "https://lowtestingmobile.wordpress.com/xmlrpc.php"
+                            "xmlrpc": "https://e2eflowtestingmobile.wordpress.com/xmlrpc.php"
                         }
                     },
                     "quota": {
