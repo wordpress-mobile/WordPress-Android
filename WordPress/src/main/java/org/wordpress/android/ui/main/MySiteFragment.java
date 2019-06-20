@@ -127,7 +127,7 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
     public static final String KEY_IS_DOMAIN_CREDIT_AVAILABLE = "KEY_IS_DOMAIN_CREDIT_AVAILABLE";
-    public static final String KEY_PLANS_CHECKED = "KEY_PLANS_CHECKED";
+    public static final String KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED";
 
     private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -159,8 +159,9 @@ public class MySiteFragment extends Fragment implements
     private TextView mQuickStartGrowTitle;
     private View mQuickStartGrowView;
     private View mQuickStartMenuButton;
-    private Handler mQuickStartSnackBarHandler = new Handler();
     private View mDomainRegistrationCta;
+
+    private Handler mQuickStartSnackBarHandler = new Handler();
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -168,7 +169,7 @@ public class MySiteFragment extends Fragment implements
 
     private int mBlavatarSz;
     private boolean mIsDomainCreditAvailable = false;
-    private boolean mPlansChecked = false;
+    private boolean mDomainCreditChecked = false;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -197,7 +198,7 @@ public class MySiteFragment extends Fragment implements
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
             mIsDomainCreditAvailable = savedInstanceState.getBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, false);
-            mPlansChecked = savedInstanceState.getBoolean(KEY_PLANS_CHECKED, false);
+            mDomainCreditChecked = savedInstanceState.getBoolean(KEY_DOMAIN_CREDIT_CHECKED, false);
         }
     }
 
@@ -301,7 +302,7 @@ public class MySiteFragment extends Fragment implements
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
         outState.putBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, mIsDomainCreditAvailable);
-        outState.putBoolean(KEY_PLANS_CHECKED, mPlansChecked);
+        outState.putBoolean(KEY_DOMAIN_CREDIT_CHECKED, mDomainCreditChecked);
     }
 
     private void updateSiteSettingsIfNecessary() {
@@ -737,7 +738,7 @@ public class MySiteFragment extends Fragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
-
+                    // reset domain credit flag - it will be checked in onSiteChanged
                     mIsDomainCreditAvailable = false;
                 }
                 break;
@@ -915,7 +916,7 @@ public class MySiteFragment extends Fragment implements
             mIsDomainCreditAvailable = false;
             toggleDomainRegistrationCtaVisibility();
         } else {
-            if (!SiteUtils.hasCustomDomain(site) && !mPlansChecked) {
+            if (!SiteUtils.hasCustomDomain(site) && !mDomainCreditChecked) {
                 fetchPlansIfNecessary(site);
             } else {
                 toggleDomainRegistrationCtaVisibility();
@@ -1041,7 +1042,7 @@ public class MySiteFragment extends Fragment implements
     public void onSiteChanged(SiteModel site) {
         // we are trying to be  careful with domain credit
         // so whenever site changes we hide CTA and check for credit again in refreshSelectedSiteDetails()
-        mPlansChecked = false;
+        mDomainCreditChecked = false;
         mIsDomainCreditAvailable = false;
         toggleDomainRegistrationCtaVisibility();
 
@@ -1255,7 +1256,7 @@ public class MySiteFragment extends Fragment implements
         if (event.isError()) {
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message);
         } else {
-            mPlansChecked = true;
+            mDomainCreditChecked = true;
             mIsDomainCreditAvailable = isDomainCreditAvailable(event.plans);
             toggleDomainRegistrationCtaVisibility();
         }

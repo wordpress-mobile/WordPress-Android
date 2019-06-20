@@ -1,12 +1,14 @@
-package org.wordpress.android.ui.plans
+package org.wordpress.android.util
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.wordpress.android.fluxc.model.PlanModel
+import org.wordpress.android.ui.plans.getCurrentPlan
+import org.wordpress.android.ui.plans.isDomainCreditAvailable
 
-class PlanUtilsTest {
+class SiteUtilsTest {
     @Test
     fun `get current plan returns the current plan`() {
         val plans = listOf(
