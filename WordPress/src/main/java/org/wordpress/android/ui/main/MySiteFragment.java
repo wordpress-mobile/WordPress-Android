@@ -169,7 +169,7 @@ public class MySiteFragment extends Fragment implements
 
     private int mBlavatarSz;
     private boolean mIsDomainCreditAvailable = false;
-    private boolean mDomainCreditChecked = false;
+    private boolean mIsDomainCreditChecked = false;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -198,7 +198,7 @@ public class MySiteFragment extends Fragment implements
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
             mIsDomainCreditAvailable = savedInstanceState.getBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, false);
-            mDomainCreditChecked = savedInstanceState.getBoolean(KEY_DOMAIN_CREDIT_CHECKED, false);
+            mIsDomainCreditChecked = savedInstanceState.getBoolean(KEY_DOMAIN_CREDIT_CHECKED, false);
         }
     }
 
@@ -302,7 +302,7 @@ public class MySiteFragment extends Fragment implements
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
         outState.putBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, mIsDomainCreditAvailable);
-        outState.putBoolean(KEY_DOMAIN_CREDIT_CHECKED, mDomainCreditChecked);
+        outState.putBoolean(KEY_DOMAIN_CREDIT_CHECKED, mIsDomainCreditChecked);
     }
 
     private void updateSiteSettingsIfNecessary() {
@@ -916,7 +916,7 @@ public class MySiteFragment extends Fragment implements
             mIsDomainCreditAvailable = false;
             toggleDomainRegistrationCtaVisibility();
         } else {
-            if (!SiteUtils.hasCustomDomain(site) && !mDomainCreditChecked) {
+            if (!SiteUtils.hasCustomDomain(site) && !mIsDomainCreditChecked) {
                 fetchSitePlans(site);
             } else {
                 toggleDomainRegistrationCtaVisibility();
@@ -1040,8 +1040,8 @@ public class MySiteFragment extends Fragment implements
      * called yet.
      */
     public void onSiteChanged(SiteModel site) {
-        // so whenever site changes we hide CTA and check for credit in refreshSelectedSiteDetails()
-        mDomainCreditChecked = false;
+        // whenever site changes we hide CTA and check for credit in refreshSelectedSiteDetails()
+        mIsDomainCreditChecked = false;
         mIsDomainCreditAvailable = false;
         toggleDomainRegistrationCtaVisibility();
 
@@ -1255,7 +1255,7 @@ public class MySiteFragment extends Fragment implements
         if (event.isError()) {
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message);
         } else {
-            mDomainCreditChecked = true;
+            mIsDomainCreditChecked = true;
             mIsDomainCreditAvailable = isDomainCreditAvailable(event.plans);
             toggleDomainRegistrationCtaVisibility();
         }
