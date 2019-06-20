@@ -102,11 +102,13 @@ constructor(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
+            val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatarUrl,
                         iconStyle = AVATAR,
                         text = author.name,
+                        barWidth = getBarWidth(author.views, maxViews),
                         value = author.views.toFormattedString(),
                         showDivider = index < domainModel.authors.size - 1
                 )
@@ -146,6 +148,17 @@ constructor(
             }
         }
         return items
+    }
+
+    private fun getBarWidth(
+        views: Int,
+        maxViews: Int
+    ): Int? {
+        return if (maxViews > 0) {
+            ((views.toDouble() / maxViews.toDouble()) * 100).toInt()
+        } else {
+            null
+        }
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {

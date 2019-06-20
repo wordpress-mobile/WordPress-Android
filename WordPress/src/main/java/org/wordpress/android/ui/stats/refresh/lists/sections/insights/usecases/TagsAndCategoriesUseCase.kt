@@ -95,15 +95,16 @@ class TagsAndCategoriesUseCase
                     )
             )
             val tagsList = mutableListOf<BlockListItem>()
+            val maxViews = domainModel.tags.maxBy { it.views }?.views ?: 0
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
-                        tagsList.add(mapTag(tag, index, domainModel.tags.size))
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews))
                     }
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, domainModel.tags.size),
+                                mapCategory(tag, index, domainModel.tags.size, maxViews),
                                 isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
@@ -129,24 +130,36 @@ class TagsAndCategoriesUseCase
         return items
     }
 
+    private fun getBarWidth(
+        views: Long,
+        maxViews: Long
+    ): Int? {
+        return if (maxViews > 0) {
+            ((views.toDouble() / maxViews.toDouble()) * 100).toInt()
+        } else {
+            null
+        }
+    }
+
     private fun buildTitle() = Title(string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
 
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
         return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
-    private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
+    private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
         val item = tag.items.first()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
                 value = tag.views.toFormattedString(),
+                barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
-    private fun mapCategory(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
+    private fun mapCategory(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
         val text = tag.items.foldIndexed("") { itemIndex, acc, item ->
             when (itemIndex) {
                 0 -> item.name
@@ -157,6 +170,7 @@ class TagsAndCategoriesUseCase
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
                 value = tag.views.toFormattedString(),
+                barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1
         )
     }
