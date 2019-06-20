@@ -917,7 +917,7 @@ public class MySiteFragment extends Fragment implements
             toggleDomainRegistrationCtaVisibility();
         } else {
             if (!SiteUtils.hasCustomDomain(site) && !mDomainCreditChecked) {
-                fetchPlansIfNecessary(site);
+                fetchSitePlans(site);
             } else {
                 toggleDomainRegistrationCtaVisibility();
             }
@@ -1040,8 +1040,7 @@ public class MySiteFragment extends Fragment implements
      * called yet.
      */
     public void onSiteChanged(SiteModel site) {
-        // we are trying to be  careful with domain credit
-        // so whenever site changes we hide CTA and check for credit again in refreshSelectedSiteDetails()
+        // so whenever site changes we hide CTA and check for credit in refreshSelectedSiteDetails()
         mDomainCreditChecked = false;
         mIsDomainCreditAvailable = false;
         toggleDomainRegistrationCtaVisibility();
@@ -1241,7 +1240,7 @@ public class MySiteFragment extends Fragment implements
     public void onCredentialsValidated(Exception error) {
     }
 
-    private void fetchPlansIfNecessary(@Nullable SiteModel site) {
+    private void fetchSitePlans(@Nullable SiteModel site) {
         if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
             mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
         }
