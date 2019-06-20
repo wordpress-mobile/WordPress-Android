@@ -143,7 +143,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
             assertThat(this).hasSize(4)
             assertTitle(this[0])
             assertHeader(this[1])
-            assertSingleTag(this[2], tagItem.name, singleTagViews.toString())
+            assertSingleTag(this[2], tagItem.name, singleTagViews.toString(), 100)
             assertLink(this[3])
         }
     }
