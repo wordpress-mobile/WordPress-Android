@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 70;
+        return 71;
     }
 
     @Override
@@ -528,6 +528,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 69:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 70:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE MediaModel ADD MARKED_LOCALLY_AS_FEATURED INTEGER");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
