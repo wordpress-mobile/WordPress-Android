@@ -1,6 +1,6 @@
 12.8
 -----
-
+* Setting featured image on a post doesn't require network connection
 
 12.7
 -----
