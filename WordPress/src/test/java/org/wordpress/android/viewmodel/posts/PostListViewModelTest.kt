@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -67,7 +68,8 @@ class PostListViewModelTest : BaseUnitTest() {
                 listItemUiStateHelper = mock(),
                 networkUtilsWrapper = mock(),
                 localDraftUploadStarter = localDraftUploadStarter,
-                connectionStatus = mock()
+                connectionStatus = mock(),
+                uiDispatcher = Dispatchers.Unconfined
         )
     }
 
