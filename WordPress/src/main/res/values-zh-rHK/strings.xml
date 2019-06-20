@@ -30,7 +30,6 @@ Language: zh_TW
     <string name="domain_contact_information_title">網域聯絡人資訊</string>
     <string name="domain_privacy_option_off_title">公開註冊</string>
     <string name="domain_privacy_option_on_title">透過隱私權保護私密註冊</string>
-    <string name="domain_registration_privacy_protection_tos">註冊此網域，即表示你同意我們的</string>
     <string name="domain_registration_privacy_protection_description">網域擁有者必須在所有網域的公共資料庫中分享自己的聯絡資訊。\n基於隱私權保護，我們只會發佈自己的資訊而非你的資訊，並會將所有通訊內容私密轉寄給你。</string>
     <string name="domain_registration_privacy_protection_title">隱私權保護</string>
     <string name="domain_registration_contact_form_input_error">請輸入有效的 %s</string>

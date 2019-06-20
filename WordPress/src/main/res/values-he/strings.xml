@@ -30,7 +30,6 @@ Language: he_IL
     <string name="domain_contact_information_title">פרטי יצירת קשר עם הדומיין</string>
     <string name="domain_privacy_option_off_title">רישום ציבורי</string>
     <string name="domain_privacy_option_on_title">הירשמות באופן פרטי עם הגנת פרטיות</string>
-    <string name="domain_registration_privacy_protection_tos">רישום לדומיין מהווה אישור מצדך של </string>
     <string name="domain_registration_privacy_protection_description">בעלי דומיינים מחויבים לשתף את פרטי הקשר שלהם בבסיס נתונים ציבורי של כל הדומיינים.\n בזכות הגנת פרטיות, אנחנו מפרסמים את הפרטים שלנו ולא את שלך ומעבירים אליך באופן פרטי כל התקשרות שתהיה.</string>
     <string name="domain_registration_privacy_protection_title">הגנת פרטיות</string>
     <string name="domain_registration_contact_form_input_error">יש להזין נתונים תקפים עבור %s</string>
