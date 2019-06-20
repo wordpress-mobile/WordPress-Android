@@ -8,11 +8,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
-import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATION
-import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
-import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
-import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_READ
-import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -77,7 +72,7 @@ constructor(
         GENERIC_ERROR;
 
         companion object {
-            private val reverseMap = DeviceRegistrationErrorType.values().associateBy(DeviceRegistrationErrorType::name)
+            private val reverseMap = values().associateBy(DeviceRegistrationErrorType::name)
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: GENERIC_ERROR
         }
     }
@@ -91,6 +86,7 @@ constructor(
 
     class FetchNotificationsPayload : Payload<BaseNetworkError>()
 
+    @Suppress("unused")
     class FetchNotificationsResponsePayload(
         val notifs: List<NotificationModel> = emptyList(),
         val lastSeen: Date? = null
@@ -105,12 +101,14 @@ constructor(
     class FetchNotificationResponsePayload(
         val notification: NotificationModel? = null
     ) : Payload<NotificationError>() {
+        @Suppress("unused")
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
     class FetchNotificationHashesResponsePayload(
         val hashesMap: Map<Long, Long> = emptyMap()
     ) : Payload<NotificationError>() {
+        @Suppress("unused")
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
@@ -122,6 +120,7 @@ constructor(
         val success: Boolean = false,
         val lastSeenTime: Long? = null
     ) : Payload<NotificationError>() {
+        @Suppress("unused")
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
@@ -133,6 +132,7 @@ constructor(
         val notifications: List<NotificationModel>? = null,
         val success: Boolean = false
     ) : Payload<NotificationError>() {
+        @Suppress("unused")
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
@@ -145,12 +145,13 @@ constructor(
         GENERIC_ERROR;
 
         companion object {
-            private val reverseMap = NotificationErrorType.values().associateBy(NotificationErrorType::name)
+            private val reverseMap = values().associateBy(NotificationErrorType::name)
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: GENERIC_ERROR
         }
     }
 
     // OnChanged events
+    @Suppress("unused")
     class OnDeviceRegistered(val deviceId: String?) : OnChanged<DeviceRegistrationError>()
 
     class OnDeviceUnregistered : OnChanged<DeviceUnregistrationError>()
@@ -254,11 +255,13 @@ constructor(
      *
      * @param idSet A [NoteIdSet] containing the localSiteId, remoteNoteId, and localNoteId
      */
+    @Suppress("unused")
     fun getNotificationByIdSet(idSet: NoteIdSet) = notificationSqlUtils.getNotificationByIdSet(idSet)
 
     /**
      * Fetch a notification from the database by the remote notification ID.
      */
+    @Suppress("unused")
     fun getNotificationByRemoteId(remoteNoteId: Long) =
             notificationSqlUtils.getNotificationByRemoteId(remoteNoteId)
 
@@ -363,7 +366,7 @@ constructor(
             // Unable to synchronize notifications with remote. Emit error event.
             val onNotificationChanged = OnNotificationChanged(0).also {
                 it.error = payload.error
-                it.causeOfChange = FETCH_NOTIFICATIONS
+                it.causeOfChange = NotificationAction.FETCH_NOTIFICATIONS
             }
             emitChange(onNotificationChanged)
             return
@@ -404,7 +407,7 @@ constructor(
 
             OnNotificationChanged(rowsAffected)
         }.apply {
-            causeOfChange = FETCH_NOTIFICATIONS
+            causeOfChange = NotificationAction.FETCH_NOTIFICATIONS
         }
 
         emitChange(onNotificationChanged)
@@ -432,7 +435,7 @@ constructor(
                 dbNotification?.let { changedNotificationLocalIds.add(it.noteId) }
             }
         }.apply {
-            causeOfChange = FETCH_NOTIFICATION
+            causeOfChange = NotificationAction.FETCH_NOTIFICATION
         }
         emitChange(onNotificationChanged)
     }
@@ -454,7 +457,7 @@ constructor(
                 lastSeenTime = payload.lastSeenTime
             }
         }.apply {
-            causeOfChange = MARK_NOTIFICATIONS_SEEN
+            causeOfChange = NotificationAction.MARK_NOTIFICATIONS_SEEN
         }
         emitChange(onNotificationChanged)
     }
@@ -487,7 +490,7 @@ constructor(
             payload.notifications?.forEach {
                 changedNotificationLocalIds.add(it.noteId)
             }
-            causeOfChange = MARK_NOTIFICATIONS_READ
+            causeOfChange = NotificationAction.MARK_NOTIFICATIONS_READ
         }
         emitChange(onNotificationChanged)
     }
@@ -497,7 +500,7 @@ constructor(
         val rowsAffected = notificationSqlUtils.insertOrUpdateNotification(payload)
         val onNotificationChanged = OnNotificationChanged(rowsAffected).apply {
             changedNotificationLocalIds.add(payload.noteId)
-            causeOfChange = UPDATE_NOTIFICATION
+            causeOfChange = NotificationAction.UPDATE_NOTIFICATION
         }
         emitChange(onNotificationChanged)
     }
