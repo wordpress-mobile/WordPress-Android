@@ -644,7 +644,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (!AztecEditorFragment.isMediaInPostBody(this,
                             mPost.getContent(), String.valueOf(media.getId()))) {
                         // don't delete featured image uploads
-                        if (!media.getFeatured()) {
+                        if (!media.getMarkedLocallyAsFeatured()) {
                             mediaToDeleteAssociationFor.add(media);
                         }
                     }
@@ -652,7 +652,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (!PostUtils.isMediaInGutenbergPostBody(
                             mPost.getContent(), String.valueOf(media.getId()))) {
                         // don't delete featured image uploads
-                        if (!media.getFeatured()) {
+                        if (!media.getMarkedLocallyAsFeatured()) {
                             mediaToDeleteAssociationFor.add(media);
                         }
                     }
@@ -1538,10 +1538,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void onUploadSuccess(MediaModel media) {
         // TODO Should this statement check media.getLocalPostId() == mPost.getId()?
-        if (media != null && !media.getFeatured() && mEditorMediaUploadListener != null) {
+        if (media != null && !media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.mediaFileFromMediaModel(media));
-        } else if (media != null && media.getFeatured() && media.getLocalPostId() == mPost.getId()) {
+        } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mPost.getId()) {
             setFeaturedImageId(media.getMediaId());
         }
     }

@@ -281,7 +281,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         } else {
             AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.");
         }
-        media.setFeatured(true);
+        media.setMarkedLocallyAsFeatured(true);
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);

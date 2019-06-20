@@ -117,7 +117,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         }
         List<MediaModel> uploads = getPendingOrInProgressMediaUploadsForPost(postModel);
         for (MediaModel model : uploads) {
-            if (model.getFeatured()) {
+            if (model.getMarkedLocallyAsFeatured()) {
                 return model;
             }
         }

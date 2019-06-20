@@ -436,7 +436,7 @@ public class UploadService extends Service {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
             Set<MediaModel> completedMedia = sInstance.mUploadStore.getCompletedMediaForPost(post);
             for (MediaModel media : completedMedia) {
-                if (media.getFeatured()) {
+                if (media.getMarkedLocallyAsFeatured()) {
                     post = updatePostWithNewFeaturedImg(post, media.getMediaId());
                 } else {
                     post = updatePostWithMediaUrl(post, media, processor);
