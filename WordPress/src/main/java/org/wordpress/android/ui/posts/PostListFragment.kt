@@ -141,6 +141,8 @@ class PostListFragment : Fragment() {
             postListAdapter.updateItemLayoutType(COMPACT)
         }
 
+        actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
+
         val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
                 .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
         val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)

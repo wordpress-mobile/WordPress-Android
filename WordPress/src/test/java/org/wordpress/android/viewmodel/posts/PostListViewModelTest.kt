@@ -99,8 +99,8 @@ class PostListViewModelTest : BaseUnitTest() {
 
         viewModel.search(null, 0)
 
-        assertThat(emptyViewStateResults.size).isEqualTo(2) // initial state + state after search
-        assertThat(emptyViewStateResults[1].emptyViewVisible).isTrue()
+        assertThat(emptyViewStateResults.size).isEqualTo(1)
+        assertThat(emptyViewStateResults[0].emptyViewVisible).isTrue()
     }
 
     private companion object {
