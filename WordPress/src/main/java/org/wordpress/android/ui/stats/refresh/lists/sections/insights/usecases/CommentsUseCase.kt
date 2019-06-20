@@ -121,7 +121,6 @@ class CommentsUseCase
         return mutableItems
     }
 
-
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)
     }
