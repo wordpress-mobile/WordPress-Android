@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
@@ -105,6 +106,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private static final int CHOOSE_FEATURED_IMAGE_MENU_ID = 100;
     private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 101;
+    private static final int CANCEL_FEATURED_IMAGE_UPLOAD_MENU_ID = 102;
 
     private SiteSettingsInterface mSiteSettings;
 
@@ -262,6 +264,7 @@ public class EditPostSettingsFragment extends Fragment {
                     view.showContextMenu();
                 }
             });
+            registerForContextMenu(mFeaturedImageProgress);
             mFeaturedImageProgress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -364,20 +367,26 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
-        menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        if (mFeaturedImageProgress.getVisibility() == View.VISIBLE) {
+            menu.add(0, CANCEL_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
+                    getString(R.string.post_settings_cancel_featured_image_upload));
+        } else {
+            menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
+            menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
-                cancelFeaturedImageUpload();
                 launchFeaturedMediaPicker();
                 return true;
             case REMOVE_FEATURED_IMAGE_MENU_ID:
-                cancelFeaturedImageUpload();
                 clearFeaturedImage();
+                return true;
+            case CANCEL_FEATURED_IMAGE_UPLOAD_MENU_ID:
+                cancelFeaturedImageUpload();
                 return true;
             default:
                 return false;
@@ -385,7 +394,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void cancelFeaturedImageUpload() {
-        MediaModel mediaModel = UploadService.getPendingOrInProgressFeaturedImageUploadForPost(getPost())
+        MediaModel mediaModel = UploadService.getPendingOrInProgressFeaturedImageUploadForPost(getPost());
         if (mediaModel != null) {
             CancelMediaPayload payload = new CancelMediaPayload(getSite(), mediaModel, true);
             mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
@@ -1137,6 +1146,13 @@ public class EditPostSettingsFragment extends Fragment {
             // no op, icons won't show
         }
         popupMenu.show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.canceled) {
+            refreshViews();
+        }
     }
 
     private void showFeaturedImage() {
