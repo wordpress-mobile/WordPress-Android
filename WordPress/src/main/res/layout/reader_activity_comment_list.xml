@@ -76,7 +76,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_container"/>
+        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_scroll_container"/>
 
 
     <View
@@ -91,14 +91,14 @@
         android:id="@+id/comment_group"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:constraint_referenced_ids="new_comment_edit_text_container,btn_submit_reply,expand_comment_field"/>
+        app:constraint_referenced_ids="new_comment_edit_text_scroll_container,btn_submit_reply,expand_comment_field"/>
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/comment_field_barrier"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="new_comment_edit_text_container, text_comments_closed"
+        app:constraint_referenced_ids="new_comment_edit_text_scroll_container, text_comments_closed"
         />
 
     <ImageView
@@ -110,12 +110,12 @@
         android:padding="@dimen/margin_large"
         android:src="@drawable/ic_chevron_up_white_24dp"
         android:tint="@color/neutral"
-        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text_container"
+        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text_scroll_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_container"/>
+        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_scroll_container"/>
 
     <ScrollView
-        android:id="@+id/new_comment_edit_text_container"
+        android:id="@+id/new_comment_edit_text_scroll_container"
         android:layout_width="0dp"
         app:layout_constrainedHeight="true"
         android:layout_height="wrap_content"
@@ -154,9 +154,9 @@
         android:padding="@dimen/margin_medium"
         android:src="@drawable/ic_send_white_24dp"
         android:tint="@color/selector_post_comment"
-        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text_container"
+        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text_scroll_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_container"/>
+        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_scroll_container"/>
 
 
     <org.wordpress.android.widgets.WPTextView

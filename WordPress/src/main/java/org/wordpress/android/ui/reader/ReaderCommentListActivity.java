@@ -28,6 +28,8 @@ import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.transition.ChangeBounds;
 import androidx.transition.ChangeScroll;
+import androidx.transition.Transition;
+import androidx.transition.TransitionListenerAdapter;
 import androidx.transition.TransitionManager;
 import androidx.transition.TransitionSet;
 
@@ -100,6 +102,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private View mSubmitReplyBtn;
     private ConstraintLayout mCommentsContainer;
     private Toolbar mEnhancedCommentToolbar;
+    private ScrollView mCommentFieldScrollView;
 
 
 
@@ -135,6 +138,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mPostNewCommentGroup = findViewById(R.id.comment_group);
         mCommentsContainer = findViewById(R.id.comments_list_container);
+        mCommentFieldScrollView = findViewById(R.id.new_comment_edit_text_scroll_container);
         mCommentFieldCollapsedConstraintSet = new ConstraintSet();
         mCommentFieldCollapsedConstraintSet.clone(mCommentsContainer);
         mCommentFieldExpandedConstraintSet = new ConstraintSet();
@@ -793,7 +797,20 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     TransitionSet set = new TransitionSet()
             .addTransition(new ChangeScroll())
-            .addTransition(new ChangeBounds());
+            .addTransition(new ChangeBounds())
+            .addListener(new TransitionListenerAdapter() {
+                @Override public void onTransitionStart(@NonNull Transition transition) {
+                    mCommentFieldScrollView.setVerticalScrollBarEnabled(false);
+                }
+
+                @Override public void onTransitionEnd(@NonNull Transition transition) {
+                    mCommentFieldScrollView.setVerticalScrollBarEnabled(true);
+                }
+
+                @Override public void onTransitionCancel(@NonNull Transition transition) {
+                    mCommentFieldScrollView.setVerticalScrollBarEnabled(true);
+                }
+            });
 
     /**
     * Scroll the scrollview so that the cursor is visible
