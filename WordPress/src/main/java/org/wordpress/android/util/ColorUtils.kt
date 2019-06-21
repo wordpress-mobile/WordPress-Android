@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
+import android.view.MenuItem
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -22,5 +23,15 @@ object ColorUtils {
     fun setImageResourceWithTint(imageView: ImageView, @DrawableRes drawableResId: Int, @ColorRes colorResId: Int) {
         imageView.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(imageView.context, colorResId))
         imageView.setImageResource(drawableResId)
+    }
+
+    fun setMenuItemWithTint(context: Context, menuItem: MenuItem, @ColorRes colorResId: Int){
+        val drawable = menuItem.icon
+        if (drawable != null) {
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            drawable.mutate()
+            DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(context, colorResId))
+            menuItem.icon = drawable
+        }
     }
 }

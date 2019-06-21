@@ -410,6 +410,11 @@
     <dimen name="stats_insights_menu_item_width">231dp</dimen>
     <dimen name="stats_insights_button_container_height">52dp</dimen>
 
+    <!--comments-->
+    <dimen name="comments_field_collapsed_max_height">64sp</dimen><!--This is the SP equivalent of ~4 lines of text-->
+    <dimen name="comments_field_collapsed_min_height">44dp</dimen>
+    <dimen name="comment_field_elevation">8dp</dimen>
+
     <dimen name="settings_icon_size">24dp</dimen>
 
     <dimen name="icon_size_075">18dp</dimen>

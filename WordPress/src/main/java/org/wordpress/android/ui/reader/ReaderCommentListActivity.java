@@ -3,17 +3,25 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.constraint.Group;
 import android.support.design.widget.Snackbar;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +54,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManag
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -69,6 +78,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 public class ReaderCommentListActivity extends AppCompatActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
+    private static final String KEY_IS_COMMENT_FIELD_EXPANDED = "comment field is expanded";
 
     private long mPostId;
     private long mBlogId;
@@ -81,12 +91,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
     private View mSubmitReplyBtn;
-    private ViewGroup mCommentBox;
+    private ConstraintLayout mCommentsContainer;
+    private Toolbar mEnhancedCommentToolbar;
+
+
 
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
     private boolean mUpdateOnResume;
+    private boolean mCommentFieldExpanded = false;
 
     private DirectOperation mDirectOperation;
     private long mReplyToCommentId;
@@ -95,6 +109,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private String mInterceptedUri;
 
     @Inject AccountStore mAccountStore;
+
+    private Group mPostNewCommentGroup;
+
+    private ConstraintSet mCommentFieldCollapsedConstraintSet;
+    private ConstraintSet mCommentFieldExpandedConstraintSet;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -106,6 +125,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
+
+        mPostNewCommentGroup = findViewById(R.id.comment_group);
+        mCommentsContainer = findViewById(R.id.comments_list_container);
+        mCommentFieldCollapsedConstraintSet = new ConstraintSet();
+        mCommentFieldCollapsedConstraintSet.clone(mCommentsContainer);
+        mCommentFieldExpandedConstraintSet = new ConstraintSet();
+        mCommentFieldExpandedConstraintSet.clone(this, R.layout.reader_activity_comment_list_expanded_field);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -123,6 +149,31 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mEnhancedCommentToolbar = findViewById(R.id.enhanced_comment_toolbar);
+        Drawable downChevron = ColorUtils.INSTANCE.applyTintToDrawable(this, R.drawable.ic_chevron_down_white_24dp, R.color.neutral);
+        mEnhancedCommentToolbar.setNavigationIcon(downChevron);
+        mEnhancedCommentToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapseCommentField(true);
+
+            }
+        });
+        mEnhancedCommentToolbar.inflateMenu(R.menu.enhanced_comment);
+        mEnhancedCommentToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch (id) {
+                    case R.id.menu_post_comment:
+                        submitComment();
+                        return true;
+                }
+                return false;
+            }
+        });
+
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -154,10 +205,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
+        mEditComment = findViewById(R.id.new_comment_edit_text);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
-        mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
+        mSubmitReplyBtn = findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -181,6 +231,33 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
 
+        findViewById(R.id.expand_comment_field).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        expandCommentField(true);
+                    }
+                });
+        mEditComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                updatePostButtonEnabledState();
+            }
+        });
+        updatePostButtonEnabledState();
+        if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_IS_COMMENT_FIELD_EXPANDED, false)) {
+            expandCommentField(false);
+        } //else leave as default state
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
     }
 
@@ -306,7 +383,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
-
+        outState.putBoolean(KEY_IS_COMMENT_FIELD_EXPANDED, mCommentFieldExpanded);
         super.onSaveInstanceState(outState);
     }
 
@@ -323,12 +400,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return false;
         }
 
-        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
         if (!mAccountStore.hasAccessToken()) {
-            mCommentBox.setVisibility(View.GONE);
+            mPostNewCommentGroup.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
         } else if (mPost.isCommentsOpen) {
-            mCommentBox.setVisibility(View.VISIBLE);
+            mPostNewCommentGroup.setVisibility(View.VISIBLE);
             showCommentsClosedMessage(false);
 
             mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -348,7 +424,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             });
         } else {
-            mCommentBox.setVisibility(View.GONE);
+            mPostNewCommentGroup.setVisibility(View.GONE);
             mEditComment.setEnabled(false);
             showCommentsClosedMessage(true);
         }
@@ -597,12 +673,17 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     }
 
+    private boolean commentTextIsValid() {
+        final String commentText = EditTextUtils.getText(mEditComment);
+        return !TextUtils.isEmpty(commentText);
+    }
+
     /*
      * submit the text typed into the comment box as a comment on the current post
      */
     private void submitComment() {
         final String commentText = EditTextUtils.getText(mEditComment);
-        if (TextUtils.isEmpty(commentText)) {
+        if (!commentTextIsValid()) {
             return;
         }
 
@@ -613,6 +694,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         AnalyticsUtils.trackWithReaderPostDetails(
                 AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mPost);
 
+        collapseCommentField(true);
         mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);
         mIsSubmittingComment = true;
@@ -659,6 +741,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         if (newComment != null) {
             mEditComment.setText(null);
+            updatePostButtonEnabledState(); //calling setText(null) doesn't appear to trigger the
+            // existing listener, so we must force the state update
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
             getCommentAdapter().setHighlightCommentId(newComment.commentId, true);
@@ -688,6 +772,57 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         // if user is returning from login, make sure to update the post and its comments
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
             mUpdateOnResume = true;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mCommentFieldExpanded) {
+            collapseCommentField(true);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+    * Expand the add comment editText and update state appropriately
+    *
+    * @param shouldAnimate set whether the expand UI change should animate into place or occur immediately
+    * */
+    private void expandCommentField(boolean shouldAnimate) {
+        mCommentFieldExpanded = true;
+        if (shouldAnimate)
+            TransitionManager.beginDelayedTransition(mCommentsContainer);
+        mCommentFieldExpandedConstraintSet.applyTo(mCommentsContainer);
+        mEditComment.setGravity(Gravity.TOP);
+        int editCommentVerticalPadding = Math.round(getResources().getDimension(R.dimen.margin_medium));
+        mEditComment.setPadding(0, editCommentVerticalPadding, 0, editCommentVerticalPadding);
+    }
+
+    /**
+     * Collapse the add comment editText and update state appropriately
+     *
+     * @param shouldAnimate set whether the collapse UI change should animate into place or occur immediately
+     * */
+    private void collapseCommentField(boolean shouldAnimate) {
+        mCommentFieldExpanded = false;
+        if (shouldAnimate)
+            TransitionManager.beginDelayedTransition(mCommentsContainer);
+        mCommentFieldCollapsedConstraintSet.applyTo(mCommentsContainer);
+        mEditComment.setGravity(Gravity.CENTER_VERTICAL);
+        mEditComment.setPadding(0, 0, 0, 0);
+    }
+
+    public void updatePostButtonEnabledState() {
+        MenuItem postCommentMenuItem = mEnhancedCommentToolbar.getMenu().findItem(R.id.menu_post_comment);
+        if (commentTextIsValid()) {
+            ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.accent);//menu icon tinting in xml only available 26+
+            postCommentMenuItem.setEnabled(true);
+            mSubmitReplyBtn.setEnabled(true);
+        } else {
+            ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.neutral);
+            postCommentMenuItem.setEnabled(false);
+            mSubmitReplyBtn.setEnabled(false);
         }
     }
 }
