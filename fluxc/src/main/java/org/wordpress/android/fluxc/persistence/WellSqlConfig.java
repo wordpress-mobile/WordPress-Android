@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 71;
+        return 72;
     }
 
     @Override
@@ -536,6 +536,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "REMOTE_NOTE_ID INTEGER,LOCAL_SITE_ID INTEGER,NOTE_HASH INTEGER,TYPE TEXT,"
                            + "SUBTYPE TEXT,READ INTEGER,ICON TEXT,NOTICON TEXT,TIMESTAMP TEXT,URL TEXT,"
                            + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
+                oldVersion++;
+            case 71:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_UPLOAD_ERRORS_OR_CANCELLATIONS INTEGER");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
