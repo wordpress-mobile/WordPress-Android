@@ -111,19 +111,16 @@ class ViewsWidgetListViewModelTest {
             assertThat(data[0].isPositiveChangeVisible).isFalse()
             assertThat(data[0].isNegativeChangeVisible).isFalse()
             assertThat(data[0].change).isEqualTo(change)
-            assertThat(data[0].showDivider).isFalse()
             assertThat(data[1].key).isEqualTo("Jan 7, 2019")
             assertThat(data[1].isNeutralChangeVisible).isFalse()
             assertThat(data[1].isPositiveChangeVisible).isFalse()
             assertThat(data[1].isNegativeChangeVisible).isTrue()
             assertThat(data[1].change).isEqualTo(change)
-            assertThat(data[1].showDivider).isFalse()
             assertThat(data[2].key).isEqualTo("Jan 6, 2019")
             assertThat(data[2].isNeutralChangeVisible).isFalse()
             assertThat(data[2].isPositiveChangeVisible).isTrue()
             assertThat(data[2].isNegativeChangeVisible).isFalse()
             assertThat(data[2].change).isEqualTo(change)
-            assertThat(data[2].showDivider).isFalse()
         }
     }
 
