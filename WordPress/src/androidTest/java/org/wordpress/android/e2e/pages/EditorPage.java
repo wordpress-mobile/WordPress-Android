@@ -5,7 +5,7 @@ import androidx.test.espresso.action.ViewActions;
 
 import org.wordpress.android.R;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -76,7 +76,7 @@ public class EditorPage {
     }
 
     public void openSettings() {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        openActionBarOverflowOrOptionsMenu(getApplicationContext());
         clickOn(onView(withText("Post settings")));
     }
 
