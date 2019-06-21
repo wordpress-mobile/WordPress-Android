@@ -151,13 +151,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
 
         mEnhancedCommentToolbar = findViewById(R.id.enhanced_comment_toolbar);
-        Drawable downChevron = ColorUtils.INSTANCE.applyTintToDrawable(this, R.drawable.ic_chevron_down_white_24dp, R.color.neutral);
+        Drawable downChevron = ColorUtils.INSTANCE.applyTintToDrawable(this,
+                R.drawable.ic_chevron_down_white_24dp, R.color.neutral);
         mEnhancedCommentToolbar.setNavigationIcon(downChevron);
         mEnhancedCommentToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 collapseCommentField(true);
-
             }
         });
         mEnhancedCommentToolbar.inflateMenu(R.menu.enhanced_comment);
@@ -241,12 +241,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mEditComment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //do nothing
+                // do nothing
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //do nothing
+                // do nothing
             }
 
             @Override
@@ -257,7 +257,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         updatePostButtonEnabledState();
         if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_IS_COMMENT_FIELD_EXPANDED, false)) {
             expandCommentField(false);
-        } //else leave as default state
+        } // else leave as default state
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
     }
 
@@ -741,7 +741,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         if (newComment != null) {
             mEditComment.setText(null);
-            updatePostButtonEnabledState(); //calling setText(null) doesn't appear to trigger the
+            updatePostButtonEnabledState(); // calling setText(null) doesn't appear to trigger the
             // existing listener, so we must force the state update
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
@@ -791,8 +791,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     * */
     private void expandCommentField(boolean shouldAnimate) {
         mCommentFieldExpanded = true;
-        if (shouldAnimate)
+        if (shouldAnimate) {
             TransitionManager.beginDelayedTransition(mCommentsContainer);
+        }
         mCommentFieldExpandedConstraintSet.applyTo(mCommentsContainer);
         mEditComment.setGravity(Gravity.TOP);
         int editCommentVerticalPadding = Math.round(getResources().getDimension(R.dimen.margin_medium));
@@ -806,8 +807,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * */
     private void collapseCommentField(boolean shouldAnimate) {
         mCommentFieldExpanded = false;
-        if (shouldAnimate)
+        if (shouldAnimate) {
             TransitionManager.beginDelayedTransition(mCommentsContainer);
+        }
         mCommentFieldCollapsedConstraintSet.applyTo(mCommentsContainer);
         mEditComment.setGravity(Gravity.CENTER_VERTICAL);
         mEditComment.setPadding(0, 0, 0, 0);
@@ -816,7 +818,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     public void updatePostButtonEnabledState() {
         MenuItem postCommentMenuItem = mEnhancedCommentToolbar.getMenu().findItem(R.id.menu_post_comment);
         if (commentTextIsValid()) {
-            ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.accent);//menu icon tinting in xml only available 26+
+            // menu icon tinting in xml only available 26+
+            ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.accent);
             postCommentMenuItem.setEnabled(true);
             mSubmitReplyBtn.setEnabled(true);
         } else {
