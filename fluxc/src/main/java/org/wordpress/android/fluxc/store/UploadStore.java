@@ -255,18 +255,6 @@ public class UploadStore extends Store {
             mediaUploadModel.setMediaError(new MediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage));
         }
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
-
-        // If we have a FAILED or CANCELLED post associated with this media, we've already started making changes to
-        // this post and don't need a reference to the old PostUploadModel anymore
-        int localPostId = payload.media.getLocalPostId();
-        if (localPostId > 0) {
-            PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
-            if (postUploadModel != null
-                    && (postUploadModel.getUploadState() == PostUploadModel.CANCELLED
-                    || postUploadModel.getUploadState() == PostUploadModel.FAILED)) {
-                UploadSqlUtils.deletePostUploadModelWithLocalId(localPostId);
-            }
-        }
     }
 
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
