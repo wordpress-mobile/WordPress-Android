@@ -175,9 +175,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .firstOrNull()?.build(formattableContentMapper)
     }
 
-    fun deleteAllNotifications(): Int {
-        return WellSql.delete(NotificationModelBuilder::class.java).execute()
-    }
+    fun deleteAllNotifications() = WellSql.delete(NotificationModelBuilder::class.java).execute()
 
     fun deleteNotificationByRemoteId(remoteNoteId: Long): Int {
         return WellSql.delete(NotificationModelBuilder::class.java)
