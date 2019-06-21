@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
@@ -8,7 +8,7 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
         app:layout_constraintTop_toTopOf="parent"/>
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/enhanced_comment_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,11 +79,11 @@
         app:layout_constraintBottom_toTopOf="@id/comment_field_background"/>
 
 
-    <android.support.constraint.Group android:id="@+id/comment_group"
+    <androidx.constraintlayout.widget.Group android:id="@+id/comment_group"
           android:layout_width="0dp"
           android:layout_height="0dp"
           app:constraint_referenced_ids="new_comment_edit_text,btn_submit_reply,expand_comment_field"/>
-    <android.support.constraint.Barrier
+    <androidx.constraintlayout.widget.Barrier
         android:id="@+id/comment_field_barrier"
         android:layout_width="0dp" android:layout_height="0dp"
         app:barrierDirection="top"
@@ -157,4 +157,4 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
