@@ -874,7 +874,18 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private PrimaryAction getPrimaryAction() {
         if (!userCanPublishPosts()) {
-            return PrimaryAction.SUBMIT_FOR_REVIEW;
+            // User doesn't have publishing permissions
+            switch (PostStatus.fromPost(mPost)) {
+                case SCHEDULED:
+                case DRAFT:
+                case PENDING:
+                case PRIVATE:
+                case PUBLISHED:
+                case UNKNOWN:
+                    return PrimaryAction.SUBMIT_FOR_REVIEW;
+                case TRASHED:
+                    return PrimaryAction.SAVE;
+            }
         }
 
         switch (PostStatus.fromPost(mPost)) {
@@ -913,7 +924,18 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private SecondaryAction getSecondaryAction() {
         if (!userCanPublishPosts()) {
-            return SecondaryAction.NONE;
+            // User doesn't have publishing permissions
+            switch (PostStatus.fromPost(mPost)) {
+                case SCHEDULED:
+                case DRAFT:
+                case PENDING:
+                case PRIVATE:
+                case PUBLISHED:
+                case UNKNOWN:
+                    return SecondaryAction.NONE;
+                case TRASHED:
+                    return SecondaryAction.SAVE_AS_DRAFT;
+            }
         }
 
         switch (PostStatus.fromPost(mPost)) {
@@ -1953,9 +1975,17 @@ public class EditPostActivity extends AppCompatActivity implements
         protected Void doInBackground(Void... params) {
             // mark as pending if the user doesn't have publishing rights
             if (!userCanPublishPosts()) {
-                if (PostStatus.fromPost(mPost) != PostStatus.DRAFT
-                    && PostStatus.fromPost(mPost) != PostStatus.PENDING) {
-                    mPost.setStatus(PostStatus.PENDING.toString());
+                switch (PostStatus.fromPost(mPost)) {
+                    case UNKNOWN:
+                    case PUBLISHED:
+                    case SCHEDULED:
+                    case PRIVATE:
+                        mPost.setStatus(PostStatus.PENDING.toString());
+                        break;
+                    case DRAFT:
+                    case PENDING:
+                    case TRASHED:
+                        break;
                 }
             }
 
