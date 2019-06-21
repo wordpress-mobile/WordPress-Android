@@ -51,6 +51,7 @@ import javax.inject.Named
 typealias PagedPostList = PagedList<PostListItemType>
 
 private const val SEARCH_DELAY_MS = 500L
+private const val SEARCH_PROGRESS_INDICATOR_DELAY_MS = 500L
 private const val EMPTY_VIEW_THROTTLE = 250L
 
 @SuppressLint("UseSparseArrays")
@@ -107,6 +108,7 @@ class PostListViewModel @Inject constructor(
 
     private var searchQuery: String? = null
     private var searchJob: Job? = null
+    private var searchProgressJob: Job? = null
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -144,7 +146,23 @@ class PostListViewModel @Inject constructor(
                 }
             }
             _isFetchingFirstPage.addSource(pagedListWrapper.isFetchingFirstPage) {
-                _isFetchingFirstPage.value = it
+                searchProgressJob?.cancel()
+                if (it == true) {
+                    val delay = if (connector.postListType != SEARCH) {
+                        0
+                    } else {
+                        SEARCH_PROGRESS_INDICATOR_DELAY_MS
+                    }
+                    searchProgressJob = launch {
+                        delay(delay)
+                        searchProgressJob = null
+                        if (isActive) {
+                            _isFetchingFirstPage.value = true
+                        }
+                    }
+                } else {
+                    _isFetchingFirstPage.value = false
+                }
             }
             _isLoadingMore.addSource(pagedListWrapper.isLoadingMore) {
                 if (!isEmptySearch()) {
@@ -227,15 +245,17 @@ class PostListViewModel @Inject constructor(
 
     fun search(query: String?, delay: Long = SEARCH_DELAY_MS) {
         searchJob?.cancel()
-        searchJob = launch {
-            delay(delay)
-            searchJob = null
-            if (isActive) {
-                if (TextUtils.isEmpty(query)) {
-                    clearLiveDataSources()
-                    pagedListWrapper = null
-                    showEmptySearchPrompt()
-                } else {
+        searchProgressJob?.cancel()
+        if (TextUtils.isEmpty(query)) {
+            clearLiveDataSources()
+            pagedListWrapper = null
+            _isFetchingFirstPage.value = false
+            showEmptySearchPrompt()
+        } else {
+            searchJob = launch {
+                delay(delay)
+                searchJob = null
+                if (isActive) {
                     initList(query, dataSource, lifecycle)
                     fetchFirstPage()
                 }

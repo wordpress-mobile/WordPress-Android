@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
-import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -43,8 +42,6 @@ import javax.inject.Inject
 private const val EXTRA_POST_LIST_AUTHOR_FILTER = "post_list_author_filter"
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
 private const val MAX_INDEX_FOR_VISIBLE_ITEM_TO_KEEP_SCROLL_POSITION = 2
-private const val SEARCH_DELAY_MS = 500L
-private const val SEARCH_PROGRESS_INDICATOR_DELAY_MS = 1000L
 
 class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
@@ -67,8 +64,6 @@ class PostListFragment : Fragment() {
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
-
-    private val searchProgressHandler = Handler()
 
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
@@ -168,18 +163,7 @@ class PostListFragment : Fragment() {
         })
 
         viewModel.isFetchingFirstPage.observe(this, Observer {
-            if (postListType != SEARCH) {
-                swipeRefreshLayout?.isRefreshing = it == true
-            } else {
-                searchProgressHandler.removeCallbacksAndMessages(null)
-                // most of the time search is pretty fast, so we don't need to show any progress indication
-                // we delay progress indicator in case request takes longer then expected
-                if (it == true) {
-                    searchProgressHandler.postDelayed(searchProgressRunnable, SEARCH_PROGRESS_INDICATOR_DELAY_MS)
-                } else {
-                    swipeRefreshLayout?.isRefreshing = false
-                }
-            }
+            swipeRefreshLayout?.isRefreshing = it == true
         })
 
         viewModel.pagedListData.observe(this, Observer {
