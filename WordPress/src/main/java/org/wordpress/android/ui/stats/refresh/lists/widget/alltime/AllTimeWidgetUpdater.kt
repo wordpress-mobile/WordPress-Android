@@ -40,12 +40,12 @@ class AllTimeWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val isWideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val views = RemoteViews(context.packageName, widgetUtils.getLayout(wideView, colorMode))
+        val views = RemoteViews(context.packageName, widgetUtils.getLayout(isWideView, colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
@@ -55,7 +55,7 @@ class AllTimeWidgetUpdater
             )
         }
         if (networkAvailable && siteModel != null) {
-            if (wideView) {
+            if (isWideView) {
                 views.setOnClickPendingIntent(
                         R.id.widget_content,
                         widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
@@ -70,7 +70,7 @@ class AllTimeWidgetUpdater
                         colorMode,
                         siteModel.id,
                         ALL_TIME_VIEWS,
-                        wideView
+                        isWideView
                 )
             }
         } else {

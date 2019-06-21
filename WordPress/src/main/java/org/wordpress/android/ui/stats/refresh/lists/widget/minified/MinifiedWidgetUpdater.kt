@@ -43,7 +43,7 @@ class MinifiedWidgetUpdater
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int
     ) {
-        val wideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val isWideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val dataType = appPrefsWrapper.getAppWidgetDataType(appWidgetId)
@@ -60,7 +60,7 @@ class MinifiedWidgetUpdater
                     R.id.widget_content,
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
             )
-            showValue(appWidgetManager, appWidgetId, views, siteModel, dataType, wideView)
+            showValue(appWidgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
             widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
         }
@@ -81,14 +81,14 @@ class MinifiedWidgetUpdater
         views: RemoteViews,
         site: SiteModel,
         dataType: DataType,
-        wideView: Boolean
+        isWideView: Boolean
     ) {
-        loadValue(appWidgetManager, appWidgetId, site, views, dataType, wideView)
+        loadValue(appWidgetManager, appWidgetId, site, views, dataType, isWideView)
         GlobalScope.launch {
             runBlocking {
                 todayInsightsStore.fetchTodayInsights(site)
             }
-            loadValue(appWidgetManager, appWidgetId, site, views, dataType, wideView)
+            loadValue(appWidgetManager, appWidgetId, site, views, dataType, isWideView)
         }
     }
 
@@ -98,7 +98,7 @@ class MinifiedWidgetUpdater
         site: SiteModel,
         views: RemoteViews,
         dataType: DataType,
-        wideView: Boolean
+        isWideView: Boolean
     ) {
         val todayInsights = todayInsightsStore.getTodayInsights(site)
         val (key, value) = when (dataType) {
@@ -108,7 +108,7 @@ class MinifiedWidgetUpdater
             LIKES -> R.string.stats_likes to todayInsights?.likes
         }
         views.setTextViewText(R.id.name, resourceProvider.getString(key))
-        val startValue = if (wideView) MILLION else ONE_THOUSAND
+        val startValue = if (isWideView) MILLION else ONE_THOUSAND
         views.setTextViewText(R.id.value, value?.toFormattedString(startValue) ?: "-")
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }

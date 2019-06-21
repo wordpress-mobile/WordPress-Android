@@ -11,15 +11,15 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
-import org.wordpress.android.ui.stats.refresh.lists.widget.WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
     @Inject lateinit var viewModel: ViewsWidgetListViewModel
     @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
-    private val wideView: Boolean = intent.getBooleanExtra(WIDE_VIEW_KEY, true)
+    private val isWideView: Boolean = intent.getBooleanExtra(IS_WIDE_VIEW_KEY, true)
     private val colorMode = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -29,7 +29,7 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     }
 
     override fun onCreate() {
-        viewModel.start(siteId, colorMode, wideView, appWidgetId)
+        viewModel.start(siteId, colorMode, isWideView, appWidgetId)
     }
 
     override fun getLoadingView(): RemoteViews? = null
