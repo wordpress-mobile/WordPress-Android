@@ -172,9 +172,7 @@ class NotificationRestClient constructor(
                         Date(it)
                     }
                     val notifications = response?.notes?.map { it ->
-                        val remoteSiteId = NotificationApiResponse.getRemoteSiteId(it) ?: 0
-                        val localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
-                        NotificationApiResponse.notificationResponseToNotificationModel(it, localSiteId)
+                        NotificationApiResponse.notificationResponseToNotificationModel(it)
                     } ?: listOf()
                     val payload = FetchNotificationsResponsePayload(notifications, lastSeenTime)
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
