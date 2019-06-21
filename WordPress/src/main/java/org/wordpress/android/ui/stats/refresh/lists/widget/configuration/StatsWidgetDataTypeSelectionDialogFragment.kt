@@ -19,7 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class DataTypeSelectionDialogFragment : AppCompatDialogFragment() {
+class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsDataTypeSelectionViewModel

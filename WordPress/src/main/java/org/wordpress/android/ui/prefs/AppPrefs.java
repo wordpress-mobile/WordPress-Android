@@ -898,8 +898,8 @@ public class AppPrefs {
         return DeletablePrefKey.STATS_WIDGET_COLOR_MODE.name() + appWidgetId;
     }
 
-    public static void setStatsWidgetDatatTypeId(int colorModeId, int appWidgetId) {
-        prefs().edit().putInt(getDatatTypeIdWidgetKey(appWidgetId), colorModeId).apply();
+    public static void setStatsWidgetDatatTypeId(int dataTypeId, int appWidgetId) {
+        prefs().edit().putInt(getDatatTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
     }
 
     public static int getStatsWidgetDatatTypeId(int appWidgetId) {

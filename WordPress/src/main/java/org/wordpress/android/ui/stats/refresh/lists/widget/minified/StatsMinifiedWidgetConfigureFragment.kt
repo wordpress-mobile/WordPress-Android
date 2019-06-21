@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.ColorSelectionDialogFragment
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.DataTypeSelectionDialogFragment
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetColorSelectionDialogFragment
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel
@@ -68,11 +68,11 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
             StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
         }
         color_container.setOnClickListener {
-            ColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
+            StatsWidgetColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
         }
         data_type_container.visibility = View.VISIBLE
         data_type_container.setOnClickListener {
-            DataTypeSelectionDialogFragment().show(fragmentManager, "stats_data_type_selection_fragment")
+            StatsWidgetDataTypeSelectionDialogFragment().show(fragmentManager, "stats_data_type_selection_fragment")
         }
 
         add_widget_button.setOnClickListener {
@@ -100,6 +100,4 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
             }
         })
     }
-
-    enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
 }
