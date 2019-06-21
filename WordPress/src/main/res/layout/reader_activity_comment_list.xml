@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:title="Comment"
+        app:title="@string/comment"
         app:titleTextColor="@color/neutral"
         android:foregroundTint="@color/neutral"
         app:navigationIcon="@drawable/ic_chevron_down_white_16dp"
