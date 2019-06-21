@@ -795,7 +795,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     }
 
-    TransitionSet set = new TransitionSet()
+    TransitionSet mExpandCollapseTransitionSet = new TransitionSet()
             .addTransition(new ChangeScroll())
             .addTransition(new ChangeBounds())
             .addListener(new TransitionListenerAdapter() {
@@ -822,13 +822,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     * to the intended position will cancel the animation going to the arbitrary position
     * taking us where we want to go.
     * */
-    private void moveNewCommentScrollViewToCursor(){
+    private void moveNewCommentScrollViewToCursor() {
         final int selection = mEditComment.getSelectionStart();
-        mEditComment.setSelection(selection == 0  && mEditComment.length() > 0 ? 1:0);
+        mEditComment.setSelection(selection == 0  && mEditComment.length() > 0 ? 1 : 0);
         new Handler().post(new Runnable() {
             @Override public void run() {
-                if(mEditComment == null || ReaderCommentListActivity.this.isDestroyed()) {
-                    return;// don't attempt to manipulate mEditComment if this activity is being destroyed
+                if (mEditComment == null || ReaderCommentListActivity.this.isDestroyed()) {
+                    return; // don't attempt to manipulate mEditComment if this activity is being destroyed
                 }
                 mEditComment.setSelection(selection);
             }
@@ -843,7 +843,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void expandCommentField(boolean shouldAnimate) {
         mCommentFieldExpanded = true;
         if (shouldAnimate) {
-            TransitionManager.beginDelayedTransition(mCommentsContainer, set);
+            TransitionManager.beginDelayedTransition(mCommentsContainer, mExpandCollapseTransitionSet);
         }
         mCommentFieldExpandedConstraintSet.applyTo(mCommentsContainer);
         int verticalEditTextMargin = Math.round(getResources().getDimension(R.dimen.margin_large));
@@ -861,7 +861,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void collapseCommentField(boolean shouldAnimate) {
         mCommentFieldExpanded = false;
         if (shouldAnimate) {
-            TransitionManager.beginDelayedTransition(mCommentsContainer, set);
+            TransitionManager.beginDelayedTransition(mCommentsContainer, mExpandCollapseTransitionSet);
         }
         mCommentFieldCollapsedConstraintSet.applyTo(mCommentsContainer);
         mEditComment.setGravity(Gravity.CENTER_VERTICAL);
