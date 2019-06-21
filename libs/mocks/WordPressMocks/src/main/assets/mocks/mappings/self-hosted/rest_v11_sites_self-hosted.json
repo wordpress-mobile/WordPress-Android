@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/([0-9]+(\\.[0-9]+)+|localhost|.*.mystagingwebsite.com)(%3A[0-9]*)?/.*"
+        "urlPattern": "/rest/v1.1/sites/([0-9]+(.[0-9]+)+|localhost|.*.mystagingwebsite.com)(:[0-9]*)?/?($|\\?.*)"
     },
     "response": {
         "status": 403,

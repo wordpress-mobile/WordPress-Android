@@ -568,6 +568,8 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         switch (stat) {
             case APPLICATION_OPENED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "application_opened";
             case APPLICATION_CLOSED:
                 return "application_closed";
@@ -930,9 +932,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case CREATE_ACCOUNT_FAILED:
                 return "account_create_failed";
             case CREATED_ACCOUNT:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
-            case CREATED_SITE:
-                return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
             case SHARED_ITEM_READER:
@@ -983,6 +985,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_management_hint_clicked";
             case STATS_INSIGHTS_MANAGEMENT_ACCESSED:
                 return "stats_insights_management_accessed";
+            case STATS_INSIGHTS_TYPE_MOVED_UP:
+                return "stats_insights_type_moved_up";
+            case STATS_INSIGHTS_TYPE_MOVED_DOWN:
+                return "stats_insights_type_moved_down";
+            case STATS_INSIGHTS_TYPE_REMOVED:
+                return "stats_insights_type_removed";
+            case STATS_INSIGHTS_MANAGEMENT_SAVED:
+                return "stats_insights_management_saved";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED:
+                return "stats_insights_management_type_added";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED:
+                return "stats_insights_management_type_removed";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED:
+                return "stats_insights_management_type_reordered";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:
@@ -995,8 +1011,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_view_all_accessed";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
-            case STATS_COMMENTS_VIEW_MORE_TAPPED:
-                return "stats_comments_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
@@ -1146,6 +1160,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PAGES_SEARCH_ACCESSED:
                 return "site_pages_search_accessed";
             case SIGNUP_BUTTON_TAPPED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "signup_button_tapped";
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
@@ -1250,6 +1266,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
                 return "enhanced_site_creation_background_service_updated";
             case SITE_CREATED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "site_created";
             case PERSON_REMOVED:
                 return "people_management_person_removed";

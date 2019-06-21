@@ -49,9 +49,9 @@
             },
             "meta": {
                 "links": {
-                    "self": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/151",
-                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/106707880/media/151/help",
-                    "site": "https://public-api.wordpress.com/rest/v1.1/sites/106707880"
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/151",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/151/help",
+                    "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                 }
             }
         },
