@@ -80,11 +80,6 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
         } else {
             rv.setViewVisibility(R.id.negative_change, View.GONE)
         }
-        if (uiModel.showDivider) {
-            rv.setViewVisibility(R.id.divider, View.VISIBLE)
-        } else {
-            rv.setViewVisibility(R.id.divider, View.GONE)
-        }
         rv.setTextViewText(R.id.value, uiModel.value)
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

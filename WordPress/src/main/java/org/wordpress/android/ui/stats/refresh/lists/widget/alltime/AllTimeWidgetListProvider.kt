@@ -60,7 +60,7 @@ class AllTimeWidgetListProvider(val context: Context, intent: Intent) : RemoteVi
         val uiModel = viewModel.data[position]
         val rv = RemoteViews(context.packageName, uiModel.layout)
         rv.setTextViewText(R.id.period, uiModel.key)
-        rv.setViewVisibility(R.id.divider, View.VISIBLE)
+        rv.setViewVisibility(R.id.divider, View.GONE)
         rv.setTextViewText(R.id.value, uiModel.value)
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
