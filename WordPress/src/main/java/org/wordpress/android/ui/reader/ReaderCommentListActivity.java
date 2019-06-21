@@ -824,7 +824,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     * */
     private void moveNewCommentScrollViewToCursor() {
         final int selection = mEditComment.getSelectionStart();
-        mEditComment.setSelection(selection == 0  && mEditComment.length() > 0 ? 1 : 0);
+        mEditComment.setSelection(selection == 0 && mEditComment.length() > 0 ? 1 : 0);
         new Handler().post(new Runnable() {
             @Override public void run() {
                 if (mEditComment == null || ReaderCommentListActivity.this.isDestroyed()) {
