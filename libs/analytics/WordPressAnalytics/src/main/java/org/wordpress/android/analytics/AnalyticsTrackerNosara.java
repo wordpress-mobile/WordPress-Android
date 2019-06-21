@@ -985,6 +985,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_management_hint_clicked";
             case STATS_INSIGHTS_MANAGEMENT_ACCESSED:
                 return "stats_insights_management_accessed";
+            case STATS_INSIGHTS_TYPE_MOVED_UP:
+                return "stats_insights_type_moved_up";
+            case STATS_INSIGHTS_TYPE_MOVED_DOWN:
+                return "stats_insights_type_moved_down";
+            case STATS_INSIGHTS_TYPE_REMOVED:
+                return "stats_insights_type_removed";
+            case STATS_INSIGHTS_MANAGEMENT_SAVED:
+                return "stats_insights_management_saved";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED:
+                return "stats_insights_management_type_added";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED:
+                return "stats_insights_management_type_removed";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED:
+                return "stats_insights_management_type_reordered";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:
