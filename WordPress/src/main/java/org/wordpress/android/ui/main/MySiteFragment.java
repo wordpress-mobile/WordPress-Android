@@ -1042,8 +1042,6 @@ public class MySiteFragment extends Fragment implements
     public void onSiteChanged(SiteModel site) {
         // whenever site changes we hide CTA and check for credit in refreshSelectedSiteDetails()
         mIsDomainCreditChecked = false;
-        mIsDomainCreditAvailable = false;
-        toggleDomainRegistrationCtaVisibility();
 
         refreshSelectedSiteDetails(site);
         showSiteIconProgressBar(false);
