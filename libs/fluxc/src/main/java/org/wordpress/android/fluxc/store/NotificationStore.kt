@@ -423,8 +423,6 @@ constructor(
         } else {
             // Update the localSiteId and save to the db
             val rows = payload.notification?.let {
-                val remoteSiteId = it.getRemoteSiteId() ?: 0
-                it.localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
                 notificationSqlUtils.insertOrUpdateNotification(it)
             } ?: 0
             // Fetch inserted/updated local notification id
