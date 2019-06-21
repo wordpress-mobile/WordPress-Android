@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
@@ -29,7 +30,8 @@ import org.wordpress.android.viewmodel.Event
 abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     val type: StatsType,
     private val mainDispatcher: CoroutineDispatcher,
-    private val defaultUiState: UI_STATE
+    private val defaultUiState: UI_STATE,
+    private val inputParams: List<UseCaseParam> = listOf(SITE)
 ) {
     private val domainState = MutableLiveData<UseCaseState>()
     private val domainModel = MutableLiveData<DOMAIN_MODEL>()
@@ -92,6 +94,16 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             val state = fetchRemoteData(forced)
             evaluateState(state)
         }
+    }
+
+    suspend fun onParamsChange(param: UseCaseParam) {
+        if (inputParams.contains(param)) {
+            fetch(refresh = true, forced = false)
+        }
+    }
+
+    enum class UseCaseParam {
+        SITE, SELECTED_DATE
     }
 
     protected suspend fun evaluateState(state: State<DOMAIN_MODEL>) {
@@ -211,36 +223,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     }
 
     /**
-     * Stateful use case should be used when we have a block that has a UI state that needs to be preserved
-     * over rotation pull to refresh. It is for example a block with Tabs or with expandable item.
-     * @param defaultUiState default value the UI state should have when the screen first loads
-     */
-    abstract class StatefulUseCase<DOMAIN_MODEL, UI_STATE>(
-        type: StatsType,
-        mainDispatcher: CoroutineDispatcher,
-        private val defaultUiState: UI_STATE
-    ) : BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher, defaultUiState) {
-        final override fun buildUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem> {
-            return buildStatefulUiModel(domainModel, uiState)
-        }
-
-        /**
-         * Transforms given domain model and ui state into the UI model
-         * @param domainModel domain model coming from FluxC
-         * @param uiState contains UI specific data
-         * @return a list of block list data
-         */
-        protected abstract fun buildStatefulUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem>
-    }
-
-    /**
      * Stateless use case should be used for the blocks that display just plain data.
      * These blocks don't have only one UI state and it doesn't change.
      */
     abstract class StatelessUseCase<DOMAIN_MODEL>(
         type: StatsType,
-        mainDispatcher: CoroutineDispatcher
-    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher, NotUsedUiState) {
+        mainDispatcher: CoroutineDispatcher,
+        inputParams: List<UseCaseParam> = listOf(SITE)
+    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher, NotUsedUiState, inputParams) {
         /**
          * Transforms given domain model into the UI model
          * @param domainModel domain model coming from FluxC
