@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -806,7 +807,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     * */
     private void moveNewCommentScrollViewToCursor(){
         final int selection = mEditComment.getSelectionStart();
-        mEditComment.setSelection(selection == 0 ? 1:0);
+        mEditComment.setSelection(selection == 0  && mEditComment.length() > 0 ? 1:0);
         new Handler().post(new Runnable() {
             @Override public void run() {
                 if(mEditComment == null || ReaderCommentListActivity.this.isDestroyed()) {
@@ -828,6 +829,10 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             TransitionManager.beginDelayedTransition(mCommentsContainer, set);
         }
         mCommentFieldExpandedConstraintSet.applyTo(mCommentsContainer);
+        int verticalEditTextMargin = Math.round(getResources().getDimension(R.dimen.margin_large));
+        ScrollView.LayoutParams params = (ScrollView.LayoutParams) mEditComment.getLayoutParams();
+        params.topMargin = verticalEditTextMargin;
+        params.bottomMargin = verticalEditTextMargin;
         mEditComment.setGravity(Gravity.TOP);
     }
 
@@ -843,6 +848,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
         mCommentFieldCollapsedConstraintSet.applyTo(mCommentsContainer);
         mEditComment.setGravity(Gravity.CENTER_VERTICAL);
+        ScrollView.LayoutParams params = (ScrollView.LayoutParams) mEditComment.getLayoutParams();
+        params.topMargin = 0;
+        params.bottomMargin = 0;
         moveNewCommentScrollViewToCursor();
     }
 
@@ -854,7 +862,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             postCommentMenuItem.setEnabled(true);
             mSubmitReplyBtn.setEnabled(true);
         } else {
-            ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.neutral);
+            ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.neutral_300);
             postCommentMenuItem.setEnabled(false);
             mSubmitReplyBtn.setEnabled(false);
         }
