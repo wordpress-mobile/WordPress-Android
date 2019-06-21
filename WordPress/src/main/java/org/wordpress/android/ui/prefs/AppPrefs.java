@@ -123,7 +123,8 @@ public class AppPrefs {
 
         // Widget settings
         STATS_WIDGET_SELECTED_SITE_ID,
-        STATS_WIDGET_COLOR_MODE
+        STATS_WIDGET_COLOR_MODE,
+        STATS_WIDGET_DATA_TYPE
     }
 
     /**
@@ -895,5 +896,21 @@ public class AppPrefs {
 
     @NonNull private static String getColorModeIdWidgetKey(int appWidgetId) {
         return DeletablePrefKey.STATS_WIDGET_COLOR_MODE.name() + appWidgetId;
+    }
+
+    public static void setStatsWidgetDatatTypeId(int dataTypeId, int appWidgetId) {
+        prefs().edit().putInt(getDatatTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
+    }
+
+    public static int getStatsWidgetDatatTypeId(int appWidgetId) {
+        return prefs().getInt(getDatatTypeIdWidgetKey(appWidgetId), -1);
+    }
+
+    public static void removeStatsWidgetDatatTypeId(int appWidgetId) {
+        prefs().edit().remove(getDatatTypeIdWidgetKey(appWidgetId)).apply();
+    }
+
+    @NonNull private static String getDatatTypeIdWidgetKey(int appWidgetId) {
+        return DeletablePrefKey.STATS_WIDGET_DATA_TYPE.name() + appWidgetId;
     }
 }
