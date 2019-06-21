@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,7 +25,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.transition.ChangeBounds;
+import androidx.transition.ChangeScroll;
 import androidx.transition.TransitionManager;
+import androidx.transition.TransitionSet;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -786,6 +790,33 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     }
 
+    TransitionSet set = new TransitionSet()
+            .addTransition(new ChangeScroll())
+            .addTransition(new ChangeBounds());
+
+    /**
+    * Scroll the scrollview so that the cursor is visible
+    *
+    * By default, setting the selection on a TextView programmatically only scrolls
+    * the cursor into focus if the selection is changed. This method functions by
+    * setting the selection to some arbitrary position that is not the current
+    * position, then setting it *back* to the original position. The animation going
+    * to the intended position will cancel the animation going to the arbitrary position
+    * taking us where we want to go.
+    * */
+    private void moveNewCommentScrollViewToCursor(){
+        final int selection = mEditComment.getSelectionStart();
+        mEditComment.setSelection(selection == 0 ? 1:0);
+        new Handler().post(new Runnable() {
+            @Override public void run() {
+                if(mEditComment == null || ReaderCommentListActivity.this.isDestroyed()) {
+                    return;// don't attempt to manipulate mEditComment if this activity is being destroyed
+                }
+                mEditComment.setSelection(selection);
+            }
+        });
+    }
+
     /**
     * Expand the add comment editText and update state appropriately
     *
@@ -794,12 +825,10 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void expandCommentField(boolean shouldAnimate) {
         mCommentFieldExpanded = true;
         if (shouldAnimate) {
-            TransitionManager.beginDelayedTransition(mCommentsContainer);
+            TransitionManager.beginDelayedTransition(mCommentsContainer, set);
         }
         mCommentFieldExpandedConstraintSet.applyTo(mCommentsContainer);
         mEditComment.setGravity(Gravity.TOP);
-        int editCommentVerticalPadding = Math.round(getResources().getDimension(R.dimen.margin_medium));
-        mEditComment.setPadding(0, editCommentVerticalPadding, 0, editCommentVerticalPadding);
     }
 
     /**
@@ -810,11 +839,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void collapseCommentField(boolean shouldAnimate) {
         mCommentFieldExpanded = false;
         if (shouldAnimate) {
-            TransitionManager.beginDelayedTransition(mCommentsContainer);
+            TransitionManager.beginDelayedTransition(mCommentsContainer, set);
         }
         mCommentFieldCollapsedConstraintSet.applyTo(mCommentsContainer);
         mEditComment.setGravity(Gravity.CENTER_VERTICAL);
-        mEditComment.setPadding(0, 0, 0, 0);
+        moveNewCommentScrollViewToCursor();
     }
 
     public void updatePostButtonEnabledState() {

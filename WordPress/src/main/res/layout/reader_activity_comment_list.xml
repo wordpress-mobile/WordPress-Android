@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/comments_list_container"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
@@ -14,14 +16,15 @@
         android:id="@+id/enhanced_comment_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:title="@string/comment"
-        app:titleTextColor="@color/neutral"
-        android:foregroundTint="@color/neutral"
-        app:navigationIcon="@drawable/ic_chevron_down_white_16dp"
-        android:elevation="@dimen/appbar_elevation"
         android:layout_marginBottom="10dp"
-    app:layout_constraintBottom_toTopOf="parent"/>
+        android:background="@color/white"
+        android:elevation="@dimen/appbar_elevation"
+        android:foregroundTint="@color/neutral"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_chevron_down_white_16dp"
+        app:title="@string/comment"
+        app:titleTextColor="@color/neutral"/>
+
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
         style="@style/ReaderTextView.EmptyList"
@@ -34,6 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:visibility="visible"/>
+
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_to_refresh"
         android:layout_width="match_parent"
@@ -50,6 +54,7 @@
             android:scrollbars="vertical"/>
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
     <ProgressBar
         android:id="@+id/progress_loading"
         style="@style/ReaderProgressBar"
@@ -63,14 +68,15 @@
         tools:visibility="visible"/>
 
 
-    <View android:id="@+id/comment_field_background"
-          android:layout_width="0dp"
-          android:layout_height="0dp"
-          android:background="@color/white"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="@id/new_comment_edit_text"/>
+    <View
+        android:id="@+id/comment_field_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_container"/>
 
 
     <View
@@ -81,16 +87,19 @@
         app:layout_constraintBottom_toTopOf="@id/comment_field_background"/>
 
 
-    <androidx.constraintlayout.widget.Group android:id="@+id/comment_group"
-                                      android:layout_width="0dp"
-                                      android:layout_height="0dp"
-                                      app:constraint_referenced_ids="new_comment_edit_text,btn_submit_reply,expand_comment_field"/>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/comment_group"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="new_comment_edit_text_container,btn_submit_reply,expand_comment_field"/>
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/comment_field_barrier"
-        android:layout_width="0dp" android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="new_comment_edit_text, text_comments_closed"
-    />
+        app:constraint_referenced_ids="new_comment_edit_text_container, text_comments_closed"
+        />
 
     <ImageView
         android:id="@+id/expand_comment_field"
@@ -101,50 +110,53 @@
         android:padding="@dimen/margin_medium"
         android:src="@drawable/ic_chevron_up_white_24dp"
         android:tint="@color/neutral"
-        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text"
+        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text"/>
+        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_container"/>
 
-
-    <org.wordpress.android.widgets.SuggestionAutoCompleteText
-        android:id="@+id/new_comment_edit_text"
+    <ScrollView
+        android:id="@+id/new_comment_edit_text_container"
         android:layout_width="0dp"
+        app:layout_constrainedHeight="true"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:background="@color/transparent"
-        android:focusableInTouchMode="false"
-        android:gravity="start|center_vertical"
-        android:hint="@string/reader_hint_comment_on_post"
-        android:imeOptions="actionSend"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:inputType="text|textCapSentences|textMultiLine"
-        android:maxHeight="@dimen/comments_field_collapsed_max_height"
-        android:minHeight="@dimen/comments_field_collapsed_min_height"
-        android:paddingStart="@dimen/margin_small"
-        android:paddingTop="@dimen/margin_extra_small"
-        android:paddingEnd="@dimen/margin_small"
-        android:paddingBottom="@dimen/margin_extra_small"
-        android:textAlignment="viewStart"
-        android:textColorHint="@color/neutral_400"
-        android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_submit_reply"
-        app:layout_constraintStart_toEndOf="@+id/expand_comment_field"/>
+        app:layout_constraintHeight_max="80dp"
+        app:layout_constraintHeight_min="48dp"
+        android:overScrollMode="never"
+        android:fillViewport="true"
+        app:layout_constraintStart_toEndOf="@+id/expand_comment_field">
+        <org.wordpress.android.widgets.SuggestionAutoCompleteText
+            android:id="@+id/new_comment_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:gravity="start|center_vertical"
+            android:hint="@string/reader_hint_comment_on_post"
+            android:imeOptions="actionSend"
+            android:inputType="text|textCapSentences|textMultiLine"
+            android:paddingBottom="@dimen/margin_extra_small"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_extra_small"
+            android:textAlignment="viewStart"
+            android:textColorHint="@color/neutral_400"
+            android:textSize="@dimen/text_sz_large"/>
+    </ScrollView>
 
     <ImageButton
         android:id="@+id/btn_submit_reply"
         android:layout_width="@dimen/min_touch_target_sz"
         android:layout_height="@dimen/min_touch_target_sz"
         android:layout_gravity="center_vertical"
+        android:backgroundTint="@color/transparent"
         android:contentDescription="@string/reader_label_submit_comment"
         android:padding="@dimen/margin_medium"
-        android:backgroundTint="@color/transparent"
         android:src="@drawable/ic_send_white_24dp"
         android:tint="@color/selector_post_comment"
-        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text"
+        app:layout_constraintBottom_toBottomOf="@id/new_comment_edit_text_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text"/>
+        app:layout_constraintTop_toTopOf="@id/new_comment_edit_text_container"/>
 
 
     <org.wordpress.android.widgets.WPTextView
@@ -156,8 +168,8 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_horizontal"
-        android:paddingTop="@dimen/margin_large"
         android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
         android:text="@string/reader_label_comments_closed"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
