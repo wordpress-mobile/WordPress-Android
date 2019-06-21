@@ -10,6 +10,10 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 import kotlin.math.round
 
+/**
+ * This class is based on the {@link com.github.mikephil.charting.formatter.LargeValueFormatter} and fixes the issue
+ * with Locale other than US (in some languages is the DecimalFormat different).
+ */
 class LargeValueFormatter : IValueFormatter, IAxisValueFormatter {
     private var mSuffix = arrayOf("", "k", "m", "b", "t")
     private var mMaxLength = 5
