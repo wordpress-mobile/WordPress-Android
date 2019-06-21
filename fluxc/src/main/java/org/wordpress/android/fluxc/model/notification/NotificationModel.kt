@@ -7,7 +7,10 @@ import java.util.Locale
 data class NotificationModel(
     val noteId: Int = 0,
     val remoteNoteId: Long = 0L,
+
+    // Note: this could be 0 in the db if the notification is not for one of the users sites
     var remoteSiteId: Long = 0L,
+
     var noteHash: Long = 0L,
     val type: Kind = Kind.UNKNOWN,
     val subtype: Subkind? = Subkind.NONE,
