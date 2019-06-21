@@ -25,13 +25,13 @@ object ColorUtils {
         imageView.setImageResource(drawableResId)
     }
 
-    fun setMenuItemWithTint(context: Context, menuItem: MenuItem, @ColorRes colorResId: Int){
+    fun setMenuItemWithTint(context: Context, menuItem: MenuItem, @ColorRes colorResId: Int) {
         val drawable = menuItem.icon
         if (drawable != null) {
-            val wrappedDrawable = DrawableCompat.wrap(drawable)
-            drawable.mutate()
+            val drawableCopy = drawable.mutate()
+            val wrappedDrawable = DrawableCompat.wrap(drawableCopy)
             DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(context, colorResId))
-            menuItem.icon = drawable
+            menuItem.icon = drawableCopy
         }
     }
 }
