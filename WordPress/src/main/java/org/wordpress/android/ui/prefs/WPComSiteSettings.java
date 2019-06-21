@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -16,10 +17,10 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

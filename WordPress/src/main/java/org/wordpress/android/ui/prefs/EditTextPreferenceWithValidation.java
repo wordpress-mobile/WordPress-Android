@@ -3,14 +3,15 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ValidationUtils;
@@ -73,6 +74,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                         case URL:
                             positiveButton.setEnabled(ValidationUtils.validateUrl(s));
                             break;
+                        case PASSWORD_SELF_HOSTED:
+                            positiveButton.setEnabled(ValidationUtils.validatePasswordSelfHosted(s));
                     }
                 }
             });
@@ -87,7 +90,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         }
 
         // Use "hidden" input type for passwords so characters are replaced with dots for added security.
-        hideInputCharacters(mValidationType == ValidationType.PASSWORD);
+        hideInputCharacters(
+                mValidationType == ValidationType.PASSWORD || mValidationType == ValidationType.PASSWORD_SELF_HOSTED);
     }
 
     public void setValidationType(ValidationType validationType) {
@@ -106,6 +110,6 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
     }
 
     public enum ValidationType {
-        NONE, EMAIL, PASSWORD, URL
+        NONE, EMAIL, PASSWORD, PASSWORD_SELF_HOSTED, URL
     }
 }

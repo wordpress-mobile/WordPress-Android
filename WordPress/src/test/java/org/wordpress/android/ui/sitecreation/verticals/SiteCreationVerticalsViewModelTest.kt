@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.firstValue

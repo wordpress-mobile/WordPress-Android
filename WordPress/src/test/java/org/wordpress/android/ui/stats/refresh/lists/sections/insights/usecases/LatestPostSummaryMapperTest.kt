@@ -9,7 +9,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -57,7 +56,7 @@ class LatestPostSummaryMapperTest {
         val messageWithNoEngagement = "message with no engagement"
         whenever(
                 resourceProvider.getString(
-                        string.stats_insights_latest_post_with_no_engagement,
+                        R.string.stats_insights_latest_post_with_no_engagement,
                         sinceTimeLabel,
                         postTitle
                 )
@@ -89,7 +88,7 @@ class LatestPostSummaryMapperTest {
         val messageWithEngagement = "message with no engagement"
         whenever(
                 resourceProvider.getString(
-                        string.stats_insights_latest_post_message,
+                        R.string.stats_insights_latest_post_message,
                         sinceTimeLabel,
                         postTitle
                 )

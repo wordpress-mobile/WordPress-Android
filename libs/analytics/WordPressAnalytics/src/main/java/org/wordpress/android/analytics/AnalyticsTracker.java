@@ -20,6 +20,8 @@ public final class AnalyticsTracker {
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
     public enum Stat {
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
         APPLICATION_INSTALLED,
@@ -77,6 +79,9 @@ public final class AnalyticsTracker {
         STATS_ACCESSED,
         STATS_ACCESS_ERROR,
         STATS_INSIGHTS_ACCESSED,
+        STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED,
+        STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED,
+        STATS_INSIGHTS_MANAGEMENT_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED,
         STATS_PERIOD_WEEKS_ACCESSED,
         STATS_PERIOD_MONTHS_ACCESSED,
@@ -270,8 +275,9 @@ public final class AnalyticsTracker {
         CREATE_ACCOUNT_EMAIL_EXISTS,
         CREATE_ACCOUNT_USERNAME_EXISTS,
         CREATE_ACCOUNT_FAILED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         CREATED_ACCOUNT,
-        CREATED_SITE,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
         SHARED_ITEM_READER,
@@ -337,6 +343,8 @@ public final class AnalyticsTracker {
         PAGES_TAB_PRESSED,
         PAGES_OPTIONS_PRESSED,
         PAGES_SEARCH_ACCESSED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SIGNUP_BUTTON_TAPPED,
         SIGNUP_EMAIL_BUTTON_TAPPED,
         SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED,
@@ -385,10 +393,13 @@ public final class AnalyticsTracker {
         ENHANCED_SITE_CREATION_SUCCESS_LOADING,
         ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
         ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
-        ENHANCED_SITE_CREATION_COMPLETED,
+        ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED,
         ENHANCED_SITE_CREATION_EXITED,
         ENHANCED_SITE_CREATION_ERROR_SHOWN,
         ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
+        SITE_CREATED,
         MEDIA_LIBRARY_ADDED_PHOTO,
         MEDIA_LIBRARY_ADDED_VIDEO,
         PERSON_REMOVED,

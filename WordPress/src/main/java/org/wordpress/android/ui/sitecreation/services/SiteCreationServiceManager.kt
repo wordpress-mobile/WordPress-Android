@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.FAILURE
@@ -24,6 +25,7 @@ import kotlin.properties.Delegates
 class SiteCreationServiceManager @Inject constructor(
     private val createSiteUseCase: CreateSiteUseCase,
     private val dispatcher: Dispatcher,
+    private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private val job = Job()
@@ -78,7 +80,12 @@ class SiteCreationServiceManager @Inject constructor(
                 updateServiceState(CREATE_SITE)
                 createSite()
             }
-            SUCCESS -> updateServiceState(SUCCESS, newSiteRemoteId)
+            SUCCESS -> {
+                updateServiceState(SUCCESS, newSiteRemoteId)
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
+                tracker.trackSiteCreated()
+            }
             FAILURE -> {
                 val currentState = serviceListener.getCurrentState()
                 AppLog.e(T.SITE_CREATION,

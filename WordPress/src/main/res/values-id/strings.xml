@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-14 14:54:08+0000
+Translation-Revision-Date: 2019-06-11 10:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">Terjadi error saat memperbarui detail situs Anda: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Terjadi error saat mengambil informasi kontak domain: %s</string>
+    <string name="domain_registration_error_registering_domain">Terjadi error saat registrasi domain: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Mendaftarkan nama domain…</string>
+    <string name="domain_registration_state_picker_dialog_title">Pilih Provinsi</string>
+    <string name="domain_registration_country_picker_dialog_title">Pilih Negara</string>
+    <string name="domain_registration_result_continue_button">Lanjut</string>
+    <string name="domain_registration_result_description">domain baru Anda &lt;b>%s&lt;/b> sedang disiapkan. Situs Anda\n melakukan perubahan dengan penuh keseruan!</string>
+    <string name="domain_registration_result_title">Selamat</string>
+    <string name="domain_contact_information_register_domain_button">Daftarkan Domain</string>
+    <string name="domain_contact_information_postal_code_hint">Kode pos</string>
+    <string name="domain_contact_information_state_hint">Provinsi</string>
+    <string name="domain_contact_information_city_hint">Kota</string>
+    <string name="domain_contact_information_address_hint_two">Alamat 2</string>
+    <string name="domain_contact_information_address_hint">Alamat</string>
+    <string name="domain_contact_information_country_hint">Negara</string>
+    <string name="domain_contact_information_country_code_hint">Kode negara</string>
+    <string name="domain_contact_information_phone_number_hint">Telepon</string>
+    <string name="domain_contact_information_organization_hint">Organisasi (opsional)</string>
+    <string name="domain_contact_information_description">Demi kenyamanan Anda, kami telah mengisi informasi kontak WordPress.com Anda\n terlebih dahulu. Harap tinjau kembali untuk memastikan informasi yang ingin Anda gunakan untuk domain ini sudah benar.</string>
+    <string name="domain_contact_information_title">Informasi kontak domain</string>
+    <string name="domain_privacy_option_off_title">Daftarkan secara publik</string>
+    <string name="domain_privacy_option_on_title">Daftarkan secara pribadi dengan Perlindungan Privasi</string>
+    <string name="domain_registration_privacy_protection_description">Pemilik domain harus berbagi informasi kontak di database publik semua domain.\n Dengan Perlindungan Privasi, kami memublikasikan informasi kami sendiri, bukan informasi Anda, dan meneruskan segala komunikasi kepada Anda secara pribadi.</string>
+    <string name="domain_registration_privacy_protection_title">Perlindungan Privasi</string>
+    <string name="domain_registration_contact_form_input_error">Masukkan %s yang valid</string>
+    <string name="domains_suggestions_choose_domain">Pilih Domain</string>
+    <string name="stats_management_new">Baru</string>
+    <string name="stats_management_edit">Sunting</string>
+    <string name="stats_management_dismiss_insights_news_card">Tutup</string>
+    <string name="stats_management_try_it_now">Coba sekarang</string>
+    <string name="stats_management_news_card_message">Pilih statistik apa yang ingin dilihat, dan fokus pada data yang paling Anda perhatikan. Ketuk %1$s di bagian bawah Wawasan untuk menyesuaikan statistik Anda.</string>
+    <string name="stats_manage_your_stats">Kelola Statistik Anda</string>
+    <string name="history_fetching_revisions">Memuat perbaikan…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Gagal memasukkan media.\nKetuk untuk melihat pilihan.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Gagal memasukkan media.\nKetuk untuk mencoba lagi.</string>
+    <string name="editor_uploading_draft">Konsep Anda sedang diunggah</string>
+    <string name="post_uploading_draft">Mengunggah konsep</string>
     <string name="post_list_drafts">Konsep</string>
     <string name="post_list_published">Dipublikasikan</string>
     <string name="post_list_author_everyone">Setiap Orang</string>
@@ -18,10 +57,6 @@ Language: id
     <string name="stats_insights_social">Sosial</string>
     <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
     <string name="stats_view_follower_totals">Total Pengikut</string>
-    <string name="suggestion_fetch_error">Saran domain tidak dapat dimuat</string>
-    <string name="suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
-    <string name="suggestions_empty_list">Saran tidak ditemukan</string>
-    <string name="choose_domain">Pilih Domain</string>
     <string name="register_domain">Daftarkan Domain</string>
     <string name="jetpack_installed_message">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
     <string name="stats_menu_remove">Hapus dari wawasan</string>
@@ -92,7 +127,6 @@ Language: id
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Blok Tidak Didukung</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Tempel URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">PILIH GAMBAR</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Gagal memasukkan media.\nKetuk untuk melihat pilihan.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Hapus Semua Pengaturan</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Teks Alt</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Pustaka Media WordPress</string>
@@ -210,7 +244,6 @@ Language: id
     <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
     <string name="preference_strip_image_location">Hapus lokasi dari media</string>
     <string name="stats_cannot_be_started">Saat ini kami tidak dapat membuka statistik. Harap coba lagi nanti</string>
-    <string name="site_creation_label_domain_selection">Pilih alamat yang tersedia agar orang-orang dapat menemukan Anda di web.</string>
     <string name="giphy_powered_by_giphy">Didukung oleh GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Sebagian media gagal dimuat karena terdapat error jaringan.</string>
     <string name="giphy_picker_empty_search_list">Tidak ada media yang cocok dengan pencarian Anda</string>
@@ -509,7 +542,6 @@ Language: id
     <string name="content_description_people_looking_charts">Orang-orang melihat grafik dan bagan</string>
     <string name="comment_title">%s pada %s</string>
     <string name="dialog_confirm_delete_permanently_post">Anda yakin ingin menghapus pos ini secara permanen?</string>
-    <string name="notification_site_creation_title_in_progress">Membuat situs… Hal ini mungkin memerlukan beberapa menit.</string>
     <string name="notification_channel_important_title">Penting</string>
     <string name="notification_channel_general_title">Umum</string>
     <string name="photo_picker_use_photo">Gunakan foto ini</string>
@@ -522,10 +554,6 @@ Language: id
     <string name="site_settings_quota_space_unlimited">%1$s dari tidak terbatas</string>
     <string name="preview_count">Pratinjau %d</string>
     <string name="add_count">Tambahkan %d</string>
-    <string name="site_creation_domain_selection_title">Buat Situs Baru Langkah 4</string>
-    <string name="site_creation_site_details_title">Buat Situs Baru Langkah 3</string>
-    <string name="site_creation_theme_selection_title">Buat Situs Baru Langkah 2</string>
-    <string name="site_creation_category_title">Buat Situs Baru Langkah 1</string>
     <string name="stats_followers_many_desc">%d pengikut</string>
     <string name="stats_followers_one_desc">satu pengikut</string>
     <string name="stats_followers_zero_desc">tidak ada pengikut</string>
@@ -623,7 +651,6 @@ Language: id
     <string name="help_screen_title">Bantuan dan Dukungan</string>
     <string name="license_screen_title">Lisensi</string>
     <string name="release_notes_screen_title">Catatan rilis</string>
-    <string name="site_creation_creating_failed_extended">Kami mengalami masalah tidak terduga. Bagaimana kalau mencobanya lagi?</string>
     <string name="signup_epilogue_error_avatar_view">Avatar Anda telah diunggah dan akan tersedia sesaat lagi.</string>
     <string name="email_not_registered_wpcom">Hmm, kami tidak dapat menemukan akun WordPress.com yang terhubung dengan alamat email ini. Coba tautan di bawah ini untuk login menggunakan alamat situs Anda.</string>
     <string name="permissions_denied_message">Tampaknya Anda mematikan izin wajib untuk fitur ini.&lt;br/>&lt;br/>Untuk mengubahnya, edit izin Anda dan pastikan &lt;strong>%s&lt;/strong> telah aktif.</string>
@@ -675,44 +702,7 @@ Language: id
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Tuliskan pos pertama</string>
-    <string name="site_creation_epilogue_configure">Konfigurasi</string>
-    <string name="site_creation_epilogue_congrats">Selamat!\nSitus Anda telah siap.</string>
-    <string name="site_creation_creating_modal">Tunggu sampai pembuatan situs selesai.</string>
-    <string name="site_creation_creating_retry">Coba lagi</string>
-    <string name="site_creation_creating_failed">Terjadi masalah…</string>
-    <string name="site_creation_creating_preparing_frontend">Menyiapkan sisi depan…</string>
-    <string name="site_creation_creating_configuring_theme">Mengonfigurasi gaya situs…</string>
-    <string name="site_creation_creating_configuring_content">Mengonfigurasi konten situs…</string>
-    <string name="site_creation_creating_fetching_info">Mengambil informasi situs…</string>
-    <string name="site_creation_creating_laying_foundation">Menerapkan dasar situs…</string>
-    <string name="site_creation_empty_site_title">Masukkan judul situs</string>
-    <string name="site_creation_tagline_helper">Slogan adalah teks pendek yang ditampilkan di bawah judul sebagian besar tema, dan berperan sebagai metadata situs pada mesin pencari.</string>
-    <string name="site_creation_tagline_hint">Slogan situs (opsional)</string>
-    <string name="site_creation_title_hint">Judul situs</string>
     <string name="site_creation_domain_finish_button">Buat situs</string>
-    <string name="site_creation_domain_keywords_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
-    <string name="site_creation_label_domain_selection_title">Langkah 4 dari 4</string>
-    <string name="site_creation_label_site_details">Ceritakan lebih banyak tentang apa yang sedang Anda buat. Apa judul dan slogannya?</string>
-    <string name="site_creation_label_site_details_title">Langkah 3 dari 4</string>
-    <string name="site_creation_label_theme_loading">Harap tunggu selagi kami memuat tema</string>
-    <string name="site_creation_label_theme_selection">Mulai dengan cepat menggunakan salah satu tema populer kami. Setelah situs dibuat, Anda dapat menelusuri dan memilih dari ratusan tema lainnya.</string>
-    <string name="site_creation_label_theme_selection_title">Langkah 2 dari 4</string>
-    <string name="site_creation_subtitle_portfolio">Untuk mempresentasikan proyek kreatif Anda dalam sebuah karya visual.</string>
-    <string name="site_creation_title_portfolio">Mulai dengan Portofolio</string>
-    <string name="site_creation_subtitle_website">Untuk mempromosikan bisnis atau merek Anda, dan menghubungkan Anda dengan audiens.</string>
-    <string name="site_creation_title_website">Mulai dengan Situs Web</string>
-    <string name="site_creation_subtitle_blog">Untuk membagikan ide, cerita, dan foto dengan pengikut Anda.</string>
-    <string name="site_creation_title_blog">Mulai dengan Blog</string>
-    <string name="site_creation_label_category">Situs seperti apa yang Anda butuhkan?\nPilih salah satu pilihan di bawah:</string>
-    <string name="site_creation_label_category_title">Langkah 1 dari 4</string>
-    <string name="site_creation_title">Buat Situs Baru</string>
-    <string name="notification_site_creation_failed">Terjadi error.</string>
-    <string name="notification_site_creation_title_stopped">Pembuatan situs dihentikan</string>
-    <string name="notification_site_creation_step_theme">Langkah 4 dari 4</string>
-    <string name="notification_site_creation_step_tagline">Langkah 3 dari 4</string>
-    <string name="notification_site_creation_step_fetching">Langkah 2 dari 4</string>
-    <string name="notification_site_creation_step_creating">Langkah 1 dari 4</string>
     <string name="notification_site_creation_created">Ketuk untuk melanjutkan.</string>
     <string name="notification_site_creation_title_success">Situs telah dibuat!</string>
     <string name="google_error_timeout">Google terlalu lama dalam merespons. Anda mungkin harus menunggu sampai memiliki koneksi internet yang lebih kuat.</string>

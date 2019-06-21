@@ -5,17 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.constraint.Group;
-import android.support.design.widget.Snackbar;
-import android.support.transition.TransitionManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -25,6 +14,14 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

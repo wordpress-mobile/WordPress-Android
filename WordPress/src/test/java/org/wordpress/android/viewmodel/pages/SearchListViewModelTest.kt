@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.MutableLiveData
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever

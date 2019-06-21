@@ -30,14 +30,14 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
-import org.wordpress.android.util.CrashLoggingUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -213,9 +213,13 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (event.isError()) {
             switch (event.error.type) {
-                case SETTINGS_FETCH_ERROR:
+                case SETTINGS_FETCH_GENERIC_ERROR:
                     ToastUtils
                             .showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+                    break;
+                case SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR:
+                    ToastUtils.showToast(getActivity(), R.string.error_disabled_apis,
+                            ToastUtils.Duration.LONG);
                     break;
                 case SETTINGS_POST_ERROR:
                     ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);

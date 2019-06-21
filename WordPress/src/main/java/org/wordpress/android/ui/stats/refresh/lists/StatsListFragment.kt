@@ -1,18 +1,18 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.LayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
@@ -67,7 +67,7 @@ class StatsListFragment : DaggerFragment() {
     private fun initializeViews(savedInstanceState: Bundle?) {
         val columns = resources.getInteger(R.integer.stats_number_of_columns)
         val layoutManager: LayoutManager = if (columns == 1) {
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         } else {
             StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
         }
@@ -197,9 +197,19 @@ class StatsListFragment : DaggerFragment() {
             viewModel.onListSelected()
         })
 
-        viewModel.typeMoved?.observe(this, Observer { event ->
+        viewModel.typesChanged.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                viewModel.onTypeMoved()
+                viewModel.onTypesChanged()
+            }
+        })
+
+        viewModel.scrollTo?.observe(this, Observer { event ->
+            if (event != null) {
+                (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                    event.getContentIfNotHandled()?.let { statsType ->
+                        recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
+                    }
+                }
             }
         })
     }

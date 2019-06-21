@@ -1,7 +1,7 @@
 package org.wordpress.android.viewmodel.giphy
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.paging.PositionalDataSource.LoadInitialCallback
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.PositionalDataSource.LoadInitialCallback
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doNothing

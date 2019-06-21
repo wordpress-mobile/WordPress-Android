@@ -291,10 +291,11 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -749,7 +750,7 @@
 
         <!-- Provider for exposing file URIs on Android 7+ -->
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">

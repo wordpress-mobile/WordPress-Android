@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.sitecreation.segments
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.whenever

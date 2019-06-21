@@ -13,7 +13,7 @@
         tools:visibility="gone"/>
 
     <include
-        layout="@layout/site_creation_progress"
+        layout="@layout/progress_layout"
         tools:visibility="gone"/>
 
     <RelativeLayout
@@ -42,7 +42,7 @@
             android:layout_marginLeft="@dimen/site_creation_preview_web_view_side_margin"
             android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin"/>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/sitePreviewOkButtonContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/site_creation_preview_ok_button_container_height"
@@ -52,7 +52,7 @@
             app:cardElevation="@dimen/site_creation_container_elevation"
             tools:ignore="InconsistentLayout">
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,6 +61,6 @@
                 android:layout_marginStart="@dimen/margin_extra_large"
                 android:text="@string/dialog_button_ok"
                 android:theme="@style/WordPress.Button.Primary"/>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </RelativeLayout>

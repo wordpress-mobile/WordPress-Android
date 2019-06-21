@@ -93,8 +93,16 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
     }
 
-    fun trackCreationCompleted() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_COMPLETED)
+    fun trackPreviewOkButtonTapped() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED)
+    }
+
+    /**
+     * This stat is part of a funnel that provides critical information.  Before
+     * making ANY modification to this stat please refer to: p4qSXL-35X-p2
+     */
+    fun trackSiteCreated() {
+        tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
     }
 
     fun trackFlowExited() {

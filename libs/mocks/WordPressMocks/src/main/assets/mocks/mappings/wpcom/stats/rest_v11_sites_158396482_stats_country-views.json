@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/158396482/stats/country-views/"
+        "urlPattern": "/rest/v1.1/sites/158396482/stats/country-views(/)?($|\\?.*)"
     },
     "response": {
         "status": 200,

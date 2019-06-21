@@ -28,7 +28,7 @@
         android:layout_toEndOf="@+id/icon"
         android:importantForAccessibility="no">
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             app:theme="@style/LoginTheme.EditText"
             style="@style/TextAppearance.AppCompat.Body1"
             android:id="@+id/input"

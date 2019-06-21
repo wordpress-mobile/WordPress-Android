@@ -5,8 +5,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;

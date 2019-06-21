@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.MenuItem
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 
 object ColorUtils {
     fun applyTintToDrawable(context: Context, @DrawableRes drawableResId: Int, @ColorRes colorResId: Int): Drawable {

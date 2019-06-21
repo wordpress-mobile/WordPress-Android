@@ -3,14 +3,15 @@ package org.wordpress.android.ui.prefs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;

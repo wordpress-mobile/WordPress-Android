@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 06:54:10+0000
+Translation-Revision-Date: 2019-06-11 13:54:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">Fehler beim Aktualisieren deiner Websitedetails: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">Fehler beim Abrufen der Domain-Kontaktdaten: %s</string>
+    <string name="domain_registration_error_registering_domain">Fehler während der Domain-Registrierung: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Domainname wird registriert …</string>
+    <string name="domain_registration_state_picker_dialog_title">Bundesstaat auswählen</string>
+    <string name="domain_registration_country_picker_dialog_title">Land wählen</string>
+    <string name="domain_registration_result_continue_button">Weiter</string>
+    <string name="domain_registration_result_description">Deine neue Domain &lt;b>%s&lt;/b> wird eingerichtet. Deine Website macht\n Luftsprünge vor Begeisterung!</string>
+    <string name="domain_registration_result_title">Glückwunsch</string>
+    <string name="domain_contact_information_register_domain_button">Domain registrieren</string>
+    <string name="domain_contact_information_postal_code_hint">Postleitzahl</string>
+    <string name="domain_contact_information_state_hint">Bundesstaat</string>
+    <string name="domain_contact_information_city_hint">Ort</string>
+    <string name="domain_contact_information_address_hint_two">Adresse 2</string>
+    <string name="domain_contact_information_address_hint">Adresse</string>
+    <string name="domain_contact_information_country_hint">Land</string>
+    <string name="domain_contact_information_country_code_hint">Ländercode</string>
+    <string name="domain_contact_information_phone_number_hint">Telefon</string>
+    <string name="domain_contact_information_organization_hint">Organisation (optional)</string>
+    <string name="domain_contact_information_description">Wir haben bereits deine WordPress.com-\n Kontaktinformationen für dich ausgefüllt. Überprüfe bitte, ob wir die Informationen, die du für diese Domain verwenden möchtest, korrekt eingegeben haben.</string>
+    <string name="domain_contact_information_title">Domain-Kontaktdaten</string>
+    <string name="domain_privacy_option_off_title">Öffentlich registrieren</string>
+    <string name="domain_privacy_option_on_title">Privat mit Datenschutz registrieren</string>
+    <string name="domain_registration_privacy_protection_description">Domain-Eigentümer müssen ihre Kontaktinformationen in einer öffentlichen Datenbank aller Domains veröffentlichen.\n Durch den Datenschutz veröffentlichen wir unsere eigenen Informationen anstatt deinen und leiten sämtliche Kommunikation vertraulich an dich weiter.</string>
+    <string name="domain_registration_privacy_protection_title">Datenschutz</string>
+    <string name="domain_registration_contact_form_input_error">Bitte gib eine gültige %s ein</string>
+    <string name="domains_suggestions_choose_domain">Domain auswählen</string>
+    <string name="stats_management_new">Neu</string>
+    <string name="stats_management_edit">Bearbeiten</string>
+    <string name="stats_management_dismiss_insights_news_card">Verwerfen</string>
+    <string name="stats_management_try_it_now">Jetzt ausprobieren</string>
+    <string name="stats_management_news_card_message">Wähle aus, welche Statistiken du sehen möchtest, und konzentriere dich auf die Daten, die für dich am Wichtigsten sind. Tippe unten in Einsichten auf %1$s, um deine Statistiken anzupassen.</string>
+    <string name="stats_manage_your_stats">Deine Statistiken verwalten</string>
+    <string name="history_fetching_revisions">Revisionen werden abgerufen…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Medien hochladen fehlgeschlagen.\nBitte tippen für Optionen.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Medien einfügen fehlgeschlagen.\nBitte tippen für neuen Versuch.</string>
+    <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
+    <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
     <string name="post_list_drafts">Entwürfe</string>
     <string name="post_list_published">Veröffentlicht</string>
     <string name="post_list_author_everyone">Jeder</string>
@@ -18,10 +57,9 @@ Language: de
     <string name="stats_insights_social">Social Media</string>
     <string name="stats_insights_annual_site_stats">Jährliche Website-Statistiken</string>
     <string name="stats_view_follower_totals">Follower insgesamt</string>
-    <string name="suggestion_fetch_error">Domain-Vorschläge konnten nicht geladen werden</string>
-    <string name="suggestions_search_hint">Gib ein Stichwort ein, um weitere Ideen zu erhalten</string>
-    <string name="suggestions_empty_list">Keine Vorschläge gefunden</string>
-    <string name="choose_domain">Domain auswählen</string>
+    <string name="domain_suggestions_fetch_error">Domain-Vorschläge konnten nicht geladen werden</string>
+    <string name="domain_suggestions_search_hint">Gib ein Stichwort ein, um weitere Ideen zu erhalten</string>
+    <string name="domains_suggestions_empty_list">Keine Vorschläge gefunden</string>
     <string name="register_domain">Domain registrieren</string>
     <string name="jetpack_installed_message">Jetpack ist installiert. Jetzt müssen wir nur noch die Einrichtung abschließen. Dies dauert nur eine Minute.</string>
     <string name="stats_menu_remove">Aus Einsichten entfernen</string>
@@ -93,7 +131,6 @@ Language: de
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Nicht unterstützter Block</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL einfügen</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WÄHLE EIN BILD AUS</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Das Einfügen von Medien ist fehlgeschlagen.\nBitte tippe hier für Optionen.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Alle Einstellungen löschen</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Alt-Text</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress-Mediathek</string>
@@ -211,7 +248,6 @@ Language: de
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
     <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
     <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte später erneut versuchen</string>
-    <string name="site_creation_label_domain_selection">Wähle eine verfügbare Adresse aus, damit andere dich im Web finden.</string>
     <string name="giphy_powered_by_giphy">Bereitgestellt von GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Einige Medien konnten aufgrund eines Netzwerkfehlers nicht geladen werden.</string>
     <string name="giphy_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
@@ -269,6 +305,7 @@ Language: de
     <string name="stats_followers_count_message">%1$s-Follower insgesamt: %2$s</string>
     <string name="stats_followers_email">E-Mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_manage_insights">Einsichten verwalten</string>
     <string name="stats_empty_insights_title">Noch keine Einsichten hinzugefügt</string>
     <string name="stats_no_data_yet">Noch keine Daten</string>
     <string name="menu_debug">Debug-Menü</string>
@@ -376,9 +413,13 @@ Language: de
     <string name="reader_empty_followed_tags_subtitle">Füge hier Tags hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
     <string name="install_jetpack_retry">Erneut versuchen</string>
+    <string name="install_jetpack_continue">Weiter</string>
+    <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
     <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
     <string name="jetpack_installed">Jetpack installiert</string>
+    <string name="installing_jetpack_message">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern</string>
     <string name="installing_jetpack">Jetpack installieren</string>
+    <string name="install_jetpack_message">Deine Website-Anmeldedaten werden nicht gespeichert und werden verwendet, um Jetpack zu installieren</string>
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
@@ -532,7 +573,6 @@ Language: de
     <string name="content_description_people_looking_charts">Personen, die auf Diagramme und Grafiken schauen</string>
     <string name="comment_title">%s auf %s</string>
     <string name="dialog_confirm_delete_permanently_post">Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest?</string>
-    <string name="notification_site_creation_title_in_progress">Website wird erstellt … Dies kann ein paar Minuten dauern.</string>
     <string name="notification_channel_important_title">Wichtig</string>
     <string name="notification_channel_general_title">Allgemein</string>
     <string name="photo_picker_use_photo">Dieses Foto verwenden</string>
@@ -545,10 +585,6 @@ Language: de
     <string name="site_settings_quota_space_unlimited">%1$s von unbegrenzt</string>
     <string name="preview_count">%d in der Vorschau anzeigen</string>
     <string name="add_count">%d hinzufügen</string>
-    <string name="site_creation_domain_selection_title">Neue Website erstellen, Schritt 4</string>
-    <string name="site_creation_site_details_title">Neue Website erstellen, Schritt 3</string>
-    <string name="site_creation_theme_selection_title">Neue Website erstellen, Schritt 2</string>
-    <string name="site_creation_category_title">Neue Website erstellen, Schritt 1</string>
     <string name="stats_followers_many_desc">%d Follower</string>
     <string name="stats_followers_one_desc">ein Follower</string>
     <string name="stats_followers_zero_desc">null Follower</string>
@@ -646,7 +682,6 @@ Language: de
     <string name="help_screen_title">Hilfe und Support</string>
     <string name="license_screen_title">Lizenz</string>
     <string name="release_notes_screen_title">Versionshinweise</string>
-    <string name="site_creation_creating_failed_extended">Es ist ein unerwartetes Problem aufgetreten. Versuche es am besten noch einmal.</string>
     <string name="signup_epilogue_error_avatar_view">Dein Avatar wurde hochgeladen und ist in Kürze verfügbar.</string>
     <string name="email_not_registered_wpcom">Hmm, wir können kein WordPress.com-Konto finden, das mit dieser E-Mail-Adresse verknüpft ist. Versuche, dich über den unten stehenden Link mit deiner Website-Adresse anzumelden.</string>
     <string name="permissions_denied_message">Scheinbar hast du die Rechte, die für diese Funktion erforderlich sind, deaktiviert.&lt;br/>&lt;br/>Bearbeite deine Rechte, um dies zu ändern, und stelle sicher, dass &lt;strong>%s&lt;/strong> aktiviert ist.</string>
@@ -698,44 +733,7 @@ Language: de
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Ersten Beitrag verfassen</string>
-    <string name="site_creation_epilogue_configure">Konfigurieren </string>
-    <string name="site_creation_epilogue_congrats">Glückwunsch!\nDeine Website ist startklar.</string>
-    <string name="site_creation_creating_modal">Bitte warte, bis die Erstellung deiner Website abgeschlossen ist.</string>
-    <string name="site_creation_creating_retry">Erneut versuchen</string>
-    <string name="site_creation_creating_failed">Es ist ein Fehler aufgetreten …</string>
-    <string name="site_creation_creating_preparing_frontend">Front-End wird vorbereitet …</string>
-    <string name="site_creation_creating_configuring_theme">Website-Stil wird konfiguriert …</string>
-    <string name="site_creation_creating_configuring_content">Website-Inhalt wird konfiguriert …</string>
-    <string name="site_creation_creating_fetching_info">Website-Informationen werden abgerufen …</string>
-    <string name="site_creation_creating_laying_foundation">Grundlagen für Website werden gelegt …</string>
-    <string name="site_creation_empty_site_title">Bitte gib einen Titel für deine Website ein</string>
-    <string name="site_creation_tagline_helper">Der Untertitel ist eine kurzer Text, der in den meisten Themes direkt unter dem Titel angezeigt wird. Er wird auch von Suchmaschinen im Suchergebnis angezeigt.</string>
-    <string name="site_creation_tagline_hint">Website-Untertitel (optional)</string>
-    <string name="site_creation_title_hint">Website-Titel</string>
     <string name="site_creation_domain_finish_button">Website erstellen</string>
-    <string name="site_creation_domain_keywords_hint">Gib ein Stichwort ein, um weitere Vorschläge zu erhalten</string>
-    <string name="site_creation_label_domain_selection_title">Schritt 4 von 4</string>
-    <string name="site_creation_label_site_details">Erzähle uns mehr von der Website, die du erstellen möchtest. Was sollen ihr Titel und Untertitel sein?</string>
-    <string name="site_creation_label_site_details_title">Schritt 3 von 4</string>
-    <string name="site_creation_label_theme_loading">Bitte warte, während die Themes geladen werden</string>
-    <string name="site_creation_label_theme_selection">Mit einem unserer beliebten Themes kannst du schneller loslegen. Sobald deine Website erstellt ist, kannst du aus Hunderten weiterer Themes wählen.</string>
-    <string name="site_creation_label_theme_selection_title">Schritt 2 von 4</string>
-    <string name="site_creation_subtitle_portfolio">Um deine kreativen Projekte visuell ansprechend zu präsentieren.</string>
-    <string name="site_creation_title_portfolio">Beginne mit einem Portfolio</string>
-    <string name="site_creation_subtitle_website">Um dein Unternehmen oder deine Marke zu bewerben und deine Zielgruppe anzusprechen.</string>
-    <string name="site_creation_title_website">Beginne mit einer Website</string>
-    <string name="site_creation_subtitle_blog">Um deine Ideen, Geschichten und Fotos mit deinen Followern zu teilen.</string>
-    <string name="site_creation_title_blog">Beginne mit einem Blog</string>
-    <string name="site_creation_label_category">Welche Art von Website brauchst du?\nWähle unten eine Option:</string>
-    <string name="site_creation_label_category_title">Schritt 1 von 4</string>
-    <string name="site_creation_title">Neue Website erstellen</string>
-    <string name="notification_site_creation_failed">Es ist ein Fehler aufgetreten.</string>
-    <string name="notification_site_creation_title_stopped">Die Erstellung der Website wurde angehalten</string>
-    <string name="notification_site_creation_step_theme">Schritt 4 von 4</string>
-    <string name="notification_site_creation_step_tagline">Schritt 3 von 4</string>
-    <string name="notification_site_creation_step_fetching">Schritt 2 von 4</string>
-    <string name="notification_site_creation_step_creating">Schritt 1 von 4</string>
     <string name="notification_site_creation_created">Zum Fortfahren tippen.</string>
     <string name="notification_site_creation_title_success">Die Website wurde erstellt!</string>
     <string name="google_error_timeout">Google hat zu lange gebraucht, um zu antworten. Gegebenenfalls musst du warten, bis du eine stärkere Internetverbindung hast.</string>
@@ -1043,6 +1041,8 @@ Language: de
     <string name="editor_dropped_text_error">Beim Ablegen des Textes ist ein Fehler aufgetreten</string>
     <string name="editor_dropped_html_images_not_allowed">Im HTML-Modus können keine Bilder abgelegt werden</string>
     <string name="editor_content_hint">Erzähle deine Geschichte hier …</string>
+    <string name="post_list_trashed">Im Papierkorb</string>
+    <string name="post_list_scheduled">Geplant</string>
     <string name="post_status_post_private">Privat</string>
     <string name="post_status_draft">Entwurf</string>
     <string name="post_status_pending_review">Ausstehender Review</string>

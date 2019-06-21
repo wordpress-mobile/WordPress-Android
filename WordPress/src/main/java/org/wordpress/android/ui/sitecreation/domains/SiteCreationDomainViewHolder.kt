@@ -1,15 +1,13 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import android.support.annotation.LayoutRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
@@ -54,8 +52,8 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
         }
 
         private fun addRetryCompoundDrawable() {
-            val drawable = itemView.context.getDrawable(drawable.retry_icon)
-            drawable.setTint(ContextCompat.getColor(itemView.context, color.primary))
+            val drawable = itemView.context.getDrawable(R.drawable.retry_icon)
+            drawable.setTint(ContextCompat.getColor(itemView.context, R.color.primary))
             retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         }
 

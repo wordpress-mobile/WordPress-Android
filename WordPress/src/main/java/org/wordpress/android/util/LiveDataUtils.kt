@@ -1,9 +1,9 @@
 package org.wordpress.android.util
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -95,6 +95,27 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
         mediator.value = Pair(mediator.value?.first, it)
     }
     return mediator.map { (dataA, dataB) -> merger(dataA, dataB) }
+}
+
+/**
+ * Merges two LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @return new data source
+ */
+fun <T> merge(sourceA: LiveData<T>?, sourceB: LiveData<T>?): MediatorLiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    if (sourceA != null) {
+        mediator.addSource(sourceA) {
+            mediator.value = it
+        }
+    }
+    if (sourceB != null) {
+        mediator.addSource(sourceB) {
+            mediator.value = it
+        }
+    }
+    return mediator
 }
 
 /**

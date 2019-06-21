@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -11,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.DrawableRes;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;

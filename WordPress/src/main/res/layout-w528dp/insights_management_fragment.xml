@@ -7,7 +7,7 @@ android:id="@+id/insightsManagementScrollView"
 android:layout_width="wrap_content"
 android:layout_height="match_parent">
 
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/insightsManagementContainer"
     style="@style/StatsInsightManagementList"
     android:paddingBottom="@dimen/margin_large"
@@ -30,7 +30,7 @@ android:layout_height="match_parent">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/addedInsightsCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@ android:layout_height="match_parent">
         app:cardCornerRadius="@dimen/default_cardview_radius"
         app:cardElevation="@dimen/default_cardview_elevation">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/addedInsights"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@ android:layout_height="match_parent">
             android:scrollbars="none"
             tools:listitem="@layout/insights_management_list_item"/>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/addedInsightsInfo"
@@ -81,7 +81,7 @@ android:layout_height="match_parent">
         app:layout_constraintTop_toBottomOf="@id/addedInsightsInfo"
         android:text="@string/stats_insights_add_insights_header"/>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/removedInsightsCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@ android:layout_height="match_parent">
         app:cardCornerRadius="@dimen/default_cardview_radius"
         app:cardElevation="@dimen/default_cardview_elevation">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/removedInsights"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -102,8 +102,8 @@ android:layout_height="match_parent">
             tools:listitem="@layout/insights_management_list_item"
             />
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

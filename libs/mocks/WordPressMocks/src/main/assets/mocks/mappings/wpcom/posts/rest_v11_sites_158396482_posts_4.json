@@ -11,7 +11,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "ID": 106,
+            "ID": 4,
             "site_ID": 158396482,
             "author": {
                 "ID": 152748359,
@@ -34,7 +34,7 @@
             "content": "John was shortlisted for the World Press Photo competition, an international celebration of the best photojournalism of the year.\n\nhttps://twitter.com/wordpressdotcom/status/702181837079187456",
             "excerpt": "",
             "slug": "some-news-to-share",
-            "guid": "https://infocusphotographers.wordpress.com/?p=106",
+            "guid": "https://infocusphotographers.wordpress.com/?p=4",
             "status": "publish",
             "sticky": false,
             "password": "",
@@ -79,9 +79,9 @@
                         "parent": 0,
                         "meta": {
                             "links": {
-                                "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized",
-                                "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
-                                "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                                "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized",
+                                "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
+                                "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
                             }
                         }
                     }
@@ -101,9 +101,9 @@
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized",
-                            "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
-                            "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
                         }
                     }
                 }
@@ -124,12 +124,12 @@
             ],
             "meta": {
                 "links": {
-                    "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/4",
-                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/4/help",
-                    "site": "https://public-api.wordpress.com/rest/v1.1/sites/158396482",
-                    "replies": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/4/replies/",
-                    "likes": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/4/likes/",
-                    "autosave": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/4/autosave"
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/4",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/4/help",
+                    "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482",
+                    "replies": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/4/replies/",
+                    "likes": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/4/likes/",
+                    "autosave": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/4/autosave"
                 }
             },
             "capabilities": {

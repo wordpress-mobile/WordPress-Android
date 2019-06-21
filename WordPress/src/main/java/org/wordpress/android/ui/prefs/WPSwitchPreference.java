@@ -6,10 +6,6 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.preference.SwitchPreference;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -18,6 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
 

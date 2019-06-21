@@ -1,15 +1,13 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import android.support.annotation.LayoutRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
@@ -66,8 +64,8 @@ sealed class SiteCreationVerticalsViewHolder(internal val parent: ViewGroup, @La
         }
 
         private fun addRetryCompoundDrawable() {
-            val drawable = itemView.context.getDrawable(drawable.retry_icon)
-            drawable?.setTint(ContextCompat.getColor(itemView.context, color.primary))
+            val drawable = itemView.context.getDrawable(R.drawable.retry_icon)
+            drawable?.setTint(ContextCompat.getColor(itemView.context, R.color.primary))
             retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         }
 

@@ -5,7 +5,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/post_list_author_selection_image"
         android:layout_width="@dimen/posts_list_spinner_avatar_size"
         android:layout_height="@dimen/posts_list_spinner_avatar_size"
