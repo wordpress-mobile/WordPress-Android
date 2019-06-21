@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.NotificationStore.NotificationError
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDeviceResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.UnregisterDeviceResponsePayload
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
@@ -153,11 +152,9 @@ class NotificationRestClient constructor(
      *
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      *
-     * @param siteStore A reference to [SiteStore] used for finding and populating the localSiteId property of
-     * [NotificationModel]
      * @param remoteNoteIds Optional. A list of remote notification ids to be fetched from the remote api
      */
-    fun fetchNotifications(siteStore: SiteStore, remoteNoteIds: List<Long>? = null) {
+    fun fetchNotifications(remoteNoteIds: List<Long>? = null) {
         val url = WPCOMREST.notifications.urlV1_1
         val params = mutableMapOf(
                 "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
@@ -189,7 +186,7 @@ class NotificationRestClient constructor(
     }
 
     /**
-     * Fetch a single notification by it's remote note_id.
+     * Fetch a single notification by its remote note_id.
      *
      * https://developer.wordpress.com/docs/api/1/get/notifications/%s
      */
