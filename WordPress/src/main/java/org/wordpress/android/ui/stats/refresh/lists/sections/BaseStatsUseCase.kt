@@ -102,10 +102,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }
 
-    enum class UseCaseParam {
-        SITE, SELECTED_DATE
-    }
-
     protected suspend fun evaluateState(state: State<DOMAIN_MODEL>) {
         val useCaseState = when (state) {
             is Error -> ERROR
@@ -251,5 +247,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     enum class UseCaseMode {
         BLOCK,
         VIEW_ALL
+    }
+
+    enum class UseCaseParam {
+        SITE,
+        SELECTED_DATE
     }
 }

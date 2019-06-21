@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
@@ -101,7 +101,7 @@ class StatsViewModel
             }
         } else {
             _isRefreshing.value = false
-            _showSnackbarMessage.value = SnackbarMessageHolder(string.no_network_title)
+            _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
         }
     }
 
