@@ -890,7 +890,8 @@ public class EditPostActivity extends AppCompatActivity implements
             case UNKNOWN:
                 return PrimaryAction.UPDATE;
         }
-        return PrimaryAction.SAVE;
+        throw new IllegalStateException(
+                "Switch in getPrimaryAction is missing a required case or the case is missing \"return\" keyword ");
     }
 
     private String getPrimaryActionText() {
@@ -906,7 +907,8 @@ public class EditPostActivity extends AppCompatActivity implements
             case SAVE:
                 return getString(R.string.save);
         }
-        return getString(R.string.save);
+        throw new IllegalStateException(
+                "Switch in getPrimaryActionText is missing a required case or the case is missing \"return\" keyword ");
     }
 
     private SecondaryAction getSecondaryAction() {
@@ -927,7 +929,8 @@ public class EditPostActivity extends AppCompatActivity implements
             case UNKNOWN:
                 return SecondaryAction.SAVE_AS_DRAFT;
         }
-        return SecondaryAction.NONE;
+        throw new IllegalStateException(
+                "Switch in getSecondaryAction is missing a required case or the case is missing \"return\" keyword ");
     }
 
     private String getSecondaryActionText() {
@@ -939,9 +942,11 @@ public class EditPostActivity extends AppCompatActivity implements
             case PUBLISH_NOW:
                 return getString(R.string.menu_publish_now);
             case NONE:
-                throw new IllegalStateException("getSecondaryActionText shouldn't be called with that case");
+                throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
         }
-        throw new IllegalStateException("getSecondaryActionText shouldn't be called with that case");
+        throw new IllegalStateException(
+                "Switch in getSecondaryActionText is missing a required case or the case is missing \"return\" "
+                + "keyword ");
     }
 
     private boolean isPhotoPickerShowing() {
@@ -1452,8 +1457,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 showPublishConfirmationDialogAndPublishPost();
                 return true;
             case NONE:
-                // Error: noop
-                return false;
+                throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
         }
         return false;
     }
@@ -1556,6 +1560,7 @@ public class EditPostActivity extends AppCompatActivity implements
             case SUBMIT_FOR_REVIEW:
             case SAVE:
                 uploadPost(false);
+                break;
         }
     }
 
