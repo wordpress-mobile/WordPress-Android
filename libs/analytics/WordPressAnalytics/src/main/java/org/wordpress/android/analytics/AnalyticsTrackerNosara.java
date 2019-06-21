@@ -1011,8 +1011,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_view_all_accessed";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
-            case STATS_COMMENTS_VIEW_MORE_TAPPED:
-                return "stats_comments_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
