@@ -30,8 +30,7 @@ constructor(
     dispatcher: Dispatcher,
     private val context: Context,
     private val notificationRestClient: NotificationRestClient,
-    private val notificationSqlUtils: NotificationSqlUtils,
-    private val siteStore: SiteStore
+    private val notificationSqlUtils: NotificationSqlUtils
 ) : Store(dispatcher) {
     companion object {
         const val WPCOM_PUSH_DEVICE_UUID = "NOTIFICATIONS_UUID_PREF_KEY"
@@ -353,7 +352,7 @@ constructor(
             notificationRestClient.fetchNotificationHashes()
         } else {
             // Fetch all notifications from the remote
-            notificationRestClient.fetchNotifications(siteStore)
+            notificationRestClient.fetchNotifications()
         }
     }
 
@@ -394,7 +393,7 @@ constructor(
         }
 
         // Fetch new and updated notifications from the remote api
-        notificationRestClient.fetchNotifications(siteStore, notifsToFetch.keys.toList())
+        notificationRestClient.fetchNotifications(notifsToFetch.keys.toList())
     }
 
     private fun handleFetchNotificationsCompleted(payload: FetchNotificationsResponsePayload) {
