@@ -30,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -130,17 +131,6 @@ constructor(
             }
         }
         return items
-    }
-
-    private fun getBarWidth(
-        views: Int,
-        maxViews: Int
-    ): Int? {
-        return if (maxViews > 0) {
-            ((views.toDouble() / maxViews.toDouble()) * 100).toInt()
-        } else {
-            null
-        }
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {

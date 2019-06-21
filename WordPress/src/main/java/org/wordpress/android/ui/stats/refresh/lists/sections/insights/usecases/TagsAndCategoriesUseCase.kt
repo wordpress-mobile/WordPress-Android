@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUse
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -128,17 +129,6 @@ class TagsAndCategoriesUseCase
             }
         }
         return items
-    }
-
-    private fun getBarWidth(
-        views: Long,
-        maxViews: Long
-    ): Int? {
-        return if (maxViews > 0) {
-            ((views.toDouble() / maxViews.toDouble()) * 100).toInt()
-        } else {
-            null
-        }
     }
 
     private fun buildTitle() = Title(string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
