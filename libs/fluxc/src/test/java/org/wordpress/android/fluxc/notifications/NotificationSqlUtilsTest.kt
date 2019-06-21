@@ -82,7 +82,7 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 153482281 }
+        val site = SiteModel().apply { siteId = 153482281 }
         val notesList = apiResponse.notes?.map {
             NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
@@ -101,7 +101,7 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/store-order-notification.json")
         val apiResponse = NotificationTestUtils.parseNotificationApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 141286411 }
+        val site = SiteModel().apply { siteId = 141286411 }
         val notesList = listOf(NotificationApiResponse.notificationResponseToNotificationModel(apiResponse))
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
         assertEquals(1, inserted)
@@ -181,7 +181,7 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/store-review-notification.json")
         val apiResponse = NotificationTestUtils.parseNotificationApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 153482281 }
+        val site = SiteModel().apply { siteId = 153482281 }
         val notesList = listOf(NotificationApiResponse.notificationResponseToNotificationModel(apiResponse))
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
         assertEquals(1, inserted)
@@ -248,7 +248,7 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 153482281 }
+        val site = SiteModel().apply { siteId = 153482281 }
         val notesList = apiResponse.notes?.map {
             NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
@@ -287,7 +287,7 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 153482281 }
+        val site = SiteModel().apply { siteId = 153482281 }
         val notesList = apiResponse.notes?.map {
             NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
@@ -312,7 +312,7 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 153482281 }
+        val site = SiteModel().apply { siteId = 153482281 }
         val notesList = apiResponse.notes?.map {
             NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
@@ -357,7 +357,7 @@ class NotificationSqlUtilsTest {
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
         assertEquals(6, inserted)
 
-        val site = SiteModel().apply { id = 0 }
+        val site = SiteModel().apply { siteId = 153482281 }
         val hasUnread = notificationSqlUtils.hasUnreadNotificationsForSite(site)
         assertEquals(hasUnread, true)
     }
@@ -371,7 +371,6 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 153482281 }
         val notesList = apiResponse.notes?.map {
             NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
