@@ -7,7 +7,7 @@ import java.util.Locale
 data class NotificationModel(
     val noteId: Int = 0,
     val remoteNoteId: Long = 0L,
-    var localSiteId: Int = 0,
+    var remoteSiteId: Long = 0L,
     var noteHash: Long = 0L,
     val type: Kind = Kind.UNKNOWN,
     val subtype: Subkind? = Subkind.NONE,
@@ -61,10 +61,8 @@ data class NotificationModel(
         }
     }
 
-    fun getRemoteSiteId(): Long? = meta?.ids?.site
-
     fun toLogString(): String {
         return "[id=$noteId, remoteNoteId=$remoteNoteId, read=$read, " +
-                "localSiteId=$localSiteId, type=${type.name}, subtype=${subtype?.name}, title=$title]"
+                "siteId=$remoteSiteId, type=${type.name}, subtype=${subtype?.name}, title=$title]"
     }
 }
