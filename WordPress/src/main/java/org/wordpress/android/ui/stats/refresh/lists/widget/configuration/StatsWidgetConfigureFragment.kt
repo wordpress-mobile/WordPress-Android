@@ -87,7 +87,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
         }
         color_container.setOnClickListener {
-            ColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
+            StatsWidgetColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
         }
 
         add_widget_button.setOnClickListener {

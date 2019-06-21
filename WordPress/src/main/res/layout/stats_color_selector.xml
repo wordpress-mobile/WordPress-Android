@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/colors"
+    android:id="@+id/data_types"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="beforeDescendants"
