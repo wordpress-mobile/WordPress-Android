@@ -1156,23 +1156,23 @@ public class EditPostActivity extends AppCompatActivity implements
             showMenuItems = false;
         }
 
-        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_secondary_action);
+        MenuItem secondaryAction = menu.findItem(R.id.menu_secondary_action);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
-        if (saveAsDraftMenuItem != null && mPost != null) {
+        if (secondaryAction != null && mPost != null) {
             switch (getSecondaryAction()) {
                 case SAVE_AS_DRAFT:
                 case SAVE:
                 case PUBLISH_NOW:
-                    saveAsDraftMenuItem.setVisible(showMenuItems);
-                    saveAsDraftMenuItem.setTitle(getSecondaryActionText());
+                    secondaryAction.setVisible(showMenuItems);
+                    secondaryAction.setTitle(getSecondaryActionText());
                     break;
                 case NONE:
-                    saveAsDraftMenuItem.setVisible(false);
+                    secondaryAction.setVisible(false);
                     break;
             }
         }
@@ -1199,12 +1199,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
         showHideDiscardLocalChangesMenuOption(showMenuItems, discardChanges);
 
-        // Set text of the save button in the ActionBar
+        // Set text of the primary action button in the ActionBar
         if (mPost != null) {
-            MenuItem saveMenuItem = menu.findItem(R.id.menu_primary_action);
-            if (saveMenuItem != null) {
-                saveMenuItem.setTitle(getPrimaryActionText());
-                saveMenuItem.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
+            MenuItem primaryAction = menu.findItem(R.id.menu_primary_action);
+            if (primaryAction != null) {
+                primaryAction.setTitle(getPrimaryActionText());
+                primaryAction.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
             }
         }
 
