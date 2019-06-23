@@ -52,6 +52,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     public static final String EXTRA_MEDIA_URI = "media_uri";
     public static final String EXTRA_MEDIA_ID = "media_id";
+    public static final String EXTRA_MEDIA_QUEUED = "media_queued";
 
     // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
@@ -257,7 +258,9 @@ public class PhotoPickerActivity extends AppCompatActivity
                                                  @Override
                                                  public void doNext(Uri uri) {
                                                      queueFeaturedImageForUpload(uri, mimeType);
-                                                     setResult(RESULT_OK);
+                                                     Intent intent = new Intent()
+                                                             .putExtra(EXTRA_MEDIA_QUEUED, true);
+                                                     setResult(RESULT_OK, intent);
                                                      finish();
                                                  }
                                              });
