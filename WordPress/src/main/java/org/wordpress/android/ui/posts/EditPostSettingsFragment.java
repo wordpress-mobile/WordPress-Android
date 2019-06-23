@@ -60,6 +60,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -89,6 +90,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -139,6 +141,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject UploadStore mUploadStore;
 
 
     interface EditPostActivityHook {
@@ -395,10 +398,26 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void cancelFeaturedImageUpload() {
         MediaModel mediaModel = UploadService.getPendingOrInProgressFeaturedImageUploadForPost(getPost());
+        if (mediaModel == null) {
+            mediaModel = getFailedFeaturedImageUpload();
+        }
         if (mediaModel != null) {
             CancelMediaPayload payload = new CancelMediaPayload(getSite(), mediaModel, true);
             mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+            UploadService.cancelFinalNotification(getContext(), getPost());
+            UploadService.cancelFinalNotificationForMedia(getContext(), getSite());
+            updateFeaturedImageView();
         }
+    }
+
+    private MediaModel getFailedFeaturedImageUpload() {
+        Set<MediaModel> failedMediaForPost = mUploadStore.getFailedMediaForPost(getPost());
+        for (MediaModel item : failedMediaForPost) {
+            if (item.getMarkedLocallyAsFeatured()) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public void refreshViews() {
@@ -927,11 +946,15 @@ public class EditPostSettingsFragment extends Fragment {
         }
         PostModel postModel = getPost();
         if (UploadService.getPendingOrInProgressFeaturedImageUploadForPost(postModel) != null) {
-            showFeaturedImageProgress();
+            updateFeaturedImageState(FeaturedImageState.IMAGE_UPLOAD_IN_PROGRESS);
+            return;
+        }
+        if (getFailedFeaturedImageUpload() != null) {
+            updateFeaturedImageState(FeaturedImageState.IMAGE_UPLOAD_FAILED);
             return;
         }
         if (!postModel.hasFeaturedImage()) {
-            showFeaturedImageButton();
+            updateFeaturedImageState(FeaturedImageState.IMAGE_EMPTY);
             return;
         }
 
@@ -941,7 +964,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        showFeaturedImage();
+        updateFeaturedImageState(FeaturedImageState.IMAGE_SET);
 
         // Get max width for photon thumbnail
         int width = DisplayUtils.getDisplayPixelWidth(getActivity());
@@ -1155,22 +1178,29 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void showFeaturedImage() {
-        mFeaturedImageView.setVisibility(View.VISIBLE);
-        mFeaturedImageButton.setVisibility(View.GONE);
-        mFeaturedImageProgress.setVisibility(View.GONE);
-    }
-
-
-    private void showFeaturedImageButton() {
-        mFeaturedImageView.setVisibility(View.GONE);
-        mFeaturedImageButton.setVisibility(View.VISIBLE);
-        mFeaturedImageProgress.setVisibility(View.GONE);
-    }
-
-    private void showFeaturedImageProgress() {
+    private void updateFeaturedImageState(FeaturedImageState state) {
         mFeaturedImageView.setVisibility(View.GONE);
         mFeaturedImageButton.setVisibility(View.GONE);
-        mFeaturedImageProgress.setVisibility(View.VISIBLE);
+        mFeaturedImageProgress.setVisibility(View.GONE);
+
+        switch (state) {
+            case IMAGE_EMPTY:
+                mFeaturedImageButton.setVisibility(View.VISIBLE);
+                break;
+            case IMAGE_SET:
+                mFeaturedImageView.setVisibility(View.VISIBLE);
+                break;
+            case IMAGE_UPLOAD_IN_PROGRESS:
+            case IMAGE_UPLOAD_FAILED:
+                mFeaturedImageProgress.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    enum FeaturedImageState {
+        IMAGE_EMPTY,
+        IMAGE_SET,
+        IMAGE_UPLOAD_IN_PROGRESS,
+        IMAGE_UPLOAD_FAILED
     }
 }
