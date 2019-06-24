@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
+import org.wordpress.android.fluxc.list.ListDescriptorUnitTestCase
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.AuthorFilter
 import org.wordpress.android.fluxc.model.list.ListOrder.ASC
@@ -17,14 +18,7 @@ import org.wordpress.android.fluxc.model.list.PostListOrderBy.DATE
 import org.wordpress.android.fluxc.model.list.PostListOrderBy.ID
 import org.wordpress.android.fluxc.model.post.PostStatus
 
-internal class PostListDescriptorTestCase(
-    val typeIdentifierReason: String,
-    val uniqueIdentifierReason: String,
-    val descriptor1: PostListDescriptor,
-    val descriptor2: PostListDescriptor,
-    val shouldHaveSameTypeIdentifier: Boolean,
-    val shouldHaveSameUniqueIdentifier: Boolean
-)
+private typealias PostListDescriptorTestCase = ListDescriptorUnitTestCase<PostListDescriptor>
 
 @RunWith(Parameterized::class)
 internal class PostListDescriptorTest(
@@ -235,35 +229,11 @@ internal class PostListDescriptorTest(
 
     @Test
     fun `test type identifier`() {
-        if (testCase.shouldHaveSameTypeIdentifier) {
-            assertSameTypeIdentifiers(
-                    reason = testCase.typeIdentifierReason,
-                    descriptor1 = testCase.descriptor1,
-                    descriptor2 = testCase.descriptor2
-            )
-        } else {
-            assertDifferentTypeIdentifiers(
-                    reason = testCase.typeIdentifierReason,
-                    descriptor1 = testCase.descriptor1,
-                    descriptor2 = testCase.descriptor2
-            )
-        }
+        testCase.testTypeIdentifier()
     }
 
     @Test
     fun `test unique identifier`() {
-        if (testCase.shouldHaveSameUniqueIdentifier) {
-            assertSameUniqueIdentifiers(
-                    reason = testCase.uniqueIdentifierReason,
-                    descriptor1 = testCase.descriptor1,
-                    descriptor2 = testCase.descriptor2
-            )
-        } else {
-            assertDifferentUniqueIdentifiers(
-                    reason = testCase.uniqueIdentifierReason,
-                    descriptor1 = testCase.descriptor1,
-                    descriptor2 = testCase.descriptor2
-            )
-        }
+        testCase.testUniqueIdentifier()
     }
 }

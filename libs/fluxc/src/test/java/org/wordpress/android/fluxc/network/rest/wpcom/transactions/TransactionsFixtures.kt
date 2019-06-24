@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.transactions
 
 import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Product
 
 val SUPPORTED_COUNTRIES_MODEL = arrayOf(
@@ -12,8 +13,8 @@ val CREATE_SHOPPING_CART_RESPONSE = CreateShoppingCartResponse(
         76,
         22.toString(),
         listOf(
-                Product("76", "superraredomainname156726.blog"),
-                Product("1001", "other product")
+                Product(76, "superraredomainname156726.blog", Extra(true)),
+                Product(1001, "other product", Extra(true))
         )
 )
 
