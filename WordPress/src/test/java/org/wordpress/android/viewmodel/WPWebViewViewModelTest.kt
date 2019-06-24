@@ -12,12 +12,14 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.test
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
 
 @RunWith(MockitoJUnitRunner::class)
@@ -40,35 +42,41 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `progress shown on start`() = test {
-        viewModel.start()
+        viewModel.start(WPWebViewActivity.ActionableReusableState.NONE)
         Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 
     @Test
     fun `error shown on start when internet access not available`() = test {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
-        viewModel.start()
+        viewModel.start(WPWebViewActivity.ActionableReusableState.NONE)
         Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `error shown on error failure`() {
-        viewModel.start()
+        viewModel.start(WPWebViewActivity.ActionableReusableState.NONE)
         viewModel.onReceivedError()
         Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `show content on UrlLoaded`() {
-        viewModel.start()
+        viewModel.start(WPWebViewActivity.ActionableReusableState.NONE)
         viewModel.onUrlLoaded()
         Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
     }
 
     @Test
     fun `show progress screen on retry clicked`() {
-        viewModel.start()
+        viewModel.start(WPWebViewActivity.ActionableReusableState.NONE)
         viewModel.loadIfNecessary()
         Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
+    }
+
+    @Test
+    fun `preview not available actionable shown when asked`() = test {
+        viewModel.start(WPWebViewActivity.ActionableReusableState.REMOTE_PREVIEW_NOT_AVAILABLE)
+        Assertions.assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenNotAvailableUiState::class.java)
     }
 }
