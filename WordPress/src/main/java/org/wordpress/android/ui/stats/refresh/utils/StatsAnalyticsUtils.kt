@@ -4,13 +4,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val GRANULARITY_PROPERTY = "granularity"
@@ -35,13 +28,13 @@ fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranular
 
 fun AnalyticsTrackerWrapper.trackWithSection(stat: Stat, section: StatsSection) {
     val property = when (section) {
-        DAYS -> DAYS_PROPERTY
-        WEEKS -> WEEKS_PROPERTY
-        MONTHS -> MONTHS_PROPERTY
-        YEARS -> YEARS_PROPERTY
-        INSIGHTS -> INSIGHTS_PROPERTY
-        DETAIL -> DETAIL_PROPERTY
-        ANNUAL_STATS -> ANNUAL_STATS_PROPERTY
+        StatsSection.DAYS -> DAYS_PROPERTY
+        StatsSection.WEEKS -> WEEKS_PROPERTY
+        StatsSection.MONTHS -> MONTHS_PROPERTY
+        StatsSection.YEARS -> YEARS_PROPERTY
+        StatsSection.INSIGHTS -> INSIGHTS_PROPERTY
+        StatsSection.DETAIL -> DETAIL_PROPERTY
+        StatsSection.ANNUAL_STATS -> ANNUAL_STATS_PROPERTY
     }
     this.track(stat, mapOf(GRANULARITY_PROPERTY to property))
 }
