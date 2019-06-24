@@ -2,6 +2,7 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,11 @@ public class ThemeWebActivity extends WPWebViewActivity {
         DEMO,
         DETAILS,
         SUPPORT
+    }
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setActionBarTitleToThemeName();
     }
 
     public static String getSiteLoginUrl(SiteModel site) {
@@ -135,12 +141,6 @@ public class ThemeWebActivity extends WPWebViewActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void configureView() {
-        setContentView(R.layout.theme_web_activity);
-        setActionBarTitleToThemeName();
     }
 
     private void setActionBarTitleToThemeName() {
