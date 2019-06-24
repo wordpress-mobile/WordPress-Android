@@ -97,7 +97,7 @@ class PostListViewModelTest : BaseUnitTest() {
             emptyViewStateResults.add(it)
         }
 
-        viewModel.search(null, 0)
+        viewModel.search("", 0)
 
         assertThat(emptyViewStateResults.size).isEqualTo(1)
         assertThat(emptyViewStateResults[0].emptyViewVisible).isTrue()
