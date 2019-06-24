@@ -38,7 +38,6 @@ import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragment
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -375,10 +374,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
-
         ThemeModel theme =
                 TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId.replace("-wpcom", ""));
         if (theme == null) {

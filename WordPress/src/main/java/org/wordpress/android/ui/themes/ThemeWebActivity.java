@@ -37,7 +37,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
         SUPPORT
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setActionBarTitleToThemeName();
     }
@@ -154,8 +155,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
      * Show Activate in the Action Bar menu if the theme is free and not the current theme.
      */
     private boolean shouldShowActivateMenuItem() {
-        Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
-        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
+        boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
+        boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
         return !isCurrentTheme && !isPremiumTheme;
     }
 }
