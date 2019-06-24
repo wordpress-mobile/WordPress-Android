@@ -1604,6 +1604,21 @@ public class EditPostActivity extends AppCompatActivity implements
         dialog.show(getSupportFragmentManager(), tag);
     }
 
+    private void setPreviewingInEditorSticky(boolean enable, @Nullable PostModel post) {
+        if (enable) {
+            if (post != null) {
+                EventBus.getDefault().postSticky(
+                        new PostEvents.PostPreviewingInEditor(post.getLocalSiteId(), post.getId()));
+            }
+        } else {
+            PostEvents.PostPreviewingInEditor stickyEvent =
+                    EventBus.getDefault().getStickyEvent(PostEvents.PostPreviewingInEditor.class);
+            if (stickyEvent != null) {
+                EventBus.getDefault().removeStickyEvent(stickyEvent);
+            }
+        }
+    }
+
     private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState) {
         updatePostLoadingAndDialogState(postLoadingState, null);
     }
@@ -1620,6 +1635,21 @@ public class EditPostActivity extends AppCompatActivity implements
         /* update the state */
         mPostLoadingState = postLoadingState;
 
+        /* take care of exit actions on state transition */
+        switch (postLoadingState) {
+            case NONE:
+                setPreviewingInEditorSticky(false, post);
+                break;
+            case UPLOADING_FOR_PREVIEW:
+            case REMOTE_AUTO_SAVING_FOR_PREVIEW:
+            case PREVIEWING:
+            case REMOTE_AUTO_SAVE_PREVIEW_ERROR:
+                setPreviewingInEditorSticky(true, post);
+                break;
+            default:
+                 /* nothing to do */
+        }
+
         /* update the progress dialog state */
         mProgressDialog = ProgressDialogHelper.updateProgressDialogState(
                 this,
@@ -1627,7 +1657,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPostLoadingState.getProgressDialogUiState(),
                 mUiHelpers);
     }
-
 
     private void toggleHtmlModeOnMenu() {
         mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
