@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.text.TextUtils;
-
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostModel;
