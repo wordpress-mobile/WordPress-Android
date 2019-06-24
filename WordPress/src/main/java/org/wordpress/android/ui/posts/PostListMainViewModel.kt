@@ -187,8 +187,7 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        val layout = prefs.postListViewLayoutType
-        setViewLayoutAndIcon(layout)
+        setUserPreferredViewLayoutType()
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
@@ -259,6 +258,7 @@ class PostListMainViewModel @Inject constructor(
 
     fun onSearchExpanded(restorePreviousSearch: Boolean) {
         if (isSearchExpanded.value != true) {
+            setViewLayoutAndIcon(COMPACT, false)
             AnalyticsUtils.trackWithSiteDetails(POST_LIST_SEARCH_ACCESSED, site)
 
             if (!restorePreviousSearch) {
@@ -271,6 +271,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onSearchCollapsed(delay: Long = SEARCH_COLLAPSE_DELAY) {
+        setUserPreferredViewLayoutType()
         _isSearchExpanded.value = false
         clearSearch()
 
@@ -420,16 +421,23 @@ class PostListMainViewModel @Inject constructor(
             STANDARD -> COMPACT
             COMPACT -> STANDARD
         }
-        prefs.postListViewLayoutType = toggledValue
         AnalyticsUtils.trackAnalyticsPostListToggleLayout(toggledValue)
-        setViewLayoutAndIcon(toggledValue)
+        setViewLayoutAndIcon(toggledValue, true)
     }
 
-    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType) {
+    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType, storeIntoPreferences: Boolean = true) {
         _viewLayoutType.value = layout
         _viewLayoutTypeMenuUiState.value = when (layout) {
             STANDARD -> StandardViewLayoutTypeMenuUiState
             COMPACT -> CompactViewLayoutTypeMenuUiState
         }
+        if (storeIntoPreferences) {
+            prefs.postListViewLayoutType = layout
+        }
+    }
+
+    private fun setUserPreferredViewLayoutType() {
+        val savedLayoutType = prefs.postListViewLayoutType
+        setViewLayoutAndIcon(savedLayoutType, false)
     }
 }

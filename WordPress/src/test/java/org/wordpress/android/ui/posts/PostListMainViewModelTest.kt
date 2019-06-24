@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
@@ -133,5 +134,24 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         viewModel.onSearchExpanded(false)
         assertThat(searchQuery).isNull()
+    }
+
+    @Test
+    fun `search is using compact view mode independently from normal post list`() {
+        viewModel.start(site)
+        assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
+
+        var viewLayoutType: PostListViewLayoutType? = null
+        viewModel.viewLayoutType.observeForever {
+            viewLayoutType = it
+        }
+
+        viewModel.onSearchExpanded(false)
+
+        assertThat(viewLayoutType).isEqualTo(COMPACT)
+
+        viewModel.onSearchCollapsed()
+
+        assertThat(viewLayoutType).isEqualTo(STANDARD)
     }
 }

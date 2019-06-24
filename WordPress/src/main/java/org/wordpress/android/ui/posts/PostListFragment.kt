@@ -111,30 +111,23 @@ class PostListFragment : Fragment() {
         mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
-        // PostListMainViewModel is not aware about list style preferences of individual fragments
-        // se we have to set SEARCH list to compact style manually
-        if (postListType != SEARCH) {
-            mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
-                optionaLayoutType?.let { layoutType ->
-                    when (layoutType) {
-                        STANDARD -> {
-                            recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
-                            recyclerView?.addItemDecoration(itemDecorationStandardLayout)
-                        }
-                        COMPACT -> {
-                            recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
-                            recyclerView?.addItemDecoration(itemDecorationCompactLayout)
-                        }
+        mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
+            optionaLayoutType?.let { layoutType ->
+                when (layoutType) {
+                    STANDARD -> {
+                        recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
+                        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
                     }
-
-                    recyclerView?.scrollToPosition(0)
-                    postListAdapter.updateItemLayoutType(layoutType)
+                    COMPACT -> {
+                        recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
+                        recyclerView?.addItemDecoration(itemDecorationCompactLayout)
+                    }
                 }
-            })
-        } else {
-            recyclerView?.addItemDecoration(itemDecorationCompactLayout)
-            postListAdapter.updateItemLayoutType(COMPACT)
-        }
+
+                recyclerView?.scrollToPosition(0)
+                postListAdapter.updateItemLayoutType(layoutType)
+            }
+        })
 
         actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
 

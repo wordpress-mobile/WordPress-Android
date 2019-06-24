@@ -119,7 +119,9 @@ class PostListViewModel @Inject constructor(
         }
         connector = postListViewModelConnector
 
-        initList(null, dataSource, lifecycle)
+        if (connector.postListType != SEARCH) {
+            initList(null, dataSource, lifecycle)
+        }
 
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
@@ -136,39 +138,35 @@ class PostListViewModel @Inject constructor(
 
         listenToEmptyViewStateLiveData(pagedListWrapper)
 
-        if (!isEmptySearch()) {
-            _pagedListData.addSource(pagedListWrapper.data) { pagedPostList ->
-                pagedPostList?.let {
-                    if (isSearchResultDeliverable()) {
-                        onDataUpdated(it)
-                        _pagedListData.value = it
-                    }
+        _pagedListData.addSource(pagedListWrapper.data) { pagedPostList ->
+            pagedPostList?.let {
+                if (isSearchResultDeliverable()) {
+                    onDataUpdated(it)
+                    _pagedListData.value = it
                 }
             }
-            _isFetchingFirstPage.addSource(pagedListWrapper.isFetchingFirstPage) {
-                searchProgressJob?.cancel()
-                if (it == true) {
-                    val delay = if (connector.postListType != SEARCH) {
-                        0
-                    } else {
-                        SEARCH_PROGRESS_INDICATOR_DELAY_MS
-                    }
-                    searchProgressJob = launch {
-                        delay(delay)
-                        searchProgressJob = null
-                        if (isActive) {
-                            _isFetchingFirstPage.value = true
-                        }
-                    }
+        }
+        _isFetchingFirstPage.addSource(pagedListWrapper.isFetchingFirstPage) {
+            searchProgressJob?.cancel()
+            if (it == true) {
+                val delay = if (connector.postListType != SEARCH) {
+                    0
                 } else {
-                    _isFetchingFirstPage.value = false
+                    SEARCH_PROGRESS_INDICATOR_DELAY_MS
                 }
-            }
-            _isLoadingMore.addSource(pagedListWrapper.isLoadingMore) {
-                if (!isEmptySearch()) {
-                    _isLoadingMore.value = it
+                searchProgressJob = launch {
+                    delay(delay)
+                    searchProgressJob = null
+                    if (isActive) {
+                        _isFetchingFirstPage.value = true
+                    }
                 }
+            } else {
+                _isFetchingFirstPage.value = false
             }
+        }
+        _isLoadingMore.addSource(pagedListWrapper.isLoadingMore) {
+            _isLoadingMore.value = it
         }
 
         this.pagedListWrapper = pagedListWrapper
