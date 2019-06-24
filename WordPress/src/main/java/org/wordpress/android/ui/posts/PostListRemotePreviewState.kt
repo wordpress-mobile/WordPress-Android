@@ -3,7 +3,11 @@ package org.wordpress.android.ui.posts
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
-
+/**
+ * This enum class is used to keep the current Remote Preview state.
+ * It also contains the [progressDialogUiState] that can be used to update the ProgressDialog
+ * managed by this state.
+ */
 enum class PostListRemotePreviewState(val value: Int, val progressDialogUiState: ProgressDialogUiState) {
     NONE(0, ProgressDialogUiState.HiddenProgressDialog),
     UPLOADING_FOR_PREVIEW(1, ProgressDialogUiState.VisibleProgressDialog(

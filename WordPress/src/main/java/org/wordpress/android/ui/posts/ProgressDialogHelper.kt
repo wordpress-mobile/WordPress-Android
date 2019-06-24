@@ -4,6 +4,10 @@ import android.app.ProgressDialog
 import android.content.Context
 import org.wordpress.android.ui.utils.UiHelpers
 
+/**
+ * This helper class allows to create, dismiss or ignore the state of a [dialog] ProgressDialog
+ * based on the [state] parameter using its [updateProgressDialogState] method.
+ */
 
 class ProgressDialogHelper private constructor() {
     companion object {
