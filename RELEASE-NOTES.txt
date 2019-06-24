@@ -1,5 +1,6 @@
 12.7
 -----
+* Added Remote Preview support for Blog Posts
 * Show upload in progress notification when retrying
 
 12.6
