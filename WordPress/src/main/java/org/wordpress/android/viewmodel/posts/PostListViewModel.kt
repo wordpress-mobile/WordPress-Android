@@ -120,7 +120,7 @@ class PostListViewModel @Inject constructor(
         connector = postListViewModelConnector
 
         if (connector.postListType != SEARCH) {
-            initList(null, dataSource, lifecycle)
+            initList(dataSource, lifecycle)
         }
 
         isStarted = true
@@ -128,8 +128,7 @@ class PostListViewModel @Inject constructor(
         fetchFirstPage()
     }
 
-    private fun initList(query: String?, dataSource: PostListItemDataSource, lifecycle: Lifecycle) {
-        searchQuery = query
+    private fun initList(dataSource: PostListItemDataSource, lifecycle: Lifecycle) {
         val listDescriptor: PostListDescriptor = initListDescriptor(searchQuery)
 
         clearLiveDataSources()
@@ -242,8 +241,12 @@ class PostListViewModel @Inject constructor(
     }
 
     fun search(query: String?, delay: Long = SEARCH_DELAY_MS) {
+        if (searchQuery == query) {
+            return
+        }
         searchJob?.cancel()
         searchProgressJob?.cancel()
+        searchQuery = query
         if (TextUtils.isEmpty(query)) {
             clearLiveDataSources()
             pagedListWrapper = null
@@ -254,7 +257,7 @@ class PostListViewModel @Inject constructor(
                 delay(delay)
                 searchJob = null
                 if (isActive) {
-                    initList(query, dataSource, lifecycle)
+                    initList(dataSource, lifecycle)
                     fetchFirstPage()
                 }
             }
