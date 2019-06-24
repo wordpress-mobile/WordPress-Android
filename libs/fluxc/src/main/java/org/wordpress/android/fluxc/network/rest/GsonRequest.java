@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -85,6 +87,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            Log.d("vojta", json);
             T res;
             if (mClass == null) {
                 res = mGson.fromJson(json, mType);
