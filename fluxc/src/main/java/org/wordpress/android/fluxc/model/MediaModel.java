@@ -72,6 +72,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
 
     // Local only
     @Column private String mUploadState;
+    @Column private boolean mMarkedLocallyAsFeatured;
 
     // Other Sizes. Only available for images on self-hosted (xmlrpc layer) sites
     @Column private String mFileUrlMediumSize;
@@ -106,6 +107,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
                 && getVideoPressProcessingDone() == otherMedia.getVideoPressProcessingDone()
                 && getFeatured() == otherMedia.getFeatured()
                 && getFeaturedInPost() == otherMedia.getFeaturedInPost()
+                && getMarkedLocallyAsFeatured() == otherMedia.getMarkedLocallyAsFeatured()
                 && StringUtils.equals(getGuid(), otherMedia.getGuid())
                 && StringUtils.equals(getUploadDate(), otherMedia.getUploadDate())
                 && StringUtils.equals(getUrl(), otherMedia.getUrl())
@@ -357,6 +359,14 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
 
     public void setFeaturedInPost(boolean featuredInPost) {
         mFeaturedInPost = featuredInPost;
+    }
+
+    public boolean getMarkedLocallyAsFeatured() {
+        return mMarkedLocallyAsFeatured;
+    }
+
+    public void setMarkedLocallyAsFeatured(boolean markedLocallyAsFeatured) {
+        mMarkedLocallyAsFeatured = markedLocallyAsFeatured;
     }
 
     public boolean getFeaturedInPost() {
