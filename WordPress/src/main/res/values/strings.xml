@@ -1451,6 +1451,10 @@
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
 
+    <!-- Post Remote Preview -->
+    <string name="post_preview_saving_draft">Saving&#8230;</string>
+    <string name="post_preview_remote_auto_saving_post">Generating Preview&#8230;</string>
+    
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
     <string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>

@@ -139,6 +139,8 @@ import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
+import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -230,8 +232,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
-    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateKeyIsDialogProgressShown";
-    private static final String STATE_KEY_IS_DISCARDING_CHANGES = "stateKeyIsDiscardingChanges";
+    private static final String STATE_KEY_POST_LOADING_STATE = "stateKeyPostLoadingState";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
@@ -316,9 +317,64 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
-    private boolean mIsDialogProgressShown;
-    private boolean mIsDiscardingChanges;
-    private boolean mIsUpdatingPost;
+    private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
+
+
+    private enum PostLoadingState {
+        NONE(0, ProgressDialogUiState.HiddenProgressDialog.INSTANCE),
+        DISCARDING(1, new ProgressDialogUiState.VisibleProgressDialog(
+                new UiStringRes(R.string.local_changes_discarding),
+                false,
+                true)),
+        RELOADING(2, ProgressDialogUiState.IgnoreProgressDialog.INSTANCE),
+        LOADING_REVISION(3, new ProgressDialogUiState.VisibleProgressDialog(
+                new UiStringRes(R.string.history_loading_revision),
+                false,
+                true)),
+        UPLOADING_FOR_PREVIEW(4, new ProgressDialogUiState.VisibleProgressDialog(
+                new UiStringRes(R.string.post_preview_saving_draft),
+                false,
+                true)),
+        REMOTE_AUTO_SAVING_FOR_PREVIEW(5, new ProgressDialogUiState.VisibleProgressDialog(
+                new UiStringRes(R.string.post_preview_remote_auto_saving_post),
+                false,
+                true)),
+        PREVIEWING(6, ProgressDialogUiState.HiddenProgressDialog.INSTANCE),
+        REMOTE_AUTO_SAVE_PREVIEW_ERROR(7, ProgressDialogUiState.HiddenProgressDialog.INSTANCE);
+
+        PostLoadingState(int value, ProgressDialogUiState dialogUiState) {
+            mValue = value;
+            mDialogUiState = dialogUiState;
+        }
+
+        private final int mValue;
+        private final ProgressDialogUiState mDialogUiState;
+
+        public int getValue() {
+            return mValue;
+        }
+
+        public ProgressDialogUiState getProgressDialogUiState() {
+            return mDialogUiState;
+        }
+
+        public static PostLoadingState fromInt(int value) {
+            if (value < 0 || value >= values().length) {
+                throw new IllegalArgumentException("PostLoadingState wrong value " + value);
+            }
+
+            PostLoadingState state = NONE;
+
+            for (PostLoadingState item : values()) {
+                if (item.mValue == value) {
+                    state = item;
+                    break;
+                }
+            }
+
+            return state;
+        }
+    }
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
@@ -340,6 +396,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject QuickStartStore mQuickStartStore;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ImageManager mImageManager;
+    @Inject UiHelpers mUiHelpers;
 
     private SiteModel mSite;
 
@@ -471,13 +528,11 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
-            mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
-            mIsDiscardingChanges = savedInstanceState.getBoolean(STATE_KEY_IS_DISCARDING_CHANGES, false);
+            updatePostLoadingAndDialogState(PostLoadingState.fromInt(
+                    savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
             mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
             mPostEditorAnalyticsSession =
                     (PostEditorAnalyticsSession) savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
-
-            showDialogProgress(mIsDialogProgressShown);
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
@@ -765,6 +820,11 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().unregister(this);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 
     @Override protected void onStop() {
@@ -814,8 +874,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
-        outState.putBoolean(STATE_KEY_IS_DISCARDING_CHANGES, mIsDiscardingChanges);
-        outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
+        outState.putInt(STATE_KEY_POST_LOADING_STATE, mPostLoadingState.getValue());
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
@@ -1407,9 +1466,8 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_discard_changes) {
                 if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                     AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
-                    showDialogProgress(true);
+                    updatePostLoadingAndDialogState(PostLoadingState.DISCARDING);
                     mPostForUndo = mPost.clone();
-                    mIsDiscardingChanges = true;
                     RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
                     mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
                 } else {
@@ -1456,21 +1514,30 @@ public class EditPostActivity extends AppCompatActivity implements
         dialog.show(getSupportFragmentManager(), tag);
     }
 
-    private void showDialogProgress(boolean show) {
-        if (show) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setMessage(mIsDiscardingChanges
-                    ? getString(R.string.local_changes_discarding)
-                    : getString(R.string.history_loading_revision));
-            mProgressDialog.show();
-        } else if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
-
-        mIsDialogProgressShown = show;
+    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState) {
+        updatePostLoadingAndDialogState(postLoadingState, null);
     }
+
+    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState, @Nullable PostModel post) {
+        /* We need only transitions, so... */
+        if (mPostLoadingState == postLoadingState) return;
+
+        AppLog.d(
+                AppLog.T.POSTS,
+                "****** EDITOR PREVIEW SM - from [" + mPostLoadingState + "] to [" + postLoadingState + "]"
+        );
+
+        /* update the state */
+        mPostLoadingState = postLoadingState;
+
+        /* update the progress dialog state */
+        mProgressDialog = ProgressDialogHelper.updateProgressDialogState(
+                this,
+                mProgressDialog,
+                mPostLoadingState.getProgressDialogUiState(),
+                mUiHelpers);
+    }
+
 
     private void toggleHtmlModeOnMenu() {
         mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
@@ -1525,7 +1592,10 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
+    private void savePostOnlineAndFinishAsync(
+            boolean isFirstTimePublish,
+            boolean doFinishActivity
+    ) {
         new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -1837,7 +1907,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void loadRevision() {
-        showDialogProgress(true);
+        updatePostLoadingAndDialogState(PostLoadingState.LOADING_REVISION);
         mPostForUndo = mPost.clone();
         mPost.setTitle(mRevision.getPostTitle());
         mPost.setContent(mRevision.getPostContent());
@@ -1858,7 +1928,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 })
                 .show();
 
-        showDialogProgress(false);
+        updatePostLoadingAndDialogState(PostLoadingState.NONE);
     }
 
     private boolean isNewPost() {
@@ -3899,44 +3969,44 @@ public class EditPostActivity extends AppCompatActivity implements
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();
 
-                if (mIsUpdatingPost) {
-                    mIsUpdatingPost = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-                    refreshEditorContent();
+                switch (mPostLoadingState) {
+                    case RELOADING:
+                        mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                        refreshEditorContent();
 
-                    if (mViewPager != null) {
-                        WPSnackbar.make(mViewPager, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
-                                .setAction(getString(R.string.undo), new OnClickListener() {
-                                    @Override public void onClick(View view) {
-                                        AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
-                                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
-                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostForUndo.clone();
-                                        refreshEditorContent();
-                                    }
-                                })
-                                .show();
-                    }
+                        if (mViewPager != null) {
+                            WPSnackbar.make(
+                                    mViewPager,
+                                    getString(R.string.local_changes_discarded),
+                                    Snackbar.LENGTH_LONG)
+                                    .setAction(getString(R.string.undo), new OnClickListener() {
+                                        @Override public void onClick(View view) {
+                                            AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
+                                            RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
+                                            mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                                            mPost = mPostForUndo.clone();
+                                            refreshEditorContent();
+                                        }
+                                    })
+                                    .show();
+                        }
 
-                    showDialogProgress(false);
-                }
-
-                if (mIsDiscardingChanges) {
-                    mIsDiscardingChanges = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
-                    mIsUpdatingPost = true;
+                        updatePostLoadingAndDialogState(PostLoadingState.NONE);
+                        break;
+                    case DISCARDING:
+                        mPostLoadingState = PostLoadingState.RELOADING;
+                        mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+                        break;
                 }
             } else {
-                if (mIsDiscardingChanges) {
+                if (mPostLoadingState == PostLoadingState.DISCARDING) {
                     showDialogError(R.string.local_changes_discarding_error, R.string.contact_support,
                             TAG_DISCARDING_CHANGES_ERROR_DIALOG,
                             true);
                 }
 
-                mIsDiscardingChanges = false;
-                mIsUpdatingPost = false;
-                showDialogProgress(false);
+                updatePostLoadingAndDialogState(PostLoadingState.NONE);
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         }
