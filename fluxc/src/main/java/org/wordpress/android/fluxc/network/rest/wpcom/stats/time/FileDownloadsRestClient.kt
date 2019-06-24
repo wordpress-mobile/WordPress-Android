@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 import android.content.Context
 import com.android.volley.RequestQueue
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -41,7 +40,7 @@ class FileDownloadsRestClient
         itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<FileDownloadsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.top_authors.urlV1_1
+        val url = WPCOMREST.sites.site(site.siteId).stats.file_downloads.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to itemsToLoad.toString(),
@@ -73,14 +72,12 @@ class FileDownloadsRestClient
         data class Groups(
             @SerializedName("other_downloads") val otherDownloads: Int?,
             @SerializedName("total_downloads") val totalDownloads: Int?,
-            @SerializedName("downloads") val authors: List<Download>
+            @SerializedName("downloads") val downloads: List<Download>
         )
 
         data class Download(
             @SerializedName("name") val name: String?,
-            @SerializedName("views") var views: Int?,
-            @SerializedName("avatar") val avatarUrl: String?,
-            @SerializedName("posts") val posts: JsonElement?
+            @SerializedName("count") var count: Int?
         )
     }
 }
