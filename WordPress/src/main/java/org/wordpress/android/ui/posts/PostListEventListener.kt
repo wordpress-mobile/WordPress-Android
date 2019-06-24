@@ -6,11 +6,13 @@ import androidx.lifecycle.OnLifecycleEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemovePost
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RestorePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
@@ -21,6 +23,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
+import org.wordpress.android.ui.posts.PostUploadAction.PostRemotePreviewSnackbarError
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -28,6 +31,9 @@ import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -43,7 +49,10 @@ class PostListEventListener(
     private val handlePostUploadedWithoutError: (LocalId) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
     private val invalidateUploadStatus: (List<Int>) -> Unit,
-    private val invalidateFeaturedMedia: (List<Long>) -> Unit
+    private val invalidateFeaturedMedia: (List<Long>) -> Unit,
+    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
+    private val isRemotePreviewingFromPostsList: () -> Boolean,
+    private val hasRemoteAutoSavePreviewError: () -> Boolean
 ) : LifecycleObserver {
     init {
         dispatcher.register(this)
@@ -101,6 +110,21 @@ class PostListEventListener(
                         isError = event.isError
                 )
             }
+            is CauseOfOnPostChanged.RemoteAutoSavePost -> {
+                if (isRemotePreviewingFromPostsList.invoke()) {
+                    val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
+                    if (event.isError) {
+                        AppLog.d(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
+                                event.error.type + " - " + event.error.message)
+                        triggerPreviewStateUpdate(
+                                PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR,
+                                PostInfoType.PostNoInfo
+                        )
+                    }
+                    val payload = RemotePostPayload(post, site)
+                    dispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload))
+                }
+            }
         }
     }
 
@@ -117,10 +141,30 @@ class PostListEventListener(
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
-            triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
+            if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {
+                triggerPostUploadAction.invoke(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
+            }
+
             uploadStatusChanged(event.post.id)
             if (!event.isError) {
                 handlePostUploadedWithoutError.invoke(LocalId(event.post.id))
+            }
+
+            if (isRemotePreviewingFromPostsList.invoke()) {
+                if (event.isError || hasRemoteAutoSavePreviewError.invoke()) {
+                    triggerPreviewStateUpdate(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
+                    triggerPostUploadAction.invoke(
+                            PostRemotePreviewSnackbarError(R.string.remote_preview_operation_error)
+                    )
+                } else if (!hasRemoteAutoSavePreviewError.invoke()) {
+                    triggerPreviewStateUpdate(
+                            PostListRemotePreviewState.PREVIEWING,
+                            PostInfoType.PostInfo(
+                                    post = event.post,
+                                    hasError = event.isError
+                            )
+                    )
+                }
             }
         }
     }
@@ -201,6 +245,13 @@ class PostListEventListener(
         }
     }
 
+    private fun isRemotePreviewingFromEditor(post: PostModel?): Boolean {
+        val previewedPost = EventBus.getDefault().getStickyEvent(PostEvents.PostPreviewingInEditor::class.java)
+        return previewedPost != null && post != null &&
+                post.localSiteId == previewedPost.localSiteId &&
+                post.id == previewedPost.postId
+    }
+
     private fun uploadStatusChanged(vararg localPostIds: Int) {
         invalidateUploadStatus.invoke(localPostIds.toList())
     }
@@ -220,7 +271,10 @@ class PostListEventListener(
             handlePostUploadedWithoutError: (LocalId) -> Unit,
             triggerPostUploadAction: (PostUploadAction) -> Unit,
             invalidateUploadStatus: (List<Int>) -> Unit,
-            invalidateFeaturedMedia: (List<Long>) -> Unit
+            invalidateFeaturedMedia: (List<Long>) -> Unit,
+            triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
+            isRemotePreviewingFromPostsList: () -> Boolean,
+            hasRemoteAutoSavePreviewError: () -> Boolean
         ) {
             PostListEventListener(
                     lifecycle = lifecycle,
@@ -232,8 +286,10 @@ class PostListEventListener(
                     handlePostUploadedWithoutError = handlePostUploadedWithoutError,
                     triggerPostUploadAction = triggerPostUploadAction,
                     invalidateUploadStatus = invalidateUploadStatus,
-                    invalidateFeaturedMedia = invalidateFeaturedMedia
-            )
+                    invalidateFeaturedMedia = invalidateFeaturedMedia,
+                    triggerPreviewStateUpdate = triggerPreviewStateUpdate,
+                    isRemotePreviewingFromPostsList = isRemotePreviewingFromPostsList,
+                    hasRemoteAutoSavePreviewError = hasRemoteAutoSavePreviewError)
         }
     }
 }

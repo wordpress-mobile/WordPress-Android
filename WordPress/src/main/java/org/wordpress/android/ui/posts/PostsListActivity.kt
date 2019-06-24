@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -49,6 +50,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
+    @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -62,6 +64,8 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: androidx.viewpager.widget.ViewPager
     private lateinit var fab: FloatingActionButton
+
+    private var progressDialog: ProgressDialog? = null
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -191,7 +195,7 @@ class PostsListActivity : AppCompatActivity(),
 
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
-                handlePostListAction(this@PostsListActivity, action)
+                handlePostListAction(this@PostsListActivity, action, remotePreviewLogicHelper)
             }
         })
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
@@ -217,6 +221,13 @@ class PostsListActivity : AppCompatActivity(),
         })
         viewModel.snackBarMessage.observe(this, Observer {
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
+        })
+        viewModel.previewState.observe(this, Observer {
+            progressDialog = ProgressDialogHelper.updateProgressDialogState(
+                    this,
+                    progressDialog,
+                    it.progressDialogUiState,
+                    uiHelpers)
         })
         viewModel.dialogAction.observe(this, Observer {
             it?.show(this, supportFragmentManager, uiHelpers)
@@ -267,6 +278,11 @@ class PostsListActivity : AppCompatActivity(),
         ActivityId.trackLastActivity(ActivityId.POSTS)
     }
 
+    override fun onPause() {
+        super.onPause()
+        progressDialog?.dismiss()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -282,6 +298,8 @@ class PostsListActivity : AppCompatActivity(),
             }
 
             viewModel.handleEditPostResult(data)
+        } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
+            viewModel.handleRemotePreviewClosing()
         }
     }
 
