@@ -56,10 +56,9 @@ class MinifiedWidgetUpdater
         val views = RemoteViews(context.packageName, layout)
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         if (networkAvailable && siteModel != null && dataType != null) {
-            views.setOnClickPendingIntent(
-                    R.id.widget_content,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
-            )
+            val intent = widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
+            views.setOnClickPendingIntent(R.id.widget_content, intent)
+            views.setOnClickPendingIntent(R.id.widget_site_icon, intent)
             showValue(appWidgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
             widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)

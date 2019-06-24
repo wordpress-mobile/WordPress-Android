@@ -6,6 +6,7 @@
     android:layout_height="@dimen/stats_minified_widget_height"
     android:background="@drawable/bg_rectangle_gray_800_radius_4dp"
     android:gravity="center_vertical"
+    android:id="@+id/widget_container"
     android:minWidth="118dp"
     android:orientation="horizontal">
 
