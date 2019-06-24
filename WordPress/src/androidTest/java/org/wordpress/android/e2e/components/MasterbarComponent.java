@@ -17,4 +17,11 @@ public class MasterbarComponent {
         clickOn(R.id.row_blog_posts);
         return this;
     }
+
+    public MasterbarComponent clickSitePages() {
+        clickOn(R.id.row_pages);
+        return this;
+    }
+
+
 }

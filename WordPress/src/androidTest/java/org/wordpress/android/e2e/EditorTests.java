@@ -105,4 +105,25 @@ public class EditorTests extends BaseTest {
         boolean isPublished = editorPage.publishPost();
         assertTrue(isPublished);
     }
+
+    @Test
+    public void testPublishSimplePage() {
+        String title = "Hello Espresso!";
+        String content = "Just a quick test.";
+
+        MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
+        sleep();
+        mb.clickSitePages();
+
+        MySitesPage sp = new MySitesPage();
+        sp.clickCreatePage();
+
+        EditorPage editorPage = new EditorPage();
+        editorPage.enterTitle(title);
+        editorPage.enterContent(content);
+
+        boolean isPublished = editorPage.publishPost();
+        assertTrue(isPublished);
+    }
+
 }

@@ -49,4 +49,6 @@ public class MySitesPage {
     public void startNewPost(String siteAddress) {
         clickOn(R.id.fab_button);
     }
+
+    public void clickCreatePage() { clickOn(R.id.button); }
 }
