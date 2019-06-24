@@ -60,6 +60,7 @@ import javax.inject.Inject;
 public class PostUploadHandler implements UploadHandler<PostModel> {
     private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
+    private static Set<Integer> sShouldRemoteAutoSavePosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
     private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
 
@@ -125,6 +126,18 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     void unregisterPostForAnalyticsTracking(@NonNull PostModel post) {
         synchronized (sFirstPublishPosts) {
             sFirstPublishPosts.remove(post.getId());
+        }
+    }
+
+    void registerPostForRemoteAutoSave(@NonNull PostModel post) {
+        synchronized (sShouldRemoteAutoSavePosts) {
+            sShouldRemoteAutoSavePosts.add(post.getId());
+        }
+    }
+
+    void unregisterPostForRemoteAutoSave(@NonNull PostModel post) {
+        synchronized (sShouldRemoteAutoSavePosts) {
+            sShouldRemoteAutoSavePosts.remove(post.getId());
         }
     }
 
@@ -259,7 +272,12 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             EventBus.getDefault().post(new PostUploadStarted(mPost));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+
+            if (sShouldRemoteAutoSavePosts.contains(mPost.getId())) {
+                mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
+            } else {
+                mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+            }
 
             return true;
         }
@@ -579,9 +597,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
             sFirstPublishPosts.remove(event.post.getId());
+            sShouldRemoteAutoSavePosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
+            sShouldRemoteAutoSavePosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null) {
