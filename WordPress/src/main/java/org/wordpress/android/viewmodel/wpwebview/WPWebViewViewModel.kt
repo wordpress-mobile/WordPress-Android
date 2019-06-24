@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.wpwebview
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -7,14 +8,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.R
+import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
+        .WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
+        .WebPreviewFullscreenProgressUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
+        .WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState
 import javax.inject.Inject
 
 class WPWebViewViewModel
@@ -41,13 +49,15 @@ class WPWebViewViewModel
         })
     }
 
-    fun start() {
+    fun start(actionableDirectUsageState: WPWebViewActivity.ActionableReusableState) {
         if (isStarted) {
             return
         }
         isStarted = true
-        // If there is no internet show the error screen
-        if (networkUtils.isNetworkAvailable()) {
+        if (actionableDirectUsageState != WPWebViewActivity.ActionableReusableState.NONE) {
+            updateUiState(WPWebViewActivity.ActionableReusableState.toWebPreviewUiState(actionableDirectUsageState))
+        } else if (networkUtils.isNetworkAvailable()) {
+            // If there is no internet show the error screen
             updateUiState(WebPreviewFullscreenProgressUiState)
         } else {
             updateUiState(WebPreviewFullscreenErrorUiState)
@@ -94,7 +104,10 @@ class WPWebViewViewModel
     }
 
     fun loadIfNecessary() {
-        if (uiState.value !is WebPreviewFullscreenProgressUiState && uiState.value !is WebPreviewContentUiState) {
+        if (uiState.value !is WebPreviewFullscreenProgressUiState &&
+                uiState.value !is WebPreviewContentUiState &&
+                uiState.value !is WebPreviewFullscreenNotAvailableUiState
+        ) {
             updateUiState(WebPreviewFullscreenProgressUiState)
             _loadNeeded.value = true
         }
@@ -113,8 +126,27 @@ class WPWebViewViewModel
                 fullscreenProgressLayoutVisibility = true
         )
 
-        object WebPreviewFullscreenErrorUiState : WebPreviewUiState(
-                actionableEmptyView = true
-        )
+        sealed class WebPreviewFullscreenUiState : WebPreviewUiState(actionableEmptyView = true) {
+            abstract val imageRes: Int
+            abstract val titleText: UiStringRes?
+            abstract val subtitleText: UiStringRes?
+            abstract val buttonVisibility: Boolean
+
+            object WebPreviewFullscreenErrorUiState : WebPreviewFullscreenUiState() {
+                @DrawableRes
+                override val imageRes: Int = R.drawable.img_illustration_cloud_off_152dp
+                override val titleText: UiStringRes = UiStringRes(R.string.error_browser_no_network)
+                override val subtitleText: UiStringRes = UiStringRes(R.string.error_network_connection)
+                override val buttonVisibility: Boolean = true
+            }
+
+            object WebPreviewFullscreenNotAvailableUiState : WebPreviewFullscreenUiState() {
+                @DrawableRes
+                override val imageRes: Int = R.drawable.img_illustration_empty_results_216dp
+                override val titleText: UiStringRes = UiStringRes(R.string.preview_unavailable_self_hosted_sites)
+                override val subtitleText: UiStringRes? = null
+                override val buttonVisibility: Boolean = false
+            }
+        }
     }
 }

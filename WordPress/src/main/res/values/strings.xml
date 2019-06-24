@@ -1454,6 +1454,7 @@
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving&#8230;</string>
     <string name="post_preview_remote_auto_saving_post">Generating Preview&#8230;</string>
+    <string name="preview_unavailable_self_hosted_sites">Preview Unavailable</string>
     
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>

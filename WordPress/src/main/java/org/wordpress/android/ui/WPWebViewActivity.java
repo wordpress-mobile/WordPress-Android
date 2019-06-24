@@ -40,6 +40,7 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -97,6 +98,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
     public static final String ENCODING_UTF8 = "UTF-8";
+    public static final String ACTIONABLE_REUSABLE_STATE = "actionable_reusable_state";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -106,6 +108,52 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
+    private ActionableReusableState mActionableReusableState;
+
+    public enum ActionableReusableState {
+        NONE(0),
+        REMOTE_PREVIEW_NOT_AVAILABLE(1);
+
+        ActionableReusableState(int value) {
+            mValue = value;
+        }
+
+        private final int mValue;
+
+        public int getValue() {
+            return mValue;
+        }
+
+        public static ActionableReusableState fromInt(int value) {
+            if (value < 0 || value >= values().length) {
+                throw new IllegalArgumentException("ActionableReusableState wrong value " + value);
+            }
+
+            ActionableReusableState state = NONE;
+
+            for (ActionableReusableState item : values()) {
+                if (item.mValue == value) {
+                    state = item;
+                    break;
+                }
+            }
+
+            return state;
+        }
+
+        public static WebPreviewUiState toWebPreviewUiState(ActionableReusableState state) {
+            WebPreviewUiState uiState;
+            switch (state) {
+                case REMOTE_PREVIEW_NOT_AVAILABLE:
+                    uiState = WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState.INSTANCE;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Mapping of " + state + " to WebPreviewUiState not allowed.");
+            }
+            return uiState;
+        }
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +168,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
         mFullScreenProgressLayout = findViewById(R.id.progress_layout);
         mWebView = findViewById(R.id.webView);
+
+        mActionableReusableState = ActionableReusableState.fromInt(getIntent()
+                .getIntExtra(ACTIONABLE_REUSABLE_STATE, 0));
 
         initRetryButton();
         initViewModel();
@@ -153,17 +204,25 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     mUiHelpers.updateVisibility(mFullScreenProgressLayout,
                             webPreviewUiState.getFullscreenProgressLayoutVisibility());
                     mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
+
+                    if (webPreviewUiState instanceof WebPreviewFullscreenUiState) {
+                        WebPreviewFullscreenUiState state = (WebPreviewFullscreenUiState) webPreviewUiState;
+                        mUiHelpers.setImageOrHide(mActionableEmptyView.image, state.getImageRes());
+                        mUiHelpers.setTextOrHide(mActionableEmptyView.title, state.getTitleText());
+                        mUiHelpers.setTextOrHide(mActionableEmptyView.subtitle, state.getSubtitleText());
+                        mUiHelpers.updateVisibility(mActionableEmptyView.button, state.getButtonVisibility());
+                    }
                 }
             }
         });
         mViewModel.getLoadNeeded().observe(this, new Observer<Boolean>() {
             @Override public void onChanged(@Nullable Boolean loadNeeded) {
-                if (loadNeeded != null && loadNeeded) {
+                if (!isActionableReusableState() && loadNeeded != null && loadNeeded) {
                     loadContent();
                 }
             }
         });
-        mViewModel.start();
+        mViewModel.start(mActionableReusableState);
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
@@ -227,6 +286,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, post.getTitle());
             }
         }
+    }
+
+    public static void openActionableEmptyViewDirectly(Context context, ActionableReusableState reusableState) {
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.ACTIONABLE_REUSABLE_STATE, reusableState.getValue());
         context.startActivity(intent);
     }
 
@@ -289,6 +353,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void configureWebView() {
+        if (isActionableReusableState()) return;
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
@@ -348,6 +414,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     protected void loadContent() {
+        if (isActionableReusableState()) return;
+    
         Bundle extras = getIntent().getExtras();
 
         if (extras == null) {
@@ -470,9 +538,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         return loginURL;
     }
 
+    private boolean isActionableReusableState() {
+        return mActionableReusableState != ActionableReusableState.NONE;
+    }
+
+    private boolean shouldShowOptionsMenu() {
+        return !isActionableReusableState();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
+        if (!shouldShowOptionsMenu()) return true;
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.webview, menu);
         return true;
