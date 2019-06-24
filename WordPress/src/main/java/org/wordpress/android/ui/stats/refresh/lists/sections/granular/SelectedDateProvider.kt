@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PREVIOUS_DATE_TAPPED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -11,9 +10,8 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
-import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackWithSection
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.filter
 import org.wordpress.android.viewmodel.Event
@@ -109,7 +107,7 @@ class SelectedDateProvider
         getSelectedDateState(statsSection).let { selectedDate ->
             val selectedDateIndex = selectedDate.index
             if (selectedDateIndex != null && selectedDateIndex > 0) {
-                trackSelectDate(STATS_PREVIOUS_DATE_TAPPED, statsSection)
+                analyticsTrackerWrapper.trackWithSection(STATS_PREVIOUS_DATE_TAPPED, statsSection)
                 updateSelectedDate(selectedDate.copy(index = selectedDate.index - 1), statsSection)
             }
         }
@@ -119,14 +117,10 @@ class SelectedDateProvider
         getSelectedDateState(statsSection).let { selectedDate ->
             val selectedDateIndex = selectedDate.index
             if (selectedDateIndex != null && selectedDateIndex < selectedDate.availableDates.size - 1) {
-                trackSelectDate(STATS_NEXT_DATE_TAPPED, statsSection)
+                analyticsTrackerWrapper.trackWithSection(STATS_NEXT_DATE_TAPPED, statsSection)
                 updateSelectedDate(selectedDate.copy(index = selectedDate.index + 1), statsSection)
             }
         }
-    }
-
-    private fun trackSelectDate(stat: Stat, statsSection: StatsSection) {
-        statsSection.toStatsGranularity()?.let { analyticsTrackerWrapper.trackGranular(stat, it) }
     }
 
     fun onDateLoadingFailed(statsGranularity: StatsGranularity) {
