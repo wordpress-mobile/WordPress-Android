@@ -130,6 +130,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -397,11 +398,17 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ImageManager mImageManager;
     @Inject UiHelpers mUiHelpers;
+    @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
 
     private SiteModel mSite;
 
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
+
+    private boolean isRemotePreviewing() {
+        return (mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
+                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW);
+    }
 
     private boolean isModernEditor() {
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
@@ -1195,7 +1202,6 @@ public class EditPostActivity extends AppCompatActivity implements
             showMenuItems = false;
         }
 
-
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
@@ -1356,6 +1362,70 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
+    private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
+       return new RemotePreviewLogicHelper.RemotePreviewHelperFunctions() {
+            @Override
+            public boolean isNewPost() {
+                return EditPostActivity.this.isNewPost();
+            }
+
+            @Override
+            public void notifyNoNetwork() {
+                UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.no_network_message);
+            }
+
+            @Override
+            public boolean notifyUploadInProgress(PostModel post) {
+                if (UploadService.hasInProgressMediaUploadsForPost(post)) {
+                    ToastUtils.showToast(EditPostActivity.this,
+                            getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            @Nullable
+            @Override
+            public PostModel updatePostIfNeeded() {
+                updatePostObject();
+                return mPost;
+            }
+
+            @Override
+            public boolean canDiscard() {
+                return isDiscardable();
+            }
+
+            @Override
+            public void notifyEmptyDraft() {
+                ToastUtils.showToast(EditPostActivity.this,
+                        getString(R.string.error_preview_empty_draft), Duration.SHORT);
+            }
+
+            @Override
+            public void startUploading(boolean isRemoteAutoSave, @Nullable PostModel post) {
+                if (isRemoteAutoSave) {
+                    updatePostLoadingAndDialogState(PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW, post);
+                    savePostAndOptionallyFinish(false, true);
+                } else {
+                    updatePostLoadingAndDialogState(PostLoadingState.UPLOADING_FOR_PREVIEW, post);
+                    savePostAndOptionallyFinish(false);
+                }
+            }
+
+            @Override
+            public void notifyEmptyPost() {
+                String message = getString(
+                        mIsPage
+                                ? R.string.error_preview_empty_page
+                                : R.string.error_preview_empty_post
+                );
+                ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+            }
+        };
+    }
+
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -1387,7 +1457,27 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
-                mViewPager.setCurrentItem(PAGE_PREVIEW);
+                if (mPost.isPage()) {
+                    mViewPager.setCurrentItem(PAGE_PREVIEW);
+                } else {
+                    PreviewLogicOperationResult opResult =
+                            mRemotePreviewLogicHelper.runPostPreviewLogic(
+                            this,
+                            mSite,
+                            mPost,
+                            getEditPostActivityStrategyFunctions()
+                    );
+
+                    if (
+                            opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
+                            || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
+                            || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
+                    ) {
+                        return false;
+                    } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
+                        updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
+                    }
+                }
             } else if (itemId == R.id.menu_post_settings) {
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.refreshViews();
@@ -1592,11 +1682,16 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
+        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinishActivity, false);
+    }
+
     private void savePostOnlineAndFinishAsync(
             boolean isFirstTimePublish,
-            boolean doFinishActivity
+            boolean doFinishActivity,
+            boolean isRemoteAutoSave
     ) {
-        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
+        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity, isRemoteAutoSave)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -1950,10 +2045,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
         boolean mDoFinishActivity;
+        boolean mIsRemoteAutoSave;
 
-        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity) {
+        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity, boolean isRemoteAutoSave) {
             this.mIsFirstTimePublish = isFirstTimePublish;
             this.mDoFinishActivity = doFinishActivity;
+            this.mIsRemoteAutoSave = isRemoteAutoSave;
         }
 
         @Override
@@ -1971,9 +2068,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
             UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {
-                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
+                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost, mIsRemoteAutoSave);
             } else {
-                UploadService.uploadPost(EditPostActivity.this, mPost);
+                UploadService.uploadPost(EditPostActivity.this, mPost, mIsRemoteAutoSave);
             }
 
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
@@ -2170,6 +2267,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish) {
+        savePostAndOptionallyFinish(doFinish, false);
+    }
+
+    private void savePostAndOptionallyFinish(final boolean doFinish, final boolean isRemoteAutoSave) {
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
@@ -2189,7 +2290,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
                 // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = shouldSavePost();
+                boolean shouldSave = shouldSavePost() || isRemoteAutoSave;
 
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
@@ -2203,13 +2304,19 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (shouldSave) {
                     PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
-                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
-                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext()) && isNotRestarting) {
+                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING
+                            || (isRemotePreviewing() && status == PostStatus.SCHEDULED)) && isPublishable
+                            && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
+                            && isNotRestarting) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
+                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish, isRemoteAutoSave);
                     } else {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        savePostLocallyAndFinishAsync(doFinish);
+                        if (isRemoteAutoSave) {
+                            savePostOnlineAndFinishAsync(false, false, isRemoteAutoSave);
+                        } else {
+                            savePostLocallyAndFinishAsync(doFinish);
+                        }
                     }
                 } else {
                     // discard post if new & empty
@@ -3052,6 +3159,13 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // In case of Remote Preview we need to change state even if (resultCode != Activity.RESULT_OK)
+        // so placing this here before the check
+        if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
+            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            return;
+        }
 
         if (resultCode != Activity.RESULT_OK) {
             return;
@@ -4009,21 +4123,59 @@ public class EditPostActivity extends AppCompatActivity implements
                 updatePostLoadingAndDialogState(PostLoadingState.NONE);
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            if (!event.isError()) {
+                mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+            } else {
+                AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
+                updatePostLoadingAndDialogState(PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR, mPost);
+            }
+            RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+            mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
         }
     }
+
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
         if (post != null && post.getId() == mPost.getId()) {
-            View snackbarAttachView = findViewById(R.id.editor_activity);
-            UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
-                    event.isError() ? event.error.message : null, getSite(), mDispatcher);
-            if (!event.isError()) {
-                mPost = post;
-                mIsNewPost = false;
-                invalidateOptionsMenu();
+            if (!(mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW)
+                    && !(mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW)
+                    && !(mPostLoadingState == PostLoadingState.PREVIEWING)
+                    && !(mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR)
+            ) {
+                View snackbarAttachView = findViewById(R.id.editor_activity);
+                UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
+                        event.isError() ? event.error.message : null, getSite(), mDispatcher);
+                if (!event.isError()) {
+                    mPost = post;
+                    mIsNewPost = false;
+                    invalidateOptionsMenu();
+                }
+            } else {
+                if (!event.isError()
+                        && !(mPostLoadingState == PostLoadingState.PREVIEWING)
+                        && !(mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR)
+                ) {
+                    mPost = post;
+                    mIsNewPost = false;
+                    invalidateOptionsMenu();
+                    ActivityLauncher.previewPostOrPageForResult(
+                            EditPostActivity.this,
+                            mSite,
+                            mPost,
+                            mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
+                                    ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
+                                    : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                            );
+                    updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
+                } else if (event.isError() || (mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR)) {
+                    updatePostLoadingAndDialogState(PostLoadingState.NONE);
+                    UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
+                            getString(R.string.remote_preview_operation_error));
+                }
             }
         }
     }

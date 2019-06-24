@@ -1454,8 +1454,12 @@
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving&#8230;</string>
     <string name="post_preview_remote_auto_saving_post">Generating Preview&#8230;</string>
+    <string name="remote_preview_operation_error">Error during remote preview preparation.\nPlease try again.</string>
     <string name="preview_unavailable_self_hosted_sites">Preview Unavailable</string>
-    
+    <string name="error_preview_empty_post">Can\'t preview an empty post</string>
+    <string name="error_preview_empty_page">Can\'t preview an empty page</string>
+    <string name="error_preview_empty_draft">Can\'t preview an empty draft</string>
+
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
     <string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
