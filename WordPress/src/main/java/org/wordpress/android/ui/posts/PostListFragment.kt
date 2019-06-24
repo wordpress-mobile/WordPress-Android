@@ -173,10 +173,6 @@ class PostListFragment : Fragment() {
         })
     }
 
-    private val searchProgressRunnable = Runnable {
-        swipeRefreshLayout?.isRefreshing = true
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
