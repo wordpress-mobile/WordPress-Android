@@ -187,7 +187,11 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        setUserPreferredViewLayoutType()
+        if (isSearchExpanded.value == true) {
+            setViewLayoutAndIcon(COMPACT, false)
+        } else {
+            setUserPreferredViewLayoutType()
+        }
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
