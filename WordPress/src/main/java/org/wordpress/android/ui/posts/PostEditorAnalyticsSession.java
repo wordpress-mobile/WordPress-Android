@@ -47,7 +47,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         PUBLISH
     }
 
-    PostEditorAnalyticsSession(Editor editor, PostModel post, SiteModel site) {
+    PostEditorAnalyticsSession(Editor editor, PostModel post, SiteModel site, boolean isNewPost) {
         // fill in which the current Editor is
         mCurrentEditor = editor;
 
@@ -69,7 +69,7 @@ public class PostEditorAnalyticsSession implements Serializable {
 
         // fill in mContentType
         String postContent = post.getContent();
-        if (TextUtils.isEmpty(post.getContent())) {
+        if (isNewPost) {
             mContentType = "new";
         } else if (PostUtils.contentContainsGutenbergBlocks(postContent)) {
             mContentType = "gutenberg";
