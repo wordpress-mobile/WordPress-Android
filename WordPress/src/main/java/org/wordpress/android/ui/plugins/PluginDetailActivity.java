@@ -1514,10 +1514,18 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
             // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
             if (mSite.isAutomatedTransfer()) {
-                AppLog.v(T.PLUGINS, "Site is successfully fetched after Automated Transfer, fetching the site plugins "
-                                    + "to complete the process...");
-                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+                // There is a little bit of delay after AT is completed and plugin installation is reflected on
+                // server side, so we delay fetching plugin directory to accommodate this
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppLog.v(T.PLUGINS,
+                                "Site is successfully fetched after Automated Transfer, fetching the site plugins "
+                                + "to complete the process...");
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                                .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+                    }
+                }, 10000);
             } else {
                 // Either an error occurred while fetching the site or Automated Transfer is not yet reflected in the
                 // API response. We need to keep fetching the site until we get the updated site. Otherwise, any changes
