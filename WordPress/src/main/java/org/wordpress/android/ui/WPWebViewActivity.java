@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -110,6 +111,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private WPWebViewViewModel mViewModel;
     private ActionableReusableState mActionableReusableState;
 
+    /**
+    * This enum could be expanded to allow to re-use this actionable view
+    * in other scenarios with different WebPreviewUiState, also menu can be
+    * customized with the same principle.
+    * TODO: evaluate if to extract a dedicated Activity/Fragment for this actionable direct usage.
+    */
     public enum ActionableReusableState {
         NONE(0),
         REMOTE_PREVIEW_NOT_AVAILABLE(1);
@@ -159,6 +166,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResultIfNeeded();
     }
 
     @Override
@@ -230,13 +243,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
-                                                                String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject);
+                                                                String shareSubject, boolean startPreviewForResult) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, startPreviewForResult);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
     public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
-                                                  String frameNonce) {
+                                                  String frameNonce, boolean startPreviewForResult) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
@@ -249,12 +262,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
-        context.startActivity(intent);
+        if (startPreviewForResult) {
+            ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
-                                                     String[] listOfAllowedURLs) {
+                                                     String[] listOfAllowedURLs, boolean startPreviewForResult) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -286,7 +303,14 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, post.getTitle());
             }
         }
+
+        if (startPreviewForResult) {
+            ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
+        } else {
+            context.startActivity(intent);
+        }
     }
+
 
     public static void openActionableEmptyViewDirectly(Context context, ActionableReusableState reusableState) {
         Intent intent = new Intent(context, WPWebViewActivity.class);
@@ -333,6 +357,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false);
+    }
+
+    private static void openWPCOMURL(
+            Context context,
+            String url,
+            String shareableUrl,
+            String shareSubject,
+            boolean startPreviewForResult
+    ) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -347,7 +381,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
-        context.startActivity(intent);
+
+        if (startPreviewForResult) {
+            ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -393,7 +432,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
-                finish();
+                setResultIfNeededAndFinish();
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL, this);
         } else {
@@ -420,7 +459,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         if (extras == null) {
             AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
-            finish();
+            setResultIfNeededAndFinish();
             return;
         }
 
@@ -432,7 +471,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
-            finish();
+            setResultIfNeededAndFinish();
             return;
         }
 
@@ -467,13 +506,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
                 ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
-                finish();
+                setResultIfNeededAndFinish();
             }
 
             if (TextUtils.isEmpty(username)) {
                 AppLog.e(AppLog.T.UTILS, "Username empty/null");
                 ToastUtils.showToast(this, R.string.incorrect_credentials, ToastUtils.Duration.SHORT);
-                finish();
+                setResultIfNeededAndFinish();
             }
 
             loadAuthenticatedUrl(authURL, addressToLoad, username, password);
@@ -564,7 +603,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         int itemID = item.getItemId();
-        if (itemID == R.id.menu_refresh) {
+
+        if (itemID == android.R.id.home) {
+            setResultIfNeeded();
+        } else if (itemID == R.id.menu_refresh) {
             mWebView.reload();
             return true;
         } else if (itemID == R.id.menu_share) {
@@ -589,5 +631,19 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Since currently we are going to look at the request code and not at the result code
+    // in the onActivityResult callbacks, this method is actually redundant, but wanted
+    // to be explicit in case of future expansions on this.
+    private void setResultIfNeeded() {
+        if (getCallingActivity() != null) {
+            setResult(RESULT_OK);
+        }
+    }
+
+    private void setResultIfNeededAndFinish() {
+        setResultIfNeeded();
+        finish();
     }
 }
