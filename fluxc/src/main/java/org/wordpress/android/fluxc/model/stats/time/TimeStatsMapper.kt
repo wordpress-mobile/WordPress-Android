@@ -291,8 +291,8 @@ class TimeStatsMapper
                 it
             }
         }?.mapNotNull {
-            if (it.name != null) {
-                FileDownloads(it.name, it.count ?: 0)
+            if (it.filename != null) {
+                FileDownloads(it.filename, it.downloads ?: 0)
             } else {
                 null
             }
