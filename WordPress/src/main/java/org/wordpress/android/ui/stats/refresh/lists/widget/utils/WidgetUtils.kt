@@ -44,17 +44,10 @@ class WidgetUtils
         return minWidth > minWidthLimit
     }
 
-    fun getLayout(showColumns: Boolean, colorMode: Color): Int {
-        return if (showColumns) {
-            when (colorMode) {
-                DARK -> R.layout.stats_widget_blocks_dark
-                LIGHT -> R.layout.stats_widget_blocks_light
-            }
-        } else {
-            when (colorMode) {
-                DARK -> R.layout.stats_widget_list_dark
-                LIGHT -> R.layout.stats_widget_list_light
-            }
+    fun getLayout(colorMode: Color): Int {
+        return when (colorMode) {
+            DARK -> R.layout.stats_widget_list_dark
+            LIGHT -> R.layout.stats_widget_list_light
         }
     }
 

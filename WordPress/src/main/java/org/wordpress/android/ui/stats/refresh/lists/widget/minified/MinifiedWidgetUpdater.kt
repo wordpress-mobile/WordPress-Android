@@ -40,10 +40,11 @@ class MinifiedWidgetUpdater
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
+        appWidgetId: Int,
+        appWidgetManager: AppWidgetManager?
     ) {
-        val isWideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val widgetManager = appWidgetManager ?: AppWidgetManager.getInstance(context)
+        val isWideView = widgetUtils.isWidgetWiderThanLimit(widgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val dataType = appPrefsWrapper.getAppWidgetDataType(appWidgetId)
@@ -59,9 +60,9 @@ class MinifiedWidgetUpdater
             views.setOnClickPendingIntent(R.id.widget_container,
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
             )
-            showValue(appWidgetManager, appWidgetId, views, siteModel, dataType, isWideView)
+            showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
-            widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
+            widgetUtils.showError(widgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
         }
     }
 
@@ -70,7 +71,7 @@ class MinifiedWidgetUpdater
         val viewsWidget = ComponentName(context, StatsMinifiedWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
         for (appWidgetId in allWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            updateAppWidget(context, appWidgetId, appWidgetManager)
         }
     }
 

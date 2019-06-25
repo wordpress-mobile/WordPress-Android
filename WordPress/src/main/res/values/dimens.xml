@@ -419,6 +419,7 @@
     <dimen name="stats_insights_button_container_height">52dp</dimen>
     <dimen name="stats_widget_list_item_height">40dp</dimen>
     <dimen name="stats_minified_widget_height">66dp</dimen>
+    <dimen name="stats_widget_block_list_item_height">56dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
 

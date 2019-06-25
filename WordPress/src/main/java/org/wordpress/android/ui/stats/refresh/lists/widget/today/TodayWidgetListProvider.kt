@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.today
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import org.wordpress.android.R
@@ -60,7 +59,6 @@ class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteView
         val uiModel = viewModel.data[position]
         val rv = RemoteViews(context.packageName, uiModel.layout)
         rv.setTextViewText(R.id.period, uiModel.key)
-        rv.setViewVisibility(R.id.divider, View.VISIBLE)
         rv.setTextViewText(R.id.value, uiModel.value)
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

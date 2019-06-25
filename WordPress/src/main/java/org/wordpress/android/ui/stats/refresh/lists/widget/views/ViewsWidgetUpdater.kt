@@ -26,27 +26,28 @@ class ViewsWidgetUpdater
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int
+        appWidgetId: Int,
+        appWidgetManager: AppWidgetManager?
     ) {
-        val isWideView = widgetUtils.isWidgetWiderThanLimit(appWidgetManager, appWidgetId)
+        val widgetManager = appWidgetManager ?: AppWidgetManager.getInstance(context)
+        val isWideView = widgetUtils.isWidgetWiderThanLimit(widgetManager, appWidgetId)
         val colorMode = appPrefsWrapper.getAppWidgetColor(appWidgetId) ?: LIGHT
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
         val siteModel = siteStore.getSiteBySiteId(siteId)
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
-        val layout = widgetUtils.getLayout(showColumns = false, colorMode = colorMode)
+        val layout = widgetUtils.getLayout(colorMode = colorMode)
         val views = RemoteViews(context.packageName, layout)
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_views))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
             views.setOnClickPendingIntent(
-                    R.id.widget_title,
+                    R.id.widget_title_container,
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, DAY)
             )
         }
         if (networkAvailable && siteModel != null) {
             widgetUtils.showList(
-                    appWidgetManager,
+                    widgetManager,
                     views,
                     context,
                     appWidgetId,
@@ -56,7 +57,7 @@ class ViewsWidgetUpdater
                     isWideView
             )
         } else {
-            widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
+            widgetUtils.showError(widgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
         }
     }
 
@@ -65,7 +66,7 @@ class ViewsWidgetUpdater
         val viewsWidget = ComponentName(context, StatsViewsWidget::class.java)
         val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
         for (appWidgetId in allWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            updateAppWidget(context, appWidgetId)
         }
     }
 

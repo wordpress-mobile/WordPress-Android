@@ -120,7 +120,6 @@ class ViewsWidgetListViewModel
         val isNeutralChangeVisible: Boolean,
         val change: String? = null,
         val period: String,
-        val localSiteId: Int,
-        val showDivider: Boolean = !isPositiveChangeVisible && !isNegativeChangeVisible && !isNeutralChangeVisible
+        val localSiteId: Int
     )
 }
