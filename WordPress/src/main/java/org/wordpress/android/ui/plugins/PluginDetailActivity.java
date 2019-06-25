@@ -48,7 +48,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
@@ -101,6 +100,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 
 
 public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener {
@@ -291,16 +292,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                 return;
             }
 
-            PlanModel currentPlan = null;
-            for (PlanModel plan : event.plans) {
-                if (plan.isCurrentPlan()) {
-                    currentPlan = plan;
-                    break;
-                }
-            }
-
-            boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
-            if (isDomainCreditAvailable) {
+            if (isDomainCreditAvailable(event.plans)) {
                 showDomainRegistrationDialog();
             } else {
                 dispatchInstallPluginAction();

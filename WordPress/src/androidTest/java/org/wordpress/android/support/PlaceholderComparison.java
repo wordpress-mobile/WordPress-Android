@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Size;
 import android.widget.ImageView;
 
-import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ApplicationProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -27,7 +27,7 @@ public class PlaceholderComparison {
     private ImageType mImageType;
 
     public PlaceholderComparison(ImageType imageType) {
-        mContext = InstrumentationRegistry.getTargetContext();
+        mContext = ApplicationProvider.getApplicationContext();
         mImageType = imageType;
     }
 

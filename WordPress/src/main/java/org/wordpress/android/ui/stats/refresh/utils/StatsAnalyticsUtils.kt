@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val GRANULARITY = "granularity"
@@ -13,6 +14,7 @@ private const val DAYS_PROPERTY = "days"
 private const val WEEKS_PROPERTY = "weeks"
 private const val MONTHS_PROPERTY = "months"
 private const val YEARS_PROPERTY = "years"
+private const val TYPE = "type"
 
 fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) {
     val property = when (granularity) {
@@ -22,4 +24,8 @@ fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranular
         YEARS -> YEARS_PROPERTY
     }
     this.track(stat, mapOf(GRANULARITY to property))
+}
+
+fun AnalyticsTrackerWrapper.trackWithType(stat: Stat, insightType: InsightType) {
+    this.track(stat, mapOf(TYPE to insightType.name))
 }

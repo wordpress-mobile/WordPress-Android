@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/menu_save_post"
+        android:id="@+id/menu_primary_action"
         android:title="@string/post_status_publish_post"
         app:showAsAction="always" >
     </item>
@@ -24,7 +24,7 @@
         </item>
 
         <item
-            android:id="@+id/menu_save_as_draft_or_publish"
+            android:id="@+id/menu_secondary_action"
             android:title="@string/menu_save_as_draft" >
         </item>
 

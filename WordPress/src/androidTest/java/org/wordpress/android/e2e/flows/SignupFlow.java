@@ -9,7 +9,7 @@ import androidx.test.rule.ActivityTestRule;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
-import static androidx.test.InstrumentationRegistry.getTargetContext;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -36,7 +36,7 @@ public class SignupFlow {
         Intent intent = new Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("wordpress://magic-login?token=valid_token&new_user=1")
-        ).setPackage(getTargetContext().getPackageName());
+        ).setPackage(getApplicationContext().getPackageName());
 
         magicLinkActivityTestRule.launchActivity(intent);
     }
