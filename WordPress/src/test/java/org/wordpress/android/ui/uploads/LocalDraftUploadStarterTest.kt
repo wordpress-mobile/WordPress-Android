@@ -14,6 +14,7 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -254,6 +255,33 @@ class LocalDraftUploadStarterTest {
                 times(sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size)
         ).isPostUploadingOrQueued(any())
         verifyNoMoreInteractions(uploadServiceFacade)
+    }
+
+    @Test
+    fun `when uploading a single site, local drafts with too many errors or cancellations are not uploaded`() {
+        // Given
+        val site: SiteModel = sites[1]
+
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+
+        // This UploadStore.getNumberOfPostUploadErrorsOrCancellations mocked method will always return that
+        // any post was cancelled 1000 times. The auto upload should not be started.
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade,
+                uploadStore = createMockedUploadStore(1000))
+
+        // When
+        starter.queueUploadFromSite(site)
+
+        // Then
+        // Make sure the uploadPost method is never called
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any(),
+                publish = any(),
+                isRetry = eq(true)
+        )
     }
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
