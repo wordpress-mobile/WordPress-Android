@@ -13,6 +13,8 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SELECTED_DATE
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
@@ -73,6 +75,17 @@ class BaseListUseCase(
         loadData(true, forced)
     }
 
+    suspend fun onParamChanged(param: UseCaseParam) {
+        statsTypes.value?.forEach { type ->
+            useCases.find { it.type == type }
+                    ?.let { block ->
+                        withContext(bgDispatcher) {
+                            block.onParamsChange(param)
+                        }
+                    }
+        }
+    }
+
     suspend fun refreshTypes(): List<StatsType> {
         val items = getStatsTypes()
         withContext(mainDispatcher) {
@@ -90,8 +103,10 @@ class BaseListUseCase(
                 val visibleTypes = refreshTypes()
                 visibleTypes.forEach { type ->
                     useCases.find { it.type == type }
-                            ?.let { block -> launch(bgDispatcher) {
-                                block.fetch(refresh, forced) }
+                            ?.let { block ->
+                                launch(bgDispatcher) {
+                                    block.fetch(refresh, forced)
+                                }
                             }
                 }
             }
@@ -108,7 +123,7 @@ class BaseListUseCase(
     }
 
     suspend fun onDateChanged() {
-        refreshData()
+        onParamChanged(SELECTED_DATE)
     }
 
     fun onListSelected() {

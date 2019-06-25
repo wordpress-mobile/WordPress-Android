@@ -108,7 +108,8 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
             Dispatchers.Unconfined,
-            0
+            0,
+            listOf()
     ) {
         override fun buildLoadingItem(): List<BlockListItem> {
             return loadingItems
