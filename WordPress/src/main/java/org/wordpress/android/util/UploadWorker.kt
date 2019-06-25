@@ -15,12 +15,13 @@ import androidx.work.Worker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
 import java.util.concurrent.TimeUnit.HOURS
+
+private const val PERIODIC_UNIQUE_WORK_NAME = "periodic auto-upload"
 
 class UploadWorker(
     appContext: Context,
@@ -33,13 +34,14 @@ class UploadWorker(
     }
 
     override fun doWork(): Result {
-        runBlocking {
-            val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
-                UPLOAD_FROM_ALL_SITES -> localDraftUploadStarter.queueUploadFromAllSites()
-                else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
-            }
-            job?.join()
-        }
+        // TODO Hotfix: WorkManager causes ANRs and we are not sure why yet. We are disabling it for now.
+//        runBlocking {
+//            val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
+//                UPLOAD_FROM_ALL_SITES -> localDraftUploadStarter.queueUploadFromAllSites()
+//                else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
+//            }
+//            job?.join()
+//        }
         return Result.success()
     }
 
@@ -81,8 +83,12 @@ fun enqueuePeriodicUploadWorkRequestForAllSites(): Pair<WorkRequest, Operation> 
             .setConstraints(getUploadConstraints())
             .build()
     val operation = WorkManager.getInstance().enqueueUniquePeriodicWork(
-            "periodic auto-upload",
+            PERIODIC_UNIQUE_WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP, request
     )
     return Pair(request, operation)
+}
+
+fun cancelPeriodicUploadWorkRequestForAllSites() {
+    WorkManager.getInstance().cancelUniqueWork(PERIODIC_UNIQUE_WORK_NAME)
 }

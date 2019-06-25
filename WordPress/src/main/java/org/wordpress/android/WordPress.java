@@ -316,9 +316,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         initWorkManager();
 
-        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
-        // It will upload local draft or published posts with local changes to the server.
-        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+        // TODO Hotfix: WorkManager causes ANRs and we are not sure why yet. We are disabling it for now. We are also
+        //  canceling all the already scheduled WorkRequests.
+
+//        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
+//        // It will upload local draft or published posts with local changes to the server.
+//        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+
+        UploadWorkerKt.cancelPeriodicUploadWorkRequestForAllSites();
     }
 
     protected void initWorkManager() {
