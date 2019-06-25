@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -909,10 +908,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * If the button is already in the correct state, calling this method will result in no change.
      * i.e. the button will not repeatedly animate in, it will simply stay where it's supposed to be
      * */
-    public void updatePostButtonPosition(){
-        boolean shouldShowSubmitButton = !mCommentFieldExpanded && (mEditComment.isFocused() || mEditComment.length() > 0);
+    public void updatePostButtonPosition() {
+        boolean shouldShowSubmitButton = !mCommentFieldExpanded
+                                         && (mEditComment.isFocused() || mEditComment.length() > 0);
         TransitionManager.beginDelayedTransition(mCommentsContainer);
-        if(shouldShowSubmitButton){
+        if (shouldShowSubmitButton) {
             ConstraintSet showSet = new ConstraintSet();
             showSet.clone(mCommentsContainer);
             showSet.connect(R.id.btn_submit_reply, ConstraintSet.END, mCommentsContainer.getId(), ConstraintSet.END);
