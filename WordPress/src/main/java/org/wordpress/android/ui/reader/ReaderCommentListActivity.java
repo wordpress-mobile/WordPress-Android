@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -218,6 +220,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mEditComment = findViewById(R.id.new_comment_edit_text);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
+        mEditComment.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override public void onFocusChange(View v, boolean hasFocus) {
+                updatePostButtonPosition();
+            }
+        });
         mSubmitReplyBtn = findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
@@ -263,12 +270,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 updatePostButtonEnabledState();
+                updatePostButtonPosition();
             }
         });
-        updatePostButtonEnabledState();
+
         if (savedInstanceState != null && savedInstanceState.getBoolean(KEY_IS_COMMENT_FIELD_EXPANDED, false)) {
             expandCommentField(false);
         } // else leave as default state
+        updatePostButtonEnabledState();
+        updatePostButtonPosition();
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
     }
 
@@ -756,6 +766,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             // existing listener, so we must force the state update
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
+            updatePostButtonPosition();
             getCommentAdapter().setHighlightCommentId(newComment.commentId, true);
             getCommentAdapter().addComment(newComment);
             // make sure it's scrolled into view
@@ -869,8 +880,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         params.topMargin = 0;
         params.bottomMargin = 0;
         moveNewCommentScrollViewToCursor();
+        updatePostButtonPosition();
     }
 
+
+    /**
+     * This method updates the post button enabled state (whether it is clickable and what color it is)
+     *
+     * This method is safe to call repeatedly, even if the button is already in the correct state
+     * */
     public void updatePostButtonEnabledState() {
         MenuItem postCommentMenuItem = mEnhancedCommentToolbar.getMenu().findItem(R.id.menu_post_comment);
         if (commentTextIsValid()) {
@@ -882,6 +900,30 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             ColorUtils.INSTANCE.setMenuItemWithTint(this, postCommentMenuItem, R.color.neutral_300);
             postCommentMenuItem.setEnabled(false);
             mSubmitReplyBtn.setEnabled(false);
+        }
+    }
+
+    /**
+     * This method updates the position of the bottom Post Comment button to match the current state
+     *
+     * If the button is already in the correct state, calling this method will result in no change.
+     * i.e. the button will not repeatedly animate in, it will simply stay where it's supposed to be
+     * */
+    public void updatePostButtonPosition(){
+        boolean shouldShowSubmitButton = !mCommentFieldExpanded && (mEditComment.isFocused() || mEditComment.length() > 0);
+        TransitionManager.beginDelayedTransition(mCommentsContainer);
+        if(shouldShowSubmitButton){
+            ConstraintSet showSet = new ConstraintSet();
+            showSet.clone(mCommentsContainer);
+            showSet.connect(R.id.btn_submit_reply, ConstraintSet.END, mCommentsContainer.getId(), ConstraintSet.END);
+            showSet.clear(R.id.btn_submit_reply, ConstraintSet.START);
+            showSet.applyTo(mCommentsContainer);
+        } else {
+            ConstraintSet hideSet = new ConstraintSet();
+            hideSet.clone(mCommentsContainer);
+            hideSet.connect(R.id.btn_submit_reply, ConstraintSet.START, mCommentsContainer.getId(), ConstraintSet.END);
+            hideSet.clear(R.id.btn_submit_reply, ConstraintSet.END);
+            hideSet.applyTo(mCommentsContainer);
         }
     }
 }
