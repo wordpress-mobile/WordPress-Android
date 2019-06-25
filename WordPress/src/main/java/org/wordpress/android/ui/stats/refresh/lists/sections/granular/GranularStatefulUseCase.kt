@@ -5,7 +5,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SELECTED_DATE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.util.Date
@@ -17,7 +19,7 @@ abstract class GranularStatefulUseCase<DOMAIN_MODEL, UI_STATE>(
     val selectedDateProvider: SelectedDateProvider,
     val statsGranularity: StatsGranularity,
     defaultUiState: UI_STATE
-) : StatefulUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher, defaultUiState) {
+) : BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher, defaultUiState, listOf(SITE, SELECTED_DATE)) {
     abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel): DOMAIN_MODEL?
 
     final override suspend fun loadCachedData(): DOMAIN_MODEL? {

@@ -170,7 +170,7 @@ class StatsFragment : DaggerFragment() {
         })
 
         viewModel.siteChanged.observe(this, Observer {
-            viewModel.refreshData()
+            viewModel.onSiteChanged()
         })
 
         viewModel.hideToolbar.observe(this, Observer { event ->

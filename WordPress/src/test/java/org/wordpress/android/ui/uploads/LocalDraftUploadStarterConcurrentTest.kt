@@ -73,6 +73,7 @@ class LocalDraftUploadStarterConcurrentTest {
             postStore = postStore,
             pageStore = pageStore,
             siteStore = mock(),
+            uploadStore = mock(),
             bgDispatcher = Dispatchers.Default,
             ioDispatcher = Dispatchers.IO,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
