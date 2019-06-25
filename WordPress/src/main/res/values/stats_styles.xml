@@ -272,12 +272,23 @@
         <item name="android:paddingTop">17dp</item>
     </style>
 
-    <style name="StatsWidgetTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:gravity">center_vertical</item>
+    <style name="StatsWidgetHeader">
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="StatsWidgetHeader.Light">
+        <item name="android:background">@drawable/bg_rectangle_gray_0_top_radius_4dp</item>
+    </style>
+
+    <style name="StatsWidgetHeader.Dark">
+        <item name="android:background">@drawable/bg_rectangle_gray_700_top_radius_4dp</item>
+    </style>
+
+    <style name="StatsWidgetTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="StatsWidgetTitle.Light">

@@ -2,8 +2,8 @@
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
-    android:initialKeyguardLayout="@layout/stats_widget_blocks_light"
-    android:initialLayout="@layout/stats_widget_blocks_light"
+    android:initialKeyguardLayout="@layout/stats_widget_minified_light"
+    android:initialLayout="@layout/stats_widget_minified_light"
     android:minHeight="50dp"
     android:minWidth="110dp"
     android:previewImage="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"

@@ -43,7 +43,7 @@ class AllTimeWidgetUpdater
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         siteModel?.let {
             views.setOnClickPendingIntent(
-                    R.id.widget_title,
+                    R.id.widget_title_container,
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
             )
         }

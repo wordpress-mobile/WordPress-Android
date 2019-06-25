@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetList
 
 class WidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        val wideView = intent.getBooleanExtra(WIDE_VIEW_KEY, true)
+        val wideView = intent.getBooleanExtra(IS_WIDE_VIEW_KEY, true)
         return when (intent.getViewType()) {
             WEEK_VIEWS -> ViewsWidgetListProvider(this.applicationContext, intent)
             ALL_TIME_VIEWS -> {

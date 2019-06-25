@@ -11,8 +11,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 
 class WidgetBlockListProvider(val context: Context, val viewModel: WidgetBlockListViewModel, intent: Intent) :
         RemoteViewsFactory {
