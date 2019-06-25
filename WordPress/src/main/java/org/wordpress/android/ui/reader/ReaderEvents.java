@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;

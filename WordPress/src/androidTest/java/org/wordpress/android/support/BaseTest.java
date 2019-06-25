@@ -1,7 +1,8 @@
 package org.wordpress.android.support;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -21,7 +22,6 @@ import org.wordpress.android.ui.WPLaunchActivity;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
@@ -32,8 +32,7 @@ public class BaseTest {
 
     @Before
     public void setup() {
-        mAppContext =
-                (WordPress) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+        mAppContext = ApplicationProvider.getApplicationContext();
         mMockedAppComponent = DaggerAppComponentTest.builder()
                                                     .application(mAppContext)
                                                     .build();
@@ -42,7 +41,8 @@ public class BaseTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(
             options().port(WIREMOCK_PORT)
-                     .fileSource(new AssetFileSource(InstrumentationRegistry.getContext().getAssets()))
+                     .fileSource(new AssetFileSource(
+                             InstrumentationRegistry.getInstrumentation().getContext().getAssets()))
                      .extensions(new ResponseTemplateTransformer(true))
                      .notifier(new AndroidNotifier()));
     @Rule
@@ -71,7 +71,7 @@ public class BaseTest {
         new LoginFlow().loginEmailPassword();
     }
 
-    protected void wpLogout() {
-        new MePage().go().verifyUsername(E2E_WP_COM_USER_USERNAME).logout();
+    private void wpLogout() {
+        new MePage().go().logout();
     }
 }

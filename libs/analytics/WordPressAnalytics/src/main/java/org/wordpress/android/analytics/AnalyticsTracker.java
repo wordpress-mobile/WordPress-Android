@@ -20,6 +20,8 @@ public final class AnalyticsTracker {
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
     public enum Stat {
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
         APPLICATION_INSTALLED,
@@ -77,13 +79,22 @@ public final class AnalyticsTracker {
         STATS_ACCESSED,
         STATS_ACCESS_ERROR,
         STATS_INSIGHTS_ACCESSED,
+        STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED,
+        STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED,
+        STATS_INSIGHTS_MANAGEMENT_ACCESSED,
+        STATS_INSIGHTS_TYPE_MOVED_UP,
+        STATS_INSIGHTS_TYPE_MOVED_DOWN,
+        STATS_INSIGHTS_TYPE_REMOVED,
+        STATS_INSIGHTS_MANAGEMENT_SAVED,
+        STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED,
+        STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED,
+        STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED,
         STATS_PERIOD_DAYS_ACCESSED,
         STATS_PERIOD_WEEKS_ACCESSED,
         STATS_PERIOD_MONTHS_ACCESSED,
         STATS_PERIOD_YEARS_ACCESSED,
         STATS_VIEW_ALL_ACCESSED,
         STATS_FOLLOWERS_VIEW_MORE_TAPPED,
-        STATS_COMMENTS_VIEW_MORE_TAPPED,
         STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED,
         STATS_PUBLICIZE_VIEW_MORE_TAPPED,
         STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED,
@@ -270,8 +281,9 @@ public final class AnalyticsTracker {
         CREATE_ACCOUNT_EMAIL_EXISTS,
         CREATE_ACCOUNT_USERNAME_EXISTS,
         CREATE_ACCOUNT_FAILED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         CREATED_ACCOUNT,
-        CREATED_SITE,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
         SHARED_ITEM_READER,
@@ -337,6 +349,8 @@ public final class AnalyticsTracker {
         PAGES_TAB_PRESSED,
         PAGES_OPTIONS_PRESSED,
         PAGES_SEARCH_ACCESSED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SIGNUP_BUTTON_TAPPED,
         SIGNUP_EMAIL_BUTTON_TAPPED,
         SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED,
@@ -385,10 +399,13 @@ public final class AnalyticsTracker {
         ENHANCED_SITE_CREATION_SUCCESS_LOADING,
         ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
         ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
-        ENHANCED_SITE_CREATION_COMPLETED,
+        ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED,
         ENHANCED_SITE_CREATION_EXITED,
         ENHANCED_SITE_CREATION_ERROR_SHOWN,
         ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
+        SITE_CREATED,
         MEDIA_LIBRARY_ADDED_PHOTO,
         MEDIA_LIBRARY_ADDED_VIDEO,
         PERSON_REMOVED,
@@ -412,8 +429,6 @@ public final class AnalyticsTracker {
         THEMES_SUPPORT_ACCESSED,
         THEMES_DETAILS_ACCESSED,
         ACCOUNT_SETTINGS_LANGUAGE_CHANGED,
-        SITE_CREATION_BACKGROUND_SERVICE_UPDATE,
-        NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE,
         SITE_SETTINGS_ACCESSED,
         SITE_SETTINGS_ACCESSED_MORE_SETTINGS,
         SITE_SETTINGS_LEARN_MORE_CLICKED,

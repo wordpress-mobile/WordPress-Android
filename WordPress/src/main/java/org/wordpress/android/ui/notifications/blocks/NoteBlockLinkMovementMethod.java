@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.notifications.blocks;
 
-import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 /**
  * Allows links to be highlighted when tapped on note blocks.

@@ -7,19 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
@@ -37,6 +24,21 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -46,7 +48,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
@@ -99,6 +100,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 
 
 public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener {
@@ -289,16 +292,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                 return;
             }
 
-            PlanModel currentPlan = null;
-            for (PlanModel plan : event.plans) {
-                if (plan.isCurrentPlan()) {
-                    currentPlan = plan;
-                    break;
-                }
-            }
-
-            boolean isDomainCreditAvailable = currentPlan != null && currentPlan.getHasDomainCredit();
-            if (isDomainCreditAvailable) {
+            if (isDomainCreditAvailable(event.plans)) {
                 showDomainRegistrationDialog();
             } else {
                 dispatchInstallPluginAction();
@@ -572,7 +566,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
     }
 
     private boolean isCustomDomainRequired() {
-        return mSite.getUrl().contains(".wordpress.com") && BuildConfig.DOMAIN_REGISTRATION_ENABLED;
+        return mSite.getUrl().contains(".wordpress.com");
     }
 
     private void refreshViews() {

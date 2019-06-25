@@ -5,15 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +17,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -33,6 +34,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -40,6 +42,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.inject.Inject;
 
@@ -290,9 +293,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
-            ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile);
-            onLoginFinished(false);
-            return;
+            if (event.error.type == AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR) {
+                // This probably means we're logging in to 2FA-enabled account with a non-production WP.com client id.
+                // A few WordPress.com APIs like /me/settings/ won't work for this account.
+                ToastUtils.showToast(getContext(), R.string.error_disabled_apis, Duration.LONG);
+            } else {
+                ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile, Duration.LONG);
+                onLoginFinished(false);
+                return;
+            }
         }
 
         if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {

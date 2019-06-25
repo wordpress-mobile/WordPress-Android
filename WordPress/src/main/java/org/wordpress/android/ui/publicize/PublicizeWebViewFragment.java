@@ -2,7 +2,6 @@ package org.wordpress.android.ui.publicize;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -25,8 +27,6 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.WebViewUtils;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     private SiteModel mSite;

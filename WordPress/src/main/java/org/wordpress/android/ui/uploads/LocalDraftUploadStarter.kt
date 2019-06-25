@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.uploads
 
-import android.arch.lifecycle.Lifecycle.Event
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.OnLifecycleEvent
-import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
+import androidx.lifecycle.Lifecycle.Event
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
@@ -37,7 +38,7 @@ import kotlin.coroutines.CoroutineContext
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
-class LocalDraftUploadStarter @Inject constructor(
+open class LocalDraftUploadStarter @Inject constructor(
     /**
      * The Application context
      */
@@ -49,6 +50,7 @@ class LocalDraftUploadStarter @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val postUtilsWrapper: PostUtilsWrapper,
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
@@ -84,7 +86,7 @@ class LocalDraftUploadStarter @Inject constructor(
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
-    private fun queueUploadFromAllSites() = launch {
+    open fun queueUploadFromAllSites() = launch {
         val sites = siteStore.sites
         try {
             checkConnectionAndUpload(sites = sites)
@@ -96,7 +98,7 @@ class LocalDraftUploadStarter @Inject constructor(
     /**
      * Upload all local drafts from the given [site].
      */
-    fun queueUploadFromSite(site: SiteModel) = launch {
+    open fun queueUploadFromSite(site: SiteModel) = launch {
         try {
             checkConnectionAndUpload(sites = listOf(site))
         } catch (e: Exception) {
@@ -131,7 +133,9 @@ class LocalDraftUploadStarter @Inject constructor(
 
         val postsAndPages = posts.await() + pages.await()
 
-        postsAndPages.filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
+        postsAndPages
+                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
+                .filter { postUtilsWrapper.isPublishable(it) }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,

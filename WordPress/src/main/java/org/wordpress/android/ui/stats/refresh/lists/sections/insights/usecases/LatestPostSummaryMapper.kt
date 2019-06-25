@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
@@ -25,7 +24,7 @@ class LatestPostSummaryMapper
         navigationAction: (params: LinkClickParams) -> Unit
     ): Text {
         if (model == null) {
-            return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
+            return Text(resourceProvider.getString(R.string.stats_insights_latest_post_empty))
         }
         val sinceLabel = statsUtilsWrapper.getSinceLabelLowerCase(model.postDate)
         val postTitle = if (model.postTitle.isNotBlank()) {
@@ -35,13 +34,13 @@ class LatestPostSummaryMapper
         }
         val message = if (model.postViewsCount == 0 && model.postLikeCount == 0) {
             resourceProvider.getString(
-                    string.stats_insights_latest_post_with_no_engagement,
+                    R.string.stats_insights_latest_post_with_no_engagement,
                     sinceLabel,
                     postTitle
             )
         } else {
             resourceProvider.getString(
-                    string.stats_insights_latest_post_message,
+                    R.string.stats_insights_latest_post_message,
                     sinceLabel,
                     postTitle
             )

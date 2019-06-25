@@ -3,11 +3,13 @@ package org.wordpress.android.ui.prefs;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.apache.commons.text.StringEscapeUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -22,10 +24,9 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Activity for configuring blog specific settings.
@@ -115,11 +116,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
         SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
             if (!event.isConnected()) {
-                ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
+                ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast), Duration.LONG);
             }
             siteSettingsFragment.setEditingEnabled(event.isConnected());
 

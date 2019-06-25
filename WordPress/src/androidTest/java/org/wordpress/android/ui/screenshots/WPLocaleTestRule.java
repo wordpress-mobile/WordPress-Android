@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.screenshots;
 
-import android.support.test.InstrumentationRegistry;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -45,7 +47,7 @@ public class WPLocaleTestRule implements TestRule {
     }
 
     private static void changeLocale(String localeCode) {
-        LocaleManager.setNewLocale(InstrumentationRegistry.getTargetContext(), localeCode);
+        LocaleManager.setNewLocale(ApplicationProvider.getApplicationContext(), localeCode);
         WordPress.updateContextLocale();
     }
 

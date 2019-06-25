@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.R;
@@ -188,7 +190,7 @@ public class PostUtils {
     /**
      * Checks if two posts have differing data
      */
-    public static boolean postHasEdits(PostModel oldPost, PostModel newPost) {
+    public static boolean postHasEdits(@Nullable PostModel oldPost, PostModel newPost) {
         if (oldPost == null) {
             return newPost != null;
         }

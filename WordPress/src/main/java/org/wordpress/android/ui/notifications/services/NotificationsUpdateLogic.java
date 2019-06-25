@@ -6,6 +6,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -22,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 public class NotificationsUpdateLogic {
     private ServiceCompletionListener mCompletionListener;

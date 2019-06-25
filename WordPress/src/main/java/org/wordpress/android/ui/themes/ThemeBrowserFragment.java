@@ -2,10 +2,8 @@ package org.wordpress.android.ui.themes;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.SearchView;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -51,8 +54,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
@@ -222,7 +223,6 @@ public class ThemeBrowserFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
 
         getAdapter().setThemeList(fetchThemes());
-        setEmptyViewVisible(getAdapter().getCount() == 0);
         mGridView.setAdapter(getAdapter());
     }
 
@@ -386,16 +386,21 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    private void setEmptyViewVisible(boolean visible) {
+    private void updateDisplay() {
         if (!isAdded() || getView() == null) {
             return;
         }
-        mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
-        mActionableEmptyView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
+
+        boolean hasThemes = getAdapter().getUnfilteredCount() > 0;
+        boolean hasVisibleThemes = getAdapter().getCount() > 0;
+        boolean hasNoMatchingThemes = hasThemes && !hasVisibleThemes;
+
+        mEmptyView.setVisibility(!hasThemes ? View.VISIBLE : View.GONE);
+        if (!hasThemes && !NetworkUtils.isNetworkAvailable(getActivity())) {
             mEmptyTextView.setText(R.string.no_network_title);
         }
+        mGridView.setVisibility(hasVisibleThemes ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.setVisibility(hasNoMatchingThemes ? View.VISIBLE : View.GONE);
     }
 
     private List<ThemeModel> fetchThemes() {
@@ -413,13 +418,13 @@ public class ThemeBrowserFragment extends Fragment
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.getPlanId(), mCallback, mImageManager);
+            mAdapter.registerDataSetObserver(new ThemeDataSetObserver());
         }
         return mAdapter;
     }
 
     protected void refreshView() {
         getAdapter().setThemeList(fetchThemes());
-        setEmptyViewVisible(getAdapter().getCount() == 0);
     }
 
     private List<ThemeModel> getSortedWpComThemes() {
@@ -520,11 +525,21 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override public void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    private class ThemeDataSetObserver extends DataSetObserver {
+        @Override public void onChanged() {
+            updateDisplay();
+        }
+
+        @Override public void onInvalidated() {
+            updateDisplay();
+        }
     }
 }

@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -25,13 +28,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import static org.wordpress.android.WordPress.getContext;
 
 /**
- * An activity to handle deep linking and intercepting
+ * An activity to handle deep linking and intercepting links like:
  * <p>
  * wordpress://viewpost?blogId={blogId}&postId={postId}
  * <p>

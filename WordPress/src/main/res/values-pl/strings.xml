@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-19 15:55:36+0000
+Translation-Revision-Date: 2019-05-30 16:14:27+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="history_fetching_revisions">Pobieranie wersji…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Nie udało się wstawić plików mediów.\nStuknij aby spróbować ponownie. </string>
+    <string name="editor_uploading_draft">Twój szkic jest przesyłany</string>
+    <string name="post_uploading_draft">Przesyłanie wpisu</string>
     <string name="post_list_drafts">Szkice</string>
     <string name="post_list_published">Opublikowane</string>
     <string name="post_list_author_everyone">Każdy</string>
@@ -18,10 +23,6 @@ Language: pl
     <string name="stats_insights_social">Społecznościowe</string>
     <string name="stats_insights_annual_site_stats">Roczne statystyki witryny</string>
     <string name="stats_view_follower_totals">Suma obserwujących</string>
-    <string name="suggestion_fetch_error">Nie można było wczytać sugestii domeny</string>
-    <string name="suggestions_search_hint">Wpisz słowo kluczowe aby uzyskać więcej pomysłów</string>
-    <string name="suggestions_empty_list">Nie znaleziono sugestii</string>
-    <string name="choose_domain">Wybierz domenę</string>
     <string name="register_domain">Zarejestruj domenę</string>
     <string name="jetpack_installed_message">Jetpack jest już zainstalowany, czas go skonfigurować. Zajmie to chwilę. </string>
     <string name="stats_menu_remove">Usuń z Trendów</string>
@@ -93,7 +94,6 @@ Language: pl
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">Niewspierany blok</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">Wklej adres URL</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">WYBIERZ OBRAZEK</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">Błąd podczas osadzania pliku mediów.\nStuknij aby dostać się do opcji.</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">Wyczyść wszystkie ustawienia</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Tekst alternatywny</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">Biblioteka mediów WordPress</string>
@@ -211,7 +211,6 @@ Language: pl
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
-    <string name="site_creation_label_domain_selection">Wybierz dostępny adres internetowy aby ludzie mogli znaleźć ciebie w sieci.</string>
     <string name="giphy_powered_by_giphy">Wspierane przez GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się przesłać z powodu błędu sieci. </string>
     <string name="giphy_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
@@ -537,7 +536,6 @@ Language: pl
     <string name="content_description_people_looking_charts">Ludzie analizujący grafiki i wykresy</string>
     <string name="comment_title">%s na %s</string>
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
-    <string name="notification_site_creation_title_in_progress">Tworzenie witryny… To może zająć kilka minut.</string>
     <string name="notification_channel_important_title">Ważne</string>
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
@@ -550,10 +548,6 @@ Language: pl
     <string name="site_settings_quota_space_unlimited">%1$s z bez limitu</string>
     <string name="preview_count">Podgląd %d</string>
     <string name="add_count">Dodaj %d</string>
-    <string name="site_creation_domain_selection_title">Utwórz nową witrynę Krok 4</string>
-    <string name="site_creation_site_details_title">Utwórz nową witrynę Krok 3</string>
-    <string name="site_creation_theme_selection_title">Utwórz nową witrynę Krok 2</string>
-    <string name="site_creation_category_title">Utwórz nową witrynę Krok 1</string>
     <string name="stats_followers_many_desc">%d obserwujących</string>
     <string name="stats_followers_one_desc">jeden obserwujący</string>
     <string name="stats_followers_zero_desc">brak obserwujących</string>
@@ -651,7 +645,6 @@ Language: pl
     <string name="help_screen_title">Pomoc i wsparcie</string>
     <string name="license_screen_title">Licencja</string>
     <string name="release_notes_screen_title">Informacje o wydaniu</string>
-    <string name="site_creation_creating_failed_extended">Napotkaliśmy na nieoczekiwany problem. Może spróbujemy jeszcze raz?</string>
     <string name="signup_epilogue_error_avatar_view">Twój obrazek profilowy został przesłany i będzie wkrótce dostępny.</string>
     <string name="email_not_registered_wpcom">Hmm, nie możemy odnaleźć konta WordPress.com połączonego z tym adresem email. Spróbuj poniższej odnośnika aby zalogować się używając adresu swojej witryny.</string>
     <string name="permissions_denied_message">Wygląda na to, że wyłączyłeś uprawnienia wymagane do tej funkcjonalności.&lt;br/>&lt;br/>Aby to zmienić, edytuj uprawnienia i upewnij się, iż &lt;strong>%s&lt;/strong> jest uaktywnione.</string>
@@ -703,44 +696,7 @@ Language: pl
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Napisz pierwszy wpis</string>
-    <string name="site_creation_epilogue_configure">Skonfiguruj</string>
-    <string name="site_creation_epilogue_congrats">Gratulacje! Twoja witryna jest gotowa.</string>
-    <string name="site_creation_creating_modal">Proszę czekać na zakończenie tworzenia witryny.</string>
-    <string name="site_creation_creating_retry">Spróbuj ponownie</string>
-    <string name="site_creation_creating_failed">Coś poszło nie tak…</string>
-    <string name="site_creation_creating_preparing_frontend">Przygotowywanie interfejsu…</string>
-    <string name="site_creation_creating_configuring_theme">Konfiguracja stylu witryny…</string>
-    <string name="site_creation_creating_configuring_content">Konfiguracja zawartości witryny…</string>
-    <string name="site_creation_creating_fetching_info">Pobieranie informacji o witrynie…</string>
-    <string name="site_creation_creating_laying_foundation">Układanie fundamentów witryny…</string>
-    <string name="site_creation_empty_site_title">Proszę wprowadzić tytuł witryny</string>
-    <string name="site_creation_tagline_helper">Opis to krótka linia tekstu pokazana we większości motywów zaraz pod tytułem, i działa jako metadane witryny dla silników wyszukiwania.</string>
-    <string name="site_creation_tagline_hint">Opis witryny (opcjonalnie)</string>
-    <string name="site_creation_title_hint">Tytuł witryny</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
-    <string name="site_creation_domain_keywords_hint">Wprowadź słowo kluczowe aby zaczerpnąć więcej pomysłów</string>
-    <string name="site_creation_label_domain_selection_title">Krok 4 z 4</string>
-    <string name="site_creation_label_site_details">Powiedz nam więcej o tym co tworzysz. Jaki jest tytuł i opis?</string>
-    <string name="site_creation_label_site_details_title">Krok 3 z 4</string>
-    <string name="site_creation_label_theme_loading">Proszę czekać, ładowanie motywów</string>
-    <string name="site_creation_label_theme_selection">Rozpocznij bez zbędnego namysłu z jednym z naszych popularnych motywów. Zaraz po utworzeniu witryny, możesz przeszukiwać i wybierać spośród setek innych motywów.</string>
-    <string name="site_creation_label_theme_selection_title">Krok 2 z 4</string>
-    <string name="site_creation_subtitle_portfolio">Aby zaprezentować swoje kreatywne projektu w wizualnej prezentacji.</string>
-    <string name="site_creation_title_portfolio">Zacznij od portfolio</string>
-    <string name="site_creation_subtitle_website">Aby wypromować swój biznes lub markę i połączyć się ze swoją publiką.</string>
-    <string name="site_creation_title_website">Zacznij od witryny</string>
-    <string name="site_creation_subtitle_blog">Aby dzielić się swoimi pomysłami, historiami i fotografiami ze swoimi obserwującymi.</string>
-    <string name="site_creation_title_blog">Zacznij od Blogu</string>
-    <string name="site_creation_label_category">Jakiego rodzaju witrynę potrzebujesz?\nWybierz jedną z poniższych opcji:</string>
-    <string name="site_creation_label_category_title">Krok 1 z 4</string>
-    <string name="site_creation_title">Stwórz nową witrynę</string>
-    <string name="notification_site_creation_failed">Wystąpił błąd.</string>
-    <string name="notification_site_creation_title_stopped">Zatrzymano tworzenie witryny</string>
-    <string name="notification_site_creation_step_theme">Krok 4 z 4</string>
-    <string name="notification_site_creation_step_tagline">Krok 3 z 4</string>
-    <string name="notification_site_creation_step_fetching">Krok 2 z 4</string>
-    <string name="notification_site_creation_step_creating">Krok 1 z 4</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
     <string name="notification_site_creation_title_success">Utworzono witrynę!</string>
     <string name="google_error_timeout">Odpowiedź zajęła Google zbyt dużo czasu. Możliwe, że będziesz musiał poczekać na lepsze połączenie z internetem.</string>

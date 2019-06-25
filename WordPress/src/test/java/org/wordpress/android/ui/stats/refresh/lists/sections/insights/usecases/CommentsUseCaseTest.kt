@@ -20,13 +20,11 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
@@ -60,9 +58,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
-                tracker,
-                popupMenuHandler,
-                BLOCK
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
@@ -94,70 +90,6 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val updatedResult = loadComments(true, forced)
 
         updatedResult.data!!.assertTabWithPosts(1)
-    }
-
-    @Test
-    fun `adds link to UI model when has more posts`() = test {
-        val forced = false
-        val model = CommentsModel(
-                listOf(Post(postId, postTitle, totalCount, url)),
-                listOf(),
-                hasMorePosts = true,
-                hasMoreAuthors = false
-        )
-        whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
-        whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
-        )
-
-        val result = loadComments(true, forced)
-
-        assertThat(result.type).isEqualTo(InsightType.COMMENTS)
-        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        result.data!!.apply {
-            assertThat(this).hasSize(3)
-            assertThat(this[1] is TabsItem).isTrue()
-            assertTitle(this[0])
-            assertThat(this[2] is Link).isFalse()
-        }
-
-        (result.data!![1] as TabsItem).onTabSelected(1)
-        val updatedResult = loadComments(true, forced)
-
-        updatedResult.data!!.apply {
-            assertThat(this).hasSize(5)
-            assertTitle(this[0])
-            assertThat(this[4] is Link).isTrue()
-        }
-    }
-
-    @Test
-    fun `adds link to UI model when has more authors`() = test {
-        val forced = false
-        val model = CommentsModel(
-                listOf(Post(postId, postTitle, totalCount, url)),
-                listOf(),
-                hasMorePosts = false,
-                hasMoreAuthors = true
-        )
-        whenever(insightsStore.getComments(eq(statsSiteProvider.siteModel), any())).thenReturn(model)
-        whenever(insightsStore.fetchComments(site, LimitMode.Top(blockItemCount), forced)).thenReturn(
-                OnStatsFetched(
-                        model
-                )
-        )
-
-        val result = loadComments(true, forced)
-
-        assertThat(result.type).isEqualTo(InsightType.COMMENTS)
-        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
-        result.data!!.apply {
-            assertThat(this).hasSize(4)
-            assertTitle(this[0])
-            assertThat(this[3] is Link).isTrue()
-        }
     }
 
     @Test
@@ -279,12 +211,6 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(this[2]).isEqualTo(Empty())
         return tabsItem
-    }
-
-    private fun List<BlockListItem>.assertEmpty() {
-        assertThat(this).hasSize(2)
-        assertTitle(this[0])
-        assertThat(this[1]).isEqualTo(Empty())
     }
 
     private fun assertTitle(item: BlockListItem) {

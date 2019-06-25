@@ -11,11 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -26,9 +21,16 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -66,8 +68,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class MeFragment extends Fragment implements MainToolbarFragment, WPMainActivity.OnScrollToTopListener {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
@@ -522,6 +522,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(GravatarUploadFinished event) {
         showGravatarProgressBar(false);
         if (event.success) {

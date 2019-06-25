@@ -5,10 +5,6 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.OnLifecycleEvent;
-import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -21,13 +17,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.multidex.MultiDexApplication;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.multidex.MultiDexApplication;
+import androidx.work.WorkManager;
 
 import com.android.volley.RequestQueue;
 import com.google.android.gms.auth.api.Auth;
@@ -36,6 +38,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -90,6 +93,8 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.UploadWorker;
+import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -108,7 +113,6 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-import de.greenrobot.event.EventBus;
 
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {
@@ -310,6 +314,19 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+
+        initWorkManager();
+
+        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
+        // It will upload local draft or published posts with local changes to the server.
+        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+    }
+
+    protected void initWorkManager() {
+        UploadWorker.Factory factory = new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
+        androidx.work.Configuration config =
+                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
+        WorkManager.initialize(this, config);
     }
 
     // note that this is overridden in WordPressDebug
@@ -830,6 +847,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
+            // This stat is part of a funnel that provides critical information.  Before
+            // making ANY modification to this stat please refer to: p4qSXL-35X-p2
             AnalyticsTracker.track(Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications

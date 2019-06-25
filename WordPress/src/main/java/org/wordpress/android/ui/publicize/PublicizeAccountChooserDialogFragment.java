@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +28,6 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
-
-import de.greenrobot.event.EventBus;
 
 public class PublicizeAccountChooserDialogFragment extends DialogFragment
         implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {

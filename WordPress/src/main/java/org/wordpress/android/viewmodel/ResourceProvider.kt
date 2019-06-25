@@ -1,10 +1,10 @@
 package org.wordpress.android.viewmodel
 
 import android.content.Context
-import android.support.annotation.ColorRes
-import android.support.annotation.DimenRes
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import javax.inject.Inject
 
 class ResourceProvider @Inject constructor(private val context: Context) {

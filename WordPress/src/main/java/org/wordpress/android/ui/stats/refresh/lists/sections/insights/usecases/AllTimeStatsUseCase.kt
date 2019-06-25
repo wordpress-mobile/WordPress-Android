@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
@@ -69,8 +68,8 @@ class AllTimeStatsUseCase
         } else {
             items.add(
                     QuickScanItem(
-                            Column(string.stats_views, domainModel.views.toFormattedString()),
-                            Column(string.stats_visitors, domainModel.visitors.toFormattedString())
+                            Column(R.string.stats_views, domainModel.views.toFormattedString()),
+                            Column(R.string.stats_visitors, domainModel.visitors.toFormattedString())
                     )
             )
             val tooltip = if (domainModel.viewsBestDay.isNotEmpty()) {
@@ -80,9 +79,9 @@ class AllTimeStatsUseCase
             }
             items.add(
                     QuickScanItem(
-                            Column(string.posts, domainModel.posts.toFormattedString()),
+                            Column(R.string.posts, domainModel.posts.toFormattedString()),
                             Column(
-                                    string.stats_insights_best_ever,
+                                    R.string.stats_insights_best_ever,
                                     domainModel.viewsBestDayTotal.toFormattedString(),
                                     tooltip
                             )
@@ -92,7 +91,7 @@ class AllTimeStatsUseCase
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_insights_all_time_stats, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_all_time_stats, menuAction = this::onMenuClick)
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)

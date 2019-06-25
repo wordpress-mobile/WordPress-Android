@@ -7,7 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.util.AppLog;
 

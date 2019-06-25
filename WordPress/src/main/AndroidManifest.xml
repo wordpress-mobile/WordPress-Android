@@ -115,7 +115,7 @@
             android:theme="@style/LoginTheme" />
 
         <activity
-            android:name=".ui.sitecreation.NewSiteCreationActivity"
+            android:name=".ui.sitecreation.SiteCreationActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
 
@@ -291,10 +291,11 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -691,7 +692,7 @@
             android:label="Login to WPCOM Service" />
 
         <service
-            android:name=".ui.sitecreation.services.NewSiteCreationService"
+            android:name=".ui.sitecreation.services.SiteCreationService"
             android:exported="false"
             android:label="Site Creation Service" />
 
@@ -764,7 +765,7 @@
 
         <!-- Provider for exposing file URIs on Android 7+ -->
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -772,5 +773,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+
+        <!-- Remove the default WorkManagerInitializer so we can use our own -->
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
+
     </application>
 </manifest>

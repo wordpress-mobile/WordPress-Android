@@ -122,13 +122,13 @@ import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
-import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment;
-import org.wordpress.android.ui.sitecreation.previews.NewSiteCreationPreviewFragment;
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
-import org.wordpress.android.ui.sitecreation.services.NewSiteCreationService;
-import org.wordpress.android.ui.sitecreation.siteinfo.NewSiteCreationSiteInfoFragment;
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
+import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
+import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
+import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
+import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment;
 import org.wordpress.android.ui.stats.OldStatsActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -167,12 +167,12 @@ import dagger.android.support.AndroidSupportInjectionModule;
         AndroidSupportInjectionModule.class,
         ViewModelModule.class,
         StatsModule.class,
+        SupportModule.class,
+        ThreadModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
-        LoginServiceModule.class,
-        SupportModule.class,
-        ThreadModule.class
+        LoginServiceModule.class
 })
 public interface AppComponent extends AndroidInjector<WordPress> {
     @Override
@@ -180,7 +180,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(WPMainActivity object);
 
-    void inject(NewSiteCreationService object);
+    void inject(SiteCreationService object);
 
     void inject(UploadService object);
 
@@ -200,17 +200,17 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(UsernameChangerFullScreenDialogFragment object);
 
-    void inject(NewSiteCreationActivity object);
+    void inject(SiteCreationActivity object);
 
-    void inject(NewSiteCreationSegmentsFragment object);
+    void inject(SiteCreationSegmentsFragment object);
 
-    void inject(NewSiteCreationSiteInfoFragment object);
+    void inject(SiteCreationSiteInfoFragment object);
 
-    void inject(NewSiteCreationDomainsFragment object);
+    void inject(SiteCreationDomainsFragment object);
 
-    void inject(NewSiteCreationVerticalsFragment object);
+    void inject(SiteCreationVerticalsFragment object);
 
-    void inject(NewSiteCreationPreviewFragment object);
+    void inject(SiteCreationPreviewFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
 
