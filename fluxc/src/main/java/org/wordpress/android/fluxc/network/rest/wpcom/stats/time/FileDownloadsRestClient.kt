@@ -76,8 +76,8 @@ class FileDownloadsRestClient
         )
 
         data class Download(
-            @SerializedName("name") val name: String?,
-            @SerializedName("count") var count: Int?
+            @SerializedName("filename") val filename: String?,
+            @SerializedName("downloads") var downloads: Int?
         )
     }
 }
