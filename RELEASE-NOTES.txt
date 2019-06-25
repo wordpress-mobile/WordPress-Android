@@ -1,6 +1,6 @@
 12.8
 -----
-
+* Allow user to expand new comment field
 
 12.7
 -----
