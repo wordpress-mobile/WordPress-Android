@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -102,11 +103,13 @@ constructor(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
+            val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatarUrl,
                         iconStyle = AVATAR,
                         text = author.name,
+                        barWidth = getBarWidth(author.views, maxViews),
                         value = author.views.toFormattedString(),
                         showDivider = index < domainModel.authors.size - 1
                 )

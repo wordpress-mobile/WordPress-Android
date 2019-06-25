@@ -5,17 +5,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.ViewPortHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -23,8 +20,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.util.DisplayUtils
-import kotlin.math.round
 
 private const val MIN_COLUMN_COUNT = 5
 private const val MIN_VALUE = 5f
@@ -89,20 +86,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 R.color.neutral_50
         )
         axisLeft.apply {
-            valueFormatter = object : LargeValueFormatter() {
-                override fun getFormattedValue(value: Float, axis: AxisBase?): String {
-                    return super.getFormattedValue(round(value), axis)
-                }
-
-                override fun getFormattedValue(
-                    value: Float,
-                    entry: Entry?,
-                    dataSetIndex: Int,
-                    viewPortHandler: ViewPortHandler?
-                ): String {
-                    return super.getFormattedValue(round(value), entry, dataSetIndex, viewPortHandler)
-                }
-            }
+            valueFormatter = LargeValueFormatter()
             setDrawGridLines(true)
             setDrawTopYLabelEntry(true)
             setDrawZeroLine(false)

@@ -30,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -102,6 +103,7 @@ constructor(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             items.add(Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label))
+            val maxViews = domainModel.views.maxBy { it.views }?.views ?: 0
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_white_24dp
@@ -112,6 +114,7 @@ constructor(
                         text = viewsModel.title,
                         value = viewsModel.views.toFormattedString(),
                         showDivider = index < domainModel.views.size - 1,
+                        barWidth = getBarWidth(viewsModel.views, maxViews),
                         navigationAction = create(
                                 LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.title, viewsModel.type),
                                 this::onLinkClicked
