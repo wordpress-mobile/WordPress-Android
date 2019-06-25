@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -56,9 +56,9 @@ class MinifiedWidgetUpdater
         val views = RemoteViews(context.packageName, layout)
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         if (networkAvailable && siteModel != null && dataType != null) {
-            val intent = widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
-            views.setOnClickPendingIntent(R.id.widget_content, intent)
-            views.setOnClickPendingIntent(R.id.widget_site_icon, intent)
+            views.setOnClickPendingIntent(R.id.widget_container,
+                    widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+            )
             showValue(appWidgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
             widgetUtils.showError(appWidgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
