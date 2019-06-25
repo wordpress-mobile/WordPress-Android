@@ -23,5 +23,9 @@ public class MasterbarComponent {
         return this;
     }
 
+    public MasterbarComponent clickActivity() {
+        clickOn(R.id.row_activity_log);
+        return this;
+    }
 
 }

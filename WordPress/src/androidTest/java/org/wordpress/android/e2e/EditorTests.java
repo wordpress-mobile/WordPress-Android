@@ -126,4 +126,30 @@ public class EditorTests extends BaseTest {
         assertTrue(isPublished);
     }
 
+    @Test
+    public void testActivityLog(){
+        String title = "Hello Espresso!";
+        String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
+        MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
+        sleep();
+        mb.clickBlogPosts();
+
+        new MySitesPage()
+                .startNewPost(E2E_WP_COM_USER_SITE_ADDRESS);
+
+        EditorPage editorPage = new EditorPage();
+        editorPage.enterTitle(title);
+        editorPage.enterContent(content);
+
+        boolean isPublished = editorPage.publishPost();
+        assertTrue(isPublished);
+
+        pressBack();
+
+        mb.clickActivity();
+
+        //checkViewHasText(onView(withId(R.id.action_button)), title);
+    }
+
 }
