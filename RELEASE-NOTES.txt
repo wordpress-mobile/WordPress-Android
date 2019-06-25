@@ -4,6 +4,7 @@ Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and
 
 12.7
 -----
+* Added Post search
 * Show upload in progress notification when retrying
 * Fix issue where two identical drafts were created
 * Block Editor: Fixed keyboard flickering issue after pressing Enter repeatedly on the Post Title.
