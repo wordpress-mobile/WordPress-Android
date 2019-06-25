@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -259,12 +260,14 @@ class LocalDraftUploadStarterTest {
     private fun createLocalDraftUploadStarter(
         connectionStatus: LiveData<ConnectionStatus>,
         uploadServiceFacade: UploadServiceFacade,
-        postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper()
+        postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
+        uploadStore: UploadStore = createMockedUploadStore(0)
     ) = LocalDraftUploadStarter(
             context = mock(),
             postStore = postStore,
             pageStore = pageStore,
             siteStore = siteStore,
+            uploadStore = uploadStore,
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
@@ -286,6 +289,10 @@ class LocalDraftUploadStarterTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
+        }
+
+        fun createMockedUploadStore(numberOfPostErrors: Int) = mock<UploadStore> {
+            on { getNumberOfPostUploadErrorsOrCancellations(any()) } doReturn numberOfPostErrors
         }
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {
