@@ -11,19 +11,35 @@
     android:scrollbars="vertical">
 
     <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/stats_widget_light_color"
+        android:id="@+id/stats_widget_views"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
         android:checked="true"
         android:paddingStart="@dimen/stats_widget_color_selector_padding"
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_widget_color_light"/>
+        android:text="@string/stats_views"/>
 
     <androidx.appcompat.widget.AppCompatRadioButton
-        android:id="@+id/stats_widget_dark_color"
+        android:id="@+id/stats_widget_visitors"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_extra_extra_large"
         android:paddingStart="@dimen/stats_widget_color_selector_padding"
         android:paddingEnd="@dimen/stats_widget_color_selector_padding"
-        android:text="@string/stats_widget_color_dark"/>
+        android:text="@string/stats_visitors"/>
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/stats_widget_comments"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_extra_extra_large"
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_comments"/>
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/stats_widget_likes"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_extra_extra_large"
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/stats_likes"/>
 </RadioGroup>

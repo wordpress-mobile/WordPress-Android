@@ -22,7 +22,11 @@ import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
@@ -140,6 +144,26 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StatsWidgetConfigureViewModel.class)
     abstract ViewModel statsViewsWidgetViewModel(StatsWidgetConfigureViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsSiteSelectionViewModel.class)
+    abstract ViewModel statsSiteSelectionViewModel(StatsSiteSelectionViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsDataTypeSelectionViewModel.class)
+    abstract ViewModel statsDataTypeSelectionViewModel(StatsDataTypeSelectionViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsMinifiedWidgetConfigureViewModel.class)
+    abstract ViewModel statsMinifiedWidgetViewModel(StatsMinifiedWidgetConfigureViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsColorSelectionViewModel.class)
+    abstract ViewModel statsColorSelectionViewModel(StatsColorSelectionViewModel viewModel);
 
     @Binds
     @IntoMap

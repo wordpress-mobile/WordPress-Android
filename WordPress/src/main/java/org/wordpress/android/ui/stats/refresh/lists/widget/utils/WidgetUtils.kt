@@ -16,13 +16,13 @@ import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
-import org.wordpress.android.ui.stats.refresh.lists.widget.WIDE_VIEW_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -102,7 +102,7 @@ class WidgetUtils
         colorMode: Color,
         siteId: Int,
         viewType: ViewType,
-        wideView: Boolean
+        isWideView: Boolean
     ) {
         views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
         views.setViewVisibility(R.id.widget_content, View.VISIBLE)
@@ -112,7 +112,7 @@ class WidgetUtils
         listIntent.putColorMode(colorMode)
         listIntent.putViewType(viewType)
         listIntent.putExtra(SITE_ID_KEY, siteId)
-        listIntent.putExtra(WIDE_VIEW_KEY, wideView)
+        listIntent.putExtra(IS_WIDE_VIEW_KEY, isWideView)
         listIntent.data = Uri.parse(
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )

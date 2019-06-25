@@ -2,9 +2,14 @@ package org.wordpress.android.ui.prefs
 
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.DARK
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.COMMENTS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.LIKES
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,8 +68,35 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun removeAppWidgetColorModeId(appWidgetId: Int) = AppPrefs.removeStatsWidgetColorModeId(appWidgetId)
 
+    fun getAppWidgetDataType(appWidgetId: Int): DataType? {
+        return when (AppPrefs.getStatsWidgetDatatTypeId(appWidgetId)) {
+            VIEWS_TYPE_ID -> VIEWS
+            VISITORS_TYPE_ID -> VISITORS
+            COMMENTS_TYPE_ID -> COMMENTS
+            LIKES_TYPE_ID -> LIKES
+            else -> null
+        }
+    }
+
+    fun setAppWidgetDataType(dataType: DataType, appWidgetId: Int) {
+        val dataTypeId = when (dataType) {
+            VIEWS -> VIEWS_TYPE_ID
+            VISITORS -> VISITORS_TYPE_ID
+            COMMENTS -> COMMENTS_TYPE_ID
+            LIKES -> LIKES_TYPE_ID
+        }
+        AppPrefs.setStatsWidgetDatatTypeId(dataTypeId, appWidgetId)
+    }
+
+    fun removeAppWidgetDataTypeModeId(appWidgetId: Int) = AppPrefs.removeStatsWidgetDatatTypeId(appWidgetId)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
+
+        private const val VIEWS_TYPE_ID = 0
+        private const val VISITORS_TYPE_ID = 1
+        private const val COMMENTS_TYPE_ID = 2
+        private const val LIKES_TYPE_ID = 3
     }
 }
