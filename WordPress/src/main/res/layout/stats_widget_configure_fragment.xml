@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/stats_widget_type_caption"/>
+            android:text="@string/stats_views"/>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton

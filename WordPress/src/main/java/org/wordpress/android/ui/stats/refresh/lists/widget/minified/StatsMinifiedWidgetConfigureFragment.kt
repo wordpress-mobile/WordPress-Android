@@ -16,23 +16,18 @@ import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetColorSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment
-import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
-import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
-    @Inject lateinit var allTimeWidgetUpdater: AllTimeWidgetUpdater
-    @Inject lateinit var todayWidgetUpdater: TodayWidgetUpdater
+    @Inject lateinit var minifiedWidgetUpdater: MinifiedWidgetUpdater
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
@@ -90,16 +85,14 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
                     site_value.text = uiModel.siteTitle
                 }
                 color_value.setText(uiModel.color.title)
-                if (uiModel.dataType != null) {
-                    data_type_value.setText(uiModel.dataType.title)
-                }
+                data_type_value.setText(uiModel.dataType.title)
                 add_widget_button.isEnabled = uiModel.buttonEnabled
             }
         })
 
         viewModel.widgetAdded.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                // TODO Update minified widget
+                minifiedWidgetUpdater.updateAppWidget(context!!, appWidgetId = appWidgetId)
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 activity?.setResult(RESULT_OK, resultValue)

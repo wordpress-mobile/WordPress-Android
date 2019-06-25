@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsCo
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -31,7 +32,7 @@ class StatsMinifiedWidgetConfigureViewModel
             WidgetSettingsModel(
                     selectedSite?.title,
                     viewMode ?: LIGHT,
-                    dataType
+                    dataType ?: VIEWS
             )
         }
     }
@@ -60,11 +61,10 @@ class StatsMinifiedWidgetConfigureViewModel
 
     fun addWidget() {
         val selectedSite = siteSelectionViewModel.selectedSite.value
-        val dataType = dataTypeSelectionViewModel.dataType.value
-        if (appWidgetId != -1 && selectedSite != null && dataType != null) {
+        if (appWidgetId != -1 && selectedSite != null) {
             appPrefsWrapper.setAppWidgetSiteId(selectedSite.siteId, appWidgetId)
             appPrefsWrapper.setAppWidgetColor(colorSelectionViewModel.viewMode.value ?: LIGHT, appWidgetId)
-            appPrefsWrapper.setAppWidgetDataType(dataType, appWidgetId)
+            appPrefsWrapper.setAppWidgetDataType(dataTypeSelectionViewModel.dataType.value ?: VIEWS, appWidgetId)
             mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId)))
         }
     }
@@ -72,8 +72,8 @@ class StatsMinifiedWidgetConfigureViewModel
     data class WidgetSettingsModel(
         val siteTitle: String? = null,
         val color: Color,
-        val dataType: DataType?,
-        val buttonEnabled: Boolean = siteTitle != null && dataType != null
+        val dataType: DataType,
+        val buttonEnabled: Boolean = siteTitle != null
     )
 
     data class WidgetAdded(val appWidgetId: Int)

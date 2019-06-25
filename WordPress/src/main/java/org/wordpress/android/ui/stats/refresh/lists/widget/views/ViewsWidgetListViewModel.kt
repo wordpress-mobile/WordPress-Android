@@ -34,14 +34,14 @@ class ViewsWidgetListViewModel
 ) {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
-    private var wideView: Boolean = true
+    private var isWideView: Boolean = true
     private var appWidgetId: Int? = null
     private val mutableData = mutableListOf<ListItemUiModel>()
     val data: List<ListItemUiModel> = mutableData
-    fun start(siteId: Int, colorMode: Color, wideView: Boolean, appWidgetId: Int) {
+    fun start(siteId: Int, colorMode: Color, isWideView: Boolean, appWidgetId: Int) {
         this.siteId = siteId
         this.colorMode = colorMode
-        this.wideView = wideView
+        this.isWideView = isWideView
         this.appWidgetId = appWidgetId
     }
 
@@ -87,7 +87,7 @@ class ViewsWidgetListViewModel
         }
         val previousItem = periods.getOrNull(position + 1)
         val isCurrentDay = position == 0
-        val startValue = if (wideView) MILLION else ONE_THOUSAND
+        val startValue = if (isWideView) MILLION else ONE_THOUSAND
         val uiModel = overviewMapper.buildTitle(selectedItem, previousItem, 0, isCurrentDay, startValue)
 
         val key = if (isCurrentDay) {
@@ -95,9 +95,9 @@ class ViewsWidgetListViewModel
         } else {
             statsDateFormatter.printDate(periods[position].period)
         }
-        val isPositiveChangeVisible = uiModel.state == POSITIVE && wideView && !uiModel.change.isNullOrEmpty()
-        val isNegativeChangeVisible = uiModel.state == NEGATIVE && wideView && !uiModel.change.isNullOrEmpty()
-        val isNeutralChangeVisible = uiModel.state == NEUTRAL && wideView && !uiModel.change.isNullOrEmpty()
+        val isPositiveChangeVisible = uiModel.state == POSITIVE && isWideView && !uiModel.change.isNullOrEmpty()
+        val isNegativeChangeVisible = uiModel.state == NEGATIVE && isWideView && !uiModel.change.isNullOrEmpty()
+        val isNeutralChangeVisible = uiModel.state == NEUTRAL && isWideView && !uiModel.change.isNullOrEmpty()
         return ListItemUiModel(
                 layout,
                 key,
