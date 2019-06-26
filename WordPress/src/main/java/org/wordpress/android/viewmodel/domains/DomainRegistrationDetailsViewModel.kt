@@ -3,7 +3,9 @@ package org.wordpress.android.viewmodel.domains
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -16,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.store.AccountStore.OnDomainContactFetched
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnDomainSupportedStatesFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.TransactionsStore
@@ -25,20 +28,30 @@ import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartRedeeme
 import org.wordpress.android.fluxc.store.TransactionsStore.OnSupportedCountriesFetched
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartError
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
+import javax.inject.Named
+
+const val SITE_CHECK_DELAY_MS = 5000L
+const val MAX_SITE_RETRIEVALS_TRIES = 10
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val transactionsStore: TransactionsStore // needed for events to work
-) : ViewModel() {
+    private val transactionsStore: TransactionsStore, // needed for events to work
+    private val siteStore: SiteStore,
+    @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
     private lateinit var site: SiteModel
     private lateinit var domainProductDetails: DomainProductDetails
 
     private var isStarted = false
+
+    private var siteRetrievalsTries = 0
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
     private val _supportedStates = MutableLiveData<List<SupportedStateResponse>>()
@@ -213,16 +226,38 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
-        _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
         if (event.isError) {
             AppLog.e(
                     T.DOMAIN_REGISTRATION,
                     "An error occurred while updating site details : " + event.error.message
             )
             _showErrorMessage.value = event.error.message
+            _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+            _handleCompletedDomainRegistration.postValue(domainProductDetails.domainName)
+            return
         }
 
-        _handleCompletedDomainRegistration.postValue(domainProductDetails.domainName)
+        val updatedSite = siteStore.getSiteByLocalId(site.id)
+
+        // New domain is not is not reflected in SiteModel yet, try refreshing a site until we get it
+        if (updatedSite.url.endsWith(".wordpress.com") && siteRetrievalsTries < MAX_SITE_RETRIEVALS_TRIES) {
+            AppLog.v(
+                    T.DOMAIN_REGISTRATION,
+                    "Newly registered domain is still not reflected in site model. Refreshing site model..."
+            )
+            launch {
+                delay(SITE_CHECK_DELAY_MS)
+                dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
+                siteRetrievalsTries++
+            }
+        } else {
+            // Everything looks good! Let's wait a bit before moving on
+            launch {
+                delay(SITE_CHECK_DELAY_MS)
+                _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+                _handleCompletedDomainRegistration.postValue(domainProductDetails.domainName)
+            }
+        }
     }
 
     fun onCountrySelectorClicked() {

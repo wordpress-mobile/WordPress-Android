@@ -2022,6 +2022,7 @@
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
     <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
+    <string name="plugin_install_site_ineligible_no_ssl">Can\'t find SSL certificate. If you just registered a new domain name it may take us a few minutes to set it up.</string>
     <string name="plugin_install_site_ineligible_email_unverified">Plugin feature requires a verified email address.</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">Plugin cannot be installed due to disk space limitations.</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">Plugin cannot be installed on VIP sites.</string>
