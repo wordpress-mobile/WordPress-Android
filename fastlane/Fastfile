@@ -61,8 +61,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
     old_version = android_codefreeze_prechecks(options)
    
     android_bump_version_release()
-    new_version = ios_get_app_version()
-    ios_update_release_notes(new_version: new_version)
+    new_version = android_get_app_version()
+    android_update_release_notes(new_version: new_version)
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
     
