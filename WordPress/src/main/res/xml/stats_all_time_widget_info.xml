@@ -7,7 +7,7 @@
     android:minHeight="110dp"
     android:minResizeWidth="150dp"
     android:minWidth="250dp"
-    android:previewImage="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+    android:previewImage="@drawable/preview_all_time_widget"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="600000"
     android:widgetCategory="home_screen">
