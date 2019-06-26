@@ -45,8 +45,6 @@ public class BaseTest {
                              InstrumentationRegistry.getInstrumentation().getContext().getAssets()))
                      .extensions(new ResponseTemplateTransformer(true))
                      .notifier(new AndroidNotifier()));
-    @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
     private void logout() {
         boolean isSelfHosted = new MePage().go().isSelfHosted();
