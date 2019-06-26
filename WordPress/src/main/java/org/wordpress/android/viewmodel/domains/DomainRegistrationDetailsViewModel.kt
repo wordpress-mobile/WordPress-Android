@@ -19,7 +19,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateRespons
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.store.AccountStore.OnDomainContactFetched
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnDomainSupportedStatesFetched
+import org.wordpress.android.fluxc.store.SiteStore.OnPrimaryDomainDesignated
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.TransactionsStore
 import org.wordpress.android.fluxc.store.TransactionsStore.CreateShoppingCartPayload
@@ -219,6 +221,30 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                             " " + event.error.message
             )
             return
+        }
+
+        launch {
+            delay(SITE_CHECK_DELAY_MS)
+            dispatcher.dispatch(
+                    SiteActionBuilder.newDesignatePrimaryDomainAction(
+                            DesignatePrimaryDomainPayload(
+                                    site,
+                                    domainProductDetails.domainName
+                            )
+                    )
+            )
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPrimaryDomainDesignated(event: OnPrimaryDomainDesignated) {
+        if (event.isError) {
+            _showErrorMessage.value = event.error.message
+            AppLog.e(
+                    T.DOMAIN_REGISTRATION,
+                    "An error occurred while redeeming a shopping cart : " + event.error.type +
+                            " " + event.error.message
+            )
         }
 
         dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
