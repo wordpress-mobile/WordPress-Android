@@ -339,6 +339,7 @@
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
+            android:theme="@style/Calypso.NoActionBar"
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -371,6 +372,21 @@
                 <data
                     android:host="notifications"
                     android:scheme="wordpress" />
+
+                <data
+                    android:host="public-api.wordpress.com"
+                    android:pathPattern="/mbar/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 

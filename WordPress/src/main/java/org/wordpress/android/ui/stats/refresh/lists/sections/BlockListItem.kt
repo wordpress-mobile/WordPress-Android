@@ -115,10 +115,9 @@ sealed class BlockListItem(val type: Type) {
         val iconStyle: IconStyle = NORMAL,
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        @StringRes val subTextResource: Int? = null,
-        val subText: String? = null,
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
+        val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null

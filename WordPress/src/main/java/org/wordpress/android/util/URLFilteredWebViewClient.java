@@ -47,7 +47,9 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
             return true;
         }
 
-        if (isAllURLsAllowed() || mAllowedURLs.contains(url)) {
+        if (isAllURLsAllowed() || mAllowedURLs.contains(url)
+            // If a url is allowed without the trailing `/`, it should be allowed with it as well
+            || mAllowedURLs.contains(StringUtils.removeTrailingSlash(url))) {
             view.loadUrl(url);
         } else {
             // show "links are disabled" message.

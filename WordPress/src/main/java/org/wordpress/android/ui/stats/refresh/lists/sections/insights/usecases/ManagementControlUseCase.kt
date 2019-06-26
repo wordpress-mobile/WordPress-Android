@@ -20,7 +20,7 @@ class ManagementControlUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val newsCardHandler: NewsCardHandler,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) : StatelessUseCase<Boolean>(ManagementType.CONTROL, mainDispatcher) {
+) : StatelessUseCase<Boolean>(ManagementType.CONTROL, mainDispatcher, listOf()) {
     override suspend fun loadCachedData() = true
 
     override suspend fun fetchRemoteData(forced: Boolean): State<Boolean> = State.Data(true)

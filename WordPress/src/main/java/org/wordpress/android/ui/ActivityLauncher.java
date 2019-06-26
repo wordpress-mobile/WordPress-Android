@@ -224,6 +224,19 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
     public static void viewStatsInNewStack(Context context, SiteModel site) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
@@ -465,7 +478,18 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             AppLog.w(AppLog.T.UTILS, "Site URL is null. Login URL: " + site.getLoginUrl());
         } else {
-            openUrlExternal(context, site.getUrl());
+            String siteUrl = site.getUrl();
+            if (site.isWPCom()) {
+                // Show wp.com sites authenticated
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl);
+            } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
+                // Show self-hosted sites as authenticated since we should have the username & password
+                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false);
+            } else {
+                // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
+                // connected through REST API.
+                WPWebViewActivity.openURL(context, siteUrl);
+            }
         }
     }
 
@@ -578,7 +602,8 @@ public class ActivityLauncher {
             // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
+            WPWebViewActivity
+                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true);
         }
     }
 
