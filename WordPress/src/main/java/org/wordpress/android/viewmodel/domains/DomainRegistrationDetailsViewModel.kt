@@ -40,7 +40,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val SITE_CHECK_DELAY_MS = 5000L
-const val MAX_SITE_RETRIEVAL_TRIES = 10
+const val MAX_SITE_CHECK_TRIES = 10
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -53,7 +53,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private var siteRetrievalTries = 0
+    private var siteCheckTries = 0
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
     private val _supportedStates = MutableLiveData<List<SupportedStateResponse>>()
@@ -223,6 +223,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             return
         }
 
+        // after cart is redeemed, wait for a bit before manually setting domain as primary
         launch {
             delay(SITE_CHECK_DELAY_MS)
             dispatcher.dispatch(
@@ -238,7 +239,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrimaryDomainDesignated(event: OnPrimaryDomainDesignated) {
-        if (event.isError) {
+        if (event.isError) { // in case of error we notify used and proceed to next step
             _showErrorMessage.value = event.error.message
             AppLog.e(
                     T.DOMAIN_REGISTRATION,
@@ -266,7 +267,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val updatedSite = siteStore.getSiteByLocalId(site.id)
 
         // New domain is not is not reflected in SiteModel yet, try refreshing a site until we get it
-        if (updatedSite.url.endsWith(".wordpress.com") && siteRetrievalTries < MAX_SITE_RETRIEVAL_TRIES) {
+        if (updatedSite.url.endsWith(".wordpress.com") && siteCheckTries < MAX_SITE_CHECK_TRIES) {
             AppLog.v(
                     T.DOMAIN_REGISTRATION,
                     "Newly registered domain is still not reflected in site model. Refreshing site model..."
@@ -274,7 +275,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             launch {
                 delay(SITE_CHECK_DELAY_MS)
                 dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
-                siteRetrievalTries++
+                siteCheckTries++
             }
         } else {
             // Everything looks good! Let's wait a bit before moving on

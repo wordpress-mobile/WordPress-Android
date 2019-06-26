@@ -423,7 +423,6 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onRegisterDomainButtonClicked()
 
-
         assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo(primaryCountry.code)
         assertThat(viewModel.domainContactDetails.value?.state).isEqualTo(primaryState.code)
 
