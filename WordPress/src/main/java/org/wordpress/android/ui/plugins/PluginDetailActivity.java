@@ -333,7 +333,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             if (resultCode != Activity.RESULT_OK || isFinishing()) {
                 return;
             }
-            startAutomatedTransfer();
+            confirmInstallPluginForAutomatedTransfer();
         }
     }
 
@@ -1378,6 +1378,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_FLOW_COMPLETE, mSite);
         cancelAutomatedTransferDialog();
         refreshPluginFromStore();
+        dispatchConfigurePluginAction(true);
         refreshViews();
         showSuccessfulInstallSnackbar();
         invalidateOptionsMenu();
