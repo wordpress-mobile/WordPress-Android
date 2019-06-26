@@ -339,6 +339,7 @@
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
+            android:theme="@style/Calypso.NoActionBar"
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
