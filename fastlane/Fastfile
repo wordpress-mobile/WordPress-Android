@@ -67,7 +67,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
     
     localize_libs()
-    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version["version_name"]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version["version_name"]}_#{new_version}.txt")
+    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
 #####################################################################################
