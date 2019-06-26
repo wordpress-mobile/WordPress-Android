@@ -115,7 +115,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
-    public void configureView() {
+    public final void configureView() {
         setContentView(R.layout.wpwebview_activity);
 
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
