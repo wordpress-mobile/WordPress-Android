@@ -3,7 +3,9 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -17,6 +19,7 @@ class StatsSiteSelectionViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore,
+    private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableSelectedSite = MutableLiveData<SiteUiModel>()
@@ -26,6 +29,12 @@ class StatsSiteSelectionViewModel
     val sites: LiveData<List<SiteUiModel>> = mutableSites
     private val mutableHideSiteDialog = MutableLiveData<Event<Unit>>()
     val hideSiteDialog: LiveData<Event<Unit>> = mutableHideSiteDialog
+
+    private val mutableNotification = MutableLiveData<Event<Int>>()
+    val notification: LiveData<Event<Int>> = mutableNotification
+
+    private val mutableDialogOpened = MutableLiveData<Event<Unit>>()
+    val dialogOpened: LiveData<Event<Unit>> = mutableDialogOpened
 
     fun start(appWidgetId: Int) {
         val siteId = appPrefsWrapper.getAppWidgetSiteId(appWidgetId)
@@ -56,6 +65,14 @@ class StatsSiteSelectionViewModel
     private fun selectSite(site: SiteUiModel) {
         mutableHideSiteDialog.postValue(Event(Unit))
         mutableSelectedSite.postValue(site)
+    }
+
+    fun openSiteDialog() {
+        if (accountStore.hasAccessToken()) {
+            mutableDialogOpened.postValue(Event(Unit))
+        } else {
+            mutableNotification.postValue(Event(R.string.stats_widget_log_in_message))
+        }
     }
 
     data class SiteUiModel(
