@@ -56,6 +56,7 @@ public class SiteStore extends Store {
     public static class CompleteQuickStartPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String variant;
+
         public CompleteQuickStartPayload(@NonNull SiteModel site, String variant) {
             this.site = site;
             this.variant = variant;
@@ -63,7 +64,9 @@ public class SiteStore extends Store {
     }
 
     public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
-        public RefreshSitesXMLRPCPayload() {}
+        public RefreshSitesXMLRPCPayload() {
+        }
+
         public String username;
         public String password;
         public String url;
@@ -102,6 +105,7 @@ public class SiteStore extends Store {
     public static class FetchedPostFormatsPayload extends Payload<PostFormatsError> {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
+
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
@@ -111,6 +115,7 @@ public class SiteStore extends Store {
     public static class FetchedUserRolesPayload extends Payload<UserRolesError> {
         public SiteModel site;
         public List<RoleModel> roles;
+
         public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
             this.site = site;
             this.roles = roles;
@@ -140,6 +145,7 @@ public class SiteStore extends Store {
         @Nullable public Long segmentId;
         public int quantity;
         public boolean includeVendorDot;
+
         public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
                                      boolean includeDotBlogSubdomain, int quantity, boolean includeVendorDot) {
             this.query = query;
@@ -161,6 +167,7 @@ public class SiteStore extends Store {
     public static class SuggestDomainsResponsePayload extends Payload<SuggestDomainError> {
         public String query;
         public List<DomainSuggestionResponse> suggestions;
+
         public SuggestDomainsResponsePayload(@NonNull String query, SuggestDomainError error) {
             this.query = query;
             this.error = error;
@@ -191,6 +198,16 @@ public class SiteStore extends Store {
         public String description() {
             return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
                     url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects);
+        }
+    }
+
+    public static class DesignatePrimaryDomainPayload extends Payload<DesignatePrimaryDomainError> {
+        public SiteModel site;
+        public String domain;
+
+        public DesignatePrimaryDomainPayload(SiteModel site, @NonNull String domainName) {
+            this.site = site;
+            this.domain = domainName;
         }
     }
 
@@ -250,6 +267,7 @@ public class SiteStore extends Store {
             this.currentStep = currentStep;
             this.totalSteps = totalSteps;
         }
+
         public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
@@ -343,6 +361,7 @@ public class SiteStore extends Store {
     public static class NewSiteError implements OnChangedError {
         public NewSiteErrorType type;
         public String message;
+
         public NewSiteError(NewSiteErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
@@ -352,10 +371,12 @@ public class SiteStore extends Store {
     public static class DeleteSiteError implements OnChangedError {
         public DeleteSiteErrorType type;
         public String message;
+
         public DeleteSiteError(String errorType, @NonNull String message) {
             this.type = DeleteSiteErrorType.fromString(errorType);
             this.message = message;
         }
+
         public DeleteSiteError(DeleteSiteErrorType errorType) {
             this.type = errorType;
             this.message = "";
@@ -383,6 +404,7 @@ public class SiteStore extends Store {
     public static class DomainAvailabilityError implements OnChangedError {
         @NonNull public DomainAvailabilityErrorType type;
         @Nullable public String message;
+
         public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
@@ -429,9 +451,20 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DesignatePrimaryDomainError implements OnChangedError {
+        @NonNull public DesignatePrimaryDomainErrorType type;
+        @Nullable public String message;
+
+        public DesignatePrimaryDomainError(@NonNull DesignatePrimaryDomainErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public static class OnProfileFetched extends OnChanged<SiteError> {
         public SiteModel site;
+
         public OnProfileFetched(SiteModel site) {
             this.site = site;
         }
@@ -439,6 +472,7 @@ public class SiteStore extends Store {
 
     public static class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
+
         public OnSiteChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
         }
@@ -446,6 +480,7 @@ public class SiteStore extends Store {
 
     public static class OnSiteRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
+
         public OnSiteRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
@@ -453,6 +488,7 @@ public class SiteStore extends Store {
 
     public static class OnAllSitesRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
+
         public OnAllSitesRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
@@ -476,6 +512,7 @@ public class SiteStore extends Store {
 
     public static class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
         public SiteModel site;
+
         public OnPostFormatsChanged(SiteModel site) {
             this.site = site;
         }
@@ -483,6 +520,7 @@ public class SiteStore extends Store {
 
     public static class OnUserRolesChanged extends OnChanged<UserRolesError> {
         public SiteModel site;
+
         public OnUserRolesChanged(SiteModel site) {
             this.site = site;
         }
@@ -502,6 +540,7 @@ public class SiteStore extends Store {
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
+
         public OnURLChecked(@NonNull String url) {
             this.url = url;
         }
@@ -509,6 +548,7 @@ public class SiteStore extends Store {
 
     public static class OnConnectSiteInfoChecked extends OnChanged<SiteError> {
         public ConnectSiteInfoPayload info;
+
         public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfoPayload info) {
             this.info = info;
         }
@@ -517,6 +557,7 @@ public class SiteStore extends Store {
     public static class OnWPComSiteFetched extends OnChanged<SiteError> {
         public String checkedUrl;
         public SiteModel site;
+
         public OnWPComSiteFetched(String checkedUrl, @NonNull SiteModel site) {
             this.checkedUrl = checkedUrl;
             this.site = site;
@@ -526,6 +567,7 @@ public class SiteStore extends Store {
     public static class SuggestDomainError implements OnChangedError {
         public SuggestDomainErrorType type;
         public String message;
+
         public SuggestDomainError(@NonNull String apiErrorType, @NonNull String message) {
             this.type = SuggestDomainErrorType.fromString(apiErrorType);
             this.message = message;
@@ -535,6 +577,7 @@ public class SiteStore extends Store {
     public static class OnSuggestedDomains extends OnChanged<SuggestDomainError> {
         public String query;
         public List<DomainSuggestionResponse> suggestions;
+
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
@@ -635,6 +678,7 @@ public class SiteStore extends Store {
         public @NonNull SiteModel site;
         public boolean isEligible;
         public @NonNull List<String> eligibilityErrorCodes;
+
         public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
                                                      boolean isEligible,
                                                      @NonNull List<String> eligibilityErrorCodes,
@@ -664,6 +708,7 @@ public class SiteStore extends Store {
         public boolean isCompleted;
         public int currentStep;
         public int totalSteps;
+
         public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, boolean isCompleted, int currentStep,
                                                 int totalSteps) {
             this.site = site;
@@ -671,6 +716,7 @@ public class SiteStore extends Store {
             this.currentStep = currentStep;
             this.totalSteps = totalSteps;
         }
+
         public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
@@ -692,6 +738,26 @@ public class SiteStore extends Store {
         public boolean success;
 
         OnQuickStartCompleted(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
+    public static class DesignatedPrimaryDomainPayload extends OnChanged<DesignatePrimaryDomainError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        public DesignatedPrimaryDomainPayload(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
+    public static class OnPrimaryDomainDesignated extends OnChanged<DesignatePrimaryDomainError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        public OnPrimaryDomainDesignated(@NonNull SiteModel site, boolean status) {
             this.site = site;
             this.success = status;
         }
@@ -855,13 +921,17 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
-      }
+    }
 
     public enum DomainSupportedCountriesErrorType {
         GENERIC_ERROR
     }
 
     public enum QuickStartErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum DesignatePrimaryDomainErrorType {
         GENERIC_ERROR
     }
 
@@ -1076,12 +1146,12 @@ public class SiteStore extends Store {
      */
     public boolean isWPComSiteVisibleByLocalId(int id) {
         return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
+                      .where().beginGroup()
+                      .equals(SiteModelTable.ID, id)
+                      .equals(SiteModelTable.IS_WPCOM, true)
+                      .equals(SiteModelTable.IS_VISIBLE, true)
+                      .endGroup().endWhere()
+                      .getAsCursor().getCount() > 0;
     }
 
     /**
@@ -1089,19 +1159,19 @@ public class SiteStore extends Store {
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
         List<SiteModel> sites = WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
-                .or()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
-                .endGroup().endWhere()
-                .getAsModel(new SelectMapper<SiteModel>() {
-                    @Override
-                    public SiteModel convert(Cursor cursor) {
-                        SiteModel siteModel = new SiteModel();
-                        siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                        return siteModel;
-                    }
-                });
+                                       .where().beginGroup()
+                                       .equals(SiteModelTable.SITE_ID, siteId)
+                                       .or()
+                                       .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
+                                       .endGroup().endWhere()
+                                       .getAsModel(new SelectMapper<SiteModel>() {
+                                           @Override
+                                           public SiteModel convert(Cursor cursor) {
+                                               SiteModel siteModel = new SiteModel();
+                                               siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                                               return siteModel;
+                                           }
+                                       });
         if (sites.size() > 0) {
             return sites.get(0).getId();
         }
@@ -1113,18 +1183,18 @@ public class SiteStore extends Store {
      */
     public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
         List<SiteModel> sites = WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsModel(new SelectMapper<SiteModel>() {
-                    @Override
-                    public SiteModel convert(Cursor cursor) {
-                        SiteModel siteModel = new SiteModel();
-                        siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                        return siteModel;
-                    }
-                });
+                                       .where().beginGroup()
+                                       .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
+                                       .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
+                                       .endGroup().endWhere()
+                                       .getAsModel(new SelectMapper<SiteModel>() {
+                                           @Override
+                                           public SiteModel convert(Cursor cursor) {
+                                               SiteModel siteModel = new SiteModel();
+                                               siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                                               return siteModel;
+                                           }
+                                       });
         if (sites.size() > 0) {
             return sites.get(0).getId();
         }
@@ -1137,19 +1207,20 @@ public class SiteStore extends Store {
      */
     public long getSiteIdForLocalId(int id) {
         List<SiteModel> result = WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .endGroup().endWhere()
-                .getAsModel(new SelectMapper<SiteModel>() {
-                    @Override
-                    public SiteModel convert(Cursor cursor) {
-                        SiteModel siteModel = new SiteModel();
-                        siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                        siteModel.setSelfHostedSiteId(cursor.getLong(
-                                cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
-                        return siteModel;
-                    }
-                });
+                                        .where().beginGroup()
+                                        .equals(SiteModelTable.ID, id)
+                                        .endGroup().endWhere()
+                                        .getAsModel(new SelectMapper<SiteModel>() {
+                                            @Override
+                                            public SiteModel convert(Cursor cursor) {
+                                                SiteModel siteModel = new SiteModel();
+                                                siteModel.setSiteId(
+                                                        cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
+                                                siteModel.setSelfHostedSiteId(cursor.getLong(
+                                                        cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
+                                                return siteModel;
+                                            }
+                                        });
         if (result.isEmpty()) {
             return 0;
         }
@@ -1341,6 +1412,12 @@ public class SiteStore extends Store {
                 break;
             case COMPLETED_QUICK_START:
                 handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
+                break;
+            case DESIGNATE_PRIMARY_DOMAIN:
+                designatePrimaryDomain((DesignatePrimaryDomainPayload) action.getPayload());
+                break;
+            case DESIGNATED_PRIMARY_DOMAIN:
+                handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
                 break;
         }
     }
@@ -1694,6 +1771,16 @@ public class SiteStore extends Store {
 
     private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
         OnQuickStartCompleted event = new OnQuickStartCompleted(payload.site, payload.success);
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void designatePrimaryDomain(@NonNull DesignatePrimaryDomainPayload payload) {
+        mSiteRestClient.designatePrimaryDomain(payload.site, payload.domain);
+    }
+
+    private void handleDesignatedPrimaryDomain(@NonNull DesignatedPrimaryDomainPayload payload) {
+        OnPrimaryDomainDesignated event = new OnPrimaryDomainDesignated(payload.site, payload.success);
         event.error = payload.error;
         emitChange(event);
     }
