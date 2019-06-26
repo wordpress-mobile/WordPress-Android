@@ -14,6 +14,6 @@ class NoDelayCoroutineDispatcher : CoroutineDispatcher(), Delay {
     }
 
     override fun dispatch(context: CoroutineContext, block: Runnable) {
-        block.run()  // dispatch on calling thread
+        block.run()
     }
 }
