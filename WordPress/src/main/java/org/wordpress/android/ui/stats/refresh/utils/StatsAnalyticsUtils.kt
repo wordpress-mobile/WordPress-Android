@@ -53,7 +53,7 @@ fun AnalyticsTrackerWrapper.trackWithType(stat: Stat, insightType: InsightType) 
 }
 
 fun AnalyticsTrackerWrapper.trackWithWidgetType(stat: Stat, widgetType: WidgetType) {
-    val property = when(widgetType) {
+    val property = when (widgetType) {
         WEEK_VIEWS -> WEEKLY_VIEWS_WIDGET_PROPERTY
         ALL_TIME_VIEWS -> ALL_TIME_WIDGET_PROPERTY
         TODAY_VIEWS -> TODAY_WIDGET_PROPERTY
