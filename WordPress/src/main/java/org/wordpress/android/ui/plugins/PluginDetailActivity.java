@@ -1545,10 +1545,9 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
             // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
             if (mSite.isAutomatedTransfer()) {
-                AppLog.v(T.PLUGINS,
-                        "Site is successfully fetched after Automated Transfer, fetching the site plugins "
-                        + "to complete the process...");
-              fetchPluginDirectory(0);
+                AppLog.v(T.PLUGINS, "Site is successfully fetched after Automated Transfer, fetching"
+                                    + " the site plugins to complete the process...");
+                fetchPluginDirectory(0);
             } else {
                 // Either an error occurred while fetching the site or Automated Transfer is not yet reflected in the
                 // API response. We need to keep fetching the site until we get the updated site. Otherwise, any changes
@@ -1591,6 +1590,8 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                                     + event.error.type + " and message: " + event.error.message);
                 // Although unlikely, fetching the plugins after a successful Automated Transfer can result in an error.
                 // This should hopefully be an edge case and fetching the plugins again should
+                AppLog.v(T.PLUGINS, "Fetching the site plugins again after Automated Transfer since the"
+                                    + " changes are not yet reflected");
                 fetchPluginDirectory(RETRY_DELAY_MS);
             }
             // We are safe to ignore the errors for this event unless it's for Automated Transfer since that's the only
@@ -1601,6 +1602,8 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             // Automated Transfer is performed right after domain registration
             if (mIsShowingAutomatedTransferProgress) {
                 if (mPluginReCheckTimer < MAX_PLUGIN_CHECK_TRIES) {
+                    AppLog.v(T.PLUGINS, "Targeted plugin is not marked as installed after Automated Transfer."
+                                        + " Fetching the site plugins to reflect the changes.");
                     fetchPluginDirectory(RETRY_DELAY_MS);
                     mPluginReCheckTimer++;
                     return;
@@ -1627,9 +1630,6 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                AppLog.v(T.PLUGINS, "Fetching the site plugins again after Automated Transfer since the"
-                                    + " changes are not yet reflected");
-                // Wait 3 seconds before fetching the site plugins again
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
                         .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
             }
