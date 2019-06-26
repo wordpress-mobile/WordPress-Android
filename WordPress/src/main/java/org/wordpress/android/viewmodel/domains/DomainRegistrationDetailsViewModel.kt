@@ -38,7 +38,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val SITE_CHECK_DELAY_MS = 5000L
-const val MAX_SITE_RETRIEVALS_TRIES = 10
+const val MAX_SITE_RETRIEVAL_TRIES = 10
 
 class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -51,7 +51,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private var siteRetrievalsTries = 0
+    private var siteRetrievalTries = 0
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
     private val _supportedStates = MutableLiveData<List<SupportedStateResponse>>()
@@ -240,7 +240,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         val updatedSite = siteStore.getSiteByLocalId(site.id)
 
         // New domain is not is not reflected in SiteModel yet, try refreshing a site until we get it
-        if (updatedSite.url.endsWith(".wordpress.com") && siteRetrievalsTries < MAX_SITE_RETRIEVALS_TRIES) {
+        if (updatedSite.url.endsWith(".wordpress.com") && siteRetrievalTries < MAX_SITE_RETRIEVAL_TRIES) {
             AppLog.v(
                     T.DOMAIN_REGISTRATION,
                     "Newly registered domain is still not reflected in site model. Refreshing site model..."
@@ -248,7 +248,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             launch {
                 delay(SITE_CHECK_DELAY_MS)
                 dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
-                siteRetrievalsTries++
+                siteRetrievalTries++
             }
         } else {
             // Everything looks good! Let's wait a bit before moving on
