@@ -1661,11 +1661,8 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             case "site_private":
                 errorMessageRes = R.string.plugin_install_site_ineligible_site_private;
                 break;
-            case "no_ssl_certificate":
-                errorMessageRes = R.string.plugin_install_site_ineligible_no_ssl;
-                break;
             default:
-                // no_jetpack_sites, no_wpcom_nameservers, not_resolving_to_wpcom
+                // no_jetpack_sites, no_ssl_certificate, no_wpcom_nameservers, not_resolving_to_wpcom
                 errorMessageRes = R.string.plugin_install_site_ineligible_default_error;
                 break;
         }
