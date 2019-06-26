@@ -72,7 +72,7 @@ class UiModelMapper
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
     ): UiModel {
-            return mapStatsWithOverview(PostDetailType.POST_OVERVIEW, useCaseModels, showError)
+        return mapStatsWithOverview(PostDetailType.POST_OVERVIEW, useCaseModels, showError)
     }
 
     private fun mapStatsWithOverview(
@@ -84,8 +84,9 @@ class UiModelMapper
                 .fold(true) { acc, useCaseModel ->
                     acc && useCaseModel.state == ERROR
                 }
+        val overviewIsFailing = useCaseModels.any { it.type == overViewType && it.state == ERROR }
         val overviewHasData = useCaseModels.any { it.type == overViewType && it.data != null }
-        return if (!allFailing) {
+        return if (!allFailing && (overviewHasData || !overviewIsFailing)) {
             if (useCaseModels.isNotEmpty()) {
                 UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
                     if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {

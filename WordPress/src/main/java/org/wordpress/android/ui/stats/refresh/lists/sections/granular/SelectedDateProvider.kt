@@ -68,7 +68,7 @@ class SelectedDateProvider
     private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
         val currentDate = mutableDates[statsSection]
         mutableDates[statsSection] = selectedDate
-        if (selectedDate.hasUpdatedDate(currentDate)) {
+        if (selectedDate != currentDate) {
             selectedDateChanged.postValue(Event(SectionChange(statsSection)))
         }
     }
