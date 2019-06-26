@@ -126,7 +126,8 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
     private static final String KEY_PLUGIN_RECHECKED_TIMES = "KEY_PLUGIN_RECHECKED_TIMES";
 
     private static final int MAX_PLUGIN_CHECK_TRIES = 10;
-    private static final int RETRY_DELAY_MS = 3000;
+    private static final int DEFAULT_RETRY_DELAY_MS = 3000;
+    private static final int PLUGIN_RETRY_DELAY_MS = 10000;
 
     private SiteModel mSite;
     private String mSlug;
@@ -1514,7 +1515,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                         // Wait 3 seconds before checking the status again
                         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
                     }
-                }, RETRY_DELAY_MS);
+                }, DEFAULT_RETRY_DELAY_MS);
             }
         }
     }
@@ -1562,7 +1563,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                         // Wait 3 seconds before fetching the site again
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
                     }
-                }, RETRY_DELAY_MS);
+                }, DEFAULT_RETRY_DELAY_MS);
             }
         }
     }
@@ -1592,7 +1593,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                 // This should hopefully be an edge case and fetching the plugins again should
                 AppLog.v(T.PLUGINS, "Fetching the site plugins again after Automated Transfer since the"
                                     + " changes are not yet reflected");
-                fetchPluginDirectory(RETRY_DELAY_MS);
+                fetchPluginDirectory(PLUGIN_RETRY_DELAY_MS);
             }
             // We are safe to ignore the errors for this event unless it's for Automated Transfer since that's the only
             // one triggered in this page and only one we care about.
@@ -1604,7 +1605,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                 if (mPluginReCheckTimer < MAX_PLUGIN_CHECK_TRIES) {
                     AppLog.v(T.PLUGINS, "Targeted plugin is not marked as installed after Automated Transfer."
                                         + " Fetching the site plugins to reflect the changes.");
-                    fetchPluginDirectory(RETRY_DELAY_MS);
+                    fetchPluginDirectory(PLUGIN_RETRY_DELAY_MS);
                     mPluginReCheckTimer++;
                     return;
                 } else {
