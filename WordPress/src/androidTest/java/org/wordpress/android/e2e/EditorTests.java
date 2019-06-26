@@ -122,7 +122,7 @@ public class EditorTests extends BaseTest {
         editorPage.enterTitle(title);
         editorPage.enterContent(content);
 
-        boolean isPublished = editorPage.publishPost();
+        boolean isPublished = editorPage.publishPage();
         assertTrue(isPublished);
     }
 
