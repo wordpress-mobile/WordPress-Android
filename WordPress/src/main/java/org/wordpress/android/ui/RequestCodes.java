@@ -25,6 +25,7 @@ public class RequestCodes {
     public static final int ACTIVITY_LOG_DETAIL = 1700;
     public static final int PAGE_PARENT = 1800;
     public static final int HISTORY_DETAIL = 1900;
+    public static final int DOMAIN_REGISTRATION = 2000;
 
     // Media
     public static final int PICTURE_LIBRARY = 2000;

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ class DomainRegistrationResultFragment : Fragment() {
         checkNotNull((activity?.application as WordPress).component())
 
         continue_button.setOnClickListener {
+            activity!!.setResult(Activity.RESULT_OK)
             activity!!.finish()
         }
 
