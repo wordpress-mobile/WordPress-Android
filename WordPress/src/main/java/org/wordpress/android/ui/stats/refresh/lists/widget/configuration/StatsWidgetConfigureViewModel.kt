@@ -7,7 +7,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -34,18 +34,18 @@ class StatsWidgetConfigureViewModel
     val widgetAdded: LiveData<Event<WidgetAdded>> = mutableWidgetAdded
 
     private var appWidgetId: Int = -1
-    private lateinit var viewType: ViewType
+    private lateinit var widgetType: WidgetType
     private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
 
     fun start(
         appWidgetId: Int,
-        viewType: ViewType,
+        widgetType: WidgetType,
         siteSelectionViewModel: StatsSiteSelectionViewModel,
         colorSelectionViewModel: StatsColorSelectionViewModel
     ) {
         this.appWidgetId = appWidgetId
-        this.viewType = viewType
+        this.widgetType = widgetType
         this.siteSelectionViewModel = siteSelectionViewModel
         this.colorSelectionViewModel = colorSelectionViewModel
         colorSelectionViewModel.start(appWidgetId)
@@ -57,7 +57,7 @@ class StatsWidgetConfigureViewModel
         if (appWidgetId != -1 && selectedSite != null) {
             appPrefsWrapper.setAppWidgetSiteId(selectedSite.siteId, appWidgetId)
             appPrefsWrapper.setAppWidgetColor(colorSelectionViewModel.viewMode.value ?: LIGHT, appWidgetId)
-            mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId, viewType)))
+            mutableWidgetAdded.postValue(Event(WidgetAdded(appWidgetId, widgetType)))
         }
     }
 
@@ -67,5 +67,5 @@ class StatsWidgetConfigureViewModel
         val buttonEnabled: Boolean = siteTitle != null
     )
 
-    data class WidgetAdded(val appWidgetId: Int, val viewType: ViewType)
+    data class WidgetAdded(val appWidgetId: Int, val widgetType: WidgetType)
 }

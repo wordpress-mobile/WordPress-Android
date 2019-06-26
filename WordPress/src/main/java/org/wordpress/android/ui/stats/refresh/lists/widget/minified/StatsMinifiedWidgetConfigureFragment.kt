@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TODAY_MINIFIED_WIDGET_ADDED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WIDGET_ADDED
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel
@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetColorSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment
+import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -95,7 +96,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
 
         viewModel.widgetAdded.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                analyticsTrackerWrapper.track(STATS_TODAY_MINIFIED_WIDGET_ADDED)
+                analyticsTrackerWrapper.trackMinifiedWidget(STATS_WIDGET_ADDED)
                 minifiedWidgetUpdater.updateAppWidget(context!!, appWidgetId = appWidgetId)
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

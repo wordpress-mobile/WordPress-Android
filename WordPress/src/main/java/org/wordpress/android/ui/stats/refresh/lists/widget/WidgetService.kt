@@ -4,9 +4,9 @@ import android.content.Intent
 import android.widget.RemoteViewsService
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.TODAY_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBlockListProviderFactory
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListProvider
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getViewType

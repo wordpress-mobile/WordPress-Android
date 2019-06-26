@@ -13,7 +13,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel.SiteUiModel
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.WidgetAdded
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel.WidgetSettingsModel
 import org.wordpress.android.viewmodel.Event
@@ -29,7 +29,7 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
     private val siteName = "WordPress"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
-    private val viewType = ViewType.WEEK_VIEWS
+    private val viewType = WidgetType.WEEK_VIEWS
     @Before
     fun setUp() {
         viewModel = StatsWidgetConfigureViewModel(Dispatchers.Unconfined, appPrefsWrapper)
@@ -92,7 +92,7 @@ class StatsWidgetConfigureViewModelTest : BaseUnitTest() {
 
         val widgetAdded: WidgetAdded? = event?.getContentIfNotHandled()
         assertThat(widgetAdded).isNotNull
-        assertThat(widgetAdded!!.viewType).isEqualTo(viewType)
+        assertThat(widgetAdded!!.widgetType).isEqualTo(viewType)
         assertThat(widgetAdded.appWidgetId).isEqualTo(appWidgetId)
     }
 }

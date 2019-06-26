@@ -16,17 +16,16 @@ import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ALL_TIME_WIDGET_ADDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TODAY_WIDGET_ADDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WEEK_VIEWS_WIDGET_ADDED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WIDGET_ADDED
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.TODAY_VIEWS
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.TODAY_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
+import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -43,14 +42,14 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     private lateinit var viewModel: StatsWidgetConfigureViewModel
     private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
-    private lateinit var viewType: ViewType
+    private lateinit var widgetType: WidgetType
 
     override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         activity?.let {
             val styledAttributes = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
             val views = styledAttributes.getInt(R.styleable.statsWidget_viewType, -1)
-            viewType = when (views) {
+            widgetType = when (views) {
                 0 -> WEEK_VIEWS
                 1 -> ALL_TIME_VIEWS
                 2 -> TODAY_VIEWS
@@ -86,7 +85,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             return
         }
 
-        viewModel.start(appWidgetId, viewType, siteSelectionViewModel, colorSelectionViewModel)
+        viewModel.start(appWidgetId, widgetType, siteSelectionViewModel, colorSelectionViewModel)
 
         site_container.setOnClickListener {
             StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
@@ -111,17 +110,15 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         viewModel.widgetAdded.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                when (it.viewType) {
+                analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
+                when (it.widgetType) {
                     WEEK_VIEWS -> {
-                        analyticsTrackerWrapper.track(STATS_WEEK_VIEWS_WIDGET_ADDED)
                         viewsWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
                     ALL_TIME_VIEWS -> {
-                        analyticsTrackerWrapper.track(STATS_ALL_TIME_WIDGET_ADDED)
                         allTimeWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
                     TODAY_VIEWS -> {
-                        analyticsTrackerWrapper.track(STATS_TODAY_WIDGET_ADDED)
                         todayWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
                 }
@@ -133,5 +130,5 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         })
     }
 
-    enum class ViewType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
+    enum class WidgetType { WEEK_VIEWS, ALL_TIME_VIEWS, TODAY_VIEWS }
 }

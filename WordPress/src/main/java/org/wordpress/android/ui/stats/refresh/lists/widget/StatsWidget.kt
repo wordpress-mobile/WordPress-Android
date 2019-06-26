@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.modules.AppComponent
 
 const val IS_WIDE_VIEW_KEY = "show_change_value_key"
@@ -41,7 +40,6 @@ abstract class StatsWidget : AppWidgetProvider() {
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         inject((context.applicationContext as WordPress).component())
         for (appWidgetId in appWidgetIds) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED)
             widgetUpdater.delete(appWidgetId)
         }
     }
