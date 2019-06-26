@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-23 22:41:10+0000
+Translation-Revision-Date: 2019-06-12 10:38:35+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">حدث خطأ أثناء تحديث تفاصيل موقعك: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">حدث خطأ أثناء جلب معلومات جهة اتصال النطاق: %s</string>
+    <string name="domain_registration_error_registering_domain">حدث خطأ أثناء تسجيل النطاق: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">جاري تسجيل اسم النطاق…</string>
+    <string name="domain_registration_state_picker_dialog_title">تحديد الولاية</string>
+    <string name="domain_registration_country_picker_dialog_title">تحديد الدولة</string>
+    <string name="domain_registration_result_continue_button">متابعة</string>
+    <string name="domain_registration_result_description">يجري إعداد نطاقك الجديد &lt;b>%s&lt;/b>. يقوم موقعك\n القيام بحركات بهلوانية من أجل الإثارة!</string>
+    <string name="domain_registration_result_title">تهانينا</string>
+    <string name="domain_contact_information_register_domain_button">تسجيل اسم نطاق</string>
+    <string name="domain_contact_information_postal_code_hint">الرمز البريدي</string>
+    <string name="domain_contact_information_state_hint">الولاية</string>
+    <string name="domain_contact_information_city_hint">المدينة</string>
+    <string name="domain_contact_information_address_hint_two">العنوان 2</string>
+    <string name="domain_contact_information_address_hint">العنوان</string>
+    <string name="domain_contact_information_country_hint">الدولة</string>
+    <string name="domain_contact_information_country_code_hint">رمز الدولة</string>
+    <string name="domain_contact_information_phone_number_hint">الهاتف</string>
+    <string name="domain_contact_information_organization_hint">المؤسسة (اختياري)</string>
+    <string name="domain_contact_information_description">قمنا بتعبئة معلومات جهات الاتصال الخاصة بك مسبقًا على حسابك في WordPress.com من أجل راحتك.\n        يرجى المراجعة للتأكد من صحة المعلومات التي ترغب في استخدامها لهذا النطاق.</string>
+    <string name="domain_contact_information_title">معلومات الاتصال الخاصة بالنطاق</string>
+    <string name="domain_privacy_option_off_title">التسجيل بشكل علني</string>
+    <string name="domain_privacy_option_on_title">التسجيل بشكل خاص مع ميزة الحماية من الخصوصية</string>
+    <string name="domain_registration_privacy_protection_description">يتعين على مالكي النطاق مشاركة معلومات الاتصال في قاعدة بيانات عامة لجميع النطاقات.\n        مع ميزة حماية الخصوصية، ننشر معلوماتنا الخاصة بدلاً من معلوماتك، وإعادة توجيه أي اتصال إليك بشكل سري.</string>
+    <string name="domain_registration_privacy_protection_title">حماية الخصوصية</string>
+    <string name="domain_registration_contact_form_input_error">الرجاء إدخال عنوان %s صالح</string>
+    <string name="domains_suggestions_choose_domain">اختيار النطاق</string>
+    <string name="stats_management_new">جديد</string>
+    <string name="stats_management_edit">تحرير</string>
+    <string name="stats_management_dismiss_insights_news_card">تجاهل</string>
+    <string name="stats_management_try_it_now">التجربة الآن</string>
+    <string name="stats_management_news_card_message">اختر الإحصائيات التي ستراها، والتركيز على البيانات التي تهمك أكثر. أنقر على %1$s في الجزء السفلي من الإحصائيات لتخصيص إحصائياتك.</string>
+    <string name="stats_manage_your_stats">إدارة إحصائياتك</string>
     <string name="history_fetching_revisions">جاري جلب المراجعات…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">فشلت عملية إدراج وسائط.\nيرجى النقر على إعادة المحاولة.</string>
@@ -23,10 +57,9 @@ Language: ar
     <string name="stats_insights_social">اجتماعي</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>
     <string name="stats_view_follower_totals">إجماليات المتابعين</string>
-    <string name="suggestion_fetch_error">تعذَّر تحميل اقتراحات النطاق</string>
-    <string name="suggestions_search_hint">كتابة كلمة أساسية للحصول على مزيد من الأفكار</string>
-    <string name="suggestions_empty_list">لم يتم العثور على أي اقتراحات</string>
-    <string name="choose_domain">اختيار نطاق</string>
+    <string name="domain_suggestions_fetch_error">تعذّر تحميل اقتراحات النطاق</string>
+    <string name="domain_suggestions_search_hint">كتابة كلمة مفتاحية للحصول على مزيد من الأفكار</string>
+    <string name="domains_suggestions_empty_list">لم يتم العثور على أي اقتراحات</string>
     <string name="register_domain">تسجيل نطاق</string>
     <string name="jetpack_installed_message">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
     <string name="stats_menu_remove">إزالة من الرؤى</string>
@@ -215,7 +248,6 @@ Language: ar
     <string name="stats_no_data_for_period">لا توجد بيانات لهذه الفترة</string>
     <string name="preference_strip_image_location">إزالة موقع من الوسائط</string>
     <string name="stats_cannot_be_started">يتعذر علينا فتح الإحصاءات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
-    <string name="site_creation_label_domain_selection">حدد عنوانًا متاحًا للسماح للأشخاص بالبحث عنك على الويب.</string>
     <string name="giphy_powered_by_giphy">مدعون من GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">فشل تحميل بعض الوسائط بسبب وجود خطأ في الشبكة.</string>
     <string name="giphy_picker_empty_search_list">لا توجد وسائط مطابقة لبحثك</string>
@@ -541,7 +573,6 @@ Language: ar
     <string name="content_description_people_looking_charts">الأشخاص الذين ينظرون إلى الرسومات والمخططات</string>
     <string name="comment_title">%s في %s</string>
     <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
-    <string name="notification_site_creation_title_in_progress">جاري إنشاء الموقع… قد يستغرق هذا الأمر بضع دقائق.</string>
     <string name="notification_channel_important_title">مهم</string>
     <string name="notification_channel_general_title">عام</string>
     <string name="photo_picker_use_photo">استخدام هذه الصورة</string>
@@ -554,10 +585,6 @@ Language: ar
     <string name="site_settings_quota_space_unlimited">%1$s من غير المحدود</string>
     <string name="preview_count">معاينة %d</string>
     <string name="add_count">إضافة %d</string>
-    <string name="site_creation_domain_selection_title">الخطوة 4 من خطوات إنشاء موقع جديد</string>
-    <string name="site_creation_site_details_title">الخطوة 3 من خطوات إنشاء موقع جديد</string>
-    <string name="site_creation_theme_selection_title">الخطوة 2 من خطوات إنشاء موقع جديد</string>
-    <string name="site_creation_category_title">الخطوة 1 من خطوات إنشاء موقع جديد</string>
     <string name="stats_followers_many_desc">%d من المتابعين</string>
     <string name="stats_followers_one_desc">متابع واحد</string>
     <string name="stats_followers_zero_desc">لا يوجد متابعون</string>
@@ -655,7 +682,6 @@ Language: ar
     <string name="help_screen_title">المساعدة والدعم</string>
     <string name="license_screen_title">الترخيص</string>
     <string name="release_notes_screen_title">ملاحظات الإصدار</string>
-    <string name="site_creation_creating_failed_extended">واجهنا مشكلة غير متوقعة. ما رأيك في المحاولة مرة أخرى؟</string>
     <string name="signup_epilogue_error_avatar_view">تم رفع الصورة الرمزية الخاصة بك وستصبح متاحة قريبًا.</string>
     <string name="email_not_registered_wpcom">حسنًا، لا يمكننا العثور على حساب WordPress.com متصل بعنوان البريد الإلكتروني هذا. حاول الرابط أدناه لتسجيل الدخول باستخدام عنوان موقعك.</string>
     <string name="permissions_denied_message">يبدو أنك أوقفت الأذونات المطلوبة لهذه الميزة.&lt;br/>&lt;br/>لتغيير هذا، قم بتحرير أذوناتك وتأكد من تمكين &lt;strong>%s&lt;/strong>.</string>
@@ -707,44 +733,7 @@ Language: ar
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s، %2$s</string>
     <string name="latitude_longitude">%1$f، %2$f</string>
-    <string name="site_creation_epilogue_write">كتابة المقالة الأولى</string>
-    <string name="site_creation_epilogue_configure">تكوين</string>
-    <string name="site_creation_epilogue_congrats">تهانينا! \n موقعك جاهز.</string>
-    <string name="site_creation_creating_modal">يرجى الانتظار حتى اكتمال إنشاء الموقع.</string>
-    <string name="site_creation_creating_retry">حاول مرة أخرى</string>
-    <string name="site_creation_creating_failed">حدث خطأ ما…</string>
-    <string name="site_creation_creating_preparing_frontend">إعداد الواجهة الأمامية…</string>
-    <string name="site_creation_creating_configuring_theme">يتم تكوين تنسيق الموقع…</string>
-    <string name="site_creation_creating_configuring_content">يتم تكوين محتوى الموقع…</string>
-    <string name="site_creation_creating_fetching_info">جاري استرداد معلومات الموقع…</string>
-    <string name="site_creation_creating_laying_foundation">جاري وضع أساس الموقع…</string>
-    <string name="site_creation_empty_site_title">يرجى إدخال عنوان الموقع</string>
-    <string name="site_creation_tagline_helper">العلامة عبارة عن سطر قصير من النص يظهر جهة اليمين أسفل العنوان في معظم القوالب، وتعمل بمثابة بيانات تعريف للموقع على محركات البحث.</string>
-    <string name="site_creation_tagline_hint">سطر وصف الموقع (اختياري)</string>
-    <string name="site_creation_title_hint">عنوان الموقع</string>
     <string name="site_creation_domain_finish_button">إنشاء موقع</string>
-    <string name="site_creation_domain_keywords_hint">كتابة كلمة أساسية لمزيد من الأفكار</string>
-    <string name="site_creation_label_domain_selection_title">خطوة 4 من 4</string>
-    <string name="site_creation_label_site_details">أخبرنا المزيد عمّا تقوم بإنشائه. ما العنوان والعلامة؟</string>
-    <string name="site_creation_label_site_details_title">خطوة 3 من 4</string>
-    <string name="site_creation_label_theme_loading">يُرجى الانتظار أثناء تحميل القوالب</string>
-    <string name="site_creation_label_theme_selection">ابدأ بسرعة باستخدام قالب من قوالبنا الشائعة. بمجرد إنشاء موقعك، يمكنك التصفح والاختيار من بين مئات القوالب الأخرى.</string>
-    <string name="site_creation_label_theme_selection_title">خطوة 2 من 4</string>
-    <string name="site_creation_subtitle_portfolio">لتقديم مشاريعك الإبداعية في حالة مرئية.</string>
-    <string name="site_creation_title_portfolio">بدء معرض الأعمال</string>
-    <string name="site_creation_subtitle_website">للترويج لأعمالك التجارية أو علامتك التجارية، تواصل مع جمهورك.</string>
-    <string name="site_creation_title_website">بدء موقع على الويب</string>
-    <string name="site_creation_subtitle_blog">لمشاركة أفكارك وقصصك وصورك الفوتوغرافية مع متابعيك.</string>
-    <string name="site_creation_title_blog">بدء مدونة</string>
-    <string name="site_creation_label_category">ما نوع الموقع الذي تحتاج إليه؟\nاختر خيارًا مما يلي:</string>
-    <string name="site_creation_label_category_title">خطوة 1 من 4</string>
-    <string name="site_creation_title">إنشاء موقع جديد</string>
-    <string name="notification_site_creation_failed">حدث خطأ.</string>
-    <string name="notification_site_creation_title_stopped">توقف إنشاء الموقع</string>
-    <string name="notification_site_creation_step_theme">خطوة 4 من 4</string>
-    <string name="notification_site_creation_step_tagline">خطوة 3 من 4</string>
-    <string name="notification_site_creation_step_fetching">خطوة 2 من 4</string>
-    <string name="notification_site_creation_step_creating">خطوة 1 من 4</string>
     <string name="notification_site_creation_created">انقر للمتابعة.</string>
     <string name="notification_site_creation_title_success">تم إنشاء الموقع!</string>
     <string name="google_error_timeout">استغرق Google وقتًا طويلاً جدًا لدرجة أنه لم يستجب. قد تحتاج إلى الانتظار حتى يكون لديك اتصال قوي بالإنترنت.</string>

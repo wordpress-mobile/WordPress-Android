@@ -11,18 +11,19 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_127"
+msgid ""
+"12.7:\n"
+"* Quote and More blocks are now available, and we fixed an issue that caused the keyboard in the editor to flicker if you repeatedly pressed Enter on a post title.\n"
+"* Business plan customers can register a custom domain when installing a plugin.\n"
+"* Sometimes when you started a new draft, the app would create two. Fixed!\n"
+msgstr ""
+
 msgctxt "release_note_126"
 msgid ""
 "12.6:\n"
 "* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.\n"
 "* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.\n"
-msgstr ""
-
-msgctxt "release_note_125"
-msgid ""
-"12.5:\n"
-"Better offline support: If you draft offline, drafts automatically upload to the server when you log in.\n"
-"Clearer stats: Navigate to a post’s detailed data by clicking on its title on the Stats screen. The current day’s stats appear in gray to help you remember that they’re not final.\n"
 msgstr ""
 
 msgctxt "sample_post_content"

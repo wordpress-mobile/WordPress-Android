@@ -35,7 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.S
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase.CommentsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
@@ -81,7 +81,7 @@ class StatsModule {
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
         followersUseCaseFactory: FollowersUseCaseFactory,
-        commentsUseCaseFactory: CommentsUseCaseFactory,
+        commentsUseCase: CommentsUseCase,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
@@ -96,7 +96,7 @@ class StatsModule {
                 latestPostSummaryUseCase,
                 todayStatsUseCase,
                 followersUseCaseFactory.build(BLOCK),
-                commentsUseCaseFactory.build(BLOCK),
+                commentsUseCase,
                 mostPopularInsightsUseCase,
                 tagsAndCategoriesUseCaseFactory.build(BLOCK),
                 publicizeUseCaseFactory.build(BLOCK),
@@ -117,7 +117,6 @@ class StatsModule {
     @Named(VIEW_ALL_INSIGHTS_USE_CASES)
     fun provideViewAllInsightsUseCases(
         followersUseCaseFactory: FollowersUseCaseFactory,
-        commentsUseCaseFactory: CommentsUseCaseFactory,
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
@@ -127,7 +126,6 @@ class StatsModule {
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 followersUseCaseFactory.build(VIEW_ALL),
-                commentsUseCaseFactory.build(VIEW_ALL),
                 tagsAndCategoriesUseCaseFactory.build(VIEW_ALL),
                 publicizeUseCaseFactory.build(VIEW_ALL),
                 postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),

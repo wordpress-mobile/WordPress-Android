@@ -49,3 +49,18 @@ fun Double.toFormattedString(thresholdValue: Int = TEN_THOUSAND, locale: Locale 
         this.toLong().toFormattedString(thresholdValue, locale)
     }
 }
+
+fun getBarWidth(views: Int, maxViews: Int) = getBarWidth(views.toDouble(), maxViews.toDouble())
+
+fun getBarWidth(views: Long, maxViews: Long) = getBarWidth(views.toDouble(), maxViews.toDouble())
+
+private fun getBarWidth(
+    views: Double,
+    maxViews: Double
+): Int? {
+    return if (maxViews > 0) {
+        ((views / maxViews) * 100).toInt()
+    } else {
+        null
+    }
+}

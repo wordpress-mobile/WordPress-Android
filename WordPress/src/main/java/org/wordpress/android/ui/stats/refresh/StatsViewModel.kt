@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
@@ -146,10 +147,6 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        refreshData()
-    }
-
-    fun refreshData() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
@@ -161,6 +158,12 @@ class StatsViewModel
         } else {
             _isRefreshing.value = false
             _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
+        }
+    }
+
+    fun onSiteChanged() {
+        loadData {
+            listUseCases.values.forEach { it.onParamChanged(SITE) }
         }
     }
 

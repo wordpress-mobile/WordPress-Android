@@ -53,8 +53,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: AuthorsUseCase
-    private val firstAuthorViews = 50
-    private val secondAuthorViews = 30
+    private val firstAuthorViews = 20
+    private val secondAuthorViews = 40
     private val authorWithoutPosts = Author("group1", firstAuthorViews, "group1.jpg", listOf())
     private val post = Post("Post1", "Post title", 20, "post.com")
     private val authorWithPosts = Author("group2", secondAuthorViews, "group2.jpg", listOf(post))
@@ -112,13 +112,15 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 this[2],
                 authorWithoutPosts.name,
                 authorWithoutPosts.views,
-                authorWithoutPosts.avatarUrl
+                authorWithoutPosts.avatarUrl,
+                50
         )
         return assertExpandableItem(
                 this[3],
                 authorWithPosts.name,
                 authorWithPosts.views,
-                authorWithPosts.avatarUrl
+                authorWithPosts.avatarUrl,
+                100
         )
     }
 
@@ -131,13 +133,15 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 this[2],
                 authorWithoutPosts.name,
                 authorWithoutPosts.views,
-                authorWithoutPosts.avatarUrl
+                authorWithoutPosts.avatarUrl,
+                50
         )
         val expandableItem = assertExpandableItem(
                 this[3],
                 authorWithPosts.name,
                 authorWithPosts.views,
-                authorWithPosts.avatarUrl
+                authorWithPosts.avatarUrl,
+                100
         )
         assertSingleItem(this[4], post.title, post.views, null)
         assertThat(this[5]).isEqualTo(Divider)
@@ -149,8 +153,12 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts), true)
         whenever(store.getAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD), selectedDate)).thenReturn(model)
-        whenever(store.fetchAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
-                selectedDate, forced)).thenReturn(
+        whenever(
+                store.fetchAuthors(
+                        site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                        selectedDate, forced
+                )
+        ).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -166,7 +174,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                     this[2],
                     authorWithoutPosts.name,
                     authorWithoutPosts.views,
-                    authorWithoutPosts.avatarUrl
+                    authorWithoutPosts.avatarUrl,
+                    100
             )
             assertLink(this[3])
         }
@@ -175,8 +184,12 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty authors to UI model`() = test {
         val forced = false
-        whenever(store.fetchAuthors(site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
-                selectedDate, forced)).thenReturn(
+        whenever(
+                store.fetchAuthors(
+                        site, statsGranularity, LimitMode.Top(ITEMS_TO_LOAD),
+                        selectedDate, forced
+                )
+        ).thenReturn(
                 OnStatsFetched(AuthorsModel(0, listOf(), false))
         )
 
@@ -228,7 +241,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         item: BlockListItem,
         key: String,
         views: Int?,
-        icon: String?
+        icon: String?,
+        bar: Int? = null
     ) {
         assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((item as ListItemWithIcon).text).isEqualTo(key)
@@ -237,6 +251,11 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
+        if (bar != null) {
+            assertThat(item.barWidth).isEqualTo(bar)
+        } else {
+            assertThat(item.barWidth).isNull()
+        }
         assertThat(item.iconUrl).isEqualTo(icon)
     }
 
@@ -244,12 +263,14 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         item: BlockListItem,
         label: String,
         views: Int,
-        icon: String?
+        icon: String?,
+        bar: Int
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toFormattedString())
         assertThat(item.header.iconUrl).isEqualTo(icon)
+        assertThat(item.header.barWidth).isEqualTo(bar)
         return item
     }
 

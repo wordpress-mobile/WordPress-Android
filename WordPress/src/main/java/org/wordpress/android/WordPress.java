@@ -850,6 +850,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
+            // This stat is part of a funnel that provides critical information.  Before
+            // making ANY modification to this stat please refer to: p4qSXL-35X-p2
             AnalyticsTracker.track(Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications

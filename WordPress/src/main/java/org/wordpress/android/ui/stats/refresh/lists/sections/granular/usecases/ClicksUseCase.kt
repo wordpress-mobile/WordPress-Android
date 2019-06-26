@@ -88,7 +88,7 @@ constructor(
         }
     }
 
-    override fun buildStatefulUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List<BlockListItem> {
+    override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {

@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -37,7 +37,7 @@ constructor(
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : StatefulUseCase<VisitsAndViewsModel, UiState>(
+) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         OVERVIEW,
         mainDispatcher,
         UiState()
@@ -89,7 +89,7 @@ constructor(
         }
     }
 
-    override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
