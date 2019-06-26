@@ -14,6 +14,7 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -255,16 +257,45 @@ class LocalDraftUploadStarterTest {
         verifyNoMoreInteractions(uploadServiceFacade)
     }
 
+    @Test
+    fun `when uploading a single site, local drafts with too many errors or cancellations are not uploaded`() {
+        // Given
+        val site: SiteModel = sites[1]
+
+        val connectionStatus = createConnectionStatusLiveData(null)
+        val uploadServiceFacade = createMockedUploadServiceFacade()
+
+        // This UploadStore.getNumberOfPostUploadErrorsOrCancellations mocked method will always return that
+        // any post was cancelled 1000 times. The auto upload should not be started.
+        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade,
+                uploadStore = createMockedUploadStore(1000))
+
+        // When
+        starter.queueUploadFromSite(site)
+
+        // Then
+        // Make sure the uploadPost method is never called
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any(),
+                publish = any(),
+                isRetry = eq(true)
+        )
+    }
+
     @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createLocalDraftUploadStarter(
         connectionStatus: LiveData<ConnectionStatus>,
         uploadServiceFacade: UploadServiceFacade,
-        postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper()
+        postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
+        uploadStore: UploadStore = createMockedUploadStore(0)
     ) = LocalDraftUploadStarter(
             context = mock(),
             postStore = postStore,
             pageStore = pageStore,
             siteStore = siteStore,
+            uploadStore = uploadStore,
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
@@ -286,6 +317,10 @@ class LocalDraftUploadStarterTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
+        }
+
+        fun createMockedUploadStore(numberOfPostErrors: Int) = mock<UploadStore> {
+            on { getNumberOfPostUploadErrorsOrCancellations(any()) } doReturn numberOfPostErrors
         }
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {

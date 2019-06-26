@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Product
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactError
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactErrorType
@@ -75,7 +76,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val states = listOf(primaryState, secondaryState)
 
     private val siteId = 1234L
-    private val productId = "76"
+    private val productId = 76
     private val testDomainName = "testdomain.blog"
     private val cartId = "123"
 
@@ -113,7 +114,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     private val createShoppingCartResponse = CreateShoppingCartResponse(
             siteId.toInt(),
             cartId,
-            listOf(Product(productId, testDomainName))
+            listOf(Product(productId, testDomainName, Extra(privacy = true)))
     )
 
     private val domainProductDetails = DomainProductDetails(productId, testDomainName)

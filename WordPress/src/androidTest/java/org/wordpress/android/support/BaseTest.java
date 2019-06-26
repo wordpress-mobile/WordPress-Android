@@ -1,6 +1,7 @@
 package org.wordpress.android.support;
 
-import androidx.test.InstrumentationRegistry;
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
@@ -31,8 +32,7 @@ public class BaseTest {
 
     @Before
     public void setup() {
-        mAppContext =
-                (WordPress) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+        mAppContext = ApplicationProvider.getApplicationContext();
         mMockedAppComponent = DaggerAppComponentTest.builder()
                                                     .application(mAppContext)
                                                     .build();
@@ -41,7 +41,8 @@ public class BaseTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(
             options().port(WIREMOCK_PORT)
-                     .fileSource(new AssetFileSource(InstrumentationRegistry.getContext().getAssets()))
+                     .fileSource(new AssetFileSource(
+                             InstrumentationRegistry.getInstrumentation().getContext().getAssets()))
                      .extensions(new ResponseTemplateTransformer(true))
                      .notifier(new AndroidNotifier()));
     @Rule

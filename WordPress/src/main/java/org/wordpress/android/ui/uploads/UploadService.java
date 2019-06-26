@@ -790,7 +790,7 @@ public class UploadService extends Service {
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
             }
 
-            // no retry uploading the media items
+            // retry uploading media items
             for (MediaModel media : mediaToRetry) {
                 mMediaUploadHandler.upload(media);
             }

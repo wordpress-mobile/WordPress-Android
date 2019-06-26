@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-10 13:09:12+0000
+Translation-Revision-Date: 2019-06-03 13:21:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
+    <string name="post_list_drafts">Προσχέδια</string>
+    <string name="post_list_published">Δημοσιευμένα</string>
+    <string name="post_list_author_everyone">Όλοι</string>
+    <string name="post_list_author_me">Εγώ</string>
     <string name="gutenberg_mobile_src_block_types_unsupported_block_edit_js_27">Μη υποστηριζόμενο</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">Εναλλακτικό κείμενο</string>
     <string name="gutenberg_mobile_gutenberg_packages_format_library_src_link_modal_native_js_136">Κείμενο συνδέσμου</string>
@@ -309,23 +313,7 @@ Language: el_GR
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Γράψτε το πρώτο σας άρθρο</string>
-    <string name="site_creation_epilogue_configure">Ρύθμιση</string>
-    <string name="site_creation_creating_retry">Δοκιμάστε ξανά</string>
-    <string name="site_creation_creating_failed">Κάτι πήγε στραβά…</string>
-    <string name="site_creation_title_hint">Τίτλος ιστότοπου</string>
     <string name="site_creation_domain_finish_button">Δημιουργία ενός ιστότοπου</string>
-    <string name="site_creation_label_domain_selection_title">Βήμα 4 από 4</string>
-    <string name="site_creation_label_site_details_title">Βήμα 3 από 4</string>
-    <string name="site_creation_label_theme_selection_title">Βήμα 2 από 4</string>
-    <string name="site_creation_title_blog">Ξεκινήστε με ένα ιστολόγιο</string>
-    <string name="site_creation_label_category_title">Βήμα 1 από 4</string>
-    <string name="site_creation_title">Δημιουργία νέου ιστότοπου</string>
-    <string name="notification_site_creation_failed">Προέκυψε σφάλμα.</string>
-    <string name="notification_site_creation_step_theme">Βήμα 4 από 4</string>
-    <string name="notification_site_creation_step_tagline">Βήμα 3 από 4</string>
-    <string name="notification_site_creation_step_fetching">Βήμα 2 από 4</string>
-    <string name="notification_site_creation_step_creating">Βήμα 1 από 4</string>
     <string name="notification_site_creation_created">Πατήστε για να συνεχίσετε.</string>
     <string name="username_changer_title">Αλλαγή ονόματος χρήστη</string>
     <string name="username_changer_dismiss_button_positive">Απόρριψη</string>

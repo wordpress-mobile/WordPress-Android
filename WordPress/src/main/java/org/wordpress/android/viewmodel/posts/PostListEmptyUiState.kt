@@ -8,6 +8,7 @@ import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -22,10 +23,11 @@ sealed class PostListEmptyUiState(
     class EmptyList(
         title: UiString,
         buttonText: UiString? = null,
-        onButtonClick: (() -> Unit)? = null
+        onButtonClick: (() -> Unit)? = null,
+        @DrawableRes imageResId: Int = R.drawable.img_illustration_posts_75dp
     ) : PostListEmptyUiState(
             title = title,
-            imgResId = R.drawable.img_illustration_posts_75dp,
+            imgResId = imageResId,
             buttonText = buttonText,
             onButtonClick = onButtonClick
     )
@@ -59,6 +61,7 @@ fun createEmptyUiState(
     isNetworkAvailable: Boolean,
     isLoadingData: Boolean,
     isListEmpty: Boolean,
+    isSearchPromptRequired: Boolean,
     error: ListError?,
     fetchFirstPage: () -> Unit,
     newPost: () -> Unit
@@ -70,8 +73,19 @@ fun createEmptyUiState(
                     error = error,
                     fetchFirstPage = fetchFirstPage
             )
-            isLoadingData -> PostListEmptyUiState.Loading
-            else -> createEmptyListUiState(postListType = postListType, newPost = newPost)
+            isLoadingData -> {
+                // don't show intermediate screen when loading search results
+                if (postListType == SEARCH) {
+                    PostListEmptyUiState.DataShown
+                } else {
+                    PostListEmptyUiState.Loading
+                }
+            }
+            else -> createEmptyListUiState(
+                    postListType = postListType,
+                    newPost = newPost,
+                    isSearchPromptRequired = isSearchPromptRequired
+            )
         }
     } else {
         PostListEmptyUiState.DataShown
@@ -99,7 +113,11 @@ private fun createErrorListUiState(
     }
 }
 
-private fun createEmptyListUiState(postListType: PostListType, newPost: () -> Unit): PostListEmptyUiState.EmptyList {
+private fun createEmptyListUiState(
+    postListType: PostListType,
+    newPost: () -> Unit,
+    isSearchPromptRequired: Boolean
+): PostListEmptyUiState.EmptyList {
     return when (postListType) {
         PUBLISHED -> PostListEmptyUiState.EmptyList(
                 UiStringRes(R.string.posts_published_empty),
@@ -116,6 +134,15 @@ private fun createEmptyListUiState(postListType: PostListType, newPost: () -> Un
                 UiStringRes(R.string.posts_empty_list_button),
                 newPost
         )
+        SEARCH -> {
+            val messageResId = if (isSearchPromptRequired) {
+                R.string.post_list_search_prompt
+            } else {
+                R.string.post_list_search_nothing_found
+            }
+
+            PostListEmptyUiState.EmptyList(title = UiStringRes(messageResId), imageResId = 0)
+        }
         TRASHED -> PostListEmptyUiState.EmptyList(UiStringRes(R.string.posts_trashed_empty))
     }
 }

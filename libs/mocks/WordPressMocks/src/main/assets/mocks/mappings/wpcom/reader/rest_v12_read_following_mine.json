@@ -1,12 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.2/read/following/mine/",
-        "queryParameters": {
-          "meta": {
-              "equalTo": "site"
-          }
-      }
+        "urlPattern": "/rest/v1.2/read/following/mine.*"
     },
     "response": {
         "status": 200,
@@ -26,8 +21,8 @@
                     "is_owner": true,
                     "meta": {
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/158396482",
-                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/93780362"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.2/read/sites/158396482",
+                            "feed": "{{request.requestLine.baseUrl}}/rest/v1.1/read/feed/93780362"
                         },
                         "data": {
                             "site": {
@@ -203,10 +198,10 @@
                                 "jetpack_modules": null,
                                 "meta": {
                                     "links": {
-                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/158396482",
-                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/158396482/help",
-                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/158396482/posts/",
-                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
+                                        "self": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/158396482",
+                                        "help": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/158396482/help",
+                                        "posts": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/158396482/posts/",
+                                        "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/comments/",
                                         "xmlrpc": "https://e2eflowtestingmobile.wordpress.com/xmlrpc.php"
                                     }
                                 },
@@ -262,8 +257,8 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024",
-                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/41325786"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.2/read/sites/53424024",
+                            "feed": "{{request.requestLine.baseUrl}}/rest/v1.1/read/feed/41325786"
                         },
                         "data": {
                             "site": {
@@ -289,12 +284,12 @@
                                 "is_following": true,
                                 "meta": {
                                     "links": {
-                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/53424024",
-                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/53424024/help",
-                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/53424024/posts/",
-                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/53424024/comments/",
+                                        "self": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/53424024",
+                                        "help": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/53424024/help",
+                                        "posts": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/53424024/posts/",
+                                        "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/53424024/comments/",
                                         "xmlrpc": "https://discover.wordpress.com/xmlrpc.php",
-                                        "featured": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024/featured"
+                                        "featured": "{{request.requestLine.baseUrl}}/rest/v1.2/read/sites/53424024/featured"
                                     }
                                 },
                                 "launch_status": false,
@@ -355,7 +350,7 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/84614284"
+                            "feed": "{{request.requestLine.baseUrl}}/rest/v1.1/read/feed/84614284"
                         }
                     }
                 },
@@ -373,8 +368,8 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/70135762",
-                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/22973954"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.2/read/sites/70135762",
+                            "feed": "{{request.requestLine.baseUrl}}/rest/v1.1/read/feed/22973954"
                         },
                         "data": {
                             "site": {
@@ -400,10 +395,10 @@
                                 "is_following": true,
                                 "meta": {
                                     "links": {
-                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/70135762",
-                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/70135762/help",
-                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/70135762/posts/",
-                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/70135762/comments/",
+                                        "self": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/70135762",
+                                        "help": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/70135762/help",
+                                        "posts": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/70135762/posts/",
+                                        "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/70135762/comments/",
                                         "xmlrpc": "https://longreadsblog.wordpress.com/xmlrpc.php"
                                     }
                                 },
@@ -465,8 +460,8 @@
                     "is_owner": false,
                     "meta": {
                         "links": {
-                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/3584907",
-                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/25823"
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.2/read/sites/3584907",
+                            "feed": "{{request.requestLine.baseUrl}}/rest/v1.1/read/feed/25823"
                         },
                         "data": {
                             "site": {
@@ -492,10 +487,10 @@
                                 "is_following": true,
                                 "meta": {
                                     "links": {
-                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/3584907",
-                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/3584907/help",
-                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/3584907/posts/",
-                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/3584907/comments/",
+                                        "self": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/3584907",
+                                        "help": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/3584907/help",
+                                        "posts": "{{request.requestLine.baseUrl}}/rest/v1.2/sites/3584907/posts/",
+                                        "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/3584907/comments/",
                                         "xmlrpc": "https://en.blog.wordpress.com/xmlrpc.php"
                                     }
                                 },
