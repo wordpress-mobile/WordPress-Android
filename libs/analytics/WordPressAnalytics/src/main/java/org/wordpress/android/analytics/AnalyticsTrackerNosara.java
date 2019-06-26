@@ -1073,6 +1073,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_widget_removed";
             case STATS_WIDGET_TAPPED:
                 return "stats_widget_tapped";
+            case STATS_WEEK_VIEWS_WIDGET_ADDED:
+                return "stats_week_views_widget_added";
+            case STATS_TODAY_WIDGET_ADDED:
+                return "stats_today_widget_added";
+            case STATS_TODAY_MINIFIED_WIDGET_ADDED:
+                return "stats_today_minified_widget_added";
+            case STATS_ALL_TIME_WIDGET_ADDED:
+                return "stats_all_time_widget_added";
             case PUSH_NOTIFICATION_RECEIVED:
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:

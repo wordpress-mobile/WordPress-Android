@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ALL_TIME_WIDGET_ADDED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TODAY_WIDGET_ADDED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WEEK_VIEWS_WIDGET_ADDED
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetUpdater
@@ -24,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.WEEK_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -35,6 +39,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: StatsWidgetConfigureViewModel
     private lateinit var siteSelectionViewModel: StatsSiteSelectionViewModel
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
@@ -108,12 +113,15 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             event?.getContentIfNotHandled()?.let {
                 when (it.viewType) {
                     WEEK_VIEWS -> {
+                        analyticsTrackerWrapper.track(STATS_WEEK_VIEWS_WIDGET_ADDED)
                         viewsWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
                     ALL_TIME_VIEWS -> {
+                        analyticsTrackerWrapper.track(STATS_ALL_TIME_WIDGET_ADDED)
                         allTimeWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
                     TODAY_VIEWS -> {
+                        analyticsTrackerWrapper.track(STATS_TODAY_WIDGET_ADDED)
                         todayWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
                     }
                 }
