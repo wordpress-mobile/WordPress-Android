@@ -43,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -75,6 +76,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -107,7 +110,8 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 
-public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener {
+public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener,
+        BasicDialogPositiveClickInterface {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_INSTALLING_PLUGIN = "KEY_IS_INSTALLING_PLUGIN";
@@ -124,6 +128,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
     private static final String KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS
             = "KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS";
     private static final String KEY_PLUGIN_RECHECKED_TIMES = "KEY_PLUGIN_RECHECKED_TIMES";
+    private static final String TAG_ERROR_DIALOG = "ERROR_DIALOG";
 
     private static final int MAX_PLUGIN_CHECK_TRIES = 10;
     private static final int DEFAULT_RETRY_DELAY_MS = 3000;
@@ -335,6 +340,11 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             }
             confirmInstallPluginForAutomatedTransfer();
         }
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        // do nothing
     }
 
     public static class DomainRegistrationPromptDialog extends DialogFragment {
@@ -1390,7 +1400,10 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
      */
     private void handleAutomatedTransferFailed(String errorMessage) {
         cancelAutomatedTransferDialog();
-        ToastUtils.showToast(this, errorMessage, Duration.LONG);
+        BasicFragmentDialog errorDialog = new BasicFragmentDialog();
+        errorDialog.initialize(TAG_ERROR_DIALOG, null, errorMessage,
+                getString(R.string.dialog_button_ok), null, null);
+        errorDialog.show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
     }
 
     /**
