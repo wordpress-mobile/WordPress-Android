@@ -7,13 +7,17 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel.SiteUiModel
+import org.wordpress.android.viewmodel.Event
 
 class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
+    @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var site: SiteModel
     private lateinit var viewModel: StatsSiteSelectionViewModel
@@ -23,7 +27,7 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     private val iconUrl = "icon.jpg"
     @Before
     fun setUp() {
-        viewModel = StatsSiteSelectionViewModel(Dispatchers.Unconfined, siteStore, appPrefsWrapper)
+        viewModel = StatsSiteSelectionViewModel(Dispatchers.Unconfined, siteStore, accountStore, appPrefsWrapper)
         whenever(site.siteId).thenReturn(siteId)
         whenever(site.name).thenReturn(siteName)
         whenever(site.url).thenReturn(siteUrl)
@@ -66,5 +70,32 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
         loadedSite.click()
 
         Assertions.assertThat(hideSiteDialog).isNotNull
+    }
+
+    @Test
+    fun `opens dialog when access token present`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        var event: Event<Unit>? = null
+        viewModel.dialogOpened.observeForever {
+            event = it
+        }
+
+        viewModel.openSiteDialog()
+
+        Assertions.assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `shows notification when access token not present`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        var notification: Event<Int>? = null
+        viewModel.notification.observeForever {
+            notification = it
+        }
+
+        viewModel.openSiteDialog()
+
+        Assertions.assertThat(notification).isNotNull
+        Assertions.assertThat(notification?.getContentIfNotHandled()).isEqualTo(R.string.stats_widget_log_in_message)
     }
 }

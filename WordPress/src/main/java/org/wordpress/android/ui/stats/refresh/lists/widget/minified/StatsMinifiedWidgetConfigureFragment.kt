@@ -25,7 +25,9 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.mergeNotNull
 import javax.inject.Inject
 
 class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
@@ -69,19 +71,49 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
         viewModel.start(appWidgetId, siteSelectionViewModel, colorSelectionViewModel, dataTypeSelectionViewModel)
 
         site_container.setOnClickListener {
-            StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
+            siteSelectionViewModel.openSiteDialog()
         }
         color_container.setOnClickListener {
-            StatsWidgetColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
+            colorSelectionViewModel.openColorDialog()
         }
         data_type_container.visibility = View.VISIBLE
         data_type_container.setOnClickListener {
-            StatsWidgetDataTypeSelectionDialogFragment().show(fragmentManager, "stats_data_type_selection_fragment")
+            dataTypeSelectionViewModel.openDataTypeDialog()
         }
 
         add_widget_button.setOnClickListener {
             viewModel.addWidget()
         }
+
+        siteSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+            event?.applyIfNotHandled {
+                StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
+            }
+        })
+
+        colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+            event?.applyIfNotHandled {
+                StatsWidgetColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
+            }
+        })
+
+        dataTypeSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+            event?.applyIfNotHandled {
+                StatsWidgetDataTypeSelectionDialogFragment().show(fragmentManager, "stats_data_type_selection_fragment")
+            }
+        })
+
+        mergeNotNull(
+                siteSelectionViewModel.notification,
+                colorSelectionViewModel.notification,
+                dataTypeSelectionViewModel.notification
+        ).observe(
+                this,
+                Observer { event ->
+                    event?.applyIfNotHandled {
+                        ToastUtils.showToast(activity, this)
+                    }
+                })
 
         viewModel.settingsModel.observe(this, Observer { uiModel ->
             uiModel?.let {

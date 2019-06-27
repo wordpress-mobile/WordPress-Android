@@ -9,14 +9,17 @@ import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -57,8 +60,10 @@ class WidgetUtils
         views: RemoteViews,
         appWidgetId: Int
     ) {
-        val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
-        imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
+        GlobalScope.launch(Dispatchers.Main) {
+            val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
+            imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
+        }
     }
 
     fun showError(

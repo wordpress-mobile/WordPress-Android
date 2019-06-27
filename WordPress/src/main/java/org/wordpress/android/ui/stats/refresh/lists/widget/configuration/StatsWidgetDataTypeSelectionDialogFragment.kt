@@ -30,7 +30,7 @@ class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
         val alertDialogBuilder = AlertDialog.Builder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.stats_data_type_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
-            checkedId.toDataType()?.let { viewModel.dataTypeClicked(it) }
+            checkedId.toDataType()?.let { viewModel.selectDataType(it) }
         }
         alertDialogBuilder.setView(view)
         viewModel.dataType.observe(this, Observer { updatedDataType ->
