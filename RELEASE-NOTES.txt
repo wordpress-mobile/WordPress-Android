@@ -1,6 +1,9 @@
 12.8
 -----
-Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Block Editor: Fix pasting simple text on Post Title
+* Block Editor: Remove editable empty line after list on the List block
+* Block Editor: Performance improvements on rich text editing
 
 12.7
 -----
