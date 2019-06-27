@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeW
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -106,7 +106,7 @@ class WidgetUtils
         appWidgetId: Int,
         colorMode: Color,
         siteId: Int,
-        viewType: ViewType,
+        widgetType: WidgetType,
         isWideView: Boolean
     ) {
         views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
@@ -115,7 +115,7 @@ class WidgetUtils
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putColorMode(colorMode)
-        listIntent.putViewType(viewType)
+        listIntent.putViewType(widgetType)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.putExtra(IS_WIDE_VIEW_KEY, isWideView)
         listIntent.data = Uri.parse(

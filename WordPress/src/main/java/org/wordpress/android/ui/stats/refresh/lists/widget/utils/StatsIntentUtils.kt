@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.utils
 
 import android.content.Intent
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 
 private const val COLOR_MODE_KEY = "color_mode_key"
@@ -15,12 +15,12 @@ fun Intent.putColorMode(color: Color) {
     this.putEnumExtra(COLOR_MODE_KEY, color)
 }
 
-fun Intent.getViewType(): ViewType {
-    return this.getEnumExtra(VIEW_TYPE_KEY, ViewType.WEEK_VIEWS)
+fun Intent.getViewType(): WidgetType {
+    return this.getEnumExtra(VIEW_TYPE_KEY, WidgetType.WEEK_VIEWS)
 }
 
-fun Intent.putViewType(viewType: ViewType) {
-    this.putEnumExtra(VIEW_TYPE_KEY, viewType)
+fun Intent.putViewType(widgetType: WidgetType) {
+    this.putEnumExtra(VIEW_TYPE_KEY, widgetType)
 }
 
 private inline fun <reified T : Enum<T>> Intent.putEnumExtra(key: String, victim: T): Intent =

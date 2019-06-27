@@ -5,14 +5,17 @@ import android.content.ComponentName
 import android.content.Context
 import android.widget.RemoteViews
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType.ALL_TIME_VIEWS
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
+import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -22,7 +25,8 @@ class AllTimeWidgetUpdater
     private val siteStore: SiteStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val widgetUtils: WidgetUtils
+    private val widgetUtils: WidgetUtils,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
@@ -73,6 +77,7 @@ class AllTimeWidgetUpdater
     }
 
     override fun delete(appWidgetId: Int) {
+        analyticsTrackerWrapper.trackWithWidgetType(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED, ALL_TIME_VIEWS)
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }

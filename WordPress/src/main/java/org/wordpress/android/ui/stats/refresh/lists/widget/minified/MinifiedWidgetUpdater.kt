@@ -8,6 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
@@ -25,7 +26,9 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -36,7 +39,8 @@ class MinifiedWidgetUpdater
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val todayInsightsStore: TodayInsightsStore,
-    private val widgetUtils: WidgetUtils
+    private val widgetUtils: WidgetUtils,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
@@ -114,6 +118,7 @@ class MinifiedWidgetUpdater
     }
 
     override fun delete(appWidgetId: Int) {
+        analyticsTrackerWrapper.trackMinifiedWidget(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED)
         appPrefsWrapper.removeAppWidgetColorModeId(appWidgetId)
         appPrefsWrapper.removeAppWidgetSiteId(appWidgetId)
     }
