@@ -125,6 +125,7 @@ public class PostUtils {
     public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
         Map<String, Object> properties = new HashMap<>();
+        properties.put("post_type", post.isPage() ? "page" : "post");
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
@@ -168,6 +169,7 @@ public class PostUtils {
 
     public static void trackOpenEditorAnalytics(PostModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
+        properties.put("post_type", post.isPage() ? "page" : "post");
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }
