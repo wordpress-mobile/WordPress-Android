@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -13,7 +12,6 @@ import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.StatsViewType.ANNUAL_STATS
 import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
-import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
@@ -46,7 +44,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.S
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
@@ -136,7 +133,7 @@ class StatsViewAllViewModelFactory(
                     useCase,
                     statsSiteProvider,
                     dateSelectorFactory.build(StatsSection.ANNUAL_STATS),
-                    string.stats_insights_annual_site_stats
+                    R.string.stats_insights_annual_site_stats
             )
         }
 
@@ -172,10 +169,6 @@ class StatsViewAllViewModelFactory(
                 FOLLOWERS -> Pair(
                         insightsUseCases.first { it is FollowersUseCase },
                         R.string.stats_view_followers
-                )
-                COMMENTS -> Pair(
-                        insightsUseCases.first { it is CommentsUseCase },
-                        R.string.stats_view_comments
                 )
                 TAGS_AND_CATEGORIES -> Pair(
                         insightsUseCases.first { it is TagsAndCategoriesUseCase },

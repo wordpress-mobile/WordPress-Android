@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
@@ -66,7 +66,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), isNull(), any())).thenReturn(title)
+        whenever(overviewMapper.buildTitle(any(), isNull(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }

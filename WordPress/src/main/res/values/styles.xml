@@ -43,19 +43,6 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
-    <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral</item>
-    </style>
-
-    <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/neutral</item>
-        <item name="android:lineSpacingExtra">4dp</item>
-    </style>
-
-    <style name="SiteCreation.CardTitle" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/neutral_700</item>
-    </style>
-
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -294,6 +281,18 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="MySiteListRowAlertIcon">
+        <item name="android:tint">@color/alert_yellow</item>
+        <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/my_site_list_row_icon_margin_right</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
     <style name="MySiteListRowTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -307,6 +306,17 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="MySiteListRowDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">

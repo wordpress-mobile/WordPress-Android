@@ -4,13 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -378,24 +379,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
-        } else if (mBrowserType.canFilter()) {
-            switch (mFilter) {
-                case FILTER_IMAGES:
-                    mediaList = mMediaStore.getSiteImages(mSite);
-                    break;
-                case FILTER_DOCUMENTS:
-                    mediaList = mMediaStore.getSiteDocuments(mSite);
-                    break;
-                case FILTER_VIDEOS:
-                    mediaList = mMediaStore.getSiteVideos(mSite);
-                    break;
-                case FILTER_AUDIO:
-                    mediaList = mMediaStore.getSiteAudio(mSite);
-                    break;
-                default:
-                    mediaList = mMediaStore.getAllSiteMedia(mSite);
-                    break;
-            }
+        } else if (mBrowserType.canFilter() || mBrowserType.canOnlyDoInitialFilter()) {
+            mediaList = getMediaList();
         } else {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);
             mediaList = new ArrayList<>();
@@ -409,6 +394,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         ensureCorrectState(mediaList);
         return mediaList;
+    }
+
+    private List<MediaModel> getMediaList() {
+        switch (mFilter) {
+            case FILTER_IMAGES:
+                return mMediaStore.getSiteImages(mSite);
+            case FILTER_DOCUMENTS:
+                return mMediaStore.getSiteDocuments(mSite);
+            case FILTER_VIDEOS:
+                return mMediaStore.getSiteVideos(mSite);
+            case FILTER_AUDIO:
+                return mMediaStore.getSiteAudio(mSite);
+            default:
+                return mMediaStore.getAllSiteMedia(mSite);
+        }
     }
 
     void setFilter(@NonNull MediaFilter filter) {

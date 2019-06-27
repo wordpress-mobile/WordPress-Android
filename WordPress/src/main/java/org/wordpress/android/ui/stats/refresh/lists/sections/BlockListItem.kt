@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
@@ -22,9 +25,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -35,6 +40,9 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        BIG_TITLE,
+        TAG_ITEM,
+        IMAGE_ITEM,
         VALUE_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
@@ -54,7 +62,8 @@ sealed class BlockListItem(val type: Type) {
         ACTIVITY_ITEM,
         REFERRED_ITEM,
         QUICK_SCAN_ITEM,
-        LINK_BUTTON
+        LINK_BUTTON,
+        DIALOG_BUTTONS
     }
 
     data class Title(
@@ -63,15 +72,33 @@ sealed class BlockListItem(val type: Type) {
         val menuAction: ((View) -> Unit)? = null
     ) : BlockListItem(TITLE)
 
-    data class ReferredItem(@StringRes val label: Int, val itemTitle: String) : BlockListItem(REFERRED_ITEM)
+    data class BigTitle(
+        @StringRes val textResource: Int
+    ) : BlockListItem(BIG_TITLE)
+
+    data class Tag(
+        @StringRes val textResource: Int
+    ) : BlockListItem(TAG_ITEM)
+
+    data class ImageItem(
+        @DrawableRes val imageResource: Int
+    ) : BlockListItem(IMAGE_ITEM)
+
+    data class ReferredItem(
+        @StringRes val label: Int,
+        val itemTitle: String,
+        val navigationAction: NavigationAction? = null
+    ) : BlockListItem(REFERRED_ITEM)
 
     data class ValueItem(
         val value: String,
         @StringRes val unit: Int,
         val isFirst: Boolean = false,
         val change: String? = null,
-        val positive: Boolean = true
-    ) : BlockListItem(VALUE_ITEM)
+        val state: State = POSITIVE
+    ) : BlockListItem(VALUE_ITEM) {
+        enum class State { POSITIVE, NEGATIVE, NEUTRAL }
+    }
 
     data class ListItem(
         val text: String,
@@ -88,10 +115,9 @@ sealed class BlockListItem(val type: Type) {
         val iconStyle: IconStyle = NORMAL,
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        @StringRes val subTextResource: Int? = null,
-        val subText: String? = null,
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
+        val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null
@@ -118,6 +144,7 @@ sealed class BlockListItem(val type: Type) {
         val text: String? = null,
         val textResource: Int? = null,
         val links: List<Clickable>? = null,
+        val bolds: List<String>? = null,
         val isLast: Boolean = false
     ) :
             BlockListItem(TEXT) {
@@ -147,6 +174,13 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val text: Int,
         val navigateAction: NavigationAction
     ) : BlockListItem(LINK_BUTTON)
+
+    data class DialogButtons(
+        @StringRes val positiveButtonText: Int,
+        val positiveAction: NavigationAction,
+        @StringRes val negativeButtonText: Int,
+        val negativeAction: NavigationAction
+    ) : BlockListItem(DIALOG_BUTTONS)
 
     data class BarChartItem(
         val entries: List<Bar>,

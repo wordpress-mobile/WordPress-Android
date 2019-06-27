@@ -1,9 +1,10 @@
 package org.wordpress.android.editor;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.text.Editable;
 import android.text.TextWatcher;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class LiveTextWatcher implements TextWatcher {
     private MutableLiveData<Editable> mAfterTextChanged = new MutableLiveData<>();

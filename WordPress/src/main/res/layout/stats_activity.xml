@@ -10,15 +10,15 @@
         layout="@layout/toolbar"
         android:id="@+id/toolbar" />
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_height="@dimen/toolbar_subtitle_height"
             android:layout_width="match_parent">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,9 +35,9 @@
                     android:overlapAnchor="false"
                     tools:ignore="UnusedAttribute"/>
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/ptr_layout"
@@ -218,5 +218,5 @@
                 </LinearLayout>
             </org.wordpress.android.ui.stats.NestedScrollViewExt>
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

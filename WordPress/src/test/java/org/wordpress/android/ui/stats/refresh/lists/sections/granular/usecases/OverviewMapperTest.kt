@@ -9,6 +9,9 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -32,12 +35,17 @@ class OverviewMapperTest : BaseUnitTest() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
 
-        val title = mapper.buildTitle(selectedItem, null, uiState.selectedPosition)
+        val title = mapper.buildTitle(
+                selectedItem,
+                null,
+                uiState.selectedPosition,
+                false
+        )
 
         assertThat(title.value).isEqualTo(likes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isNull()
-        assertThat(title.positive).isTrue()
+        assertThat(title.state).isEqualTo(POSITIVE)
     }
 
     @Test
@@ -50,12 +58,17 @@ class OverviewMapperTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("15"), eq("300")))
                 .thenReturn(positiveLabel)
 
-        val title = mapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
+        val title = mapper.buildTitle(
+                selectedItem,
+                previousItem,
+                uiState.selectedPosition,
+                false
+        )
 
         assertThat(title.value).isEqualTo(likes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isEqualTo(positiveLabel)
-        assertThat(title.positive).isTrue()
+        assertThat(title.state).isEqualTo(POSITIVE)
     }
 
     @Test
@@ -68,12 +81,17 @@ class OverviewMapperTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
                 .thenReturn(positiveLabel)
 
-        val title = mapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
+        val title = mapper.buildTitle(
+                selectedItem,
+                previousItem,
+                uiState.selectedPosition,
+                false
+        )
 
         assertThat(title.value).isEqualTo(likes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isEqualTo(positiveLabel)
-        assertThat(title.positive).isTrue()
+        assertThat(title.state).isEqualTo(POSITIVE)
     }
 
     @Test
@@ -86,12 +104,17 @@ class OverviewMapperTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
                 .thenReturn(negativeLabel)
 
-        val title = mapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
+        val title = mapper.buildTitle(
+                selectedItem,
+                previousItem,
+                uiState.selectedPosition,
+                false
+        )
 
         assertThat(title.value).isEqualTo(likes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isEqualTo(negativeLabel)
-        assertThat(title.positive).isFalse()
+        assertThat(title.state).isEqualTo(NEGATIVE)
     }
 
     @Test
@@ -104,12 +127,17 @@ class OverviewMapperTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
                 .thenReturn(negativeLabel)
 
-        val title = mapper.buildTitle(newItem, selectedItem, uiState.selectedPosition)
+        val title = mapper.buildTitle(
+                newItem,
+                selectedItem,
+                uiState.selectedPosition,
+                false
+        )
 
         assertThat(title.value).isEqualTo(newLikes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isEqualTo(negativeLabel)
-        assertThat(title.positive).isFalse()
+        assertThat(title.state).isEqualTo(NEGATIVE)
     }
 
     @Test
@@ -122,12 +150,40 @@ class OverviewMapperTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("0"), eq("0")))
                 .thenReturn(positiveLabel)
 
-        val title = mapper.buildTitle(selectedItem, previousItem, uiState.selectedPosition)
+        val title = mapper.buildTitle(
+                selectedItem,
+                previousItem,
+                uiState.selectedPosition,
+                false
+        )
 
         assertThat(title.value).isEqualTo(likes.toString())
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isEqualTo(positiveLabel)
-        assertThat(title.positive).isTrue()
+        assertThat(title.state).isEqualTo(POSITIVE)
+    }
+
+    @Test
+    fun `builds title with negative difference from last item`() {
+        val previousLikes: Long = 30
+        val previousItem = selectedItem.copy(likes = previousLikes)
+        val selectedPosition = 2
+        val uiState = UiState(selectedPosition)
+        val negativeLabel = "-10 (-33%)"
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
+                .thenReturn(negativeLabel)
+
+        val title = mapper.buildTitle(
+                selectedItem,
+                previousItem,
+                uiState.selectedPosition,
+                true
+        )
+
+        assertThat(title.value).isEqualTo(likes.toString())
+        assertThat(title.unit).isEqualTo(R.string.stats_likes)
+        assertThat(title.change).isEqualTo(negativeLabel)
+        assertThat(title.state).isEqualTo(NEUTRAL)
     }
 
     @Test

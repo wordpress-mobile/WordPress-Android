@@ -1,15 +1,18 @@
 package org.wordpress.android.support;
 
 import android.app.Activity;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.AmbiguousViewMatcherException;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.AmbiguousViewMatcherException;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -21,21 +24,22 @@ import org.wordpress.android.util.image.ImageType;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.runner.lifecycle.Stage.RESUMED;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.longClick;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
@@ -90,6 +94,20 @@ public class WPSupportUtils {
         idleFor(500);   // allow for transitions
     }
 
+    /**
+     * Uses UIAutomator to click on an element using the resource ID in the cases of flakiness in Espresso click
+     * performing a long click
+     * @param resourceID - String resource ID
+     */
+    public static void clickOn(String resourceID) {
+        try {
+            UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
+                    "org.wordpress.android:id/" + resourceID)).click();
+        } catch (UiObjectNotFoundException e) {
+            System.out.println("Could not find button with Resource ID:" + resourceID + " to click");
+        }
+    }
+
     public static void longClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
         onView(withId(elementID)).perform(longClick());
@@ -133,6 +151,11 @@ public class WPSupportUtils {
         waitForElementToBeDisplayed(element);
         element.perform(replaceText(text))
                .perform(closeSoftKeyboard());
+    }
+
+    public static void checkViewHasText(ViewInteraction element, String text) {
+        waitForElementToBeDisplayed(element);
+        element.check(matches(withText(text)));
     }
 
     public static void focusEditPostTitle() {
@@ -223,6 +246,15 @@ public class WPSupportUtils {
             @Override
             public Boolean get() {
                 return !isElementDisplayed(elementID);
+            }
+        });
+    }
+
+    public static void waitForElementToNotBeDisplayed(final ViewInteraction element) {
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return !isElementDisplayed(element);
             }
         });
     }
@@ -456,9 +488,27 @@ public class WPSupportUtils {
         };
     }
 
+    public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
+        return new TypeSafeMatcher<View>() {
+            int mCurrentIndex = 0;
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("with index: ");
+                description.appendValue(index);
+                matcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                return matcher.matches(view) && mCurrentIndex++ == index;
+            }
+        };
+    }
+
     private static Activity mCurrentActivity;
     public static Activity getCurrentActivity() {
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+        getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
                 Collection resumedActivities = ActivityLifecycleMonitorRegistry

@@ -8,7 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.test
@@ -27,7 +27,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     private lateinit var block: TestUseCase
     private val result = mutableListOf<UseCaseModel?>()
-    private val loadingData = listOf<BlockListItem>(Title(string.stats_insights_all_time))
+    private val loadingData = listOf<BlockListItem>(Title(R.string.stats_insights_all_time))
     private val loadingBlock = UseCaseModel(
             ALL_TIME_STATS,
             data = null,
@@ -108,7 +108,8 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
             Dispatchers.Unconfined,
-            0
+            0,
+            listOf()
     ) {
         override fun buildLoadingItem(): List<BlockListItem> {
             return loadingItems

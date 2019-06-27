@@ -120,7 +120,6 @@ Language: ms
     <string name="async_promo_link">Bagaimana ianya berfungsi?</string>
     <string name="editor_uploading_post">Kiriman anda sedang dimuat naik</string>
     <string name="uploading_media">Memuat naik media…</string>
-    <string name="dialog_confirm_cancel_post_media_uploading">Anda pasti? Menghapuskan kiriman ini juga akan membatalkan muat naik media.</string>
     <string name="page_scheduled">Halaman dijadualkan</string>
     <string name="post_scheduled">Kiriman dijadualkan</string>
     <string name="post_queued">Kiriman digilirkan</string>
@@ -182,8 +181,6 @@ Language: ms
     <string name="post_status_draft">Draf</string>
     <string name="post_status_pending_review">Menunggu tinjauan</string>
     <string name="post_status_post_private">Persendirian</string>
-    <string name="post_status_scheduled">Dijadualkan</string>
-    <string name="post_status_trashed">Disampah</string>
     <string name="change_location">Tukar Lokasi</string>
     <string name="post_status_publish_post">Terbit</string>
     <string name="remove_location">Buang Lokasi</string>
@@ -342,7 +339,6 @@ Language: ms
     <string name="error_media_not_found">Media tidak dapat dijumpai</string>
     <string name="error_media_insufficient_fs_permissions">Kebenaran membaca tidak diberikan pada media peranti</string>
     <string name="site_settings_optimize_images">Optimumkan Imej</string>
-    <string name="no_site_error">Tidak dapat menghubungi laman WordPress. Tiada laman WordPress yang sah di\n        alamat ini. Periksa alamat laman (URL) yang anda masukkan.</string>
     <string name="media_generic_error">Ralat media berlaku</string>
     <string name="media_upload_error">Ralat muat naik media berlaku</string>
     <string name="confirm">Sahkan</string>
@@ -758,10 +754,8 @@ Language: ms
     <string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Sini adalah prestasi kiriman ini setakat ini…</string>
     <string name="stats_insights_latest_post_summary">Ringkasan Kiriman Terkini</string>
     <string name="connectionbar_no_connection">Tiada sambungan</string>
-    <string name="button_back">Kembali</string>
     <string name="button_edit">Sunting</string>
     <string name="stats_no_activity_this_period">Tiada aktiviti tempoh ini</string>
-    <string name="post_deleted">Kiriman dihapuskan</string>
     <string name="post_trashed">Kiriman dihantar ke sampah</string>
     <string name="button_stats">Statistik</string>
     <string name="button_trash">Sampah</string>

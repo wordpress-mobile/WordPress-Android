@@ -22,7 +22,7 @@ enum class SiteCreationStep : WizardStep {
 }
 
 @Singleton
-class NewSiteCreationStepsProvider @Inject constructor() {
+class SiteCreationStepsProvider @Inject constructor() {
     fun getSteps(): List<SiteCreationStep> {
         return listOf(
                 SiteCreationStep.fromString("site_creation_segments"),
