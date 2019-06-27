@@ -10,18 +10,21 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.stats.time.FileDownloadsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -49,7 +52,7 @@ constructor(
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_videos))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_file_downloads))
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): FileDownloadsModel? {
         return store.getFileDownloads(
@@ -82,30 +85,29 @@ constructor(
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
-            items.add(Title(R.string.stats_videos))
+            items.add(Title(R.string.stats_file_downloads))
         }
 
         if (domainModel.fileDownloads.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_videos_title_label, R.string.stats_videos_views_label))
-//            items.addAll(domainModel.fileDownloads.mapIndexed { index, videoPlays ->
-//                ListItemWithIcon(
-//                        text = videoPlays.title,
-//                        value = videoPlays.plays.toFormattedString(),
-//                        showDivider = index < domainModel.plays.size - 1,
-//                        navigationAction = videoPlays.url?.let { NavigationAction.create(it, this::onItemClick) }
-//                )
-//            })
-//
-//            if (useCaseMode == BLOCK && domainModel.hasMore) {
-//                items.add(
-//                        Link(
-//                                text = R.string.stats_insights_view_more,
-//                                navigateAction = NavigationAction.create(statsGranularity, this::onViewMoreClick)
-//                        )
-//                )
-//            }
+            items.add(Header(R.string.stats_file_downloads_title_label, R.string.stats_file_downloads_value_label))
+            items.addAll(domainModel.fileDownloads.mapIndexed { index, fileDownloads ->
+                ListItemWithIcon(
+                        text = fileDownloads.filename,
+                        value = fileDownloads.downloads.toFormattedString(),
+                        showDivider = index < domainModel.fileDownloads.size - 1
+                )
+            })
+
+            if (useCaseMode == BLOCK && domainModel.hasMore) {
+                items.add(
+                        Link(
+                                text = R.string.stats_insights_view_more,
+                                navigateAction = NavigationAction.create(statsGranularity, this::onViewMoreClick)
+                        )
+                )
+            }
         }
         return items
     }
@@ -118,11 +120,6 @@ constructor(
                         selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
         )
-    }
-
-    private fun onItemClick(url: String) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIDEO_TAPPED, statsGranularity)
-        navigateTo(ViewUrl(url))
     }
 
     class FileDownloadsUseCaseFactory
