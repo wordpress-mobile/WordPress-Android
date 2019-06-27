@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.uploads
 
-import android.arch.lifecycle.Lifecycle.Event
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.OnLifecycleEvent
-import android.arch.lifecycle.ProcessLifecycleOwner
 import android.content.Context
+import androidx.lifecycle.Lifecycle.Event
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.posts.PostUtilsWrapper
@@ -46,6 +47,7 @@ open class LocalDraftUploadStarter @Inject constructor(
     private val postStore: PostStore,
     private val pageStore: PageStore,
     private val siteStore: SiteStore,
+    private val uploadStore: UploadStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
@@ -54,6 +56,7 @@ open class LocalDraftUploadStarter @Inject constructor(
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
+    private val MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES = 10
 
     override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
@@ -136,6 +139,9 @@ open class LocalDraftUploadStarter @Inject constructor(
         postsAndPages
                 .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .filter { postUtilsWrapper.isPublishable(it) }
+                .filter {
+                    uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
+                }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,

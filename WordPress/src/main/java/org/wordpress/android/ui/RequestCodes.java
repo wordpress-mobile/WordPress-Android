@@ -9,7 +9,6 @@ public class RequestCodes {
     public static final int APP_SETTINGS = 300;
     public static final int NOTE_DETAIL = 600;
     public static final int SITE_PICKER = 700;
-    public static final int REGISTER_DOMAIN = 701;
     public static final int EDIT_POST = 800;
     public static final int PREVIEW_POST = 810;
     public static final int CREATE_SITE = 900;

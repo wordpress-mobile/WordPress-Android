@@ -69,4 +69,34 @@ class StatsUtilsTest {
             assertThat(formatted).isEqualTo(expected[i])
         }
     }
+
+    @Test
+    fun `calculates bar width`() {
+        val maxViews = 150
+        val views = 75
+
+        val barWidth = getBarWidth(views, maxViews)
+
+        assertThat(barWidth).isEqualTo(50)
+    }
+
+    @Test
+    fun `calculates bar width with max views 0`() {
+        val maxViews = 0
+        val views = 0
+
+        val barWidth = getBarWidth(views, maxViews)
+
+        assertThat(barWidth).isNull()
+    }
+
+    @Test
+    fun `calculates bar width with views gt max views`() {
+        val maxViews = 5
+        val views = 10
+
+        val barWidth = getBarWidth(views, maxViews)
+
+        assertThat(barWidth).isEqualTo(200)
+    }
 }

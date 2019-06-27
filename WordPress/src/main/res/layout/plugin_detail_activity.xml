@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/plugin_detail_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:id="@+id/plugin_detail_container"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     android:fitsSystemWindows="false">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="false"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -47,16 +47,16 @@
                     tools:layout_height="74dp" />
             </FrameLayout>
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <org.wordpress.android.widgets.WPNestedScrollView
         android:id="@+id/scroll_view"
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 style="@style/PluginCardView"
                 card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
@@ -168,7 +168,7 @@
                             android:paddingEnd="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large" >
 
-                            <android.support.v7.widget.AppCompatButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_update"
                                 android:layout_height="wrap_content"
                                 android:layout_width="wrap_content"
@@ -180,7 +180,7 @@
                                 tools:visibility="visible"
                                 style="@style/WordPress.Button.Secondary" />
 
-                            <android.support.v7.widget.AppCompatButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_install"
                                 android:layout_height="wrap_content"
                                 android:layout_width="wrap_content"
@@ -192,7 +192,7 @@
                                 tools:visibility="visible"
                                 style="@style/WordPress.Button.Secondary" />
 
-                            <android.support.v7.widget.AppCompatButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/plugin_installed"
                                 android:enabled="false"
                                 android:layout_width="wrap_content"
@@ -215,9 +215,9 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/plugin_card_site"
                 style="@style/PluginCardView"
                 card_view:cardBackgroundColor="@android:color/white"
@@ -233,7 +233,7 @@
                             style="@style/PluginCardViewPrimaryText"
                             android:text="@string/plugin_detail_label_state_active" />
 
-                        <android.support.v7.widget.SwitchCompat
+                        <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/plugin_state_active"
                             android:theme="@style/SwitchBlueMedium"
                             style="@style/PluginCardViewSecondaryElement" />
@@ -249,15 +249,15 @@
                             style="@style/PluginCardViewPrimaryText"
                             android:text="@string/plugin_detail_label_state_autoupdates" />
 
-                        <android.support.v7.widget.SwitchCompat
+                        <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
                             android:theme="@style/SwitchBlueMedium"
                             style="@style/PluginCardViewSecondaryElement" />
                     </RelativeLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 style="@style/PluginCardView"
                 card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
@@ -313,9 +313,9 @@
                             android:src="@drawable/ic_external_white_24dp" />
                     </RelativeLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 style="@style/PluginCardView"
                 android:id="@+id/plugin_wp_org_details_container"
                 card_view:cardBackgroundColor="@android:color/white"
@@ -437,9 +437,9 @@
 
                     </RelativeLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <include layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>
     </org.wordpress.android.widgets.WPNestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -291,10 +291,11 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"/>
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -338,6 +339,7 @@
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
+            android:theme="@style/Calypso.NoActionBar"
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -370,6 +372,21 @@
                 <data
                     android:host="notifications"
                     android:scheme="wordpress" />
+
+                <data
+                    android:host="public-api.wordpress.com"
+                    android:pathPattern="/mbar/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
@@ -749,7 +766,7 @@
 
         <!-- Provider for exposing file URIs on Android 7+ -->
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">

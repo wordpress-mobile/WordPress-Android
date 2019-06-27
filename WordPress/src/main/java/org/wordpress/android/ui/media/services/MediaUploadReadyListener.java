@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.media.services;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.helpers.MediaFile;

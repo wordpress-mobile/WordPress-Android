@@ -7,7 +7,7 @@
         "status": 302,
         "headers": {
             "Content-Type": "text/html;charset=utf-8",
-            "Location": "wordpress://magic-login?token=valid_token"
+            "Location": "{{request.query.scheme}}://magic-login?token=valid_token"
         }
     }
 }

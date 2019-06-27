@@ -8,8 +8,19 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -18,7 +29,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
@@ -26,6 +39,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -69,7 +84,7 @@ import javax.inject.Inject;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity {
+public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -86,11 +101,70 @@ public class WPWebViewActivity extends WebViewActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject UiHelpers mUiHelpers;
+
+    private ActionableEmptyView mActionableEmptyView;
+    private ViewGroup mFullScreenProgressLayout;
+    private WPWebViewViewModel mViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public final void configureView() {
+        setContentView(R.layout.wpwebview_activity);
+
+        mActionableEmptyView = findViewById(R.id.actionable_empty_view);
+        mFullScreenProgressLayout = findViewById(R.id.progress_layout);
+        mWebView = findViewById(R.id.webView);
+
+        initRetryButton();
+        initViewModel();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initRetryButton() {
+        mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View v) {
+                    mViewModel.loadIfNecessary();
+                }
+        });
+    }
+
+    private void initViewModel() {
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPWebViewViewModel.class);
+        mViewModel.getUiState().observe(this, new Observer<WebPreviewUiState>() {
+            @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
+                if (webPreviewUiState != null) {
+                    mUiHelpers.updateVisibility(mActionableEmptyView,
+                            webPreviewUiState.getActionableEmptyView());
+                    mUiHelpers.updateVisibility(mFullScreenProgressLayout,
+                            webPreviewUiState.getFullscreenProgressLayoutVisibility());
+                    mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
+                }
+            }
+        });
+        mViewModel.getLoadNeeded().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(@Nullable Boolean loadNeeded) {
+                if (loadNeeded != null && loadNeeded) {
+                    loadContent();
+                }
+            }
+        });
+        mViewModel.start();
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
@@ -122,7 +196,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
-                                                     String[] listOfAllowedURLs) {
+                                                     String[] listOfAllowedURLs, boolean disableLinks) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -146,7 +220,7 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
-        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
         intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
@@ -218,6 +292,8 @@ public class WPWebViewActivity extends WebViewActivity {
     protected void configureWebView() {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 
         final Bundle extras = getIntent().getExtras();
 
@@ -249,16 +325,28 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
+        URLFilteredWebViewClient webViewClient;
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            return new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL, this);
         } else {
-            return new URLFilteredWebViewClient(allowedURL);
+            webViewClient = new URLFilteredWebViewClient(allowedURL, this);
         }
+        return webViewClient;
+    }
+
+    @Override
+    public void onWebViewPageLoaded() {
+        mViewModel.onUrlLoaded();
+    }
+
+    @Override
+    public void onWebViewReceivedError() {
+        mViewModel.onReceivedError();
     }
 
     @Override

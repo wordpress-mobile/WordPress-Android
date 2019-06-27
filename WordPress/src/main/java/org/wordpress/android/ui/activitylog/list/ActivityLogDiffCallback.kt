@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.activitylog.list
 
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.IActionableItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress

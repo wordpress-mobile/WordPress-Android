@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -115,10 +115,9 @@ sealed class BlockListItem(val type: Type) {
         val iconStyle: IconStyle = NORMAL,
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        @StringRes val subTextResource: Int? = null,
-        val subText: String? = null,
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
+        val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null

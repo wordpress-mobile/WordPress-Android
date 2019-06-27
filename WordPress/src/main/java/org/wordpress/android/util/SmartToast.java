@@ -1,9 +1,10 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppPrefs;

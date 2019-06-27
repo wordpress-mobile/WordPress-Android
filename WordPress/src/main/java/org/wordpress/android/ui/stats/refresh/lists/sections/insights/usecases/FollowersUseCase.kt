@@ -7,7 +7,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
@@ -19,7 +18,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -55,7 +54,7 @@ class FollowersUseCase(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
-) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
+) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
         FollowersUiState(isLoading = true)
@@ -125,7 +124,7 @@ class FollowersUseCase(
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(
+    override fun buildUiModel(
         domainModel: Pair<FollowersModel, FollowersModel>,
         uiState: FollowersUiState
     ): List<BlockListItem> {
@@ -175,7 +174,7 @@ class FollowersUseCase(
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_view_followers, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
 
     private fun loadMore() {
         GlobalScope.launch(bgDispatcher) {
@@ -190,7 +189,7 @@ class FollowersUseCase(
             mutableItems.add(
                     Information(
                             resourceProvider.getString(
-                                    string.stats_followers_count_message,
+                                    R.string.stats_followers_count_message,
                                     resourceProvider.getString(label),
                                     model.totalCount
                             )

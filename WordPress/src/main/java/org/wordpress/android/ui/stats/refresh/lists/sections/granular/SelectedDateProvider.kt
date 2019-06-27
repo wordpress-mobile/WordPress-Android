@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PREVIOUS_DATE_TAPPED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -9,6 +11,8 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
+import org.wordpress.android.ui.stats.refresh.utils.trackWithSection
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.filter
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
@@ -17,7 +21,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SelectedDateProvider
-@Inject constructor() {
+@Inject constructor(private val analyticsTrackerWrapper: AnalyticsTrackerWrapper) {
     private val mutableDates = mutableMapOf(
             DAYS to SelectedDate(loading = true),
             WEEKS to SelectedDate(loading = true),
@@ -64,7 +68,7 @@ class SelectedDateProvider
     private fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
         val currentDate = mutableDates[statsSection]
         mutableDates[statsSection] = selectedDate
-        if (selectedDate.hasUpdatedDate(currentDate)) {
+        if (selectedDate != currentDate) {
             selectedDateChanged.postValue(Event(SectionChange(statsSection)))
         }
     }
@@ -103,6 +107,7 @@ class SelectedDateProvider
         getSelectedDateState(statsSection).let { selectedDate ->
             val selectedDateIndex = selectedDate.index
             if (selectedDateIndex != null && selectedDateIndex > 0) {
+                analyticsTrackerWrapper.trackWithSection(STATS_PREVIOUS_DATE_TAPPED, statsSection)
                 updateSelectedDate(selectedDate.copy(index = selectedDate.index - 1), statsSection)
             }
         }
@@ -112,6 +117,7 @@ class SelectedDateProvider
         getSelectedDateState(statsSection).let { selectedDate ->
             val selectedDateIndex = selectedDate.index
             if (selectedDateIndex != null && selectedDateIndex < selectedDate.availableDates.size - 1) {
+                analyticsTrackerWrapper.trackWithSection(STATS_NEXT_DATE_TAPPED, statsSection)
                 updateSelectedDate(selectedDate.copy(index = selectedDate.index + 1), statsSection)
             }
         }

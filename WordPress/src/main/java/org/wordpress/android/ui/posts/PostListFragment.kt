@@ -1,22 +1,24 @@
 package org.wordpress.android.ui.posts
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
@@ -46,6 +48,7 @@ class PostListFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PostListViewModel
+    private lateinit var mainViewModel: PostListMainViewModel
 
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
 
@@ -56,6 +59,8 @@ class PostListFragment : Fragment() {
 
     private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
     private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
+
+    private lateinit var postListType: PostListType
 
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var site: SiteModel
@@ -101,11 +106,9 @@ class PostListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
 
-        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
-                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
-        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
@@ -125,18 +128,41 @@ class PostListFragment : Fragment() {
                 postListAdapter.updateItemLayoutType(layoutType)
             }
         })
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
-        viewModel.pagedListData.observe(this, Observer {
-            it?.let { pagedListData -> updatePagedListData(pagedListData) }
-        })
+
+        actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
+
+        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
+                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
+        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
+        viewModel.start(postListViewModelConnector)
+
+        initObservers()
+    }
+
+    private fun initObservers() {
+        if (postListType == SEARCH) {
+            mainViewModel.searchQuery.observe(this, Observer {
+                if (TextUtils.isEmpty(it)) {
+                    postListAdapter.submitList(null)
+                }
+                viewModel.search(it)
+            })
+        }
+
         viewModel.emptyViewState.observe(this, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
+
         viewModel.isFetchingFirstPage.observe(this, Observer {
             swipeRefreshLayout?.isRefreshing = it == true
         })
+
+        viewModel.pagedListData.observe(this, Observer {
+            it?.let { pagedListData -> updatePagedListData(pagedListData) }
+        })
+
         viewModel.isLoadingMore.observe(this, Observer {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })

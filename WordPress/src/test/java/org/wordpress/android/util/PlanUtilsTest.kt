@@ -1,14 +1,16 @@
-package org.wordpress.android.ui.plans
+package org.wordpress.android.util
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Test
 import org.wordpress.android.fluxc.model.PlanModel
+import org.wordpress.android.ui.plans.getCurrentPlan
+import org.wordpress.android.ui.plans.isDomainCreditAvailable
 
 class PlanUtilsTest {
     @Test
-    fun `get current plan returns the current plan`() {
+    fun `getCurrentPlan returns the current plan`() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -30,7 +32,7 @@ class PlanUtilsTest {
     }
 
     @Test
-    fun `get current plan returns null when there are no current plans`() {
+    fun `getCurrentPlan returns null when there are no current plans`() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -52,17 +54,17 @@ class PlanUtilsTest {
     }
 
     @Test
-    fun `get current plan returns null when there are no plans`() {
+    fun `getCurrentPlan returns null when there are no plans`() {
         assertNull(getCurrentPlan(listOf()))
     }
 
     @Test
-    fun `get current plan returns null when plans is null`() {
+    fun `getCurrentPlan returns null when plans is null`() {
         assertNull(getCurrentPlan(null))
     }
 
     @Test
-    fun `is domain credit available returns true when there is a current plan with domain credit available`() {
+    fun `isDomainCreditAvailable returns true when there is a current plan with domain credit available`() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -84,7 +86,7 @@ class PlanUtilsTest {
     }
 
     @Test
-    fun `is domain credit available return false when current plan has no domain credit`() {
+    fun `isDomainCreditAvailable return false when current plan has no domain credit`() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -106,7 +108,7 @@ class PlanUtilsTest {
     }
 
     @Test
-    fun `is domain credit available returns false when there are no current plans`() {
+    fun `isDomainCreditAvailable returns false when there are no current plans`() {
         val plans = listOf(
                 PlanModel(
                         1,
@@ -128,12 +130,12 @@ class PlanUtilsTest {
     }
 
     @Test
-    fun `is domain credit available returns false when there are no plans`() {
+    fun `isDomainCreditAvailable returns false when there are no plans`() {
         assertFalse(isDomainCreditAvailable(listOf()))
     }
 
     @Test
-    fun `is domain credit available returns false when plans is null`() {
+    fun `isDomainCreditAvailable returns false when plans is null`() {
         assertFalse(isDomainCreditAvailable(null))
     }
 }

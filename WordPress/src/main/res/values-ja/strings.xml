@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-15 09:54:10+0000
+Translation-Revision-Date: 2019-06-13 12:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">サイトの詳細を更新中にエラーが発生しました：%s</string>
+    <string name="domain_registration_error_fetching_contact_information">ドメインの連絡先情報を取得中にエラーが発生しました：%s</string>
+    <string name="domain_registration_error_registering_domain">ドメイン登録中にエラーが発生しました :%s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">ドメイン名を登録しています…</string>
+    <string name="domain_registration_state_picker_dialog_title">都道府県を選択</string>
+    <string name="domain_registration_country_picker_dialog_title">国を選択</string>
+    <string name="domain_registration_result_continue_button">次へ</string>
+    <string name="domain_registration_result_description">新しいドメイン &lt;b>%s&lt;/b> の設定中です。間もなく設定は完了しますので、\nお楽しみに !</string>
+    <string name="domain_registration_result_title">おめでとうございます</string>
+    <string name="domain_contact_information_register_domain_button">ドメインを登録</string>
+    <string name="domain_contact_information_postal_code_hint">郵便番号</string>
+    <string name="domain_contact_information_state_hint">都道府県</string>
+    <string name="domain_contact_information_city_hint">市区町村</string>
+    <string name="domain_contact_information_address_hint_two">住所2</string>
+    <string name="domain_contact_information_address_hint">住所</string>
+    <string name="domain_contact_information_country_hint">国</string>
+    <string name="domain_contact_information_country_code_hint">国コード</string>
+    <string name="domain_contact_information_phone_number_hint">電話</string>
+    <string name="domain_contact_information_organization_hint">組織 (任意)</string>
+    <string name="domain_contact_information_description">WordPress.com 連絡先情報にはデータが事前に\n入力されています。このドメインに使用する情報として正しいことをご確認ください。</string>
+    <string name="domain_contact_information_title">ドメインの連絡先情報</string>
+    <string name="domain_privacy_option_off_title">公開として登録</string>
+    <string name="domain_privacy_option_on_title">プライバシー保護付きで非公開として登録</string>
+    <string name="domain_registration_privacy_protection_description">ドメイン所有者は、すべてのドメインのパブリックデータベースで連絡先情報を共有する必要があります。\nプライバシー保護として、お客様に関する情報の代わりに弊社に関する情報を公開し、お客様には個別でコミュニケーションを転送します。</string>
+    <string name="domain_registration_privacy_protection_title">プライバシー保護</string>
+    <string name="domain_registration_contact_form_input_error">有効な%sを入力してください</string>
+    <string name="domains_suggestions_choose_domain">ドメインを選択</string>
+    <string name="stats_management_new">新規</string>
+    <string name="stats_management_edit">編集</string>
+    <string name="stats_management_dismiss_insights_news_card">非表示</string>
+    <string name="stats_management_try_it_now">今すぐお試しください</string>
+    <string name="stats_management_news_card_message">表示する統計を選択し、最も重要視するデータに集中します。「統計概要」の下部にある%1$sをタップして、統計をカスタマイズします。</string>
+    <string name="stats_manage_your_stats">統計を管理</string>
+    <string name="history_fetching_revisions">変更を取得しています…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">メディアを挿入できませんでした。\nタップしてオプションを表示してください。</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">メディアを挿入できませんでした。\nタップして再試行してください。</string>
+    <string name="editor_uploading_draft">下書きをアップロードしています</string>
+    <string name="post_uploading_draft">下書きをアップロードしています</string>
     <string name="post_list_drafts">下書き</string>
     <string name="post_list_published">公開済み</string>
     <string name="post_list_author_everyone">すべてのユーザー</string>
@@ -18,10 +57,6 @@ Language: ja_JP
     <string name="stats_insights_social">ソーシャル</string>
     <string name="stats_insights_annual_site_stats">年間サイト統計情報</string>
     <string name="stats_view_follower_totals">フォロワー合計数</string>
-    <string name="suggestion_fetch_error">ドメインの提案が読み込めませんでした</string>
-    <string name="suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
-    <string name="suggestions_empty_list">提案が見つかりません</string>
-    <string name="choose_domain">ドメインを選択</string>
     <string name="register_domain">ドメインを登録</string>
     <string name="jetpack_installed_message">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
     <string name="stats_menu_remove">統計概要から削除</string>
@@ -92,7 +127,6 @@ Language: ja_JP
     <string name="gutenberg_mobile_src_block_types_unsupported_block_index_js_21">サポート対象外のブロック</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_url_input_index_native_js_27">URL を貼り付け</string>
     <string name="gutenberg_mobile_gutenberg_packages_editor_src_components_media_placeholder_index_native_js_26">画像を選択</string>
-    <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_374">メディアを挿入できませんでした。\nタップすると、オプションが表示されます。</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_280">すべての設定を解除</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_273">代替テキスト</string>
     <string name="gutenberg_mobile_gutenberg_packages_block_library_src_image_edit_native_js_198">WordPress メディアライブラリ</string>
@@ -210,7 +244,6 @@ Language: ja_JP
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
-    <string name="site_creation_label_domain_selection">有効なアドレスを選んで、訪問者がウェブでサイトを見つけられるようにしてください。</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">ネットワークエラーにより一部のメディアが読み込めませんでした。</string>
     <string name="giphy_picker_empty_search_list">検索と一致するメディアがありません</string>
@@ -530,7 +563,6 @@ Language: ja_JP
     <string name="content_description_people_looking_charts">グラフとチャートを見ている人</string>
     <string name="comment_title">%s 投稿日時: %s</string>
     <string name="dialog_confirm_delete_permanently_post">この投稿を完全に削除しますか ?</string>
-    <string name="notification_site_creation_title_in_progress">サイトの作成中… これには1、2分かかる場合があります。</string>
     <string name="notification_channel_important_title">重要</string>
     <string name="notification_channel_general_title">一般</string>
     <string name="photo_picker_use_photo">この写真を使用</string>
@@ -543,10 +575,6 @@ Language: ja_JP
     <string name="site_settings_quota_space_unlimited">%1$s の間、無制限です</string>
     <string name="preview_count">%d をプレビュー</string>
     <string name="add_count">%d を追加</string>
-    <string name="site_creation_domain_selection_title">新規サイトを作成 ステップ4</string>
-    <string name="site_creation_site_details_title">新規サイトを作成 ステップ3</string>
-    <string name="site_creation_theme_selection_title">新規サイトを作成 ステップ2</string>
-    <string name="site_creation_category_title">新規サイトを作成 ステップ1</string>
     <string name="stats_followers_many_desc">フォロワー数%d</string>
     <string name="stats_followers_one_desc">フォロワー数1</string>
     <string name="stats_followers_zero_desc">フォロワー数0</string>
@@ -644,7 +672,6 @@ Language: ja_JP
     <string name="help_screen_title">ヘルプとサポート</string>
     <string name="license_screen_title">ライセンス</string>
     <string name="release_notes_screen_title">リリースノート</string>
-    <string name="site_creation_creating_failed_extended">予期しない問題が発生しました。もう一度お試しください。</string>
     <string name="signup_epilogue_error_avatar_view">アバターがアップロードされました。間もなく利用可能になります。</string>
     <string name="email_not_registered_wpcom">このメールアドレスに連携されている WordPress.com アカウントが見つかりません。以下のリンクから、サイトアドレスを使用してログインしてください。</string>
     <string name="permissions_denied_message">この機能に必要な権限を無効にしているようです。&lt;br/>&lt;br/>これを変更するには、権限を編集し、&lt;strong>%s&lt;/strong> が有効にされていることを確認してください。</string>
@@ -696,44 +723,7 @@ Language: ja_JP
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s、%2$s</string>
     <string name="latitude_longitude">%1$f、%2$f</string>
-    <string name="site_creation_epilogue_write">最初の投稿を書く</string>
-    <string name="site_creation_epilogue_configure">設定</string>
-    <string name="site_creation_epilogue_congrats">おめでとうございます !\nサイトの準備ができました。</string>
-    <string name="site_creation_creating_modal">サイト作成が完了するまでお待ちください。</string>
-    <string name="site_creation_creating_retry">もう一度試す</string>
-    <string name="site_creation_creating_failed">エラーが発生しました…</string>
-    <string name="site_creation_creating_preparing_frontend">フロントエンドを準備しています…</string>
-    <string name="site_creation_creating_configuring_theme">サイトスタイルを構成しています…</string>
-    <string name="site_creation_creating_configuring_content">サイトコンテンツを構成しています…</string>
-    <string name="site_creation_creating_fetching_info">サイト情報を取得しています…</string>
-    <string name="site_creation_creating_laying_foundation">サイトの基本情報を配置しています…</string>
-    <string name="site_creation_empty_site_title">サイトのタイトルを入力してください</string>
-    <string name="site_creation_tagline_helper">タグラインは、ほとんどのテーマでタイトルの右下に表示される短い1行のテキストです。これは、検索エンジンでサイトのメタデータとして機能します。</string>
-    <string name="site_creation_tagline_hint">サイトタグライン (オプション)</string>
-    <string name="site_creation_title_hint">サイトのタイトル</string>
     <string name="site_creation_domain_finish_button">サイトの作成</string>
-    <string name="site_creation_domain_keywords_hint">その他のアイデアについてはキーワードを入力します</string>
-    <string name="site_creation_label_domain_selection_title">ステップ4/4</string>
-    <string name="site_creation_label_site_details">作成するサイトについて詳しく教えてください。タイトルとタグラインは何ですか ?</string>
-    <string name="site_creation_label_site_details_title">ステップ3/4</string>
-    <string name="site_creation_label_theme_loading">テーマの読み込み中です</string>
-    <string name="site_creation_label_theme_selection">人気の高いテーマの1つを使って簡単に始めることができます。サイトの作成が完了したら、さらに数百のテーマを参照して選択できます。</string>
-    <string name="site_creation_label_theme_selection_title">ステップ2/4</string>
-    <string name="site_creation_subtitle_portfolio">視覚に訴えるショーケースで創造的なプロジェクトを披露します。</string>
-    <string name="site_creation_title_portfolio">ポートフォリオからスタート</string>
-    <string name="site_creation_subtitle_website">ビジネスやブランドを宣伝し、読者とつながります。</string>
-    <string name="site_creation_title_website">サイトからスタート</string>
-    <string name="site_creation_subtitle_blog">アイデア、ストーリー、写真をフォロワーとシェアします。</string>
-    <string name="site_creation_title_blog">ブログからスタート</string>
-    <string name="site_creation_label_category">どんな種類のサイトが必要ですか ?\n次から選んでください。</string>
-    <string name="site_creation_label_category_title">ステップ1/4</string>
-    <string name="site_creation_title">新規サイトを作成</string>
-    <string name="notification_site_creation_failed">エラーが発生しました。</string>
-    <string name="notification_site_creation_title_stopped">サイト作成が停止しました</string>
-    <string name="notification_site_creation_step_theme">ステップ4/4</string>
-    <string name="notification_site_creation_step_tagline">ステップ3/4</string>
-    <string name="notification_site_creation_step_fetching">ステップ2/4</string>
-    <string name="notification_site_creation_step_creating">ステップ1/4</string>
     <string name="notification_site_creation_created">続行するにはタップしてください。</string>
     <string name="notification_site_creation_title_success">サイトが作成されました。</string>
     <string name="google_error_timeout">Google が応答するのに時間がかかりすぎました。インターネット接続が安定するまで時間がかかる場合があります。</string>

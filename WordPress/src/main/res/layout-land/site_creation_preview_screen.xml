@@ -12,7 +12,7 @@
         tools:visibility="gone"/>
 
     <include
-        layout="@layout/site_creation_progress"
+        layout="@layout/progress_layout"
         tools:visibility="gone"/>
 
     <RelativeLayout
@@ -35,7 +35,7 @@
 
             <include layout="@layout/site_creation_preview_header_item"/>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

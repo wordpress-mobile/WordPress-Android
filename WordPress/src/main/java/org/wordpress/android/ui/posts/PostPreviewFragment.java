@@ -2,12 +2,13 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+
+import androidx.fragment.app.Fragment;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -69,7 +71,15 @@ public class PostPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
+        // Listener is not used, this preview is only used to display local data and will be dropped soon.
+        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken(),
+                new ErrorManagedWebViewClientListener() {
+                    @Override public void onWebViewPageLoaded() {
+                    }
+
+                    @Override public void onWebViewReceivedError() {
+                    }
+                });
         mWebView.setWebViewClient(client);
 
         return view;

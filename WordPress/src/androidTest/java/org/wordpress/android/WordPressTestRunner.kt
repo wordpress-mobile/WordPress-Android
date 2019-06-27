@@ -2,7 +2,7 @@ package org.wordpress.android
 
 import android.app.Application
 import android.content.Context
-import android.support.test.runner.AndroidJUnitRunner
+import androidx.test.runner.AndroidJUnitRunner
 
 /**
  * Custom AndroidJUnitRunner that replaces the original application with [WordPressTest].

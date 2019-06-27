@@ -1,8 +1,9 @@
 package org.wordpress.android.util
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
+import android.content.Context
 import android.util.Log
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.Configuration
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -32,7 +33,7 @@ class UploadWorkerTest {
 
     @Before
     fun setUp() {
-        val context = InstrumentationRegistry.getTargetContext()
+        val context = ApplicationProvider.getApplicationContext<Context>()
         val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor here to make it easier to write tests

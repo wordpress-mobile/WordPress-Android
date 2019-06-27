@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitecreation.previews
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -26,6 +26,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
@@ -146,7 +147,7 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     fun onOkButtonClicked() {
-        tracker.trackCreationCompleted()
+        tracker.trackPreviewOkButtonTapped()
         _onOkButtonClicked.value = createSiteState
     }
 
@@ -259,6 +260,12 @@ class SitePreviewViewModel @Inject constructor(
         }
     }
 
+    fun onWebViewError() {
+        if (uiState.value !is SitePreviewWebErrorUiState) {
+            updateUiState(SitePreviewWebErrorUiState(createSitePreviewData()))
+        }
+    }
+
     private fun createSitePreviewData(): SitePreviewData {
         val subDomain = urlUtils.extractSubDomain(urlWithoutScheme)
         val fullUrl = urlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
@@ -287,12 +294,20 @@ class SitePreviewViewModel @Inject constructor(
         val fullscreenProgressLayoutVisibility: Boolean = false,
         val contentLayoutVisibility: Boolean = false,
         val webViewVisibility: Boolean = false,
+        val webViewErrorVisibility: Boolean = false,
         val shimmerVisibility: Boolean = false,
         val fullscreenErrorLayoutVisibility: Boolean = false
     ) {
         data class SitePreviewContentUiState(val data: SitePreviewData) : SitePreviewUiState(
                 contentLayoutVisibility = true,
-                webViewVisibility = true
+                webViewVisibility = true,
+                webViewErrorVisibility = false
+                )
+
+        data class SitePreviewWebErrorUiState(val data: SitePreviewData) : SitePreviewUiState(
+                contentLayoutVisibility = true,
+                webViewVisibility = false,
+                webViewErrorVisibility = true
         )
 
         data class SitePreviewLoadingShimmerState(val data: SitePreviewData) : SitePreviewUiState(

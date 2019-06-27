@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
@@ -72,7 +72,7 @@ class UiModelMapper
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
     ): UiModel {
-            return mapStatsWithOverview(PostDetailType.POST_OVERVIEW, useCaseModels, showError)
+        return mapStatsWithOverview(PostDetailType.POST_OVERVIEW, useCaseModels, showError)
     }
 
     private fun mapStatsWithOverview(
@@ -84,8 +84,9 @@ class UiModelMapper
                 .fold(true) { acc, useCaseModel ->
                     acc && useCaseModel.state == ERROR
                 }
+        val overviewIsFailing = useCaseModels.any { it.type == overViewType && it.state == ERROR }
         val overviewHasData = useCaseModels.any { it.type == overViewType && it.data != null }
-        return if (!allFailing) {
+        return if (!allFailing && (overviewHasData || !overviewIsFailing)) {
             if (useCaseModels.isNotEmpty()) {
                 UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
                     if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {
@@ -138,9 +139,9 @@ class UiModelMapper
 
     private fun getErrorMessage(): Int {
         return if (networkUtilsWrapper.isNetworkAvailable()) {
-            string.stats_loading_error
+            R.string.stats_loading_error
         } else {
-            string.no_network_title
+            R.string.no_network_title
         }
     }
 }

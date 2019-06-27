@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MarginLayoutParamsCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -15,6 +14,8 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.core.view.MarginLayoutParamsCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;

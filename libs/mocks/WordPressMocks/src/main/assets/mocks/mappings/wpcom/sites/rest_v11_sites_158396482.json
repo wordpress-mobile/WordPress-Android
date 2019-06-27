@@ -178,10 +178,10 @@
             },
             "meta": {
                 "links": {
-                    "self": "https://public-api.wordpress.com/rest/v1.1/sites/158396482",
-                    "help": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/help",
-                    "posts": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/posts/",
-                    "comments": "https://public-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/help",
+                    "posts": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/",
+                    "comments": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/comments/",
                     "xmlrpc": "https://e2eflowtestingmobile.wordpress.com/xmlrpc.php"
                 }
             },

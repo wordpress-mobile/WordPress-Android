@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;

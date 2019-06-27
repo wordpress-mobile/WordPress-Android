@@ -1,19 +1,20 @@
 package org.wordpress.android.ui.uploads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import org.m4m.MediaComposer;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.CrashLoggingUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPVideoUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.io.File;
 import java.text.DecimalFormat;

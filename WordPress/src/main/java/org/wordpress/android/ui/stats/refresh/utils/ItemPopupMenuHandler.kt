@@ -1,14 +1,15 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.support.v7.widget.ListPopupWindow
 import android.view.View
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMe
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.DOWN
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.REMOVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.UP
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
@@ -30,7 +32,8 @@ class ItemPopupMenuHandler
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val statsStore: StatsStore,
-    private val statsSiteProvider: StatsSiteProvider
+    private val statsSiteProvider: StatsSiteProvider,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val mutableTypeMoved = MutableLiveData<Event<StatsType>>()
     val typeMoved: LiveData<Event<StatsType>> = mutableTypeMoved
@@ -54,6 +57,10 @@ class ItemPopupMenuHandler
                 popup.setOnItemClickListener { _, _, _, id ->
                     when (InsightsMenuItem.values()[id.toInt()]) {
                         UP -> {
+                            analyticsTrackerWrapper.trackWithType(
+                                    Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
+                                    statsType
+                            )
                             GlobalScope.launch(bgDispatcher) {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
@@ -61,12 +68,20 @@ class ItemPopupMenuHandler
                         }
                         DOWN -> {
                             GlobalScope.launch(bgDispatcher) {
+                                analyticsTrackerWrapper.trackWithType(
+                                        Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
+                                        statsType
+                                )
                                 statsStore.moveTypeDown(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
                         }
                         REMOVE -> {
                             GlobalScope.launch(bgDispatcher) {
+                                analyticsTrackerWrapper.trackWithType(
+                                        Stat.STATS_INSIGHTS_TYPE_REMOVED,
+                                        statsType
+                                )
                                 statsStore.removeType(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }

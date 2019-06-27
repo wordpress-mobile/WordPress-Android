@@ -1,0 +1,65 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/rest/v1.1/notifications(/)?($|\\?.*)",
+        "queryParameters": {
+            "fields": {
+                "equalTo": "id,note_hash"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "last_seen_time": "1553125740",
+            "number": 10,
+            "notes": [
+                {
+                    "id": 3864303999,
+                    "note_hash": 3043037365
+                },
+                {
+                    "id": 1304254364,
+                    "note_hash": 1137486184
+                },
+                {
+                    "id": 3658516170,
+                    "note_hash": 3899811297
+                },
+                {
+                    "id": 3658516156,
+                    "note_hash": 2262707516
+                },
+                {
+                    "id": 3467659357,
+                    "note_hash": 3085655305
+                },
+                {
+                    "id": 3528647758,
+                    "note_hash": 520929093
+                },
+                {
+                    "id": 3473753915,
+                    "note_hash": 1538257386
+                },
+                {
+                    "id": 3467659628,
+                    "note_hash": 1707514061
+                },
+                {
+                    "id": 2584083750,
+                    "note_hash": 2021782991
+                },
+                {
+                    "id": 1305979273,
+                    "note_hash": 2021782123
+                }
+            ]
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}
