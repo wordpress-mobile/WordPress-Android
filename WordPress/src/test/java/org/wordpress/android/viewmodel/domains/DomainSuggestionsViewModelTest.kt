@@ -1,23 +1,16 @@
 package org.wordpress.android.viewmodel.domains
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.helpers.Debouncer
 
-@RunWith(MockitoJUnitRunner::class)
-class DomainSuggestionsViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var debouncer: Debouncer
 
@@ -32,7 +25,7 @@ class DomainSuggestionsViewModelTest {
     }
 
     @Test
-    fun isIntroVisibleIsInitializedToTrue() {
+    fun `intro is visible at start`() {
         assertNotNull(viewModel.isIntroVisible.value)
         viewModel.isIntroVisible.value?.let { isIntroVisible ->
             assert(isIntroVisible)
@@ -40,7 +33,7 @@ class DomainSuggestionsViewModelTest {
     }
 
     @Test
-    fun isIntroVisibleIsSetToFalseWhenSearchQueryIsSetToNonBlankValue() {
+    fun `intro is hidden when search query is not empty`() {
         viewModel.updateSearchQuery("Hello World")
 
         assertNotNull(viewModel.isIntroVisible.value)
@@ -50,7 +43,7 @@ class DomainSuggestionsViewModelTest {
     }
 
     @Test
-    fun isIntroVisibleIsSetToTrueWhenSearchQueryIsCleared() {
+    fun `intro is visible when search query is empty`() {
         viewModel.updateSearchQuery("Hello World")
         viewModel.updateSearchQuery("")
 
