@@ -18,7 +18,7 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
         const val DOMAIN_REGISTRATION_PURPOSE_KEY = "DOMAIN_REGISTRATION_PURPOSE_KEY"
     }
 
-    var domainRegistrationPurpose: DomainRegistrationPurpose? = null
+    private var domainRegistrationPurpose: DomainRegistrationPurpose? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,7 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
         setContentView(R.layout.activity_domain_suggestions_activity)
 
         domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                as DomainRegistrationPurpose
+                as? DomainRegistrationPurpose
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
