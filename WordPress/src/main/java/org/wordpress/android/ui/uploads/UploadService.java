@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -263,13 +264,17 @@ public class UploadService extends Service {
                 mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
 
-            if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
-                mPostUploadHandler.upload(post);
-            } else {
+
+            if (!getAllFailedMediaForPost(post).isEmpty()) {
+                boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
+                retryUpload(post, !postHasGutenbergBlocks);
+            } else if (hasPendingOrInProgressMediaUploadsForPost(post)) {
                 // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
                 // If the post is already registered, the new media will be added to its list
                 List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
                 mUploadStore.registerPostModel(post, activeMedia);
+            } else {
+                mPostUploadHandler.upload(post);
             }
         }
     }
@@ -750,11 +755,11 @@ public class UploadService extends Service {
             aztecRegisterFailedMediaForThisPost(post);
         }
 
-        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
-        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
-        if (!failedMedia.isEmpty()) {
+        ArrayList<MediaModel> mediaToRetry = getAllFailedMediaForPost(post);
+
+        if (!mediaToRetry.isEmpty()) {
             // reset these media items to QUEUED
-            for (MediaModel media : failedMedia) {
+            for (MediaModel media : mediaToRetry) {
                 media.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
@@ -784,6 +789,23 @@ public class UploadService extends Service {
             // retry uploading the Post
             mPostUploadHandler.upload(post);
         }
+    }
+
+    private ArrayList<MediaModel> getAllFailedMediaForPost(PostModel postModel) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+        return removeRecentlyDeletedMediaFromCollection(failedMedia);
+    }
+
+    private ArrayList<MediaModel> removeRecentlyDeletedMediaFromCollection(Set<MediaModel> failedMedia) {
+        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
+        ListIterator<MediaModel> iterator = mediaToRetry.listIterator();
+        while (iterator.hasNext()) {
+            String mediaIdToCompare = String.valueOf(iterator.next().getId());
+            if (mUserDeletedMediaItemIds.contains(mediaIdToCompare)) {
+                iterator.remove();
+            }
+        }
+        return mediaToRetry;
     }
 
     /**

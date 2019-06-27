@@ -242,7 +242,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_UPDATE_CONFIRMATION_DIALOG = "tag_update_confirmation_dialog";
-    private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
+    private static final String TAG_FAILED_MEDIA_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
     private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
@@ -1803,13 +1803,16 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onNegativeClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
+            case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
+                // Clear failed uploads
+                mEditorFragment.removeAllFailedMediaUploads();
+                break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
             case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_UPDATE_CONFIRMATION_DIALOG:
-            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -1839,9 +1842,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppRatingDialog.INSTANCE
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
-            case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-                // Clear failed uploads
-                mEditorFragment.removeAllFailedMediaUploads();
+            case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
+                savePostOnlineAndFinishAsync(isFirstTimePublish(), true);
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
                 uploadPost(true);
@@ -2184,13 +2186,13 @@ public class EditPostActivity extends AppCompatActivity implements
     private void showRemoveFailedUploadsDialog() {
         BasicFragmentDialog removeFailedUploadsDialog = new BasicFragmentDialog();
         removeFailedUploadsDialog.initialize(
-                TAG_REMOVE_FAILED_UPLOADS_DIALOG,
+                TAG_FAILED_MEDIA_UPLOADS_DIALOG,
                 "",
                 getString(R.string.editor_toast_failed_uploads),
+                getString(R.string.editor_retry_failed_uploads),
                 getString(R.string.editor_remove_failed_uploads),
-                getString(android.R.string.cancel),
                 null);
-        removeFailedUploadsDialog.show(getSupportFragmentManager(), TAG_REMOVE_FAILED_UPLOADS_DIALOG);
+        removeFailedUploadsDialog.show(getSupportFragmentManager(), TAG_FAILED_MEDIA_UPLOADS_DIALOG);
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish) {
