@@ -1087,6 +1087,8 @@
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
 
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>
     <string name="stats_months_and_years_period_label">Period</string>
