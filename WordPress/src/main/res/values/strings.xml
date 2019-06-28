@@ -847,6 +847,22 @@
     <string name="stats_management_edit">Edit</string>
     <string name="stats_management_new">New</string>
 
+    <!-- Stats refreshed widgets -->
+
+    <string name="stats_widget_add">Add widget</string>
+    <string name="stats_widget_views_title">Views This Week</string>
+    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_color">Color</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color_dark">Dark</string>
+    <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_select_color">Color</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_error_no_network">No network available</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
@@ -1070,6 +1086,13 @@
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+
+    <!-- Stats refreshed widgets -->
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_minified_name">At a glance</string>
 
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>
