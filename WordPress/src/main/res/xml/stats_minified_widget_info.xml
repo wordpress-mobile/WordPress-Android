@@ -6,6 +6,7 @@
     android:initialLayout="@layout/stats_widget_minified_light"
     android:minHeight="50dp"
     android:minWidth="110dp"
+    android:minResizeWidth="110dp"
     android:previewImage="@drawable/stats_minified_widget_preview"
     android:resizeMode="horizontal"
     android:updatePeriodMillis="600000"

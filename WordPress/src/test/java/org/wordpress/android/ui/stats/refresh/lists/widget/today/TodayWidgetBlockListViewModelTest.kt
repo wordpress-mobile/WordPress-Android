@@ -45,7 +45,7 @@ class TodayWidgetBlockListViewModelTest {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         val viewsKey = "Views"
         val visitorsKey = "Visitors"
-        val likesKey = "Posts"
+        val likesKey = "Likes"
         val commentsKey = "Comments"
         val views = 500
         val visitors = 100
