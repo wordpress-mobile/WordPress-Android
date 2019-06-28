@@ -25,7 +25,7 @@ class ManagementNewsCardUseCase
     private val resourceProvider: ResourceProvider,
     private val newsCardHandler: NewsCardHandler,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) : StatelessUseCase<Boolean>(ManagementType.NEWS_CARD, mainDispatcher) {
+) : StatelessUseCase<Boolean>(ManagementType.NEWS_CARD, mainDispatcher, listOf()) {
     override suspend fun loadCachedData() = true
 
     override suspend fun fetchRemoteData(forced: Boolean): State<Boolean> = State.Data(true)

@@ -92,7 +92,7 @@ constructor(
         }
     }
 
-    override fun buildStatefulUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
+    override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {

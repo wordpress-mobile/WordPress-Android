@@ -2,7 +2,6 @@ package org.wordpress.android.support;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -18,7 +17,6 @@ import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
 import org.wordpress.android.modules.AppComponentTest;
 import org.wordpress.android.modules.DaggerAppComponentTest;
-import org.wordpress.android.ui.WPLaunchActivity;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
@@ -45,8 +43,6 @@ public class BaseTest {
                              InstrumentationRegistry.getInstrumentation().getContext().getAssets()))
                      .extensions(new ResponseTemplateTransformer(true))
                      .notifier(new AndroidNotifier()));
-    @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
 
     private void logout() {
         boolean isSelfHosted = new MePage().go().isSelfHosted();

@@ -64,7 +64,7 @@ public class EditorPage {
         }
 
         // Click on a random image
-        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
+        clickOn(onView(withIndex(withId(R.id.media_grid_item_image), 0)));
 
         // Click the confirm button
         clickOn(confirmButton);

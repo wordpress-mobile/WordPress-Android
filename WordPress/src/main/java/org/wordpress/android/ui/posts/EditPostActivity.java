@@ -394,11 +394,12 @@ public class EditPostActivity extends AppCompatActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
-    private void createPostEditorAnalyticsSessionTracker(boolean showGutenbergEditor, PostModel post, SiteModel site) {
+    private void createPostEditorAnalyticsSessionTracker(boolean showGutenbergEditor, PostModel post, SiteModel site,
+                                                         boolean isNewPost) {
         if (mPostEditorAnalyticsSession == null) {
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
-                    post, site);
+                    post, site, isNewPost);
         }
     }
 
@@ -531,7 +532,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
-        createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite);
+        createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mPost, mSite, mIsNewPost);
 
         // Bump post created analytics only once, first time the editor is opened
         if (mIsNewPost && savedInstanceState == null) {
@@ -1679,6 +1680,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // Quick press
             normalizedSourceName = "quick-press";
         }
+        PostUtils.addPostTypeToAnalyticsProperties(mPost, properties);
         properties.put("created_post_source", normalizedSourceName);
         AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,

@@ -64,7 +64,7 @@ class AnnualSiteStatsUseCase(
         val selectedPeriod = periodFromProvider ?: availableDates.last()
         val index = availableDates.indexOf(selectedPeriod)
 
-        selectedDateProvider.selectDate(index, availableDates, ANNUAL_STATS)
+        selectedDateProvider.selectDate(selectedPeriod, availableDates, ANNUAL_STATS)
 
         val items = mutableListOf<BlockListItem>()
 

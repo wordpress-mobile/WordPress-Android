@@ -22,7 +22,8 @@ class PostHeaderUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<String>(
         PostDetailType.POST_HEADER,
-        mainDispatcher
+        mainDispatcher,
+        listOf()
 ) {
     override suspend fun loadCachedData(): String? {
         return statsPostProvider.postTitle

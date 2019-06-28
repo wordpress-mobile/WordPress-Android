@@ -247,4 +247,178 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
+
+    <style name="StatsWidgetConfigureTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_900</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsWidgetConfigureValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_500</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="StatsWidgetSiteIcon">
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_large</item>
+        <item name="android:paddingTop">10dp</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetSiteIcon">
+        <item name="android:paddingBottom">17dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_large</item>
+        <item name="android:paddingTop">17dp</item>
+    </style>
+
+    <style name="StatsWidgetHeader">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="StatsWidgetHeader.Light">
+        <item name="android:background">@drawable/bg_rectangle_gray_0_top_radius_4dp</item>
+    </style>
+
+    <style name="StatsWidgetHeader.Dark">
+        <item name="android:background">@drawable/bg_rectangle_gray_700_top_radius_4dp</item>
+    </style>
+
+    <style name="StatsWidgetTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="StatsWidgetTitle.Light">
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
+
+    <style name="StatsWidgetTitle.Dark">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatsWidgetErrorMessage" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsWidgetErrorMessage.Light">
+        <item name="android:textColor">@color/gray_500</item>
+    </style>
+
+    <style name="StatsWidgetErrorMessage.Dark">
+        <item name="android:textColor">@color/gray_200</item>
+    </style>
+
+    <style name="StatsWidgetRetryButton" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">@color/wp_blue_medium</item>
+    </style>
+
+    <style name="StatsWidgetListItem">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="StatsWidgetKey" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="StatsWidgetKey.Light">
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
+
+    <style name="StatsWidgetKey.Dark">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetKey" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetKey.Light">
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
+
+    <style name="StatsMinifiedWidgetKey.Dark">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatsWidgetValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:layout_marginEnd">2dp</item>
+    </style>
+
+    <style name="StatsWidgetValue.Light">
+        <item name="android:textColor">@color/gray_500</item>
+    </style>
+
+    <style name="StatsWidgetValue.Dark">
+        <item name="android:textColor">@color/gray_200</item>
+    </style>
+
+    <style name="StatsChange" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lines">1</item>
+        <item name="android:layout_marginEnd">19dp</item>
+    </style>
+
+    <style name="StatsChange.NeutralLight" parent="StatsChange">
+        <item name="android:textColor">@color/gray_500</item>
+    </style>
+
+    <style name="StatsChange.NeutralDark" parent="StatsChange">
+        <item name="android:textColor">@color/gray_200</item>
+    </style>
+
+    <style name="StatsChange.PositiveLight" parent="StatsChange">
+        <item name="android:textColor">@color/hot_green_500</item>
+    </style>
+
+    <style name="StatsChange.PositiveDark" parent="StatsChange">
+        <item name="android:textColor">@color/hot_green_300</item>
+    </style>
+
+    <style name="StatsChange.NegativeLight" parent="StatsChange">
+        <item name="android:textColor">@color/hot_red_500</item>
+    </style>
+
+    <style name="StatsChange.NegativeDark" parent="StatsChange">
+        <item name="android:textColor">@color/hot_red_400</item>
+    </style>
+
+    <style name="StatsWidgetBlockKey" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+
+    <style name="StatsWidgetBlockKey.Dark">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StatsWidgetBlockKey.Light">
+        <item name="android:textColor">@color/gray_900</item>
+    </style>
+
+    <style name="StatsWidgetBlockValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+    </style>
+
+    <style name="StatsWidgetBlockValue.Dark">
+        <item name="android:textColor">@color/gray_200</item>
+    </style>
+
+    <style name="StatsWidgetBlockValue.Light">
+        <item name="android:textColor">@color/gray_500</item>
+    </style>
 </resources>

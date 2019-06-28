@@ -4,9 +4,11 @@
 * Block Editor: Fix pasting simple text on Post Title
 * Block Editor: Remove editable empty line after list on the List block
 * Block Editor: Performance improvements on rich text editing
+* Add All-time, Today, Weekly and Minified widgets
 
 12.7
 -----
+* Added Post search
 * Show upload in progress notification when retrying
 * Fix issue where two identical drafts were created
 * Block Editor: Fixed keyboard flickering issue after pressing Enter repeatedly on the Post Title.
