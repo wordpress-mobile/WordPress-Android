@@ -34,7 +34,7 @@
                 app:layout_scrollFlags="enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:title="@string/stats_insights_today_stats"/>
+                app:title="@string/stats_widget_minified_name"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
