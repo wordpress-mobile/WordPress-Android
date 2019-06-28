@@ -70,6 +70,8 @@
 
 /sites/$site/plans/
 
+/sites/$site/domains/primary/
+
 /sites/$site/plugins
 /sites/$site/plugins/$name#String
 /sites/$site/plugins/$name#String/delete
