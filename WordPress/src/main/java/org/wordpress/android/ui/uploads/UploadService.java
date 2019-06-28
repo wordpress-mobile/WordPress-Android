@@ -793,10 +793,10 @@ public class UploadService extends Service {
 
     private ArrayList<MediaModel> getAllFailedMediaForPost(PostModel postModel) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
-        return removeRecentlyDeletedMediaFromCollection(failedMedia);
+        return filterOutRecentlyDeletedMedia(failedMedia);
     }
 
-    private ArrayList<MediaModel> removeRecentlyDeletedMediaFromCollection(Set<MediaModel> failedMedia) {
+    private ArrayList<MediaModel> filterOutRecentlyDeletedMedia(Set<MediaModel> failedMedia) {
         ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
         ListIterator<MediaModel> iterator = mediaToRetry.listIterator();
         while (iterator.hasNext()) {
