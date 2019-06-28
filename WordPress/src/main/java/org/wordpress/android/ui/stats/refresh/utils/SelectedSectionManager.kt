@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -16,17 +18,26 @@ const val SELECTED_SECTION_KEY = "SELECTED_STATS_SECTION_KEY"
 
 class SelectedSectionManager
 @Inject constructor(private val sharedPrefs: SharedPreferences) {
+    private val _liveSelectedSection = MutableLiveData<StatsSection>()
+    val liveSelectedSection: LiveData<StatsSection>
+        get() {
+            if (_liveSelectedSection.value == null) {
+                val selectedSection = getSelectedSection()
+                _liveSelectedSection.value = selectedSection
+            }
+            return _liveSelectedSection
+        }
+
     fun getSelectedSection(): StatsSection {
         val value = sharedPrefs.getString(SELECTED_SECTION_KEY, INSIGHTS.name)
         return value?.let { StatsSection.valueOf(value) } ?: INSIGHTS
     }
 
-    fun getSelectedStatsGranularity(): StatsGranularity? {
-        return getSelectedSection().toStatsGranularity()
-    }
-
     fun setSelectedSection(selectedSection: StatsSection) {
         sharedPrefs.edit().putString(SELECTED_SECTION_KEY, selectedSection.name).apply()
+        if (this.liveSelectedSection.value != selectedSection) {
+            _liveSelectedSection.postValue(selectedSection)
+        }
     }
 }
 

@@ -49,6 +49,14 @@ public class PostUtils {
     private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
 
+    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostModel post, Map<String, Object> properties) {
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+        properties.put("post_type", post.isPage() ? "page" : "post");
+        return properties;
+    }
+
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
      * shortcode name and the closing brace
@@ -125,6 +133,7 @@ public class PostUtils {
     public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
         Map<String, Object> properties = new HashMap<>();
+        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
@@ -168,6 +177,7 @@ public class PostUtils {
 
     public static void trackOpenEditorAnalytics(PostModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
+        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }

@@ -223,6 +223,13 @@
     <dimen name="stats_widget_five_cells">320dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
+    <dimen name="stats_widget_content_height">108dp</dimen>
+
+    <!-- stats refreshed widget-->
+    <dimen name="stats_widget_dialog_icon_top_bottom_margin">20dp</dimen>
+    <dimen name="stats_widget_dialog_title_left_margin">80dp</dimen>
+    <dimen name="stats_widget_dialog_list_height">288dp</dimen>
+    <dimen name="stats_widget_color_selector_padding">28dp</dimen>
 
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
@@ -410,9 +417,17 @@
     <dimen name="stats_insights_management_margin">24dp</dimen>
     <dimen name="stats_insights_menu_item_width">231dp</dimen>
     <dimen name="stats_insights_button_container_height">52dp</dimen>
+    <dimen name="stats_widget_list_item_height">40dp</dimen>
+    <dimen name="stats_minified_widget_height">66dp</dimen>
+    <dimen name="stats_widget_block_list_item_height">56dp</dimen>
 
     <dimen name="settings_icon_size">24dp</dimen>
 
     <dimen name="icon_size_075">18dp</dimen>
+
+    <!-- domain suggestions screen -->
+    <dimen name="domain_suggestions_intro_vertical_padding">24dp</dimen>
+    <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
+    <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
 </resources>
