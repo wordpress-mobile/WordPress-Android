@@ -1088,6 +1088,7 @@
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
 
     <!-- Stats refreshed widgets -->
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>
     <string name="stats_widget_today_insights_name">Today</string>
@@ -2011,6 +2012,8 @@
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>

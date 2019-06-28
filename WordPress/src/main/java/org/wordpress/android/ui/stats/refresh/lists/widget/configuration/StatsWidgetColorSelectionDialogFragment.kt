@@ -28,7 +28,7 @@ class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
         val alertDialogBuilder = AlertDialog.Builder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
-            checkedId.toColor()?.let { viewModel.colorClicked(it) }
+            checkedId.toColor()?.let { viewModel.selectColor(it) }
         }
         alertDialogBuilder.setView(view)
         viewModel.viewMode.observe(this, Observer { updatedColor ->

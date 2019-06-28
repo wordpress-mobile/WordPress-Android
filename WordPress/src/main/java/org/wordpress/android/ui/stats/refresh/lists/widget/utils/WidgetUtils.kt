@@ -9,20 +9,23 @@ import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
+import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.ViewType
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -57,8 +60,10 @@ class WidgetUtils
         views: RemoteViews,
         appWidgetId: Int
     ) {
-        val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
-        imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
+        GlobalScope.launch(Dispatchers.Main) {
+            val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
+            imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
+        }
     }
 
     fun showError(
@@ -101,7 +106,7 @@ class WidgetUtils
         appWidgetId: Int,
         colorMode: Color,
         siteId: Int,
-        viewType: ViewType,
+        widgetType: WidgetType,
         isWideView: Boolean
     ) {
         views.setPendingIntentTemplate(R.id.widget_content, getPendingTemplate(context))
@@ -110,7 +115,7 @@ class WidgetUtils
         val listIntent = Intent(context, WidgetService::class.java)
         listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         listIntent.putColorMode(colorMode)
-        listIntent.putViewType(viewType)
+        listIntent.putViewType(widgetType)
         listIntent.putExtra(SITE_ID_KEY, siteId)
         listIntent.putExtra(IS_WIDE_VIEW_KEY, isWideView)
         listIntent.data = Uri.parse(
