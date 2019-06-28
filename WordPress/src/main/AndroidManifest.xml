@@ -725,7 +725,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget">
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
+            android:label="@string/stats_widget_weekly_views_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -734,7 +736,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_views_widget_info"/>
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget">
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
+            android:label="@string/stats_widget_all_time_insights_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -743,7 +747,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_all_time_widget_info"/>
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget">
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
+            android:label="@string/stats_widget_today_insights_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -752,7 +758,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_today_widget_info"/>
         </receiver>
-        <receiver android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget">
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
+            android:label="@string/stats_widget_minified_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

@@ -75,8 +75,8 @@ class TodayWidgetListViewModel
                 TodayItemUiModel(
                         layout,
                         localSiteId,
-                        resourceProvider.getString(R.string.posts),
-                        domainModel.posts.toFormattedString(ONE_THOUSAND)
+                        resourceProvider.getString(R.string.likes),
+                        domainModel.likes.toFormattedString(ONE_THOUSAND)
                 ),
                 TodayItemUiModel(
                         layout,

@@ -1,6 +1,7 @@
 12.8
 -----
-Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Add All-time, Today, Weekly and Minified widgets
 
 12.7
 -----
