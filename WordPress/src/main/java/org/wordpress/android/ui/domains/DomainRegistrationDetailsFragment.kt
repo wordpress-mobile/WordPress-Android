@@ -22,8 +22,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.support.AndroidSupportInjection
-import org.apache.commons.lang3.StringEscapeUtils
 import kotlinx.android.synthetic.main.domain_registration_details_fragment.*
+import org.apache.commons.lang3.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.DomainContactModel
@@ -244,8 +244,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 })
 
         viewModel.handleCompletedDomainRegistration.observe(this,
-                Observer { domainName ->
-                    (activity as DomainRegistrationActivity).onDomainRegistered(StringUtils.notNullStr(domainName), "")
+                Observer { domainRegisteredEvent ->
+                    (activity as DomainRegistrationActivity).onDomainRegistered(domainRegisteredEvent)
                 })
 
         viewModel.showTos.observe(this,

@@ -60,6 +60,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -401,7 +403,8 @@ public class MySiteFragment extends Fragment implements
 
         rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                ActivityLauncher.viewDomainRegistrationActivity(getActivity(), getSelectedSite());
+                ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
+                        DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
             }
         });
 
@@ -799,16 +802,12 @@ public class MySiteFragment extends Fragment implements
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
                 break;
-//            case RequestCodes.:
-//                if (resultCode == Activity.RESULT_OK) {
-//                    String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
-//                    showRegisterDomainConfirmationMessage(email);
-//
-//                    mIsDomainRegistrationCtaVisible = false;
-//                    mDomainRegistrationCtaSiteId = -1;
-//                    fetchPlansIfNecessary(getSelectedSite());
-//                }
-//                break;
+            case RequestCodes.DOMAIN_REGISTRATION:
+                if (resultCode == Activity.RESULT_OK) {
+                    String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
+                    showRegisterDomainConfirmationMessage(email);
+                }
+                break;
         }
     }
 
