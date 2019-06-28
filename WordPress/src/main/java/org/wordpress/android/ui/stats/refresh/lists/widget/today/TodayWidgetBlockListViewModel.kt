@@ -78,8 +78,8 @@ class TodayWidgetBlockListViewModel
                 BlockItemUiModel(
                         layout,
                         localSiteId,
-                        resourceProvider.getString(R.string.posts),
-                        domainModel.posts.toFormattedString(MILLION),
+                        resourceProvider.getString(R.string.likes),
+                        domainModel.likes.toFormattedString(MILLION),
                         resourceProvider.getString(R.string.stats_comments),
                         domainModel.comments.toFormattedString(MILLION)
                 )

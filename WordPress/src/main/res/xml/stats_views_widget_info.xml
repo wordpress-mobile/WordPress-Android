@@ -8,7 +8,7 @@
     android:minResizeHeight="50dp"
     android:minResizeWidth="150dp"
     android:minWidth="250dp"
-    android:previewImage="@drawable/preview_views_widget"
+    android:previewImage="@drawable/stats_views_widget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="600000"
     android:widgetCategory="home_screen">

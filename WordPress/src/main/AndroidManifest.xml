@@ -744,7 +744,7 @@
         </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
-            android:label="@string/stats_widget_today_insights_name">
+            android:label="@string/stats_widget_minified_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

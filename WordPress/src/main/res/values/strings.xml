@@ -1088,9 +1088,10 @@
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
 
     <!-- Stats refreshed widgets -->
-    <string name="stats_widget_weekly_views_name">Weekly views</string>
-    <string name="stats_widget_all_time_insights_name">All-time insights</string>
-    <string name="stats_widget_today_insights_name">Today insights</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_minified_name">At a glance</string>
 
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>
