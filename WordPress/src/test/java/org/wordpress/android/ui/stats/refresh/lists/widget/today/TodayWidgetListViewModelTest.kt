@@ -37,18 +37,18 @@ class TodayWidgetListViewModelTest {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         val viewsKey = "Views"
         val visitorsKey = "Visitors"
-        val postsKey = "Posts"
+        val likesKey = "Likes"
         val commentsKey = "Comments"
         val views = 500
         val visitors = 100
-        val posts = 50
+        val likes = 50
         val comments = 300
         whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(viewsKey)
         whenever(resourceProvider.getString(R.string.stats_visitors)).thenReturn(visitorsKey)
-        whenever(resourceProvider.getString(R.string.posts)).thenReturn(postsKey)
+        whenever(resourceProvider.getString(R.string.likes)).thenReturn(likesKey)
         whenever(resourceProvider.getString(R.string.stats_comments)).thenReturn(commentsKey)
         whenever(store.getTodayInsights(site)).thenReturn(
-                VisitsModel("2019-10-10", views, visitors, 0, 0, comments, posts)
+                VisitsModel("2019-10-10", views, visitors, likes, 0, comments, 0)
         )
 
         viewModel.onDataSetChanged { }
@@ -56,7 +56,7 @@ class TodayWidgetListViewModelTest {
         assertThat(viewModel.data).hasSize(4)
         assertListItem(viewModel.data[0], viewsKey, views)
         assertListItem(viewModel.data[1], visitorsKey, visitors)
-        assertListItem(viewModel.data[2], postsKey, posts)
+        assertListItem(viewModel.data[2], likesKey, likes)
         assertListItem(viewModel.data[3], commentsKey, comments)
     }
 
