@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.domains
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -65,7 +66,7 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
                 .commit()
     }
 
-    override fun onDomainRegistered(event: DomainRegistrationCompletedEvent) {
+    override fun onDomainRegistered(domainRegisteredEvent: DomainRegistrationCompletedEvent) {
         if (domainRegistrationPurpose == null || domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION) {
             supportFragmentManager.beginTransaction()
                     .setCustomAnimations(
@@ -74,11 +75,20 @@ class DomainRegistrationActivity : AppCompatActivity(), DomainRegistrationStepsL
                     )
                     .replace(
                             R.id.fragment_container,
-                            DomainRegistrationResultFragment.newInstance(event.domainName, event.email)
+                            DomainRegistrationResultFragment.newInstance(
+                                    domainRegisteredEvent.domainName,
+                                    domainRegisteredEvent.email
+                            )
                     )
                     .commit()
         } else {
-            setResult(Activity.RESULT_OK)
+            val intent = Intent()
+            intent.putExtra(
+                    DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL,
+                    domainRegisteredEvent.email
+            )
+            setResult(Activity.RESULT_OK, intent)
+            finish()
             finish()
         }
     }
