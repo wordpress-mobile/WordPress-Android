@@ -2,9 +2,12 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -36,6 +39,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         SUPPORT
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setActionBarTitleToThemeName();
+    }
+
     public static String getSiteLoginUrl(SiteModel site) {
         if (site.isJetpackConnected()) {
             return WPCOM_LOGIN_URL;
@@ -43,7 +52,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
         return WPWebViewActivity.getSiteLoginUrl(site);
     }
 
-    public static void openTheme(Activity activity, SiteModel site, ThemeModel theme, ThemeWebActivityType type) {
+    public static void openTheme(Activity activity, @NonNull SiteModel site, @NonNull ThemeModel theme,
+                                 @NonNull ThemeWebActivityType type) {
         String url = getUrl(site, theme, type, !theme.isFree());
         if (TextUtils.isEmpty(url)) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
@@ -83,7 +93,16 @@ public class ThemeWebActivity extends WPWebViewActivity {
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(SiteModel site, ThemeModel theme, ThemeWebActivityType type, boolean isPremium) {
+    public static String getIdentifierForCustomizer(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+        if (site.isJetpackConnected()) {
+            return theme.getThemeId();
+        } else {
+            return theme.getStylesheet();
+        }
+    }
+
+    public static String getUrl(@NonNull SiteModel site, @NonNull ThemeModel theme, @NonNull ThemeWebActivityType type,
+                                boolean isPremium) {
         if (theme.isWpComTheme()) {
             switch (type) {
                 case PREVIEW:
@@ -105,7 +124,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         } else {
             switch (type) {
                 case PREVIEW:
-                    return site.getAdminUrl() + "customize.php?theme=" + theme.getThemeId();
+                    return site.getAdminUrl() + "customize.php?theme=" + getIdentifierForCustomizer(site, theme);
                 case DEMO:
                     return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
                 case DETAILS:
@@ -137,12 +156,6 @@ public class ThemeWebActivity extends WPWebViewActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void configureView() {
-        setContentView(R.layout.theme_web_activity);
-        setActionBarTitleToThemeName();
-    }
-
     private void setActionBarTitleToThemeName() {
         String themeName = getIntent().getStringExtra(THEME_NAME);
         if (getSupportActionBar() != null && themeName != null) {
@@ -154,8 +167,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
      * Show Activate in the Action Bar menu if the theme is free and not the current theme.
      */
     private boolean shouldShowActivateMenuItem() {
-        Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
-        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
+        boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
+        boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
         return !isCurrentTheme && !isPremiumTheme;
     }
 }

@@ -2,7 +2,7 @@
     "scenarioName": "auth",
     "newScenarioState": "logged-in",
     "request": {
-        "urlPath": "/rest/v1.3/auth/send-login-email/",
+        "urlPattern": "/rest/v1.[1-3]/auth/send-login-email.*",
         "method": "POST"
     },
     "response": {

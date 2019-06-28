@@ -18,7 +18,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -54,7 +54,7 @@ class FollowersUseCase(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
-) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
+) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
         FollowersUiState(isLoading = true)
@@ -124,7 +124,7 @@ class FollowersUseCase(
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(
+    override fun buildUiModel(
         domainModel: Pair<FollowersModel, FollowersModel>,
         uiState: FollowersUiState
     ): List<BlockListItem> {

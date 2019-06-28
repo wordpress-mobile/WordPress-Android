@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_title_container"
+    style="@style/StatsWidgetHeader.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/stats_widget_list_item_height"
+    android:background="@drawable/bg_rectangle_gray_700_top_radius_4dp"
+    android:orientation="horizontal"
+    tools:showIn="@layout/stats_widget_list_dark">
+
+    <ImageView
+        android:id="@+id/widget_site_icon"
+        style="@style/StatsWidgetSiteIcon"
+        android:layout_width="@dimen/stats_widget_list_item_height"
+        android:layout_height="@dimen/stats_widget_list_item_height"
+        android:contentDescription="@string/my_site_icon_content_description"
+        android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
+
+    <TextView
+        android:id="@+id/widget_title"
+        style="@style/StatsWidgetTitle.Dark"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/stats_widget_list_item_height"
+        android:text="@string/loading"/>
+</LinearLayout>

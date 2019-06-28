@@ -1,14 +1,28 @@
+12.8
+-----
+* Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Block Editor: Fix pasting simple text on Post Title
+* Block Editor: Remove editable empty line after list on the List block
+* Block Editor: Performance improvements on rich text editing
+* Add All-time, Today, Weekly and Minified widgets
+
 12.7
 -----
+* Added Post search
 * Show upload in progress notification when retrying
 * Fix issue where two identical drafts were created
+* Block Editor: Fixed keyboard flickering issue after pressing Enter repeatedly on the Post Title.
+* Block Editor: New blocks are available: video/quote/more
+* Block Editor: performance improvements
 * Fixed issue where text appeared behind list of themes on the theme screen
+* Domain Registration functionality for Business plan customers on a site without a custom domain during plugin installation
+* Editor: Set "Publish" as the default button in the action bar for drafts.
+* Editor: Add a new confirmation dialog when Updating published posts.
 
 12.6
 -----
 * Add Insights management introductory card
 * Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
-
 * Block Editor: A new block is available: video block.
 * Block Editor: Added UI to display a warning when a block has invalid content.
 * Block Editor: Fixed issue with link settings where “Open in New Tab” was always OFF on open.
@@ -69,3 +83,4 @@
 * Updated Notifications with tabs
 * Add Posting activity block to the Stats/Insights
 * Fixed error notifications for failed uploads
+

@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-28 11:54:09+0000
+Translation-Revision-Date: 2019-06-11 10:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_error_updating_site">אירעה שגיאה בעת העדכון של פרטי האתר: %s</string>
+    <string name="domain_registration_error_fetching_contact_information">אירעה שגיאה בקבלה של פרטי יצירת הקשר עם הדומיין: %s</string>
+    <string name="domain_registration_error_registering_domain">אירעה שגיאה במהלך ההרשמה של הדומיין: %s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">רושם את שם הדומיין…</string>
+    <string name="domain_registration_state_picker_dialog_title">בחירת מדינה</string>
+    <string name="domain_registration_country_picker_dialog_title">בחירת ארץ</string>
+    <string name="domain_registration_result_continue_button">המשך</string>
+    <string name="domain_registration_result_description">כעת מתבצע תהליך ההגדרה של הדומיין החדש שלך, &lt;b>%s&lt;/b>. האתר שלך\n עושה סלטות מרוב התרגשות!</string>
+    <string name="domain_registration_result_title">ברכותינו</string>
+    <string name="domain_contact_information_register_domain_button">רישום דומיין</string>
+    <string name="domain_contact_information_postal_code_hint">מיקוד</string>
+    <string name="domain_contact_information_state_hint">מדינה</string>
+    <string name="domain_contact_information_city_hint">עיר</string>
+    <string name="domain_contact_information_address_hint_two">שורת כתובת שנייה</string>
+    <string name="domain_contact_information_address_hint">כתובת</string>
+    <string name="domain_contact_information_country_hint">ארץ</string>
+    <string name="domain_contact_information_country_code_hint">קידומת טלפון בינלאומית</string>
+    <string name="domain_contact_information_phone_number_hint">טלפון</string>
+    <string name="domain_contact_information_organization_hint">ארגון (אופציונלי)</string>
+    <string name="domain_contact_information_description">לנוחותך, מילאנו מראש את הפרטים שלך ב-WordPress.com\n מידע ליצירת קשר. יש לבדוק את הפרטים ולוודא שהמידע נכון לדומיין שבו ברצונך להשתמש.</string>
+    <string name="domain_contact_information_title">פרטי יצירת קשר עם הדומיין</string>
+    <string name="domain_privacy_option_off_title">רישום ציבורי</string>
+    <string name="domain_privacy_option_on_title">הירשמות באופן פרטי עם הגנת פרטיות</string>
+    <string name="domain_registration_privacy_protection_description">בעלי דומיינים מחויבים לשתף את פרטי הקשר שלהם בבסיס נתונים ציבורי של כל הדומיינים.\n בזכות הגנת פרטיות, אנחנו מפרסמים את הפרטים שלנו ולא את שלך ומעבירים אליך באופן פרטי כל התקשרות שתהיה.</string>
+    <string name="domain_registration_privacy_protection_title">הגנת פרטיות</string>
+    <string name="domain_registration_contact_form_input_error">יש להזין נתונים תקפים עבור %s</string>
+    <string name="domains_suggestions_choose_domain">בחירת דומיין</string>
+    <string name="stats_management_new">חדש</string>
+    <string name="stats_management_edit">עריכה</string>
+    <string name="stats_management_dismiss_insights_news_card">ביטול</string>
+    <string name="stats_management_try_it_now">כדאי לנסות עכשיו</string>
+    <string name="stats_management_news_card_message">לבחור באילו נתונים סטטיסטיים ברצונך לצפות ולהתמקד בנתונים שחשובים לך באמת. יש להקיש על %1$s בתחתית של האזור \'תובנות\' כדי להתאים אישית את הנתונים הסטטיסטיים שלך.</string>
+    <string name="stats_manage_your_stats">ניהול הנתונים הסטטיסטיים שלך</string>
     <string name="history_fetching_revisions">מביא את גרסאות…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">שילוב פירטי המדיה נכשל.\nיש להקיש כדי לנסות שוב.</string>
@@ -23,10 +57,6 @@ Language: he_IL
     <string name="stats_insights_social">רשתות חברתיות</string>
     <string name="stats_insights_annual_site_stats">נתונים סטטיסטיים שנתיים של האתר</string>
     <string name="stats_view_follower_totals">נתונים כוללים של עוקבים</string>
-    <string name="suggestion_fetch_error">לא ניתן לטעון הצעות לדומיין</string>
-    <string name="suggestions_search_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
-    <string name="suggestions_empty_list">לא נמצאו הצעות</string>
-    <string name="choose_domain">בחירת דומיין</string>
     <string name="register_domain">רישום דומיין</string>
     <string name="jetpack_installed_message">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
     <string name="stats_menu_remove">הסרה מהתובנות</string>
@@ -214,7 +244,6 @@ Language: he_IL
     <string name="stats_no_data_for_period">אין נתונים לתקופה זו</string>
     <string name="preference_strip_image_location">הסרת מיקום ממדיה</string>
     <string name="stats_cannot_be_started">אין לנו אפשרות לפתוח את הנתונים הסטטיסטיים כעת. יש לנסות שוב מאוחר יותר</string>
-    <string name="site_creation_label_domain_selection">יש לבחור כתובת זמינה כדי לאפשר לאנשים למצוא אותך ברשת.</string>
     <string name="giphy_powered_by_giphy">מופעל באמצעות GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">הטעינה של חלק מקובצי המדיה נכשלה עקב שגיאת רשת.</string>
     <string name="giphy_picker_empty_search_list">לא נמצאו פרטי מדיה שמתאימים לחיפוש שלך</string>
@@ -527,7 +556,6 @@ Language: he_IL
     <string name="content_description_people_looking_charts">אנשים מסתכלים על גרפים ותרשימים</string>
     <string name="comment_title">%s ב-%s</string>
     <string name="dialog_confirm_delete_permanently_post">האם ברצונך למחוק את הפוסט לצמיתות?</string>
-    <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
     <string name="notification_channel_important_title">חשוב</string>
     <string name="notification_channel_general_title">כללי</string>
     <string name="photo_picker_use_photo">שימוש בתמונה זו</string>
@@ -540,10 +568,6 @@ Language: he_IL
     <string name="site_settings_quota_space_unlimited">%1$s ללא הגבלה</string>
     <string name="preview_count">תצוגה מקדימה של %d</string>
     <string name="add_count">הוספה של %d</string>
-    <string name="site_creation_domain_selection_title">יצירת אתר חדש - שלב 4</string>
-    <string name="site_creation_site_details_title">יצירת אתר חדש - שלב 3</string>
-    <string name="site_creation_theme_selection_title">יצירת אתר חדש - שלב 2</string>
-    <string name="site_creation_category_title">יצירת אתר חדש - שלב 1</string>
     <string name="stats_followers_many_desc">%d עוקבים</string>
     <string name="stats_followers_one_desc">עוקב אחד</string>
     <string name="stats_followers_zero_desc">אין עוקבים</string>
@@ -641,7 +665,6 @@ Language: he_IL
     <string name="help_screen_title">עזרה ותמיכה</string>
     <string name="license_screen_title">רישיון</string>
     <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
-    <string name="site_creation_creating_failed_extended">נתקלנו בבעיה לא צפויה. אולי ננסה שוב?</string>
     <string name="signup_epilogue_error_avatar_view">תמונת הפרופיל שלך הועלתה ותהיה זמינה בקרוב.</string>
     <string name="email_not_registered_wpcom">מצטערים, לא הצלחנו לאתר את חשבון ה-WordPress.com שמקושר לכתובת האימייל הזו. מומלץ לנסות את הקישור למטה כדי להתחבר באמצעות כתובת האתר שלך.</string>
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/>&lt;br/>כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong>%s&lt;/strong>.</string>
@@ -693,44 +716,7 @@ Language: he_IL
     <string name="at_username">‎@‎%s‎</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">כתיבת הפוסט הראשון</string>
-    <string name="site_creation_epilogue_configure">הגדרות</string>
-    <string name="site_creation_epilogue_congrats">ברכותינו!\nהאתר שלך מוכן.</string>
-    <string name="site_creation_creating_modal">יש להמתין להשלמה של יצירת האתר.</string>
-    <string name="site_creation_creating_retry">לנסות שוב</string>
-    <string name="site_creation_creating_failed">משהו השתבש…</string>
-    <string name="site_creation_creating_preparing_frontend">מכין את הקצה הקדמי…</string>
-    <string name="site_creation_creating_configuring_theme">מגדיר את סגנון האתר…</string>
-    <string name="site_creation_creating_configuring_content">מגדיר את תוכן האתר…</string>
-    <string name="site_creation_creating_fetching_info">מאחזר את פרטי האתר…</string>
-    <string name="site_creation_creating_laying_foundation">מניח את יסודות האתר…</string>
-    <string name="site_creation_empty_site_title">יש להזין את כותרת האתר</string>
-    <string name="site_creation_tagline_helper">תיאור האתר הוא שורה קצרה של מלל שמוצגת ישירות מתחת לכותרת ברוב ערכות העיצוב; מנועי החיפוש משתמשים בשורה בתור תיאור האתר.</string>
-    <string name="site_creation_tagline_hint">תיאור קצר של האתר (לא חובה)</string>
-    <string name="site_creation_title_hint">כותרת האתר</string>
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
-    <string name="site_creation_domain_keywords_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
-    <string name="site_creation_label_domain_selection_title">שלב 4 מתוך 4</string>
-    <string name="site_creation_label_site_details">נשמח לפרטים נוספים אודות האתר. מהם הכותרת ותיאור האתר?</string>
-    <string name="site_creation_label_site_details_title">שלב 3 מתוך 4</string>
-    <string name="site_creation_label_theme_loading">יש להמתין לטעינה של ערכות העיצוב</string>
-    <string name="site_creation_label_theme_selection">להתחיל מהר עם אחת מערכות העיצוב הפופולריות שלנו. לאחר שיצרת את האתר שלך, אפשר לעיין במאות הערכות הנוספות ולבחור אחרת.</string>
-    <string name="site_creation_label_theme_selection_title">שלב 2 מתוך 4</string>
-    <string name="site_creation_subtitle_portfolio">כדי לאפשר לך להציג את הפרויקטים היצירתיים שלך בספרייה ויזואלית.</string>
-    <string name="site_creation_title_portfolio">להתחיל בבניית תיק עבודות</string>
-    <string name="site_creation_subtitle_website">כדי לאפשר לך לקדם את העסק או המותג שלך ולהתחבר עם קהל היעד שלך.</string>
-    <string name="site_creation_title_website">להתחיל בבניית אתר אינטרנט</string>
-    <string name="site_creation_subtitle_blog">כדי לאפשר לך לשתף את הרעיונות, הסיפורים והתמונות שלך עם העוקבים אחריך.</string>
-    <string name="site_creation_title_blog">להתחיל בבניית בלוג</string>
-    <string name="site_creation_label_category">איזה סוג של אתר נדרש לך?\nיש לבחור אפשרות אחת מבין הבאות:</string>
-    <string name="site_creation_label_category_title">שלב 1 מתוך 4</string>
-    <string name="site_creation_title">יצירת אתר חדש</string>
-    <string name="notification_site_creation_failed">אירעה שגיאה.</string>
-    <string name="notification_site_creation_title_stopped">יצירת האתר הופסקה</string>
-    <string name="notification_site_creation_step_theme">שלב 4 מתוך 4</string>
-    <string name="notification_site_creation_step_tagline">שלב 3 מתוך 4</string>
-    <string name="notification_site_creation_step_fetching">שלב 2 מתוך 4</string>
-    <string name="notification_site_creation_step_creating">שלב 1 מתוך 4</string>
     <string name="notification_site_creation_created">יש להקיש להמשך.</string>
     <string name="notification_site_creation_title_success">האתר נוצר!</string>
     <string name="google_error_timeout">זמן התגובה של Google היה ארוך מדי. ייתכן שהחיבור לאינטרנט לא מספיק יציב ויש להמתין לחיבור טוב יותר.</string>

@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "urlPath": "/rest/v1.2/sites/158396482/posts/new/",
+        "urlPattern": "/rest/v1.2/sites/158396482/posts/new(/)?($|\\?.*)",
         "queryParameters": {
             "context": {
                 "equalTo": "edit"
@@ -32,10 +32,10 @@
             "title": "{{jsonPath request.body '$.title'}}",
             "URL": "https://lowtestingmobile.wordpress.com/2019/03/12/title-33/",
             "short_URL": "https://e/paIC9Y-1r",
-            "content": "{{jsonPath request.body '$.content'}}",
+            "content": "<!-- wp:paragraph -->\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue efficitur leo eget porta.<\/p>\n<!-- \/wp:paragraph -->",
             "excerpt": "",
             "slug": "title-33",
-            "guid": "https://lowtestingmobile.wordpress.com/2019/03/12/title-33/",
+            "guid": "https://e2eflowtestingmobile.wordpress.com/2019/03/12/title-33/",
             "status": "publish",
             "sticky": false,
             "password": "",

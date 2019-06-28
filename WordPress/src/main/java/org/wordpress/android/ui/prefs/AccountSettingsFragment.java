@@ -301,8 +301,12 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         } else {
             if (event.isError()) {
                 switch (event.error.type) {
-                    case SETTINGS_FETCH_ERROR:
+                    case SETTINGS_FETCH_GENERIC_ERROR:
                         ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings,
+                                ToastUtils.Duration.LONG);
+                        break;
+                    case SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR:
+                        ToastUtils.showToast(getActivity(), R.string.error_disabled_apis,
                                 ToastUtils.Duration.LONG);
                         break;
                     case SETTINGS_POST_ERROR:

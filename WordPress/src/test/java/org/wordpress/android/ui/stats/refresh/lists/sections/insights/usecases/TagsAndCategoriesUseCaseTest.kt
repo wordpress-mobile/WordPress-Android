@@ -52,7 +52,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private val firstTag = TagModel.Item("tag1", "tag", "url.com")
     private val secondTag = TagModel.Item("tag2", "tag", "url2.com")
     private val singleTag = TagModel(listOf(firstTag), singleTagViews)
-    private val categoryViews: Long = 15
+    private val categoryViews: Long = 20
     @Before
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
@@ -104,8 +104,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat(this).hasSize(4)
         assertTitle(this[0])
         assertHeader(this[1])
-        assertSingleTag(this[2], firstTag.name, singleTagViews.toString())
-        return assertCategory(this[3], categoryName, categoryViews)
+        assertSingleTag(this[2], firstTag.name, singleTagViews.toString(), 50)
+        return assertCategory(this[3], categoryName, categoryViews, 100)
     }
 
     private fun List<BlockListItem>.assertExpandedList(
@@ -114,8 +114,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat(this).hasSize(7)
         assertTitle(this[0])
         assertHeader(this[1])
-        assertSingleTag(this[2], firstTag.name, singleTagViews.toString())
-        val expandableItem = assertCategory(this[3], categoryName, categoryViews)
+        assertSingleTag(this[2], firstTag.name, singleTagViews.toString(), 50)
+        val expandableItem = assertCategory(this[3], categoryName, categoryViews, 100)
         assertSingleTag(this[4], firstTag.name, null)
         assertSingleTag(this[5], secondTag.name, null)
         assertThat(this[6]).isEqualTo(Divider)
@@ -143,7 +143,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
             assertThat(this).hasSize(4)
             assertTitle(this[0])
             assertHeader(this[1])
-            assertSingleTag(this[2], tagItem.name, singleTagViews.toString())
+            assertSingleTag(this[2], tagItem.name, singleTagViews.toString(), 100)
             assertLink(this[3])
         }
     }
@@ -193,7 +193,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private fun assertSingleTag(
         item: BlockListItem,
         key: String,
-        label: String?
+        label: String?,
+        bar: Int? = null
     ) {
         assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((item as ListItemWithIcon).text).isEqualTo(key)
@@ -202,18 +203,25 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
+        if (bar != null) {
+            assertThat(item.barWidth).isEqualTo(bar)
+        } else {
+            assertThat(item.barWidth).isNull()
+        }
         assertThat(item.icon).isEqualTo(R.drawable.ic_tag_white_24dp)
     }
 
     private fun assertCategory(
         item: BlockListItem,
         label: String,
-        views: Long
+        views: Long,
+        bar: Int
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toString())
         assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_white_24dp)
+        assertThat(item.header.barWidth).isEqualTo(bar)
         return item
     }
 
