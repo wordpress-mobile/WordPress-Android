@@ -98,23 +98,23 @@ constructor(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val stringBuilder = StringBuilder()
-            var minCountry: Int? = null
-            var maxCountry: Int? = null
+            var minViews: Int? = null
+            var maxViews: Int? = null
             for (country in domainModel.countries) {
-                if (country.views < minCountry ?: Int.MAX_VALUE) {
-                    minCountry = country.views
+                if (country.views < minViews ?: Int.MAX_VALUE) {
+                    minViews = country.views
                 }
-                if (country.views > maxCountry ?: 0) {
-                    maxCountry = country.views
+                if (country.views > maxViews ?: 0) {
+                    maxViews = country.views
                 }
                 stringBuilder.append("['").append(country.countryCode).append("',").append(country.views).append("],")
             }
-            val startLabel = if (minCountry == maxCountry) {
+            val startLabel = if (minViews == maxViews) {
                 0
             } else {
-                minCountry ?: 0
+                minViews ?: 0
             }.toFormattedString()
-            val endLabel = (maxCountry ?: 0).toFormattedString()
+            val endLabel = (maxViews ?: 0).toFormattedString()
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
             items.add(MapLegend(startLabel, endLabel))
             items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))

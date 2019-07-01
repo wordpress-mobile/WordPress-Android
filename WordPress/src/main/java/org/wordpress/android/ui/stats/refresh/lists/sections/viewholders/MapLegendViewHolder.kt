@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R
@@ -12,7 +11,6 @@ class MapLegendViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 ) {
     private val startLegend: TextView = itemView.findViewById(R.id.start_legend)
     private val endLegend: TextView = itemView.findViewById(R.id.end_legend)
-    @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapLegend) {
         startLegend.text = item.startLegend
         endLegend.text = item.endLegend
