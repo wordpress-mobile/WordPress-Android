@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.plugins;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -41,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -70,6 +73,10 @@ import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChec
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -104,7 +111,8 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 
 
-public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener {
+public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener,
+        BasicDialogPositiveClickInterface {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_INSTALLING_PLUGIN = "KEY_IS_INSTALLING_PLUGIN";
@@ -120,6 +128,12 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             = "KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS";
     private static final String KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS
             = "KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS";
+    private static final String KEY_PLUGIN_RECHECKED_TIMES = "KEY_PLUGIN_RECHECKED_TIMES";
+    private static final String TAG_ERROR_DIALOG = "ERROR_DIALOG";
+
+    private static final int MAX_PLUGIN_CHECK_TRIES = 10;
+    private static final int DEFAULT_RETRY_DELAY_MS = 3000;
+    private static final int PLUGIN_RETRY_DELAY_MS = 10000;
 
     private SiteModel mSite;
     private String mSlug;
@@ -162,6 +176,8 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
     protected boolean mIsShowingRemovePluginConfirmationDialog;
     protected boolean mIsShowingInstallFirstPluginConfirmationDialog;
     protected boolean mIsShowingAutomatedTransferProgress;
+
+    private int mPluginReCheckTimer = 0;
 
     // These flags reflects the UI state
     protected boolean mIsActive;
@@ -227,6 +243,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                     .getBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS);
             isShowingDomainCreditCheckProgress = savedInstanceState
                     .getBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS);
+            mPluginReCheckTimer = savedInstanceState.getInt(KEY_PLUGIN_RECHECKED_TIMES, 0);
         }
 
         setContentView(R.layout.plugin_detail_activity);
@@ -302,7 +319,24 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
 
     @Override
     public void onDomainRegistrationRequested() {
-        ActivityLauncher.viewDomainRegistrationActivity(this, mSite);
+        ActivityLauncher.viewDomainRegistrationActivityForResult(this, mSite,
+                DomainRegistrationPurpose.AUTOMATED_TRANSFER);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.DOMAIN_REGISTRATION) {
+            if (resultCode != Activity.RESULT_OK || isFinishing()) {
+                return;
+            }
+            confirmInstallPluginForAutomatedTransfer();
+        }
+    }
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        // do nothing
     }
 
     public static class DomainRegistrationPromptDialog extends DialogFragment {
@@ -404,6 +438,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         outState.putBoolean(KEY_IS_SHOWING_AUTOMATED_TRANSFER_PROGRESS, mIsShowingAutomatedTransferProgress);
         outState.putBoolean(KEY_IS_SHOWING_DOMAIN_CREDIT_CHECK_PROGRESS,
                 mCheckingDomainCreditsProgressDialog != null && mCheckingDomainCreditsProgressDialog.isShowing());
+        outState.putInt(KEY_PLUGIN_RECHECKED_TIMES, mPluginReCheckTimer);
     }
 
     // UI Helpers
@@ -1345,6 +1380,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         AnalyticsUtils.trackWithSiteDetails(Stat.AUTOMATED_TRANSFER_FLOW_COMPLETE, mSite);
         cancelAutomatedTransferDialog();
         refreshPluginFromStore();
+        dispatchConfigurePluginAction(true);
         refreshViews();
         showSuccessfulInstallSnackbar();
         invalidateOptionsMenu();
@@ -1356,7 +1392,10 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
      */
     private void handleAutomatedTransferFailed(String errorMessage) {
         cancelAutomatedTransferDialog();
-        ToastUtils.showToast(this, errorMessage, Duration.LONG);
+        BasicFragmentDialog errorDialog = new BasicFragmentDialog();
+        errorDialog.initialize(TAG_ERROR_DIALOG, null, errorMessage,
+                getString(R.string.dialog_button_ok), null, null);
+        errorDialog.show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
     }
 
     /**
@@ -1475,7 +1514,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                         // Wait 3 seconds before checking the status again
                         mDispatcher.dispatch(SiteActionBuilder.newCheckAutomatedTransferStatusAction(mSite));
                     }
-                }, 3000);
+                }, DEFAULT_RETRY_DELAY_MS);
             }
         }
     }
@@ -1506,10 +1545,9 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             // We try to fetch the site after Automated Transfer is completed so that we can fetch its plugins. If
             // we are still showing the AT progress and the site is AT site, we can continue with plugins fetch
             if (mSite.isAutomatedTransfer()) {
-                AppLog.v(T.PLUGINS, "Site is successfully fetched after Automated Transfer, fetching the site plugins "
-                                    + "to complete the process...");
-                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+                AppLog.v(T.PLUGINS, "Site is successfully fetched after Automated Transfer, fetching"
+                                    + " the site plugins to complete the process...");
+                fetchPluginDirectory(0);
             } else {
                 // Either an error occurred while fetching the site or Automated Transfer is not yet reflected in the
                 // API response. We need to keep fetching the site until we get the updated site. Otherwise, any changes
@@ -1524,7 +1562,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                         // Wait 3 seconds before fetching the site again
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
                     }
-                }, 3000);
+                }, DEFAULT_RETRY_DELAY_MS);
             }
         }
     }
@@ -1543,26 +1581,38 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         if (isFinishing()) {
             return;
         }
+
+        refreshPluginFromStore();
+
         if (event.isError()) {
             if (mIsShowingAutomatedTransferProgress) {
                 AppLog.e(T.PLUGINS, "Fetching the plugin directory after Automated Transfer has failed with error type"
                                     + event.error.type + " and message: " + event.error.message);
                 // Although unlikely, fetching the plugins after a successful Automated Transfer can result in an error.
                 // This should hopefully be an edge case and fetching the plugins again should
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppLog.v(T.PLUGINS, "Fetching the site plugins again after Automated Transfer since the"
-                                            + " changes are not yet reflected");
-                        // Wait 3 seconds before fetching the site plugins again
-                        mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
-                                .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
-                    }
-                }, 3000);
+                AppLog.v(T.PLUGINS, "Fetching the site plugins again after Automated Transfer since the"
+                                    + " changes are not yet reflected");
+                fetchPluginDirectory(PLUGIN_RETRY_DELAY_MS);
             }
             // We are safe to ignore the errors for this event unless it's for Automated Transfer since that's the only
             // one triggered in this page and only one we care about.
             return;
+        } else if (!mPlugin.isInstalled()) {
+            // it sometimes take a bit of time for plugin to get marked as installed, especially when
+            // Automated Transfer is performed right after domain registration
+            if (mIsShowingAutomatedTransferProgress) {
+                if (mPluginReCheckTimer < MAX_PLUGIN_CHECK_TRIES) {
+                    AppLog.v(T.PLUGINS, "Targeted plugin is not marked as installed after Automated Transfer."
+                                        + " Fetching the site plugins to reflect the changes.");
+                    fetchPluginDirectory(PLUGIN_RETRY_DELAY_MS);
+                    mPluginReCheckTimer++;
+                    return;
+                } else {
+                    // if plugin is still not marked as installed, we ask user to check back later, and proceed to
+                    // finish Automated Transfer
+                    ToastUtils.showToast(this, R.string.plugin_fetching_error_after_at, Duration.LONG);
+                }
+            }
         }
         if (event.type == PluginDirectoryType.SITE && mIsShowingAutomatedTransferProgress) {
             // After Automated Transfer flow is completed, we fetch the site and then it's plugins. The only way site's
@@ -1572,9 +1622,18 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         } else {
             // Although it's unlikely that a directory might be fetched while we are in the plugin detail page, we
             // should be safe to refresh the plugin and the view in case the plugin we are showing has changed
-            refreshPluginFromStore();
             refreshViews();
         }
+    }
+
+    private void fetchPluginDirectory(int delay) {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(new PluginStore
+                        .FetchPluginDirectoryPayload(PluginDirectoryType.SITE, mSite, false)));
+            }
+        }, delay);
     }
 
     private String getEligibilityErrorMessage(String errorCode) {

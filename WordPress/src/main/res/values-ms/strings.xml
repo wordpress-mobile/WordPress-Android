@@ -310,7 +310,6 @@ Language: ms
     <string name="editor_post_saved_locally_failed_media">Kiriman mempunyai muat naik media yang telah gagal dan telah disimpan secara setempat</string>
     <string name="sure_to_remove_account">Buang laman ini dari aplikasi?</string>
     <string name="photo_picker_title">Pilih gambar</string>
-    <string name="error_publish_no_network">Peranti luar talian. Perubahan disimpan secara setempat.</string>
     <string name="editor_post_saved_online">Kiriman disimpan atas talian</string>
     <string name="site_settings_image_quality_hint">Kualiti gambar. Nilai lebih tinggi bermakna kualiti gambar yang lebih baik.</string>
     <string name="site_settings_optimize_images_summary">Bolehkan untuk saiz semula dan mampatkan gambar</string>
@@ -594,7 +593,6 @@ Language: ms
     <string name="cd_related_post_preview_image">Imej pratonton kiriman berkaitan</string>
     <string name="error_post_remote_site_settings">Tidak boleh menyimpan maklumat laman</string>
     <string name="error_fetch_remote_site_settings">Tidak boleh mendapatkan maklumat laman</string>
-    <string name="site_settings_disconnected_toast">Dilog keluar, suntingan dilumpuhkan.</string>
     <string name="site_settings_close_after_dialog_switch_text">Tutup secara automatik</string>
     <string name="site_settings_close_after_dialog_description">Tutup ulasan secara automatik pada artikel.</string>
     <string name="site_settings_paging_dialog_description">Pecahkan jalur ulasan kepada berbilang halaman.</string>
