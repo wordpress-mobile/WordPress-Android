@@ -528,7 +528,7 @@ Language: id
     <string name="plugin_install_site_ineligible_site_private">Fitur plugin memerlukan situs berstatus publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Fitur plugin memerlukan paket bisnis.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Fitur plugin memerlukan domain kustom.</string>
-    <string name="plugin_install_site_ineligible_default_error">Fitur plugin tidak tersedia untuk situs ini.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Kami sedang mengerjakan penyiapan akhir — hampir selesai…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Menginstal plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instal</string>

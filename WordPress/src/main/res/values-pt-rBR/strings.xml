@@ -559,7 +559,7 @@ Language: pt_BR
     <string name="plugin_install_site_ineligible_site_private">O recurso de plugins precisa que o site esteja público.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">O recurso de plugins precisa de um plano Negócios.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">O recurso de plugins precisa de um domínio personalizado.</string>
-    <string name="plugin_install_site_ineligible_default_error">O recurso de plugins não está disponível para esse site.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Estamos fazendo as configurações finais. Quase concluído…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalando plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>

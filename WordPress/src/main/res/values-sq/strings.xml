@@ -548,7 +548,7 @@ Language: sq_AL
     <string name="plugin_install_site_ineligible_site_private">Veçoria e shtojcës lyp që sajti të jetë publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Veçoria e shtojcës lyp paketë biznes.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Veçoria e shtojcës lyp një përkatësi vetjake.</string>
-    <string name="plugin_install_site_ineligible_default_error">Veçoria e shtojcës s’është e mundshme për këtë sajt.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Po kryejmë hapin përfundimtar — thuajse mbaruam…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Po instalohet shtojca…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instaloje</string>

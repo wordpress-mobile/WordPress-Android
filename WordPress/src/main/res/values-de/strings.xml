@@ -559,7 +559,7 @@ Language: de
     <string name="plugin_install_site_ineligible_site_private">Für das Plugin-Feature muss die Website öffentlich sein.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Für das Plugin-Feature ist ein Business-Tarif erforderlich.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Für das Plugin-Feature ist eine individuelle Domain erforderlich.</string>
-    <string name="plugin_install_site_ineligible_default_error">Das Plugin-Feature ist für diese Website nicht verfügbar.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Die finale Einrichtung läuft – fast fertig …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wird installiert …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installieren</string>

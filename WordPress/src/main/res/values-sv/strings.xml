@@ -559,7 +559,7 @@ Language: sv_SE
     <string name="plugin_install_site_ineligible_site_private">För funktionen med tillägg krävs att webbplatsen är publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">För funktionen med tillägg krävs ett business-konto.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funktionen med tillägg är inte tillgänglig för denna webbplats.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Vi genomför de sista förberedelserna – nästan klart…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installerar tillägget…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>

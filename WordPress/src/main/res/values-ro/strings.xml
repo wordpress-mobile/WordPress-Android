@@ -559,7 +559,7 @@ Language: ro
     <string name="plugin_install_site_ineligible_site_private">Funcționalitatea modulului necesită ca situl să fie public.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funcționalitatea modulului necesită un plan Business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funcționalitatea modulului necesită un domeniu personalizat.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funcționalitatea modulului nu este disponibilă pentru acest sit.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Facem inițializarea finală - este aproape gata…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalez modulul…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalează</string>

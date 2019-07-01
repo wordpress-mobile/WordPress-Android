@@ -559,7 +559,7 @@ Language: tr
     <string name="plugin_install_site_ineligible_site_private">Eklenti özelliği sitenin herkese açık olmasını gerektirir.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Eklenti özelliği business paket gerektirir.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Eklenti özelliği özel alan adı gerektirir.</string>
-    <string name="plugin_install_site_ineligible_default_error">Eklenti özelliği bu site için kullanılamaz.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Son kurulumu yapıyoruz — neredeyse bitti…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Eklenti yükleniyor…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Yükle</string>
