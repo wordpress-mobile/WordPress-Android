@@ -2111,7 +2111,7 @@ public class EditPostActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean isFirstTimePublish = isFirstTimePublish();
+                boolean isFirstTimePublish = isFirstTimePublish(publishPost);
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
@@ -2202,7 +2202,7 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 // check if the opened post had some unsaved local changes
-                boolean isFirstTimePublish = isFirstTimePublish();
+                boolean isFirstTimePublish = isFirstTimePublish(false);
 
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
@@ -2270,11 +2270,18 @@ public class EditPostActivity extends AppCompatActivity implements
         return !PostUtils.isPublishable(mPost) && isNewPost();
     }
 
-    private boolean isFirstTimePublish() {
+    private boolean isFirstTimePublish(final boolean publishPost) {
+        final PostStatus originalStatus = PostStatus.fromPost(mPost);
+        return ((originalStatus == PostStatus.DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
+               || (originalStatus == PostStatus.SCHEDULED && publishPost)
+               || (originalStatus == PostStatus.PUBLISHED && mPost.isLocalDraft())
+               || (originalStatus == PostStatus.PUBLISHED && mPost.getRemotePostId() == 0);
+
+        /*
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
                && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
                    || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
+                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING); */
     }
 
     /**
