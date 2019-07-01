@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -755,7 +754,7 @@ public class UploadService extends Service {
             aztecRegisterFailedMediaForThisPost(post);
         }
 
-        ArrayList<MediaModel> mediaToRetry = getAllFailedMediaForPost(post);
+        List<MediaModel> mediaToRetry = getAllFailedMediaForPost(post);
 
         if (!mediaToRetry.isEmpty()) {
             // reset these media items to QUEUED
@@ -791,18 +790,17 @@ public class UploadService extends Service {
         }
     }
 
-    private ArrayList<MediaModel> getAllFailedMediaForPost(PostModel postModel) {
+    private List<MediaModel> getAllFailedMediaForPost(PostModel postModel) {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
         return filterOutRecentlyDeletedMedia(failedMedia);
     }
 
-    private ArrayList<MediaModel> filterOutRecentlyDeletedMedia(Set<MediaModel> failedMedia) {
-        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
-        ListIterator<MediaModel> iterator = mediaToRetry.listIterator();
-        while (iterator.hasNext()) {
-            String mediaIdToCompare = String.valueOf(iterator.next().getId());
-            if (mUserDeletedMediaItemIds.contains(mediaIdToCompare)) {
-                iterator.remove();
+    private List<MediaModel> filterOutRecentlyDeletedMedia(Set<MediaModel> failedMedia) {
+        List<MediaModel> mediaToRetry = new ArrayList<>();
+        for (MediaModel mediaModel : failedMedia) {
+            String mediaIdToCompare = String.valueOf(mediaModel.getId());
+            if (!mUserDeletedMediaItemIds.contains(mediaIdToCompare)) {
+                mediaToRetry.add(mediaModel);
             }
         }
         return mediaToRetry;
