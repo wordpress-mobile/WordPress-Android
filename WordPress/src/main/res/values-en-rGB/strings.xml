@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-05 14:50:26+0000
+Translation-Revision-Date: 2019-06-19 10:06:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
+    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our %1$sterms and conditions%2$s</string>
+    <string name="error_network_connection">Check your network connection and try again.</string>
+    <string name="error_browser_no_network">Unable to load this page right now.</string>
+    <string name="error_disabled_apis">Could not fetch settings: some APIs are unavailable for this OAuth app ID + account combination.</string>
+    <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
+    <string name="site_settings_disconnected_toast">No connection. Editing is disabled.</string>
+    <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
+    <string name="site_settings_password_updated">Password updated</string>
+    <string name="site_settings_password_dialog_title">Update password</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Error occurred while updating your site details: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Error occurred fetching domain contact information: %s</string>
-    <string name="domain_registration_error_registering_domain">Error occurred during domain registration: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
@@ -423,7 +430,6 @@ Language: en_GB
     <string name="install_jetpack">Install Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our </string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
@@ -1175,7 +1181,7 @@ Language: en_GB
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="sure_to_remove_account">Remove this site from the app?</string>
     <string name="photo_picker_title">Choose photo</string>
-    <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
+    <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
@@ -1469,7 +1475,6 @@ Language: en_GB
     <string name="cd_related_post_preview_image">Related post preview image</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
-    <string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
     <string name="site_settings_close_after_dialog_description">Automatically close comments on articles.</string>
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>

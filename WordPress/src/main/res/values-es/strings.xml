@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-05 15:23:54+0000
+Translation-Revision-Date: 2019-06-20 07:01:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Estado (no disponible)</string>
+    <string name="domain_registration_privacy_protection_tos">Al registrar este dominio aceptas nuestros %1$stérminos y condiciones%2$s</string>
+    <string name="error_network_connection">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
+    <string name="error_browser_no_network">No se ha podido cargar esta página en este momento.</string>
+    <string name="error_disabled_apis">No se pudieron recuperar los ajustes. Algunas APIs no están disponibles para la cuenta e ID de esta aplicación OAuth. </string>
+    <string name="jetpack_connection_terms_and_conditions">Al configurar Jetpack aceptas nuestros %1$stérminos y condiciones%2$s</string>
+    <string name="site_settings_disconnected_toast">No hay ninguna conexión. La edición está desactivada.</string>
+    <string name="site_settings_update_password_message">Para volver a conectar la aplicación a tu sitio alojado, introduce aquí la nueva contraseña del sitio.</string>
+    <string name="site_settings_password_updated">Contraseña actualizada</string>
+    <string name="site_settings_password_dialog_title">Actualizar contraseña</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Ocurrió un error al actualizar los detalles de tu sitio: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Ocurrió un error al recuperar la información de contacto del dominio: %s</string>
-    <string name="domain_registration_error_registering_domain">Ocurrió un error al registrar el dominio: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando el nombre de dominio…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecciona la provincia</string>
     <string name="domain_registration_country_picker_dialog_title">Selecciona el país</string>
@@ -423,7 +430,6 @@ Language: es
     <string name="install_jetpack">Instala Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Al configurar Jetpack aceptas nuestras</string>
     <string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress necesitas instalar el plugin Jetpack.</string>
     <string name="themes_empty_list">No hay temas que coincidan con tu búsqueda</string>
     <string name="reader_label_post_search_explainer">¿Que te gustaría encontrar?</string>
@@ -1175,7 +1181,7 @@ Language: es
     <string name="editor_post_saved_locally_failed_media">La entrada falló al subir los medios y se ha guardado localmente</string>
     <string name="sure_to_remove_account">¿Borrar este sitio de la aplicación?</string>
     <string name="photo_picker_title">Elegir foto</string>
-    <string name="error_publish_no_network">El dispositivo está desconectado. Los cambios se guardarán localmente.</string>
+    <string name="error_publish_no_network">El dispositivo está desconectado. La entrada se guardará localmente.</string>
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
@@ -1469,7 +1475,6 @@ Language: es
     <string name="cd_related_post_preview_image">Imagen de vista previa de entradas relacionadas</string>
     <string name="error_post_remote_site_settings">No pudo guardar la información del sitio</string>
     <string name="error_fetch_remote_site_settings">No pudo recuperar la información del sitio</string>
-    <string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado.</string>
     <string name="site_settings_close_after_dialog_switch_text">Cierra automáticamente</string>
     <string name="site_settings_close_after_dialog_description">Cierra automáticamente los comentarios en artículos</string>
     <string name="site_settings_paging_dialog_description">Rompe los hilos de comentarios en múltiples páginas</string>

@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-12 10:54:09+0000
+Translation-Revision-Date: 2019-06-27 14:05:18+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">État (non disponible)</string>
+    <string name="domain_registration_privacy_protection_tos">En enregistrant ce domaine vous acceptez nos %1$sconditions générales%2$s</string>
+    <string name="error_network_connection">Vérifiez votre connexion réseau et réessayez.</string>
+    <string name="error_browser_no_network">Impossible de charger cette page pour le moment. </string>
+    <string name="error_disabled_apis">Impossible de récupérer les réglages : Certaines APIs sont indisponibles pour cette combinaison d’id d’app OAuth + compte.</string>
+    <string name="jetpack_connection_terms_and_conditions">En configurant jetpack vous acceptez nos %1$sconditions générales%2$s</string>
+    <string name="site_settings_disconnected_toast">Aucune connexion. La modification est désactivée.</string>
+    <string name="site_settings_update_password_message">Pour reconnecter l’application à votre site auto-hébergé, saisissez le nouveau mot de passe du site ici.</string>
+    <string name="site_settings_password_updated">Mot de passe mis à jour</string>
+    <string name="site_settings_password_dialog_title">Mettre à jour le mot de passe</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Une erreur s\'est produite lors de la mise à jour des détails de votre site : %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Une erreur est survenue pendant l\'extraction des coordonnées du domaine : %s</string>
-    <string name="domain_registration_error_registering_domain">Une erreur est survenue pendant l\'enregistrement de votre domaine : %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Enregistrement du nom de domaine…</string>
     <string name="domain_registration_state_picker_dialog_title">Sélectionner un État</string>
     <string name="domain_registration_country_picker_dialog_title">Choisir le pays</string>
@@ -57,6 +64,9 @@ Language: fr
     <string name="stats_insights_social">Réseaux sociaux</string>
     <string name="stats_insights_annual_site_stats">Statistiques annuelles du site</string>
     <string name="stats_view_follower_totals">Total des abonnés</string>
+    <string name="domain_suggestions_fetch_error">Impossible de charger les suggestions de domaine</string>
+    <string name="domain_suggestions_search_hint">Saisissez un mot-clé pour obtenir davantage d\'idées</string>
+    <string name="domains_suggestions_empty_list">Aucune suggestion n’a été trouvée</string>
     <string name="register_domain">Enregistrer un domaine</string>
     <string name="jetpack_installed_message">Maintenant que Jetpack est installé, vous devez procéder à quelques réglages. Cela ne prendra qu\'une minute.</string>
     <string name="stats_menu_remove">Supprimer des tendances</string>
@@ -302,6 +312,7 @@ Language: fr
     <string name="stats_followers_count_message">Total des abonnés %1$s : %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_manage_insights">Gérer les tendances</string>
     <string name="stats_empty_insights_title">Aucune tendance n’a encore été ajoutée</string>
     <string name="stats_no_data_yet">Aucune donnée pour le moment.</string>
     <string name="menu_debug">Menu de débogage</string>
@@ -409,13 +420,16 @@ Language: fr
     <string name="reader_empty_followed_tags_subtitle">Ajoutez des étiquettes ici pour rechercher des articles sur vos rubriques préférées</string>
     <string name="login_to_to_connect_jetpack">Connectez-vous au compte WordPress.com que vous utilisez pour connecter Jetpack.</string>
     <string name="install_jetpack_retry">Réessayer</string>
+    <string name="install_jetpack_continue">Configurer</string>
+    <string name="jetpack_installation_problem_message">Impossible d\'installer Jetpack pour le moment.</string>
     <string name="jetpack_installation_problem">Un problème est survenu</string>
     <string name="jetpack_installed">Jetpack installé</string>
+    <string name="installing_jetpack_message">Installation de Jetpack en cours sur votre site. Cette opération peut prendre quelques minutes.</string>
     <string name="installing_jetpack">Installation de Jetpack</string>
+    <string name="install_jetpack_message">Vos informations d\'identification sur le site Web ne seront pas conservées. Elles sont utilisées uniquement pour installer Jetpack.</string>
     <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">En installant Jetpack vous acceptez nos </string>
     <string name="stats_jetpack_connection_setup_info">Pour utiliser les statistiques sur votre site WordPress, vous devez installer l\'extension Jetpack.</string>
     <string name="themes_empty_list">Aucun thème ne correspond à votre recherche.</string>
     <string name="reader_label_post_search_explainer">Que recherchez-vous ?</string>
@@ -1033,6 +1047,8 @@ Language: fr
     <string name="editor_dropped_text_error">Erreur survenue pendant le glisser-déposer du texte</string>
     <string name="editor_dropped_html_images_not_allowed">Il n\'est pas permis de glisser des images en mode HTML</string>
     <string name="editor_content_hint">Partagez votre histoire ici…</string>
+    <string name="post_list_trashed">Supprimé</string>
+    <string name="post_list_scheduled">Planifié</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Brouillon</string>
     <string name="post_status_pending_review">En attente de relecture</string>
@@ -1165,7 +1181,7 @@ Language: fr
     <string name="editor_post_saved_locally_failed_media">Cet article a des fichiers joints dont le téléversement a échoué. Il a été enregistré localement</string>
     <string name="sure_to_remove_account">Supprimer ce site de l\'application ?</string>
     <string name="photo_picker_title">Choisir une photo</string>
-    <string name="error_publish_no_network">L’appareil est hors ligne. Les modifications ont été sauvegardées localement.</string>
+    <string name="error_publish_no_network">L’appareil est hors ligne. L’article a été enregistré localement.</string>
     <string name="editor_post_saved_online">Article enregistré en ligne</string>
     <string name="site_settings_image_quality_hint">Qualité des images. Des valeurs élevées signifient une meilleure qualité d’image.</string>
     <string name="site_settings_optimize_images_summary">Autoriser le redimensionnement et la compression des images</string>
@@ -1459,7 +1475,6 @@ Language: fr
     <string name="cd_related_post_preview_image">Prévisualisation de l\'image de l\'article connexe</string>
     <string name="error_post_remote_site_settings">Impossible d\'enregistrer les infos du site</string>
     <string name="error_fetch_remote_site_settings">Impossible de retrouver les infos du site</string>
-    <string name="site_settings_disconnected_toast">Déconnecté, modification désactivée.</string>
     <string name="site_settings_close_after_dialog_switch_text">Fermer automatiquement</string>
     <string name="site_settings_close_after_dialog_description">Fermer automatiquement les commentaires.</string>
     <string name="site_settings_paging_dialog_description">Scinder les fils de commentaires en pages multiples.</string>

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 08:54:33+0000
+Translation-Revision-Date: 2019-06-26 08:54:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Stato (non disponibile)</string>
+    <string name="domain_registration_privacy_protection_tos">Registrando questo dominio accetti i nostri %1$sterme e le nostre condizioni%2$s</string>
+    <string name="error_network_connection">Controlla la connessione di rete e riprova.</string>
+    <string name="error_browser_no_network">Impossibile caricare questa pagina in questo momento.</string>
+    <string name="error_disabled_apis">Impossibile recuperare le impostazioni: alcune API non sono disponibili per questa combinazione di ID app OAuth + account.</string>
+    <string name="jetpack_connection_terms_and_conditions">Configurando Jetpack accetti i nostri %1$sterme e le nostre condizioni%2$s</string>
+    <string name="site_settings_disconnected_toast">Nessuna connessione. La modifica è disabilitata.</string>
+    <string name="site_settings_update_password_message">Per ricollegare l\'app al tuo sito ospitato personalmente, inserisci la nuova password del sito qui.</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Si è verificato un errore durante l\'aggiornamento dei dettagli del sito: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Si è verificato un errore durante il recupero delle informazioni di contatto per il dominio: %s</string>
-    <string name="domain_registration_error_registering_domain">Si è verificato un errore durante la registrazione del dominio: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrazione del nome di dominio in corso…</string>
     <string name="domain_registration_state_picker_dialog_title">Seleziona uno stato</string>
     <string name="domain_registration_country_picker_dialog_title">Seleziona il Paese</string>
@@ -376,7 +381,6 @@ Language: it
     <string name="install_jetpack">Installa Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Impostando Jetpack accetti </string>
     <string name="stats_jetpack_connection_setup_info">Per utilizzare le Statistiche sul tuo sito WordPress, sarà necessario installare il plugin di Jetpack.</string>
     <string name="themes_empty_list">Nessun tema corrispondente alla ricerca</string>
     <string name="reader_label_post_search_explainer">Che cosa desideri trovare?</string>
@@ -1126,7 +1130,6 @@ Language: it
     <string name="editor_post_saved_locally_failed_media">Il caricamento degli allegati multimediali dell\'articolo è fallito e sono stati salvati localmente</string>
     <string name="sure_to_remove_account">Rimuovere questo sito dall\'app?</string>
     <string name="photo_picker_title">Scegli foto</string>
-    <string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
     <string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
     <string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
     <string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
@@ -1420,7 +1423,6 @@ Language: it
     <string name="cd_related_post_preview_image">Immagine di anteprima dell\'articolo correlato</string>
     <string name="error_post_remote_site_settings">Impossibile salvare le informazioni del sito</string>
     <string name="error_fetch_remote_site_settings">Impossibile recuperare le informazioni del sito</string>
-    <string name="site_settings_disconnected_toast">Non sei connesso,  la possibilità di modifica è disabilitata.</string>
     <string name="site_settings_close_after_dialog_switch_text">Chiudi automaticamente</string>
     <string name="site_settings_close_after_dialog_description">Chiudi automaticamente i commenti sugli articoli.</string>
     <string name="site_settings_paging_dialog_description">Suddividi il flusso dei commenti in più pagine.</string>

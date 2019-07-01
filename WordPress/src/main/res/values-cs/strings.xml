@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 14:28:58+0000
+Translation-Revision-Date: 2019-06-19 18:45:13+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Při aktualizaci podrobností webu došlo k chybě: %s</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>
@@ -994,7 +993,7 @@ Language: cs_CZ
     <string name="editor_post_saved_locally_failed_media">Příspěvek selhal při nahrávání médií a byl uložen lokálně na zařízení</string>
     <string name="sure_to_remove_account">Odstranit tento web z aplikace?</string>
     <string name="photo_picker_title">Zvolit obrázek</string>
-    <string name="error_publish_no_network">Zařízení je offline. Změny uložené lokálně.</string>
+    <string name="error_publish_no_network">Zařízení je offline. Příspěvek byl uložen lokálně.</string>
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázků. Vyšší hodnoty znamenají lepší kvalitu obrázků.</string>
     <string name="site_settings_optimize_images_summary">Povolit změnu velikosti a kompresi obrázků</string>
@@ -1287,7 +1286,6 @@ Language: cs_CZ
     <string name="cd_related_post_preview_image">Náhledový obrázek souvisejících obrázků</string>
     <string name="error_post_remote_site_settings">Nepodařilo se uložit informace o stránce</string>
     <string name="error_fetch_remote_site_settings">Nepodařilo se získat informace o stránce</string>
-    <string name="site_settings_disconnected_toast">Odpojeno, úpravy vypnuty.</string>
     <string name="site_settings_close_after_dialog_switch_text">Uzavřít automaticky</string>
     <string name="site_settings_close_after_dialog_description">Automaticky uzavře komentáře k článkům.</string>
     <string name="site_settings_paging_dialog_description">Rozdělit vlákna komentářů do více stránek.</string>
