@@ -552,7 +552,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REMOTE_MODIFIED TEXT");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_PREVIEW_URL TEXT");
                 oldVersion++;
-
         }
         db.setTransactionSuccessful();
         db.endTransaction();
