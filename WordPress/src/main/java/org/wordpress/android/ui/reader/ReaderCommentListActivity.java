@@ -6,16 +6,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -34,6 +37,11 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -66,6 +74,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderCommentListActivity extends AppCompatActivity {
@@ -104,21 +113,22 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+        if (fragment != null) {
+            fragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
-        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -160,6 +170,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
+        mSubmitReplyBtn.setEnabled(false);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -184,6 +195,42 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
 
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
+
+        ImageView buttonExpand = findViewById(R.id.button_expand);
+        buttonExpand.setOnClickListener(
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = CommentFullScreenDialogFragment.newBundle(mEditComment.getText().toString());
+
+                    new Builder(ReaderCommentListActivity.this)
+                        .setTitle(R.string.comment)
+                        .setOnCollapseListener(new OnCollapseListener() {
+                            @Override
+                            public void onCollapse(@Nullable Bundle result) {
+                                if (result != null) {
+                                    mEditComment.setText(result.getString(RESULT_REPLY));
+                                    mEditComment.requestFocus();
+                                }
+                            }
+                        })
+                        .setOnConfirmListener(new OnConfirmListener() {
+                            @Override
+                            public void onConfirm(@Nullable Bundle result) {
+                                if (result != null) {
+                                    mEditComment.setText(result.getString(RESULT_REPLY));
+                                    submitComment();
+                                }
+                            }
+                        })
+                        .setContent(CommentFullScreenDialogFragment.class, bundle)
+                        .setAction(R.string.send)
+                        .setHideActivityBar(true)
+                        .build()
+                        .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
+                }
+            }
+        );
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
@@ -238,6 +285,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId && mSuggestionAdapter != null) {
             List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
             mSuggestionAdapter.setSuggestionList(suggestions);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

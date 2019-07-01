@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -63,6 +64,18 @@ public class CommentsDetailActivity extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
+    public void onBackPressed() {
+        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+        if (fragment != null) {
+            fragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

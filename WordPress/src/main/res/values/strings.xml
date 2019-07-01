@@ -2655,4 +2655,8 @@
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
+
+    <string name="description_collapse">Collapse</string>
+    <string name="description_expand">Expand</string>
+
 </resources>

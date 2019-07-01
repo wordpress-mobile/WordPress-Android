@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+    <!--<include-->
+        <!--android:id="@+id/toolbar"-->
+        <!--layout="@layout/toolbar" />-->
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
         style="@style/ReaderTextView.EmptyList"
         android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/toolbar"
         android:text="@string/reader_empty_comments"
         android:textColor="@color/neutral_400"
         android:visibility="gone"
@@ -25,8 +24,7 @@
         android:id="@+id/swipe_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/toolbar">
+        android:layout_above="@+id/layout_bottom">
 
         <org.wordpress.android.ui.reader.views.ReaderRecyclerView
             android:id="@+id/recycler_view"
