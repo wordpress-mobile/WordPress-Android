@@ -10,7 +10,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.FrameLayout.LayoutParams
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_web_view_item
 ) {
-    val webView: WebView? = itemView.findViewById(R.id.web_view)
+    private val webView: WebView = itemView.findViewById(R.id.web_view)
     @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
         GlobalScope.launch {
@@ -35,6 +34,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
             val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_50) and 0xffffff)
             val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent) and 0xffffff)
+            val emptyColor = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.neutral_50) and 0xffffff)
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
@@ -46,8 +46,10 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     " var data = google.visualization.arrayToDataTable(" +
                     " [" +
                     " ['Country', '${itemView.resources.getString(item.label)}'],${item.mapData}]);" +
-                    " var options = {keepAspectRatio: true, region: 'world', colorAxis:" +
-                    " { colors: [ '#" + colorLow + "', '#" + colorHigh + "' ] }," +
+                    " var options = {keepAspectRatio: true, region: 'world', " +
+                    " colorAxis: { colors: [ '#$colorLow', '#$colorHigh' ] }," +
+                    " datalessRegionColor: '#$emptyColor'," +
+                    " legend: 'none'," +
                     " enableRegionInteractivity: false};" +
                     " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
                     " chart.draw(data, options);" +
@@ -60,41 +62,39 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     "</html>")
 
             val width = itemView.width
-            val height = width * 3 / 4
+            val height = width * 5 / 8
 
-            if (webView != null) {
-                val params = webView.layoutParams as LayoutParams
-                val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
-                params.width = ViewGroup.LayoutParams.MATCH_PARENT
-                params.height = height
-                wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                wrapperParams.height = height
+            val params = webView.layoutParams
+            val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT
+            params.height = height
+            wrapperParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            wrapperParams.height = height
 
-                launch(Dispatchers.Main) {
-                    webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            launch(Dispatchers.Main) {
+                webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
 
-                    webView.layoutParams = params
-                    itemView.layoutParams = wrapperParams
+                webView.layoutParams = params
+                itemView.layoutParams = wrapperParams
 
-                    webView.webViewClient = object : WebViewClient() {
-                        override fun onReceivedError(
-                            view: WebView?,
-                            request: WebResourceRequest?,
-                            error: WebResourceError
-                        ) {
-                            super.onReceivedError(view, request, error)
-                            itemView.visibility = View.GONE
-                        }
-
-                        override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                            super.onReceivedSslError(view, handler, error)
-                            itemView.visibility = View.GONE
-                        }
+                webView.webViewClient = object : WebViewClient() {
+                    override fun onReceivedError(
+                        view: WebView?,
+                        request: WebResourceRequest?,
+                        error: WebResourceError
+                    ) {
+                        super.onReceivedError(view, request, error)
+                        itemView.visibility = View.GONE
                     }
-                    webView.settings.javaScriptEnabled = true
-                    webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-                    webView.loadData(htmlPage, "text/html", "UTF-8")
+
+                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                        super.onReceivedSslError(view, handler, error)
+                        itemView.visibility = View.GONE
+                    }
                 }
+                webView.settings.javaScriptEnabled = true
+                webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                webView.loadData(htmlPage, "text/html", "UTF-8")
             }
         }
     }
