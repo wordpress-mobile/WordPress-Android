@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 10:54:10+0000
+Translation-Revision-Date: 2019-06-26 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">州/省/自治区/直辖市（不可用）</string>
+    <string name="domain_registration_privacy_protection_tos">注册此域即表示，您同意我们的%1$s条款和条件%2$s</string>
+    <string name="error_network_connection">请检查您的网络连接，然后重试。</string>
+    <string name="error_browser_no_network">无法立即加载此页面。</string>
+    <string name="error_disabled_apis">无法获取设置：一些 API 不适用于此 OAuth 应用程序 ID + 帐户组合。</string>
+    <string name="jetpack_connection_terms_and_conditions">设置 Jetpack 即表示，您同意我们的%1$s条款和条件%2$s</string>
+    <string name="site_settings_disconnected_toast">没有连接。编辑已禁用。</string>
+    <string name="site_settings_update_password_message">要将应用程序重新连接到您的自托管站点，请在此处输入站点的新密码。</string>
+    <string name="site_settings_password_updated">密码已更新</string>
+    <string name="site_settings_password_dialog_title">更新密码</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">更新站点详细信息时出现错误：%s</string>
-    <string name="domain_registration_error_fetching_contact_information">抓取域联系信息时出现错误：%s</string>
-    <string name="domain_registration_error_registering_domain">域注册期间出现错误：%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在注册域名…</string>
     <string name="domain_registration_state_picker_dialog_title">选择州/省/自治区/直辖市</string>
     <string name="domain_registration_country_picker_dialog_title">选择国家/地区</string>
@@ -395,7 +402,6 @@ Language: zh_CN
     <string name="install_jetpack">安装 Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">设置 Jetpack 即表示，您同意我们的</string>
     <string name="stats_jetpack_connection_setup_info">要在 WordPress 站点中使用统计功能，您需要安装 Jetpack 插件。</string>
     <string name="themes_empty_list">没有与您的搜索匹配的主题</string>
     <string name="reader_label_post_search_explainer">您想要查找什么内容？</string>
@@ -1139,7 +1145,6 @@ Language: zh_CN
     <string name="editor_post_saved_locally_failed_media">文章有上传失败的媒体，已在本地保存</string>
     <string name="sure_to_remove_account">从应用中删除此站点？</string>
     <string name="photo_picker_title">选择照片</string>
-    <string name="error_publish_no_network">设备未连接网络。已将更改保存在本地。</string>
     <string name="editor_post_saved_online">文章已在线保存</string>
     <string name="site_settings_image_quality_hint">图片质量。值越高，表示图片质量越好。</string>
     <string name="site_settings_optimize_images_summary">启用以调整图片大小和压缩图片</string>
@@ -1432,7 +1437,6 @@ Language: zh_CN
     <string name="cd_related_post_preview_image">相关文章预览图片</string>
     <string name="error_post_remote_site_settings">无法保存站点信息</string>
     <string name="error_fetch_remote_site_settings">无法检索站点信息</string>
-    <string name="site_settings_disconnected_toast">已退出，编辑功能已禁用。</string>
     <string name="site_settings_close_after_dialog_switch_text">自动关闭</string>
     <string name="site_settings_close_after_dialog_description">自动关闭文章评论。</string>
     <string name="site_settings_paging_dialog_description">将评论线程划分到多个页面。</string>

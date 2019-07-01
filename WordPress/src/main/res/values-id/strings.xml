@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 10:54:10+0000
+Translation-Revision-Date: 2019-06-25 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Negara Bagian (Tidak Tersedia)</string>
+    <string name="domain_registration_privacy_protection_tos">Dengan mendaftarkan domain ini, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
+    <string name="error_network_connection">Periksa koneksi jaringan Anda dan coba lagi.</string>
+    <string name="error_browser_no_network">Tidak dapat memuat halaman ini sekarang.</string>
+    <string name="error_disabled_apis">Tidak dapat memuat pengaturan: Beberapa API tidak tersedia untuk kombinasi ID aplikasi OAuth + akun ini.</string>
+    <string name="jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
+    <string name="site_settings_disconnected_toast">Tidak ada koneksi. Tidak dapat menyunting.</string>
+    <string name="site_settings_update_password_message">Untuk menghubungkan kembali aplikasi ke situs Anda yang di-hosting sendiri, masukkan kata sandi situs yang baru di sini.</string>
+    <string name="site_settings_password_updated">Kata sandi diperbarui</string>
+    <string name="site_settings_password_dialog_title">Perbarui kata sandi</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Terjadi error saat memperbarui detail situs Anda: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Terjadi error saat mengambil informasi kontak domain: %s</string>
-    <string name="domain_registration_error_registering_domain">Terjadi error saat registrasi domain: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Mendaftarkan nama domain…</string>
     <string name="domain_registration_state_picker_dialog_title">Pilih Provinsi</string>
     <string name="domain_registration_country_picker_dialog_title">Pilih Negara</string>
@@ -402,7 +409,6 @@ Language: id
     <string name="install_jetpack">Instal Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui </string>
     <string name="stats_jetpack_connection_setup_info">Untuk menggunakan Statistik di situs WordPress, Anda perlu menginstal plugin Jetpack.</string>
     <string name="themes_empty_list">Tidak ada tema yang cocok dengan pencarian Anda</string>
     <string name="reader_label_post_search_explainer">Apa yang ingin Anda cari?</string>
@@ -522,7 +528,7 @@ Language: id
     <string name="plugin_install_site_ineligible_site_private">Fitur plugin memerlukan situs berstatus publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Fitur plugin memerlukan paket bisnis.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Fitur plugin memerlukan domain kustom.</string>
-    <string name="plugin_install_site_ineligible_default_error">Fitur plugin tidak tersedia untuk situs ini.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Kami sedang mengerjakan penyiapan akhir — hampir selesai…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Menginstal plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instal</string>
@@ -1119,7 +1125,6 @@ Language: id
     <string name="editor_post_saved_locally_failed_media">Pos memiliki unggahan media yang gagal dan telah disimpan secara lokal</string>
     <string name="sure_to_remove_account">Hapus situs ini dari aplikasi?</string>
     <string name="photo_picker_title">Pilih foto</string>
-    <string name="error_publish_no_network">Perangkat offline. Perubahan disimpan secara lokal.</string>
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
     <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
@@ -1411,7 +1416,6 @@ Language: id
     <string name="cd_related_post_preview_image">Gambar pratinjau pos terkait</string>
     <string name="error_post_remote_site_settings">Tidak dapat menyimpan info situs</string>
     <string name="error_fetch_remote_site_settings">Tidak dapat mengambil info situs</string>
-    <string name="site_settings_disconnected_toast">Log out, penyuntingan dinonaktifkan.</string>
     <string name="site_settings_close_after_dialog_switch_text">Tutup secara otomatis</string>
     <string name="site_settings_close_after_dialog_description">Tutup komentar secara otomatis di artikel.</string>
     <string name="site_settings_paging_dialog_description">Bagi utas komentar ke dalam beberapa halaman.</string>

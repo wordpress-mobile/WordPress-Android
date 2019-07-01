@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 13:54:33+0000
+Translation-Revision-Date: 2019-06-26 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Status (niet beschikbaar)</string>
+    <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze %1$salgemene voorwaarden%2$s</string>
+    <string name="error_network_connection">Controleer je netwerkverbinding en probeer het nogmaals.</string>
+    <string name="error_browser_no_network">Deze pagina kan momenteel niet geladen worden.</string>
+    <string name="error_disabled_apis">Instellingen ophalen mislukt: Sommige API\'s zijn niet beschikbaar voor deze combinatie van een OAuth app-ID en account.</string>
+    <string name="jetpack_connection_terms_and_conditions">Door Jetpack te installeren, ga je akkoord met onze %1$salgemene voorwaarden%2$s</string>
+    <string name="site_settings_disconnected_toast">Geen verbinding. Bewerken is uitgeschakeld.</string>
+    <string name="site_settings_update_password_message">Om de app opnieuw te koppelen aan je zelf-gehoste site, voer je hier het nieuwe wachtwoord van de site in.</string>
+    <string name="site_settings_password_updated">Wachtwoord bijgewerkt</string>
+    <string name="site_settings_password_dialog_title">Wachtwoord bijwerken</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Fout opgetreden bij het bijwerken van je sitegegevens: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Fout opgetreden bij het ophalen van contactgegevens voor je domein: %s</string>
-    <string name="domain_registration_error_registering_domain">Fout opgetreden tijdens domeinregistratie: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd …</string>
     <string name="domain_registration_state_picker_dialog_title">Staat selecteren</string>
     <string name="domain_registration_country_picker_dialog_title">Land selecteren</string>
@@ -347,7 +354,6 @@ Language: nl
     <string name="install_jetpack">Jetpack installeren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Door Jetpack in te stellen, ga je akkoord met onze </string>
     <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack-plugin om statistieken voor je WordPress-site te gebruiken.</string>
     <string name="themes_empty_list">Er komen geen thema\'s overeen met je zoekopdracht</string>
     <string name="reader_label_post_search_explainer">Waar ben je naar op zoek?</string>
@@ -477,7 +483,7 @@ Language: nl
     <string name="plugin_install_site_ineligible_site_private">Voor deze plugin-functie moet de site openbaar zijn.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Voor deze plugin-functie moet je een Business abonnement hebben.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Voor deze plugin-functie moet je een aangepast domein hebben.</string>
-    <string name="plugin_install_site_ineligible_default_error">Deze plugin-functie is niet beschikbaar voor deze site.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We voeren de laatste instellingen door, nog even geduld …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wordt geïnstalleerd …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installeren</string>
@@ -1069,7 +1075,6 @@ Language: nl
     <string name="editor_post_saved_locally_failed_media">Het bericht bevat mislukte media-uploads en is lokaal opgeslagen</string>
     <string name="sure_to_remove_account">Deze site uit de app verwijderen?</string>
     <string name="photo_picker_title">Kies een foto</string>
-    <string name="error_publish_no_network">Apparaat is offline. Wijzigingen lokaal opgeslagen.</string>
     <string name="editor_post_saved_online">Het bericht is online opgeslagen</string>
     <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het aanpassen van de grootte en het comprimeren van afbeeldingen inschakelen</string>
@@ -1363,7 +1368,6 @@ Language: nl
     <string name="cd_related_post_preview_image">Voorbeeldafbeelding van gerelateerd bericht bekijken</string>
     <string name="error_post_remote_site_settings">Kan site-informatie niet opslaan</string>
     <string name="error_fetch_remote_site_settings">Kan site-informatie niet ophalen</string>
-    <string name="site_settings_disconnected_toast">Niet ingelogd, bewerken uitgeschakeld.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatisch afsluiten</string>
     <string name="site_settings_close_after_dialog_description">Sluit reacties op artikelen automatisch af.</string>
     <string name="site_settings_paging_dialog_description">Deel reacties in threads op in meerdere pagina\'s.</string>

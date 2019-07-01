@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-13 12:54:08+0000
+Translation-Revision-Date: 2019-06-27 06:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">状態 (使用不可)</string>
+    <string name="domain_registration_privacy_protection_tos">このドメインを登録することで、当社の%1$s利用規約%2$sに合意したことになります</string>
+    <string name="error_network_connection">ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="error_browser_no_network">現在このページを読み込めません。</string>
+    <string name="error_disabled_apis">設定を取得できませんでした。一部の API でこの OAuth のアプリ ID とアカウントの組み合わせを使用できません。</string>
+    <string name="jetpack_connection_terms_and_conditions">Jetpack を設定することで、当社の%1$s利用規約%2$sに合意したことになります</string>
+    <string name="site_settings_disconnected_toast">接続できません。編集が無効になっています。</string>
+    <string name="site_settings_update_password_message">インストール型のサイトのアプリに再接続するには、サイトの新しいパスワードを入力してください。</string>
+    <string name="site_settings_password_updated">パスワードが更新されました</string>
+    <string name="site_settings_password_dialog_title">パスワードを更新</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">サイトの詳細を更新中にエラーが発生しました：%s</string>
-    <string name="domain_registration_error_fetching_contact_information">ドメインの連絡先情報を取得中にエラーが発生しました：%s</string>
-    <string name="domain_registration_error_registering_domain">ドメイン登録中にエラーが発生しました :%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">ドメイン名を登録しています…</string>
     <string name="domain_registration_state_picker_dialog_title">都道府県を選択</string>
     <string name="domain_registration_country_picker_dialog_title">国を選択</string>
@@ -407,13 +414,14 @@ Language: ja_JP
     <string name="reader_empty_followed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
     <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
     <string name="install_jetpack_retry">再試行</string>
+    <string name="install_jetpack_continue">設定</string>
+    <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません。</string>
     <string name="jetpack_installation_problem">問題が発生しました</string>
     <string name="jetpack_installed">Jetpack がインストールされています</string>
     <string name="installing_jetpack">Jetpack をインストール</string>
     <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Jetpack を設定すると、</string>
     <string name="stats_jetpack_connection_setup_info">WordPress サイトの統計情報を利用するには、Jetpack プラグインのインするが必要です。</string>
     <string name="themes_empty_list">検索と一致するテーマがありません</string>
     <string name="reader_label_post_search_explainer">何をお探しですか ?</string>
@@ -1163,7 +1171,6 @@ Language: ja_JP
     <string name="editor_post_saved_locally_failed_media">投稿はメディアアップロードに失敗し、ローカルに保存されました</string>
     <string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
     <string name="photo_picker_title">写真を選択</string>
-    <string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
     <string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
@@ -1457,7 +1464,6 @@ Language: ja_JP
     <string name="cd_related_post_preview_image">関連記事のプレビュー画像</string>
     <string name="error_post_remote_site_settings">サイト情報を保存できませんでした</string>
     <string name="error_fetch_remote_site_settings">サイト情報を取得できませんでした</string>
-    <string name="site_settings_disconnected_toast">ログアウトしたため編集を無効化しました。</string>
     <string name="site_settings_close_after_dialog_switch_text">自動的に閉じる</string>
     <string name="site_settings_close_after_dialog_description">記事のコメントを自動的に閉じます。</string>
     <string name="site_settings_paging_dialog_description">コメントスレッドを複数のページに分けます。</string>

@@ -23,7 +23,6 @@ Language: is
     <string name="start_over_email_subject">Byrja upp á nýtt með vefinn %s</string>
     <string name="site_picker_remove_site_error">Villa við að eyða vef, reyndu aftur síðar</string>
     <string name="sure_to_remove_account">Fjarlægja þennan vef úr appinu?</string>
-    <string name="error_publish_no_network">Tæki er ónettengt. Breytingar vistaðar staðbundið.</string>
     <string name="photo_picker_title">Veldu mynd</string>
     <string name="site_settings_image_quality_hint">Gæði mynda. Hærra gildi þýðir betri gæði mynda.</string>
     <string name="site_settings_optimize_images_summary">Virkjaðu til þess að minnka og þjappa myndum</string>
@@ -297,7 +296,6 @@ Language: is
     <string name="cd_related_post_preview_image">Myndaforskoðun tengdra færslna</string>
     <string name="error_post_remote_site_settings">Gat ekki vistað upplýsingar um vef</string>
     <string name="error_fetch_remote_site_settings">Gat ekki sótt upplýsingar um vef</string>
-    <string name="site_settings_disconnected_toast">Útskráð(ur), breytingar ekki í boði.</string>
     <string name="site_settings_close_after_dialog_switch_text">Loka sjálfkrafa</string>
     <string name="site_settings_close_after_dialog_description">Loka sjálfkrafa fyrir athugasemdir við greinar.</string>
     <string name="site_settings_paging_dialog_description">Skipta umræðuþráðum niður á síður.</string>
