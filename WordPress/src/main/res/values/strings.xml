@@ -846,6 +846,22 @@
     <string name="stats_management_edit">Edit</string>
     <string name="stats_management_new">New</string>
 
+    <!-- Stats refreshed widgets -->
+
+    <string name="stats_widget_add">Add widget</string>
+    <string name="stats_widget_views_title">Views This Week</string>
+    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_color">Color</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color_dark">Dark</string>
+    <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_select_color">Color</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_error_no_network">No network available</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
@@ -1069,6 +1085,13 @@
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+
+    <!-- Stats refreshed widgets -->
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_minified_name">At a glance</string>
 
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>
@@ -1984,6 +2007,8 @@
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
@@ -2018,7 +2043,7 @@
 
 
     <!-- Automated Transfer Eligibility Errors -->
-    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
     <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
@@ -2062,6 +2087,8 @@
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_external_link_icon_content_description">External link</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
+
+    <string name="plugin_fetching_error_after_at">It takes longer then usual to refresh plugin details. Please check again later.</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -33,7 +33,7 @@ class CommentsUseCase
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
+) : BaseStatsUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
         val fetchMode = LimitMode.Top(BLOCK_ITEM_COUNT)
         val response = commentsStore.fetchComments(statsSiteProvider.siteModel, fetchMode, forced)
@@ -61,7 +61,7 @@ class CommentsUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
+    override fun buildUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {

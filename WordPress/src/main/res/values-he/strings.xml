@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 10:54:10+0000
+Translation-Revision-Date: 2019-06-26 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">מדינה (לא זמין)</string>
+    <string name="domain_registration_privacy_protection_tos">הרשמה לדומיין מהווה הסכמה מצדך %1$sלתנאים ולהתניות שלנו%2$s</string>
+    <string name="error_network_connection">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="error_browser_no_network">אין אפשרות לטעון את העמוד כרגע.</string>
+    <string name="error_disabled_apis">לא ניתן היה להביא את ההגדרות: חלק ממשקי ה-API לא זמינים בשילוב הנוכחי של מזהה אפליקציית OAuth ושל החשבון.</string>
+    <string name="jetpack_connection_terms_and_conditions">ההגדרה של Jetpack מהווה הסכמה מצדך %1$sלתנאים ולהתניות שלנו%2$s</string>
+    <string name="site_settings_disconnected_toast">אין חיבור. האפשרות לעריכה מושבתת.</string>
+    <string name="site_settings_update_password_message">כדי להתחבר מחדש את האפליקציה לאתר באחסון עצמי, יש להזין את הסיסמה החדשה של האתר כאן.</string>
+    <string name="site_settings_password_updated">הסיסמה עודכנה</string>
+    <string name="site_settings_password_dialog_title">לעדכן את הסיסמה</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">אירעה שגיאה בעת העדכון של פרטי האתר: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">אירעה שגיאה בקבלה של פרטי יצירת הקשר עם הדומיין: %s</string>
-    <string name="domain_registration_error_registering_domain">אירעה שגיאה במהלך ההרשמה של הדומיין: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">רושם את שם הדומיין…</string>
     <string name="domain_registration_state_picker_dialog_title">בחירת מדינה</string>
     <string name="domain_registration_country_picker_dialog_title">בחירת ארץ</string>
@@ -406,7 +413,6 @@ Language: he_IL
     <string name="install_jetpack">התקנת Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">שאלות נפוצות בנושא Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">ההגדרה של Jetpack מהווה את ההסכמה שלך </string>
     <string name="stats_jetpack_connection_setup_info">להשתמש בנתונים סטטיסטיים באתר שלך ב-WordPress, עליך להתקין את התוסף של Jetpack.</string>
     <string name="themes_empty_list">לא נמצאו ערכות עיצוב שמתאימות לחיפוש שלך</string>
     <string name="reader_label_post_search_explainer">מה ברצונך לחפש?</string>
@@ -1156,7 +1162,6 @@ Language: he_IL
     <string name="editor_post_saved_locally_failed_media">בפוסט קיימים פריטי מדיה שהעלאתם טרם הסתיימה והם נשמרו במחשב המקומי</string>
     <string name="sure_to_remove_account">האם להסיר את האתר מהאפליקציה?</string>
     <string name="photo_picker_title">בחירת תמונה</string>
-    <string name="error_publish_no_network">המכשיר אינו מחובר. השינויים נשמרו בשרת המקומי.</string>
     <string name="editor_post_saved_online">הפוסט נשמר ברשת</string>
     <string name="site_settings_image_quality_hint">איכות תמונות. ערכים גבוהים יותר מאפשרים איכות טובה יותר של התמונות.</string>
     <string name="site_settings_optimize_images_summary">הפעלת עריכה של גודל תמונות ודחיסתן</string>
@@ -1450,7 +1455,6 @@ Language: he_IL
     <string name="cd_related_post_preview_image">תמונת תצוגה מקדימה של פוסט קשור</string>
     <string name="error_post_remote_site_settings">לא הצלחנו לשמור את פרטי האתר</string>
     <string name="error_fetch_remote_site_settings">לא הצלחנו לאחזר את פרטי האתר</string>
-    <string name="site_settings_disconnected_toast">מנותק, עריכה מושבתת.</string>
     <string name="site_settings_close_after_dialog_switch_text">סגירה אוטומטית</string>
     <string name="site_settings_close_after_dialog_description">סגירת תגובות אוטומטית במאמרים.</string>
     <string name="site_settings_paging_dialog_description">חלוקת שרשורי תגובות למספר עמודים.</string>

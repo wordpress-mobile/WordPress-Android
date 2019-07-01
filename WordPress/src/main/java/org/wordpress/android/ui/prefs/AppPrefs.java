@@ -119,7 +119,12 @@ public class AppPrefs {
         IS_QUICK_START_NOTICE_REQUIRED,
 
         POST_LIST_AUTHOR_FILTER,
-        POST_LIST_VIEW_LAYOUT_TYPE
+        POST_LIST_VIEW_LAYOUT_TYPE,
+
+        // Widget settings
+        STATS_WIDGET_SELECTED_SITE_ID,
+        STATS_WIDGET_COLOR_MODE,
+        STATS_WIDGET_DATA_TYPE
     }
 
     /**
@@ -859,5 +864,53 @@ public class AppPrefs {
 
     public static void setPostsListViewLayoutType(@NonNull PostListViewLayoutType type) {
         setLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE, type.getId());
+    }
+
+    public static void setStatsWidgetSelectedSiteId(long siteId, int appWidgetId) {
+        prefs().edit().putLong(getSiteIdWidgetKey(appWidgetId), siteId).apply();
+    }
+
+    public static long getStatsWidgetSelectedSiteId(int appWidgetId) {
+        return prefs().getLong(getSiteIdWidgetKey(appWidgetId), -1);
+    }
+
+    public static void removeStatsWidgetSelectedSiteId(int appWidgetId) {
+        prefs().edit().remove(getSiteIdWidgetKey(appWidgetId)).apply();
+    }
+
+    @NonNull private static String getSiteIdWidgetKey(int appWidgetId) {
+        return DeletablePrefKey.STATS_WIDGET_SELECTED_SITE_ID.name() + appWidgetId;
+    }
+
+    public static void setStatsWidgetColorModeId(int colorModeId, int appWidgetId) {
+        prefs().edit().putInt(getColorModeIdWidgetKey(appWidgetId), colorModeId).apply();
+    }
+
+    public static int getStatsWidgetColorModeId(int appWidgetId) {
+        return prefs().getInt(getColorModeIdWidgetKey(appWidgetId), -1);
+    }
+
+    public static void removeStatsWidgetColorModeId(int appWidgetId) {
+        prefs().edit().remove(getColorModeIdWidgetKey(appWidgetId)).apply();
+    }
+
+    @NonNull private static String getColorModeIdWidgetKey(int appWidgetId) {
+        return DeletablePrefKey.STATS_WIDGET_COLOR_MODE.name() + appWidgetId;
+    }
+
+    public static void setStatsWidgetDatatTypeId(int dataTypeId, int appWidgetId) {
+        prefs().edit().putInt(getDatatTypeIdWidgetKey(appWidgetId), dataTypeId).apply();
+    }
+
+    public static int getStatsWidgetDatatTypeId(int appWidgetId) {
+        return prefs().getInt(getDatatTypeIdWidgetKey(appWidgetId), -1);
+    }
+
+    public static void removeStatsWidgetDatatTypeId(int appWidgetId) {
+        prefs().edit().remove(getDatatTypeIdWidgetKey(appWidgetId)).apply();
+    }
+
+    @NonNull private static String getDatatTypeIdWidgetKey(int appWidgetId) {
+        return DeletablePrefKey.STATS_WIDGET_DATA_TYPE.name() + appWidgetId;
     }
 }

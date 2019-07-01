@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -50,7 +50,7 @@ class TagsAndCategoriesUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
-) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
+) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
         TagsAndCategoriesUiState(null)
@@ -79,7 +79,7 @@ class TagsAndCategoriesUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {

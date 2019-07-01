@@ -36,6 +36,9 @@ import "./ScreenshotFastfile"
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
 ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
+ENV["PROJECT_ROOT_FOLDER"]="./"
+ENV["PROJECT_NAME"]="WordPress"
+ENV["HAS_ALPHA_VERSION"]="true"
 
 ########################################################################
 # Release Lanes
@@ -46,22 +49,26 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
   # This lane executes the steps planned on code freeze
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane code_freeze codefreeze_version:<version> [update_release_branch_version:<update flag>] [skip_confirm:<skip confirm>]
+  # bundle exec fastlane code_freeze [update_release_branch_version:<update flag>] [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane code_freeze codefreeze_version:11.2
-  # bundle exec fastlane code_freeze codefreeze_version:11.2 update_release_branch_version:false
-  # bundle exec fastlane code_freeze codefreeze_version:11.2 skip_confirm:true
+  # bundle exec fastlane code_freeze 
+  # bundle exec fastlane code_freeze update_release_branch_version:false
+  # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
-    old_version = android_codefreeze(options)
+    old_version = android_codefreeze_prechecks(options)
    
+    android_bump_version_release()
+    new_version = android_get_app_version()
+    android_update_release_notes(new_version: new_version)
+    setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
+    setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
+    
     localize_libs()
-    setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
-    setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
-
-    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
+    android_tag_build()
+    get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
 #####################################################################################
