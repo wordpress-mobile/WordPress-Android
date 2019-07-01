@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-13 05:53:20+0000
+Translation-Revision-Date: 2019-06-26 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">상태(사용할 수 없음)</string>
+    <string name="domain_registration_privacy_protection_tos">이 도메인을 등록하면 %1$s이용 약관%2$s에 동의하는 것입니다.</string>
+    <string name="error_network_connection">네트워크 연결을 확인하고 다시 시도하세요.</string>
+    <string name="error_browser_no_network">지금 이 페이지를 로드할 수 없습니다.</string>
+    <string name="error_disabled_apis">설정을 가져올 수 없음: 이 OAuth 앱 ID + 계정 조합에 일부 API를 사용할 수 없습니다.</string>
+    <string name="jetpack_connection_terms_and_conditions">Jetpack을 설치하면 %1$s이용 약관%2$s에 동의하는 것입니다.</string>
+    <string name="site_settings_disconnected_toast">연결이 없습니다. 편집을 사용할 수 없습니다.</string>
+    <string name="site_settings_update_password_message">앱을 자체 호스팅된 사이트에 다시 연결하려면 여기에 사이트의 새 비밀번호를 입력하세요.</string>
+    <string name="site_settings_password_updated">비밀번호가 업데이트됨</string>
+    <string name="site_settings_password_dialog_title">비밀번호 업데이트</string>
     <string name="domain_registration_phone_number_format">+%s %s</string>
-    <string name="domain_registration_error_updating_site">사이트 세부정보를 업데이트하는 중 오류 발생: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">도메인 연락처 정보를 가져오는 중 오류 발생: %s</string>
-    <string name="domain_registration_error_registering_domain">도메인 등록 중 오류 발생: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">도메인 네임 등록 중…</string>
     <string name="domain_registration_state_picker_dialog_title">주 선택</string>
     <string name="domain_registration_country_picker_dialog_title">국가 선택</string>
@@ -423,7 +430,6 @@ Language: ko_KR
     <string name="install_jetpack">젯팩 설치</string>
     <string name="jetpack">젯팩</string>
     <string name="stats_jetpack_connection_faq">젯팩 자주 찾는 질문</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">젯팩을 설치하면 다음에 동의하는 것입니다. </string>
     <string name="stats_jetpack_connection_setup_info">워드프레스 사이트에서 통계를 사용하려면 젯팩 플러그인을 설치해야 합니다.</string>
     <string name="themes_empty_list">검색과 일치하는 테마 없음</string>
     <string name="reader_label_post_search_explainer">무엇을 찾길 원하세요?</string>
@@ -1175,7 +1181,6 @@ Language: ko_KR
     <string name="editor_post_saved_locally_failed_media">글에 완료되지 않은 미디어 업로드가 있어 글이 로컬에 저장되었습니다.</string>
     <string name="sure_to_remove_account">앱에서 이 사이트를 제거할까요?</string>
     <string name="photo_picker_title">사진 선택</string>
-    <string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
     <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
@@ -1469,7 +1474,6 @@ Language: ko_KR
     <string name="cd_related_post_preview_image">관련 글 미리보기 이미지</string>
     <string name="error_post_remote_site_settings">사이트 정보를 저장할 수 없습니다.</string>
     <string name="error_fetch_remote_site_settings">사이트 정보를 가져올 수 없습니다.</string>
-    <string name="site_settings_disconnected_toast">로그아웃, 편집 불가능</string>
     <string name="site_settings_close_after_dialog_switch_text">자동으로 닫기</string>
     <string name="site_settings_close_after_dialog_description">글에 대한 댓글을 자동으로 닫습니다.</string>
     <string name="site_settings_paging_dialog_description">댓글 스레드를 여러 페이지로 나눕니다.</string>

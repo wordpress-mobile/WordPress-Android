@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-05 22:03:21+0000
+Translation-Revision-Date: 2019-06-19 11:10:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Delstat (Inte tillgänglig)</string>
+    <string name="domain_registration_privacy_protection_tos">I och med att du registrerar denna domän accepterar du våra %1$savtalsvillkor%2$s</string>
+    <string name="error_network_connection">Kontrollera din nätverksanslutning och försök igen.</string>
+    <string name="error_browser_no_network">Det går inte att ladda denna sida just nu.</string>
+    <string name="error_disabled_apis">Det gick inte att hämta inställningarna: Vissa API:er är inte tillgängliga för denna kombination av OAuth app-ID och användarkonto.</string>
+    <string name="jetpack_connection_terms_and_conditions">I och med att du konfigurerar Jetpack accepterar du våra %1$savtalsvillkor%2$s</string>
+    <string name="site_settings_disconnected_toast">Ingen anslutning. Redigering är inaktiverad.</string>
+    <string name="site_settings_update_password_message">För att återansluta appen till din webbplats som körs på extern server behöver du skriva in webbplatsens nya lösenord här.</string>
+    <string name="site_settings_password_updated">Lösenord uppdaterat</string>
+    <string name="site_settings_password_dialog_title">Uppdatera lösenord</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Ett fel inträffade när uppgifterna om webbplatsen skulle uppdateras: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Ett fel inträffade när kontaktinformationen för domänen skulle hämtas: %s</string>
-    <string name="domain_registration_error_registering_domain">Ett fel inträffade när domänen skulle registreras: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerar domännamn…</string>
     <string name="domain_registration_state_picker_dialog_title">Välj delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Välj land</string>
@@ -423,7 +430,6 @@ Language: sv_SE
     <string name="install_jetpack">Installera Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Genom att installera Jetpack godkänner du vår </string>
     <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress-webbplats måste du installera tillägget Jetpack.</string>
     <string name="themes_empty_list">Inga teman matchar din sökning</string>
     <string name="reader_label_post_search_explainer">Vad vill du hitta?</string>
@@ -553,7 +559,7 @@ Language: sv_SE
     <string name="plugin_install_site_ineligible_site_private">För funktionen med tillägg krävs att webbplatsen är publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">För funktionen med tillägg krävs ett business-konto.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funktionen med tillägg är inte tillgänglig för denna webbplats.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Vi genomför de sista förberedelserna – nästan klart…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installerar tillägget…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>
@@ -1175,7 +1181,7 @@ Language: sv_SE
     <string name="editor_post_saved_locally_failed_media">Inlägget innehåller media som inte kunde laddas upp och har sparats lokalt på enheten</string>
     <string name="sure_to_remove_account">Ta bort denna webbplats från appen?</string>
     <string name="photo_picker_title">Välj foto</string>
-    <string name="error_publish_no_network">Enheten är off-line. Ändringarna har sparats lokalt.</string>
+    <string name="error_publish_no_network">Enheten är offline. Inlägg sparad lokalt.</string>
     <string name="editor_post_saved_online">Inlägget har sparats on-line</string>
     <string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
@@ -1469,7 +1475,6 @@ Language: sv_SE
     <string name="cd_related_post_preview_image">Relaterat inlägg förhandsgranskningsbild</string>
     <string name="error_post_remote_site_settings">Kunde inte spara webbplatsinfo</string>
     <string name="error_fetch_remote_site_settings">Kunde inte hämta webbplatsinfo</string>
-    <string name="site_settings_disconnected_toast">Utloggad, redigering inaktiverad.</string>
     <string name="site_settings_close_after_dialog_switch_text">Stäng automatiskt</string>
     <string name="site_settings_close_after_dialog_description">Stäng kommentarer om inlägg automatiskt.</string>
     <string name="site_settings_paging_dialog_description">Dela upp kommentarstrådar i flera sidor.</string>

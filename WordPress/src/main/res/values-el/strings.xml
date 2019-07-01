@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-03 13:21:24+0000
+Translation-Revision-Date: 2019-06-21 11:52:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="post_list_drafts">Προσχέδια</string>
     <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
@@ -579,7 +580,7 @@ Language: el_GR
     <string name="editor_post_saved_locally_failed_media">Το άρθρο έχει μη ολοκληρωμένες μεταφορτώσεις πολυμέσων και έχει αποθηκευτεί τοπικά.</string>
     <string name="sure_to_remove_account">Αφαίρεση αυτού του ιστότοπου από την εφαρμογή;</string>
     <string name="photo_picker_title">Επιλέξτε φωτογραφία</string>
-    <string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Οι αλλαγές αποθηκεύτηκαν τοπικά.</string>
+    <string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Το άρθρο αποθηκεύτηκε τοπικά.</string>
     <string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
     <string name="site_settings_image_quality_hint">Ποιότητα εικόνων. Υψηλότερες τιμές σημαίνουν εικόνες καλύτερης ποιότητας.</string>
     <string name="site_settings_optimize_images_summary">Ενεργοποιήστε για αλλαγή μεγέθους και συμπίεσης εικόνων</string>
@@ -873,7 +874,6 @@ Language: el_GR
     <string name="cd_related_post_preview_image">Προεπισκόπηση εικόνας σχετικού άρθρου</string>
     <string name="error_post_remote_site_settings">Αδυναμία αποθήκευσης πληροφοριών ιστοτόπου</string>
     <string name="error_fetch_remote_site_settings">Αδυναμία ανάκτησης πληροφοριών ιστοτόπου</string>
-    <string name="site_settings_disconnected_toast">Αποσυνδεδεμένος, η επεξεργασία απενεργοποιήθηκε.</string>
     <string name="site_settings_close_after_dialog_switch_text">Αυτόματο κλείσιμο</string>
     <string name="site_settings_close_after_dialog_description">Αυτόματο κλείσιμο των σχολίων στα άρθρα.</string>
     <string name="site_settings_paging_dialog_description">Σπάσιμο των συζητήσεων με σχόλια σε πολλαπλές σελίδες.</string>

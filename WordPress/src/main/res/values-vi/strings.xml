@@ -228,7 +228,6 @@ Language: vi_VN
     <string name="cd_related_post_preview_image">Ảnh xem trước bài viết liên quan</string>
     <string name="error_post_remote_site_settings">Không thể lưu thông tin site</string>
     <string name="error_fetch_remote_site_settings">Không thể lấy thông tin site</string>
-    <string name="site_settings_disconnected_toast">Đã ngắt kết nối, việc biên tập bị vô hiệu</string>
     <string name="site_settings_close_after_dialog_switch_text">Tự động đóng</string>
     <string name="site_settings_close_after_dialog_description">Tự động đóng bình luận trên các bài viết</string>
     <string name="site_settings_paging_dialog_description">Ngắt chuỗi bình luận thành nhiều trang.</string>
