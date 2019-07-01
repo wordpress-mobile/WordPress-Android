@@ -27,7 +27,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .equals(NotificationModelTable.ID, notification.noteId)
                 .or()
                 .beginGroup()
-                .equals(NotificationModelTable.LOCAL_SITE_ID, notification.localSiteId)
+                .equals(NotificationModelTable.REMOTE_SITE_ID, notification.remoteSiteId)
                 .equals(NotificationModelTable.REMOTE_NOTE_ID, notification.remoteNoteId)
                 .endGroup()
                 .endGroup().endWhere()
@@ -94,7 +94,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     ): List<NotificationModel> {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
                 .where()
-                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
+                .equals(NotificationModelTable.REMOTE_SITE_ID, site.siteId)
 
         if (filterByType != null || filterBySubtype != null) {
             conditionClauseBuilder.beginGroup()
@@ -127,7 +127,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     ): Boolean {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
                 .where()
-                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
+                .equals(NotificationModelTable.REMOTE_SITE_ID, site.siteId)
                 .equals(NotificationModelTable.READ, 0)
 
         if (filterByType != null || filterBySubtype != null) {
@@ -152,13 +152,13 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     }
 
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
-        val (id, remoteNoteId, localSiteId) = idSet
+        val (id, remoteNoteId, remoteSiteId) = idSet
         return WellSql.select(NotificationModelBuilder::class.java)
                 .where().beginGroup()
                 .equals(NotificationModelTable.ID, id)
                 .or()
                 .beginGroup()
-                .equals(NotificationModelTable.LOCAL_SITE_ID, localSiteId)
+                .equals(NotificationModelTable.REMOTE_SITE_ID, remoteSiteId)
                 .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
                 .endGroup()
                 .endGroup().endWhere()
@@ -175,9 +175,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .firstOrNull()?.build(formattableContentMapper)
     }
 
-    fun deleteAllNotifications(): Int {
-        return WellSql.delete(NotificationModelBuilder::class.java).execute()
-    }
+    fun deleteAllNotifications() = WellSql.delete(NotificationModelBuilder::class.java).execute()
 
     fun deleteNotificationByRemoteId(remoteNoteId: Long): Int {
         return WellSql.delete(NotificationModelBuilder::class.java)
@@ -190,7 +188,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         return NotificationModelBuilder(
                 mId = this.noteId,
                 remoteNoteId = this.remoteNoteId,
-                localSiteId = this.localSiteId,
+                remoteSiteId = this.remoteSiteId,
                 noteHash = this.noteHash,
                 type = this.type.toString(),
                 subtype = this.subtype.toString(),
@@ -210,7 +208,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     data class NotificationModelBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var remoteNoteId: Long,
-        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long,
         @Column var noteHash: Long,
         @Column var type: String,
         @Column var subtype: String? = null,
@@ -246,7 +244,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             return NotificationModel(
                     mId,
                     remoteNoteId,
-                    localSiteId,
+                    remoteSiteId,
                     noteHash,
                     Kind.fromString(type),
                     subkind,

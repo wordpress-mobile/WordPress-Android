@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 74;
+        return 75;
     }
 
     @Override
@@ -546,6 +546,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_UPLOAD_ERRORS_OR_CANCELLATIONS INTEGER");
                 oldVersion++;
             case 73:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS NotificationModel");
+                db.execSQL("CREATE TABLE NotificationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "REMOTE_NOTE_ID INTEGER,REMOTE_SITE_ID INTEGER,NOTE_HASH INTEGER,TYPE TEXT,"
+                           + "SUBTYPE TEXT,READ INTEGER,ICON TEXT,NOTICON TEXT,TIMESTAMP TEXT,URL TEXT,"
+                           + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
+                oldVersion++;
+            case 74:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
