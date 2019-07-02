@@ -921,15 +921,13 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        if (SiteUtils.onFreePlan(site)) {
+        if (SiteUtils.onFreePlan(site) || SiteUtils.hasCustomDomain(site)) {
             mIsDomainCreditAvailable = false;
             toggleDomainRegistrationCtaVisibility();
+        } else if (!mIsDomainCreditChecked) {
+            fetchSitePlans(site);
         } else {
-            if (!SiteUtils.hasCustomDomain(site) && !mIsDomainCreditChecked) {
-                fetchSitePlans(site);
-            } else {
-                toggleDomainRegistrationCtaVisibility();
-            }
+            toggleDomainRegistrationCtaVisibility();
         }
 
         mScrollView.setVisibility(View.VISIBLE);

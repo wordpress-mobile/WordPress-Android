@@ -27,7 +27,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationMainViewModel
-    private var domainRegistrationPurpose: DomainRegistrationPurpose? = null
+    private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_domain_suggestions_activity)
 
         domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                as? DomainRegistrationPurpose
+                as DomainRegistrationPurpose
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
@@ -65,7 +65,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
 
                 if (fragment == null) {
                     fragment = DomainRegistrationDetailsFragment.newInstance(it)
-                    showFragment(fragment!!, DomainRegistrationResultFragment.TAG)
+                    showFragment(fragment!!, DomainRegistrationDetailsFragment.TAG)
                 }
             }
         })
@@ -105,7 +105,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
     }
 
     private fun shouldShowCongratsScreen(): Boolean {
-        return domainRegistrationPurpose == null || domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
+        return domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

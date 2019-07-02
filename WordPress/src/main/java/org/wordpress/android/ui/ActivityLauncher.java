@@ -414,7 +414,7 @@ public class ActivityLauncher {
     }
 
     public static void viewDomainRegistrationActivityForResult(Activity activity, SiteModel site,
-                                                               DomainRegistrationPurpose purpose) {
+                                                               @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(activity, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);

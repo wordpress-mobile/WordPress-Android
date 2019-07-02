@@ -280,6 +280,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         } else {
             // Everything looks good! Let's wait a bit before moving on
             launch {
+                AppLog.v(T.DOMAIN_REGISTRATION, "Finishing registration...")
                 delay(SITE_CHECK_DELAY_MS)
                 finishRegistration()
             }
