@@ -1420,11 +1420,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
        return new RemotePreviewLogicHelper.RemotePreviewHelperFunctions() {
             @Override
-            public boolean isNewPost() {
-                return EditPostActivity.this.isNewPost();
-            }
-
-            @Override
             public void notifyNoNetwork() {
                 UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.no_network_message);
             }
@@ -1445,11 +1440,6 @@ public class EditPostActivity extends AppCompatActivity implements
             public PostModel updatePostIfNeeded() {
                 updatePostObject();
                 return mPost;
-            }
-
-            @Override
-            public boolean canDiscard() {
-                return isDiscardable();
             }
 
             @Override

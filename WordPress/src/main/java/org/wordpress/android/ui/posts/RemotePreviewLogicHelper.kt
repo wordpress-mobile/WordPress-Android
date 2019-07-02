@@ -13,7 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class RemotePreviewLogicHelper @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val activityLauncherWrapper: ActivityLauncherWrapper
+    private val activityLauncherWrapper: ActivityLauncherWrapper,
+    private val postUtilsWrapper: PostUtilsWrapper
 ) {
     enum class RemotePreviewType {
         NOT_A_REMOTE_PREVIEW,
@@ -32,11 +33,9 @@ class RemotePreviewLogicHelper @Inject constructor(
     }
 
     interface RemotePreviewHelperFunctions {
-        fun isNewPost() = false
         fun notifyNoNetwork()
         fun notifyUploadInProgress(post: PostModel): Boolean
         fun updatePostIfNeeded(): PostModel? = null
-        fun canDiscard(): Boolean = false
         fun notifyEmptyDraft() {}
         fun startUploading(isRemoteAutoSave: Boolean, post: PostModel)
         fun notifyEmptyPost() {}
@@ -64,15 +63,15 @@ class RemotePreviewLogicHelper @Inject constructor(
 
             val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
-            if (shouldSave(helperFunctions::isNewPost, updatedPost)) {
-                if (helperFunctions.canDiscard()) {
+            if (shouldSave(updatedPost)) {
+                if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyDraft()
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
                 }
 
                 helperFunctions.startUploading(false, updatedPost)
-            } else if (shouldRemoteAutoSave(helperFunctions::isNewPost, updatedPost)) {
-                if (helperFunctions.canDiscard()) {
+            } else if (shouldRemoteAutoSave(updatedPost)) {
+                if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyPost()
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
                 }
@@ -90,14 +89,14 @@ class RemotePreviewLogicHelper @Inject constructor(
         return PreviewLogicOperationResult.GENERATING_PREVIEW
     }
 
-    private fun shouldSave(isNewPost: () -> Boolean, post: PostModel): Boolean {
+    private fun shouldSave(post: PostModel): Boolean {
         val status = PostStatus.fromPost(post)
-        return (isNewPost() || post.isLocalDraft ||
+        return (post.isLocalDraft ||
                 ((status == PostStatus.DRAFT || status == PostStatus.SCHEDULED) && post.isLocallyChanged))
     }
 
-    private fun shouldRemoteAutoSave(isNewPost: () -> Boolean, post: PostModel): Boolean {
+    private fun shouldRemoteAutoSave(post: PostModel): Boolean {
         val status = PostStatus.fromPost(post)
-        return (!isNewPost() && (status == PostStatus.PUBLISHED) && post.isLocallyChanged)
+        return (status == PostStatus.PUBLISHED && post.isLocallyChanged)
     }
 }

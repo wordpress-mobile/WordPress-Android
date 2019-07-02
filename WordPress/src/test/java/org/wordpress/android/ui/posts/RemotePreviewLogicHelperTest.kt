@@ -40,22 +40,30 @@ class RemotePreviewLogicHelperTest {
     @Mock
     private lateinit var helperFunctions: RemotePreviewHelperFunctions
 
+    @Mock
+    private lateinit var postUtilsWrapper: PostUtilsWrapper
+
     private lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
 
     @Before
     fun setup() {
-        remotePreviewLogicHelper = RemotePreviewLogicHelper(networkUtilsWrapper, activityLauncherWrapper)
+        remotePreviewLogicHelper = RemotePreviewLogicHelper(
+                networkUtilsWrapper,
+                activityLauncherWrapper,
+                postUtilsWrapper
+        )
 
         doReturn(true).whenever(site).isUsingWpComRestApi
 
         doReturn(true).whenever(networkUtilsWrapper).isNetworkAvailable()
 
         doReturn(false).whenever(helperFunctions).notifyUploadInProgress(any())
-        doReturn(false).whenever(helperFunctions).isNewPost()
-        doReturn(false).whenever(helperFunctions).canDiscard()
+
+        doReturn(true).whenever(postUtilsWrapper).isPublishable(post)
 
         doReturn(PostStatus.DRAFT.toString()).whenever(post).status
         doReturn("2018-06-23T15:45:16+00:00").whenever(post).dateCreated
+        doReturn(true).whenever(post).isLocallyChanged
     }
 
     @Test
@@ -103,8 +111,7 @@ class RemotePreviewLogicHelperTest {
     @Test
     fun `cannot save empty draft for preview`() {
         // Given
-        doReturn(true).whenever(helperFunctions).isNewPost()
-        doReturn(true).whenever(helperFunctions).canDiscard()
+        doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -117,7 +124,7 @@ class RemotePreviewLogicHelperTest {
     @Test
     fun `upload new draft for preview`() {
         // Given
-        doReturn(true).whenever(helperFunctions).isNewPost()
+        // standard setup conditions are fine
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -130,9 +137,8 @@ class RemotePreviewLogicHelperTest {
     @Test
     fun `cannot remote auto save empty published post for preview`() {
         // Given
-        doReturn(true).whenever(helperFunctions).canDiscard()
+        doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
         doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
-        doReturn(true).whenever(post).isLocallyChanged
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -148,7 +154,6 @@ class RemotePreviewLogicHelperTest {
     fun `remote auto save published post with local changes for preview`() {
         // Given
         doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
-        doReturn(true).whenever(post).isLocallyChanged
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
