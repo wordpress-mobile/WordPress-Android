@@ -2276,12 +2276,6 @@ public class EditPostActivity extends AppCompatActivity implements
                || (originalStatus == PostStatus.SCHEDULED && publishPost)
                || (originalStatus == PostStatus.PUBLISHED && mPost.isLocalDraft())
                || (originalStatus == PostStatus.PUBLISHED && mPost.getRemotePostId() == 0);
-
-        /*
-        return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING); */
     }
 
     /**
