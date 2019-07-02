@@ -350,9 +350,9 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
+    <string name="dialog_gutenberg_informative_description_post">Block Editor is now default for the new posts.
         Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
+    <string name="dialog_gutenberg_informative_description_page">Block Editor is now default for the new posts.
         Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
 
     <!-- reload drop down -->
