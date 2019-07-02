@@ -444,7 +444,10 @@ class PostListMainViewModel @Inject constructor(
         /* We need only transitions, so... */
         if (_previewState.value == newState) return
 
-        AppLog.d(AppLog.T.POSTS, "****** POSTLIST PREVIEW SM - from [${_previewState.value}] to [$newState]")
+        AppLog.d(
+                AppLog.T.POSTS,
+                "Posts list preview state machine: transition from ${_previewState.value} to $newState"
+        )
 
         /* update the state */
         val prevState = _previewState.value

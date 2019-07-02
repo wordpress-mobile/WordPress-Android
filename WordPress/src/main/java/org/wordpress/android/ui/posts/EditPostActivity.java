@@ -1680,7 +1680,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         AppLog.d(
                 AppLog.T.POSTS,
-                "****** EDITOR PREVIEW SM - from [" + mPostLoadingState + "] to [" + postLoadingState + "]"
+                "Editor post loading state machine: transition from " + mPostLoadingState + " to " + postLoadingState
         );
 
         /* update the state */
