@@ -54,7 +54,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
                 var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
                 if (fragment == null) {
                     fragment = DomainSuggestionsFragment.newInstance()
-                    slideInFragment(fragment, DomainSuggestionsFragment.TAG)
+                    showFragment(fragment, DomainSuggestionsFragment.TAG, slideIn = false)
                 }
             }
         })
@@ -65,7 +65,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
 
                 if (fragment == null) {
                     fragment = DomainRegistrationDetailsFragment.newInstance(it)
-                    slideInFragment(fragment!!, DomainRegistrationResultFragment.TAG)
+                    showFragment(fragment!!, DomainRegistrationResultFragment.TAG)
                 }
             }
         })
@@ -77,7 +77,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
 
                     if (fragment == null) {
                         fragment = DomainRegistrationResultFragment.newInstance(it.domainName, it.email)
-                        slideInFragment(fragment!!, DomainRegistrationResultFragment.TAG)
+                        showFragment(fragment!!, DomainRegistrationResultFragment.TAG)
                     }
                 } else {
                     val intent = Intent()
@@ -89,12 +89,17 @@ class DomainRegistrationActivity : AppCompatActivity() {
         })
     }
 
-    private fun slideInFragment(fragment: Fragment, tag: String) {
-        supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                        R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                        R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-                )
+    private fun showFragment(fragment: Fragment, tag: String, slideIn: Boolean = true) {
+        val transaction = supportFragmentManager.beginTransaction()
+
+        if (slideIn) {
+            transaction.setCustomAnimations(
+                    R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                    R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+            )
+        }
+
+        transaction.addToBackStack(null)
                 .replace(R.id.fragment_container, fragment, tag)
                 .commit()
     }

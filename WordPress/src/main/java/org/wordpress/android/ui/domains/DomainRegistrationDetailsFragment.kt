@@ -86,7 +86,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 

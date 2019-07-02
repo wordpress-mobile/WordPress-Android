@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,6 +108,7 @@ import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskTy
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.RESULT_TASK;
+import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
 public class MySiteFragment extends Fragment implements
         SiteSettingsListener,
@@ -803,9 +803,9 @@ public class MySiteFragment extends Fragment implements
                 }
                 break;
             case RequestCodes.DOMAIN_REGISTRATION:
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK && isAdded() && data != null) {
                     String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
-                    showRegisterDomainConfirmationMessage(email);
+                    requestEmailValidation(getContext(), email);
                 }
                 break;
         }
@@ -983,30 +983,6 @@ public class MySiteFragment extends Fragment implements
 
         // Refresh the title
         setTitle(site.getName());
-    }
-
-    private void showRegisterDomainConfirmationMessage(@Nullable String email) {
-        int yOffset = getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
-        if (!TextUtils.isEmpty(email)) {
-            ToastUtils.showToast(
-                    getActivity(),
-                    getString(R.string.my_site_verify_your_email, email),
-                    Duration.LONG,
-                    Gravity.BOTTOM,
-                    0,
-                    yOffset
-                                );
-        } else {
-            AppLog.e(AppLog.T.MAIN, "There is no domain contact email");
-            ToastUtils.showToast(
-                    getActivity(),
-                    getString(R.string.my_site_verify_your_email_without_email),
-                    Duration.LONG,
-                    Gravity.BOTTOM,
-                    0,
-                    yOffset
-                                );
-        }
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {
