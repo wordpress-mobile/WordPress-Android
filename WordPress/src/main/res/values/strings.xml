@@ -2102,7 +2102,7 @@
     <string name="plugin_external_link_icon_content_description">External link</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
 
-    <string name="plugin_fetching_error_after_at">It takes longer then usual to refresh plugin details. Please check again later.</string>
+    <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
