@@ -1844,7 +1844,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                savePostOnlineAndFinishAsync(isFirstTimePublish(), true);
+                savePostOnlineAndFinishAsync(isFirstTimePublish(false), true);
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
                 uploadPost(true);
