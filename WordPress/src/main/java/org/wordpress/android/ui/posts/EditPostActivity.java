@@ -1602,7 +1602,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private void setGutenbergEnabledIfNeeded() {
         if (!mIsNewPost && !AppPrefs.isGutenbergDefaultForNewPosts()) {
             AppPrefs.setGutenbergDefaultForNewPosts(true);
-            // Show the GB informative dialog on editing GB posts
             showGutenbergInformativeDialog();
         }
     }
