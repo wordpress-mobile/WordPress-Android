@@ -7,9 +7,6 @@ Language: sq_AL
 -->
 <resources>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Ndodhi një gabim teksa përditësoheshin hollësitë e sajtit tuaj: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Ndodhi një gabim teksa silleshin të dhëna kontakti përkatësie: %s</string>
-    <string name="domain_registration_error_registering_domain">Ndodhi një gabim gjatë regjistrimit të përkatësisë: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Po regjistrohet emër përkatësie…</string>
     <string name="domain_registration_state_picker_dialog_title">Përzgjidhni Shtet</string>
     <string name="domain_registration_country_picker_dialog_title">Përzgjidhni Vend</string>
@@ -422,7 +419,6 @@ Language: sq_AL
     <string name="install_jetpack">Instaloni Jetpack-un</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ për Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Duke instaluar Jetpack-un, pajtoheni me </string>
     <string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack.</string>
     <string name="themes_empty_list">Kërkimi juaj s’ka përputhje me ndonjë temë</string>
     <string name="reader_label_post_search_explainer">Ç’do të donit të gjenit?</string>
@@ -552,7 +548,7 @@ Language: sq_AL
     <string name="plugin_install_site_ineligible_site_private">Veçoria e shtojcës lyp që sajti të jetë publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Veçoria e shtojcës lyp paketë biznes.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Veçoria e shtojcës lyp një përkatësi vetjake.</string>
-    <string name="plugin_install_site_ineligible_default_error">Veçoria e shtojcës s’është e mundshme për këtë sajt.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Po kryejmë hapin përfundimtar — thuajse mbaruam…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Po instalohet shtojca…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instaloje</string>
@@ -1174,7 +1170,6 @@ Language: sq_AL
     <string name="editor_post_saved_locally_failed_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
     <string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
     <string name="photo_picker_title">Zgjidhni foto</string>
-    <string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
     <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
@@ -1468,7 +1463,6 @@ Language: sq_AL
     <string name="cd_related_post_preview_image">Figurë paraparje postimi të afërt</string>
     <string name="error_post_remote_site_settings">S’u ruajtën dot të dhëna sajti</string>
     <string name="error_fetch_remote_site_settings">S’u morën dot të dhëna sajti</string>
-    <string name="site_settings_disconnected_toast">I dalë, përpunimet janë të çaktivizuara.</string>
     <string name="site_settings_close_after_dialog_switch_text">Mbylli vetvetiu</string>
     <string name="site_settings_close_after_dialog_description">Mbylli vetvetiu komentet në artikuj.</string>
     <string name="site_settings_paging_dialog_description">Copëzojini rrjedhat e komenteve në disa faqe.</string>

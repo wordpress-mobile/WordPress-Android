@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 13:54:32+0000
+Translation-Revision-Date: 2019-06-19 10:36:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Status (nicht verfügbar)</string>
+    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our %1$sBestimmungen und Konditionen%2$s</string>
+    <string name="error_network_connection">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
+    <string name="error_browser_no_network">Diese Seite kann gerade nicht geladen werden.</string>
+    <string name="error_disabled_apis">Die Einstellungen konnten nicht abgerufen werden: Einige APIs sind für diese OAuth-App-ID + Konto-Kombination nicht verfügbar.</string>
+    <string name="jetpack_connection_terms_and_conditions">Mit der Einrichtung von Jetpack erklärst du dich mit unseren %1$sBestimmungen und Konditionen%2$s einverstanden.</string>
+    <string name="site_settings_disconnected_toast">Keine Verbindung. Die Bearbeitung ist deaktiviert.</string>
+    <string name="site_settings_update_password_message">Um die App wieder mit deiner selbst gehosteten Website zu verbinden, gib hier das neue Passwort der Website ein.</string>
+    <string name="site_settings_password_updated">Passwort aktualisiert</string>
+    <string name="site_settings_password_dialog_title">Passwort aktualisieren</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Fehler beim Aktualisieren deiner Websitedetails: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Fehler beim Abrufen der Domain-Kontaktdaten: %s</string>
-    <string name="domain_registration_error_registering_domain">Fehler während der Domain-Registrierung: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Domainname wird registriert …</string>
     <string name="domain_registration_state_picker_dialog_title">Bundesstaat auswählen</string>
     <string name="domain_registration_country_picker_dialog_title">Land wählen</string>
@@ -423,7 +430,6 @@ Language: de
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Mit der Einrichtung von Jetpack erhalten wir deine Zustimmung zu unseren </string>
     <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack-Plugin installieren.</string>
     <string name="themes_empty_list">Keine Themes entsprechen deiner Suche</string>
     <string name="reader_label_post_search_explainer">Was möchtest du finden?</string>
@@ -553,7 +559,7 @@ Language: de
     <string name="plugin_install_site_ineligible_site_private">Für das Plugin-Feature muss die Website öffentlich sein.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Für das Plugin-Feature ist ein Business-Tarif erforderlich.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Für das Plugin-Feature ist eine individuelle Domain erforderlich.</string>
-    <string name="plugin_install_site_ineligible_default_error">Das Plugin-Feature ist für diese Website nicht verfügbar.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Die finale Einrichtung läuft – fast fertig …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wird installiert …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installieren</string>
@@ -1175,7 +1181,7 @@ Language: de
     <string name="editor_post_saved_locally_failed_media">Es befinden sich nicht fertiggestellte Medien-Uploads im Beitrag; er wurde lokal gespeichert.</string>
     <string name="sure_to_remove_account">Möchtest du diese Website aus der App entfernen?</string>
     <string name="photo_picker_title">Foto auswählen</string>
-    <string name="error_publish_no_network">Gerät ist offline. Änderungen wurden lokal gespeichert.</string>
+    <string name="error_publish_no_network">Gerät ist offline. Beitrag wurde lokal gespeichert.</string>
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
     <string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
@@ -1469,7 +1475,6 @@ Language: de
     <string name="cd_related_post_preview_image">Vorschaubild für ähnlichen Beitrag</string>
     <string name="error_post_remote_site_settings">Website-Info konnte nicht gespeichert werden</string>
     <string name="error_fetch_remote_site_settings">Website-Info konnte nicht abgerufen werden</string>
-    <string name="site_settings_disconnected_toast">Abgemeldet, die Bearbeitung ist deaktiviert.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatisch schließen</string>
     <string name="site_settings_close_after_dialog_description">Kommentare zu Artikeln automatisch schließen.</string>
     <string name="site_settings_paging_dialog_description">Kommentar-Threads auf mehrere Seiten aufteilen.</string>

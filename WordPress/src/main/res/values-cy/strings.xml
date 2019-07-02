@@ -262,7 +262,6 @@ Language: cy_GB
     <string name="cd_related_post_preview_image">Delwedd sy\'n perthyn ar ôl y rhagolwg</string>
     <string name="error_post_remote_site_settings">Methu cadw manylion y wefan</string>
     <string name="error_fetch_remote_site_settings">Methu estyn manylion y wefan</string>
-    <string name="site_settings_disconnected_toast">Allgofnodwyd, analluogwyd y golygu.</string>
     <string name="site_settings_close_after_dialog_switch_text">Cau\'n awtomatig</string>
     <string name="site_settings_close_after_dialog_description">Cau\'r sylwadau ar erthyglau yn awtomatig.</string>
     <string name="site_settings_paging_dialog_description">Torri\'r edefyn sylw i dudalennau lluosog.</string>

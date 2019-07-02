@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-12 10:38:35+0000
+Translation-Revision-Date: 2019-06-23 06:22:36+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">الحالة (غير متوفرة)</string>
+    <string name="domain_registration_privacy_protection_tos">من خلال تسجيل هذا النطاق فإنك توافق على%1$sالشروط والأحكام%2$s</string>
+    <string name="error_network_connection">تحقق من اتصال الشبكة وحاول مرة أخرى.</string>
+    <string name="error_browser_no_network">يتعذر تحميل هذه الصفحة حاليًا.</string>
+    <string name="error_disabled_apis">تعذّر جلب الإعدادات: بعض واجهات برمجة التطبيقات APIs غير متاحة لمُعرّف تطبيق OAuth هذا + دمج الحساب.</string>
+    <string name="jetpack_connection_terms_and_conditions">من خلال إعداد Jetpack فإنك توافق على %1$sالشروط والأحكام%2$s</string>
+    <string name="site_settings_disconnected_toast">لا يوجد اتصال. التحرير مُعطّل.</string>
+    <string name="site_settings_update_password_message">لإعادة اتصال التطبيق بموقعك المستضاف ذاتيًا، أدخل كلمة المرور الجديد للموقع من هنا.</string>
+    <string name="site_settings_password_updated">تمّ تحديث كلمة المرور</string>
+    <string name="site_settings_password_dialog_title">تحديث كلمة المرور</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">حدث خطأ أثناء تحديث تفاصيل موقعك: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">حدث خطأ أثناء جلب معلومات جهة اتصال النطاق: %s</string>
-    <string name="domain_registration_error_registering_domain">حدث خطأ أثناء تسجيل النطاق: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">جاري تسجيل اسم النطاق…</string>
     <string name="domain_registration_state_picker_dialog_title">تحديد الولاية</string>
     <string name="domain_registration_country_picker_dialog_title">تحديد الدولة</string>
@@ -423,7 +430,6 @@ Language: ar
     <string name="install_jetpack">تنصيب Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">يعني إعداد Jetpack موافقتك على </string>
     <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>
@@ -1175,7 +1181,7 @@ Language: ar
     <string name="editor_post_saved_locally_failed_media">تحتوي المقالة على عمليات رفع غير مكتملة للوسائط وتم حفظها محليًا</string>
     <string name="sure_to_remove_account">إزالة هذا الموقع من التطبيق؟</string>
     <string name="photo_picker_title">اختيار صورة</string>
-    <string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ التغييرات محليًا.</string>
+    <string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ المقالة محليًا.</string>
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
     <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
@@ -1469,7 +1475,6 @@ Language: ar
     <string name="cd_related_post_preview_image">صورة معاينة المقالة ذات الصلة</string>
     <string name="error_post_remote_site_settings">تعذر حفظ معلومات الموقع</string>
     <string name="error_fetch_remote_site_settings">تعذر استرداد معلومات الموقع</string>
-    <string name="site_settings_disconnected_toast">غير متصل، التحرير مُعطّل.</string>
     <string name="site_settings_close_after_dialog_switch_text">إغلاق تلقائي</string>
     <string name="site_settings_close_after_dialog_description">إغلاق تلقائي للتعليقات على المقالات.</string>
     <string name="site_settings_paging_dialog_description">تحديد مناقشات التعليقات في صفحات متعددة.</string>
