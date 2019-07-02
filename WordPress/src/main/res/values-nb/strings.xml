@@ -309,7 +309,6 @@ Language: nb_NO
     <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Ved å sette opp Jetpack aksepterer du vår</string>
     <string name="stats_jetpack_connection_setup_info">For å se statistikk på ditt nettsted trenger du å installere utvidelsen Jetpack.</string>
     <string name="themes_empty_list">Intet tema passet til ditt søk</string>
     <string name="reader_label_post_search_explainer">Hva vil du finne?</string>
@@ -1021,7 +1020,6 @@ Language: nb_NO
     <string name="editor_post_saved_locally_failed_media">Innlegget klarte ikke å laste opp mediene, og har blitt lagret lokalt</string>
     <string name="sure_to_remove_account">Vil du fjerne dette nettstedet fra appen?</string>
     <string name="photo_picker_title">Velg bilde</string>
-    <string name="error_publish_no_network">Enheten er ikke på nett. Endringene er lagret lokalt.</string>
     <string name="editor_post_saved_online">Innlegget ble lagret på nettet</string>
     <string name="site_settings_image_quality_hint">Bildenes kvalitet. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Aktiver for å komprimere og endre størrelsen på bilder</string>
@@ -1315,7 +1313,6 @@ Language: nb_NO
     <string name="cd_related_post_preview_image">Relaterte innleggs forhåndsvisningsbilde</string>
     <string name="error_post_remote_site_settings">Klarte ikke å lagre nettstedsinfoen</string>
     <string name="error_fetch_remote_site_settings">Klarte ikke å hente inn nettstedsinfoen</string>
-    <string name="site_settings_disconnected_toast">Logget av, så redigering er deaktivert.</string>
     <string name="site_settings_close_after_dialog_switch_text">Lukk automatisk</string>
     <string name="site_settings_close_after_dialog_description">Lukk automatisk kommentarfeltene til innlegg.</string>
     <string name="site_settings_paging_dialog_description">Bryt kommentarfelter opp i flere sider.</string>

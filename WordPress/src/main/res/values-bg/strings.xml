@@ -248,7 +248,6 @@ Language: bg
     <string name="site_picker_remove_site_error">Грешка при премахването на сайта, опитайте отново.</string>
     <string name="editor_post_saved_locally_failed_media">Тази публикация има незавършени качвания на изображения и беше запазена в локален режим</string>
     <string name="sure_to_remove_account">Премахване на сайта от приложението?</string>
-    <string name="error_publish_no_network">Устройството е офлайн. Промените бяха запазени в локален режим.</string>
     <string name="photo_picker_title">Избор на изображение</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
     <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
@@ -520,7 +519,6 @@ Language: bg
     <string name="cd_related_post_preview_image">Изображение на свързаната публикация</string>
     <string name="error_post_remote_site_settings">Грешка при запазване на информацията за сайта</string>
     <string name="error_fetch_remote_site_settings">Грешка при зареждане на информацията за сайта</string>
-    <string name="site_settings_disconnected_toast">Излезли сте, редактирането е изключено.</string>
     <string name="site_settings_close_after_dialog_switch_text">Автоматично затваряне</string>
     <string name="site_settings_close_after_dialog_description">Автоматично затваряне на коментарите на публикациите.</string>
     <string name="site_settings_paging_dialog_description">Разделяне на коментарите на няколко страници.</string>
