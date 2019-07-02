@@ -404,7 +404,6 @@ Language: gl_ES
     <string name="cd_related_post_preview_image">Imaxe de vista previa do artigo relacionado</string>
     <string name="error_post_remote_site_settings">Non foi posible gardar a información do sitio</string>
     <string name="error_fetch_remote_site_settings">Non foi posible acceder á información do sitio</string>
-    <string name="site_settings_disconnected_toast">Sen conexión, edición inhabilitada.</string>
     <string name="site_settings_close_after_dialog_switch_text">Pechar automaticamente</string>
     <string name="site_settings_close_after_dialog_description">Pechar automaticamente os comentarios nos artigos</string>
     <string name="site_settings_paging_dialog_description">Separar os fíos de comentarios en distintas páxinas</string>

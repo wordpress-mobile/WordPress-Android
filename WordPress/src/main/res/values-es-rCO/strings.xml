@@ -275,7 +275,6 @@ Language: es_CO
     <string name="editor_post_saved_locally_failed_media">La entrada falló al subir los medios y se ha guardado localmente</string>
     <string name="sure_to_remove_account">¿Borrar este sitio de la aplicación?</string>
     <string name="photo_picker_title">Elegir foto</string>
-    <string name="error_publish_no_network">El dispositivo está desconectado. Los cambios se guardarán localmente.</string>
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
@@ -558,7 +557,6 @@ Language: es_CO
     <string name="cd_related_post_preview_image">Imagen de vista previa de entradas relacionadas</string>
     <string name="error_post_remote_site_settings">No pudo guardar la información del sitio</string>
     <string name="error_fetch_remote_site_settings">No pudo recuperar la información del sitio</string>
-    <string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado.</string>
     <string name="site_settings_close_after_dialog_switch_text">Cierra automáticamente</string>
     <string name="site_settings_close_after_dialog_description">Cierra automáticamente los comentarios en artículos</string>
     <string name="site_settings_paging_dialog_description">Rompe los hilos de comentarios en múltiples páginas</string>

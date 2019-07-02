@@ -36,7 +36,6 @@ Language: hr
     <string name="cd_related_post_preview_image">Predpregled slika srodnih objava</string>
     <string name="error_post_remote_site_settings">Nije moguće snimiti info o web-stranici</string>
     <string name="error_fetch_remote_site_settings">Nije moguće dohvatiti info o web-stranici</string>
-    <string name="site_settings_disconnected_toast">Odjavljeno, uređivanje onemogućeno</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatski zatvori</string>
     <string name="site_settings_close_after_dialog_description">Automatski zatvori komentare na člancima</string>
     <string name="site_settings_paging_dialog_description">Prijelom niza komentara u više stranica.</string>

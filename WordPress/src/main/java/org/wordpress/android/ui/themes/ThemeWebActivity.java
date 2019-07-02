@@ -2,6 +2,7 @@ package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         DEMO,
         DETAILS,
         SUPPORT
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setActionBarTitleToThemeName();
     }
 
     public static String getSiteLoginUrl(SiteModel site) {
@@ -149,12 +156,6 @@ public class ThemeWebActivity extends WPWebViewActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void configureView() {
-        setContentView(R.layout.theme_web_activity);
-        setActionBarTitleToThemeName();
-    }
-
     private void setActionBarTitleToThemeName() {
         String themeName = getIntent().getStringExtra(THEME_NAME);
         if (getSupportActionBar() != null && themeName != null) {
@@ -166,8 +167,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
      * Show Activate in the Action Bar menu if the theme is free and not the current theme.
      */
     private boolean shouldShowActivateMenuItem() {
-        Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
-        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
+        boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
+        boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
         return !isCurrentTheme && !isPremiumTheme;
     }
 }

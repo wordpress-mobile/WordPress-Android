@@ -135,7 +135,17 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.StatsTodayWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBlockListProviderFactory;
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -453,6 +463,26 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(DomainSuggestionsFragment object);
 
     void inject(DomainRegistrationDetailsFragment object);
+
+    void inject(StatsViewsWidget object);
+
+    void inject(StatsAllTimeWidget object);
+
+    void inject(StatsTodayWidget object);
+
+    void inject(StatsMinifiedWidget object);
+
+    void inject(ViewsWidgetListProvider object);
+
+    void inject(AllTimeWidgetListProvider object);
+
+    void inject(AllTimeWidgetBlockListProviderFactory object);
+
+    void inject(TodayWidgetListProvider object);
+
+    void inject(TodayWidgetBlockListProviderFactory object);
+
+    void inject(StatsActivity object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
