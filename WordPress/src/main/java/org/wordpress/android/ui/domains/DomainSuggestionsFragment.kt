@@ -1,17 +1,18 @@
 package org.wordpress.android.ui.domains
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -24,9 +25,11 @@ import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var mainViewModel: DomainRegistrationMainViewModel
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     companion object {
+        const val TAG = "DOMAIN_SUGGESTIONS_FRAGMENT"
         fun newInstance(): DomainSuggestionsFragment {
             return DomainSuggestionsFragment()
         }
@@ -42,6 +45,9 @@ class DomainSuggestionsFragment : Fragment() {
         val nonNullActivity = checkNotNull(activity)
         (nonNullActivity.application as WordPress).component().inject(this)
 
+        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(DomainRegistrationMainViewModel::class.java)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainSuggestionsViewModel::class.java)
 
         val nonNullIntent = checkNotNull(nonNullActivity.intent)
@@ -53,12 +59,12 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupViews() {
-        domain_suggestions_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        domain_suggestions_list.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         domain_suggestions_list.setEmptyView(actionableEmptyView)
         chose_domain_button.setOnClickListener {
             val selectedDomain = viewModel.selectedSuggestion.value
 
-            (activity as DomainRegistrationActivity).onDomainSelected(
+            mainViewModel.selectDomain(
                     DomainProductDetails(
                             selectedDomain!!.product_id,
                             selectedDomain.domain_name
@@ -78,6 +84,11 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupObservers() {
+        viewModel.isIntroVisible.observe(this, Observer {
+            it?.let { isIntroVisible ->
+                introduction_container.visibility = if (isIntroVisible) View.VISIBLE else View.GONE
+            }
+        })
         viewModel.suggestionsLiveData.observe(this, Observer { listState ->
             if (listState != null) {
                 val isLoading = listState is ListState.Loading<*>

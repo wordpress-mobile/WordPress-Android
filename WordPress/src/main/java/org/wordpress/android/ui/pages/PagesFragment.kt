@@ -1,19 +1,9 @@
 package org.wordpress.android.ui.pages
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.widget.SearchView
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.Menu
@@ -25,8 +15,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import de.greenrobot.event.EventBus
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.pages_fragment.*
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -115,9 +115,8 @@ class PagesFragment : Fragment() {
                 return
             }
 
-            val wasPageUpdated = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
             if (pageId != -1L) {
-                onPageEditFinished(pageId, wasPageUpdated)
+                viewModel.onPageEditFinished()
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
@@ -135,10 +134,6 @@ class PagesFragment : Fragment() {
 
     fun onSpecificPageRequested(remotePageId: Long) {
         viewModel.onSpecificPageRequested(remotePageId)
-    }
-
-    private fun onPageEditFinished(pageId: Long, wasPageUpdated: Boolean) {
-        viewModel.onPageEditFinished(pageId, wasPageUpdated)
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -369,7 +364,7 @@ class PagesFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().registerSticky(this)
+        EventBus.getDefault().register(this)
     }
 
     override fun onStop() {

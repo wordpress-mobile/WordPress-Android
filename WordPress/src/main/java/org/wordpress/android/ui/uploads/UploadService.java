@@ -4,9 +4,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -48,8 +50,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class UploadService extends Service {
     private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
@@ -209,9 +209,8 @@ public class UploadService extends Service {
         if (mediaList != null && !mediaList.isEmpty()) {
             Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
             for (PostModel post : postsToRefresh) {
-                if (!mUploadStore.isRegisteredPostModel(post)) {
-                    mUploadStore.registerPostModel(post, mediaList);
-                }
+                // If the post is already registered, the new media will be added to its list
+                mUploadStore.registerPostModel(post, mediaList);
             }
 
             if (isRetry) {
@@ -250,10 +249,7 @@ public class UploadService extends Service {
                         return;
                     }
                     boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
-                    boolean processWithAztec =
-                            AppPrefs.isAztecEditorEnabled() && !AppPrefs.isGutenbergEditorEnabled()
-                            && !postHasGutenbergBlocks;
-                    retryUpload(post, processWithAztec);
+                    retryUpload(post, !postHasGutenbergBlocks);
                 } else {
                     ToastUtils.showToast(this, R.string.retry_needs_aztec);
                 }
@@ -267,13 +263,17 @@ public class UploadService extends Service {
                 mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
 
-            if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
-                mPostUploadHandler.upload(post);
-            } else {
+
+            if (!getAllFailedMediaForPost(post).isEmpty()) {
+                boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
+                retryUpload(post, !postHasGutenbergBlocks);
+            } else if (hasPendingOrInProgressMediaUploadsForPost(post)) {
                 // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
                 // If the post is already registered, the new media will be added to its list
                 List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
                 mUploadStore.registerPostModel(post, activeMedia);
+            } else {
+                mPostUploadHandler.upload(post);
             }
         }
     }
@@ -754,12 +754,11 @@ public class UploadService extends Service {
             aztecRegisterFailedMediaForThisPost(post);
         }
 
-        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
-        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
-        mPostUploadNotifier.removePostInfoFromForegroundNotificationData(post, mediaToRetry);
-        if (!failedMedia.isEmpty()) {
+        List<MediaModel> mediaToRetry = getAllFailedMediaForPost(post);
+
+        if (!mediaToRetry.isEmpty()) {
             // reset these media items to QUEUED
-            for (MediaModel media : failedMedia) {
+            for (MediaModel media : mediaToRetry) {
                 media.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
@@ -772,7 +771,7 @@ public class UploadService extends Service {
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
             }
 
-            // no retry uploading the media items
+            // retry uploading media items
             for (MediaModel media : mediaToRetry) {
                 mMediaUploadHandler.upload(media);
             }
@@ -785,9 +784,26 @@ public class UploadService extends Service {
             // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
             EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaToRetry));
         } else {
+            mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             // retry uploading the Post
             mPostUploadHandler.upload(post);
         }
+    }
+
+    private List<MediaModel> getAllFailedMediaForPost(PostModel postModel) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+        return filterOutRecentlyDeletedMedia(failedMedia);
+    }
+
+    private List<MediaModel> filterOutRecentlyDeletedMedia(Set<MediaModel> failedMedia) {
+        List<MediaModel> mediaToRetry = new ArrayList<>();
+        for (MediaModel mediaModel : failedMedia) {
+            String mediaIdToCompare = String.valueOf(mediaModel.getId());
+            if (!mUserDeletedMediaItemIds.contains(mediaIdToCompare)) {
+                mediaToRetry.add(mediaModel);
+            }
+        }
+        return mediaToRetry;
     }
 
     /**

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -10,6 +9,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -22,13 +22,19 @@ class OverviewMapper
     private val resourceProvider: ResourceProvider
 ) {
     private val units = listOf(
-            string.stats_views,
-            string.stats_visitors,
-            string.stats_likes,
-            string.stats_comments
+            R.string.stats_views,
+            R.string.stats_visitors,
+            R.string.stats_likes,
+            R.string.stats_comments
     )
 
-    fun buildTitle(selectedItem: PeriodData?, previousItem: PeriodData?, selectedPosition: Int): ValueItem {
+    fun buildTitle(
+        selectedItem: PeriodData?,
+        previousItem: PeriodData?,
+        selectedPosition: Int,
+        isLast: Boolean,
+        startValue: Int = MILLION
+    ): ValueItem {
         val value = selectedItem?.getValue(selectedPosition) ?: 0
         val previousValue = previousItem?.getValue(selectedPosition)
         val positive = value >= (previousValue ?: 0)
@@ -45,13 +51,17 @@ class OverviewMapper
                 resourceProvider.getString(R.string.stats_traffic_change, difference.toFormattedString(), percentage)
             }
         }
-
+        val state = when {
+            isLast -> State.NEUTRAL
+            positive -> State.POSITIVE
+            else -> State.NEGATIVE
+        }
         return ValueItem(
-                value = value.toFormattedString(MILLION),
+                value = value.toFormattedString(startValue),
                 unit = units[selectedPosition],
                 isFirst = true,
                 change = change,
-                positive = positive
+                state = state
         )
     }
 
@@ -91,7 +101,7 @@ class OverviewMapper
         onBarSelected: (String?) -> Unit,
         onBarChartDrawn: (visibleBarCount: Int) -> Unit,
         selectedType: Int,
-        selectedPosition: Int
+        selectedItemPeriod: String
     ): List<BlockListItem> {
         val chartItems = dates.map {
             val value = when (selectedType) {
@@ -127,7 +137,7 @@ class OverviewMapper
         result.add(BarChartItem(
                 chartItems,
                 overlappingEntries = overlappingItems,
-                selectedItem = dates[selectedPosition].period,
+                selectedItem = selectedItemPeriod,
                 onBarSelected = onBarSelected,
                 onBarChartDrawn = onBarChartDrawn
         ))

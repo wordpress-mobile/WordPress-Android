@@ -19,6 +19,10 @@ open class Event<out T>(private val content: T) {
         }
     }
 
+    fun applyIfNotHandled(block: T.() -> Unit) {
+        this.getContentIfNotHandled()?.block()
+    }
+
     /**
      * Returns the content, even if it's already been handled.
      */

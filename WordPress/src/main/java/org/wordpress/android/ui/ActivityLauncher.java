@@ -6,15 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
-import org.wordpress.android.BuildConfig;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.app.TaskStackBuilder;
+import androidx.fragment.app.Fragment;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -32,11 +32,11 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
-import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -65,17 +65,16 @@ import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
-import org.wordpress.android.ui.stats.StatsAbstractFragment;
+import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
+import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -93,7 +92,6 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -222,6 +220,19 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
     public static void viewStatsInNewStack(Context context, SiteModel site) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
@@ -238,8 +249,7 @@ public class ActivityLauncher {
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = new Intent(context, StatsActivity.class);
-        statsIntent.putExtra(WordPress.SITE, site);
+        Intent statsIntent = StatsActivity.buildIntent(context, site);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
@@ -278,43 +288,27 @@ public class ActivityLauncher {
                                   );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
+            StatsActivity.start(context, site);
         }
-    }
-
-    public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        context.startActivity(intent);
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
                                                   int localSiteId) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
-        context.startActivity(intent);
+        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
-    public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        context.startActivity(intent);
+    public static void viewAllInsightsStats(Context context, StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        Intent intent = new Intent(context, org.wordpress.android.ui.stats.refresh.StatsViewAllActivity.class);
-        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType);
-        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity);
-        context.startActivity(intent);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
+                                            int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
     }
 
-    public static void viewInsightsManagement(Context context) {
+    public static void viewInsightsManagement(Context context, int localSiteId) {
         Intent intent = new Intent(context, InsightsManagementActivity.class);
+        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
         context.startActivity(intent);
     }
 
@@ -330,10 +324,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, site.getId());
-        intent.putExtra(LOGGED_INTO_JETPACK, true);
-        context.startActivity(intent);
+        StatsActivity.start(context, site);
     }
 
     public static void viewConnectJetpackForStats(Context context, SiteModel site) {
@@ -422,11 +413,12 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewDomainRegistrationActivity(Activity activity, SiteModel site) {
-        AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, site);
+    public static void viewDomainRegistrationActivityForResult(Activity activity, SiteModel site,
+                                                               @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(activity, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        activity.startActivity(intent);
+        intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
+        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
@@ -476,7 +468,18 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             AppLog.w(AppLog.T.UTILS, "Site URL is null. Login URL: " + site.getLoginUrl());
         } else {
-            openUrlExternal(context, site.getUrl());
+            String siteUrl = site.getUrl();
+            if (site.isWPCom()) {
+                // Show wp.com sites authenticated
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl);
+            } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
+                // Show self-hosted sites as authenticated since we should have the username & password
+                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false);
+            } else {
+                // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
+                // connected through REST API.
+                WPWebViewActivity.openURL(context, siteUrl);
+            }
         }
     }
 
@@ -589,7 +592,8 @@ public class ActivityLauncher {
             // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
+            WPWebViewActivity
+                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true);
         }
     }
 
@@ -618,6 +622,9 @@ public class ActivityLauncher {
 
     public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
                                           @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("origin", origin.name());
+        AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
         context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
@@ -633,8 +640,7 @@ public class ActivityLauncher {
     }
 
     public static void newBlogForResult(Activity activity) {
-        Intent intent = new Intent(activity,
-                BuildConfig.NEW_SITE_CREATION_ENABLED ? NewSiteCreationActivity.class : SiteCreationActivity.class);
+        Intent intent = new Intent(activity, SiteCreationActivity.class);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 

@@ -1,13 +1,14 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 /**
  * Used to handle backspace in People Management username field

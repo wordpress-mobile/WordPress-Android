@@ -14,7 +14,6 @@ Language: cy_GB
     <string name="error_media_unauthorized">Nid oes gennych ganiatâd i weld y na golygu  cyfryngau</string>
     <string name="error_media_not_found">Methu canfod cyfryngau</string>
     <string name="site_settings_optimize_images">Optimeiddio Delweddau</string>
-    <string name="no_site_error">Methu cysylltu â gwefan WordPress. Nid oes gwefan WordPress dilys yn y cyfeiriad\n      hwn. Gwiriwch cyfeiriad y wefan (URL).</string>
     <string name="media_generic_error">Digwyddodd gwall cyfryngau</string>
     <string name="media_upload_error">Digwyddodd gwall llwytho cyfrwng</string>
     <string name="retry">Ceisiwch eto</string>
@@ -263,7 +262,6 @@ Language: cy_GB
     <string name="cd_related_post_preview_image">Delwedd sy\'n perthyn ar ôl y rhagolwg</string>
     <string name="error_post_remote_site_settings">Methu cadw manylion y wefan</string>
     <string name="error_fetch_remote_site_settings">Methu estyn manylion y wefan</string>
-    <string name="site_settings_disconnected_toast">Allgofnodwyd, analluogwyd y golygu.</string>
     <string name="site_settings_close_after_dialog_switch_text">Cau\'n awtomatig</string>
     <string name="site_settings_close_after_dialog_description">Cau\'r sylwadau ar erthyglau yn awtomatig.</string>
     <string name="site_settings_paging_dialog_description">Torri\'r edefyn sylw i dudalennau lluosog.</string>
@@ -421,10 +419,8 @@ Language: cy_GB
     <string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
     <string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
     <string name="connectionbar_no_connection">Dim cysylltiad</string>
-    <string name="post_deleted">Dilëwyd y dudalen</string>
     <string name="post_trashed">Anfonwyd y cofnod i\'r Sbwriel</string>
     <string name="stats_no_activity_this_period">Dim gweithgaredd yn ystod y cyfnod hwn</string>
-    <string name="button_back">Nôl</string>
     <string name="button_stats">Ystadegau</string>
     <string name="button_trash">Sbwriel</string>
     <string name="button_edit">Golygu</string>

@@ -1,18 +1,26 @@
 package org.wordpress.android.modules;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationStepsProvider;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
+import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetColorSelectionDialogFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment;
+import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
@@ -48,13 +56,34 @@ public abstract class ApplicationModule {
     @ContributesAndroidInjector
     abstract StatsDetailFragment contributeStatsDetailFragment();
 
+    @ContributesAndroidInjector
+    abstract CountryPickerDialogFragment contributeCountryPickerDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract StatePickerDialogFragment contributeCStatePickerDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsWidgetConfigureFragment contributeStatsViewsWidgetConfigureFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsWidgetSiteSelectionDialogFragment contributeSiteSelectionDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsWidgetColorSelectionDialogFragment contributeViewModeSelectionDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsMinifiedWidgetConfigureFragment contributeStatsMinifiedWidgetConfigureFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsWidgetDataTypeSelectionDialogFragment contributeDataTypeSelectionDialogFragment();
+
     @Provides
-    public static WizardManager<SiteCreationStep> provideWizardManager(NewSiteCreationStepsProvider stepsProvider) {
+    public static WizardManager<SiteCreationStep> provideWizardManager(SiteCreationStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
     }
 
     @Provides
-    public static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
-        return new ConnectionStatusLiveData(context);
+    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
+        return new ConnectionStatusLiveData.Factory(context).create();
     }
 }

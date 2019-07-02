@@ -2,8 +2,6 @@ package org.wordpress.android.ui.publicize;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +9,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -30,8 +32,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING;
 
@@ -236,7 +236,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     @Override public void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override public void onStop() {

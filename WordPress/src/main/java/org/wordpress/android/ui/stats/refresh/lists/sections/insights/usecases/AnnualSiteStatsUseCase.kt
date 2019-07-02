@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
@@ -65,7 +64,7 @@ class AnnualSiteStatsUseCase(
         val selectedPeriod = periodFromProvider ?: availableDates.last()
         val index = availableDates.indexOf(selectedPeriod)
 
-        selectedDateProvider.selectDate(index, availableDates, ANNUAL_STATS)
+        selectedDateProvider.selectDate(selectedPeriod, availableDates, ANNUAL_STATS)
 
         val items = mutableListOf<BlockListItem>()
 
@@ -106,7 +105,7 @@ class AnnualSiteStatsUseCase(
         return calendar.time
     }
 
-    private fun buildTitle() = Title(string.stats_insights_this_year_site_stats, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_this_year_site_stats, menuAction = this::onMenuClick)
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)

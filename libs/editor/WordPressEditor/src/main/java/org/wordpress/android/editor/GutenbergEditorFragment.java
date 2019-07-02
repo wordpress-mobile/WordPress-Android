@@ -2,7 +2,6 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -11,12 +10,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
@@ -29,6 +22,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -49,8 +50,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListe
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -63,6 +64,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
+    private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private boolean mHtmlModeEnabled;
 
@@ -216,18 +218,35 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryButtonClicked() {
-                        onToolbarMediaButtonClicked();
+                    @Override public void onMediaLibraryImageButtonClicked() {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddMediaImageClicked();
                     }
 
                     @Override
-                    public void onUploadMediaButtonClicked() {
+                    public void onMediaLibraryVideoButtonClicked() {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddMediaVideoClicked();
+                    }
+
+                    @Override
+                    public void onUploadPhotoButtonClicked() {
                         mEditorFragmentListener.onAddPhotoClicked();
                     }
 
                     @Override
+                    public void onUploadVideoButtonClicked() {
+                        mEditorFragmentListener.onAddVideoClicked();
+                    }
+
+                    @Override
+                    public void onCaptureVideoButtonClicked() {
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_VIDEO_PERMISSION_REQUEST_CODE);
+                    }
+
+                    @Override
                     public void onCapturePhotoButtonClicked() {
-                        checkAndRequestCameraAndStoragePermissions();
+                        checkAndRequestCameraAndStoragePermissions(CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
                     }
 
                     @Override public void onRetryUploadForMediaClicked(int mediaId) {
@@ -307,8 +326,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
-            checkAndRequestCameraAndStoragePermissions();
+        if (PermissionUtils.checkCameraAndStoragePermissions(this.getActivity())) {
+            if (requestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCapturePhotoClicked();
+            } else if (requestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCaptureVideoClicked();
+            }
         }
     }
 
@@ -341,10 +364,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private void checkAndRequestCameraAndStoragePermissions() {
+    private void checkAndRequestCameraAndStoragePermissions(int permissionRequestCode) {
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this,
-                CAPTURE_PHOTO_PERMISSION_REQUEST_CODE)) {
-            mEditorFragmentListener.onCapturePhotoClicked();
+                permissionRequestCode)) {
+            if (permissionRequestCode == CAPTURE_PHOTO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCapturePhotoClicked();
+            } else if (permissionRequestCode == CAPTURE_VIDEO_PERMISSION_REQUEST_CODE) {
+                mEditorFragmentListener.onCaptureVideoClicked();
+            }
         }
     }
 
@@ -624,9 +651,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            getGutenbergContainerFragment().appendMediaFile(Integer.valueOf(mediaFile.getMediaId()), mediaUrl);
+            getGutenbergContainerFragment().appendMediaFile(
+                    Integer.valueOf(mediaFile.getMediaId()),
+                    mediaUrl,
+                    mediaFile.isVideo());
         } else {
-            getGutenbergContainerFragment().appendUploadMediaFile(mediaFile.getId(), "file://" + mediaUrl);
+            getGutenbergContainerFragment().appendUploadMediaFile(
+                    mediaFile.getId(),
+                    "file://" + mediaUrl,
+                    mediaFile.isVideo());
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
         }
     }
@@ -743,35 +776,5 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
-    }
-
-    /**
-     * Returns true if a hardware keyboard is detected, otherwise false.
-     */
-    private boolean isHardwareKeyboardPresent() {
-        Configuration config = getResources().getConfiguration();
-        boolean returnValue = false;
-        if (config.keyboard != Configuration.KEYBOARD_NOKEYS) {
-            returnValue = true;
-        }
-        return returnValue;
-    }
-
-    public boolean onToolbarMediaButtonClicked() {
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-
-        if (isActionInProgress()) {
-            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-        }
-
-
-        getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mEditorFragmentListener.onAddMediaClicked();
-                }
-            });
-
-        return true;
     }
 }

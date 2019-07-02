@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="wrap_content"
-                                             android:background="?android:attr/selectableItemBackground"
-                                             android:minHeight="@dimen/one_line_list_item_height">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:background="?android:attr/selectableItemBackground"
+                                                   android:minHeight="@dimen/one_line_list_item_height">
+
+    <View
+        android:id="@+id/top_margin"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_medium_large"
+        android:background="@color/transparent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/text"
+        app:layout_constraintEnd_toStartOf="@+id/value"
+        app:layout_constraintStart_toStartOf="@+id/text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/text"
@@ -14,22 +27,22 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/stats_list_item_left_margin"
-        android:layout_marginTop="@dimen/margin_large"
         android:ellipsize="end"
         android:lines="1"
         android:minHeight="@dimen/margin_extra_large"
         android:textAlignment="viewStart"
         android:textSize="@dimen/text_sz_large"
-        app:layout_constraintBottom_toTopOf="@+id/subtext"
+        app:layout_constraintBottom_toTopOf="@+id/bar"
         app:layout_constraintEnd_toStartOf="@+id/value"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@+id/icon_container"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_margin"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_goneMarginBottom="@dimen/margin_large"
         app:layout_goneMarginStart="@dimen/margin_extra_large"
+        app:layout_goneMarginTop="@dimen/margin_large"
         tools:text="@string/unknown"/>
 
     <LinearLayout
@@ -38,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_medium"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -81,7 +94,7 @@
         android:layout_width="16dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/margin_medium"
         android:contentDescription="@string/icon"
         android:src="@drawable/ic_chevron_down_white_16dp"
         android:tint="@color/neutral_500"
@@ -93,21 +106,24 @@
         app:layout_constraintStart_toEndOf="@+id/value"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/subtext"
+    <ProgressBar
+        android:id="@+id/bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="5dp"
         android:layout_marginBottom="@dimen/margin_large"
-        android:minHeight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_key"
+        android:progressDrawable="@drawable/stats_bar_background"
         android:text="@string/unknown"
-        android:textAlignment="viewStart"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/text"
         app:layout_constraintStart_toStartOf="@+id/text"
         app:layout_constraintTop_toBottomOf="@+id/text"
         app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintVertical_chainStyle="packed"/>
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:progress="75"
+        tools:visibility="visible"/>
 
     <View
         android:id="@+id/divider"
@@ -118,4 +134,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/text"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

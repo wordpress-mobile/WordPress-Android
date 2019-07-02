@@ -568,6 +568,8 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         switch (stat) {
             case APPLICATION_OPENED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "application_opened";
             case APPLICATION_CLOSED:
                 return "application_closed";
@@ -716,6 +718,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_tab_changed";
             case POST_LIST_VIEW_LAYOUT_TOGGLED:
                 return "post_list_view_layout_toggled";
+            case POST_LIST_SEARCH_ACCESSED:
+                return "post_list_search_accessed";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
@@ -930,9 +934,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case CREATE_ACCOUNT_FAILED:
                 return "account_create_failed";
             case CREATED_ACCOUNT:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
-            case CREATED_SITE:
-                return "site_created";
             case SHARED_ITEM:
                 return "item_shared";
             case SHARED_ITEM_READER:
@@ -977,6 +981,26 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_access_error";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
+                return "stats_insights_management_hint_dismissed";
+            case STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED:
+                return "stats_insights_management_hint_clicked";
+            case STATS_INSIGHTS_MANAGEMENT_ACCESSED:
+                return "stats_insights_management_accessed";
+            case STATS_INSIGHTS_TYPE_MOVED_UP:
+                return "stats_insights_type_moved_up";
+            case STATS_INSIGHTS_TYPE_MOVED_DOWN:
+                return "stats_insights_type_moved_down";
+            case STATS_INSIGHTS_TYPE_REMOVED:
+                return "stats_insights_type_removed";
+            case STATS_INSIGHTS_MANAGEMENT_SAVED:
+                return "stats_insights_management_saved";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED:
+                return "stats_insights_management_type_added";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED:
+                return "stats_insights_management_type_removed";
+            case STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED:
+                return "stats_insights_management_type_reordered";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:
@@ -987,10 +1011,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_period_accessed";
             case STATS_VIEW_ALL_ACCESSED:
                 return "stats_view_all_accessed";
+            case STATS_PREVIOUS_DATE_TAPPED:
+                return "stats_previous_date_tapped";
+            case STATS_NEXT_DATE_TAPPED:
+                return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
-            case STATS_COMMENTS_VIEW_MORE_TAPPED:
-                return "stats_comments_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
@@ -1037,6 +1063,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_bar_chart_tapped";
             case STATS_OVERVIEW_TYPE_TAPPED:
                 return "stats_overview_type_tapped";
+            case STATS_DETAIL_POST_TAPPED:
+                return "stats_detail_post_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
                 return "stats_scrolled_to_bottom";
             case STATS_WIDGET_ADDED:
@@ -1138,6 +1166,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case PAGES_SEARCH_ACCESSED:
                 return "site_pages_search_accessed";
             case SIGNUP_BUTTON_TAPPED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "signup_button_tapped";
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
@@ -1205,20 +1235,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_success";
             case SIGNUP_SOCIAL_TO_LOGIN:
                 return "signup_social_to_login";
-            case SITE_CREATION_ACCESSED:
-                return "site_creation_accessed";
-            case SITE_CREATION_CATEGORY_VIEWED:
-                return "site_creation_category_viewed";
-            case SITE_CREATION_THEME_VIEWED:
-                return "site_creation_theme_viewed";
-            case SITE_CREATION_DETAILS_VIEWED:
-                return "site_creation_details_viewed";
-            case SITE_CREATION_DOMAIN_VIEWED:
-                return "site_creation_domain_viewed";
-            case SITE_CREATION_CREATING_VIEWED:
-                return "site_creation_creating_viewed";
-            case SITE_CREATION_SUCCESS_VIEWED:
-                return "site_creation_success_viewed";
             case ENHANCED_SITE_CREATION_ACCESSED:
                 return "enhanced_site_creation_accessed";
             case ENHANCED_SITE_CREATION_SEGMENTS_VIEWED:
@@ -1247,12 +1263,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_success_preview_viewed";
             case ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED:
                 return "enhanced_site_creation_success_preview_loaded";
-            case ENHANCED_SITE_CREATION_COMPLETED:
-                return "enhanced_site_creation_completed";
+            case ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED:
+                return "enhanced_site_creation_preview_ok_button_tapped";
             case ENHANCED_SITE_CREATION_EXITED:
                 return "enhanced_site_creation_exited";
             case ENHANCED_SITE_CREATION_ERROR_SHOWN:
                 return "enhanced_site_creation_error_shown";
+            case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
+                return "enhanced_site_creation_background_service_updated";
+            case SITE_CREATED:
+                // This stat is part of a funnel that provides critical information.  Before
+                // making ANY modification to this stat please refer to: p4qSXL-35X-p2
+                return "site_created";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -1327,10 +1349,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "themes_details_accessed";
             case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 return "account_settings_language_changed";
-            case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
-                return "site_creation_background_service_update";
-            case NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
-                return "new_site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
@@ -1481,6 +1499,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_rewind_started";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
+            case SUPPORT_OPENED:
+                return "support_opened";
             case SUPPORT_IDENTITY_FORM_VIEWED:
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:

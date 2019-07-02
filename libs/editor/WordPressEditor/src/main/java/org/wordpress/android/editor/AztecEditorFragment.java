@@ -1,7 +1,6 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
-import android.arch.lifecycle.LiveData;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -20,10 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -47,6 +42,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
@@ -891,12 +892,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void overlayFailedMedia(String localMediaId, Attributes attributes) {
         // set intermediate shade overlay
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-        mContent.setOverlay(localMediaIdPredicate, 0,
-                            new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
-                            Gravity.FILL);
 
-        Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
-        mContent.setOverlay(localMediaIdPredicate, 1, alertDrawable, Gravity.CENTER);
+        Drawable iconDrawable = getResources().getDrawable(R.drawable.media_retry_image);
+        float textSize = getResources().getDimension(R.dimen.text_header);
+        TextDrawable textDrawable = new TextDrawable(getResources(),
+                getString(R.string.editor_failed_to_insert_media_tap_to_retry), textSize);
+        // Divide icon height by 2 and shift the text vertically (note: both elements are vertically centered)
+        textDrawable.setTranslateY(iconDrawable.getIntrinsicHeight() / 2);
+
+        mContent.setOverlay(localMediaIdPredicate, 0,
+                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                Gravity.FILL);
+        mContent.setOverlay(localMediaIdPredicate, 1, iconDrawable, Gravity.CENTER);
+        mContent.setOverlay(localMediaIdPredicate, 2, textDrawable, Gravity.CENTER);
         mContent.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attributes));
     }
 
@@ -1664,12 +1672,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             AttributesWithClass attributesWithClass = getAttributesWithClass(
                                     mContent.getElementAttributes(mTappedMediaPredicate));
 
-                            // remove the failed class
+                            // add or remove the failed class depending on whether the media was uploaded or not
                             attributesWithClass = addFailedStatusToMediaIfLocalSrcPresent(attributesWithClass);
+
+                            // clear overlays
+                            mContent.clearOverlays(mTappedMediaPredicate);
 
                             if (!attributesWithClass.hasClass(ATTR_STATUS_FAILED)) {
                                 // just save the item and leave
-                                mContent.clearOverlays(mTappedMediaPredicate);
                                 mContent.resetAttributedMediaSpan(mTappedMediaPredicate);
                                 return;
                             }
@@ -1680,17 +1690,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             }
 
                             // set intermediate shade overlay
-                            mContent.setOverlay(mTappedMediaPredicate, 0, new ColorDrawable(
-                                    getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
+                            overlayProgressingMedia(mTappedMediaPredicate);
 
-                            Drawable progressDrawable = getResources().getDrawable(
-                                    android.R.drawable.progress_horizontal);
-                            // set the height of the progress bar to 2
-                            // (it's in dp since the drawable will be adjusted by the span)
-                            progressDrawable.setBounds(0, 0, 0, 4);
-
-                            mContent.setOverlay(mTappedMediaPredicate, 1, progressDrawable,
-                                                Gravity.FILL_HORIZONTAL | Gravity.TOP);
                             mContent.updateElementAttributes(mTappedMediaPredicate,
                                                              attributesWithClass.getAttributes());
 
@@ -2000,7 +2001,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static SpannableStringBuilder getCalypsoCompatibleStringBuilder(Context context, String postContent,
                                                                             AztecParser parser) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        String cleanSource = Format.removeSourceEditorFormatting(postContent, true);
+        String cleanSource = Format.removeSourceEditorFormatting(postContent, true, false);
         builder.append(parser.parseHtmlForInspection(cleanSource, context));
         Format.preProcessSpannedText(builder, true);
         return builder;

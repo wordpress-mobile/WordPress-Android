@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -52,11 +52,7 @@ constructor(
         currentState: DateSelectorUiModel?,
         updatedState: DateSelectorUiModel
     ) {
-        if (currentState == null ||
-                currentState.isVisible != updatedState.isVisible ||
-                currentState.date != updatedState.date ||
-                currentState.enableSelectNext != updatedState.enableSelectNext ||
-                currentState.enableSelectPrevious != updatedState.enableSelectPrevious) {
+        if (currentState != updatedState) {
             _dateSelectorUiModel.value = updatedState
         }
     }

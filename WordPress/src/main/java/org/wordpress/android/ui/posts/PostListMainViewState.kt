@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.posts
 
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
-class PostListMainViewState(
+data class PostListMainViewState(
     val isFabVisible: Boolean,
     val isAuthorFilterVisible: Boolean,
     val authorFilterSelection: AuthorFilterSelection,

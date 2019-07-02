@@ -6,9 +6,11 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="@dimen/posts_list_compact_row_height"
+    android:layout_marginEnd="@dimen/post_list_content_margin_compact"
+    android:layout_marginStart="@dimen/post_list_content_margin_compact"
     android:background="@color/white">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?selectableItemBackground">
@@ -41,9 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:layout_marginTop="@dimen/margin_extra_small"
             android:textColor="@color/neutral_500"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -124,6 +126,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

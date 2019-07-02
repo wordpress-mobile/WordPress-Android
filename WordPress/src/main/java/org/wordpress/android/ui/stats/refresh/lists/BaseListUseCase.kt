@@ -1,18 +1,21 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SELECTED_DATE
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
@@ -27,10 +30,9 @@ class BaseListUseCase(
     private val mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
-    private val getStatsTypes: suspend () -> List<StatsType>,
+    private val getStatsTypes: suspend (SiteModel) -> List<StatsType>,
     private val mapUiModel: (
         useCaseModels: List<UseCaseModel>,
-        MutableLiveData<Event<NavigationTarget>>,
         showError: (Int) -> Unit
     ) -> UiModel
 ) {
@@ -47,7 +49,7 @@ class BaseListUseCase(
             }
         }
     }.map { useCaseModels ->
-        mapUiModel(useCaseModels, mutableNavigationTarget) { message ->
+        mapUiModel(useCaseModels) { message ->
             mutableSnackbarMessage.postValue(message)
         }
     }.distinct()
@@ -74,10 +76,23 @@ class BaseListUseCase(
         loadData(true, forced)
     }
 
+    suspend fun onParamChanged(param: UseCaseParam) {
+        statsTypes.value?.forEach { type ->
+            useCases.find { it.type == type }
+                    ?.let { block ->
+                        withContext(bgDispatcher) {
+                            block.onParamsChange(param)
+                        }
+                    }
+        }
+    }
+
     suspend fun refreshTypes(): List<StatsType> {
-        val items = getStatsTypes()
-        withContext(mainDispatcher) {
-            statsTypes.value = items
+        val items = getStatsTypes(statsSiteProvider.siteModel)
+        if (statsTypes.value != items) {
+            withContext(mainDispatcher) {
+                statsTypes.value = items
+            }
         }
         return items
     }
@@ -91,8 +106,10 @@ class BaseListUseCase(
                 val visibleTypes = refreshTypes()
                 visibleTypes.forEach { type ->
                     useCases.find { it.type == type }
-                            ?.let { block -> launch(bgDispatcher) {
-                                block.fetch(refresh, forced) }
+                            ?.let { block ->
+                                launch(bgDispatcher) {
+                                    block.fetch(refresh, forced)
+                                }
                             }
                 }
             }
@@ -109,7 +126,7 @@ class BaseListUseCase(
     }
 
     suspend fun onDateChanged() {
-        refreshData()
+        onParamChanged(SELECTED_DATE)
     }
 
     fun onListSelected() {

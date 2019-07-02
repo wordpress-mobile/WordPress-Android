@@ -1,10 +1,9 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED
@@ -63,7 +62,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus)
+        val uploadUiState = createUploadUiState(uploadStatus, postStatus)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -132,7 +131,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private fun getTitle(post: PostModel): UiString {
         return if (post.title.isNotBlank()) {
             UiStringText(StringEscapeUtils.unescapeHtml4(post.title))
-        } else UiStringRes(string.untitled_in_parentheses)
+        } else UiStringRes(R.string.untitled_in_parentheses)
     }
 
     private fun getExcerpt(post: PostModel): UiString? =
@@ -174,25 +173,29 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadUiState is PostUploadUiState.UploadFailed -> {
                 getErrorLabel(uploadUiState.error)?.let { labels.add(it) }
             }
-            uploadUiState is UploadingPost -> labels.add(UiStringRes(string.post_uploading))
-            uploadUiState is UploadingMedia -> labels.add(UiStringRes(string.uploading_media))
-            uploadUiState is UploadQueued -> labels.add(UiStringRes(string.post_queued))
-            hasUnhandledConflicts -> labels.add(UiStringRes(string.local_post_is_conflicted))
+            uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
+                labels.add(UiStringRes(R.string.post_uploading_draft))
+            } else {
+                labels.add(UiStringRes(R.string.post_uploading))
+            }
+            uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
+            uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
+            hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
         }
 
         // we want to show either single error/progress label or 0-n info labels.
         if (labels.isEmpty()) {
             if (isLocalDraft) {
-                labels.add(UiStringRes(string.local_draft))
+                labels.add(UiStringRes(R.string.local_draft))
             }
             if (isLocallyChanged) {
-                labels.add(UiStringRes(string.local_changes))
+                labels.add(UiStringRes(R.string.local_changes))
             }
             if (postStatus == PRIVATE) {
-                labels.add(UiStringRes(string.post_status_post_private))
+                labels.add(UiStringRes(R.string.post_status_post_private))
             }
             if (postStatus == PENDING) {
-                labels.add(UiStringRes(string.post_status_pending_review))
+                labels.add(UiStringRes(R.string.post_status_pending_review))
             }
         }
         return labels
@@ -200,7 +203,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
     private fun getErrorLabel(uploadError: UploadError): UiString? {
         return when {
-            uploadError.mediaError != null -> UiStringRes(string.error_media_recover_post)
+            uploadError.mediaError != null -> UiStringRes(R.string.error_media_recover_post)
             uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
                     false,
                     uploadError.postError
@@ -263,7 +266,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
-        buttonTypes.add(PostListButtonType.BUTTON_EDIT)
+        buttonTypes.add(BUTTON_EDIT)
         if (canShowPublishButton) {
             buttonTypes.add(
                     if (!siteHasCapabilitiesToPublish) {
@@ -338,19 +341,24 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
     private sealed class PostUploadUiState {
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
-        object UploadingPost : PostUploadUiState()
+        data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
         data class UploadFailed(val error: UploadError) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
     }
 
-    private fun createUploadUiState(status: PostListItemUploadStatus): PostUploadUiState {
+    private fun createUploadUiState(
+        uploadStatus: PostListItemUploadStatus,
+        postStatus: PostStatus
+    ): PostUploadUiState {
         return when {
-            status.hasInProgressMediaUpload -> UploadingMedia(status.mediaUploadProgress)
-            status.isUploading -> UploadingPost
+            uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
+            uploadStatus.isUploading -> UploadingPost(postStatus == PostStatus.DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
-            status.uploadError != null -> PostUploadUiState.UploadFailed(status.uploadError)
-            status.hasPendingMediaUpload || status.isQueued || status.isUploadingOrQueued -> UploadQueued
+            uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(uploadStatus.uploadError)
+            uploadStatus.hasPendingMediaUpload ||
+                    uploadStatus.isQueued ||
+                    uploadStatus.isUploadingOrQueued -> UploadQueued
             else -> NothingToUpload
         }
     }

@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -22,6 +21,8 @@ import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;

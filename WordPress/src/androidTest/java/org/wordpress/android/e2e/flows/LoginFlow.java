@@ -1,16 +1,22 @@
 package org.wordpress.android.e2e.flows;
 
-import android.support.test.espresso.ViewInteraction;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.rule.ActivityTestRule;
+
 import org.hamcrest.Matchers;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
@@ -59,7 +65,7 @@ public class LoginFlow {
         waitForElementToBeDisplayed(R.id.nav_me);
     }
 
-    private void chooseMagicLink() {
+    private void chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
         // Receive Magic Link or Enter Password Screen – Choose "Send Link"
         // See LoginMagicLinkRequestFragment
         clickOn(R.id.login_request_magic_link);
@@ -67,7 +73,11 @@ public class LoginFlow {
         // Should See Open Mail button
         waitForElementToBeDisplayed(R.id.login_open_email_client);
 
-        // TODO: Continue flow after mocking complete
+        // Follow the magic link to continue login
+        // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("wordpress://magic-login?token=valid_token"))
+                .setPackage(getApplicationContext().getPackageName());
+        magicLinkActivityTestRule.launchActivity(intent);
     }
 
     private void enterUsernameAndPassword(String username, String password) {
@@ -93,10 +103,11 @@ public class LoginFlow {
         confirmLogin();
     }
 
-    public void loginMagicLink() {
+    public void loginMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
         chooseLogin();
         enterEmailAddress();
-        chooseMagicLink();
+        chooseMagicLink(magicLinkActivityTestRule);
+        confirmLogin();
     }
 
     public void loginSiteAddress(String siteAddress, String username, String password) {

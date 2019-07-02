@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel.giphy
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.paging.PositionalDataSource
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.paging.PositionalDataSource
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.core.models.enums.MediaType.gif
 import com.giphy.sdk.core.network.api.GPHApiClient
@@ -77,7 +77,11 @@ class GiphyPickerDataSource(
 
         apiClient.search(searchQuery, gif, params.requestedLoadSize, startPosition, null, null) { response, error ->
             if (response != null) {
-                callback.onResult(response.data.toGiphyMediaViewModels(), startPosition, response.pagination.totalCount)
+                callback.onResult(
+                        response.data.toGiphyMediaViewModels(),
+                        startPosition,
+                        response.pagination?.totalCount ?: response.data.size
+                )
             } else {
                 initialLoadError = error
                 callback.onResult(emptyList(), startPosition, 0)

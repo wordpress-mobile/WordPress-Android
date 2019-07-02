@@ -36,7 +36,6 @@ Language: hr
     <string name="cd_related_post_preview_image">Predpregled slika srodnih objava</string>
     <string name="error_post_remote_site_settings">Nije moguće snimiti info o web-stranici</string>
     <string name="error_fetch_remote_site_settings">Nije moguće dohvatiti info o web-stranici</string>
-    <string name="site_settings_disconnected_toast">Odjavljeno, uređivanje onemogućeno</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatski zatvori</string>
     <string name="site_settings_close_after_dialog_description">Automatski zatvori komentare na člancima</string>
     <string name="site_settings_paging_dialog_description">Prijelom niza komentara u više stranica.</string>
@@ -208,10 +207,8 @@ Language: hr
     <string name="button_publish">Objavi</string>
     <string name="post_trashed">Objava poslana u smeće</string>
     <string name="button_trash">Smeće</string>
-    <string name="button_back">Nazad</string>
     <string name="button_stats">Statistika</string>
     <string name="button_preview">Predpregled</string>
-    <string name="post_deleted">Objava obrisana</string>
     <string name="stats_no_activity_this_period">U ovom periodu nema aktivnosti</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovoj web-stranici</string>
     <string name="reader_toast_err_follow_blog_not_found">Web-stranicu nije moguće pronaći</string>

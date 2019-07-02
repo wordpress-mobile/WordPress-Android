@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.util.DiffUtil.Callback
-import android.support.v7.widget.RecyclerView.Adapter
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.Callback
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Status.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel.Status.REMOVED

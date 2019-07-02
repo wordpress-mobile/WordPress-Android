@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUse
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -49,7 +50,7 @@ class TagsAndCategoriesUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
-) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
+) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
         TagsAndCategoriesUiState(null)
@@ -78,7 +79,7 @@ class TagsAndCategoriesUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
@@ -95,15 +96,16 @@ class TagsAndCategoriesUseCase
                     )
             )
             val tagsList = mutableListOf<BlockListItem>()
+            val maxViews = domainModel.tags.maxBy { it.views }?.views ?: 0
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
-                        tagsList.add(mapTag(tag, index, domainModel.tags.size))
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews))
                     }
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, domainModel.tags.size),
+                                mapCategory(tag, index, domainModel.tags.size, maxViews),
                                 isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
@@ -135,18 +137,19 @@ class TagsAndCategoriesUseCase
         return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
-    private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
+    private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
         val item = tag.items.first()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
                 value = tag.views.toFormattedString(),
+                barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
-    private fun mapCategory(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
+    private fun mapCategory(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
         val text = tag.items.foldIndexed("") { itemIndex, acc, item ->
             when (itemIndex) {
                 0 -> item.name
@@ -157,6 +160,7 @@ class TagsAndCategoriesUseCase
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
                 value = tag.views.toFormattedString(),
+                barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1
         )
     }

@@ -239,7 +239,6 @@ Language: es_VE
     <string name="cd_related_post_preview_image">Imagen de vista previa de entradas relacionadas</string>
     <string name="error_post_remote_site_settings">No pudo guardar la información del sitio</string>
     <string name="error_fetch_remote_site_settings">No pudo recuperar la información del sitio</string>
-    <string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado.</string>
     <string name="site_settings_close_after_dialog_switch_text">Cierra automáticamente</string>
     <string name="site_settings_close_after_dialog_description">Cierra automáticamente los comentarios en artículos</string>
     <string name="site_settings_paging_dialog_description">Rompe los hilos de comentarios en múltiples páginas</string>
@@ -404,9 +403,7 @@ Language: es_VE
     <string name="button_trash">Papelera</string>
     <string name="button_stats">Estadísticas</string>
     <string name="post_trashed">Entrada enviada a la papelera</string>
-    <string name="post_deleted">Entrada borrada</string>
     <string name="button_edit">Editar</string>
-    <string name="button_back">Atrás</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="ignore">Ignorar</string>

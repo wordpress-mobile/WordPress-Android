@@ -43,19 +43,6 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
-    <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral</item>
-    </style>
-
-    <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">@color/neutral</item>
-        <item name="android:lineSpacingExtra">4dp</item>
-    </style>
-
-    <style name="SiteCreation.CardTitle" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/neutral_700</item>
-    </style>
-
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -888,6 +875,34 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/domain_suggestions_intro_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/domain_suggestions_intro_vertical_padding</item>
+        <item name="android:paddingEnd">@dimen/domain_suggestions_intro_horizontal_padding</item>
+        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_vertical_padding</item>
+        <item name="android:background">@color/neutral_0</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_header_bottom_padding</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/neutral_600</item>
+        <item name="android:text">@dimen/text_sz_large</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:text">@dimen/text_sz_large</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
 </resources>

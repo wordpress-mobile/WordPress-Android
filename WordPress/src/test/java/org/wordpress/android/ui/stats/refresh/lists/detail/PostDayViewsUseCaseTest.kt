@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
@@ -57,7 +57,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsPostProvider.postId).thenReturn(postId)
-        whenever(mapper.buildTitle(any(), isNull())).thenReturn(title)
+        whenever(mapper.buildTitle(any(), isNull(), any())).thenReturn(title)
     }
 
     @Test

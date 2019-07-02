@@ -1,10 +1,10 @@
 package org.wordpress.android.viewmodel.domains
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
 import android.text.TextUtils
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -49,6 +49,10 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val _selectedPosition = MutableLiveData<Int>()
     val selectedPosition: LiveData<Int>
         get() = _selectedPosition
+
+    private val _isIntroVisible = MutableLiveData<Boolean>().apply { value = true }
+    val isIntroVisible: LiveData<Boolean>
+        get() = _isIntroVisible
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -127,6 +131,8 @@ class DomainSuggestionsViewModel @Inject constructor(
     }
 
     fun updateSearchQuery(query: String) {
+        _isIntroVisible.value = query.isEmpty()
+
         if (!TextUtils.isEmpty(query)) {
             searchQuery = query
         } else if (searchQuery != site.name) {

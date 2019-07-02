@@ -1,0 +1,19 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/is-available/email/",
+        "queryParameters": {
+            "q": {
+                "matches": "^e2eflowsignuptestingmobile@example.com$"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "body": true,
+        "headers": {
+            "Content-Type": "text/javascript",
+            "Connection": "keep-alive"
+        }
+    }
+}

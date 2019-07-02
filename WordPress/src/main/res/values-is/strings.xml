@@ -23,7 +23,6 @@ Language: is
     <string name="start_over_email_subject">Byrja upp á nýtt með vefinn %s</string>
     <string name="site_picker_remove_site_error">Villa við að eyða vef, reyndu aftur síðar</string>
     <string name="sure_to_remove_account">Fjarlægja þennan vef úr appinu?</string>
-    <string name="error_publish_no_network">Tæki er ónettengt. Breytingar vistaðar staðbundið.</string>
     <string name="photo_picker_title">Veldu mynd</string>
     <string name="site_settings_image_quality_hint">Gæði mynda. Hærra gildi þýðir betri gæði mynda.</string>
     <string name="site_settings_optimize_images_summary">Virkjaðu til þess að minnka og þjappa myndum</string>
@@ -49,7 +48,6 @@ Language: is
     <string name="error_media_unauthorized">Þú hefur ekki heimild til þess að skoða eða breyta skrá</string>
     <string name="error_media_not_found">Skrá fannst ekki</string>
     <string name="site_settings_optimize_images">Hagræða myndum</string>
-    <string name="no_site_error">Gat ekki tengst WordPress vef. Það er enginn gildur WordPress vefur á þessari\n        vefslóð. Skoðaðu vefslóðina sem þú slóst inn.</string>
     <string name="media_generic_error">Skráarvilla</string>
     <string name="media_upload_error">Skráarvilla kom upp</string>
     <string name="retry">Reyna aftur</string>
@@ -298,7 +296,6 @@ Language: is
     <string name="cd_related_post_preview_image">Myndaforskoðun tengdra færslna</string>
     <string name="error_post_remote_site_settings">Gat ekki vistað upplýsingar um vef</string>
     <string name="error_fetch_remote_site_settings">Gat ekki sótt upplýsingar um vef</string>
-    <string name="site_settings_disconnected_toast">Útskráð(ur), breytingar ekki í boði.</string>
     <string name="site_settings_close_after_dialog_switch_text">Loka sjálfkrafa</string>
     <string name="site_settings_close_after_dialog_description">Loka sjálfkrafa fyrir athugasemdir við greinar.</string>
     <string name="site_settings_paging_dialog_description">Skipta umræðuþráðum niður á síður.</string>
@@ -456,7 +453,6 @@ Language: is
     <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til…</string>
     <string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
     <string name="connectionbar_no_connection">Ekkert samband</string>
-    <string name="button_back">Til baka</string>
     <string name="button_edit">Leiðrétta</string>
     <string name="button_preview">Forskoða</string>
     <string name="button_publish">Birta á vef</string>
@@ -464,7 +460,6 @@ Language: is
     <string name="button_trash">Rusl</string>
     <string name="button_view">Skoða</string>
     <string name="stats_no_activity_this_period">Engin virkni skráð á tímabili</string>
-    <string name="post_deleted">Færslu eytt</string>
     <string name="post_trashed">Færslu hent í ruslatunnu</string>
     <string name="undo">Afturkalla</string>
     <string name="push_auth_expired">Fyrirspurnin rann út á tíma. Skráðu þig inn á WordPress.com til þess að reyna aftur.</string>
