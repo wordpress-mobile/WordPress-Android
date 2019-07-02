@@ -153,19 +153,19 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
-  # build_and_upload_beta_release
+  # build_and_upload_test_releases
   # -----------------------------------------------------------------------------------
   # This lane builds the app and uploads it for both internal and external distribution 
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_beta_release [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_and_upload_test_releases [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_and_upload_beta_release 
-  # bundle exec fastlane build_and_upload_beta_release skip_confirm:true 
+  # bundle exec fastlane build_and_upload_test_releases 
+  # bundle exec fastlane build_and_upload_test_releases skip_confirm:true 
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_and_upload_beta_release do | options |
+  lane :build_and_upload_test_releases do | options |
     android_build_prechecks(skip_confirm: options[:skip_confirm], 
       alpha: true,
       beta: true,
@@ -282,15 +282,17 @@ ENV["HAS_ALPHA_VERSION"]="true"
     build_dir="build/"
 
     # Build
-    UI.message("Cleaning branch...")
-    sh("./gradlew clean")
-    UI.message("Running lint...")
-    sh("./gradlew lint#{options[:flavor]}Release")
-    UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
-    sh("./gradlew bundle#{options[:flavor]}Release")
-    sh("cp -v #{output_dir}#{options[:flavor]}Release/#{aab_file} #{build_dir}#{name}")
-    UI.message("Bundle ready: #{name}")
-    sh("../tools/extract_universal_apk #{build_dir}#{name} #{build_dir}#{apk_name}")
+    Dir.chdir("..") do
+      UI.message("Cleaning branch...")
+      sh("./gradlew clean")
+      UI.message("Running lint...")
+      sh("./gradlew lint#{options[:flavor]}Release")
+      UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
+      sh("./gradlew bundle#{options[:flavor]}Release")
+      sh("cp -v #{output_dir}#{options[:flavor]}Release/#{aab_file} #{build_dir}#{name}")
+      UI.message("Bundle ready: #{name}")
+      sh("../tools/extract_universal_apk #{build_dir}#{name} #{build_dir}#{apk_name}")
+    end
   end
 
 #####################################################################################
