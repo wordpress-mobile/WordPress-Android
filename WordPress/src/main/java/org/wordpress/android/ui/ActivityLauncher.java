@@ -584,12 +584,12 @@ public class ActivityLauncher {
             SiteModel site,
             PostModel post,
             RemotePreviewType remotePreviewType) {
-        if (
-                site == null || post == null || TextUtils.isEmpty(post.getLink())
-                ||
-                (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                        && TextUtils.isEmpty(post.getAutoSavePreviewUrl()))
-        ) {
+        if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
+            return;
+        }
+
+        if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                        && TextUtils.isEmpty(post.getAutoSavePreviewUrl())) {
             return;
         }
 
@@ -599,8 +599,6 @@ public class ActivityLauncher {
                 ? post.getAutoSavePreviewUrl()
                 : UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
 
-        // TODO: better define if it makes sense to have a sharable link in case of remote preview;
-        // in case change available menus/actions in WPWebViewActivity!
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
         boolean startPreviewForResult = remotePreviewType != RemotePreviewType.NOT_A_REMOTE_PREVIEW;
