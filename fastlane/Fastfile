@@ -131,6 +131,73 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
+  # build_and_upload_release
+  # -----------------------------------------------------------------------------------
+  # This lane builds the final release of the app and uploads it 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_release [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_and_upload_release 
+  # bundle exec fastlane build_and_upload_release skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_and_upload_release do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], 
+      alpha: false,
+      beta: false,
+      final: true)
+    # android_build_preflight()
+    
+  end
+
+  #####################################################################################
+  # build_and_upload_beta_release
+  # -----------------------------------------------------------------------------------
+  # This lane builds the app and uploads it for both internal and external distribution 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_beta_release [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_and_upload_beta_release 
+  # bundle exec fastlane build_and_upload_beta_release skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_and_upload_beta_release do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], 
+      alpha: true,
+      beta: true,
+      final: false)
+    android_build_preflight()
+    build_and_upload_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+    #build_and_upload_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+  end
+
+  #####################################################################################
+  # build_and_upload_alpha
+  # -----------------------------------------------------------------------------------
+  # This lane builds the app and upload it for internal testing  
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_alpha [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_and_upload_alpha 
+  # bundle exec fastlane build_and_upload_alpha skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_and_upload_alpha do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
+    android_build_preflight() unless (options[:skip_prechecks])
+
+    # Create the file names
+    version=android_get_alpha_version_name()
+    build_bundle(version: version, flavor:"Zalpha")
+  end
+
+  #####################################################################################
   # download_metadata_string 
   # -----------------------------------------------------------------------------------
   # This lane downloads the translated metadata (release notes,
@@ -159,16 +226,6 @@ ENV["HAS_ALPHA_VERSION"]="true"
       source_locale: "en-US",
       download_path: Dir.pwd + "/metadata/android")
   end 
-
-#####################################################################################
-# release_preflight
-# -----------------------------------------------------------------------------------
-# Run pre-build checks to ensure we're ready for release!
-#####################################################################################
-desc "Run release preflight checks"
- lane :release_preflight do | options |
-     configure_validate()
- end
 
 ########################################################################
 # Dependencies handling lanes
@@ -206,7 +263,36 @@ desc "Run release preflight checks"
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
-  
+  #####################################################################################
+  # build_bundle
+  # -----------------------------------------------------------------------------------
+  # This lane builds an app bundle
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_bundle [skip_confirm:<skip confirm>]
+  #####################################################################################
+  desc "Builds an app bundle"
+  lane :build_bundle do | options |
+    # Create the file names
+    version=options[:version]
+    name="wpandroid-#{version["name"]}.aab"
+    apk_name="wpandroid-#{version["name"]}-universal.apk"
+    aab_file="WordPress.aab"
+    output_dir="WordPress/build/outputs/bundle/"
+    build_dir="build/"
+
+    # Build
+    UI.message("Cleaning branch...")
+    sh("./gradlew clean")
+    UI.message("Running lint...")
+    sh("./gradlew lint#{options[:flavor]}Release")
+    UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
+    sh("./gradlew bundle#{options[:flavor]}Release")
+    sh("cp -v #{output_dir}#{options[:flavor]}Release/#{aab_file} #{build_dir}#{name}")
+    UI.message("Bundle ready: #{name}")
+    sh("../tools/extract_universal_apk #{build_dir}#{name} #{build_dir}#{apk_name}")
+  end
+
 #####################################################################################
 # Private lanes
 #####################################################################################
