@@ -54,7 +54,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         private const val PHONE_NUMBER_CONNECTING_CHARACTER = "."
 
         private const val EXTRA_DOMAIN_PRODUCT_DETAILS = "EXTRA_DOMAIN_PRODUCT_DETAILS"
-        const val TAG = "DOMAIN_SUGGESTION_FRAGMENT_TAG"
+        const val TAG = "DOMAIN_REGISTRATION_DETAILS"
 
         fun newInstance(domainProductDetails: DomainProductDetails): DomainRegistrationDetailsFragment {
             val fragment = DomainRegistrationDetailsFragment()
@@ -67,6 +67,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
+    private lateinit var mainViewModel: DomainRegistrationMainViewModel
 
     private var loadingProgressDialog: ProgressDialog? = null
 
@@ -83,6 +84,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(DomainRegistrationMainViewModel::class.java)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
@@ -245,7 +248,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         viewModel.handleCompletedDomainRegistration.observe(this,
                 Observer { domainRegisteredEvent ->
-                    (activity as DomainRegistrationActivity).onDomainRegistered(domainRegisteredEvent)
+                    mainViewModel.completeDomainRegistration(domainRegisteredEvent)
                 })
 
         viewModel.showTos.observe(this,
