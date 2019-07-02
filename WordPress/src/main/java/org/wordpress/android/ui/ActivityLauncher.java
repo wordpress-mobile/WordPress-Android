@@ -635,9 +635,10 @@ public class ActivityLauncher {
 
     public static void showActionableEmptyView(
             Context context,
-            WPWebViewActivity.ActionableReusableState actionableState
+            WPWebViewUsageCategory actionableState,
+            String postTitle
     ) {
-        WPWebViewActivity.openActionableEmptyViewDirectly(context, actionableState);
+        WPWebViewActivity.openActionableEmptyViewDirectly(context, actionableState, postTitle);
     }
 
     public static void viewMyProfile(Context context) {

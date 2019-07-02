@@ -19,8 +19,9 @@ import javax.inject.Singleton
 class ActivityLauncherWrapper @Inject constructor() {
     fun showActionableEmptyView(
         context: Context,
-        actionableState: WPWebViewActivity.ActionableReusableState
-    ) = ActivityLauncher.showActionableEmptyView(context, actionableState)
+        actionableState: WPWebViewUsageCategory,
+        postTitle: String
+    ) = ActivityLauncher.showActionableEmptyView(context, actionableState, postTitle)
 
     fun previewPostOrPageForResult(
         activity: Activity,

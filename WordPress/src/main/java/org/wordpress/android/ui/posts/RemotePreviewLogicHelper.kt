@@ -3,9 +3,9 @@ package org.wordpress.android.ui.posts
 import android.app.Activity
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,7 +33,6 @@ class RemotePreviewLogicHelper @Inject constructor(
     }
 
     interface RemotePreviewHelperFunctions {
-        fun notifyNoNetwork()
         fun notifyUploadInProgress(post: PostModel): Boolean
         fun updatePostIfNeeded(): PostModel? = null
         fun notifyEmptyDraft() {}
@@ -50,11 +49,16 @@ class RemotePreviewLogicHelper @Inject constructor(
         if (!site.isUsingWpComRestApi) {
             activityLauncherWrapper.showActionableEmptyView(
                     activity,
-                    WPWebViewActivity.ActionableReusableState.REMOTE_PREVIEW_NOT_AVAILABLE
+                    WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                    post.title
             )
             return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
         } else if (!networkUtilsWrapper.isNetworkAvailable()) {
-            helperFunctions.notifyNoNetwork()
+            activityLauncherWrapper.showActionableEmptyView(
+                    activity,
+                    WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
+                    post.title
+            )
             return PreviewLogicOperationResult.NETWORK_NOT_AVAILABLE
         } else {
             if (helperFunctions.notifyUploadInProgress(post)) {

@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.ActivityLauncherWrapper
-import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -64,6 +64,7 @@ class RemotePreviewLogicHelperTest {
         doReturn(PostStatus.DRAFT.toString()).whenever(post).status
         doReturn("2018-06-23T15:45:16+00:00").whenever(post).dateCreated
         doReturn(true).whenever(post).isLocallyChanged
+        doReturn("Test title for test purposes").whenever(post).title
     }
 
     @Test
@@ -72,13 +73,14 @@ class RemotePreviewLogicHelperTest {
         doReturn(false).whenever(site).isUsingWpComRestApi
 
         // When
-        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, mock(), mock())
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())
 
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
         verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
                 activity,
-                WPWebViewActivity.ActionableReusableState.REMOTE_PREVIEW_NOT_AVAILABLE
+                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                post.title
         )
     }
 
@@ -88,11 +90,15 @@ class RemotePreviewLogicHelperTest {
         doReturn(false).whenever(networkUtilsWrapper).isNetworkAvailable()
 
         // When
-        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, mock(), helperFunctions)
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
 
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.NETWORK_NOT_AVAILABLE)
-        verify(helperFunctions, times(1)).notifyNoNetwork()
+        verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
+                activity,
+                WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
+                post.title
+        )
     }
 
     @Test

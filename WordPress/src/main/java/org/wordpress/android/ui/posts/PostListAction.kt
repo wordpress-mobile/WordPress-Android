@@ -44,10 +44,6 @@ private fun getPostsListStrategyFunctions(
     activity: FragmentActivity,
     action: PostListAction.PreviewPost
 ) = object : RemotePreviewLogicHelper.RemotePreviewHelperFunctions {
-    override fun notifyNoNetwork() {
-        action.showSnackbar.invoke(action.messageNoNetwork)
-    }
-
     override fun notifyUploadInProgress(post: PostModel): Boolean {
         return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
             action.showToast.invoke(action.messageMediaUploading)

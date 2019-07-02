@@ -156,7 +156,7 @@ class PostListEventListener(
                     triggerPostUploadAction.invoke(
                             PostRemotePreviewSnackbarError(R.string.remote_preview_operation_error)
                     )
-                } else if (!hasRemoteAutoSavePreviewError.invoke()) {
+                } else {
                     triggerPreviewStateUpdate(
                             PostListRemotePreviewState.PREVIEWING,
                             PostInfoType.PostInfo(

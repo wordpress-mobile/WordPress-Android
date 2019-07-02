@@ -1415,11 +1415,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
        return new RemotePreviewLogicHelper.RemotePreviewHelperFunctions() {
             @Override
-            public void notifyNoNetwork() {
-                UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.no_network_message);
-            }
-
-            @Override
             public boolean notifyUploadInProgress(PostModel post) {
                 if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                     ToastUtils.showToast(EditPostActivity.this,

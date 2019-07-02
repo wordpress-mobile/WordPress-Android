@@ -100,7 +100,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
     public static final String ENCODING_UTF8 = "UTF-8";
-    public static final String ACTIONABLE_REUSABLE_STATE = "actionable_reusable_state";
+    public static final String WEBVIEW_USAGE_TYPE = "webview_usage_type";
+    public static final String ACTION_BAR_TITLE = "action_bar_title";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -110,58 +111,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
-    private ActionableReusableState mActionableReusableState;
-
-    /**
-    * This enum could be expanded to allow to re-use this actionable view
-    * in other scenarios with different WebPreviewUiState, also menu can be
-    * customized with the same principle.
-    * TODO: evaluate if to extract a dedicated Activity/Fragment for this actionable direct usage.
-    */
-    public enum ActionableReusableState {
-        NONE(0),
-        REMOTE_PREVIEW_NOT_AVAILABLE(1);
-
-        ActionableReusableState(int value) {
-            mValue = value;
-        }
-
-        private final int mValue;
-
-        public int getValue() {
-            return mValue;
-        }
-
-        public static ActionableReusableState fromInt(int value) {
-            if (value < 0 || value >= values().length) {
-                throw new IllegalArgumentException("ActionableReusableState wrong value " + value);
-            }
-
-            ActionableReusableState state = NONE;
-
-            for (ActionableReusableState item : values()) {
-                if (item.mValue == value) {
-                    state = item;
-                    break;
-                }
-            }
-
-            return state;
-        }
-
-        public static WebPreviewUiState toWebPreviewUiState(ActionableReusableState state) {
-            WebPreviewUiState uiState;
-            switch (state) {
-                case REMOTE_PREVIEW_NOT_AVAILABLE:
-                    uiState = WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState.INSTANCE;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Mapping of " + state + " to WebPreviewUiState not allowed.");
-            }
-            return uiState;
-        }
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -183,11 +132,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mFullScreenProgressLayout = findViewById(R.id.progress_layout);
         mWebView = findViewById(R.id.webView);
 
-        mActionableReusableState = ActionableReusableState.fromInt(getIntent()
-                .getIntExtra(ACTIONABLE_REUSABLE_STATE, 0));
+        WPWebViewUsageCategory webViewUsageCategory = WPWebViewUsageCategory.fromInt(getIntent()
+                .getIntExtra(WEBVIEW_USAGE_TYPE, 0));
 
         initRetryButton();
-        initViewModel();
+        initViewModel(webViewUsageCategory);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -197,6 +146,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+            if (isActionableDirectUsage()) {
+                 String title = getIntent().getStringExtra(ACTION_BAR_TITLE);
+                 if (title != null) {
+                     actionBar.setTitle(title);
+                 }
+            }
         }
     }
 
@@ -208,7 +164,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         });
     }
 
-    private void initViewModel() {
+    private void initViewModel(WPWebViewUsageCategory webViewUsageCategory) {
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPWebViewViewModel.class);
         mViewModel.getUiState().observe(this, new Observer<WebPreviewUiState>() {
             @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
@@ -226,17 +182,19 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                         mUiHelpers.setTextOrHide(mActionableEmptyView.subtitle, state.getSubtitleText());
                         mUiHelpers.updateVisibility(mActionableEmptyView.button, state.getButtonVisibility());
                     }
+
+                    invalidateOptionsMenu();
                 }
             }
         });
         mViewModel.getLoadNeeded().observe(this, new Observer<Boolean>() {
             @Override public void onChanged(@Nullable Boolean loadNeeded) {
-                if (!isActionableReusableState() && loadNeeded != null && loadNeeded) {
+                if (!isActionableDirectUsage() && loadNeeded != null && loadNeeded) {
                     loadContent();
                 }
             }
         });
-        mViewModel.start(mActionableReusableState);
+        mViewModel.start(webViewUsageCategory);
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
@@ -264,6 +222,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
         if (startPreviewForResult) {
+            intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
             ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
         } else {
             context.startActivity(intent);
@@ -318,16 +277,21 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         if (startPreviewForResult) {
+            intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
             ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
         } else {
             context.startActivity(intent);
         }
     }
 
-
-    public static void openActionableEmptyViewDirectly(Context context, ActionableReusableState reusableState) {
+    public static void openActionableEmptyViewDirectly(
+            Context context,
+            WPWebViewUsageCategory directUsageCategory,
+            String postTitle
+    ) {
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.ACTIONABLE_REUSABLE_STATE, reusableState.getValue());
+        intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, directUsageCategory.getValue());
+        intent.putExtra(WPWebViewActivity.ACTION_BAR_TITLE, postTitle);
         context.startActivity(intent);
     }
 
@@ -396,6 +360,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         if (startPreviewForResult) {
+            intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
             ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
         } else {
             context.startActivity(intent);
@@ -405,7 +370,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void configureWebView() {
-        if (isActionableReusableState()) return;
+        if (isActionableDirectUsage()) return;
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
@@ -468,7 +433,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     protected void loadContent() {
-        if (isActionableReusableState()) return;
+        if (isActionableDirectUsage()) return;
     
         Bundle extras = getIntent().getExtras();
 
@@ -592,22 +557,59 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         return loginURL;
     }
 
-    private boolean isActionableReusableState() {
-        return mActionableReusableState != ActionableReusableState.NONE;
-    }
-
-    private boolean shouldShowOptionsMenu() {
-        return !isActionableReusableState();
+    private boolean isActionableDirectUsage() {
+        return mViewModel.isActionableDirectUsage();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        if (!shouldShowOptionsMenu()) return true;
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.webview, menu);
+        return true;
+    }
+
+    private void updateMenuItemState(MenuItem menuItem, boolean isVisible, boolean showAsAction) {
+        if (menuItem != null) {
+            menuItem.setVisible(isVisible);
+            if (showAsAction) {
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            } else {
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            }
+        }
+    }
+
+    private void setupMenuForWebViewUsage(Menu menu) {
+        MenuItem browser = menu.findItem(R.id.menu_browser);
+        MenuItem share = menu.findItem(R.id.menu_share);
+        MenuItem refresh = menu.findItem(R.id.menu_refresh);
+
+        WPWebViewMenuUiState menuUiState = mViewModel.getMenuUiState();
+
+        updateMenuItemState(
+                browser,
+                menuUiState.getBrowserMenuVisible(),
+                menuUiState.getBrowserMenuShowAsAction());
+
+        updateMenuItemState(
+                share,
+                menuUiState.getShareMenuVisible(),
+                menuUiState.getShareMenuShowAsAction());
+
+        updateMenuItemState(
+                refresh,
+                menuUiState.getRefreshMenuVisible(),
+                menuUiState.getRefreshMenuShowAsAction());
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        setupMenuForWebViewUsage(menu);
+
         return true;
     }
 
