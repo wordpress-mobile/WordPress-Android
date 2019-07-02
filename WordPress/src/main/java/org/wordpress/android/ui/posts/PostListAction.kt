@@ -8,6 +8,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -64,6 +65,11 @@ private fun getPostsListStrategyFunctions(
             )
             if (!UploadService.isPostUploadingOrQueued(post)) {
                 UploadService.uploadPost(activity, post, true)
+            } else {
+                AppLog.d(
+                        AppLog.T.POSTS,
+                        "Remote auto save for preview not possible: post already uploading or queued"
+                )
             }
         } else {
             action.triggerPreviewStateUpdate.invoke(
@@ -72,6 +78,11 @@ private fun getPostsListStrategyFunctions(
             )
             if (!UploadService.isPostUploadingOrQueued(post)) {
                 UploadService.uploadPost(activity, post)
+            } else {
+                AppLog.d(
+                        AppLog.T.POSTS,
+                        "Upload for preview not possible: post already uploading or queued"
+                )
             }
         }
     }
