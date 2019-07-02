@@ -190,7 +190,7 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState) {
         this.site = site
 
         if (isSearchExpanded.value == true) {
@@ -238,7 +238,7 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
-        _previewState.value = _previewState.value ?: PostListRemotePreviewState.NONE
+        _previewState.value = _previewState.value ?: initPreviewState
 
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 

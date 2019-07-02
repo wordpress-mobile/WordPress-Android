@@ -21,5 +21,11 @@ enum class PostListRemotePreviewState(val value: Int, val progressDialogUiState:
             indeterminate = true
     )),
     PREVIEWING(3, ProgressDialogUiState.HiddenProgressDialog),
-    REMOTE_AUTO_SAVE_PREVIEW_ERROR(4, ProgressDialogUiState.HiddenProgressDialog)
+    REMOTE_AUTO_SAVE_PREVIEW_ERROR(4, ProgressDialogUiState.HiddenProgressDialog);
+
+    companion object {
+        fun fromInt(value: Int): PostListRemotePreviewState =
+                PostListRemotePreviewState.values().firstOrNull { it.value == value }
+                        ?: throw IllegalArgumentException("PostListRemotePreviewState wrong value $value")
+    }
 }

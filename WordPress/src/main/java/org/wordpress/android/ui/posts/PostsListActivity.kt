@@ -46,6 +46,7 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
+const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 
 class PostsListActivity : AppCompatActivity(),
         BasicDialogPositiveClickInterface,
@@ -122,9 +123,15 @@ class PostsListActivity : AppCompatActivity(),
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
+        val initPreviewState = if (savedInstanceState == null) {
+            PostListRemotePreviewState.NONE
+        } else {
+            PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
+        }
+
         setupActionBar()
         setupContent()
-        initViewModel()
+        initViewModel(initPreviewState)
         loadIntentData(intent)
     }
 
@@ -173,9 +180,9 @@ class PostsListActivity : AppCompatActivity(),
         }
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(initPreviewState: PostListRemotePreviewState) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site)
+        viewModel.start(site, initPreviewState)
 
         viewModel.viewState.observe(this, Observer { state ->
             state?.let {
@@ -286,11 +293,6 @@ class PostsListActivity : AppCompatActivity(),
     public override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        progressDialog?.dismiss()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -426,6 +428,9 @@ class PostsListActivity : AppCompatActivity(),
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
+        viewModel.previewState.value?.let {
+            outState.putInt(STATE_KEY_PREVIEW_STATE, it.value)
+        }
     }
 
     // BasicDialogFragment Callbacks

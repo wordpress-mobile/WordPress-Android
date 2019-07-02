@@ -832,11 +832,6 @@ public class EditPostActivity extends AppCompatActivity implements
         EventBus.getDefault().unregister(this);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
-
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
-        }
     }
 
     @Override protected void onStop() {
