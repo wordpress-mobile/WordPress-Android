@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-06 11:43:14+0000
+Translation-Revision-Date: 2019-06-27 13:57:55+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Estado (indisponível)</string>
+    <string name="domain_registration_privacy_protection_tos">Ao registrar esse domínio, você concorda com nossos %1$stermos e condições%2$s</string>
+    <string name="error_network_connection">Verifique sua conexão com a internet e tente novamente.</string>
+    <string name="error_browser_no_network">Não foi possível carregar essa página no momento.</string>
+    <string name="error_disabled_apis">Não foi possível coletar configurações: Algumas APIs estão indisponíveis para essa combinação de conta e ID do OAuth.</string>
+    <string name="jetpack_connection_terms_and_conditions">Ao configurar o Jetpack, você concorda com nossos %1$stermos e condições%2$s</string>
+    <string name="site_settings_disconnected_toast">Sem conexão. Edição foi desativada.</string>
+    <string name="site_settings_update_password_message">Para reconectar o aplicativo ao seu site auto-hospedado, digite a nova senha do site aqui.</string>
+    <string name="site_settings_password_updated">Senha atualizada</string>
+    <string name="site_settings_password_dialog_title">Atualizar senha</string>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando o domínio…</string>
+    <string name="domain_registration_state_picker_dialog_title">Selecionar o estado</string>
+    <string name="domain_registration_country_picker_dialog_title">Selecionar país</string>
+    <string name="domain_registration_result_continue_button">continuar</string>
+    <string name="domain_registration_result_description">seu novo domínio &lt;b>%s&lt;/b> está sendo configurado.\nSeu site está animado!</string>
+    <string name="domain_registration_result_title">Parabéns</string>
+    <string name="domain_contact_information_register_domain_button">Registrar domínio</string>
+    <string name="domain_contact_information_postal_code_hint">CEP</string>
+    <string name="domain_contact_information_state_hint">Estado</string>
+    <string name="domain_contact_information_city_hint">Cidade</string>
+    <string name="domain_contact_information_address_hint_two">Endereço 2</string>
+    <string name="domain_contact_information_address_hint">Endereço</string>
+    <string name="domain_contact_information_country_hint">País</string>
+    <string name="domain_contact_information_country_code_hint">Código do país</string>
+    <string name="domain_contact_information_phone_number_hint">Telefone</string>
+    <string name="domain_contact_information_organization_hint">Empresa (opcional)</string>
+    <string name="domain_contact_information_description">Para agilizar o processo, preenchemos com suas informações de contato do WordPress.com automaticamente.\nVerifique as informações para ter certeza de que são os dados que você deseja usar para esse domínio.</string>
+    <string name="domain_contact_information_title">Informações de contato do domínio</string>
+    <string name="domain_privacy_option_off_title">Registrar publicamente</string>
+    <string name="domain_privacy_option_on_title">Registrar com proteção de privacidade</string>
+    <string name="domain_registration_privacy_protection_description">Donos de domínios precisam compartilhar as informações de contato em um banco de dados público para todos os domínios.\nCom a proteção de privacidade, nós publicaremos nossos próprios dados ao invés dos seus e encaminharemos qualquer comunicação para você de forma privada.</string>
+    <string name="domain_registration_privacy_protection_title">Proteção de privacidade</string>
+    <string name="domain_registration_contact_form_input_error">Digite um %s válido</string>
+    <string name="domains_suggestions_choose_domain">Escolher o domínio</string>
+    <string name="stats_management_new">Novo</string>
+    <string name="stats_management_edit">Editar</string>
+    <string name="stats_management_dismiss_insights_news_card">Dispensar</string>
+    <string name="stats_management_try_it_now">Faça um teste</string>
+    <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Clique em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
+    <string name="stats_manage_your_stats">Gerenciar suas estatísticas</string>
     <string name="history_fetching_revisions">Coletando revisões…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Falha ao inserir a mídia.\nClique para ver mais opções.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nClique para ver tentar novamente.</string>
@@ -389,7 +430,6 @@ Language: pt_BR
     <string name="install_jetpack">Instalar Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Perguntas frequentes sobre o Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Ao instalar o Jetpack você concorda com nossos </string>
     <string name="stats_jetpack_connection_setup_info">Para usar estatísticas em seu site WordPress é necessário instalar o plugin Jetpack.</string>
     <string name="themes_empty_list">Nenhum tema corresponde à sua pesquisa</string>
     <string name="reader_label_post_search_explainer">O que você gostaria de encontrar?</string>
@@ -519,7 +559,7 @@ Language: pt_BR
     <string name="plugin_install_site_ineligible_site_private">O recurso de plugins precisa que o site esteja público.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">O recurso de plugins precisa de um plano Negócios.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">O recurso de plugins precisa de um domínio personalizado.</string>
-    <string name="plugin_install_site_ineligible_default_error">O recurso de plugins não está disponível para esse site.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Estamos fazendo as configurações finais. Quase concluído…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalando plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>
@@ -1141,7 +1181,7 @@ Language: pt_BR
     <string name="editor_post_saved_locally_failed_media">O post tem uploads de mídias não concluídos e foi salvo localmente</string>
     <string name="sure_to_remove_account">Remover esse site do aplicativo?</string>
     <string name="photo_picker_title">Escolha a foto</string>
-    <string name="error_publish_no_network">O dispositivo está off-line. As alterações serão salvas localmente.</string>
+    <string name="error_publish_no_network">O dispositivo está off-line. O post será salvo localmente.</string>
     <string name="editor_post_saved_online">Post salvo online</string>
     <string name="site_settings_image_quality_hint">Qualidade das imagens. Valores maiores significam melhor qualidade das imagens.</string>
     <string name="site_settings_optimize_images_summary">Habilite para redimensionar e comprimir imagens</string>
@@ -1435,7 +1475,6 @@ Language: pt_BR
     <string name="cd_related_post_preview_image">Imagem de visualização do post relacionado</string>
     <string name="error_post_remote_site_settings">Não foi possível salvar as informações do site</string>
     <string name="error_fetch_remote_site_settings">Não foi possível recuperar as informações do site</string>
-    <string name="site_settings_disconnected_toast">Sem conexão, edição desabilitada.</string>
     <string name="site_settings_close_after_dialog_switch_text">Fechar automaticamente</string>
     <string name="site_settings_close_after_dialog_description">Encerrar automaticamente comentários nos artigos.</string>
     <string name="site_settings_paging_dialog_description">Dividir tópicos de comentários em várias páginas.</string>
