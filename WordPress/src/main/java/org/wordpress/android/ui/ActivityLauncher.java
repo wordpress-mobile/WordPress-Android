@@ -55,6 +55,7 @@ import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
@@ -593,11 +594,7 @@ public class ActivityLauncher {
             return;
         }
 
-        // always add the preview parameter to avoid bumping stats when viewing posts
-        String url =
-                remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                ? post.getAutoSavePreviewUrl()
-                : UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+        String url = PostUtils.getPreviewUrlForPost(remotePreviewType, post);
 
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();

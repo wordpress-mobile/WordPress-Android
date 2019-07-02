@@ -18,11 +18,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -463,5 +465,26 @@ public class PostUtils {
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         return sdf.format(date);
+    }
+
+    public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostModel post) {
+        String previewUrl;
+
+        switch (remotePreviewType) {
+            case NOT_A_REMOTE_PREVIEW:
+            case REMOTE_PREVIEW:
+                // always add the preview parameter to avoid bumping stats when viewing posts
+                previewUrl = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+                break;
+            case REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE:
+                previewUrl = post.getAutoSavePreviewUrl();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Cannot get a Preview URL for " + remotePreviewType + " Preview type."
+                );
+        }
+
+        return previewUrl;
     }
 }
