@@ -100,8 +100,11 @@ fun handlePostListAction(
                         helperFunctions = getPostsListStrategyFunctions(activity, action)
                 )
 
+                // TODO: consider to remove this once the modifications related to
+                // https://github.com/wordpress-mobile/WordPress-Android/issues/10106 will be available.
+                // In current implementation only Trashed posts can trigger the below condition but
+                // once the above is implemented should not be possible to trigger below condition anymore.
                 if (opResult == RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW) {
-                    // TODO: evaluate if this case can really happen in the Posts List.
                     action.triggerPreviewStateUpdate.invoke(
                             PostListRemotePreviewState.PREVIEWING,
                             PostInfoType.PostNoInfo
