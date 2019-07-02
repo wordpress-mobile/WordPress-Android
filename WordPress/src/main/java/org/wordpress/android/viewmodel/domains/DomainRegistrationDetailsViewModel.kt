@@ -8,6 +8,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TransactionAction.FETCH_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -213,6 +215,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCartRedeemed(event: OnShoppingCartRedeemed) {
         if (event.isError) {
+            AnalyticsTracker.track(Stat.AUTOMATED_CUSTOM_DOMAIN_PURCHASE_FAILED)
             _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
             _formError.value = event.error
             _showErrorMessage.value = event.error.message

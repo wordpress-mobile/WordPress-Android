@@ -11,8 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import javax.inject.Inject
@@ -73,7 +71,6 @@ class DomainRegistrationActivity : AppCompatActivity() {
         })
 
         viewModel.domainRegistrationCompleted.observe(this, Observer { event ->
-            AnalyticsTracker.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS)
             event?.let {
                 if (shouldShowCongratsScreen()) {
                     var fragment = supportFragmentManager.findFragmentByTag(DomainRegistrationResultFragment.TAG)
