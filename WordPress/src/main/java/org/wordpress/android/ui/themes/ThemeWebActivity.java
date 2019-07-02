@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
@@ -50,7 +52,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
         return WPWebViewActivity.getSiteLoginUrl(site);
     }
 
-    public static void openTheme(Activity activity, SiteModel site, ThemeModel theme, ThemeWebActivityType type) {
+    public static void openTheme(Activity activity, @NonNull SiteModel site, @NonNull ThemeModel theme,
+                                 @NonNull ThemeWebActivityType type) {
         String url = getUrl(site, theme, type, !theme.isFree());
         if (TextUtils.isEmpty(url)) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
@@ -90,7 +93,16 @@ public class ThemeWebActivity extends WPWebViewActivity {
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(SiteModel site, ThemeModel theme, ThemeWebActivityType type, boolean isPremium) {
+    public static String getIdentifierForCustomizer(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+        if (site.isJetpackConnected()) {
+            return theme.getThemeId();
+        } else {
+            return theme.getStylesheet();
+        }
+    }
+
+    public static String getUrl(@NonNull SiteModel site, @NonNull ThemeModel theme, @NonNull ThemeWebActivityType type,
+                                boolean isPremium) {
         if (theme.isWpComTheme()) {
             switch (type) {
                 case PREVIEW:
@@ -112,7 +124,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         } else {
             switch (type) {
                 case PREVIEW:
-                    return site.getAdminUrl() + "customize.php?theme=" + theme.getThemeId();
+                    return site.getAdminUrl() + "customize.php?theme=" + getIdentifierForCustomizer(site, theme);
                 case DEMO:
                     return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
                 case DETAILS:

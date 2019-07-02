@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -93,5 +94,13 @@ public class SiteUtils {
 
     public static boolean hasNonJetpackBusinessPlan(SiteModel site) {
         return site.getPlanId() == PlansConstants.BUSINESS_PLAN_ID;
+    }
+
+    public static boolean onFreePlan(@NonNull SiteModel site) {
+        return site.getPlanId() == PlansConstants.FREE_PLAN_ID;
+    }
+
+    public static boolean hasCustomDomain(@NonNull SiteModel site) {
+        return !site.getUrl().contains(".wordpress.com");
     }
 }

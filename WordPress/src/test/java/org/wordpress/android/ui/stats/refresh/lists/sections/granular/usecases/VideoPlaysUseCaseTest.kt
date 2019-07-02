@@ -65,7 +65,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
-                        0,
+                        selectedDate,
                         listOf(selectedDate)
                 )
         )

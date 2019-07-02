@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
@@ -25,7 +24,6 @@ import org.wordpress.android.util.image.ImageType;
 import java.util.Collection;
 import java.util.function.Supplier;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -40,6 +38,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
@@ -509,7 +508,7 @@ public class WPSupportUtils {
 
     private static Activity mCurrentActivity;
     public static Activity getCurrentActivity() {
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+        getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
                 Collection resumedActivities = ActivityLifecycleMonitorRegistry

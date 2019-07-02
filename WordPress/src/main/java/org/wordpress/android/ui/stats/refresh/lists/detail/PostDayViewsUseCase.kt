@@ -80,7 +80,7 @@ class PostDayViewsUseCase
         val selectedPeriod = periodFromProvider ?: availableDates.last()
         val index = availableDates.indexOf(selectedPeriod)
 
-        selectedDateProvider.selectDate(index, availableDates, DETAIL)
+        selectedDateProvider.selectDate(selectedPeriod, availableDates, DETAIL)
 
         val shiftedIndex = index + domainModel.dayViews.size - visibleBarCount
         val selectedItem = domainModel.dayViews.getOrNull(shiftedIndex) ?: domainModel.dayViews.last()
