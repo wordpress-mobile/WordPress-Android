@@ -90,6 +90,9 @@ jobs:
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
+      - run:
+          name: Validate aztec strings
+          command: bundle exec fastlane validate_aztec_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
   wordpress_android:
