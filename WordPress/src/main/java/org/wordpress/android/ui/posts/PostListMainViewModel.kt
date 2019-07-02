@@ -440,8 +440,46 @@ class PostListMainViewModel @Inject constructor(
         updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
     }
 
+    /**
+     * This function was introduced as an expression body function in order to force the
+     * usage of the when as an expression and take advantage of the compiler checks on the
+     * when being exhaustive.
+     */
+    private fun managePreviewStateTransitions(
+        newState: PostListRemotePreviewState,
+        prevState: PostListRemotePreviewState?,
+        postInfo: PostInfoType
+    ) = when (newState) {
+        PostListRemotePreviewState.PREVIEWING -> {
+            prevState?.let {
+                if (it == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW ||
+                        it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW) {
+                    (postInfo as? PostInfoType.PostInfo)?.let { info ->
+                        info.post.let { post ->
+                            postActionHandler.handleRemotePreview(
+                                    localPostId = post.id,
+                                    remotePreviewType = if (prevState ==
+                                            PostListRemotePreviewState.UPLOADING_FOR_PREVIEW) {
+                                        RemotePreviewType.REMOTE_PREVIEW
+                                    } else {
+                                        RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                                    }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        PostListRemotePreviewState.NONE,
+        PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
+        PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
+        PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR -> {
+            // nothing to do
+        }
+    }
+
     private fun updatePreviewAndDialogState(newState: PostListRemotePreviewState, postInfo: PostInfoType) {
-        /* We need only transitions, so... */
+        // We need only transitions, so...
         if (_previewState.value == newState) return
 
         AppLog.d(
@@ -449,34 +487,12 @@ class PostListMainViewModel @Inject constructor(
                 "Posts list preview state machine: transition from ${_previewState.value} to $newState"
         )
 
-        /* update the state */
+        // update the state
         val prevState = _previewState.value
         _previewState.postValue(newState)
 
-        /* take care of exit actions on state transition */
-        when (newState) {
-            PostListRemotePreviewState.PREVIEWING -> {
-                when (prevState) {
-                    PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
-                    PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW -> {
-                        (postInfo as? PostInfoType.PostInfo)?.let { info ->
-                            info.post.let { post ->
-                                postActionHandler.handleRemotePreview(
-                                        localPostId = post.id,
-                                        remotePreviewType = if (prevState ==
-                                            PostListRemotePreviewState.UPLOADING_FOR_PREVIEW) {
-                                            RemotePreviewType.REMOTE_PREVIEW
-                                        } else {
-                                            RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                                        }
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            else -> { /* nothing to do*/ }
-        }
+        // take care of exit actions on state transition
+        managePreviewStateTransitions(newState, prevState, postInfo)
     }
 
     fun toggleViewLayout() {

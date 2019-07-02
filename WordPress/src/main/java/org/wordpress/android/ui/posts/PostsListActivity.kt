@@ -55,6 +55,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -232,7 +233,7 @@ class PostsListActivity : AppCompatActivity(),
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
         })
         viewModel.previewState.observe(this, Observer {
-            progressDialog = ProgressDialogHelper.updateProgressDialogState(
+            progressDialog = progressDialogHelper.updateProgressDialogState(
                     this,
                     progressDialog,
                     it.progressDialogUiState,

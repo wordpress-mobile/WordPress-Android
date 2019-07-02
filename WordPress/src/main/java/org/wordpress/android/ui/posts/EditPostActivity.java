@@ -401,6 +401,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject ImageManager mImageManager;
     @Inject UiHelpers mUiHelpers;
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
+    @Inject ProgressDialogHelper mProgressDialogHelper;
 
     private SiteModel mSite;
 
@@ -1670,23 +1671,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState) {
-        updatePostLoadingAndDialogState(postLoadingState, null);
-    }
-
-    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState, @Nullable PostModel post) {
-        /* We need only transitions, so... */
-        if (mPostLoadingState == postLoadingState) return;
-
-        AppLog.d(
-                AppLog.T.POSTS,
-                "Editor post loading state machine: transition from " + mPostLoadingState + " to " + postLoadingState
-        );
-
-        /* update the state */
-        mPostLoadingState = postLoadingState;
-
-        /* take care of exit actions on state transition */
+    private void managePostLoadingStateTransitions(PostLoadingState postLoadingState, @Nullable PostModel post) {
         switch (postLoadingState) {
             case NONE:
                 setPreviewingInEditorSticky(false, post);
@@ -1697,12 +1682,37 @@ public class EditPostActivity extends AppCompatActivity implements
             case REMOTE_AUTO_SAVE_PREVIEW_ERROR:
                 setPreviewingInEditorSticky(true, post);
                 break;
+            case DISCARDING:
+            case RELOADING:
+            case LOADING_REVISION:
+                // nothing to do
+                break;
             default:
-                 /* nothing to do */
+                throw new IllegalArgumentException("Unmanaged PostLoadingState: " + postLoadingState);
         }
+    }
 
-        /* update the progress dialog state */
-        mProgressDialog = ProgressDialogHelper.updateProgressDialogState(
+    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState) {
+        updatePostLoadingAndDialogState(postLoadingState, null);
+    }
+
+    private void updatePostLoadingAndDialogState(PostLoadingState postLoadingState, @Nullable PostModel post) {
+        // We need only transitions, so...
+        if (mPostLoadingState == postLoadingState) return;
+
+        AppLog.d(
+                AppLog.T.POSTS,
+                "Editor post loading state machine: transition from " + mPostLoadingState + " to " + postLoadingState
+        );
+
+        // update the state
+        mPostLoadingState = postLoadingState;
+
+        // take care of exit actions on state transition
+        managePostLoadingStateTransitions(postLoadingState, post);
+
+        // update the progress dialog state
+        mProgressDialog = mProgressDialogHelper.updateProgressDialogState(
                 this,
                 mProgressDialog,
                 mPostLoadingState.getProgressDialogUiState(),
