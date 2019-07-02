@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-08 21:06:50+0000
+Translation-Revision-Date: 2019-06-19 20:48:58+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Eyalet (mevcut değil)</string>
+    <string name="domain_registration_privacy_protection_tos">Bu etki alanını kaydettirerek %1$sşartlar ve koşulları%2$s kabul etmiş sayılırsınız.</string>
+    <string name="error_network_connection">Ağ bağlantınızı kontrol edin ve tekrar deneyin.</string>
+    <string name="error_browser_no_network">Bu sayfa şu anda yüklenemiyor.</string>
+    <string name="error_disabled_apis">Ayarlar getirilemedi: Bu OAuth uygulama idsi ve hesap birleşimi için bazı API\'ler kullanılamıyor.</string>
+    <string name="jetpack_connection_terms_and_conditions">Jetpack\'i kurarak %1$sşartlar ve koşulları%2$s kabul etmiş sayılırsınız.</string>
+    <string name="site_settings_disconnected_toast">Bağlantı yok. Düzenleme devre dışı bırakıldı.</string>
+    <string name="site_settings_update_password_message">Uygulamayı kendi barındırdığınız sitenize yeniden bağlamak için sitenin yeni parolasını buraya girin.</string>
+    <string name="site_settings_password_updated">Parola güncellendi</string>
+    <string name="site_settings_password_dialog_title">Parolayı güncelle</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Site ayrıntılarınızı güncellerken hata oluştu: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Alan adı iletişim bilgileri alınırken hata oluştu: %s</string>
-    <string name="domain_registration_error_registering_domain">Alan adı kaydedilirken hata oluştu: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
@@ -423,7 +430,6 @@ Language: tr
     <string name="install_jetpack">Jetpack\'i kur</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Jetpack\'i kurarak şunu kabul etmiş olursunuz: </string>
     <string name="stats_jetpack_connection_setup_info">WordPress sitenizdeki istatistikleri kullanmak için Jetpack eklentisini yüklemeniz gerekir.</string>
     <string name="themes_empty_list">Aramanızla eşleşen bir tema yok</string>
     <string name="reader_label_post_search_explainer">Ne bulmak istersiniz?</string>
@@ -553,7 +559,7 @@ Language: tr
     <string name="plugin_install_site_ineligible_site_private">Eklenti özelliği sitenin herkese açık olmasını gerektirir.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Eklenti özelliği business paket gerektirir.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Eklenti özelliği özel alan adı gerektirir.</string>
-    <string name="plugin_install_site_ineligible_default_error">Eklenti özelliği bu site için kullanılamaz.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Son kurulumu yapıyoruz — neredeyse bitti…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Eklenti yükleniyor…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Yükle</string>
@@ -1175,7 +1181,7 @@ Language: tr
     <string name="editor_post_saved_locally_failed_media">Yazı, ortam dosyası yüklemelerinde başarısız oldu ve yerel olarak kaydedildi</string>
     <string name="sure_to_remove_account">Bu site uygulamadan kaldırılsın mı?</string>
     <string name="photo_picker_title">Fotoğraf seç</string>
-    <string name="error_publish_no_network">Cihaz çevrimdışı. Değişiklikler yerel olarak kaydedildi.</string>
+    <string name="error_publish_no_network">Cihaz çevrimdışı. Yazılar yerel olarak kaydedildi.</string>
     <string name="editor_post_saved_online">Yazı çevrimiçi kaydedildi.</string>
     <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
@@ -1469,7 +1475,6 @@ Language: tr
     <string name="cd_related_post_preview_image">İlgili yazı önizleme görseli</string>
     <string name="error_post_remote_site_settings">Site bilgileri kaydedilemedi</string>
     <string name="error_fetch_remote_site_settings">Site bilgileri alınamadı</string>
-    <string name="site_settings_disconnected_toast">Çıkış yapılmış, düzenleme devre dışı.</string>
     <string name="site_settings_close_after_dialog_switch_text">Otomatik olarak kapat</string>
     <string name="site_settings_close_after_dialog_description">Makalelerdeki yorumları otomatik kapat.</string>
     <string name="site_settings_paging_dialog_description">Yorum zincirlerini birden çok sayfaya böl.</string>

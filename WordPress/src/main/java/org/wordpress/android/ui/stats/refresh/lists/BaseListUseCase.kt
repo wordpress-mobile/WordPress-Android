@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -29,7 +30,7 @@ class BaseListUseCase(
     private val mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val useCases: List<BaseStatsUseCase<*, *>>,
-    private val getStatsTypes: suspend () -> List<StatsType>,
+    private val getStatsTypes: suspend (SiteModel) -> List<StatsType>,
     private val mapUiModel: (
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
@@ -87,9 +88,11 @@ class BaseListUseCase(
     }
 
     suspend fun refreshTypes(): List<StatsType> {
-        val items = getStatsTypes()
-        withContext(mainDispatcher) {
-            statsTypes.value = items
+        val items = getStatsTypes(statsSiteProvider.siteModel)
+        if (statsTypes.value != items) {
+            withContext(mainDispatcher) {
+                statsTypes.value = items
+            }
         }
         return items
     }
