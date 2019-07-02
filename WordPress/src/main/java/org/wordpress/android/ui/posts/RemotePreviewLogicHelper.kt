@@ -95,12 +95,12 @@ class RemotePreviewLogicHelper @Inject constructor(
 
     private fun shouldSave(post: PostModel): Boolean {
         val status = PostStatus.fromPost(post)
-        return (post.isLocalDraft ||
-                ((status == PostStatus.DRAFT || status == PostStatus.SCHEDULED) && post.isLocallyChanged))
+        return post.isLocalDraft ||
+                (status == PostStatus.DRAFT && post.isLocallyChanged)
     }
 
     private fun shouldRemoteAutoSave(post: PostModel): Boolean {
         val status = PostStatus.fromPost(post)
-        return (status == PostStatus.PUBLISHED && post.isLocallyChanged)
+        return (status == PostStatus.PUBLISHED || status == PostStatus.SCHEDULED) && post.isLocallyChanged
     }
 }

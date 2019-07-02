@@ -409,11 +409,6 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
-    private boolean isRemotePreviewing() {
-        return (mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW);
-    }
-
     private boolean isModernEditor() {
         return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
     }
@@ -2419,8 +2414,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (shouldSave) {
                     PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
-                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING
-                            || (isRemotePreviewing() && status == PostStatus.SCHEDULED)) && isPublishable
+                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
                             && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                             && isNotRestarting) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);

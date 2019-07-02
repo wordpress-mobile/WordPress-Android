@@ -188,4 +188,53 @@ class RemotePreviewLogicHelperTest {
                 RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
         )
     }
+
+    @Test
+    fun `cannot remote auto save empty scheduled post for preview`() {
+        // Given
+        doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
+        doReturn(PostStatus.SCHEDULED.toString()).whenever(post).status
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(
+                RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
+        )
+        verify(helperFunctions, times(1)).notifyEmptyPost()
+    }
+
+    @Test
+    fun `remote auto save scheduled post with local changes for preview`() {
+        // Given
+        doReturn(PostStatus.SCHEDULED.toString()).whenever(post).status
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
+        verify(helperFunctions, times(1)).startUploading(true, post)
+    }
+
+    @Test
+    fun `launch remote preview with no uploading for scheduled post without local changes`() {
+        // Given
+        doReturn(PostStatus.SCHEDULED.toString()).whenever(post).status
+        doReturn(false).whenever(post).isLocallyChanged
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
+        verify(helperFunctions, never()).startUploading(any(), any())
+        verify(activityLauncherWrapper, times(1)).previewPostOrPageForResult(
+                activity,
+                site,
+                post,
+                RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
+        )
+    }
 }
