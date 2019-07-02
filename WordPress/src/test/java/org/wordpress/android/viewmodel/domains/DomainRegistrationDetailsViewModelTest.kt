@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPay
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
 import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainProductDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
@@ -68,7 +69,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
     @Mock private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
     @Mock private lateinit var tosLinkObserver: Observer<Unit>
-    @Mock private lateinit var completedDomainRegistrationObserver: Observer<String>
+    @Mock private lateinit var completedDomainRegistrationObserver: Observer<DomainRegistrationCompletedEvent>
     @Mock private lateinit var errorMessageObserver: Observer<String>
 
     private val uiStateResults = mutableListOf<DomainRegistrationDetailsUiState>()
@@ -101,6 +102,11 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             "email@wordpress.org",
             "3124567890",
             ""
+    )
+
+    private val domainRegistrationCompletedEvent = DomainRegistrationCompletedEvent(
+            "testdomain.blog",
+            "email@wordpress.org"
     )
 
     private val shoppingCartCreateError = CreateShoppingCartError(GENERIC_ERROR, "Error Creating Cart")
@@ -444,7 +450,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val domainRegisteredState = uiStateResults[1]
         assertThat(domainRegisteredState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
-        verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
+        verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
     }
 
     @Test
@@ -529,7 +535,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         verify(errorMessageObserver).onChanged(siteChangedError.message)
 
-        verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
+        verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
     }
 
     @Test
