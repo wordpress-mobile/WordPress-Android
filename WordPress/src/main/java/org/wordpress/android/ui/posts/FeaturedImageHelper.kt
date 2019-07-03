@@ -99,7 +99,7 @@ internal class FeaturedImageHelper @Inject constructor(
 
         val mediaUri = StringUtils.notNullStr(media.thumbnailUrl)
         val photonUrl = ReaderUtils.getResizedImageUrl(mediaUri, maxDimen, maxDimen, !SiteUtils.isPhotonCapable(site))
-        return FeaturedImageData(FeaturedImageState.IMAGE_SET, photonUrl)
+        return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }
 
     internal data class FeaturedImageData(val uiState: FeaturedImageState, val mediaUri: String?)
@@ -108,12 +108,14 @@ internal class FeaturedImageHelper @Inject constructor(
     internal enum class FeaturedImageState(
         val buttonVisible: Boolean = false,
         val imageViewVisible: Boolean = false,
+        val localImageViewVisible: Boolean = false,
         val progressOverlayVisible: Boolean = false,
         val retryOverlayVisible: Boolean = false
     ) {
         IMAGE_EMPTY(buttonVisible = true),
-        IMAGE_SET(imageViewVisible = true),
-        IMAGE_UPLOAD_IN_PROGRESS(imageViewVisible = true, progressOverlayVisible = true),
-        IMAGE_UPLOAD_FAILED(imageViewVisible = true, retryOverlayVisible = true);
+        REMOTE_IMAGE_LOADING(localImageViewVisible = true, imageViewVisible = true),
+        REMOTE_IMAGE_SET(imageViewVisible = true),
+        IMAGE_UPLOAD_IN_PROGRESS(localImageViewVisible = true, progressOverlayVisible = true),
+        IMAGE_UPLOAD_FAILED(localImageViewVisible = true, retryOverlayVisible = true);
     }
 }

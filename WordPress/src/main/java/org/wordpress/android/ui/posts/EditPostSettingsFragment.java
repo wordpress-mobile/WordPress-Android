@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -77,6 +78,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
 import java.lang.reflect.Field;
@@ -122,6 +124,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
     private ImageView mFeaturedImageView;
+    private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
     private ViewGroup mFeaturedImageRetryOverlay;
     private ViewGroup mFeaturedImageProgressOverlay;
@@ -251,6 +254,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
+        mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
         mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
         mFeaturedImageRetryOverlay = rootView.findViewById(R.id.post_featured_image_retry_overlay);
         mFeaturedImageProgressOverlay = rootView.findViewById(R.id.post_featured_image_progress_overlay);
@@ -258,26 +262,20 @@ public class EditPostSettingsFragment extends Fragment {
         final CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+            OnClickListener showContextMenuListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    view.showContextMenu();
+                }
+            };
             registerForContextMenu(mFeaturedImageView);
-            mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    view.showContextMenu();
-                }
-            });
+            registerForContextMenu(mLocalFeaturedImageView);
+            mFeaturedImageView.setOnClickListener(showContextMenuListener);
+            mLocalFeaturedImageView.setOnClickListener(showContextMenuListener);
             registerForContextMenu(mFeaturedImageRetryOverlay);
-            mFeaturedImageRetryOverlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    view.showContextMenu();
-                }
-            });
+            mFeaturedImageRetryOverlay.setOnClickListener(showContextMenuListener);
             registerForContextMenu(mFeaturedImageProgressOverlay);
-            mFeaturedImageProgressOverlay.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View view) {
-                    view.showContextMenu();
-                }
-            });
+            mFeaturedImageProgressOverlay.setOnClickListener(showContextMenuListener);
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -942,13 +940,34 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded() || post == null || site == null || context == null) {
             return;
         }
-        FeaturedImageData currentFeaturedImageState =
+        final FeaturedImageData currentFeaturedImageState =
                 mFeaturedImageHelper.createCurrentFeaturedImageState(context, site, post);
 
-        updateFeaturedImageViewsVisibility(currentFeaturedImageState.getUiState());
+        FeaturedImageState uiState = currentFeaturedImageState.getUiState();
+        updateFeaturedImageViews(currentFeaturedImageState.getUiState());
         if (currentFeaturedImageState.getMediaUri() != null) {
-            mImageManager.load(mFeaturedImageView, ImageType.PHOTO, currentFeaturedImageState.getMediaUri(),
-                    ScaleType.FIT_CENTER);
+            if (uiState == FeaturedImageState.REMOTE_IMAGE_LOADING) {
+                /*
+                 *  Fetch the remote image, but keep showing the local image (when present) until "onResourceReady"
+                 *  is invoked.  We use this hack to prevent showing an empty view when the local image is replaced
+                 *  with a remote image.
+                 */
+                mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
+                        currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
+                        null, new RequestListener<Drawable>() {
+                            @Override public void onLoadFailed(@org.jetbrains.annotations.Nullable Exception e) {
+                            }
+
+                            @Override public void onResourceReady(Drawable resource) {
+                                if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
+                                    updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
+                                }
+                            }
+                        });
+            } else {
+                mImageManager.load(mLocalFeaturedImageView, ImageType.IMAGE, currentFeaturedImageState.getMediaUri(),
+                        ScaleType.FIT_CENTER);
+            }
         }
     }
 
@@ -1154,10 +1173,14 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void updateFeaturedImageViewsVisibility(FeaturedImageState state) {
+    private void updateFeaturedImageViews(FeaturedImageState state) {
         mUiHelpers.updateVisibility(mFeaturedImageView, state.getImageViewVisible());
+        mUiHelpers.updateVisibility(mLocalFeaturedImageView, state.getLocalImageViewVisible());
         mUiHelpers.updateVisibility(mFeaturedImageButton, state.getButtonVisible());
         mUiHelpers.updateVisibility(mFeaturedImageRetryOverlay, state.getRetryOverlayVisible());
         mUiHelpers.updateVisibility(mFeaturedImageProgressOverlay, state.getProgressOverlayVisible());
+        if (!state.getLocalImageViewVisible()) {
+            mImageManager.cancelRequestAndClearImageView(mLocalFeaturedImageView);
+        }
     }
 }
