@@ -92,7 +92,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.Companion.getTAG());
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
 
         if (fragment != null) {
             fragment.onBackPressed();

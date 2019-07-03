@@ -69,7 +69,7 @@ public class CommentsDetailActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.Companion.getTAG());
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
 
         if (fragment != null) {
             fragment.onBackPressed();
@@ -105,11 +105,11 @@ public class CommentsDetailActivity extends AppCompatActivity
         }
 
         // set up the viewpager and adapter for lateral navigation
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_loading);
+        mProgressBar = findViewById(R.id.progress_loading);
 
         // Asynchronously loads comments and build the adapter
         loadDataInViewPager();

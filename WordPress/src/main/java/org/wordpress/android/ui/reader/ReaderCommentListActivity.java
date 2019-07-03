@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -171,6 +173,21 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
+
+        mEditComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSubmitReplyBtn.setEnabled(s.length() > 0);
+            }
+        });
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
         mSubmitReplyBtn.setEnabled(false);
 
@@ -694,9 +711,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     return;
                 }
                 mIsSubmittingComment = false;
-                mSubmitReplyBtn.setEnabled(true);
                 mEditComment.setEnabled(true);
                 if (succeeded) {
+                    mSubmitReplyBtn.setEnabled(false);
                     // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
@@ -705,6 +722,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
                 } else {
                     mEditComment.setText(commentText);
+                    mSubmitReplyBtn.setEnabled(true);
                     getCommentAdapter().removeComment(fakeCommentId);
                     ToastUtils.showToast(
                             ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed,

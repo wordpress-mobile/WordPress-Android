@@ -69,7 +69,6 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         const val RESULT_REPLY = "RESULT_REPLY"
         const val RESULT_SELECTION_START = "RESULT_SELECTION_START"
         const val RESULT_SELECTION_END = "RESULT_SELECTION_END"
-        val TAG = CommentFullScreenDialogFragment::class.java.simpleName
 
         private const val EXTRA_REPLY = "EXTRA_REPLY"
         private const val EXTRA_SELECTION_START = "EXTRA_SELECTION_START"
