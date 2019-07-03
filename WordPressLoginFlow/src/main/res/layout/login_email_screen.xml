@@ -19,6 +19,8 @@
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_width="match_parent"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         tools:text="@string/enter_email_wordpress_com"
         style="@style/LoginTheme.TextLabel" >
     </TextView>

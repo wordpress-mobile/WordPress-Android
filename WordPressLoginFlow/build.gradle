@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
     }
 }
 
@@ -35,12 +35,12 @@ dependencies {
         exclude group: "com.mcxiaoke.volley"
     }
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:animated-vector-drawable:28.0.0'
-    implementation 'com.android.support:support-media-compat:28.0.0'
-    implementation 'com.android.support:support-v13:28.0.0'
-    implementation 'com.android.support:gridlayout-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'androidx.media:media:1.0.1'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
     api 'com.google.android.gms:play-services-auth:15.0.1'
 
@@ -51,7 +51,7 @@ dependencies {
             exclude group: "org.wordpress", module: "utils"
         }
     } else {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:8cdbf03cf3d595ef904bab3c1dc207e39242c882") {
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:9f07b031646dd3e6021d4b8e0a35647c9109ff27") {
             exclude group: "com.android.support"
             exclude group: "org.wordpress", module: "utils"
         }
@@ -61,11 +61,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     // Dagger
-    implementation 'com.google.dagger:dagger:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    implementation 'com.google.dagger:dagger:2.22.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.22.1'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation 'com.google.dagger:dagger-android-support:2.11'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+    implementation 'com.google.dagger:dagger-android-support:2.22.1'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.22.1'
 
     lintChecks 'org.wordpress:lint:1.0.1'
 }
