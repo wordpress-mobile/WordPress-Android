@@ -1600,8 +1600,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts() && !mIsNewPost &&
-            !AppPrefs.isGutenbergDefaultForNewPosts()) {
+        if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts()
+            && !mIsNewPost
+            && !AppPrefs.isGutenbergDefaultForNewPosts()) {
             AppPrefs.setGutenbergDefaultForNewPosts(true);
             AppPrefs.autoEnableGutenbergForThewNewPosts(false);
             showGutenbergInformativeDialog();
