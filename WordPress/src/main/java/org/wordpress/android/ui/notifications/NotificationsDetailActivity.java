@@ -35,7 +35,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -93,7 +92,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.Companion.getTAG());
 
         if (fragment != null) {
             fragment.onBackPressed();

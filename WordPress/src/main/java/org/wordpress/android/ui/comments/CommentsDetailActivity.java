@@ -69,7 +69,7 @@ public class CommentsDetailActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
-                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.Companion.getTAG());
 
         if (fragment != null) {
             fragment.onBackPressed();

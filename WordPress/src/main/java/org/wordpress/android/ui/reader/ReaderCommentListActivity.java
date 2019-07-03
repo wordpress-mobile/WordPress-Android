@@ -75,6 +75,8 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderCommentListActivity extends AppCompatActivity {
@@ -201,7 +203,10 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bundle bundle = CommentFullScreenDialogFragment.newBundle(mEditComment.getText().toString());
+                    Bundle bundle = CommentFullScreenDialogFragment.Companion
+                            .newBundle(mEditComment.getText().toString(),
+                                    mEditComment.getSelectionStart(),
+                                    mEditComment.getSelectionEnd());
 
                     new Builder(ReaderCommentListActivity.this)
                         .setTitle(R.string.comment)
@@ -210,6 +215,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                             public void onCollapse(@Nullable Bundle result) {
                                 if (result != null) {
                                     mEditComment.setText(result.getString(RESULT_REPLY));
+                                    mEditComment.setSelection(result.getInt(RESULT_SELECTION_START),
+                                            result.getInt(RESULT_SELECTION_END));
                                     mEditComment.requestFocus();
                                 }
                             }

@@ -98,6 +98,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.Companion;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
 
 /**
@@ -298,7 +299,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bundle bundle = CommentFullScreenDialogFragment.newBundle(mEditReply.getText().toString());
+                    Bundle bundle = Companion.newBundle(
+                            mEditReply.getText().toString(),
+                            mEditReply.getSelectionStart(),
+                            mEditReply.getSelectionEnd()
+                                                       );
 
                     new Builder(requireContext())
                         .setTitle(R.string.comment)
