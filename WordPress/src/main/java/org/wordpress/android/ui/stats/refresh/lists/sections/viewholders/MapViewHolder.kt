@@ -34,7 +34,12 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
             val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_50) and 0xffffff)
             val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent) and 0xffffff)
-            val emptyColor = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.neutral_50) and 0xffffff)
+            val emptyColor = Integer.toHexString(
+                    ContextCompat.getColor(
+                            itemView.context,
+                            R.color.neutral_50
+                    ) and 0xffffff
+            )
             val htmlPage = ("<html>" +
                     "<head>" +
                     "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
