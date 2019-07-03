@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -239,6 +240,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DomainRegistrationDetailsViewModel.class)
     abstract ViewModel domainRegistrationDetailsViewModel(DomainRegistrationDetailsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainRegistrationMainViewModel.class)
+    abstract ViewModel domainRegistrationMainViewModel(DomainRegistrationMainViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

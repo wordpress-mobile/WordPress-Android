@@ -75,6 +75,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.util.AniUtils;
@@ -109,7 +110,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
-
+import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
 public class PluginDetailActivity extends AppCompatActivity implements OnDomainRegistrationRequestedListener,
         BasicDialogPositiveClickInterface {
@@ -329,6 +330,10 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
         if (requestCode == RequestCodes.DOMAIN_REGISTRATION) {
             if (resultCode != Activity.RESULT_OK || isFinishing()) {
                 return;
+            }
+            if (data != null) {
+                String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
+                requestEmailValidation(this, email);
             }
             confirmInstallPluginForAutomatedTransfer();
         }

@@ -25,9 +25,11 @@ import javax.inject.Inject
 
 class DomainSuggestionsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var mainViewModel: DomainRegistrationMainViewModel
     private lateinit var viewModel: DomainSuggestionsViewModel
 
     companion object {
+        const val TAG = "DOMAIN_SUGGESTIONS_FRAGMENT"
         fun newInstance(): DomainSuggestionsFragment {
             return DomainSuggestionsFragment()
         }
@@ -42,6 +44,9 @@ class DomainSuggestionsFragment : Fragment() {
 
         val nonNullActivity = checkNotNull(activity)
         (nonNullActivity.application as WordPress).component().inject(this)
+
+        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(DomainRegistrationMainViewModel::class.java)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainSuggestionsViewModel::class.java)
 
@@ -59,7 +64,7 @@ class DomainSuggestionsFragment : Fragment() {
         chose_domain_button.setOnClickListener {
             val selectedDomain = viewModel.selectedSuggestion.value
 
-            (activity as DomainRegistrationActivity).onDomainSelected(
+            mainViewModel.selectDomain(
                     DomainProductDetails(
                             selectedDomain!!.product_id,
                             selectedDomain.domain_name
