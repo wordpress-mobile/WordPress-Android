@@ -63,6 +63,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/com_google_android_geo_api_key"/>
 
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
