@@ -14,7 +14,6 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScr
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
-
     private lateinit var mDialogController: CollapseFullScreenDialogController
     private lateinit var mReply: SuggestionAutoCompleteText
 
