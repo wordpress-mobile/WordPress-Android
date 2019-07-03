@@ -153,42 +153,42 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
-  # build_and_upload_test_releases
+  # build_test_releases
   # -----------------------------------------------------------------------------------
-  # This lane builds the app and uploads it for both internal and external distribution 
+  # This lane builds the app it for both internal and external distribution 
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_test_releases [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_test_releases [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_and_upload_test_releases 
-  # bundle exec fastlane build_and_upload_test_releases skip_confirm:true 
+  # bundle exec fastlane build_test_releases 
+  # bundle exec fastlane build_test_releases skip_confirm:true 
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_and_upload_test_releases do | options |
+  lane :build_test_releases do | options |
     android_build_prechecks(skip_confirm: options[:skip_confirm], 
       alpha: true,
       beta: true,
       final: false)
     android_build_preflight()
-    build_and_upload_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm])
-    build_and_upload_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm])
   end
 
   #####################################################################################
-  # build_and_upload_alpha
+  # build_alpha
   # -----------------------------------------------------------------------------------
-  # This lane builds the app and upload it for internal testing  
+  # This lane builds the app it for internal testing  
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_alpha [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_and_upload_alpha 
-  # bundle exec fastlane build_and_upload_alpha skip_confirm:true 
+  # bundle exec fastlane build_alpha 
+  # bundle exec fastlane build_alpha skip_confirm:true 
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_and_upload_alpha do | options |
+  lane :build_alpha do | options |
     android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
@@ -198,19 +198,19 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
-  # build_and_upload_alpha
+  # build_beta
   # -----------------------------------------------------------------------------------
-  # This lane builds the app and upload it for internal testing  
+  # This lane builds the app it for internal testing  
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_alpha [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_and_upload_alpha 
-  # bundle exec fastlane build_and_upload_alpha skip_confirm:true 
+  # bundle exec fastlane build_beta 
+  # bundle exec fastlane build_beta skip_confirm:true 
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_and_upload_alpha do | options |
+  lane :build_beta do | options |
     android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
     android_build_preflight() unless (options[:skip_prechecks])
 
