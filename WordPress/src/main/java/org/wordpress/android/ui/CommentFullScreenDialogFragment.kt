@@ -18,7 +18,8 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
     private lateinit var mReply: SuggestionAutoCompleteText
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val layout = inflater.inflate(R.layout.comment_dialog_fragment, container, false) as ViewGroup
