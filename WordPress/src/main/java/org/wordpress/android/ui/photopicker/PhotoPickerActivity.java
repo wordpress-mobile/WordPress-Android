@@ -20,18 +20,14 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.MediaActionBuilder;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
@@ -43,10 +39,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
+
 public class PhotoPickerActivity extends AppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
-    private static final int EMPTY_LOCAL_POST_ID = -1;
-
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
 
@@ -70,6 +66,7 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject FeaturedImageHelper mFeaturedImageHelper;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -257,7 +254,9 @@ public class PhotoPickerActivity extends AppCompatActivity
                                              new WPMediaUtils.MediaFetchDoNext() {
                                                  @Override
                                                  public void doNext(Uri uri) {
-                                                     queueFeaturedImageForUpload(uri, mimeType);
+                                                     mFeaturedImageHelper
+                                                             .queueFeaturedImageForUpload(PhotoPickerActivity.this,
+                                                                     mLocalPostId, mSite, uri, mimeType);
                                                      Intent intent = new Intent()
                                                              .putExtra(EXTRA_MEDIA_QUEUED, true);
                                                      setResult(RESULT_OK, intent);
@@ -272,30 +271,6 @@ public class PhotoPickerActivity extends AppCompatActivity
             finish();
         }
     }
-
-    private void queueFeaturedImageForUpload(Uri uri, String mimeType) {
-        MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
-        if (mLocalPostId != EMPTY_LOCAL_POST_ID) {
-            media.setLocalPostId(mLocalPostId);
-        } else {
-            AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.");
-        }
-        media.setMarkedLocallyAsFeatured(true);
-
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-        addMediaToUploadService(media);
-    }
-
-    private void addMediaToUploadService(@NonNull MediaModel media) {
-        ArrayList<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        UploadService.uploadMedia(this, mediaList);
-    }
-
 
     private void doMediaIdSelected(long mediaId, @NonNull PhotoPickerMediaSource source) {
         Intent data = new Intent()

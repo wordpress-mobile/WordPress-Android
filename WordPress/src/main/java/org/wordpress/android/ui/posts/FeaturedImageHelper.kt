@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
+import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -14,10 +15,16 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.ToastUtils
 import java.util.ArrayList
 import javax.inject.Inject
+
+const val EMPTY_LOCAL_POST_ID = -1
 
 /**
  * Helper class for separating logic related to FeaturedImage upload.
@@ -63,6 +70,29 @@ internal class FeaturedImageHelper @Inject constructor(
         UploadService.uploadMedia(context, mediaList)
     }
 
+    fun queueFeaturedImageForUpload(
+        context: Context,
+        localPostId: Int,
+        site: SiteModel,
+        uri: Uri,
+        mimeType: String?
+    ) {
+        val media = FluxCUtils.mediaModelFromLocalUri(context, uri, mimeType, mediaStore, site.id)
+        if (media == null) {
+            ToastUtils.showToast(context, R.string.file_not_found, ToastUtils.Duration.SHORT)
+            return
+        }
+        if (localPostId != EMPTY_LOCAL_POST_ID) {
+            media.localPostId = localPostId
+        } else {
+            AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.")
+        }
+        media.markedLocallyAsFeatured = true
+
+        dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
+        startUploadService(context, media)
+    }
+
     fun cancelFeaturedImageUpload(context: Context, site: SiteModel, post: PostModel, cancelFailedOnly: Boolean) {
         var mediaModel: MediaModel? = getFailedFeaturedImageUpload(post)
         if (!cancelFailedOnly && mediaModel == null) {
@@ -103,7 +133,6 @@ internal class FeaturedImageHelper @Inject constructor(
     }
 
     internal data class FeaturedImageData(val uiState: FeaturedImageState, val mediaUri: String?)
-
 
     internal enum class FeaturedImageState(
         val buttonVisible: Boolean = false,
