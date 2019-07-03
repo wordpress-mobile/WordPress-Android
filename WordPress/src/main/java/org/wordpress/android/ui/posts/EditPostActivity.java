@@ -342,6 +342,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject QuickStartStore mQuickStartStore;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ImageManager mImageManager;
+    @Inject FeaturedImageHelper mFeaturedImageHelper;
 
     private SiteModel mSite;
 
@@ -1815,6 +1816,7 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
                 // Clear failed uploads
+                mFeaturedImageHelper.cancelFeaturedImageUpload(this, mSite, mPost, true);
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
