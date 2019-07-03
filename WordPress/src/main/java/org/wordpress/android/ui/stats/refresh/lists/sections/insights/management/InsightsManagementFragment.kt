@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.insights_management_fragment.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightModel
 import javax.inject.Inject
 
@@ -41,10 +42,15 @@ class InsightsManagementFragment : DaggerFragment() {
         inflater?.inflate(R.menu.menu_insights_management, menu)
         this.menu = menu
 
-        initializeViews()
-        initializeViewModels(requireActivity())
-
         enableAnimations()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val siteId = activity?.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+        initializeViews()
+        initializeViewModels(requireActivity(), siteId)
     }
 
     private fun enableAnimations() {
@@ -70,9 +76,10 @@ class InsightsManagementFragment : DaggerFragment() {
         addedInsights.layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: FragmentActivity, siteId: Int?) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
-        viewModel.start()
+
+        viewModel.start(siteId)
 
         setupObservers()
     }

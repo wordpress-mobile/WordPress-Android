@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.id
@@ -20,6 +21,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
     private val value = itemView.findViewById<TextView>(id.value)
     private val divider = itemView.findViewById<View>(id.divider)
     private val expandButton = itemView.findViewById<ImageView>(id.expand_button)
+    private var bar = itemView.findViewById<ProgressBar>(R.id.bar)
 
     fun bind(
         expandableItem: ExpandableItem,
@@ -31,6 +33,12 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         expandButton.visibility = View.VISIBLE
         value.setTextOrHide(header.valueResource, header.value)
         divider.setVisible(header.showDivider && !expandableItem.isExpanded)
+        if (header.barWidth != null) {
+            bar.visibility = View.VISIBLE
+            bar.progress = header.barWidth
+        } else {
+            bar.visibility = View.GONE
+        }
 
         if (expandChanged) {
             val rotationAngle = if (expandButton.rotation == 0F) 180 else 0

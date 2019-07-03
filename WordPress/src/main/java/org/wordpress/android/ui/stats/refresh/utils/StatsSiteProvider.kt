@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -8,7 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,20 +23,26 @@ class StatsSiteProvider
     var siteModel = SiteModel()
         private set
 
-    private val mutableSiteChanged = SingleLiveEvent<OnSiteChanged>()
-    val siteChanged: LiveData<OnSiteChanged> = mutableSiteChanged
+    private val mutableSiteChanged = MutableLiveData<Event<Int>>()
+    val siteChanged: LiveData<Event<Int>> = mutableSiteChanged
 
     init {
         reset()
         dispatcher.register(this)
     }
 
-    fun start(localSiteId: Int) {
+    fun start(localSiteId: Int): Boolean {
         if (localSiteId != 0) {
+            val siteChanged = localSiteId != siteModel.id
             siteStore.getSiteByLocalId(localSiteId)?.let { site ->
                 siteModel = site
             }
+            if (siteChanged) {
+                mutableSiteChanged.postValue(Event(localSiteId))
+            }
+            return siteChanged
         }
+        return false
     }
 
     fun reset() {
@@ -52,9 +59,12 @@ class StatsSiteProvider
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
-        siteStore.getSiteByLocalId(selectedSite.currentLocalSiteId)?.let { site ->
+        if (event.isError) {
+            return
+        }
+        siteStore.getSiteByLocalId(siteModel.id)?.let { site ->
             siteModel = site
-            mutableSiteChanged.value = event
+            mutableSiteChanged.value = Event(siteModel.id)
         }
     }
 

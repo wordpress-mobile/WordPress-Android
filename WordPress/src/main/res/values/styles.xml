@@ -281,6 +281,18 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="MySiteListRowAlertIcon">
+        <item name="android:tint">@color/alert_yellow</item>
+        <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:layout_marginEnd">@dimen/my_site_list_row_icon_margin_right</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
     <style name="MySiteListRowTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -294,6 +306,17 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="MySiteListRowDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
@@ -852,6 +875,34 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/domain_suggestions_intro_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/domain_suggestions_intro_vertical_padding</item>
+        <item name="android:paddingEnd">@dimen/domain_suggestions_intro_horizontal_padding</item>
+        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_vertical_padding</item>
+        <item name="android:background">@color/neutral_0</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">@dimen/domain_suggestions_intro_header_bottom_padding</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/neutral_600</item>
+        <item name="android:text">@dimen/text_sz_large</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="DomainSuggestionsFormIntroductionDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:text">@dimen/text_sz_large</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
 </resources>
