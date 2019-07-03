@@ -245,6 +245,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mServeImagesFromOurServers;
     private WPSwitchPreference mLazyLoadImages;
 
+    // Site accelerator settings
+    private PreferenceScreen mSiteAcceleratorSettings;
+    private WPSwitchPreference mSiteAccelerator;
+    private WPSwitchPreference mFasterImages;
+    private WPSwitchPreference mFasterStaticFiles;
+
     public boolean mEditingEnabled = true;
 
     // Reference to the state of the fragment
@@ -506,6 +512,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupJetpackSecurityScreen();
         } else if (preference == mSpeedUpYourSiteSettings) {
             setupSpeedUpScreen();
+        } else if (preference == mSiteAcceleratorSettings) {
+            setupSiteAcceleratorScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) {
@@ -642,6 +650,28 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mLazyLoadImages) {
             mLazyLoadImages.setChecked((Boolean) newValue);
             mSiteSettings.enableLazyLoadImages((Boolean) newValue);
+        } else if (preference == mSiteAccelerator) {
+            Boolean checked = (Boolean) newValue;
+            mSiteAccelerator.setChecked(checked);
+            mFasterImages.setChecked(checked);
+            mFasterStaticFiles.setChecked(checked);
+//            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
+        } else if (preference == mFasterImages) {
+            Boolean checked = (Boolean) newValue;
+            mFasterImages.setChecked(checked);
+            boolean siteAcceleratorIsChecked = checked && mFasterStaticFiles.isChecked();
+            if (siteAcceleratorIsChecked != mSiteAccelerator.isChecked()) {
+                mSiteAccelerator.setChecked(siteAcceleratorIsChecked);
+            }
+//            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
+        } else if (preference == mFasterStaticFiles) {
+            Boolean checked = (Boolean) newValue;
+            mFasterStaticFiles.setChecked(checked);
+            boolean siteAcceleratorIsChecked = checked && mFasterImages.isChecked();
+            if (siteAcceleratorIsChecked != mSiteAccelerator.isChecked()) {
+                mSiteAccelerator.setChecked(siteAcceleratorIsChecked);
+            }
+//            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
@@ -924,6 +954,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         mGutenbergDefaultForNewPosts =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_default_for_new_posts);
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
+
+        mSiteAcceleratorSettings = (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings);
+        mSiteAccelerator = (WPSwitchPreference) getChangePref(R.string.pref_key_site_accelerator);
+        mFasterImages = (WPSwitchPreference) getChangePref(R.string.pref_key_faster_images);
+        mFasterStaticFiles = (WPSwitchPreference) getChangePref(R.string.pref_key_faster_static_files);
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -1670,6 +1705,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
         String title = getString(R.string.site_settings_speed_up_your_site);
         Dialog dialog = mSpeedUpYourSiteSettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
+    private void setupSiteAcceleratorScreen() {
+        if (mSiteAcceleratorSettings == null || !isAdded()) {
+            return;
+        }
+        String title = getString(R.string.site_settings_site_accelerator);
+        Dialog dialog = mSiteAcceleratorSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);

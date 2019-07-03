@@ -536,6 +536,7 @@
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_advanced_header">Advanced</string>
     <string name="site_settings_traffic_header">Traffic</string>
+    <string name="site_settings_performance">Performance</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -611,8 +612,14 @@
     <string name="site_settings_speed_up_your_site">Speed up your site</string>
     <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimize your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
-    <string name="site_settings_lazy_load_images">"Lazy-load" images</string>
     <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
+
+    <!-- Site accelerator -->
+    <string name="site_settings_site_accelerator">Site Accelerator</string>
+    <string name="site_settings_lazy_load_images">Lazy load images</string>
+    <string name="site_settings_faster_images">Faster images</string>
+    <string name="site_settings_faster_static_files">Faster static files</string>
+    <string name="site_settings_site_accelerator_summary">Load pages faster by allowing Jetpack to optimize your images and static files (like CSS and JavaScript).</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
@@ -711,6 +718,7 @@
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
+    <string name="site_settings_jetpack_performance_settings_hint">View and change your Jetpack performance settings</string>
     <string name="site_settings_allow_comments_hint">Allow readers to post comments</string>
     <string name="site_settings_send_pingbacks_hint">Attempt to notify any blogs linked to from the article</string>
     <string name="site_settings_receive_pingbacks_hint">Allow link notifications from other blogs</string>

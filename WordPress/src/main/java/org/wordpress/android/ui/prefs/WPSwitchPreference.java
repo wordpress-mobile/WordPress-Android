@@ -26,6 +26,13 @@ import org.wordpress.android.util.ContextExtensionsKt;
 public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
     private @ColorRes int mTint = 0;
+    private ColorStateList mThumbTint;
+    private ColorStateList mTrackTint;
+    private @ColorRes int mTextColor = 0;
+    private @ColorRes int mBackgroundCheckedColor = 0;
+    private @ColorRes int mBackgroundUncheckedColor = 0;
+
+    private View mContainer;
 
     public WPSwitchPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,6 +44,16 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
                 mHint = array.getString(index);
             } else if (index == R.styleable.SummaryEditTextPreference_iconTint) {
                 mTint = array.getResourceId(index, R.color.neutral);
+            } else if (index == R.styleable.SummaryEditTextPreference_switchThumbTint) {
+                mThumbTint = array.getColorStateList(index);
+            } else if (index == R.styleable.SummaryEditTextPreference_switchTrackTint) {
+                mTrackTint = array.getColorStateList(index);
+            } else if (index == R.styleable.SummaryEditTextPreference_preferenceTextColor) {
+                mTextColor = array.getResourceId(index, R.color.white);
+            } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorChecked) {
+                mBackgroundCheckedColor = array.getResourceId(index, R.color.white);
+            } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorUnchecked) {
+                mBackgroundUncheckedColor = array.getResourceId(index, R.color.white);
             }
         }
 
@@ -46,6 +63,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
     @Override
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
+        mContainer = view;
 
         ImageView icon = view.findViewById(android.R.id.icon);
         if (icon != null && mTint != 0) {
@@ -56,9 +74,13 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (titleView != null) {
             Resources res = getContext().getResources();
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(
-                    isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
-                            : R.color.neutral_20));
+            if (mTextColor == 0) {
+                titleView.setTextColor(res.getColor(
+                        isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
+                                : R.color.neutral_20));
+            } else {
+                titleView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.white));
+            }
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
@@ -70,16 +92,38 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Switch switchControl = getSwitch((ViewGroup) view);
             if (switchControl != null) {
-                switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.primary_40_gray_20_gray_40_selector));
+                if (mThumbTint == null) {
+                    switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
+                            R.color.primary_40_gray_20_gray_40_selector));
+                } else {
+                    switchControl.setThumbTintList(mThumbTint);
+                }
+                if (mTrackTint == null) {
                 switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
                         R.color.primary_40_gray_90_gray_50_selector));
+                } else {
+                    switchControl.setTrackTintList(mTrackTint);
+                }
+                setBackground(switchControl.isChecked());
             }
         }
 
         // Add padding to start of switch.
         ViewCompat.setPaddingRelative(getSwitch((ViewGroup) view),
                 getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_large), 0, 0, 0);
+        if (titleView != null) {
+            titleView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.white));
+        }
+    }
+
+    private void setBackground(boolean checked) {
+        if (mContainer != null && mBackgroundCheckedColor != 0 && mBackgroundUncheckedColor != 0) {
+            if (checked) {
+                mContainer.setBackgroundColor(ContextCompat.getColor(this.getContext(), mBackgroundCheckedColor));
+            } else {
+                mContainer.setBackgroundColor(ContextCompat.getColor(this.getContext(), mBackgroundUncheckedColor));
+            }
+        }
     }
 
     private Switch getSwitch(ViewGroup parentView) {
@@ -96,6 +140,11 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             }
         }
         return null;
+    }
+
+    @Override public void setChecked(boolean checked) {
+        super.setChecked(checked);
+            setBackground(checked);
     }
 
     @Override

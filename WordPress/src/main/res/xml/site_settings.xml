@@ -159,27 +159,6 @@
             android:key="@string/pref_key_site_posts_per_page"
             android:title="@string/site_settings_posts_per_page_title"/>
 
-        <PreferenceScreen
-            android:id="@+id/speed_up_your_site_screen"
-            android:key="@string/pref_key_speed_up_your_site_screen"
-            android:title="@string/site_settings_speed_up_your_site">
-
-            <org.wordpress.android.ui.prefs.WPSwitchPreference
-                android:id="@+id/pref_serve_images_from_our_servers"
-                android:key="@string/pref_key_serve_images_from_our_servers"
-                android:layout="@layout/wp_preference_layout"
-                android:summary="@string/site_settings_serve_images_from_our_servers_summary"
-                android:title="@string/site_settings_serve_images_from_our_servers"/>
-
-            <org.wordpress.android.ui.prefs.WPSwitchPreference
-                android:id="@+id/pref_lazy_load_images"
-                android:key="@string/pref_key_lazy_load_images"
-                android:layout="@layout/wp_preference_layout"
-                android:summary="@string/site_settings_lazy_load_images_summary"
-                android:title="@string/site_settings_lazy_load_images"/>
-        </PreferenceScreen>
-
-
     </PreferenceCategory>
 
     <!-- Site Quota Settings -->
@@ -208,6 +187,69 @@
             android:key="@string/pref_key_site_amp"
             android:summary="@string/site_settings_amp_summary"
             android:title="@string/site_settings_amp_title"/>
+
+    </PreferenceCategory>
+
+    <!-- Jetpack performance settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_jetpack_performance_settings"
+        android:key="@string/pref_key_jetpack_performance_settings"
+        android:title="@string/site_settings_performance"
+        app:longClickHint="@string/site_settings_jetpack_performance_settings_hint">
+
+        <PreferenceScreen
+            android:id="@+id/site_accelerator"
+            android:defaultValue="@string/off"
+            android:key="@string/pref_key_site_accelerator_settings"
+            android:title="@string/site_settings_site_accelerator">
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_site_accelerator"
+                android:key="@string/pref_key_site_accelerator"
+                android:layout="@layout/wp_preference_layout"
+                android:title="@string/site_settings_site_accelerator"
+                app:switchThumbTint="@color/primary_0_gray_20_gray_40_selector"
+                app:switchTrackTint="@color/primary_0_gray_90_gray_50_selector"
+                app:preferenceTextColor="@color/white"
+                app:backgroundColorChecked="@color/primary_40"
+                app:backgroundColorUnchecked="@color/neutral_40"/>
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_faster_images"
+                android:key="@string/pref_key_faster_images"
+                android:layout="@layout/wp_preference_layout"
+                android:title="@string/site_settings_faster_images"/>
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_faster_stats_files"
+                android:key="@string/pref_key_faster_static_files"
+                android:layout="@layout/wp_preference_layout"
+                android:title="@string/site_settings_faster_static_files"/>
+
+            <org.wordpress.android.ui.prefs.WPPreference
+                android:summary="@string/site_settings_site_accelerator_summary"/>
+
+        </PreferenceScreen>
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_lazy_load_images"
+            android:key="@string/pref_key_lazy_load_images"
+            android:layout="@layout/wp_preference_layout"
+            android:summary="@string/site_settings_lazy_load_images_summary"
+            android:title="@string/site_settings_lazy_load_images"/>
+
+        <PreferenceScreen
+            android:id="@+id/speed_up_your_site_screen"
+            android:key="@string/pref_key_speed_up_your_site_screen"
+            android:title="@string/site_settings_speed_up_your_site">
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_serve_images_from_our_servers"
+                android:key="@string/pref_key_serve_images_from_our_servers"
+                android:layout="@layout/wp_preference_layout"
+                android:summary="@string/site_settings_serve_images_from_our_servers_summary"
+                android:title="@string/site_settings_serve_images_from_our_servers"/>
+        </PreferenceScreen>
 
     </PreferenceCategory>
 
