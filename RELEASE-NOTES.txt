@@ -1,3 +1,7 @@
+12.9
+-----
+* Full screen comments view
+
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
