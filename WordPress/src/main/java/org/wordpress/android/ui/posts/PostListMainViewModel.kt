@@ -440,11 +440,6 @@ class PostListMainViewModel @Inject constructor(
         updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
     }
 
-    /**
-     * This function was introduced as an expression body function in order to force the
-     * usage of the when as an expression and take advantage of the compiler checks on the
-     * when being exhaustive.
-     */
     private fun managePreviewStateTransitions(
         newState: PostListRemotePreviewState,
         prevState: PostListRemotePreviewState?,

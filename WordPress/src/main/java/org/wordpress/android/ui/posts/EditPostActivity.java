@@ -1663,8 +1663,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case LOADING_REVISION:
                 // nothing to do
                 break;
-            default:
-                throw new IllegalArgumentException("Unmanaged PostLoadingState: " + postLoadingState);
         }
     }
 
