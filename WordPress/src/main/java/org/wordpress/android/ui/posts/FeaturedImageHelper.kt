@@ -38,10 +38,10 @@ internal class FeaturedImageHelper @Inject constructor(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher
 ) {
-    private fun getFailedFeaturedImageUpload(post: PostModel): MediaModel? {
+    fun getFailedFeaturedImageUpload(post: PostModel): MediaModel? {
         val failedMediaForPost = uploadStore.getFailedMediaForPost(post)
         for (item in failedMediaForPost) {
-            if (item.markedLocallyAsFeatured) {
+            if (item != null && item.markedLocallyAsFeatured) {
                 return item
             }
         }

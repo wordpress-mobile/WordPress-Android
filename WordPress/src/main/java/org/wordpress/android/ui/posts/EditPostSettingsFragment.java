@@ -268,14 +268,17 @@ public class EditPostSettingsFragment extends Fragment {
                     view.showContextMenu();
                 }
             };
-            registerForContextMenu(mFeaturedImageView);
-            registerForContextMenu(mLocalFeaturedImageView);
+
             mFeaturedImageView.setOnClickListener(showContextMenuListener);
             mLocalFeaturedImageView.setOnClickListener(showContextMenuListener);
-            registerForContextMenu(mFeaturedImageRetryOverlay);
             mFeaturedImageRetryOverlay.setOnClickListener(showContextMenuListener);
-            registerForContextMenu(mFeaturedImageProgressOverlay);
             mFeaturedImageProgressOverlay.setOnClickListener(showContextMenuListener);
+
+            registerForContextMenu(mFeaturedImageView);
+            registerForContextMenu(mLocalFeaturedImageView);
+            registerForContextMenu(mFeaturedImageRetryOverlay);
+            registerForContextMenu(mFeaturedImageProgressOverlay);
+
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -389,13 +392,11 @@ public class EditPostSettingsFragment extends Fragment {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
                 mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
                 launchFeaturedMediaPicker();
-                updateFeaturedImageView();
                 return true;
             case REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID:
             case REMOVE_FEATURED_IMAGE_MENU_ID:
                 mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
                 clearFeaturedImage();
-                updateFeaturedImageView();
                 return true;
             case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
                 retryFeaturedImageUpload();

@@ -2161,7 +2161,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        if (mEditorFragment.hasFailedMediaUploads()) {
+                        if (mEditorFragment.hasFailedMediaUploads()
+                            || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null) {
                             EditPostActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -3860,7 +3861,10 @@ public class EditPostActivity extends AppCompatActivity implements
             if (failedMedia != null && !failedMedia.isEmpty()) {
                 HashSet<Integer> mediaIds = new HashSet<>();
                 for (MediaModel media : failedMedia) {
-                    mediaIds.add(media.getId());
+                    // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
+                    if (!media.getMarkedLocallyAsFeatured()) {
+                        mediaIds.add(media.getId());
+                    }
                 }
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }

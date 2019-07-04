@@ -211,6 +211,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_above="@+id/featured_image_progress_desc"
+                            android:layout_marginBottom="@dimen/margin_small"
                             android:layout_centerHorizontal="true"
                             android:indeterminate="true"
                             android:indeterminateTint="@color/white"/>
@@ -220,6 +221,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:paddingTop="@dimen/margin_small"
                             android:gravity="center"
                             android:text="@string/post_settings_featured_image_uploading_tap_for_options"
                             android:textColor="@color/white"
