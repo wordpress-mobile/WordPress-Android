@@ -646,11 +646,11 @@ public class AppPrefs {
         return true;
     }
 
-    public static boolean shouldAutoEnableGutenbergForTheNewPosts() {
+    public static boolean isGutenbergAutoEnabledForTheNewPosts() {
         return getBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, true);
     }
 
-    public static void autoEnableGutenbergForThewNewPosts(boolean enable) {
+    public static void setGutenbergAutoEnabledForThewNewPosts(boolean enable) {
         setBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, enable);
     }
 
