@@ -223,6 +223,7 @@
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
     <string name="create_a_link">Create a link</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
 
     <!-- page view -->
     <string name="title">Title</string>
@@ -1372,6 +1373,12 @@
     <string name="post_title">Title</string>
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+
+    <string name="link_dialog_title">Insert link</string>
+    <string name="link_dialog_button_remove_link">Remove Link</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_button_cancel">Cancel</string>
 
     <!-- History -->
     <string name="description_user">User avatar</string>
