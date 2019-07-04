@@ -1487,9 +1487,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "automated_transfer_status_failed";
             case AUTOMATED_TRANSFER_FLOW_COMPLETE:
                 return "automated_transfer_flow_complete";
-            case AUTOMATED_CUSTOM_DOMAIN_PURCHASED:
+            case AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASED:
                 return "automated_transfer_custom_domain_purchased";
-            case AUTOMATED_CUSTOM_DOMAIN_PURCHASE_FAILED:
+            case AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED:
                 return "automated_transfer_custom_domain_purchase_failed";
             case PUBLICIZE_SERVICE_CONNECTED:
                 return "publicize_service_connected";

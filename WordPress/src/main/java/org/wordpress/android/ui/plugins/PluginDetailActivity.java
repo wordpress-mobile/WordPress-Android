@@ -336,7 +336,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                 String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
                 requestEmailValidation(this, email);
             }
-            AnalyticsTracker.track(Stat.AUTOMATED_CUSTOM_DOMAIN_PURCHASED);
+            AnalyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASED);
             confirmInstallPluginForAutomatedTransfer();
         }
     }

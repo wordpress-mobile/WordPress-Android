@@ -215,7 +215,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCartRedeemed(event: OnShoppingCartRedeemed) {
         if (event.isError) {
-            AnalyticsTracker.track(Stat.AUTOMATED_CUSTOM_DOMAIN_PURCHASE_FAILED)
+            AnalyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
             _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
             _formError.value = event.error
             _showErrorMessage.value = event.error.message
