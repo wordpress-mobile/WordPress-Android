@@ -123,7 +123,11 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
+            if (PostStatus.SCHEDULED.toString().equals(post.getStatus())) {
+                showSnackbar(snackbarAttachView, R.string.error_schedule_no_network);
+            } else {
+                showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
+            }
             return;
         }
 
@@ -236,8 +240,13 @@ public class UploadUtils {
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
         if (!NetworkUtils.isNetworkAvailable(activity)) {
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
+            if (PostStatus.SCHEDULED.toString().equals(post.getStatus())) {
+                ToastUtils.showToast(activity, R.string.error_schedule_no_network,
+                        ToastUtils.Duration.SHORT);
+            } else {
+                ToastUtils.showToast(activity, R.string.error_publish_no_network,
+                        ToastUtils.Duration.SHORT);
+            }
             return;
         }
 
