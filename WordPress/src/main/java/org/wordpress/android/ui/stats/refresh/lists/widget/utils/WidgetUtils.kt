@@ -21,7 +21,6 @@ import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
-import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -71,13 +70,17 @@ class WidgetUtils
         views: RemoteViews,
         appWidgetId: Int,
         networkAvailable: Boolean,
+        hasAccessToken: Boolean,
         resourceProvider: ResourceProvider,
-        context: Context
+        context: Context,
+        widgetType: Class<*>
     ) {
         views.setViewVisibility(R.id.widget_content, View.GONE)
         views.setViewVisibility(R.id.widget_error, View.VISIBLE)
         val errorMessage = if (!networkAvailable) {
             R.string.stats_widget_error_no_network
+        } else if (!hasAccessToken) {
+            R.string.stats_widget_error_no_access_token
         } else {
             R.string.stats_widget_error_no_data
         }
@@ -85,7 +88,7 @@ class WidgetUtils
                 R.id.widget_error_message,
                 resourceProvider.getString(errorMessage)
         )
-        val intentSync = Intent(context, StatsAllTimeWidget::class.java)
+        val intentSync = Intent(context, widgetType)
         intentSync.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
 
         intentSync.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)

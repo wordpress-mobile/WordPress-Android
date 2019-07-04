@@ -10,6 +10,7 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -36,6 +37,7 @@ class MinifiedWidgetUpdater
 @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
+    private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val todayInsightsStore: TodayInsightsStore,
@@ -60,24 +62,28 @@ class MinifiedWidgetUpdater
         }
         val views = RemoteViews(context.packageName, layout)
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
-        if (networkAvailable && siteModel != null && dataType != null) {
-            views.setOnClickPendingIntent(R.id.widget_container,
+        val hasAccessToken = accountStore.hasAccessToken()
+        if (networkAvailable && hasAccessToken && siteModel != null && dataType != null) {
+            views.setOnClickPendingIntent(
+                    R.id.widget_container,
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
             )
             showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
-            widgetUtils.showError(widgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
+            widgetUtils.showError(
+                    widgetManager,
+                    views,
+                    appWidgetId,
+                    networkAvailable,
+                    hasAccessToken,
+                    resourceProvider,
+                    context,
+                    StatsMinifiedWidget::class.java
+            )
         }
     }
 
-    override fun updateAllWidgets(context: Context) {
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        val viewsWidget = ComponentName(context, StatsMinifiedWidget::class.java)
-        val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
-        for (appWidgetId in allWidgetIds) {
-            updateAppWidget(context, appWidgetId, appWidgetManager)
-        }
-    }
+    override fun componentName(context: Context) = ComponentName(context, StatsMinifiedWidget::class.java)
 
     private fun showValue(
         appWidgetManager: AppWidgetManager,

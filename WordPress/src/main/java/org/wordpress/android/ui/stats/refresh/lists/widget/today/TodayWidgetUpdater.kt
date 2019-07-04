@@ -6,6 +6,7 @@ import android.content.Context
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
@@ -23,6 +24,7 @@ class TodayWidgetUpdater
 @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
+    private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val widgetUtils: WidgetUtils,
@@ -51,7 +53,8 @@ class TodayWidgetUpdater
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
             )
         }
-        if (networkAvailable && siteModel != null) {
+        val hasAccessToken = accountStore.hasAccessToken()
+        if (networkAvailable && hasAccessToken && siteModel != null) {
             widgetUtils.showList(
                     widgetManager,
                     views,
@@ -63,18 +66,20 @@ class TodayWidgetUpdater
                     isWideView
             )
         } else {
-            widgetUtils.showError(widgetManager, views, appWidgetId, networkAvailable, resourceProvider, context)
+            widgetUtils.showError(
+                    widgetManager,
+                    views,
+                    appWidgetId,
+                    networkAvailable,
+                    hasAccessToken,
+                    resourceProvider,
+                    context,
+                    StatsTodayWidget::class.java
+            )
         }
     }
 
-    override fun updateAllWidgets(context: Context) {
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        val viewsWidget = ComponentName(context, StatsTodayWidget::class.java)
-        val allWidgetIds = appWidgetManager.getAppWidgetIds(viewsWidget)
-        for (appWidgetId in allWidgetIds) {
-            updateAppWidget(context, appWidgetId)
-        }
-    }
+    override fun componentName(context: Context) = ComponentName(context, StatsTodayWidget::class.java)
 
     override fun delete(appWidgetId: Int) {
         analyticsTrackerWrapper.trackWithWidgetType(AnalyticsTracker.Stat.STATS_WIDGET_REMOVED, TODAY_VIEWS)
