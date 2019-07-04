@@ -67,7 +67,7 @@ class RemotePreviewLogicHelper @Inject constructor(
 
             val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
-            if (shouldSave(updatedPost)) {
+            if (shouldUpload(updatedPost)) {
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyDraft()
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
@@ -93,7 +93,7 @@ class RemotePreviewLogicHelper @Inject constructor(
         return PreviewLogicOperationResult.GENERATING_PREVIEW
     }
 
-    private fun shouldSave(post: PostModel): Boolean {
+    private fun shouldUpload(post: PostModel): Boolean {
         val status = PostStatus.fromPost(post)
         return post.isLocalDraft ||
                 (status == PostStatus.DRAFT && post.isLocallyChanged)
