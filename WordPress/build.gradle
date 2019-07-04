@@ -28,7 +28,6 @@ apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
-    useLibrary 'org.apache.http.legacy'
     useLibrary 'android.test.runner'
 
     useLibrary 'android.test.base'
@@ -47,7 +46,7 @@ android {
         versionName "alpha-177"
         versionCode 746
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 28
 
         multiDexEnabled true
 
@@ -186,7 +185,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'com.airbnb.android:lottie:2.0.0-rc2'
+    implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     implementation ('com.yalantis:ucrop:2.2.0') {
