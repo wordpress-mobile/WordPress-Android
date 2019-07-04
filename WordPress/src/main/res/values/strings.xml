@@ -350,8 +350,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve enabled it for the new Posts.</string>
-    <string name="dialog_gutenberg_informative_description_page">This post was originally created in the Block Editor, so we\'ve enabled it for the new Pages.</string>
+    <string name="dialog_gutenberg_informative_description_post">This post uses the Block Editor, which is now the default editor for new posts. You can change this setting by going to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the Block Editor, which is now the default editor for new pages. You can change this setting by going to Me > App Settings.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
