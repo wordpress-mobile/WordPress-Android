@@ -9,7 +9,8 @@ public enum LoginMode {
     JETPACK_STATS,
     WPCOM_LOGIN_DEEPLINK,
     WPCOM_REAUTHENTICATE,
-    SHARE_INTENT;
+    SHARE_INTENT,
+    WOO_LOGIN_MODE;
 
     private static final String ARG_LOGIN_MODE = "ARG_LOGIN_MODE";
 
