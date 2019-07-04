@@ -406,8 +406,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-
-
     private void retryFeaturedImageUpload() {
         MediaModel mediaModel =
                 mFeaturedImageHelper.retryFeaturedImageUpload(getContext(), getSite(), getPost());
