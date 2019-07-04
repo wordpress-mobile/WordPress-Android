@@ -227,7 +227,12 @@ class PageListViewModel @Inject constructor(
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.asSequence().groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
-                        results.map { ScheduledPage(it.remoteId, it.title, it.date,
+                        results.map {
+                            val labels = mutableListOf<Int>()
+                            if (it.hasLocalChanges)
+                                labels.add(R.string.local_changes)
+
+                            ScheduledPage(it.remoteId, it.title, it.date, labels,
                                 getFeaturedImageUrl(it.featuredImageId), actionsEnabled) }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
