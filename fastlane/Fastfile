@@ -149,7 +149,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   desc "Creates a new hotfix branch from the given tag"
   lane :new_hotfix_release do | options |
-    prev_ver = android_hotfix_prechecks(options)
+    prev_ver = android_hotfix_prechecks(version_name: options[:version_name], skip_confirm: options[:skip_confirm])
     android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code])
     android_tag_build(tag_alpha: false)
   end
