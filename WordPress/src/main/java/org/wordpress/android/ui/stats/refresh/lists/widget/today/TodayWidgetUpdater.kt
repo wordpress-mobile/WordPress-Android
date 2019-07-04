@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.today
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.view.View
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
