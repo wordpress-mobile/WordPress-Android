@@ -51,4 +51,7 @@ public interface LoginAnalyticsListener {
     void trackUrlHelpScreenViewed();
     void trackUsernamePasswordFormViewed();
     void trackWpComBackgroundServiceUpdate(Map<String, ?> properties);
+    void trackConnectedSiteInfoRequested(String url);
+    void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType, String errorDescription);
+    void trackConnectedSiteInfoSucceeded(Map<String, ?> properties);
 }
