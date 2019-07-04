@@ -75,6 +75,15 @@ class WidgetUtils
         context: Context,
         widgetType: Class<*>
     ) {
+        views.setOnClickPendingIntent(
+                R.id.widget_title_container,
+                PendingIntent.getActivity(
+                        context,
+                        0,
+                        Intent(),
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                )
+        )
         views.setViewVisibility(R.id.widget_content, View.GONE)
         views.setViewVisibility(R.id.widget_error, View.VISIBLE)
         val errorMessage = if (!networkAvailable) {
@@ -88,18 +97,26 @@ class WidgetUtils
                 R.id.widget_error_message,
                 resourceProvider.getString(errorMessage)
         )
+        val pendingSync = getRetryIntent(context, widgetType, appWidgetId)
+        views.setOnClickPendingIntent(R.id.widget_error, pendingSync)
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
+
+    fun getRetryIntent(
+        context: Context,
+        widgetType: Class<*>,
+        appWidgetId: Int
+    ): PendingIntent? {
         val intentSync = Intent(context, widgetType)
         intentSync.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
 
         intentSync.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        val pendingSync = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
                 context,
                 Random(appWidgetId).nextInt(),
                 intentSync,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        views.setOnClickPendingIntent(R.id.widget_error, pendingSync)
-        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     fun showList(

@@ -45,14 +45,14 @@ class ViewsWidgetUpdater
         val views = RemoteViews(context.packageName, layout)
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_views))
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
-        siteModel?.let {
-            views.setOnClickPendingIntent(
-                    R.id.widget_title_container,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, DAY)
-            )
-        }
         val hasAccessToken = accountStore.hasAccessToken()
         if (networkAvailable && hasAccessToken && siteModel != null) {
+            siteModel.let {
+                views.setOnClickPendingIntent(
+                        R.id.widget_title_container,
+                        widgetUtils.getPendingSelfIntent(context, siteModel.id, DAY)
+                )
+            }
             widgetUtils.showList(
                     widgetManager,
                     views,

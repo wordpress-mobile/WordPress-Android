@@ -47,14 +47,14 @@ class AllTimeWidgetUpdater
         val hasToken = accountStore.hasAccessToken()
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_all_time_stats))
-        widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
-        siteModel?.let {
-            views.setOnClickPendingIntent(
-                    R.id.widget_title_container,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
-            )
-        }
         if (networkAvailable && siteModel != null && hasToken) {
+            widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
+            siteModel.let {
+                views.setOnClickPendingIntent(
+                        R.id.widget_title_container,
+                        widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                )
+            }
             widgetUtils.showList(
                     widgetManager,
                     views,

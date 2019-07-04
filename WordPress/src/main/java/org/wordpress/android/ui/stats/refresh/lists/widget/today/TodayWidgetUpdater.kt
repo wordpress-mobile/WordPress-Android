@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.today
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -46,15 +48,15 @@ class TodayWidgetUpdater
         val networkAvailable = networkUtilsWrapper.isNetworkAvailable()
         val views = RemoteViews(context.packageName, widgetUtils.getLayout(colorMode))
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_insights_today_stats))
-        widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
-        siteModel?.let {
-            views.setOnClickPendingIntent(
-                    R.id.widget_title_container,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
-            )
-        }
         val hasAccessToken = accountStore.hasAccessToken()
         if (networkAvailable && hasAccessToken && siteModel != null) {
+            widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
+            siteModel.let {
+                views.setOnClickPendingIntent(
+                        R.id.widget_title_container,
+                        widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
+                )
+            }
             widgetUtils.showList(
                     widgetManager,
                     views,

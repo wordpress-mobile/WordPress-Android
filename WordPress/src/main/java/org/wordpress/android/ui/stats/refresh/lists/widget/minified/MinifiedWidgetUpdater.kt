@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.minified
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.view.View
 import android.widget.RemoteViews
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -64,22 +65,22 @@ class MinifiedWidgetUpdater
         widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
         val hasAccessToken = accountStore.hasAccessToken()
         if (networkAvailable && hasAccessToken && siteModel != null && dataType != null) {
+            views.setViewVisibility(R.id.widget_content, View.VISIBLE)
+            views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
+            views.setViewVisibility(R.id.widget_retry_button, View.GONE)
             views.setOnClickPendingIntent(
                     R.id.widget_container,
                     widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
             )
             showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
-            widgetUtils.showError(
-                    widgetManager,
-                    views,
-                    appWidgetId,
-                    networkAvailable,
-                    hasAccessToken,
-                    resourceProvider,
-                    context,
-                    StatsMinifiedWidget::class.java
-            )
+            views.setViewVisibility(R.id.widget_content, View.GONE)
+            views.setViewVisibility(R.id.widget_site_icon, View.GONE)
+            views.setViewVisibility(R.id.widget_retry_button, View.VISIBLE)
+
+            val pendingSync = widgetUtils.getRetryIntent(context, StatsMinifiedWidget::class.java, appWidgetId)
+            views.setOnClickPendingIntent(R.id.widget_container, pendingSync)
+            widgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 
