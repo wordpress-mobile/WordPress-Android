@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 136ef95a1f88ab50e748003dd856b39955b75bd3
-  ref: 136ef95a1f88ab50e748003dd856b39955b75bd3
+  revision: d5ad0466ab9f72161cd55916577cf52ee386f9cf
+  tag: 0.5.0
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.4.0)
+    fastlane-plugin-wpmreleasetoolkit (0.5.0)
       diffy (~> 3.3)
       git (~> 1.3)
       jsonlint
