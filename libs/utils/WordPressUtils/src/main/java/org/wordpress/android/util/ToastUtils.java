@@ -34,7 +34,7 @@ public class ToastUtils {
     }
 
     public static Toast showToast(Context context, String text, Duration duration, int gravity) {
-        return showToast(context, text, duration, gravity);
+        return showToast(context, text, duration, gravity, 0, 0);
     }
 
     public static Toast showToast(
