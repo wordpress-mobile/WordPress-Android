@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartErr
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.DomainProductDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -82,8 +83,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val domainContactDetails: LiveData<DomainContactModel>
         get() = _domainContactDetails
 
-    private val _handleCompletedDomainRegistration = SingleLiveEvent<String>()
-    val handleCompletedDomainRegistration: LiveData<String>
+    private val _handleCompletedDomainRegistration = SingleLiveEvent<DomainRegistrationCompletedEvent>()
+    val handleCompletedDomainRegistration: LiveData<DomainRegistrationCompletedEvent>
         get() = _handleCompletedDomainRegistration
 
     private val _showTos = SingleLiveEvent<Unit>()
@@ -259,8 +260,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                     "An error occurred while updating site details : " + event.error.message
             )
             _showErrorMessage.value = event.error.message
-            _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
-            _handleCompletedDomainRegistration.postValue(domainProductDetails.domainName)
+            finishRegistration()
             return
         }
 
@@ -280,11 +280,21 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         } else {
             // Everything looks good! Let's wait a bit before moving on
             launch {
+                AppLog.v(T.DOMAIN_REGISTRATION, "Finishing registration...")
                 delay(SITE_CHECK_DELAY_MS)
-                _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
-                _handleCompletedDomainRegistration.postValue(domainProductDetails.domainName)
+                finishRegistration()
             }
         }
+    }
+
+    private fun finishRegistration() {
+        _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
+        _handleCompletedDomainRegistration.postValue(
+                DomainRegistrationCompletedEvent(
+                        domainProductDetails.domainName,
+                        domainContactDetails.value!!.email!!
+                )
+        )
     }
 
     fun onCountrySelectorClicked() {

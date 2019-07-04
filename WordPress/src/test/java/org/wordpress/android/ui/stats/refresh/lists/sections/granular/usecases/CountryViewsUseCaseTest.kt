@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
@@ -96,13 +97,16 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(4)
+            assertThat(this).hasSize(5)
             assertTitle(this[0])
             val mapItem = (this[1] as MapItem)
             assertThat(mapItem.mapData).isEqualTo("['CZ',500],")
             assertThat(mapItem.label).isEqualTo(R.string.stats_country_views_label)
-            assertLabel(this[2])
-            assertItem(this[3], country.fullName, country.views, country.flagIconUrl)
+            val mapLegendItem = (this[2] as MapLegend)
+            assertThat(mapLegendItem.startLegend).isEqualTo("0")
+            assertThat(mapLegendItem.endLegend).isEqualTo("500")
+            assertLabel(this[3])
+            assertItem(this[4], country.fullName, country.views, country.flagIconUrl)
         }
     }
 
@@ -129,8 +133,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(5)
-            assertLink(this[4])
+            assertThat(this).hasSize(6)
+            assertLink(this[5])
         }
     }
 

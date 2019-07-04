@@ -248,6 +248,11 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
+    <style name="StatsMapLegend" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
     <style name="StatsWidgetConfigureTitle" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/grey_900</item>
         <item name="android:textSize">@dimen/text_sz_large</item>

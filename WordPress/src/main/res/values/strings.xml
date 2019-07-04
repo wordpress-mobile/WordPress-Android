@@ -223,6 +223,7 @@
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
     <string name="create_a_link">Create a link</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
 
     <!-- page view -->
     <string name="title">Title</string>
@@ -1371,6 +1372,12 @@
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
+    <string name="link_dialog_title">Insert link</string>
+    <string name="link_dialog_button_remove_link">Remove Link</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_button_cancel">Cancel</string>
+
     <!-- History -->
     <string name="description_user">User avatar</string>
     <string name="history_detail_button_next">Next</string>
@@ -1786,6 +1793,8 @@
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
     <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
@@ -2091,7 +2100,7 @@
     <string name="plugin_external_link_icon_content_description">External link</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
 
-    <string name="plugin_fetching_error_after_at">It takes longer then usual to refresh plugin details. Please check again later.</string>
+    <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
