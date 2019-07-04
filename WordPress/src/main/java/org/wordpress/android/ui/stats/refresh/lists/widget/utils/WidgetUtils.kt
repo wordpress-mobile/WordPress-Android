@@ -59,6 +59,7 @@ class WidgetUtils
         views: RemoteViews,
         appWidgetId: Int
     ) {
+        views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
         GlobalScope.launch(Dispatchers.Main) {
             val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
             imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
@@ -75,6 +76,7 @@ class WidgetUtils
         context: Context,
         widgetType: Class<*>
     ) {
+        views.setViewVisibility(R.id.widget_site_icon, View.GONE)
         views.setOnClickPendingIntent(
                 R.id.widget_title_container,
                 PendingIntent.getActivity(
