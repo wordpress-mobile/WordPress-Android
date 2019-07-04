@@ -22,7 +22,7 @@ msgstr ""
 msgctxt "release_note_126"
 msgid ""
 "12.6:\n"
-"* Block Editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.\n"
+"* Block editor improvements: You’ll see clearer error messages when a block contains invalid content, and an issue in link settings (“Open in New Tab” was always OFF on open) is fixed.\n"
 "* Better offline support: If you draft a page while offline, the app will automatically upload it to the server as soon as an internet connection is available.\n"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgid "WordPress – Website & Blog Builder"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_1"
 msgid ""
 "Enjoy your\n"
@@ -79,7 +79,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_2"
 msgid ""
 "Share your ideas\n"
@@ -87,7 +87,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_3"
 msgid ""
 "Manage your site\n"
@@ -95,7 +95,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_4"
 msgid ""
 "Get notified\n"
@@ -103,7 +103,7 @@ msgid ""
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
-#. No specified characters limit here, but try to keep as short as the source one. 
+#. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_5"
 msgid ""
 "All the stats\n"

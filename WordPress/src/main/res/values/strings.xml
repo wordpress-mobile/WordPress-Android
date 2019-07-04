@@ -351,10 +351,10 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
-        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
+    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the block editor, so we\'ve also enabled it on this Post.
+        Switch back to the classic editor at any time by tapping  ⋮  in the top bar.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the block editor, so we\'ve also enabled it on this Page.
+        Switch back to the classic editor at any time by tapping  ⋮  in the top bar.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1367,8 +1367,8 @@
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_debug">Debug Menu</string>
-    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
-    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
+    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
 
     <string name="post_title">Title</string>
 
