@@ -650,7 +650,7 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, true);
     }
 
-    public static void setGutenbergAutoEnabledForThewNewPosts(boolean enable) {
+    public static void setGutenbergAutoEnabledForTheNewPosts(boolean enable) {
         setBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, enable);
     }
 

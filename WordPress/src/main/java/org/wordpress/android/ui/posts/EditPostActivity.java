@@ -1604,7 +1604,7 @@ public class EditPostActivity extends AppCompatActivity implements
             && !mIsNewPost
             && !AppPrefs.isGutenbergDefaultForNewPosts()) {
             AppPrefs.setGutenbergDefaultForNewPosts(true);
-            AppPrefs.setGutenbergAutoEnabledForThewNewPosts(false);
+            AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);
             showGutenbergInformativeDialog();
         }
     }
