@@ -1768,7 +1768,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                savePostOnlineAndFinishAsync(isFirstTimePublish(), true);
+                savePostOnlineAndFinishAsync(isFirstTimePublish(false), true);
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
                 uploadPost(true);
@@ -2037,7 +2037,7 @@ public class EditPostActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean isFirstTimePublish = isFirstTimePublish();
+                boolean isFirstTimePublish = isFirstTimePublish(publishPost);
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
@@ -2128,7 +2128,7 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 // check if the opened post had some unsaved local changes
-                boolean isFirstTimePublish = isFirstTimePublish();
+                boolean isFirstTimePublish = isFirstTimePublish(false);
 
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
@@ -2196,11 +2196,12 @@ public class EditPostActivity extends AppCompatActivity implements
         return !PostUtils.isPublishable(mPost) && isNewPost();
     }
 
-    private boolean isFirstTimePublish() {
-        return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
+    private boolean isFirstTimePublish(final boolean publishPost) {
+        final PostStatus originalStatus = PostStatus.fromPost(mPost);
+        return ((originalStatus == PostStatus.DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
+               || (originalStatus == PostStatus.SCHEDULED && publishPost)
+               || (originalStatus == PostStatus.PUBLISHED && mPost.isLocalDraft())
+               || (originalStatus == PostStatus.PUBLISHED && mPost.getRemotePostId() == 0);
     }
 
     /**
