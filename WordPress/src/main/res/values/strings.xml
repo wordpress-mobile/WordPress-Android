@@ -862,6 +862,7 @@
     <string name="stats_widget_select_type">Type</string>
     <string name="stats_widget_error_no_data">Couldn\'t load data</string>
     <string name="stats_widget_error_no_network">No network available</string>
+    <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
