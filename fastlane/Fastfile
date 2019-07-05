@@ -131,6 +131,98 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
+  # build_release
+  # -----------------------------------------------------------------------------------
+  # This lane builds the final release of the app and uploads it 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_release [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_release 
+  # bundle exec fastlane build_release skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_release do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], 
+      alpha: false,
+      beta: false,
+      final: true)
+    android_build_preflight()
+    
+    # Create the file names
+    version=android_get_release_version()
+    build_bundle(version: version, flavor:"Vanilla")
+  end
+
+  #####################################################################################
+  # build_test_releases
+  # -----------------------------------------------------------------------------------
+  # This lane builds the app it for both internal and external distribution 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_test_releases [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_test_releases 
+  # bundle exec fastlane build_test_releases skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_test_releases do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], 
+      alpha: true,
+      beta: true,
+      final: false)
+    android_build_preflight()
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+  end
+
+  #####################################################################################
+  # build_alpha
+  # -----------------------------------------------------------------------------------
+  # This lane builds the app it for internal testing  
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_alpha 
+  # bundle exec fastlane build_alpha skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_alpha do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], alpha: true) unless (options[:skip_prechecks])
+    android_build_preflight() unless (options[:skip_prechecks])
+
+    # Create the file names
+    version=android_get_alpha_version()
+    build_bundle(version: version, flavor:"Zalpha")
+  end
+
+  #####################################################################################
+  # build_beta
+  # -----------------------------------------------------------------------------------
+  # This lane builds the app it for internal testing  
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane build_beta 
+  # bundle exec fastlane build_beta skip_confirm:true 
+  #####################################################################################
+  desc "Builds and updates for distribution"
+  lane :build_beta do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless (options[:skip_prechecks])
+    android_build_preflight() unless (options[:skip_prechecks])
+
+    # Create the file names
+    version=android_get_release_version()
+    build_bundle(version: version, flavor:"Vanilla")
+  end
+
+  #####################################################################################
   # download_metadata_string 
   # -----------------------------------------------------------------------------------
   # This lane downloads the translated metadata (release notes,
@@ -159,16 +251,6 @@ ENV["HAS_ALPHA_VERSION"]="true"
       source_locale: "en-US",
       download_path: Dir.pwd + "/metadata/android")
   end 
-
-#####################################################################################
-# release_preflight
-# -----------------------------------------------------------------------------------
-# Run pre-build checks to ensure we're ready for release!
-#####################################################################################
-desc "Run release preflight checks"
- lane :release_preflight do | options |
-     configure_validate()
- end
 
 ########################################################################
 # Dependencies handling lanes
@@ -206,7 +288,44 @@ desc "Run release preflight checks"
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
-  
+  #####################################################################################
+  # build_bundle
+  # -----------------------------------------------------------------------------------
+  # This lane builds an app bundle
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_bundle [skip_confirm:<skip confirm>]
+  #####################################################################################
+  desc "Builds an app bundle"
+  lane :build_bundle do | options |
+    # Create the file names
+    version=options[:version]
+    name="wpandroid-#{version["name"]}.aab"
+    apk_name="wpandroid-#{version["name"]}-universal.apk"
+    aab_file="WordPress.aab"
+    output_dir="WordPress/build/outputs/bundle/"
+    build_dir="build/"
+    logfile_path="#{build_dir}build.log"
+
+    # Build
+    Dir.chdir("..") do
+      UI.message("Cleaning branch...")
+      sh("echo \"Cleaning branch\" >> #{logfile_path}")
+      sh("./gradlew clean >> #{logfile_path} 2>&1")
+      UI.message("Running lint...")
+      sh("echo \"Running lint...\" >> #{logfile_path}")
+      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
+      sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
+      sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("cp -v #{output_dir}#{options[:flavor]}Release/#{aab_file} #{build_dir}#{name} | tee -a #{logfile_path}")
+      UI.message("Bundle ready: #{name}")
+      sh("echo \"Bundle ready: #{name}\" >> #{logfile_path}")
+      extract_universal_apk(bundle_path:"#{build_dir}#{name}", apk_path:"#{build_dir}#{apk_name}")
+    end
+    "#{build_dir}#{name}"
+  end
+
 #####################################################################################
 # Private lanes
 #####################################################################################
@@ -216,6 +335,26 @@ desc "Run release preflight checks"
         File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
       end
     end
+  end
+
+  private_lane :extract_universal_apk do | options |
+    bundle_path=options[:bundle_path]
+    apk_path=options[:apk_path]
+    temp_dir = Dir.mktmpdir()
+
+    command = "source ./tools/gradle-functions.sh"
+    command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
+    --output=\"#{temp_dir}/universal.apks\" \\
+    --mode=universal \\
+    --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
+    --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
+    --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
+    --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
+    sh(command)
+
+    sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")
+    FileUtils.cp_r("#{temp_dir}/universal.apk", "#{apk_path}", remove_destination: true)  
+    FileUtils.rm_rf("#{temp_dir}")
   end
 end
 

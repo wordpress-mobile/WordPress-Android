@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
@@ -97,10 +98,25 @@ constructor(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val stringBuilder = StringBuilder()
+            var minViews: Int? = null
+            var maxViews: Int? = null
             for (country in domainModel.countries) {
+                if (country.views < minViews ?: Int.MAX_VALUE) {
+                    minViews = country.views
+                }
+                if (country.views > maxViews ?: 0) {
+                    maxViews = country.views
+                }
                 stringBuilder.append("['").append(country.countryCode).append("',").append(country.views).append("],")
             }
+            val startLabel = if (minViews == maxViews) {
+                0
+            } else {
+                minViews ?: 0
+            }.toFormattedString()
+            val endLabel = (maxViews ?: 0).toFormattedString()
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
+            items.add(MapLegend(startLabel, endLabel))
             items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(

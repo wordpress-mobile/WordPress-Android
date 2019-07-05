@@ -21,7 +21,6 @@ import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
-import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -60,6 +59,7 @@ class WidgetUtils
         views: RemoteViews,
         appWidgetId: Int
     ) {
+        views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
         GlobalScope.launch(Dispatchers.Main) {
             val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
             imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
@@ -71,13 +71,27 @@ class WidgetUtils
         views: RemoteViews,
         appWidgetId: Int,
         networkAvailable: Boolean,
+        hasAccessToken: Boolean,
         resourceProvider: ResourceProvider,
-        context: Context
+        context: Context,
+        widgetType: Class<*>
     ) {
+        views.setViewVisibility(R.id.widget_site_icon, View.GONE)
+        views.setOnClickPendingIntent(
+                R.id.widget_title_container,
+                PendingIntent.getActivity(
+                        context,
+                        0,
+                        Intent(),
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                )
+        )
         views.setViewVisibility(R.id.widget_content, View.GONE)
         views.setViewVisibility(R.id.widget_error, View.VISIBLE)
         val errorMessage = if (!networkAvailable) {
             R.string.stats_widget_error_no_network
+        } else if (!hasAccessToken) {
+            R.string.stats_widget_error_no_access_token
         } else {
             R.string.stats_widget_error_no_data
         }
@@ -85,18 +99,26 @@ class WidgetUtils
                 R.id.widget_error_message,
                 resourceProvider.getString(errorMessage)
         )
-        val intentSync = Intent(context, StatsAllTimeWidget::class.java)
+        val pendingSync = getRetryIntent(context, widgetType, appWidgetId)
+        views.setOnClickPendingIntent(R.id.widget_error, pendingSync)
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
+
+    fun getRetryIntent(
+        context: Context,
+        widgetType: Class<*>,
+        appWidgetId: Int
+    ): PendingIntent? {
+        val intentSync = Intent(context, widgetType)
         intentSync.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
 
         intentSync.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        val pendingSync = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
                 context,
                 Random(appWidgetId).nextInt(),
                 intentSync,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
-        views.setOnClickPendingIntent(R.id.widget_error, pendingSync)
-        appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
     fun showList(
