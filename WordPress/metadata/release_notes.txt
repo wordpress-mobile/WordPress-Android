@@ -1,3 +1,4 @@
-* Quote and More blocks are now available, and we fixed an issue that caused the keyboard in the editor to flicker if you repeatedly pressed Enter on a post title.
-* Business plan customers can register a custom domain when installing a plugin.
-* Sometimes when you started a new draft, the app would create two. Fixed!
+* In Posts and Pages, Authors, Tags, and Categories Stats cards, a percentage bar has been added to communicate the impact of each item.
+* You can now search posts on the Post List page.
+* New! Widgets for All-time, Today, and Weekly Stats are now available.
+* Block Editor: Fixed a bug that affected pasting text into the Post Title.
