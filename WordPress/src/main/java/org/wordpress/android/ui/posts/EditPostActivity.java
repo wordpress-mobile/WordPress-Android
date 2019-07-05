@@ -312,7 +312,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsPage;
     private boolean mHasSetPostContent;
     private boolean mIsDialogProgressShown;
-    private boolean mIsUpdatingPost;
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
