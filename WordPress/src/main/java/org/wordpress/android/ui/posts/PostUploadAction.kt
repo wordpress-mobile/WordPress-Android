@@ -35,6 +35,10 @@ sealed class PostUploadAction {
         val message: String?
     ) : PostUploadAction()
 
+    class PostRemotePreviewSnackbarError(
+        val messageResId: Int
+    ) : PostUploadAction()
+
     /**
      * Cancel all post and media uploads related to this post
      */
@@ -81,6 +85,12 @@ fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAtt
                     action.mediaList,
                     action.site,
                     action.message
+            )
+        }
+        is PostUploadAction.PostRemotePreviewSnackbarError -> {
+            UploadUtils.showSnackbarError(
+                    snackbarAttachView,
+                    snackbarAttachView.resources.getString(action.messageResId)
             )
         }
         is PostUploadAction.CancelPostAndMediaUpload -> {

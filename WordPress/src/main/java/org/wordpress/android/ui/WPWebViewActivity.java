@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -98,6 +100,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
     public static final String ENCODING_UTF8 = "UTF-8";
+    public static final String WEBVIEW_USAGE_TYPE = "webview_usage_type";
+    public static final String ACTION_BAR_TITLE = "action_bar_title";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -115,6 +119,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResultIfNeeded();
+    }
+
+    @Override
     public final void configureView() {
         setContentView(R.layout.wpwebview_activity);
 
@@ -122,8 +132,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mFullScreenProgressLayout = findViewById(R.id.progress_layout);
         mWebView = findViewById(R.id.webView);
 
+        WPWebViewUsageCategory webViewUsageCategory = WPWebViewUsageCategory.fromInt(getIntent()
+                .getIntExtra(WEBVIEW_USAGE_TYPE, 0));
+
         initRetryButton();
-        initViewModel();
+        initViewModel(webViewUsageCategory);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -133,6 +146,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+            if (isActionableDirectUsage()) {
+                 String title = getIntent().getStringExtra(ACTION_BAR_TITLE);
+                 if (title != null) {
+                     actionBar.setTitle(title);
+                 }
+            }
         }
     }
 
@@ -144,7 +164,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         });
     }
 
-    private void initViewModel() {
+    private void initViewModel(WPWebViewUsageCategory webViewUsageCategory) {
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPWebViewViewModel.class);
         mViewModel.getUiState().observe(this, new Observer<WebPreviewUiState>() {
             @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
@@ -154,17 +174,27 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     mUiHelpers.updateVisibility(mFullScreenProgressLayout,
                             webPreviewUiState.getFullscreenProgressLayoutVisibility());
                     mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
+
+                    if (webPreviewUiState instanceof WebPreviewFullscreenUiState) {
+                        WebPreviewFullscreenUiState state = (WebPreviewFullscreenUiState) webPreviewUiState;
+                        mUiHelpers.setImageOrHide(mActionableEmptyView.image, state.getImageRes());
+                        mUiHelpers.setTextOrHide(mActionableEmptyView.title, state.getTitleText());
+                        mUiHelpers.setTextOrHide(mActionableEmptyView.subtitle, state.getSubtitleText());
+                        mUiHelpers.updateVisibility(mActionableEmptyView.button, state.getButtonVisibility());
+                    }
+
+                    invalidateOptionsMenu();
                 }
             }
         });
         mViewModel.getLoadNeeded().observe(this, new Observer<Boolean>() {
             @Override public void onChanged(@Nullable Boolean loadNeeded) {
-                if (loadNeeded != null && loadNeeded) {
+                if (!isActionableDirectUsage() && loadNeeded != null && loadNeeded) {
                     loadContent();
                 }
             }
         });
-        mViewModel.start();
+        mViewModel.start(webViewUsageCategory);
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
@@ -172,13 +202,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
-                                                                String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject);
+                                                                String shareSubject, boolean startPreviewForResult) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, startPreviewForResult);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
     public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
-                                                  String frameNonce) {
+                                                  String frameNonce, boolean startPreviewForResult) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
@@ -191,12 +221,29 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
-        context.startActivity(intent);
+        if (startPreviewForResult) {
+            intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
+            ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
                                                      String[] listOfAllowedURLs, boolean disableLinks) {
+        openUrlByUsingBlogCredentials(context, site, post, url, listOfAllowedURLs, disableLinks, false);
+    }
+
+    public static void openUrlByUsingBlogCredentials(
+            Context context,
+            SiteModel site,
+            PostModel post,
+            String url,
+            String[] listOfAllowedURLs,
+            boolean disableLinks,
+            boolean startPreviewForResult
+    ) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -228,6 +275,23 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, post.getTitle());
             }
         }
+
+        if (startPreviewForResult) {
+            intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
+            ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
+        } else {
+            context.startActivity(intent);
+        }
+    }
+
+    public static void openActionableEmptyViewDirectly(
+            Context context,
+            WPWebViewUsageCategory directUsageCategory,
+            String postTitle
+    ) {
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, directUsageCategory.getValue());
+        intent.putExtra(WPWebViewActivity.ACTION_BAR_TITLE, postTitle);
         context.startActivity(intent);
     }
 
@@ -270,6 +334,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false);
+    }
+
+    private static void openWPCOMURL(
+            Context context,
+            String url,
+            String shareableUrl,
+            String shareSubject,
+            boolean startPreviewForResult
+    ) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -284,12 +358,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
-        context.startActivity(intent);
+
+        if (startPreviewForResult) {
+            intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
+            ((Activity) context).startActivityForResult(intent, RequestCodes.REMOTE_PREVIEW_POST);
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void configureWebView() {
+        if (isActionableDirectUsage()) return;
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         CookieManager cookieManager = CookieManager.getInstance();
@@ -330,7 +412,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
-                finish();
+                setResultIfNeededAndFinish();
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL, this);
         } else {
@@ -351,11 +433,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     protected void loadContent() {
+        if (isActionableDirectUsage()) return;
+    
         Bundle extras = getIntent().getExtras();
 
         if (extras == null) {
             AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
-            finish();
+            setResultIfNeededAndFinish();
             return;
         }
 
@@ -367,7 +451,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
-            finish();
+            setResultIfNeededAndFinish();
             return;
         }
 
@@ -402,13 +486,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
                 ToastUtils.showToast(this, R.string.invalid_site_url_message, ToastUtils.Duration.SHORT);
-                finish();
+                setResultIfNeededAndFinish();
             }
 
             if (TextUtils.isEmpty(username)) {
                 AppLog.e(AppLog.T.UTILS, "Username empty/null");
                 ToastUtils.showToast(this, R.string.incorrect_credentials, ToastUtils.Duration.SHORT);
-                finish();
+                setResultIfNeededAndFinish();
             }
 
             loadAuthenticatedUrl(authURL, addressToLoad, username, password);
@@ -473,11 +557,59 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         return loginURL;
     }
 
+    private boolean isActionableDirectUsage() {
+        return mViewModel.isActionableDirectUsage();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.webview, menu);
+        return true;
+    }
+
+    private void updateMenuItemState(MenuItem menuItem, boolean isVisible, boolean showAsAction) {
+        if (menuItem != null) {
+            menuItem.setVisible(isVisible);
+            if (showAsAction) {
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            } else {
+                menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            }
+        }
+    }
+
+    private void setupMenuForWebViewUsage(Menu menu) {
+        MenuItem browser = menu.findItem(R.id.menu_browser);
+        MenuItem share = menu.findItem(R.id.menu_share);
+        MenuItem refresh = menu.findItem(R.id.menu_refresh);
+
+        WPWebViewMenuUiState menuUiState = mViewModel.getMenuUiState();
+
+        updateMenuItemState(
+                browser,
+                menuUiState.getBrowserMenuVisible(),
+                menuUiState.getBrowserMenuShowAsAction());
+
+        updateMenuItemState(
+                share,
+                menuUiState.getShareMenuVisible(),
+                menuUiState.getShareMenuShowAsAction());
+
+        updateMenuItemState(
+                refresh,
+                menuUiState.getRefreshMenuVisible(),
+                menuUiState.getRefreshMenuShowAsAction());
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        setupMenuForWebViewUsage(menu);
+
         return true;
     }
 
@@ -488,7 +620,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         int itemID = item.getItemId();
-        if (itemID == R.id.menu_refresh) {
+
+        if (itemID == android.R.id.home) {
+            setResultIfNeeded();
+        } else if (itemID == R.id.menu_refresh) {
             mWebView.reload();
             return true;
         } else if (itemID == R.id.menu_share) {
@@ -513,5 +648,19 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Since currently we are going to look at the request code and not at the result code
+    // in the onActivityResult callbacks, this method is actually redundant, but wanted
+    // to be explicit in case of future expansions on this.
+    private void setResultIfNeeded() {
+        if (getCallingActivity() != null) {
+            setResult(RESULT_OK);
+        }
+    }
+
+    private void setResultIfNeededAndFinish() {
+        setResultIfNeeded();
+        finish();
     }
 }
