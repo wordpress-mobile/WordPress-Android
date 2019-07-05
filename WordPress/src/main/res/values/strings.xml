@@ -272,7 +272,6 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_discard">Discard</string>
-    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
 
@@ -353,7 +352,7 @@
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
     <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
-
+    
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -861,6 +860,7 @@
     <string name="stats_widget_select_type">Type</string>
     <string name="stats_widget_error_no_data">Couldn\'t load data</string>
     <string name="stats_widget_error_no_network">No network available</string>
+    <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -1360,13 +1360,12 @@
     <string name="menu_visual_mode">Visual Mode</string>
     <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_debug">Debug Menu</string>
-    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
-    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
+    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
 
     <string name="post_title">Title</string>
 
@@ -1475,10 +1474,6 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
-    <string name="local_changes_discarded">Local changes discarded</string>
-    <string name="local_changes_discarding">Discarding local changes</string>
-    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
-    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
