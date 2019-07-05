@@ -272,7 +272,6 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_discard">Discard</string>
-    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
 
@@ -1363,7 +1362,6 @@
     <string name="menu_visual_mode">Visual Mode</string>
     <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
@@ -1478,10 +1476,6 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
-    <string name="local_changes_discarded">Local changes discarded</string>
-    <string name="local_changes_discarding">Discarding local changes</string>
-    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
-    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
