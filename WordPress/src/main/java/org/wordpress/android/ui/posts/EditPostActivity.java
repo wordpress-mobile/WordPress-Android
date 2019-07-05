@@ -1521,16 +1521,23 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void showGutenbergInformativeDialog() {
         // Show the GB informative dialog on editing GB posts
-        if (!mIsNewPost && !AppPrefs.isGutenbergInformativeDialogDisabled()) {
-            final PromoDialog gbInformativeDialog = new PromoDialog();
-            gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
-                    getString(R.string.dialog_gutenberg_informative_title),
-                    mPost.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
-                    : getString(R.string.dialog_gutenberg_informative_description_post),
-                    getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        final PromoDialog gbInformativeDialog = new PromoDialog();
+        gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
+                getString(R.string.dialog_gutenberg_informative_title),
+                mPost.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
+                        : getString(R.string.dialog_gutenberg_informative_description_post),
+                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
-            gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
-            AppPrefs.setGutenbergInformativeDialogDisabled(true);
+        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+    }
+
+    private void setGutenbergEnabledIfNeeded() {
+        if (AppPrefs.isGutenbergAutoEnabledForTheNewPosts()
+            && !mIsNewPost
+            && !AppPrefs.isGutenbergDefaultForNewPosts()) {
+            AppPrefs.setGutenbergDefaultForNewPosts(true);
+            AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);
+            showGutenbergInformativeDialog();
         }
     }
 
@@ -2262,8 +2269,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
-                        // Show the GB informative dialog on editing GB posts
-                        showGutenbergInformativeDialog();
+                        // Enable gutenberg upon opening a block based post
+                        setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);

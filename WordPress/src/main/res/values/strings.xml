@@ -350,11 +350,9 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the block editor, so we\'ve also enabled it on this Post.
-        Switch back to the classic editor at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the block editor, so we\'ve also enabled it on this Page.
-        Switch back to the classic editor at any time by tapping  ⋮  in the top bar.</string>
-
+    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
+    
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
