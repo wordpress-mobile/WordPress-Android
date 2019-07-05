@@ -34,7 +34,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,8 +46,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -116,7 +113,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -231,15 +227,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
     private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateKeyIsDialogProgressShown";
-    private static final String STATE_KEY_IS_DISCARDING_CHANGES = "stateKeyIsDiscardingChanges";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
-    private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
-    private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_UPDATE_CONFIRMATION_DIALOG = "tag_update_confirmation_dialog";
     private static final String TAG_FAILED_MEDIA_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
@@ -319,8 +312,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsPage;
     private boolean mHasSetPostContent;
     private boolean mIsDialogProgressShown;
-    private boolean mIsDiscardingChanges;
-    private boolean mIsUpdatingPost;
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
@@ -475,7 +466,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
-            mIsDiscardingChanges = savedInstanceState.getBoolean(STATE_KEY_IS_DISCARDING_CHANGES, false);
             mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
             mPostEditorAnalyticsSession =
                     (PostEditorAnalyticsSession) savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
@@ -817,7 +807,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
-        outState.putBoolean(STATE_KEY_IS_DISCARDING_CHANGES, mIsDiscardingChanges);
         outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
@@ -1189,7 +1178,6 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
-        MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
         if (secondaryAction != null && mPost != null) {
             switch (getSecondaryAction()) {
@@ -1224,8 +1212,6 @@ public class EditPostActivity extends AppCompatActivity implements
             settingsMenuItem.setTitle(mIsPage ? R.string.page_settings : R.string.post_settings);
             settingsMenuItem.setVisible(showMenuItems);
         }
-
-        showHideDiscardLocalChangesMenuOption(showMenuItems, discardChanges);
 
         // Set text of the primary action button in the ActionBar
         if (mPost != null) {
@@ -1265,36 +1251,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    private void showHideDiscardLocalChangesMenuOption(boolean showMenuItems, MenuItem discardChanges) {
-        if (discardChanges != null) {
-            if (mIsNewPost) {
-                // by "local changes" we mean changes that are only local (that is to say, are not in the remote yet).
-                // if this is a new Post, then there aren't any local changes to discard yet (everything is local).
-                discardChanges.setVisible(false);
-                return;
-            }
-
-            if (mPost != null && showMenuItems) {
-                // don't show Discard Local Changes option if it's a completely local draft
-                boolean showDiscardChanges = mPost.isLocallyChanged() && !mPost.isLocalDraft();
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
-                        && ((AztecEditorFragment) mEditorFragment).canUndo()
-                            && !mPost.isLocalDraft()) {
-                        showDiscardChanges = true;
-                    } else {
-                        // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mPostSnapshotWhenEditorOpened != null
-                                             && mPostSnapshotWhenEditorOpened.isLocallyChanged();
-                    }
-                }
-                discardChanges.setVisible(showDiscardChanges);
-            } else {
-                discardChanges.setVisible(false);
-            }
-        }
     }
 
     @Override
@@ -1406,20 +1362,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                     });
                 }
-            } else if (itemId == R.id.menu_discard_changes) {
-                if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
-                    AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
-                    showDialogProgress(true);
-                    mPostForUndo = mPost.clone();
-                    mIsDiscardingChanges = true;
-                    RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-                    mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                } else {
-                    showDialogError(R.string.local_changes_discarding_no_connection,
-                            R.string.dialog_button_ok,
-                            TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG,
-                            false);
-                }
             } else if (itemId == R.id.menu_switch_to_aztec) {
                 // let's finish this editing instance and start again, but not letting Gutenberg be used
                 mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
@@ -1498,22 +1440,12 @@ public class EditPostActivity extends AppCompatActivity implements
         fillContentEditorFields();
     }
 
-    private void showDialogError(@StringRes int resIdMessage, @StringRes int resIdPositiveButton, String tag,
-                                 boolean showCancel) {
-        BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(tag, "", getString(resIdMessage),
-                getString(resIdPositiveButton), showCancel ? getString(R.string.cancel) : null, null);
-        dialog.show(getSupportFragmentManager(), tag);
-    }
-
     private void showDialogProgress(boolean show) {
         if (show) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setMessage(mIsDiscardingChanges
-                    ? getString(R.string.local_changes_discarding)
-                    : getString(R.string.history_loading_revision));
+            mProgressDialog.setMessage(getString(R.string.history_loading_revision));
             mProgressDialog.show();
         } else if (mProgressDialog != null) {
             mProgressDialog.dismiss();
@@ -1810,8 +1742,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
             case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
-            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
-            case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_UPDATE_CONFIRMATION_DIALOG:
                 break;
@@ -1829,12 +1759,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
-            case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
-                // no op
-                break;
-            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
-                mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
-                break;
             case TAG_UPDATE_CONFIRMATION_DIALOG:
                 uploadPost(false);
                 break;
@@ -1844,7 +1768,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
                 break;
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
-                savePostOnlineAndFinishAsync(isFirstTimePublish(), true);
+                savePostOnlineAndFinishAsync(isFirstTimePublish(false), true);
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
                 uploadPost(true);
@@ -2113,7 +2037,7 @@ public class EditPostActivity extends AppCompatActivity implements
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean isFirstTimePublish = isFirstTimePublish();
+                boolean isFirstTimePublish = isFirstTimePublish(publishPost);
                 if (publishPost) {
                     // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
                     // otherwise we'd have an incorrect value
@@ -2204,7 +2128,7 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 // check if the opened post had some unsaved local changes
-                boolean isFirstTimePublish = isFirstTimePublish();
+                boolean isFirstTimePublish = isFirstTimePublish(false);
 
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
@@ -2272,11 +2196,12 @@ public class EditPostActivity extends AppCompatActivity implements
         return !PostUtils.isPublishable(mPost) && isNewPost();
     }
 
-    private boolean isFirstTimePublish() {
-        return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.DRAFT)
-               && (mPost.isLocalDraft() || mPostSnapshotWhenEditorOpened == null
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.DRAFT
-                   || PostStatus.fromPost(mPostSnapshotWhenEditorOpened) == PostStatus.PENDING);
+    private boolean isFirstTimePublish(final boolean publishPost) {
+        final PostStatus originalStatus = PostStatus.fromPost(mPost);
+        return ((originalStatus == PostStatus.DRAFT || originalStatus == PostStatus.UNKNOWN) && publishPost)
+               || (originalStatus == PostStatus.SCHEDULED && publishPost)
+               || (originalStatus == PostStatus.PUBLISHED && mPost.isLocalDraft())
+               || (originalStatus == PostStatus.PUBLISHED && mPost.getRemotePostId() == 0);
     }
 
     /**
@@ -3995,44 +3920,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();
-
-                if (mIsUpdatingPost) {
-                    mIsUpdatingPost = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-                    refreshEditorContent();
-
-                    if (mViewPager != null) {
-                        WPSnackbar.make(mViewPager, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
-                                .setAction(getString(R.string.undo), new OnClickListener() {
-                                    @Override public void onClick(View view) {
-                                        AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
-                                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
-                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostForUndo.clone();
-                                        refreshEditorContent();
-                                    }
-                                })
-                                .show();
-                    }
-
-                    showDialogProgress(false);
-                }
-
-                if (mIsDiscardingChanges) {
-                    mIsDiscardingChanges = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
-                    mIsUpdatingPost = true;
-                }
             } else {
-                if (mIsDiscardingChanges) {
-                    showDialogError(R.string.local_changes_discarding_error, R.string.contact_support,
-                            TAG_DISCARDING_CHANGES_ERROR_DIALOG,
-                            true);
-                }
-
-                mIsDiscardingChanges = false;
-                mIsUpdatingPost = false;
                 showDialogProgress(false);
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }

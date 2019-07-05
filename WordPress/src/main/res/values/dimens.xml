@@ -211,6 +211,7 @@
     <dimen name="stats_label_min_text_size">6sp</dimen>
     <dimen name="stats_activity_box_size">12dp</dimen>
     <dimen name="stats_activity_box_end_margin">4dp</dimen>
+    <dimen name="stats_map_legend_width">60dp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_icon_size">18dp</dimen>

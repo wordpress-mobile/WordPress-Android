@@ -9,8 +9,6 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large" >
 
     <TextView
@@ -57,7 +55,6 @@
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingEnd="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:gravity="center_vertical"
         tools:ignore="RtlSymmetry" >
@@ -66,7 +63,6 @@
             android:importantForAccessibility="no"
             android:layout_height="@dimen/google_button_icon_sz"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
             android:layout_width="@dimen/google_button_icon_sz"
             app:srcCompat="@drawable/ic_google_60dp" >
         </ImageView>
@@ -92,7 +88,6 @@
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingEnd="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:gravity="center_vertical"
         tools:ignore="RtlSymmetry" >
@@ -102,7 +97,6 @@
             android:importantForAccessibility="no"
             android:layout_height="@dimen/google_button_icon_sz"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
             android:layout_width="@dimen/google_button_icon_sz"
             app:srcCompat="@drawable/ic_domains_grey_24dp" >
         </ImageView>
