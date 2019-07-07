@@ -1,6 +1,7 @@
 orbs:
   android: wordpress-mobile/android@0.0.27
   bundle-install: toshimaru/bundle-install@0.1.1
+  slack: circleci/slack@2.5.0
 
 commands:
   copy-gradle-properties:
@@ -71,11 +72,15 @@ jobs:
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk
+          test-targets: package org.wordpress.android.e2e
           device: model=Nexus5X,version=26,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
+      - slack/status:
+          fail_only: 'true'
+          failure_message: ':red_circle: WordPress Android end to end tests have failed!\nSee https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670'
   strings-check:
     docker:
       - image: circleci/ruby:2.3

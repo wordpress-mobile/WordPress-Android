@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
@@ -114,7 +115,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     @Override
-    public void configureView() {
+    public final void configureView() {
         setContentView(R.layout.wpwebview_activity);
 
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
@@ -195,7 +196,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
-                                                     String[] listOfAllowedURLs) {
+                                                     String[] listOfAllowedURLs, boolean disableLinks) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -219,7 +220,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
-        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
         intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
@@ -291,6 +292,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     protected void configureWebView() {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptThirdPartyCookies(mWebView, true);
 
         final Bundle extras = getIntent().getExtras();
 

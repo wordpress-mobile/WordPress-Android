@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-09 06:50:22+0000
+Translation-Revision-Date: 2019-06-19 18:45:13+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
+    <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
+    <string name="domain_registration_result_continue_button">Další</string>
+    <string name="domain_registration_result_title">Gratulace!</string>
+    <string name="domain_contact_information_register_domain_button">Registrovat doménu</string>
+    <string name="domain_contact_information_postal_code_hint">PSČ</string>
+    <string name="domain_contact_information_state_hint">Země</string>
+    <string name="domain_contact_information_city_hint">Město</string>
+    <string name="domain_contact_information_address_hint_two">Adresa 2</string>
+    <string name="domain_contact_information_address_hint">Adresa</string>
+    <string name="domain_contact_information_country_hint">Země</string>
+    <string name="domain_contact_information_country_code_hint">Předvolba země.</string>
+    <string name="domain_contact_information_phone_number_hint">Telefon</string>
+    <string name="domain_contact_information_organization_hint">Organizace (volitelné)</string>
+    <string name="stats_management_new">Nový</string>
+    <string name="stats_management_edit">Upravit</string>
+    <string name="stats_management_dismiss_insights_news_card">Skrýt</string>
+    <string name="stats_management_try_it_now">Zkusit teď</string>
+    <string name="post_list_drafts">Koncepty</string>
+    <string name="post_list_published">Publikováno</string>
+    <string name="post_list_author_everyone">Všichni</string>
+    <string name="post_list_author_me">Já</string>
     <string name="stats_insights_average_words">Průměr slov/příspěvek</string>
     <string name="stats_insights_total_words">Celkem slov</string>
     <string name="stats_insights_average_likes">Průměr to se mi líbí/příspěvek</string>
@@ -350,7 +373,7 @@ Language: cs_CZ
     <string name="plugin_install_site_ineligible_site_private">Funkce pluginu vyžaduje, aby byl web veřejný.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funkce pluginu vyžaduje business plán.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funkce pluginu vyžaduje vlastní doménu.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funkce pluginu není k dispozici pro tyto stránky.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Dokončujeme finální nastavení - téměř hotovo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instaluji plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalovat</string>
@@ -370,7 +393,6 @@ Language: cs_CZ
     <string name="content_description_people_looking_charts">Lidé, kteří se dívají na grafy</string>
     <string name="comment_title">%s na %s</string>
     <string name="dialog_confirm_delete_permanently_post">Opravdu chcete tento příspěvek smazat?</string>
-    <string name="notification_site_creation_title_in_progress">Vytváření webu … Může to trvat několik minut.</string>
     <string name="notification_channel_important_title">Důležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použijte tuto fotku</string>
@@ -383,10 +405,6 @@ Language: cs_CZ
     <string name="site_settings_quota_space_unlimited">%1$s z neomezeného množství</string>
     <string name="preview_count">Náhled %d</string>
     <string name="add_count">Přidat %d</string>
-    <string name="site_creation_domain_selection_title">Vytvoření nových stránek - krok 4</string>
-    <string name="site_creation_site_details_title">Vytvoření nových stránek - krok 3</string>
-    <string name="site_creation_theme_selection_title">Vytvoření nových stránek - krok 2</string>
-    <string name="site_creation_category_title">Vytvoření nových stránek - krok 1</string>
     <string name="stats_followers_many_desc">%d fanoušků</string>
     <string name="stats_followers_one_desc">jeden fanoušek</string>
     <string name="stats_followers_zero_desc">žádný fanoušek</string>
@@ -484,7 +502,6 @@ Language: cs_CZ
     <string name="help_screen_title">Podpora a pomoc</string>
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Poznámky k vydání</string>
-    <string name="site_creation_creating_failed_extended">Objevil se neočekávaný problém. Nechcete to zkusit ještě jednou?</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar byl nahrán a bude brzy k dispozici.</string>
     <string name="email_not_registered_wpcom">Hmm, nemůžeme najít WordPress.com účet spojený s tímto emailem. Vyzkoušejte níže uvedený odkaz a přihlaste se pomocí adresy vašeho webu.</string>
     <string name="permissions_denied_message">Vypadá to že jste si deaktivoval práva pro tuto funkci. &lt;br/>&lt;br/>Pokud to chcete změnit, ověřte si že máte povolená práva na funkci &lt;strong>%s&lt;/strong>.</string>
@@ -536,44 +553,7 @@ Language: cs_CZ
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Napsat první příspěvek</string>
-    <string name="site_creation_epilogue_configure">Nastavit</string>
-    <string name="site_creation_epilogue_congrats">Blahopřejeme!\nWeb je hotový.</string>
-    <string name="site_creation_creating_modal">Vyčkejte, dokud neskončí vytváření webu.</string>
-    <string name="site_creation_creating_retry">Zkusit znovu</string>
-    <string name="site_creation_creating_failed">Nastala neočekávaná chyba…</string>
-    <string name="site_creation_creating_preparing_frontend">Připravuji vzhled stránek…</string>
-    <string name="site_creation_creating_configuring_theme">Nastavuji styl stránek …</string>
-    <string name="site_creation_creating_configuring_content">Nastavuji obsah stránek…</string>
-    <string name="site_creation_creating_fetching_info">Načítám informace o webu…</string>
-    <string name="site_creation_creating_laying_foundation">Nastavuji základní rozvržení stránek…</string>
-    <string name="site_creation_empty_site_title">Vložte prosím nadpis stránek (title)</string>
-    <string name="site_creation_tagline_helper">Tagline stručný výpis článku nebo prvních pár vět článku, které se objeví pod nadpisem článku ve většině šablon a slouží také jako metadata pro vyhledávače..</string>
-    <string name="site_creation_tagline_hint">Stručný popis stránky (volitelné)</string>
-    <string name="site_creation_title_hint">Název webové stránky</string>
     <string name="site_creation_domain_finish_button">Vytvořit stránku</string>
-    <string name="site_creation_domain_keywords_hint">Napište klíčové slovo pro více nápadů</string>
-    <string name="site_creation_label_domain_selection_title">Krok 4 ze 4</string>
-    <string name="site_creation_label_site_details">Řekněte nám více o tom, co vytváříte. Jaký je název a slogan?</string>
-    <string name="site_creation_label_site_details_title">Krok 3 ze 4</string>
-    <string name="site_creation_label_theme_loading">Počkejte než nahraji šablony</string>
-    <string name="site_creation_label_theme_selection">Začněte rychle s jedním z našich oblíbených témat. Po vytvoření stránek můžete procházet a vybírat si ze stovek dalších.</string>
-    <string name="site_creation_label_theme_selection_title">Krok 2 ze 4</string>
-    <string name="site_creation_subtitle_portfolio">Prezentujte své kreativní projekty vizuálně.</string>
-    <string name="site_creation_title_portfolio">Začít s portfóliem</string>
-    <string name="site_creation_subtitle_website">Propagujte svou firmu nebo značku a spojte se s vaším publikem.</string>
-    <string name="site_creation_title_website">Začít s webem</string>
-    <string name="site_creation_subtitle_blog">Sdílejte své nápady, příběhy a fotografie se svými příznivci.</string>
-    <string name="site_creation_title_blog">Začít s blogem</string>
-    <string name="site_creation_label_category">Jaké stránky potřebujete?\nVyberte níže uvedenou možnost:</string>
-    <string name="site_creation_label_category_title">Krok 1 ze 4</string>
-    <string name="site_creation_title">Vytvořit novou stránku</string>
-    <string name="notification_site_creation_failed">Došlo k chybě.</string>
-    <string name="notification_site_creation_title_stopped">Vytváření webu zastaveno</string>
-    <string name="notification_site_creation_step_theme">Krok 4 ze 4</string>
-    <string name="notification_site_creation_step_tagline">Krok 3 ze 4</string>
-    <string name="notification_site_creation_step_fetching">Krok 2 ze 4</string>
-    <string name="notification_site_creation_step_creating">Krok 1 ze 4</string>
     <string name="notification_site_creation_created">Dotkněte se pro pokračování.</string>
     <string name="notification_site_creation_title_success">Web vytvořen!</string>
     <string name="google_error_timeout">Google delší chvíli nereaguje. Možná byste měli počkat, až budete mít silnější připojení k internetu.</string>
@@ -1013,7 +993,7 @@ Language: cs_CZ
     <string name="editor_post_saved_locally_failed_media">Příspěvek selhal při nahrávání médií a byl uložen lokálně na zařízení</string>
     <string name="sure_to_remove_account">Odstranit tento web z aplikace?</string>
     <string name="photo_picker_title">Zvolit obrázek</string>
-    <string name="error_publish_no_network">Zařízení je offline. Změny uložené lokálně.</string>
+    <string name="error_publish_no_network">Zařízení je offline. Příspěvek byl uložen lokálně.</string>
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázků. Vyšší hodnoty znamenají lepší kvalitu obrázků.</string>
     <string name="site_settings_optimize_images_summary">Povolit změnu velikosti a kompresi obrázků</string>
@@ -1306,7 +1286,6 @@ Language: cs_CZ
     <string name="cd_related_post_preview_image">Náhledový obrázek souvisejících obrázků</string>
     <string name="error_post_remote_site_settings">Nepodařilo se uložit informace o stránce</string>
     <string name="error_fetch_remote_site_settings">Nepodařilo se získat informace o stránce</string>
-    <string name="site_settings_disconnected_toast">Odpojeno, úpravy vypnuty.</string>
     <string name="site_settings_close_after_dialog_switch_text">Uzavřít automaticky</string>
     <string name="site_settings_close_after_dialog_description">Automaticky uzavře komentáře k článkům.</string>
     <string name="site_settings_paging_dialog_description">Rozdělit vlákna komentářů do více stránek.</string>

@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-30 16:14:27+0000
+Translation-Revision-Date: 2019-06-20 12:49:44+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Stan (niedostępne)</string>
+    <string name="domain_registration_privacy_protection_tos">Rejestrując tą domenę akceptujesz nasze %1$s warunki użytkowania%2$s</string>
+    <string name="error_network_connection">Sprawdź swoje połączenie i spróbuj ponownie</string>
+    <string name="error_browser_no_network">Nie można było w tym momencie wczytać tej strony</string>
+    <string name="site_settings_disconnected_toast">Brak połączenia. Edycja jest wyłączona. </string>
+    <string name="site_settings_update_password_message">Aby ponownie połączyć aplikację do witryny z własnym hostingiem, wprowadź nowe hasło witryny. </string>
+    <string name="site_settings_password_updated">Hasło zaktualizowane</string>
+    <string name="site_settings_password_dialog_title">Zaktualizuj hasło</string>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Rejestrowanie nazwy domeny…</string>
+    <string name="domain_registration_state_picker_dialog_title">Wybierz stan</string>
+    <string name="domain_registration_country_picker_dialog_title">Wybierz kraj</string>
+    <string name="domain_registration_result_continue_button">kontynuuj</string>
+    <string name="domain_registration_result_description">twoja nowa witryna &lt;b>%s&lt;/b> jest ustawiana. Twoja witryna \n        wykonuje salta z ekscytacji!</string>
+    <string name="domain_registration_result_title">Gratulacje</string>
+    <string name="domain_contact_information_register_domain_button">Zarejestruj domenę</string>
+    <string name="domain_contact_information_postal_code_hint">Kod pocztowy</string>
+    <string name="domain_contact_information_state_hint">Stan </string>
+    <string name="domain_contact_information_city_hint">Miasto</string>
+    <string name="domain_contact_information_address_hint_two">Adres 2</string>
+    <string name="domain_contact_information_address_hint">Adres</string>
+    <string name="domain_contact_information_country_hint">Kraj</string>
+    <string name="domain_contact_information_country_code_hint">Kod kraju</string>
+    <string name="domain_contact_information_phone_number_hint">Telefon</string>
+    <string name="domain_contact_information_organization_hint">Organizacja (opcjonalnie)</string>
+    <string name="domain_contact_information_title">Informacje kontaktowe domeny</string>
+    <string name="domain_registration_privacy_protection_title">Zabezpieczenie prywatności</string>
+    <string name="domain_registration_contact_form_input_error">Wprowadź prawidłowy %s</string>
+    <string name="domains_suggestions_choose_domain">Wybierz domenę</string>
+    <string name="stats_management_new">Nowy</string>
+    <string name="stats_management_edit">Edycja</string>
+    <string name="stats_management_dismiss_insights_news_card">Odrzuć</string>
+    <string name="stats_management_try_it_now">Wypróbuj</string>
+    <string name="stats_manage_your_stats">Zarządzaj statystykami</string>
     <string name="history_fetching_revisions">Pobieranie wersji…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Nie udało się wstawić plików mediów.\nStuknij aby spróbować ponownie. </string>
@@ -23,10 +57,9 @@ Language: pl
     <string name="stats_insights_social">Społecznościowe</string>
     <string name="stats_insights_annual_site_stats">Roczne statystyki witryny</string>
     <string name="stats_view_follower_totals">Suma obserwujących</string>
-    <string name="suggestion_fetch_error">Nie można było wczytać sugestii domeny</string>
-    <string name="suggestions_search_hint">Wpisz słowo kluczowe aby uzyskać więcej pomysłów</string>
-    <string name="suggestions_empty_list">Nie znaleziono sugestii</string>
-    <string name="choose_domain">Wybierz domenę</string>
+    <string name="domain_suggestions_fetch_error">Nie można było wczytać sugestii dla nazwy domeny</string>
+    <string name="domain_suggestions_search_hint">Wpisz słowo kluczowe aby uzyskać więcej pomysłów</string>
+    <string name="domains_suggestions_empty_list">Nie znaleziono sugestii</string>
     <string name="register_domain">Zarejestruj domenę</string>
     <string name="jetpack_installed_message">Jetpack jest już zainstalowany, czas go skonfigurować. Zajmie to chwilę. </string>
     <string name="stats_menu_remove">Usuń z Trendów</string>
@@ -215,7 +248,6 @@ Language: pl
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
-    <string name="site_creation_label_domain_selection">Wybierz dostępny adres internetowy aby ludzie mogli znaleźć ciebie w sieci.</string>
     <string name="giphy_powered_by_giphy">Wspierane przez GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się przesłać z powodu błędu sieci. </string>
     <string name="giphy_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
@@ -391,7 +423,6 @@ Language: pl
     <string name="install_jetpack">Zainstaluj Jetpacka</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Konfigurując Jetpacka zgadzasz się z naszymi</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
@@ -521,7 +552,7 @@ Language: pl
     <string name="plugin_install_site_ineligible_site_private">Funkcjonalność wtyczek wymaga aby witryna była publiczna.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funkcjonalność wtyczek wymaga planu business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funkcjonalność wtyczek wymaga własnej domeny.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funkcjonalność wtyczek nie jest dostępna dla tej witryny.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Dokonujemy finalnego ustawiania - prawie gotowe…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalowanie wtyczki…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Zainstaluj</string>
@@ -541,7 +572,6 @@ Language: pl
     <string name="content_description_people_looking_charts">Ludzie analizujący grafiki i wykresy</string>
     <string name="comment_title">%s na %s</string>
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
-    <string name="notification_site_creation_title_in_progress">Tworzenie witryny… To może zająć kilka minut.</string>
     <string name="notification_channel_important_title">Ważne</string>
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
@@ -554,10 +584,6 @@ Language: pl
     <string name="site_settings_quota_space_unlimited">%1$s z bez limitu</string>
     <string name="preview_count">Podgląd %d</string>
     <string name="add_count">Dodaj %d</string>
-    <string name="site_creation_domain_selection_title">Utwórz nową witrynę Krok 4</string>
-    <string name="site_creation_site_details_title">Utwórz nową witrynę Krok 3</string>
-    <string name="site_creation_theme_selection_title">Utwórz nową witrynę Krok 2</string>
-    <string name="site_creation_category_title">Utwórz nową witrynę Krok 1</string>
     <string name="stats_followers_many_desc">%d obserwujących</string>
     <string name="stats_followers_one_desc">jeden obserwujący</string>
     <string name="stats_followers_zero_desc">brak obserwujących</string>
@@ -655,7 +681,6 @@ Language: pl
     <string name="help_screen_title">Pomoc i wsparcie</string>
     <string name="license_screen_title">Licencja</string>
     <string name="release_notes_screen_title">Informacje o wydaniu</string>
-    <string name="site_creation_creating_failed_extended">Napotkaliśmy na nieoczekiwany problem. Może spróbujemy jeszcze raz?</string>
     <string name="signup_epilogue_error_avatar_view">Twój obrazek profilowy został przesłany i będzie wkrótce dostępny.</string>
     <string name="email_not_registered_wpcom">Hmm, nie możemy odnaleźć konta WordPress.com połączonego z tym adresem email. Spróbuj poniższej odnośnika aby zalogować się używając adresu swojej witryny.</string>
     <string name="permissions_denied_message">Wygląda na to, że wyłączyłeś uprawnienia wymagane do tej funkcjonalności.&lt;br/>&lt;br/>Aby to zmienić, edytuj uprawnienia i upewnij się, iż &lt;strong>%s&lt;/strong> jest uaktywnione.</string>
@@ -707,44 +732,7 @@ Language: pl
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="site_creation_epilogue_write">Napisz pierwszy wpis</string>
-    <string name="site_creation_epilogue_configure">Skonfiguruj</string>
-    <string name="site_creation_epilogue_congrats">Gratulacje! Twoja witryna jest gotowa.</string>
-    <string name="site_creation_creating_modal">Proszę czekać na zakończenie tworzenia witryny.</string>
-    <string name="site_creation_creating_retry">Spróbuj ponownie</string>
-    <string name="site_creation_creating_failed">Coś poszło nie tak…</string>
-    <string name="site_creation_creating_preparing_frontend">Przygotowywanie interfejsu…</string>
-    <string name="site_creation_creating_configuring_theme">Konfiguracja stylu witryny…</string>
-    <string name="site_creation_creating_configuring_content">Konfiguracja zawartości witryny…</string>
-    <string name="site_creation_creating_fetching_info">Pobieranie informacji o witrynie…</string>
-    <string name="site_creation_creating_laying_foundation">Układanie fundamentów witryny…</string>
-    <string name="site_creation_empty_site_title">Proszę wprowadzić tytuł witryny</string>
-    <string name="site_creation_tagline_helper">Opis to krótka linia tekstu pokazana we większości motywów zaraz pod tytułem, i działa jako metadane witryny dla silników wyszukiwania.</string>
-    <string name="site_creation_tagline_hint">Opis witryny (opcjonalnie)</string>
-    <string name="site_creation_title_hint">Tytuł witryny</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
-    <string name="site_creation_domain_keywords_hint">Wprowadź słowo kluczowe aby zaczerpnąć więcej pomysłów</string>
-    <string name="site_creation_label_domain_selection_title">Krok 4 z 4</string>
-    <string name="site_creation_label_site_details">Powiedz nam więcej o tym co tworzysz. Jaki jest tytuł i opis?</string>
-    <string name="site_creation_label_site_details_title">Krok 3 z 4</string>
-    <string name="site_creation_label_theme_loading">Proszę czekać, ładowanie motywów</string>
-    <string name="site_creation_label_theme_selection">Rozpocznij bez zbędnego namysłu z jednym z naszych popularnych motywów. Zaraz po utworzeniu witryny, możesz przeszukiwać i wybierać spośród setek innych motywów.</string>
-    <string name="site_creation_label_theme_selection_title">Krok 2 z 4</string>
-    <string name="site_creation_subtitle_portfolio">Aby zaprezentować swoje kreatywne projektu w wizualnej prezentacji.</string>
-    <string name="site_creation_title_portfolio">Zacznij od portfolio</string>
-    <string name="site_creation_subtitle_website">Aby wypromować swój biznes lub markę i połączyć się ze swoją publiką.</string>
-    <string name="site_creation_title_website">Zacznij od witryny</string>
-    <string name="site_creation_subtitle_blog">Aby dzielić się swoimi pomysłami, historiami i fotografiami ze swoimi obserwującymi.</string>
-    <string name="site_creation_title_blog">Zacznij od Blogu</string>
-    <string name="site_creation_label_category">Jakiego rodzaju witrynę potrzebujesz?\nWybierz jedną z poniższych opcji:</string>
-    <string name="site_creation_label_category_title">Krok 1 z 4</string>
-    <string name="site_creation_title">Stwórz nową witrynę</string>
-    <string name="notification_site_creation_failed">Wystąpił błąd.</string>
-    <string name="notification_site_creation_title_stopped">Zatrzymano tworzenie witryny</string>
-    <string name="notification_site_creation_step_theme">Krok 4 z 4</string>
-    <string name="notification_site_creation_step_tagline">Krok 3 z 4</string>
-    <string name="notification_site_creation_step_fetching">Krok 2 z 4</string>
-    <string name="notification_site_creation_step_creating">Krok 1 z 4</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
     <string name="notification_site_creation_title_success">Utworzono witrynę!</string>
     <string name="google_error_timeout">Odpowiedź zajęła Google zbyt dużo czasu. Możliwe, że będziesz musiał poczekać na lepsze połączenie z internetem.</string>
@@ -1186,7 +1174,7 @@ Language: pl
     <string name="editor_post_saved_locally_failed_media">Wpis ma zakończone błędem próby przesyłania mediów i został zapisany lokalnie</string>
     <string name="sure_to_remove_account">Usunąć tą witrynę z aplikacji?</string>
     <string name="photo_picker_title">Wybierz zdjęcie</string>
-    <string name="error_publish_no_network">Urządzenie jest offline. Zmiany zapisywane lokalnie.</string>
+    <string name="error_publish_no_network">Urządzenie jest w trybie offline. Wpis zapisany lokalnie.</string>
     <string name="editor_post_saved_online">Wpis został zapisany online</string>
     <string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
     <string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
@@ -1480,7 +1468,6 @@ Language: pl
     <string name="cd_related_post_preview_image">Podgląd obrazka powiązanego wpisu</string>
     <string name="error_post_remote_site_settings">Nie można było zapisać informacji o witrynie</string>
     <string name="error_fetch_remote_site_settings">Nie można było pobrać informacji o witrynie</string>
-    <string name="site_settings_disconnected_toast">Wylogowano, możliwość edycji wyłączona.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatycznie zamknij</string>
     <string name="site_settings_close_after_dialog_description">Automatycznie zamknij komentowanie artykułów</string>
     <string name="site_settings_paging_dialog_description">Podziel wątki komentarzy na kilka stron</string>

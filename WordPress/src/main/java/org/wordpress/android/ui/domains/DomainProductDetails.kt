@@ -5,6 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class DomainProductDetails(
-    val productId: String,
+    val productId: Int,
     val domainName: String
 ) : Parcelable

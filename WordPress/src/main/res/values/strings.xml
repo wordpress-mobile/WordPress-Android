@@ -327,6 +327,10 @@
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
+    <string name="dialog_confirm_update_title">Ready to Update?</string>
+    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
+    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
+    <string name="dialog_confirm_update_yes">Update now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
     <!-- post version sync conflict dialog -->
@@ -843,6 +847,23 @@
     <string name="stats_management_edit">Edit</string>
     <string name="stats_management_new">New</string>
 
+    <!-- Stats refreshed widgets -->
+
+    <string name="stats_widget_add">Add widget</string>
+    <string name="stats_widget_views_title">Views This Week</string>
+    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_color">Color</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color_dark">Dark</string>
+    <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_select_color">Color</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_error_no_network">No network available</string>
+    <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
@@ -1066,6 +1087,13 @@
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+
+    <!-- Stats refreshed widgets -->
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_minified_name">At a glance</string>
 
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>
@@ -1480,6 +1508,7 @@
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+    <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
@@ -1759,6 +1788,7 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
     <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
@@ -1983,6 +2013,8 @@
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
@@ -2017,7 +2049,7 @@
 
 
     <!-- Automated Transfer Eligibility Errors -->
-    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
     <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
@@ -2061,6 +2093,8 @@
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_external_link_icon_content_description">External link</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
+
+    <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
@@ -2541,6 +2575,8 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_search_prompt">Search posts</string>
+    <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 
     <!-- News Card -->

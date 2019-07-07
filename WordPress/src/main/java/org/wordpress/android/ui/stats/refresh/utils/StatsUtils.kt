@@ -13,6 +13,7 @@ private val SUFFIXES = TreeMap(mapOf(
         1_000_000_000_000_000_000L to "E"
 ))
 
+const val ONE_THOUSAND = 1000
 const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000
@@ -46,5 +47,20 @@ fun Double.toFormattedString(thresholdValue: Int = TEN_THOUSAND, locale: Locale 
         formatter.format(this)
     } else {
         this.toLong().toFormattedString(thresholdValue, locale)
+    }
+}
+
+fun getBarWidth(views: Int, maxViews: Int) = getBarWidth(views.toDouble(), maxViews.toDouble())
+
+fun getBarWidth(views: Long, maxViews: Long) = getBarWidth(views.toDouble(), maxViews.toDouble())
+
+private fun getBarWidth(
+    views: Double,
+    maxViews: Double
+): Int? {
+    return if (maxViews > 0) {
+        ((views / maxViews) * 100).toInt()
+    } else {
+        null
     }
 }

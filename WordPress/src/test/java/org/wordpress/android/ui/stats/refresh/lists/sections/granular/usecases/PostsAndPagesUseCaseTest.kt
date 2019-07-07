@@ -67,7 +67,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
-                        0,
+                        selectedDate,
                         listOf(selectedDate)
                 )
         )
@@ -158,6 +158,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.icon).isEqualTo(R.drawable.ic_posts_white_24dp)
         assertThat(item.text).isEqualTo(post.title)
         assertThat(item.value).isEqualTo("10")
+        assertThat(item.barWidth).isEqualTo(100)
     }
 
     @Test
@@ -200,6 +201,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_white_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toString())
+        assertThat(item.barWidth).isEqualTo(100)
     }
 
     @Test
@@ -280,6 +282,48 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(items[3] is ListItemWithIcon).isTrue()
         assertThat((items[2] as ListItemWithIcon).showDivider).isEqualTo(true)
         assertThat((items[3] as ListItemWithIcon).showDivider).isEqualTo(false)
+    }
+
+    @Test
+    fun `shows percentage on items`() = test {
+        val forced = false
+        val refresh = true
+        val page = ViewsModel(2L, "Page 1", 10, PAGE, "page.com")
+        val homePage = ViewsModel(3L, "Homepage 1", 20, HOMEPAGE, "homepage.com")
+        val model = PostAndPageViewsModel(listOf(page, homePage), false)
+        whenever(
+                store.getPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate
+                )
+        ).thenReturn(model)
+        whenever(
+                store.fetchPostAndPageViews(
+                        site,
+                        statsGranularity,
+                        LimitMode.Top(itemsToLoad),
+                        selectedDate,
+                        forced
+                )
+        ).thenReturn(OnStatsFetched(model))
+
+        val result = loadData(refresh, forced)
+
+        assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.type).isEqualTo(TimeStatsType.POSTS_AND_PAGES)
+        val items = result.data!!
+        assertThat(items.size).isEqualTo(4)
+        assertHeader(items[1])
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        assertThat(items[3] is ListItemWithIcon).isTrue()
+        val firstItem = items[2] as ListItemWithIcon
+        assertThat(firstItem.showDivider).isEqualTo(true)
+        assertThat(firstItem.barWidth).isEqualTo(50)
+        val secondItem = items[3] as ListItemWithIcon
+        assertThat(secondItem.showDivider).isEqualTo(false)
+        assertThat(secondItem.barWidth).isEqualTo(100)
     }
 
     @Test
