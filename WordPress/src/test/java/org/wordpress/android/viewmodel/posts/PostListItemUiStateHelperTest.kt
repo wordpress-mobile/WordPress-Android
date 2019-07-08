@@ -28,6 +28,7 @@ private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
 private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
 private val POST_STATE_PENDING = PostStatus.PENDING.toString()
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
+private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
@@ -242,6 +243,13 @@ class PostListItemUiStateHelperTest {
     fun `show overlay when uploading post`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
         assertThat(state.data.showOverlay).isTrue()
+    }
+
+    @Test
+    fun `show only delete and move to draft buttons on trashed posts`() {
+        val state = createPostListItemUiState(post = createPostModel(POST_STATE_TRASHED))
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
     }
 
     private fun createPostModel(
