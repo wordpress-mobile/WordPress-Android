@@ -262,11 +262,13 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 postStatus == PostStatus.PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
-        val canShowViewButton = !canRetryUpload
+        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
-        buttonTypes.add(BUTTON_EDIT)
+        if (postStatus != PostStatus.TRASHED) {
+            buttonTypes.add(BUTTON_EDIT)
+        }
         if (canShowPublishButton) {
             buttonTypes.add(
                     if (!siteHasCapabilitiesToPublish) {
