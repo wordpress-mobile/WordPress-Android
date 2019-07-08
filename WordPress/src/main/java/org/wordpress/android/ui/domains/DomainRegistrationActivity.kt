@@ -54,7 +54,7 @@ class DomainRegistrationActivity : AppCompatActivity() {
                 var fragment = supportFragmentManager.findFragmentByTag(DomainSuggestionsFragment.TAG)
                 if (fragment == null) {
                     fragment = DomainSuggestionsFragment.newInstance()
-                    showFragment(fragment, DomainSuggestionsFragment.TAG, slideIn = false)
+                    showFragment(fragment, DomainSuggestionsFragment.TAG, slideIn = false, isRootFragment = true)
                 }
             }
         })
@@ -89,7 +89,12 @@ class DomainRegistrationActivity : AppCompatActivity() {
         })
     }
 
-    private fun showFragment(fragment: Fragment, tag: String, slideIn: Boolean = true) {
+    private fun showFragment(
+        fragment: Fragment,
+        tag: String,
+        slideIn: Boolean = true,
+        isRootFragment: Boolean = false
+    ) {
         val transaction = supportFragmentManager.beginTransaction()
 
         if (slideIn) {
@@ -98,10 +103,12 @@ class DomainRegistrationActivity : AppCompatActivity() {
                     R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
             )
         }
+        
+        if (!isRootFragment) {
+            transaction.addToBackStack(null)
+        }
 
-        transaction.addToBackStack(null)
-                .replace(R.id.fragment_container, fragment, tag)
-                .commit()
+        transaction.replace(R.id.fragment_container, fragment, tag).commit()
     }
 
     private fun shouldShowCongratsScreen(): Boolean {
