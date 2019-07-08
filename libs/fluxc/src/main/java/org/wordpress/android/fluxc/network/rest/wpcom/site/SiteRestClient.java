@@ -403,7 +403,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void suggestDomains(@NonNull final String query, final Boolean onlyWordpressCom,
                                final Boolean includeWordpressCom, final Boolean includeDotBlogSubdomain,
-                               final Long segmentId, final int quantity, final boolean includeVendorDot) {
+                               final Long segmentId, final int quantity, final boolean includeVendorDot,
+                               List<String> tlds) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
@@ -419,13 +420,19 @@ public class SiteRestClient extends BaseWPComRestClient {
         if (segmentId != null) {
             params.put("segment_id", String.valueOf(segmentId));
         }
+        if (tlds != null) {
+            for (String supportedTlds : tlds) {
+                params.put("tlds", supportedTlds);
+            }
+        }
         params.put("quantity", String.valueOf(quantity));
         if (includeVendorDot) {
             params.put("vendor", "dot");
         }
         final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, params,
-                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
+                        new TypeToken<ArrayList<DomainSuggestionResponse>>() {
+                        }.getType(),
                         new Listener<ArrayList<DomainSuggestionResponse>>() {
                             @Override
                             public void onResponse(ArrayList<DomainSuggestionResponse> response) {
@@ -451,7 +458,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 }
                             }
                         }
-                );
+                                                );
         add(request);
     }
 
