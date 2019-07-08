@@ -32,6 +32,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.react.bridge.ReadableArray;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -270,9 +271,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnEditorMountListener() {
                     @Override
-                    public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                    public void onEditorDidMount(ReadableArray unsupportedBlocks) {
                         mEditorDidMount = true;
-                        mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
+                        mEditorFragmentListener.onEditorFragmentContentReady(unsupportedBlocks.size() > 0);
 
                         // Hide the progress bar when editor is ready
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
