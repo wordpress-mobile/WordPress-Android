@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.test
 import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
-class PageStoreLocalDraftTest {
+class PageStoreLocalChangesTest {
     private val postSqlUtils = PostSqlUtils()
     private val pageStore = PageStore(
             postStore = mock(),
