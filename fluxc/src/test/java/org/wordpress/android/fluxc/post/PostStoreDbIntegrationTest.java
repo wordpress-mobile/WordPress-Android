@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.DiffOperations;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
@@ -31,6 +32,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +41,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -470,6 +473,73 @@ public class PostStoreDbIntegrationTest {
             assertNotEquals(localDraftPage.getId(), localDraftPost.getId());
         }
     }
+
+    @Test
+    public void testGetLocallyChangedPostsReturnsLocalDraftsAndChangedPostsOnly() {
+        // Arrange
+        final SiteModel site = new SiteModel();
+        site.setId(PostTestUtils.DEFAULT_LOCAL_SITE_ID);
+
+        // Objects that should be included
+        final ArrayList<Integer> expectedPostIds = new ArrayList<>();
+        final String baseTitle = "Rerum";
+        for (int i = 0; i < 3; i++) {
+            final String compoundTitle = baseTitle.concat(":").concat(UUID.randomUUID().toString());
+            final PostModel post = PostTestUtils.generateSampleLocalDraftPost(compoundTitle);
+            mPostSqlUtils.insertPostForResult(post);
+            expectedPostIds.add(post.getId());
+        }
+        for (int i = 0; i < 5; i++) {
+            final String compoundTitle = baseTitle.concat(":").concat(UUID.randomUUID().toString());
+            final PostModel post = PostTestUtils.generateSampleLocallyChangedPost(compoundTitle);
+            mPostSqlUtils.insertPostForResult(post);
+            expectedPostIds.add(post.getId());
+        }
+
+        final PostModel modifiedUploadPost = PostTestUtils.generateSampleUploadedPost();
+        modifiedUploadPost.setTitle(baseTitle.concat("-c_up_post"));
+        modifiedUploadPost.setIsLocallyChanged(true);
+        mPostSqlUtils.insertPostForResult(modifiedUploadPost);
+        expectedPostIds.add(modifiedUploadPost.getId());
+
+        final PostModel modifiedPublishedPost = PostTestUtils.generateSampleUploadedPost();
+        modifiedPublishedPost.setTitle(baseTitle.concat("-mpp"));
+        modifiedPublishedPost.setIsLocallyChanged(true);
+        modifiedPublishedPost.setStatus(PostStatus.PUBLISHED.toString());
+        mPostSqlUtils.insertPostForResult(modifiedPublishedPost);
+        expectedPostIds.add(modifiedPublishedPost.getId());
+
+        // Objects that should not be included
+        final PostModel localDraftPage = PostTestUtils.generateSampleLocalDraftPost();
+        localDraftPage.setIsPage(true);
+        mPostSqlUtils.insertPostForResult(localDraftPage);
+
+        final PostModel unchangedUploadedPost = PostTestUtils.generateSampleUploadedPost();
+        mPostSqlUtils.insertPostForResult(unchangedUploadedPost);
+
+        final PostModel unchangedPublishedPost = PostTestUtils.generateSampleUploadedPost();
+        modifiedPublishedPost.setStatus(PostStatus.PUBLISHED.toString());
+        mPostSqlUtils.insertPostForResult(unchangedPublishedPost);
+
+        final List<Integer> unexpectedPostIds = Arrays.asList(
+                localDraftPage.getId(),
+                unchangedUploadedPost.getId(),
+                unchangedPublishedPost.getId());
+
+        // Act
+        final List<PostModel> locallyChangedPosts = mPostStore.getLocallyChangedPosts(site);
+
+        // Assert
+        assertEquals(expectedPostIds.size(), locallyChangedPosts.size());
+        for (PostModel locallyChangedPost : locallyChangedPosts) {
+            assertThat(locallyChangedPost.getId()).isNotIn(unexpectedPostIds);
+            assertThat(locallyChangedPost.getId()).isIn(expectedPostIds);
+
+            assertTrue(locallyChangedPost.isLocalDraft() || locallyChangedPost.isLocallyChanged());
+            assertThat(locallyChangedPost.getTitle()).startsWith(baseTitle);
+        }
+    }
+
 
     /**
      * Tests that getPostsByLocalOrRemotePostIds works correctly in various situations.
