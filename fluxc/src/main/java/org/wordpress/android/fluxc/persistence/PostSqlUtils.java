@@ -147,6 +147,18 @@ public class PostSqlUtils {
                       .getAsModel();
     }
 
+    public List<PostModel> getLocallyChangedPosts(@NonNull Integer localSiteId, boolean isPage) {
+        return WellSql.select(PostModel.class)
+                      .where()
+                      .equals(PostModelTable.IS_PAGE, isPage)
+                      .equals(PostModelTable.LOCAL_SITE_ID, localSiteId)
+                      .beginGroup()
+                      .equals(PostModelTable.IS_LOCAL_DRAFT, true).or().equals(PostModelTable.IS_LOCALLY_CHANGED, true)
+                      .endGroup()
+                      .endWhere()
+                      .getAsModel();
+    }
+
     public List<PostModel> getPostsByRemoteIds(@Nullable List<Long> remoteIds, int localSiteId) {
         if (remoteIds != null && remoteIds.size() > 0) {
             return WellSql.select(PostModel.class)
