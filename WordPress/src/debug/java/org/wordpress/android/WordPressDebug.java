@@ -29,7 +29,7 @@ public class WordPressDebug extends WordPress {
     protected void initWorkManager() {
         Configuration config = (new Configuration.Builder())
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setWorkerFactory(new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore))
+                .setWorkerFactory(new UploadWorker.Factory(mUploadStarter, mSiteStore))
                 .build();
         WorkManager.initialize(this, config);
     }

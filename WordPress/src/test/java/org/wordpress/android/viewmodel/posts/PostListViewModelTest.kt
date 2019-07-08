@@ -20,11 +20,11 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var localDraftUploadStarter: LocalDraftUploadStarter
+    @Mock private lateinit var uploadStarter: UploadStarter
 
     private lateinit var viewModel: PostListViewModel
 
@@ -69,7 +69,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 accountStore = mock(),
                 listItemUiStateHelper = mock(),
                 networkUtilsWrapper = mock(),
-                localDraftUploadStarter = localDraftUploadStarter,
+                uploadStarter = uploadStarter,
                 connectionStatus = mock(),
                 uiDispatcher = TEST_DISPATCHER,
                 bgDispatcher = TEST_DISPATCHER
@@ -84,7 +84,7 @@ class PostListViewModelTest : BaseUnitTest() {
         viewModel.swipeToRefresh()
 
         // Then
-        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
+        verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
 
     @Test

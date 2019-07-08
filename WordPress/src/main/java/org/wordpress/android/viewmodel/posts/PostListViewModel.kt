@@ -34,7 +34,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -62,7 +62,7 @@ class PostListViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val uploadStarter: UploadStarter,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -285,7 +285,7 @@ class PostListViewModel @Inject constructor(
     // Public Methods
 
     fun swipeToRefresh() {
-        localDraftUploadStarter.queueUploadFromSite(connector.site)
+        uploadStarter.queueUploadFromSite(connector.site)
         fetchFirstPage()
     }
 
