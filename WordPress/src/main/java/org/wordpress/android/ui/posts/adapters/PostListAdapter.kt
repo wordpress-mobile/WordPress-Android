@@ -11,6 +11,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.posts.PostListItemViewHolder
+import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
@@ -62,11 +64,11 @@ class PostListAdapter(
             }
             VIEW_TYPE_LOADING -> {
                 val view = layoutInflater.inflate(R.layout.post_list_item_skeleton, parent, false)
-                LoadingViewHolder(view)
+                LoadingViewHolder(view, postViewHolderConfig.postListType)
             }
             VIEW_TYPE_LOADING_COMPACT -> {
                 val view = layoutInflater.inflate(R.layout.post_list_item_skeleton_compact, parent, false)
-                LoadingViewHolder(view)
+                LoadingViewHolder(view, postViewHolderConfig.postListType)
             }
             VIEW_TYPE_POST -> {
                 PostListItemViewHolder.Standard(parent, postViewHolderConfig, uiHelpers)
@@ -101,7 +103,17 @@ class PostListAdapter(
         notifyDataSetChanged()
     }
 
-    private class LoadingViewHolder(view: View) : ViewHolder(view)
+    private class LoadingViewHolder(view: View, postListType: PostListType) : ViewHolder(view) {
+        init {
+            if (postListType == TRASHED) {
+                (view.findViewById(R.id.skeleton_button_edit) as View?)?.visibility = View.GONE
+                (view.findViewById(R.id.skeleton_button_view) as View?)?.visibility = View.GONE
+                (view.findViewById(R.id.skeleton_button_more) as View?)?.visibility = View.GONE
+                (view.findViewById(R.id.skeleton_button_delete) as View?)?.visibility = View.VISIBLE
+                (view.findViewById(R.id.skeleton_button_move_to_draft) as View?)?.visibility = View.VISIBLE
+            }
+        }
+    }
     private class EndListViewHolder(view: View) : ViewHolder(view)
 }
 
