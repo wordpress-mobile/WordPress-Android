@@ -98,7 +98,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         )
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
-            onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+            when (postStatus) {
+                PostStatus.TRASHED -> {}
+                else -> onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+            }
         }
         val itemUiData = PostListItemUiStateData(
                 remotePostId = remotePostId,
