@@ -269,6 +269,7 @@
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
+    <string name="button_delete_permanently">Delete Permanently</string>
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_discard">Discard</string>
