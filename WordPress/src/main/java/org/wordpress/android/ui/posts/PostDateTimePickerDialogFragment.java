@@ -19,10 +19,10 @@ import org.wordpress.android.fluxc.model.PostModel;
 
 import java.util.Calendar;
 
-public class PostDatePickerDialogFragment extends DialogFragment {
+public class PostDateTimePickerDialogFragment extends DialogFragment {
     interface OnPostDatePickerDialogListener {
         void onPostDatePickerDialogPositiveButtonClicked(
-                @NonNull PostDatePickerDialogFragment dialog,
+                @NonNull PostDateTimePickerDialogFragment dialog,
                 @NonNull Calendar calender);
     }
 
@@ -56,10 +56,10 @@ public class PostDatePickerDialogFragment extends DialogFragment {
 
     private OnPostDatePickerDialogListener mListener;
 
-    public static PostDatePickerDialogFragment newInstance(@NonNull PickerDialogType dialogType,
-                                                           @NonNull PostModel post,
-                                                           @NonNull Calendar calendar) {
-        PostDatePickerDialogFragment fragment = new PostDatePickerDialogFragment();
+    public static PostDateTimePickerDialogFragment newInstance(@NonNull PickerDialogType dialogType,
+                                                               @NonNull PostModel post,
+                                                               @NonNull Calendar calendar) {
+        PostDateTimePickerDialogFragment fragment = new PostDateTimePickerDialogFragment();
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -134,7 +134,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                                 getArguments().putInt(ARG_MONTH, mMonth);
                                 getArguments().putInt(ARG_YEAR, mYear);
                                 mListener.onPostDatePickerDialogPositiveButtonClicked(
-                                        PostDatePickerDialogFragment.this,
+                                        PostDateTimePickerDialogFragment.this,
                                         getCalender());
                             }
                         });
@@ -148,7 +148,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                                 Calendar now = Calendar.getInstance();
                                 mPublishNow = true;
                                 mListener.onPostDatePickerDialogPositiveButtonClicked(
-                                        PostDatePickerDialogFragment.this,
+                                        PostDateTimePickerDialogFragment.this,
                                         now);
                             }
                         });
@@ -168,7 +168,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                                 getArguments().putInt(ARG_HOUR, mHour);
                                 getArguments().putInt(ARG_MINUTE, mMinute);
                                 mListener.onPostDatePickerDialogPositiveButtonClicked(
-                                        PostDatePickerDialogFragment.this,
+                                        PostDateTimePickerDialogFragment.this,
                                         getCalender());
                             }
                         },

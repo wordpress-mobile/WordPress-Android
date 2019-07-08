@@ -583,14 +583,14 @@
     <style name="PostSettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_700_neutral_200_selector</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="PostSettingsSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">@color/neutral_500_neutral_200_selector</item>
         <item name="android:textColorHint">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>

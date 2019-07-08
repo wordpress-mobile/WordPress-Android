@@ -122,6 +122,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -207,8 +208,9 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
-        PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
-        HistoryListFragment.HistoryItemClickInterface {
+        PostDateTimePickerDialogFragment.OnPostDatePickerDialogListener,
+        HistoryListFragment.HistoryItemClickInterface,
+        EditPostSettingsCallback {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -240,8 +242,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
-    private static final int PAGE_PREVIEW = 2;
-    private static final int PAGE_HISTORY = 3;
+    private static final int PAGE_PUBLISH_SETTINGS = 2;
+    private static final int PAGE_PREVIEW = 3;
+    private static final int PAGE_HISTORY = 4;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_PUBLISH_DIALOG_TAG = "ASYNC_PROMO_PUBLISH_DIALOG_TAG";
@@ -556,6 +559,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    hidePhotoPicker();
+                } else if (position == PAGE_PUBLISH_SETTINGS) {
+                    setTitle(R.string.publish_date);
                     hidePhotoPicker();
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
@@ -1822,7 +1828,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * along to the settings fragment
      */
     @Override
-    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
+    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDateTimePickerDialogFragment dialog,
                                                             @NonNull Calendar calender) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
@@ -2256,7 +2262,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 4;
+        private static final int NUM_PAGES_EDITOR = 5;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -2266,7 +2272,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         // Enable gutenberg upon opening a block based post
@@ -2283,12 +2289,16 @@ public class EditPostActivity extends AppCompatActivity implements
                     } else {
                         return new LegacyEditorFragment();
                     }
-                case 1:
+                case PAGE_SETTINGS:
                     return EditPostSettingsFragment.newInstance();
-                case 3:
+                case PAGE_PUBLISH_SETTINGS:
+                    return EditPostPublishedSettingsFragment.Companion.newInstance();
+                case PAGE_HISTORY:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
-                default:
+                case PAGE_PREVIEW:
                     return EditPostPreviewFragment.newInstance(mPost, mSite);
+                default:
+                    throw new IllegalArgumentException("Unexpected page type");
             }
         }
 
@@ -2296,7 +2306,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
@@ -2323,10 +2333,10 @@ public class EditPostActivity extends AppCompatActivity implements
                         reattachUploadingMediaForAztec();
                     }
                     break;
-                case 1:
+                case PAGE_SETTINGS:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
                     break;
-                case 2:
+                case PAGE_PREVIEW:
                     mEditPostPreviewFragment = (EditPostPreviewFragment) fragment;
                     break;
             }
@@ -3400,6 +3410,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return media;
+    }
+
+    @Override
+    public void onEditPostPublishedSettingsClick() {
+        mViewPager.setCurrentItem(PAGE_PUBLISH_SETTINGS);
     }
 
     /**

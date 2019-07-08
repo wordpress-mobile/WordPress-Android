@@ -6,7 +6,6 @@ import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,7 +24,11 @@ import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -59,7 +62,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
+import org.wordpress.android.ui.posts.PostDateTimePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -132,6 +135,10 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject PostSettingsUtils mPostSettingsUtils;
+
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private EditPostPublishedSettingsViewModel mPublishedViewModel;
 
 
     interface EditPostActivityHook {
@@ -156,6 +163,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
+        mPublishedViewModel =
+                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishedSettingsViewModel.class);
     }
 
     @Override
@@ -333,7 +342,10 @@ public class EditPostSettingsFragment extends Fragment {
         publishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPostDateSelectionDialog();
+                FragmentActivity activity = getActivity();
+                if (activity instanceof EditPostSettingsCallback) {
+                    ((EditPostSettingsCallback) activity).onEditPostPublishedSettingsClick();
+                }
             }
         });
 
@@ -345,6 +357,17 @@ public class EditPostSettingsFragment extends Fragment {
             formatBottomSeparator.setVisibility(View.GONE);
             mFormatContainer.setVisibility(View.GONE);
         }
+
+        mPublishedViewModel.getOnPublishedLabelChanged().observe(this, new Observer<String>() {
+            @Override public void onChanged(String label) {
+                updatePublishDateTextView(label);
+            }
+        });
+        mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {
+            @Override public void onChanged(PostStatus postStatus) {
+                updatePostStatus(postStatus.toString());
+            }
+        });
 
         return rootView;
     }
@@ -507,10 +530,10 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     /*
-     * called by the activity when the user taps OK on a PostDatePickerDialogFragment
+     * called by the activity when the user taps OK on a PostDateTimePickerDialogFragment
      */
     public void onPostDatePickerDialogPositiveButtonClicked(
-            @NonNull PostDatePickerDialogFragment dialog,
+            @NonNull PostDateTimePickerDialogFragment dialog,
             @NonNull Calendar calender) {
         updatePublishDate(calender);
         // if this was the date picker and the user didn't choose to publish immediately, show the
@@ -578,10 +601,10 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         Calendar calendar = getCurrentPublishDateAsCalendar();
-        PostDatePickerDialogFragment fragment =
-                PostDatePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
+        PostDateTimePickerDialogFragment fragment =
+                PostDateTimePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragment.show(fm, PostDatePickerDialogFragment.TAG_DATE);
+        fragment.show(fm, PostDateTimePickerDialogFragment.TAG_DATE);
     }
 
     private void showPostTimeSelectionDialog() {
@@ -590,10 +613,10 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         Calendar calendar = getCurrentPublishDateAsCalendar();
-        PostDatePickerDialogFragment fragment =
-                PostDatePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
+        PostDateTimePickerDialogFragment fragment =
+                PostDateTimePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragment.show(fm, PostDatePickerDialogFragment.TAG_TIME);
+        fragment.show(fm, PostDateTimePickerDialogFragment.TAG_TIME);
     }
 
     // Helpers
@@ -743,38 +766,14 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostModel postModel = getPost();
-        String labelToUse;
-        String dateCreated = postModel.getDateCreated();
-        if (!TextUtils.isEmpty(dateCreated)) {
-            String formattedDate = DateUtils.formatDateTime(getActivity(),
-                    DateTimeUtils.timestampFromIso8601Millis(dateCreated),
-                    getDateTimeFlags());
-
-            PostStatus status = PostStatus.fromPost(postModel);
-            if (status == PostStatus.SCHEDULED) {
-                labelToUse = getString(R.string.scheduled_for, formattedDate);
-            } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
-                labelToUse = getString(R.string.published_on, formattedDate);
-            } else if (postModel.isLocalDraft()) {
-                if (PostUtils.isPublishDateInThePast(postModel)) {
-                    labelToUse = getString(R.string.backdated_for, formattedDate);
-                } else if (PostUtils.shouldPublishImmediately(postModel)) {
-                    labelToUse = getString(R.string.immediately);
-                } else {
-                    labelToUse = getString(R.string.publish_on, formattedDate);
-                }
-            } else if (PostUtils.isPublishDateInTheFuture(postModel)) {
-                labelToUse = getString(R.string.schedule_for, formattedDate);
-            } else {
-                labelToUse = getString(R.string.publish_on, formattedDate);
-            }
-        } else if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(postModel)) {
-            labelToUse = getString(R.string.immediately);
-        } else {
-            // TODO: What should the label be if there is no specific date and this is not a DRAFT?
-            labelToUse = "";
+        if (postModel != null && getActivity() != null) {
+            String labelToUse = mPostSettingsUtils.getPublishDateLabel(postModel, getActivity());
+            mPublishDateTextView.setText(labelToUse);
         }
-        mPublishDateTextView.setText(labelToUse);
+    }
+
+    private void updatePublishDateTextView(String label) {
+        mPublishDateTextView.setText(label);
     }
 
     private void updateCategoriesTextView() {
@@ -936,15 +935,6 @@ public class EditPostSettingsFragment extends Fragment {
             calendar.setTime(DateTimeUtils.dateFromIso8601(dateCreated));
         }
         return calendar;
-    }
-
-    private int getDateTimeFlags() {
-        int flags = 0;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-        return flags;
     }
 
     // FluxC events
@@ -1111,5 +1101,9 @@ public class EditPostSettingsFragment extends Fragment {
             // no op, icons won't show
         }
         popupMenu.show();
+    }
+
+    interface EditPostSettingsCallback {
+        void onEditPostPublishedSettingsClick();
     }
 }
