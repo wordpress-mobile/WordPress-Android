@@ -184,13 +184,23 @@ class PageStore @Inject constructor(
     }
 
     /**
-     * Get pages that have not been uploaded to the server yet.
+     * Get local draft pages that have not been uploaded to the server yet.
      *
      * This returns [PostModel] instead of [PageModel] to accommodate the `UploadService` in WPAndroid which relies
      * heavily on [PostModel]. When `UploadService` gets refactored, we should change this back to using [PageModel].
      */
     suspend fun getLocalDraftPages(site: SiteModel): List<PostModel> = withContext(coroutineContext) {
         return@withContext postSqlUtils.getLocalDrafts(site.id, true)
+    }
+
+    /**
+     * Get pages that have not been uploaded to the server yet.
+     *
+     * This returns [PostModel] instead of [PageModel] to accommodate the `UploadService` in WPAndroid which relies
+     * heavily on [PostModel]. When `UploadService` gets refactored, we should change this back to using [PageModel].
+     */
+    suspend fun getLocallyChangedPages(site: SiteModel): List<PostModel> = withContext(coroutineContext) {
+        return@withContext postSqlUtils.getLocallyChangedPosts(site.id, true)
     }
 
     private fun fetchPages(site: SiteModel, loadMore: Boolean) {
