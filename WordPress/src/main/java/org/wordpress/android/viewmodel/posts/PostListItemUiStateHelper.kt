@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELECTED
@@ -11,9 +12,13 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
+import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -171,7 +176,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is PostUploadUiState.UploadFailed -> {
-                getErrorLabel(uploadUiState.error)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState.error, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.post_uploading_draft))
@@ -201,9 +206,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return labels
     }
 
-    private fun getErrorLabel(uploadError: UploadError): UiString? {
+    private fun getErrorLabel(uploadError: UploadError, postStatus: PostStatus): UiString? {
         return when {
-            uploadError.mediaError != null -> UiStringRes(R.string.error_media_recover_post)
+            uploadError.mediaError != null -> when (postStatus) {
+                PRIVATE, PUBLISHED -> UiStringRes(string.error_media_recover_post_not_published)
+                SCHEDULED -> UiStringRes(string.error_media_recover_post_not_scheduled)
+                PENDING -> UiStringRes(string.error_media_recover_post_not_submitted)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(string.error_media_recover_post)
+            }
             uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
                     false,
                     uploadError.postError

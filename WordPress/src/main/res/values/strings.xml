@@ -1533,7 +1533,10 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
