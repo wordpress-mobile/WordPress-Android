@@ -66,12 +66,12 @@ class UploadStarterTest {
     }
     private val postStore = mock<PostStore> {
         sites.forEach {
-            on { getLocalDraftPosts(eq(it)) } doReturn sitesAndPosts.getValue(it)
+            on { getLocallyChangedPosts(eq(it)) } doReturn sitesAndPosts.getValue(it)
         }
     }
     private val pageStore = mock<PageStore> {
         sites.forEach {
-            onBlocking { getLocalDraftPages(eq(it)) } doReturn sitesAndPages.getValue(it)
+            onBlocking { getLocallyChangedPages(eq(it)) } doReturn sitesAndPages.getValue(it)
         }
     }
 
