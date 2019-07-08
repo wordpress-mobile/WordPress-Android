@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 74;
+        return 75;
     }
 
     @Override
@@ -553,6 +553,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "SUBTYPE TEXT,READ INTEGER,ICON TEXT,NOTICON TEXT,TIMESTAMP TEXT,URL TEXT,"
                            + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
                 oldVersion++;
+            case 74:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -827,6 +831,16 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "DATE_CREATED TEXT NOT NULL,_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
                                + "UNIQUE (REMOTE_ORDER_ID, LOCAL_SITE_ID) ON CONFLICT REPLACE)");
+                    break;
+                case 74:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCRevenueStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  INTERVAL TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
             }
         }
