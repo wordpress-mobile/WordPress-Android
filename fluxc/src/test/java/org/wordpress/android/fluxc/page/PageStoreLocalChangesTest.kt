@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.test
 import java.util.UUID
+import kotlin.random.Random
 
 @RunWith(RobolectricTestRunner::class)
 class PageStoreLocalChangesTest {
@@ -50,16 +51,14 @@ class PageStoreLocalChangesTest {
 
         val baseTitle = "Voluptatem harum repellendus"
         val expectedPages = List(3) {
-            createLocalDraft(localSiteId = site.id, baseTitle = baseTitle).apply {
-                setIsPage(true)
-            }
+            createLocalDraft(localSiteId = site.id, baseTitle = baseTitle, isPage = true)
         }
 
         val unexpectedPosts = listOf(
                 // local draft post
-                createLocalDraft(localSiteId = site.id).apply { setIsPage(false) },
+                createLocalDraft(localSiteId = site.id, isPage = false),
                 // other site page
-                createLocalDraft(localSiteId = 4_000),
+                createLocalDraft(localSiteId = 4_000, isPage = true),
                 // uploaded page
                 PostModel().apply {
                     title = "Title"
@@ -79,10 +78,69 @@ class PageStoreLocalChangesTest {
         assertThat(localDraftPages.map { it.id }).isEqualTo(expectedPages.map { it.id })
     }
 
-    private fun createLocalDraft(localSiteId: Int, baseTitle: String = "Title") = PostModel().apply {
+    @Test
+    fun `getLocallyChangedPages returns local draft and locally changed pages only`() = test {
+        // Arrange
+        val site = SiteModel().apply { id = 3_000 }
+
+        val baseTitle = "Voluptatem harum repellendus"
+        val expectedPages = mutableListOf<PostModel>().apply {
+            addAll(List(3) {
+                createLocalDraft(localSiteId = site.id, baseTitle = baseTitle, isPage = true)
+            })
+
+            addAll(List(5) {
+                createUploadedPost(localSiteId = site.id, baseTitle = baseTitle, isPage = true).apply {
+                    setIsLocallyChanged(true)
+                }
+            })
+
+            add(createUploadedPost(localSiteId = site.id, baseTitle = baseTitle, isPage = true).apply {
+                status = PostStatus.PUBLISHED.toString()
+                setIsLocallyChanged(true)
+            })
+        }.toList()
+
+        val unexpectedPosts = listOf(
+                // local draft post
+                createLocalDraft(localSiteId = site.id, isPage = false),
+                // other site page
+                createLocalDraft(localSiteId = 4_000, isPage = true),
+                // uploaded post
+                createUploadedPost(localSiteId = site.id, isPage = false),
+                // uploaded post with changes
+                createUploadedPost(localSiteId = site.id, isPage = false).apply { setIsLocallyChanged(true) },
+                // uploaded page with no changes
+                createUploadedPost(localSiteId = site.id, isPage = true),
+                // published page with no changes
+                createUploadedPost(localSiteId = site.id, isPage = true).apply {
+                    status = PostStatus.PUBLISHED.toString()
+                }
+        )
+
+        expectedPages.plus(unexpectedPosts).forEach { postSqlUtils.insertPostForResult(it) }
+
+        // Act
+        val locallyChangedPages = pageStore.getLocallyChangedPages(site)
+
+        // Assert
+        assertThat(locallyChangedPages).hasSize(expectedPages.size)
+        assertThat(locallyChangedPages).allMatch { it.title.startsWith(baseTitle) }
+        assertThat(locallyChangedPages.map { it.id }).isEqualTo(expectedPages.map { it.id })
+    }
+
+    private fun createLocalDraft(localSiteId: Int, baseTitle: String = "Title", isPage: Boolean) = PostModel().apply {
         this.localSiteId = localSiteId
         title = "$baseTitle:${UUID.randomUUID()}"
+        setIsPage(isPage)
         setIsLocalDraft(true)
         status = PostStatus.DRAFT.toString()
+    }
+
+    private fun createUploadedPost(localSiteId: Int, baseTitle: String = "Title", isPage: Boolean) = PostModel().apply {
+        this.localSiteId = localSiteId
+        remotePostId = Random.nextLong()
+        title = "$baseTitle:${UUID.randomUUID()}"
+        setIsPage(isPage)
     }
 }
