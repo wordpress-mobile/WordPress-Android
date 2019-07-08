@@ -31,7 +31,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Automatically uploads local drafts.
+ * Automatically uploads posts and pages with local changes.
  *
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
  * addition to this, call sites can also request an immediate execution by calling [upload].
@@ -131,8 +131,8 @@ open class UploadStarter @Inject constructor(
      * This is meant to be used by [checkConnectionAndUpload] only.
      */
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        val posts = async { postStore.getLocalDraftPosts(site) }
-        val pages = async { pageStore.getLocalDraftPages(site) }
+        val posts = async { postStore.getLocallyChangedPosts(site) }
+        val pages = async { pageStore.getLocallyChangedPages(site) }
 
         val postsAndPages = posts.await() + pages.await()
 
