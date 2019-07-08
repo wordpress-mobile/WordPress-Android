@@ -103,7 +103,6 @@ class DomainRegistrationActivity : AppCompatActivity() {
                     R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
             )
         }
-        
         if (!isRootFragment) {
             transaction.addToBackStack(null)
         }
