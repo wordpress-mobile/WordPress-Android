@@ -40,10 +40,10 @@ class UploadStarterConcurrentTest {
     )
 
     private val postStore = mock<PostStore> {
-        on { getLocalDraftPosts(eq(site)) } doReturn posts
+        on { getLocallyChangedPosts(eq(site)) } doReturn posts
     }
     private val pageStore = mock<PageStore> {
-        onBlocking { getLocalDraftPages(any()) } doReturn emptyList()
+        onBlocking { getLocallyChangedPages(any()) } doReturn emptyList()
     }
 
     @Test
