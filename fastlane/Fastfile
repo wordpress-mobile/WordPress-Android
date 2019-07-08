@@ -170,6 +170,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :finalize_release do | options |
     android_finalize_prechecks(options)
     android_update_metadata(options) unless android_current_branch_is_hotfix
+    android_bump_version_final_release() unless android_current_branch_is_hotfix
+    android_tag_build(tag_alpha: false)
   end
 
   #####################################################################################
