@@ -1,10 +1,9 @@
 12.9
 -----
- 
+* Setting featured image on a post doesn't require network connection
+
 12.8
 -----
-* Setting featured image on a post doesn't require network connection
-Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
 * Block Editor: Fix pasting simple text on Post Title
 * Block Editor: Remove editable empty line after list on the List block
