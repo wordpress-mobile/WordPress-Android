@@ -23,11 +23,13 @@
 
         <TextView
             style="@style/PostSettingsTitle"
+            android:enabled="false"
             android:text="@string/post_settings_notification"/>
 
         <TextView
             android:id="@+id/publish_notification"
             style="@style/PostSettingsSubtitle"
+            android:enabled="false"
             android:hint="@string/off"/>
     </LinearLayout>
 
@@ -37,6 +39,7 @@
 
         <TextView
             style="@style/PostSettingsTitle"
+            android:enabled="false"
             android:text="@string/post_settings_add_to_calendar"/>
     </LinearLayout>
 

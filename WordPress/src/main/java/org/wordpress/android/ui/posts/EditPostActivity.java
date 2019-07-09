@@ -1224,7 +1224,8 @@ public class EditPostActivity extends AppCompatActivity implements
             MenuItem primaryAction = menu.findItem(R.id.menu_primary_action);
             if (primaryAction != null) {
                 primaryAction.setTitle(getPrimaryActionText());
-                primaryAction.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
+                primaryAction.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY
+                                         && mViewPager.getCurrentItem() != PAGE_PUBLISH_SETTINGS);
             }
         }
 
@@ -1294,7 +1295,10 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
 
-        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+        if (mViewPager.getCurrentItem() == PAGE_PUBLISH_SETTINGS) {
+            mViewPager.setCurrentItem(PAGE_SETTINGS);
+            invalidateOptionsMenu();
+        } else if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
