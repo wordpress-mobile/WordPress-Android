@@ -120,7 +120,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 showOverlay = shouldShowOverlay(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
-                )
+                ),
+                disableRippleEffect = postStatus == PostStatus.TRASHED
         )
 
         return PostListItemUiState(

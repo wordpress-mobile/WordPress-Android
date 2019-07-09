@@ -12,6 +12,7 @@ import android.widget.PopupMenu
 import android.widget.ProgressBar
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -43,6 +44,7 @@ sealed class PostListItemViewHolder(
     private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
+    private val container: ConstraintLayout = itemView.findViewById(R.id.container)
 
     /**
      * Url of an image loaded in the `featuredImageView`.
@@ -118,6 +120,9 @@ sealed class PostListItemViewHolder(
         showFeaturedImage(data.imageUrl)
         updateProgressBarState(data.progressBarState)
         uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
+        if (data.disableRippleEffect) {
+            container.background = null
+        }
     }
 
     protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {

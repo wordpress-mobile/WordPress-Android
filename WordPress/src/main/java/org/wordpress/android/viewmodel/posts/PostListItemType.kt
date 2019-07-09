@@ -30,7 +30,8 @@ data class PostListItemUiStateData(
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
     val progressBarState: PostListItemProgressBar,
-    val showOverlay: Boolean
+    val showOverlay: Boolean,
+    val disableRippleEffect: Boolean
 )
 
 sealed class PostListItemProgressBar(val visibility: Boolean) {
