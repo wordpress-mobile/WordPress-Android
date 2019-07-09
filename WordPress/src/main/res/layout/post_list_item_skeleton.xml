@@ -90,15 +90,15 @@
 
                 <org.wordpress.android.widgets.PostListButton
                     style="@style/PostListRowSkeletonButton"
-                    android:id="@+id/skeleton_button_delete"
-                    android:visibility="gone"
-                    wp:wpPostButtonType="delete"/>
-
-                <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
                     android:id="@+id/skeleton_button_move_to_draft"
                     android:visibility="gone"
                     wp:wpPostButtonType="moveToDraft"/>
+
+                <org.wordpress.android.widgets.PostListButton
+                    style="@style/PostListRowSkeletonButton"
+                    android:id="@+id/skeleton_button_delete"
+                    android:visibility="gone"
+                    wp:wpPostButtonType="delete"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

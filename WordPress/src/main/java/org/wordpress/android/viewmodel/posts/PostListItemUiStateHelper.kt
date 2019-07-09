@@ -300,8 +300,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         when {
             isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
             postStatus == PostStatus.TRASHED -> {
-                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
                 buttonTypes.add(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
             }
             postStatus != PostStatus.TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
         }
