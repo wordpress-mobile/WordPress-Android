@@ -1,8 +1,8 @@
 12.9
-* Add Remote Preview support for Drafts, Published and Scheduled posts with local changes
-
 -----
- 
+* Add Remote Preview support for Drafts, Published and Scheduled posts with local changes
+* Post List: Trashed post must now be restored before edit or preview
+
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
