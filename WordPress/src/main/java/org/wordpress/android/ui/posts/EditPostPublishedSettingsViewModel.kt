@@ -32,10 +32,15 @@ class EditPostPublishedSettingsViewModel
     var canPublishImmediately: Boolean = false
 
     var year: Int? = null
+        private set
     var month: Int? = null
+        private set
     var day: Int? = null
+        private set
     var hour: Int? = null
+        private set
     var minute: Int? = null
+        private set
 
     private val _onDatePicked = MutableLiveData<Unit>()
     val onDatePicked: LiveData<Unit> = _onDatePicked
@@ -63,13 +68,18 @@ class EditPostPublishedSettingsViewModel
         _onPublishedDateChanged.postValue(Calendar.getInstance())
     }
 
-    fun onTimeSelected() {
+    fun onTimeSelected(selectedHour: Int, selectedMinute: Int) {
+        this.hour = selectedHour
+        this.minute = selectedMinute
         val calendar = Calendar.getInstance()
         calendar.set(year!!, month!!, day!!, hour!!, minute!!)
         _onPublishedDateChanged.postValue(calendar)
     }
 
-    fun onDateSelected() {
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        this.year = year
+        this.month = month
+        this.day = dayOfMonth
         _onDatePicked.postValue(Unit)
     }
 

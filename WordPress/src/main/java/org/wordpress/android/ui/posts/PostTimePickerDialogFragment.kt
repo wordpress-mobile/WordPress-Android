@@ -26,9 +26,7 @@ class PostTimePickerDialogFragment : DialogFragment() {
         val timePickerDialog = TimePickerDialog(
                 ContextThemeWrapper(activity, style.Calypso_Dialog_Alert),
                 OnTimeSetListener { _, selectedHour, selectedMinute ->
-                    viewModel.hour = selectedHour
-                    viewModel.minute = selectedMinute
-                    viewModel.onTimeSelected()
+                    viewModel.onTimeSelected(selectedHour, selectedMinute)
                 },
                 viewModel.hour ?: 0,
                 viewModel.minute ?: 0,

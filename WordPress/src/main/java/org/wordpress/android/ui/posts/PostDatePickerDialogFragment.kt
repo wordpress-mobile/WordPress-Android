@@ -32,10 +32,11 @@ class PostDatePickerDialogFragment : DialogFragment() {
                 DialogInterface.BUTTON_POSITIVE,
                 getString(android.R.string.ok)
         ) { _, _ ->
-            viewModel.year = datePickerDialog.datePicker.year
-            viewModel.month = datePickerDialog.datePicker.month
-            viewModel.day = datePickerDialog.datePicker.dayOfMonth
-            viewModel.onDateSelected()
+            viewModel.onDateSelected(
+                    datePickerDialog.datePicker.year,
+                    datePickerDialog.datePicker.month,
+                    datePickerDialog.datePicker.dayOfMonth
+            )
         }
         val neutralButtonTitle = if (viewModel.canPublishImmediately)
             getString(R.string.immediately)
