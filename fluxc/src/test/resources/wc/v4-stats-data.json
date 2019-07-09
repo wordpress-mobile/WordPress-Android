@@ -1,18 +1,4 @@
-{
-    "totals": {
-      "orders_count": 10,
-      "num_items_sold": 13,
-      "gross_revenue": 283.99,
-      "coupons": 18,
-      "coupons_count": 1,
-      "refunds": 0,
-      "taxes": 0,
-      "shipping": 0,
-      "net_revenue": 283.99,
-      "products": 8,
-      "segments": []
-    },
-    "intervals": [
+[
       {
         "interval": "2019-07-07",
         "date_start": "2019-07-07 00:00:00",
@@ -146,5 +132,4 @@
           "segments": []
         }
       }
-    ]
-  }
+]
