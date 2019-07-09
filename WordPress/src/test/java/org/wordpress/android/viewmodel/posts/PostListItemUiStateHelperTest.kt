@@ -180,8 +180,7 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post_not_published))
-        assertThat(state.data.statuses).hasSize(1)
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_published))
     }
 
     @Test
@@ -190,8 +189,7 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post_not_submitted))
-        assertThat(state.data.statuses).hasSize(1)
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted))
     }
 
     @Test
@@ -200,8 +198,7 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post_not_scheduled))
-        assertThat(state.data.statuses).hasSize(1)
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled))
     }
 
     @Test
@@ -210,8 +207,7 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post))
-        assertThat(state.data.statuses).hasSize(1)
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post))
     }
 
     @Test
