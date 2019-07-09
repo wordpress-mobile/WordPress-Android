@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -67,12 +66,10 @@ class EditPostPublishedSettingsViewModel
     fun onTimeSelected() {
         val calendar = Calendar.getInstance()
         calendar.set(year!!, month!!, day!!, hour!!, minute!!)
-        Log.d("vojta", "onTimeSelected: $hour:$minute")
         _onPublishedDateChanged.postValue(calendar)
     }
 
     fun onDateSelected() {
-        Log.d("vojta", "onDateSelected: $day. $month. $year")
         _onDatePicked.postValue(Unit)
     }
 
@@ -87,9 +84,7 @@ class EditPostPublishedSettingsViewModel
     }
 
     fun updatePost(updatedDate: Calendar, post: PostModel?, context: Context) {
-        Log.d("vojta", "updatePost $post")
         post?.let {
-            Log.d("vojta", "updatePost")
             post.dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
             val initialPostStatus = PostStatus.fromPost(post)
             val isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(post)
@@ -119,7 +114,6 @@ class EditPostPublishedSettingsViewModel
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)
             val publishDateLabel = postSettingsUtils.getPublishDateLabel(post, context)
-            Log.d("vojta", "updating label: $publishDateLabel")
             _onPublishedLabelChanged.postValue(publishDateLabel)
         }
     }

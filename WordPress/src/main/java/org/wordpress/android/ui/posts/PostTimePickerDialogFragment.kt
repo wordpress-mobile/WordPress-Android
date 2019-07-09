@@ -6,7 +6,6 @@ import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +26,6 @@ class PostTimePickerDialogFragment : DialogFragment() {
         val timePickerDialog = TimePickerDialog(
                 ContextThemeWrapper(activity, style.Calypso_Dialog_Alert),
                 OnTimeSetListener { _, selectedHour, selectedMinute ->
-                    Log.d("vojta", "Time set: $selectedHour:$selectedMinute")
                     viewModel.hour = selectedHour
                     viewModel.minute = selectedMinute
                     viewModel.onTimeSelected()
