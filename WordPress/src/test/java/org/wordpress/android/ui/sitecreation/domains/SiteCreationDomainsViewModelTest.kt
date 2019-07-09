@@ -202,7 +202,7 @@ class SiteCreationDomainsViewModelTest {
     fun verifyClearQueryWithNonEmptyTitleUiStateAfterResponseWithMultipleResults() = testWithSuccessResponse {
         viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        viewModel.updateQuery("");
+        viewModel.updateQuery("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(6)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(captor.lastValue, false, 20)
@@ -216,7 +216,7 @@ class SiteCreationDomainsViewModelTest {
     fun verifyClearQueryWithEmptyTitleInitialState() = testWithSuccessResponse {
         viewModel.start(null, SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        viewModel.updateQuery("");
+        viewModel.updateQuery("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(4)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.lastValue)
