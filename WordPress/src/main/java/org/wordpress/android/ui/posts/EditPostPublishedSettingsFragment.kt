@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
 class EditPostPublishedSettingsFragment : Fragment() {
@@ -46,12 +49,22 @@ class EditPostPublishedSettingsFragment : Fragment() {
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
-                viewModel.updatePost(date, getPost(), activity!!)
+                viewModel.updatePost(date, getPost())
             }
         })
         viewModel.onPublishedLabelChanged.observe(this, Observer {
             it?.let { label ->
                 dateAndTime.text = label
+            }
+        })
+        viewModel.onToast.observe(this, Observer {
+            it?.let { message ->
+                ToastUtils.showToast(
+                        context,
+                        message,
+                        SHORT,
+                        Gravity.TOP
+                )
             }
         })
         viewModel.start(getPost())

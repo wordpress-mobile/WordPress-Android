@@ -1,29 +1,25 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
 import android.text.TextUtils
-import android.text.format.DateUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class PostSettingsUtils
-@Inject constructor(private val resourceProvider: ResourceProvider) {
+@Inject constructor(
+    private val resourceProvider: ResourceProvider,
+    private val dateUtils: DateUtils
+) {
     fun getPublishDateLabel(
-        postModel: PostModel,
-        context: Context
+        postModel: PostModel
     ): String {
         val labelToUse: String
         val dateCreated = postModel.dateCreated
         if (!TextUtils.isEmpty(dateCreated)) {
-            val formattedDate = DateUtils.formatDateTime(
-                    context,
-                    DateTimeUtils.timestampFromIso8601Millis(dateCreated),
-                    getDateTimeFlags()
-            )
+            val formattedDate = dateUtils.formatDateTime(dateCreated)
 
             val status = PostStatus.fromPost(postModel)
             if (status == PostStatus.SCHEDULED) {
@@ -50,14 +46,5 @@ class PostSettingsUtils
             labelToUse = ""
         }
         return labelToUse
-    }
-
-    private fun getDateTimeFlags(): Int {
-        var flags = 0
-        flags = flags or DateUtils.FORMAT_SHOW_DATE
-        flags = flags or DateUtils.FORMAT_ABBREV_MONTH
-        flags = flags or DateUtils.FORMAT_SHOW_YEAR
-        flags = flags or DateUtils.FORMAT_SHOW_TIME
-        return flags
     }
 }
