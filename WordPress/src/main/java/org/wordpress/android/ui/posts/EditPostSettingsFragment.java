@@ -62,7 +62,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.posts.PostDateTimePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -529,21 +528,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    /*
-     * called by the activity when the user taps OK on a PostDateTimePickerDialogFragment
-     */
-    public void onPostDatePickerDialogPositiveButtonClicked(
-            @NonNull PostDateTimePickerDialogFragment dialog,
-            @NonNull Calendar calender) {
-        updatePublishDate(calender);
-        // if this was the date picker and the user didn't choose to publish immediately, show the
-        // time picker dialog fragment so they can choose a publish time
-        if (dialog.getDialogType() == PickerDialogType.DATE_PICKER
-                && !dialog.isPublishNow()) {
-            showPostTimeSelectionDialog();
-        }
-    }
-
     private void showStatusDialog() {
         if (!isAdded()) {
             return;
@@ -593,30 +577,6 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                 });
         dialog.show(getFragmentManager(), null);
-    }
-
-    private void showPostDateSelectionDialog() {
-        if (!isAdded()) {
-            return;
-        }
-
-        Calendar calendar = getCurrentPublishDateAsCalendar();
-        PostDateTimePickerDialogFragment fragment =
-                PostDateTimePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragment.show(fm, PostDateTimePickerDialogFragment.TAG_DATE);
-    }
-
-    private void showPostTimeSelectionDialog() {
-        if (!isAdded()) {
-            return;
-        }
-
-        Calendar calendar = getCurrentPublishDateAsCalendar();
-        PostDateTimePickerDialogFragment fragment =
-                PostDateTimePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragment.show(fm, PostDateTimePickerDialogFragment.TAG_TIME);
     }
 
     // Helpers

@@ -208,7 +208,6 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
-        PostDateTimePickerDialogFragment.OnPostDatePickerDialogListener,
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
@@ -1824,18 +1823,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment dialog) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(dialog);
-        }
-    }
-
-    /*
-     * user clicked OK on a settings date/time dialog displayed from the settings fragment - pass the event
-     * along to the settings fragment
-     */
-    @Override
-    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDateTimePickerDialogFragment dialog,
-                                                            @NonNull Calendar calender) {
-        if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
         }
     }
 
