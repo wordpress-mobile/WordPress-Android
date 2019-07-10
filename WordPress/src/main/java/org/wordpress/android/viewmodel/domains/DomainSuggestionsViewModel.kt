@@ -99,7 +99,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         suggestions = ListState.Loading(suggestions)
 
         val suggestDomainsPayload = if (SiteUtils.onBloggerPlan(site)) {
-            SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, listOf("blog"))
+            SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, "blog")
         } else {
             SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
         }
