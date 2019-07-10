@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -116,6 +117,8 @@ class EditPostPublishSettingsViewModel
                 // show toast only once, when time is shown
                 _onToast.postValue(resourceProvider.getString(string.editor_post_converted_back_to_draft))
             }
+            Log.d("vojta", "Changed post: $finalPostStatus")
+            Log.d("vojta", "publish date in the future: $isPublishDateInTheFuture")
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)
             val publishDateLabel = postSettingsUtils.getPublishDateLabel(post, context)

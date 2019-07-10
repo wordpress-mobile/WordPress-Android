@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.text.TextUtils
 import android.text.format.DateUtils
+import android.util.Log
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -49,6 +50,7 @@ class PostSettingsUtils
             // TODO: What should the label be if there is no specific date and this is not a DRAFT?
             labelToUse = ""
         }
+        Log.d("vojta", "Updated label: $labelToUse")
         return labelToUse
     }
 
