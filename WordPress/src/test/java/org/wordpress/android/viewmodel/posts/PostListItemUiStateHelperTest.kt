@@ -250,6 +250,7 @@ class PostListItemUiStateHelperTest {
         val state = createPostListItemUiState(post = createPostModel(POST_STATE_TRASHED))
         assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(state.actions).hasSize(2)
     }
 
     private fun createPostModel(
