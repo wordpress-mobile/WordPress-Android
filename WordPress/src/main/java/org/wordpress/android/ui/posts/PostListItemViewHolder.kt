@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -122,6 +124,8 @@ sealed class PostListItemViewHolder(
         uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
         if (data.disableRippleEffect) {
             container.background = null
+        } else {
+            container.background = getDrawableFromAttribute(container.context, android.R.attr.selectableItemBackground)
         }
     }
 
@@ -140,6 +144,13 @@ sealed class PostListItemViewHolder(
             }
         }
         menu.show()
+    }
+
+    private fun getDrawableFromAttribute(context: Context, attributeId: Int): Drawable? {
+        val styledAttributes = context.obtainStyledAttributes(intArrayOf(attributeId))
+        val styledDrawable = styledAttributes.getDrawable(0)
+        styledAttributes.recycle()
+        return styledDrawable
     }
 
     private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
