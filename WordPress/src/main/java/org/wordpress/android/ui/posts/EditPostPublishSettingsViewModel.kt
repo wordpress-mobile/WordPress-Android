@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -101,9 +100,9 @@ class EditPostPublishSettingsViewModel
             val isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(post)
             var finalPostStatus = initialPostStatus
             if (initialPostStatus == DRAFT && isPublishDateInTheFuture) {
-                // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
-                // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
-                finalPostStatus = PUBLISHED
+                // The previous logic was setting the status twice, once from draft to published and when the user
+                // picked the time, it set it from published to scheduled. This is now done in one step.
+                finalPostStatus = SCHEDULED
             } else if (initialPostStatus == PUBLISHED && post.isLocalDraft()) {
                 // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
                 // is by running into the if case above. So, if they're updating the date again by calling
@@ -117,8 +116,6 @@ class EditPostPublishSettingsViewModel
                 // show toast only once, when time is shown
                 _onToast.postValue(resourceProvider.getString(string.editor_post_converted_back_to_draft))
             }
-            Log.d("vojta", "Changed post: $finalPostStatus")
-            Log.d("vojta", "publish date in the future: $isPublishDateInTheFuture")
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)
             val publishDateLabel = postSettingsUtils.getPublishDateLabel(post, context)
