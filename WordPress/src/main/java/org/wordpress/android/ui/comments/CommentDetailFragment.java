@@ -100,6 +100,8 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.Companion;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -312,6 +314,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                             public void onCollapse(@Nullable Bundle result) {
                                 if (result != null) {
                                     mEditReply.setText(result.getString(RESULT_REPLY));
+                                    mEditReply.setSelection(result.getInt(RESULT_SELECTION_START),
+                                            result.getInt(RESULT_SELECTION_END));
                                     mEditReply.requestFocus();
                                 }
                             }
