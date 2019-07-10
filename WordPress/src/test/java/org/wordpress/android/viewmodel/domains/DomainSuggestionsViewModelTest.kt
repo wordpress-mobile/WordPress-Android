@@ -86,9 +86,8 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         assertThat(lastAction.payload).isInstanceOf(SuggestDomainsPayload::class.java)
 
         val payload = lastAction.payload as SuggestDomainsPayload
-        assertThat(payload.tlds).isNotNull
-        assertThat(payload.tlds!!.size).isEqualTo(1)
-        assertThat(payload.tlds!![0]).isEqualTo("blog")
+        assertThat(payload.tlds).isNotNull()
+        assertThat(payload.tlds).isEqualTo("blog")
         assertThat(payload.onlyWordpressCom).isNull()
         assertThat(payload.includeWordpressCom).isNull()
         assertThat(payload.includeDotBlogSubdomain).isNull()
@@ -107,7 +106,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         val lastAction = captor.value
 
         assertThat(lastAction.type).isEqualTo(SiteAction.SUGGEST_DOMAINS)
-        assertThat(lastAction.payload).isNotNull
+        assertThat(lastAction.payload).isNotNull()
         assertThat(lastAction.payload).isInstanceOf(SuggestDomainsPayload::class.java)
 
         val payload = lastAction.payload as SuggestDomainsPayload
