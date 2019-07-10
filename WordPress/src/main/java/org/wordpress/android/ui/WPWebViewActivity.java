@@ -168,7 +168,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         });
 
-
         initRetryButton();
         initViewModel();
 
