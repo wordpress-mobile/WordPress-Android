@@ -140,6 +140,9 @@ open class LocalDraftUploadStarter @Inject constructor(
         postsAndPages
                 .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .filter { postUtilsWrapper.isPublishable(it) }
+                .filter {
+                    uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
+                }
                 .filter { PostStatus.DRAFT.toString() == it.status }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
