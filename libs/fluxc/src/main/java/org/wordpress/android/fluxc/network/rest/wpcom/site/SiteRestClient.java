@@ -404,7 +404,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     public void suggestDomains(@NonNull final String query, final Boolean onlyWordpressCom,
                                final Boolean includeWordpressCom, final Boolean includeDotBlogSubdomain,
                                final Long segmentId, final int quantity, final boolean includeVendorDot,
-                               List<String> tlds) {
+                               final String tlds) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
@@ -421,9 +421,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             params.put("segment_id", String.valueOf(segmentId));
         }
         if (tlds != null) {
-            for (String supportedTlds : tlds) {
-                params.put("tlds", supportedTlds);
-            }
+            params.put("tlds", tlds);
         }
         params.put("quantity", String.valueOf(quantity));
         if (includeVendorDot) {

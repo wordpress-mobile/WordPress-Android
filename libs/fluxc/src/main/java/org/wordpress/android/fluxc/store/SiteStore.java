@@ -142,7 +142,7 @@ public class SiteStore extends Store {
         @Nullable public Boolean onlyWordpressCom;
         @Nullable public Boolean includeWordpressCom;
         @Nullable public Boolean includeDotBlogSubdomain;
-        @Nullable public List<String> tlds;
+        @Nullable public String tlds;
         @Nullable public Long segmentId;
         public int quantity;
         public boolean includeVendorDot;
@@ -165,7 +165,7 @@ public class SiteStore extends Store {
             this.includeVendorDot = includeVendorDot;
         }
 
-         public SuggestDomainsPayload(@NonNull String query, int quantity, List<String> tlds) {
+         public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
             this.query = query;
             this.quantity = quantity;
             this.tlds = tlds;
