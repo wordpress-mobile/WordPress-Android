@@ -9,6 +9,10 @@
 * Block Editor: Performance improvements on rich text editing
 * Add All-time, Today, Weekly and Minified widgets
 
+12.7.1
+------
+* Fix issue where local draft with "Publish" status got automatically published
+
 12.7
 -----
 * Added Post search
