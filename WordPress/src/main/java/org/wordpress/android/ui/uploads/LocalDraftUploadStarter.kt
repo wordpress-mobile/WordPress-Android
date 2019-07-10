@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -136,6 +137,7 @@ open class LocalDraftUploadStarter @Inject constructor(
         postsAndPages
                 .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .filter { postUtilsWrapper.isPublishable(it) }
+                .filter { PostStatus.DRAFT.toString() == it.status }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,

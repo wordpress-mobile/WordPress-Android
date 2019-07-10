@@ -1,6 +1,9 @@
 12.8
 -----
 
+12.7.1
+------
+* Fix issue where local draft with "Publish" status got automatically published
 
 12.7
 -----
@@ -16,7 +19,6 @@
 -----
 * Add Insights management introductory card
 * Local draft pages will be automatically uploaded to the server as soon as an internet connection is available.
-
 * Block Editor: A new block is available: video block.
 * Block Editor: Added UI to display a warning when a block has invalid content.
 * Block Editor: Fixed issue with link settings where “Open in New Tab” was always OFF on open.
