@@ -1,6 +1,5 @@
 12.9
 -----
-* Block Editor: Video block is now available in the Inserter
  
 12.8
 -----
