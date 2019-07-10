@@ -239,7 +239,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mViewModel.getShare().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO sahre
+                // TODO share
             }
         });
 
