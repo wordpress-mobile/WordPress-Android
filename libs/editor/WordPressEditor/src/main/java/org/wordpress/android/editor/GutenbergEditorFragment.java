@@ -32,7 +32,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.react.bridge.ReadableArray;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -271,7 +270,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnEditorMountListener() {
                     @Override
-                    public void onEditorDidMount(ReadableArray unsupportedBlocks) {
+                    public void onEditorDidMount(ArrayList<Object> unsupportedBlocks) {
                         mEditorDidMount = true;
                         mEditorFragmentListener.onEditorFragmentContentReady(unsupportedBlocks.size() > 0);
 
