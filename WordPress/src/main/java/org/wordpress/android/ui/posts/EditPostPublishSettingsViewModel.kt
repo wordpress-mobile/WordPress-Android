@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.text.TextUtils
-import android.view.Gravity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,15 +13,13 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
 
-class EditPostPublishedSettingsViewModel
+class EditPostPublishSettingsViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val resourceProvider: ResourceProvider,
@@ -50,6 +47,8 @@ class EditPostPublishedSettingsViewModel
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
     private val _onPublishedLabelChanged = MutableLiveData<String>()
     val onPublishedLabelChanged: LiveData<String> = _onPublishedLabelChanged
+    private val _onToast = MutableLiveData<String>()
+    val onToast: LiveData<String> = _onToast
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(postModel) } ?: Calendar.getInstance()
@@ -114,12 +113,7 @@ class EditPostPublishedSettingsViewModel
                 // having the app be smart about it - we don't want to accidentally publish a post.
                 finalPostStatus = DRAFT
                 // show toast only once, when time is shown
-                ToastUtils.showToast(
-                        context,
-                        resourceProvider.getString(string.editor_post_converted_back_to_draft),
-                        SHORT,
-                        Gravity.TOP
-                )
+                _onToast.postValue(resourceProvider.getString(string.editor_post_converted_back_to_draft))
             }
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)

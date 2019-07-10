@@ -15,11 +15,11 @@ import javax.inject.Inject
 
 class PostDatePickerDialogFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: EditPostPublishedSettingsViewModel
+    private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(EditPostPublishedSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
 
         val datePickerDialog = DatePickerDialog(
                 ContextThemeWrapper(activity, R.style.Calypso_Dialog),

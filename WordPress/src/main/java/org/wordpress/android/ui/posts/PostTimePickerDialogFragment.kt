@@ -16,11 +16,11 @@ import javax.inject.Inject
 
 class PostTimePickerDialogFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: EditPostPublishedSettingsViewModel
+    private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(EditPostPublishedSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
         val timePickerDialog = TimePickerDialog(

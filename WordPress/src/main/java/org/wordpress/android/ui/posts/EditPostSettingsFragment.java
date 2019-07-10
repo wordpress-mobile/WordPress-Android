@@ -137,7 +137,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject PostSettingsUtils mPostSettingsUtils;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    private EditPostPublishedSettingsViewModel mPublishedViewModel;
+    private EditPostPublishSettingsViewModel mPublishedViewModel;
 
 
     interface EditPostActivityHook {
@@ -163,7 +163,7 @@ public class EditPostSettingsFragment extends Fragment {
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel =
-                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishedSettingsViewModel.class);
+                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishSettingsViewModel.class);
     }
 
     @Override

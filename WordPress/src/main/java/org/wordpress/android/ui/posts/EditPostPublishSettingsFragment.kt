@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,21 +15,23 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
-class EditPostPublishedSettingsFragment : Fragment() {
+class EditPostPublishSettingsFragment : Fragment() {
     private lateinit var dateAndTime: TextView
     private lateinit var publishNotification: TextView
     private lateinit var publishNotificationContainer: LinearLayout
     private lateinit var addToCalendarContainer: LinearLayout
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: EditPostPublishedSettingsViewModel
+    private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.applicationContext as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(EditPostPublishedSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,6 +55,16 @@ class EditPostPublishedSettingsFragment : Fragment() {
         viewModel.onPublishedLabelChanged.observe(this, Observer {
             it?.let { label ->
                 dateAndTime.text = label
+            }
+        })
+        viewModel.onToast.observe(this, Observer {
+            it?.let { message ->
+                ToastUtils.showToast(
+                        context,
+                        message,
+                        SHORT,
+                        Gravity.TOP
+                )
             }
         })
         viewModel.start(getPost())
@@ -89,7 +102,8 @@ class EditPostPublishedSettingsFragment : Fragment() {
             throw RuntimeException("$activity must implement EditPostActivityHook")
         }
     }
+
     companion object {
-        fun newInstance() = EditPostPublishedSettingsFragment()
+        fun newInstance() = EditPostPublishSettingsFragment()
     }
 }
