@@ -352,7 +352,7 @@
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
     <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
-    
+
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -2461,6 +2461,10 @@
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
+    <string name="navigate_forward_desc">go forward</string>
+    <string name="navigate_back_desc">go back</string>
+    <string name="share_desc">share</string>
+    <string name="preview_type_desc">select preview type</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
