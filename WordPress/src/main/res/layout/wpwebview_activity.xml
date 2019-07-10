@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_divider_height"
             android:layout_above="@+id/navbar"
-            android:background="@color/gray_0"/>
+            android:background="@color/neutral_100"/>
 
         <LinearLayout
             android:id="@+id/navbar"
