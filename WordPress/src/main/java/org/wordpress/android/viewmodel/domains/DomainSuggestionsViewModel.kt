@@ -66,6 +66,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     companion object {
         private const val SEARCH_QUERY_DELAY_MS = 250L
         private const val SUGGESTIONS_REQUEST_COUNT = 20
+        private const val BLOG_DOMAIN_TLDS = "blog"
     }
 
     // Bind Dispatcher to Lifecycle
@@ -99,7 +100,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         suggestions = ListState.Loading(suggestions)
 
         val suggestDomainsPayload = if (SiteUtils.onBloggerPlan(site)) {
-            SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, "blog")
+            SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, BLOG_DOMAIN_TLDS)
         } else {
             SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
         }
