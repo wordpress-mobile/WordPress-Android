@@ -56,7 +56,12 @@ class LocalDraftUploadStarterTest {
 
     private val sitesAndDraftPages: Map<SiteModel, List<PostModel>> = mapOf(
             sites[0] to listOf(createDraftPostModel(), createDraftPostModel()),
-            sites[1] to listOf(createDraftPostModel(), createDraftPostModel(), createDraftPostModel(), createDraftPostModel())
+            sites[1] to listOf(
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel()
+            )
     )
     private val draftPages = sitesAndDraftPages.values.flatten()
 
@@ -166,7 +171,8 @@ class LocalDraftUploadStarterTest {
         starter.queueUploadFromSite(site)
 
         // Then
-        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages.getValue(site).size
+        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size +
+                sitesAndDraftPages.getValue(site).size
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
@@ -197,7 +203,8 @@ class LocalDraftUploadStarterTest {
 
         // Then
         // subtract - 1 as we've returned isPublishable = false for the first post of the site
-        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages.getValue(site).size - 1
+        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size +
+                sitesAndDraftPages.getValue(site).size - 1
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
