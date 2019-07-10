@@ -7,15 +7,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -190,6 +193,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         });
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
         mSubmitReplyBtn.setEnabled(false);
+        mSubmitReplyBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -255,6 +268,17 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
             }
         );
+
+        buttonExpand.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {

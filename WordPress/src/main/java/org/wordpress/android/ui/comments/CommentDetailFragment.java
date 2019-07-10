@@ -10,16 +10,19 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -279,6 +282,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
         mSubmitReplyBtn.setEnabled(false);
+        mSubmitReplyBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.addTextChangedListener(new TextWatcher() {
@@ -337,6 +350,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 }
             }
         );
+        buttonExpand.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
         setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
