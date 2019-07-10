@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Calendar
@@ -39,8 +40,8 @@ class EditPostPublishSettingsViewModel
     var minute: Int? = null
         private set
 
-    private val _onDatePicked = MutableLiveData<Unit>()
-    val onDatePicked: LiveData<Unit> = _onDatePicked
+    private val _onDatePicked = MutableLiveData<Event<Unit>>()
+    val onDatePicked: LiveData<Event<Unit>> = _onDatePicked
     private val _onPublishedDateChanged = MutableLiveData<Calendar>()
     val onPublishedDateChanged: LiveData<Calendar> = _onPublishedDateChanged
     private val _onPostStatusChanged = MutableLiveData<PostStatus>()
@@ -79,7 +80,7 @@ class EditPostPublishSettingsViewModel
         this.year = year
         this.month = month
         this.day = dayOfMonth
-        _onDatePicked.postValue(Unit)
+        _onDatePicked.postValue(Event(Unit))
     }
 
     private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {

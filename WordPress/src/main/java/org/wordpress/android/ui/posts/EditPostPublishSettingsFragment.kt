@@ -45,7 +45,9 @@ class EditPostPublishSettingsFragment : Fragment() {
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
 
         viewModel.onDatePicked.observe(this, Observer {
-            showPostTimeSelectionDialog()
+            it?.applyIfNotHandled {
+                showPostTimeSelectionDialog()
+            }
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
