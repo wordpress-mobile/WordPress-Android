@@ -137,7 +137,7 @@ open class LocalDraftUploadStarter @Inject constructor(
         postsAndPages
                 .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .filter { postUtilsWrapper.isPublishable(it) }
-                .filter { PostStatus.DRAFT.toString() == it.status || PostStatus.PENDING.toString() == it.status }
+                .filter { PostStatus.DRAFT.toString() == it.status }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,
