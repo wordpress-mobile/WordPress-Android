@@ -39,7 +39,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 @RunWith(MockitoJUnitRunner::class)
-class LocalDraftUploadStarterTest {
+class UploadStarterTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     private val sites = listOf(SiteModel(), SiteModel())
@@ -84,7 +84,7 @@ class LocalDraftUploadStarterTest {
         // ON_RESUME -> app is in the foreground
         val lifecycle = LifecycleRegistry(mock()).apply { handleLifecycleEvent(Event.ON_RESUME) }
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
         starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
 
         // we need to reset the uploadServiceFacade mock as when the app moves to ON_RESUME state (comes to foreground)
@@ -113,7 +113,7 @@ class LocalDraftUploadStarterTest {
         // ON_CREATE -> app is in the background
         val lifecycle = LifecycleRegistry(mock()).apply { handleLifecycleEvent(Event.ON_CREATE) }
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
         starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
 
         // When
@@ -137,7 +137,7 @@ class LocalDraftUploadStarterTest {
 
         val lifecycle = LifecycleRegistry(mock()).apply { handleLifecycleEvent(Event.ON_CREATE) }
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
         starter.activateAutoUploading(createMockedProcessLifecycleOwner(lifecycle))
 
         // When
@@ -161,7 +161,7 @@ class LocalDraftUploadStarterTest {
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
 
         // When
         starter.queueUploadFromSite(site)
@@ -191,7 +191,7 @@ class LocalDraftUploadStarterTest {
             }
         }
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade, postUtilsWrapper)
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade, postUtilsWrapper)
 
         // When
         starter.queueUploadFromSite(site)
@@ -237,7 +237,7 @@ class LocalDraftUploadStarterTest {
             }
         }
 
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade)
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade)
 
         // When
         starter.queueUploadFromSite(site)
@@ -267,7 +267,7 @@ class LocalDraftUploadStarterTest {
 
         // This UploadStore.getNumberOfPostUploadErrorsOrCancellations mocked method will always return that
         // any post was cancelled 1000 times. The auto upload should not be started.
-        val starter = createLocalDraftUploadStarter(connectionStatus, uploadServiceFacade,
+        val starter = createUploadStarter(connectionStatus, uploadServiceFacade,
                 uploadStore = createMockedUploadStore(1000))
 
         // When
@@ -285,12 +285,12 @@ class LocalDraftUploadStarterTest {
     }
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
-    private fun createLocalDraftUploadStarter(
+    private fun createUploadStarter(
         connectionStatus: LiveData<ConnectionStatus>,
         uploadServiceFacade: UploadServiceFacade,
         postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
         uploadStore: UploadStore = createMockedUploadStore(0)
-    ) = LocalDraftUploadStarter(
+    ) = UploadStarter(
             context = mock(),
             postStore = postStore,
             pageStore = pageStore,
