@@ -41,7 +41,7 @@
         <LinearLayout
             android:id="@+id/navbar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/web_preview_navbar_height"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:orientation="horizontal"

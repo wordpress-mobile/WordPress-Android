@@ -431,4 +431,7 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
+    <!-- web preview  -->
+    <dimen name="web_preview_navbar_height">72dp</dimen>
+
 </resources>
