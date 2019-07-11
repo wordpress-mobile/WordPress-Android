@@ -384,7 +384,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                               + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
                                       .getFilePath()
                               + ", " + queuedMedia.getLocalSiteId());
-            if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
+            if (isSameMediaFileQueuedForThisPost(queuedMedia, mediaModel)) {
                 return true;
             }
         }
@@ -394,15 +394,15 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                               + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
                                       .getFilePath()
                               + ", " + queuedMedia.getLocalSiteId());
-            if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
+            if (isSameMediaFileQueuedForThisPost(queuedMedia, mediaModel)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
-        return (media1.getLocalSiteId() == media2.getLocalSiteId()
+    private boolean isSameMediaFileQueuedForThisPost(MediaModel media1, MediaModel media2) {
+        return (media1.getLocalSiteId() == media2.getLocalSiteId() && media1.getLocalPostId() == media2.getLocalPostId()
                 && StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
