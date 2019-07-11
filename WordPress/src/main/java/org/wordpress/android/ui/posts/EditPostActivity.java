@@ -2670,9 +2670,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = mPostProvider.updatePostTitleIfDifferent(title);
         boolean contentChanged = mPostProvider.updatePostContentIfDifferent(content);
-        boolean statusChanged = mPostSnapshotWhenEditorOpened != null && !mPostProvider.getPostModel().getStatus()
-                                                                                       .equals(mPostSnapshotWhenEditorOpened
-                                                                                               .getStatus());
+        String currentStatus = mPostProvider.getPostModel().getStatus();
+        boolean statusChanged = mPostSnapshotWhenEditorOpened != null && !currentStatus
+                .equals(mPostSnapshotWhenEditorOpened.getStatus());
 
         if (!mPostProvider.getPostModel().isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPostProvider.setIsLocallyChanged(true);
