@@ -15,9 +15,17 @@ sealed class PostListItemType {
         val onSelected: () -> Unit
     ) : PostListItemType()
 
-    class LoadingItem(val localOrRemoteId: LocalOrRemoteId) : PostListItemType()
+    class LoadingItem(val localOrRemoteId: LocalOrRemoteId, val options: LoadingItemOptions) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
 }
+
+data class LoadingItemOptions(
+    val showEditButton : Boolean,
+    val showViewButton : Boolean,
+    val showMoreButton : Boolean ,
+    val showMoveToDraftButton : Boolean,
+    val showDeleteButton : Boolean
+)
 
 data class PostListItemUiStateData(
     val remotePostId: RemotePostId,

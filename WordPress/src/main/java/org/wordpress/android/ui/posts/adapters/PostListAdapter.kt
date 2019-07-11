@@ -11,13 +11,12 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.posts.PostListItemViewHolder
-import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
@@ -64,11 +63,11 @@ class PostListAdapter(
             }
             VIEW_TYPE_LOADING -> {
                 val view = layoutInflater.inflate(R.layout.post_list_item_skeleton, parent, false)
-                LoadingViewHolder(view, postViewHolderConfig.postListType)
+                LoadingViewHolder(view)
             }
             VIEW_TYPE_LOADING_COMPACT -> {
                 val view = layoutInflater.inflate(R.layout.post_list_item_skeleton_compact, parent, false)
-                LoadingViewHolder(view, postViewHolderConfig.postListType)
+                LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
                 PostListItemViewHolder.Standard(parent, postViewHolderConfig, uiHelpers)
@@ -84,7 +83,7 @@ class PostListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // The only holders that require special setup are PostListItemViewHolder sealed subclasses
+        // The only holders that require special setup are PostListItemViewHolder and LoadingViewHolder subclasses
         if (holder is PostListItemViewHolder) {
             val item = getItem(position)
             assert(item is PostListItemUiState) {
@@ -92,6 +91,14 @@ class PostListAdapter(
                         "for position: $position"
             }
             holder.onBind((item as PostListItemUiState))
+        }
+        if (holder is LoadingViewHolder) {
+            val item = getItem(position)
+            assert(item is LoadingItem) {
+                "If we are presenting LoadingViewHolder, the item has to be of type LoadingItem " +
+                        "for position: $position"
+            }
+            holder.onBind((item as LoadingItem))
         }
     }
 
@@ -103,17 +110,17 @@ class PostListAdapter(
         notifyDataSetChanged()
     }
 
-    private class LoadingViewHolder(view: View, postListType: PostListType) : ViewHolder(view) {
-        init {
-            if (postListType == TRASHED) {
-                (view.findViewById(R.id.skeleton_button_edit) as View?)?.visibility = View.GONE
-                (view.findViewById(R.id.skeleton_button_view) as View?)?.visibility = View.GONE
-                (view.findViewById(R.id.skeleton_button_more) as View?)?.visibility = View.GONE
-                (view.findViewById(R.id.skeleton_button_delete) as View?)?.visibility = View.VISIBLE
-                (view.findViewById(R.id.skeleton_button_move_to_draft) as View?)?.visibility = View.VISIBLE
-            }
+    private class LoadingViewHolder(val view: View) : ViewHolder(view) {
+        fun onBind(item: LoadingItem) {
+            (view.findViewById(R.id.skeleton_button_edit) as View?)?.setVisible(item.options.showEditButton)
+            (view.findViewById(R.id.skeleton_button_view) as View?)?.setVisible(item.options.showViewButton)
+            (view.findViewById(R.id.skeleton_button_more) as View?)?.setVisible(item.options.showMoreButton)
+            (view.findViewById(R.id.skeleton_button_move_to_draft) as View?)?.setVisible(
+                    item.options.showMoveToDraftButton)
+            (view.findViewById(R.id.skeleton_button_delete) as View?)?.setVisible(item.options.showDeleteButton)
         }
     }
+
     private class EndListViewHolder(view: View) : ViewHolder(view)
 }
 
