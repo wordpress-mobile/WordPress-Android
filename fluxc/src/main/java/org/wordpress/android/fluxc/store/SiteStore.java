@@ -112,6 +112,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class FetchedEditorsPayload extends Payload<SiteEditorsError> {
+        public SiteModel site;
+        public String webEditor;
+        public String mobileEditor;
+
+        public FetchedEditorsPayload(@NonNull SiteModel site, @NonNull String webEditor, @NonNull String mobileEditor) {
+            this.site = site;
+            this.mobileEditor = mobileEditor;
+            this.webEditor = webEditor;
+        }
+    }
+
     public static class FetchedUserRolesPayload extends Payload<UserRolesError> {
         public SiteModel site;
         public List<RoleModel> roles;
@@ -338,6 +350,20 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class SiteEditorsError implements OnChangedError {
+        public SiteEditorsErrorType type;
+        public String message;
+
+        public SiteEditorsError(SiteEditorsErrorType type) {
+            this(type, "");
+        }
+
+        SiteEditorsError(SiteEditorsErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     public static class PostFormatsError implements OnChangedError {
         public PostFormatsErrorType type;
         public String message;
@@ -522,6 +548,15 @@ public class SiteStore extends Store {
         public SiteModel site;
 
         public OnPostFormatsChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
+    public static class OnSiteEditorsChanged extends OnChanged<SiteEditorsError> {
+        public SiteModel site;
+        public int rowsAffected;
+
+        public OnSiteEditorsChanged(SiteModel site) {
             this.site = site;
         }
     }
@@ -831,6 +866,10 @@ public class SiteStore extends Store {
     }
 
     public enum UserRolesErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum SiteEditorsErrorType {
         GENERIC_ERROR
     }
 
@@ -1341,6 +1380,12 @@ public class SiteStore extends Store {
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
+            case FETCH_SITE_EDITORS:
+                fetchSiteEditor((SiteModel) action.getPayload());
+                break;
+            case FETCHED_SITE_EDITORS:
+                updateSiteEditors((FetchedEditorsPayload) action.getPayload());
+                break;
             case FETCH_USER_ROLES:
                 fetchUserRoles((SiteModel) action.getPayload());
                 break;
@@ -1612,6 +1657,28 @@ public class SiteStore extends Store {
         } else {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
         }
+        emitChange(event);
+    }
+
+    private void fetchSiteEditor(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchSiteEditor(site);
+        }
+    }
+
+    private void updateSiteEditors(FetchedEditorsPayload payload) {
+        SiteModel site = payload.site;
+        OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            try {
+                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (Exception e) {
+                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+            }
+        }
+
         emitChange(event);
     }
 
