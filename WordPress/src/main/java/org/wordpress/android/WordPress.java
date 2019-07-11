@@ -78,7 +78,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter;
+import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
@@ -147,7 +147,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
     @Inject ZendeskHelper mZendeskHelper;
-    @Inject LocalDraftUploadStarter mLocalDraftUploadStarter;
+    @Inject UploadStarter mUploadStarter;
     @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
@@ -285,7 +285,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
-        mLocalDraftUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
+        mUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
@@ -325,7 +325,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     protected void initWorkManager() {
-        UploadWorker.Factory factory = new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
+        UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
         androidx.work.Configuration config =
                 (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
         WorkManager.initialize(this, config);

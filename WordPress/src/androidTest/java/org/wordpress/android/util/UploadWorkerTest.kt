@@ -24,11 +24,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 
 @RunWith(AndroidJUnit4::class)
 class UploadWorkerTest {
-    private val localDraftUploadStarter = mock<LocalDraftUploadStarter>()
+    private val uploadStarter = mock<UploadStarter>()
     private val siteStore = mock<SiteStore>()
 
     @Before
@@ -38,7 +38,7 @@ class UploadWorkerTest {
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor here to make it easier to write tests
                 .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(UploadWorker.Factory(localDraftUploadStarter, siteStore))
+                .setWorkerFactory(UploadWorker.Factory(uploadStarter, siteStore))
                 .build()
 
         // Initialize WorkManager for instrumentation tests.
@@ -67,7 +67,7 @@ class UploadWorkerTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Check the work was successful and the method was called with the right argument
-        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
+        verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
         assertThat(workInfo.state, `is`(WorkInfo.State.SUCCEEDED))
     }
 
@@ -89,7 +89,7 @@ class UploadWorkerTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // We didn't call setAllConstraintsMet earlier, so the work won't be executed (can't be success or failure)
-        verifyZeroInteractions(localDraftUploadStarter)
+        verifyZeroInteractions(uploadStarter)
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -113,7 +113,7 @@ class UploadWorkerTest {
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
         // Periodic upload worker will stay enqueued after success/failure: ENQUEUED -> RUNNING -> ENQUEUED
-        verify(localDraftUploadStarter, times(1)).queueUploadFromAllSites()
+        verify(uploadStarter, times(1)).queueUploadFromAllSites()
         assertThat(workInfo.state, `is`(WorkInfo.State.ENQUEUED))
     }
 
@@ -142,8 +142,8 @@ class UploadWorkerTest {
         testDriver.setPeriodDelayMet(request.id)
         operation.result.get()
 
-        // Check LocalDraftUploadStarter.queueUploadFromAllSites() was called twice
-        verify(localDraftUploadStarter, times(2)).queueUploadFromAllSites()
+        // Check UploadStarter.queueUploadFromAllSites() was called twice
+        verify(uploadStarter, times(2)).queueUploadFromAllSites()
 
         // WorkRequest should still be queued
         val workInfo2 = workManager.getWorkInfoById(request.id).get()

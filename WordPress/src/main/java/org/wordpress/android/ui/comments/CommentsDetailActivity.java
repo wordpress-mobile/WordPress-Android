@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -66,6 +67,18 @@ public class CommentsDetailActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed() {
+        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+        if (fragment != null) {
+            fragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -92,11 +105,11 @@ public class CommentsDetailActivity extends AppCompatActivity
         }
 
         // set up the viewpager and adapter for lateral navigation
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_loading);
+        mProgressBar = findViewById(R.id.progress_loading);
 
         // Asynchronously loads comments and build the adapter
         loadDataInViewPager();

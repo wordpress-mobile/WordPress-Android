@@ -58,6 +58,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -105,6 +107,7 @@ import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskTy
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.RESULT_TASK;
+import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
 public class MySiteFragment extends Fragment implements
         SiteSettingsListener,
@@ -397,10 +400,10 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewDomainRegistrationActivity(getActivity(), getSelectedSite());
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
+                        DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
             }
         });
 
@@ -798,6 +801,12 @@ public class MySiteFragment extends Fragment implements
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
                 break;
+            case RequestCodes.DOMAIN_REGISTRATION:
+                if (resultCode == Activity.RESULT_OK && isAdded() && data != null) {
+                    String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
+                    requestEmailValidation(getContext(), email);
+                }
+                break;
         }
     }
 
@@ -911,15 +920,13 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        if (SiteUtils.onFreePlan(site)) {
+        if (SiteUtils.onFreePlan(site) || SiteUtils.hasCustomDomain(site)) {
             mIsDomainCreditAvailable = false;
             toggleDomainRegistrationCtaVisibility();
+        } else if (!mIsDomainCreditChecked) {
+            fetchSitePlans(site);
         } else {
-            if (!SiteUtils.hasCustomDomain(site) && !mIsDomainCreditChecked) {
-                fetchSitePlans(site);
-            } else {
-                toggleDomainRegistrationCtaVisibility();
-            }
+            toggleDomainRegistrationCtaVisibility();
         }
 
         mScrollView.setVisibility(View.VISIBLE);

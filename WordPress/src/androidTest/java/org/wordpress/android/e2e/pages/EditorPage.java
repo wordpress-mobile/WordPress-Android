@@ -64,7 +64,8 @@ public class EditorPage {
         }
 
         // Click on a random image
-        clickOn(onView(withIndex(withId(R.id.media_grid_item_image), 0)));
+        waitForElementToBeDisplayed(onView(withText("WordPress media")));
+        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
 
         // Click the confirm button
         clickOn(confirmButton);
