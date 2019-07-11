@@ -60,10 +60,10 @@ class EditPostPublishSettingsFragment : Fragment() {
             }
         })
         viewModel.onToast.observe(this, Observer {
-            it?.let { message ->
+            it?.applyIfNotHandled {
                 ToastUtils.showToast(
                         context,
-                        message,
+                        this,
                         SHORT,
                         Gravity.TOP
                 )

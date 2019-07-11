@@ -48,8 +48,8 @@ class EditPostPublishSettingsViewModel
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
     private val _onPublishedLabelChanged = MutableLiveData<String>()
     val onPublishedLabelChanged: LiveData<String> = _onPublishedLabelChanged
-    private val _onToast = MutableLiveData<String>()
-    val onToast: LiveData<String> = _onToast
+    private val _onToast = MutableLiveData<Event<String>>()
+    val onToast: LiveData<Event<String>> = _onToast
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(postModel) } ?: Calendar.getInstance()
@@ -114,7 +114,7 @@ class EditPostPublishSettingsViewModel
                 // having the app be smart about it - we don't want to accidentally publish a post.
                 finalPostStatus = DRAFT
                 // show toast only once, when time is shown
-                _onToast.postValue(resourceProvider.getString(string.editor_post_converted_back_to_draft))
+                _onToast.postValue(Event(resourceProvider.getString(string.editor_post_converted_back_to_draft)))
             }
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)
