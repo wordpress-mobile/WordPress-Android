@@ -42,8 +42,8 @@ class WPWebViewViewModel
     private val _openInExternalBrowser = SingleLiveEvent<Unit>()
     val openExternalBrowser: LiveData<Unit> = _openInExternalBrowser
 
-    private val _isPreviewModeSelectorVisible = MutableLiveData<Boolean>()
-    val isPreviewModeSelectorVisible: LiveData<Boolean> = _isPreviewModeSelectorVisible
+    private val _previewModeSelector = MutableLiveData<PreviewModeSelectorStatus>()
+    val previewModeSelector: LiveData<PreviewModeSelectorStatus> = _previewModeSelector
 
     private val _navbarUiState: MutableLiveData<NavBarUiState> = MutableLiveData()
     val navbarUiState: LiveData<NavBarUiState> = _navbarUiState
@@ -75,6 +75,7 @@ class WPWebViewViewModel
         )
 
         _previewMode.value = DEFAULT
+        _previewModeSelector.value = PreviewModeSelectorStatus(false, DEFAULT)
 
         // If there is no internet show the error screen
         if (networkUtils.isNetworkAvailable()) {
@@ -155,7 +156,7 @@ class WPWebViewViewModel
     }
 
     fun togglePreviewModeSelectorVisibility(isVisible: Boolean) {
-        _isPreviewModeSelectorVisible.value = isVisible
+        _previewModeSelector.value = PreviewModeSelectorStatus(isVisible, previewMode.value!!)
     }
 
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {
@@ -173,6 +174,8 @@ class WPWebViewViewModel
         DEFAULT,
         DESKTOP
     }
+
+    data class PreviewModeSelectorStatus(val isVisible: Boolean, val selectedPreviewMode: PreviewMode)
 
     sealed class WebPreviewUiState(
         val fullscreenProgressLayoutVisibility: Boolean = false,

@@ -14,12 +14,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.PopupMenu.OnDismissListener;
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -46,6 +46,7 @@ import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 
 import java.io.UnsupportedEncodingException;
@@ -254,11 +255,31 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         });
 
-        mViewModel.isPreviewModeSelectorVisible().observe(this, new Observer<Boolean>() {
+        mViewModel.getPreviewModeSelector().observe(this, new Observer<PreviewModeSelectorStatus>() {
             @Override
-            public void onChanged(@Nullable Boolean isVisible) {
-                if (isVisible != null && isVisible) {
-                    showPreviewModeSelector();
+            public void onChanged(final @Nullable PreviewModeSelectorStatus previewModelSelectorStatus) {
+                if (previewModelSelectorStatus != null && previewModelSelectorStatus.isVisible()) {
+                    mPreviewModeButton.post(new Runnable() {
+                        @Override public void run() {
+                            final ListPopupWindow listPopup = new ListPopupWindow(WPWebViewActivity.this);
+                            listPopup.setWidth(getResources().getDimensionPixelSize(R.dimen.web_preview_mode_menu_item_width));
+                            listPopup.setAdapter(new PreviewModeMenuAdapter(WPWebViewActivity.this,
+                                    previewModelSelectorStatus.getSelectedPreviewMode()));
+                            listPopup.setDropDownGravity(Gravity.END);
+                            listPopup.setAnchorView(mPreviewModeButton);
+                            listPopup.setModal(true);
+                            listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    listPopup.dismiss();
+                                    PreviewModeMenuAdapter adapter = (PreviewModeMenuAdapter) parent.getAdapter();
+                                    PreviewMode selectedMode = adapter.getItem(position);
+                                    mViewModel.selectPreviewMode(selectedMode);
+                                }
+                            });
+                            listPopup.show();
+                        }
+                    });
                 }
             }
         });
@@ -272,25 +293,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         });
         mViewModel.start();
-    }
-
-    private void showPreviewModeSelector() {
-        mPreviewModeButton.post(new Runnable() {
-            @Override public void run() {
-                PopupMenu popup = new PopupMenu(WPWebViewActivity.this, mPreviewModeButton, Gravity.BOTTOM,
-                        R.attr.actionOverflowMenuStyle, 0);
-                popup.setOnMenuItemClickListener(WPWebViewActivity.this);
-                popup.setOnDismissListener(new OnDismissListener() {
-                    @Override
-                    public void onDismiss(PopupMenu menu) {
-                        mViewModel.togglePreviewModeSelectorVisibility(false);
-                    }
-                });
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.site_preview_menu, popup.getMenu());
-                popup.show();
-            }
-        });
     }
 
 
