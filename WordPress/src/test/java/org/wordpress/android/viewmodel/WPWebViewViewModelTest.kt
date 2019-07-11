@@ -18,6 +18,7 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DEFAULT
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DESKTOP
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
@@ -174,17 +175,42 @@ class WPWebViewViewModelTest {
     fun `clicking on preview mode button toggles preview mode selector`() {
         viewModel.start()
 
-        var previewModeSelectorVisible = false
-        viewModel.isPreviewModeSelectorVisible.observeForever {
-            previewModeSelectorVisible = it
+        var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
+        viewModel.previewModeSelector.observeForever {
+            previewModeSelectorStatus = it
         }
 
-        assertThat(previewModeSelectorVisible).isFalse()
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+
         viewModel.togglePreviewModeSelectorVisibility(true)
-        assertThat(previewModeSelectorVisible).isTrue()
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
 
         viewModel.togglePreviewModeSelectorVisibility(false)
-        assertThat(previewModeSelectorVisible).isFalse()
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+    }
+
+    @Test
+    fun `selected preview mode is reflected in preview mode selector`() {
+        viewModel.start()
+
+        var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
+        viewModel.previewModeSelector.observeForever {
+            previewModeSelectorStatus = it
+        }
+
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DEFAULT)
+
+        viewModel.selectPreviewMode(DESKTOP)
+        viewModel.togglePreviewModeSelectorVisibility(true)
+
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
+        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DESKTOP)
     }
 
     @Test
