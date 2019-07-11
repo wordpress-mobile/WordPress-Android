@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityR
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
@@ -48,6 +49,8 @@ public enum SiteAction implements IAction {
     FETCH_POST_FORMATS,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE_EDITORS,
+    @Action(payloadType = DesignateMobileEditorPayload.class)
+    DESIGNATE_MOBILE_EDITOR,
     @Action(payloadType = SiteModel.class)
     FETCH_USER_ROLES,
     @Action(payloadType = SiteModel.class)

@@ -300,6 +300,32 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void designateMobileEditor(final SiteModel site, final String mobileEditorName) {
+        Map<String, Object> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
+        params.put("editor", mobileEditorName);
+        params.put("platform", "mobile");
+        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest
+                .buildPostRequest(url, params, SiteEditorsResponse.class,
+                        new Listener<SiteEditorsResponse>() {
+                            @Override
+                            public void onResponse(SiteEditorsResponse response) {
+                                FetchedEditorsPayload payload;
+                                payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
     public void fetchPostFormats(@NonNull final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
         final WPComGsonRequest<PostFormatsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
