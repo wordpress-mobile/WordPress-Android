@@ -268,7 +268,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchSiteEditor(final SiteModel site) {
+    public void fetchSiteEditors(final SiteModel site) {
         Map<String, String> params = new HashMap<>();
         String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
         final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
