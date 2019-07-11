@@ -52,7 +52,6 @@ class PreviewModeMenuAdapter(context: Context, private val mSelectedPreviewMode:
             holder.checkmark.visibility = View.GONE
         }
 
-
         return view
     }
 

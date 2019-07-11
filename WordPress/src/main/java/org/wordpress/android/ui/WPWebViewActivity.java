@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.ListPopupWindow;
-import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -93,8 +92,7 @@ import kotlin.Unit;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener,
-        OnMenuItemClickListener {
+public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -262,7 +260,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     mPreviewModeButton.post(new Runnable() {
                         @Override public void run() {
                             final ListPopupWindow listPopup = new ListPopupWindow(WPWebViewActivity.this);
-                            listPopup.setWidth(getResources().getDimensionPixelSize(R.dimen.web_preview_mode_menu_item_width));
+                            listPopup.setWidth(
+                                    getResources().getDimensionPixelSize(R.dimen.web_preview_mode_menu_item_width));
                             listPopup.setAdapter(new PreviewModeMenuAdapter(WPWebViewActivity.this,
                                     previewModelSelectorStatus.getSelectedPreviewMode()));
                             listPopup.setDropDownGravity(Gravity.END);
@@ -642,19 +641,5 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.preview_default:
-                mViewModel.selectPreviewMode(PreviewMode.DEFAULT);
-                return true;
-            case R.id.preview_desktop:
-                mViewModel.selectPreviewMode(PreviewMode.DESKTOP);
-                return true;
-            default:
-                return false;
-        }
     }
 }
