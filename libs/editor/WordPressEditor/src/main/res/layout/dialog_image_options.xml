@@ -23,9 +23,7 @@
                 android:layout_width="@dimen/image_settings_dialog_thumbnail_size"
                 android:layout_height="@dimen/image_settings_dialog_thumbnail_size"
                 android:orientation="horizontal"
-                android:layout_marginLeft="@dimen/image_settings_dialog_thumbnail_left_margin"
                 android:layout_marginStart="@dimen/image_settings_dialog_thumbnail_left_margin"
-                android:layout_marginRight="@dimen/image_settings_dialog_thumbnail_right_margin"
                 android:layout_marginEnd="@dimen/image_settings_dialog_thumbnail_right_margin"
                 android:gravity="center">
                 <ImageView
@@ -47,7 +45,6 @@
                 android:id="@+id/image_filename"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/image_settings_dialog_filename_margin_left"
                 android:layout_marginStart="@dimen/image_settings_dialog_filename_margin_left"
                 android:layout_gravity="center_vertical"/>
         </LinearLayout>
@@ -108,7 +105,6 @@
             android:layout_height="wrap_content"
             android:entries="@array/alignment_array"
             android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
-            android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
             android:prompt="@string/image_alignment"
             style="@style/ImageOptionsDialogInput"/>
 
@@ -150,7 +146,6 @@
                 android:id="@+id/image_size_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/image_icon"
                 android:layout_toEndOf="@+id/image_icon" />
         </RelativeLayout>
 
@@ -170,7 +165,6 @@
             android:layout_height="wrap_content"
             android:text="@string/featured"
             android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
-            android:layout_marginLeft="@dimen/image_settings_dialog_input_field_start_margin"
             android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

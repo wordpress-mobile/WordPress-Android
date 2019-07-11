@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
@@ -56,6 +57,7 @@ sealed class BlockListItem(val type: Type) {
         TABS,
         HEADER,
         MAP,
+        MAP_LEGEND,
         EXPANDABLE_ITEM,
         DIVIDER,
         LOADING_ITEM,
@@ -219,6 +221,8 @@ sealed class BlockListItem(val type: Type) {
     data class Empty(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(EMPTY)
 
     data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
+
+    data class MapLegend(val startLegend: String, val endLegend: String) : BlockListItem(MAP_LEGEND)
 
     object Divider : BlockListItem(DIVIDER)
 

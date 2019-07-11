@@ -5,18 +5,24 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +60,11 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -89,6 +100,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.Companion;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
+import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -263,10 +279,88 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mCommentContentLayout = view.findViewById(R.id.comment_content_container);
 
         mLayoutReply = view.findViewById(R.id.layout_comment_box);
-        mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
-        setReplyUniqueId();
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
+        mSubmitReplyBtn.setEnabled(false);
+        mSubmitReplyBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSubmitReplyBtn.setEnabled(s.length() > 0);
+            }
+        });
+
+        ImageView buttonExpand = mLayoutReply.findViewById(R.id.button_expand);
+        buttonExpand.setOnClickListener(
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = Companion.newBundle(
+                            mEditReply.getText().toString(),
+                            mEditReply.getSelectionStart(),
+                            mEditReply.getSelectionEnd()
+                                                       );
+
+                    new Builder(requireContext())
+                        .setTitle(R.string.comment)
+                        .setOnCollapseListener(new OnCollapseListener() {
+                            @Override
+                            public void onCollapse(@Nullable Bundle result) {
+                                if (result != null) {
+                                    mEditReply.setText(result.getString(RESULT_REPLY));
+                                    mEditReply.setSelection(result.getInt(RESULT_SELECTION_START),
+                                            result.getInt(RESULT_SELECTION_END));
+                                    mEditReply.requestFocus();
+                                }
+                            }
+                        })
+                        .setOnConfirmListener(new OnConfirmListener() {
+                            @Override
+                            public void onConfirm(@Nullable Bundle result) {
+                                if (result != null) {
+                                    mEditReply.setText(result.getString(RESULT_REPLY));
+                                    submitReply();
+                                }
+                            }
+                        })
+                        .setContent(CommentFullScreenDialogFragment.class, bundle)
+                        .setAction(R.string.send)
+                        .setHideActivityBar(true)
+                        .build()
+                        .show(requireActivity().getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
+                }
+            }
+        );
+        buttonExpand.setOnLongClickListener(new OnLongClickListener() {
+            @Override public boolean onLongClick(View view) {
+                if (view.isHapticFeedbackEnabled()) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+
+                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
         mBtnLikeComment.setVisibility(View.GONE);

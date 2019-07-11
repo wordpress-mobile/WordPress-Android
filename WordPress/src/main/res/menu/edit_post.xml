@@ -49,15 +49,4 @@
         </item>
 
     </group>
-
-    <group
-        android:orderInCategory="2" >
-
-        <item
-            android:id="@+id/menu_discard_changes"
-            android:title="@string/menu_discard_changes" >
-        </item>
-
-    </group>
-
 </menu>

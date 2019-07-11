@@ -1,9 +1,12 @@
 12.9
 -----
+* Full screen comments view
+
  
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Remove "Discard Local Changes" feature from the editor
 * Block Editor: Fix pasting simple text on Post Title
 * Block Editor: Remove editable empty line after list on the List block
 * Block Editor: Performance improvements on rich text editing
@@ -76,7 +79,7 @@
 * Added swiping between tabs in Notifications
 * Refreshed View all Stats screens, when digging into stats data
 * Visual update to Today's stats, All-time stats and Most popular stats blocks
-* Now sharing pictures to WordPress opens the Block editor
+* Now sharing pictures to WordPress opens the block editor
 * Fixed crash when inserting text right before an Image
 * Now sharing pictures to WordPress opens the block editor
 
