@@ -80,6 +80,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
@@ -105,6 +106,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -2251,6 +2253,15 @@ public class EditPostActivity extends AppCompatActivity implements
         startActivity(getIntent());
     }
 
+    public void setMobileEditorPreferenceToRemote() {
+        String editorSetting = "aztec";
+        if (AppPrefs.isGutenbergDefaultForNewPosts()) {
+            editorSetting = "gutenberg";
+        }
+        mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                new DesignateMobileEditorPayload(mSite, editorSetting)));
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -2273,8 +2284,10 @@ public class EditPostActivity extends AppCompatActivity implements
                         setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+                        setMobileEditorPreferenceToRemote();
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
                     } else if (mShowAztecEditor) {
+                        setMobileEditorPreferenceToRemote();
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
