@@ -1662,7 +1662,7 @@ public class SiteStore extends Store {
 
     private void fetchSiteEditor(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchSiteEditor(site);
+            mSiteRestClient.fetchSiteEditors(site);
         }
     }
 
