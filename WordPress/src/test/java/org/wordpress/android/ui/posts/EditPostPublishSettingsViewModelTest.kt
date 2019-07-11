@@ -178,7 +178,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `updatePost updates post status from SCHEDULED to DRAFT when published date in past`() {
         val expectedToastMessage = "Message"
-        whenever(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)).thenReturn(expectedToastMessage)
+        whenever(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)).thenReturn(
+                expectedToastMessage
+        )
         val post = PostModel()
         post.status = PostStatus.SCHEDULED.toString()
         post.setIsLocalDraft(true)
