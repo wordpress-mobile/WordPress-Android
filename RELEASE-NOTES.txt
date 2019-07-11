@@ -1,5 +1,7 @@
 12.9
 -----
+* Full screen comments view
+
  
 12.8
 -----
