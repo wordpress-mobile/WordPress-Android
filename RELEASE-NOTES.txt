@@ -1,6 +1,9 @@
 12.9
 -----
-* Block Editor: Video block is now available in the Inserter
+* Block editor: Video block is now available in the Inserter
+* Block editor: Tapping on an empty editor area will create a new paragraph block
+* Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
+* Block editor: Adding a block from the Post Title now inserts the block at the top of the Post.
  
 12.8
 -----
