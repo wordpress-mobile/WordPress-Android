@@ -58,6 +58,10 @@ class EditPostPublishSettingsViewModel
         day = startCalendar.get(Calendar.DAY_OF_MONTH)
         hour = startCalendar.get(Calendar.HOUR_OF_DAY)
         minute = startCalendar.get(Calendar.MINUTE)
+        onPostStatusChanged(postModel)
+    }
+
+    fun onPostStatusChanged(postModel: PostModel?) {
         canPublishImmediately = PostUtils.shouldPublishImmediatelyOptionBeAvailable(postModel)
         postModel?.let {
             _onPublishedLabelChanged.postValue(postSettingsUtils.getPublishDateLabel(postModel, context))
