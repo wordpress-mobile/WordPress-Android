@@ -433,5 +433,6 @@
 
     <!-- web preview  -->
     <dimen name="web_preview_navbar_height">72dp</dimen>
+    <dimen name="web_preview_mode_menu_item_width">161sp</dimen> <!-- SP works better with popup list menu  -->
 
 </resources>
