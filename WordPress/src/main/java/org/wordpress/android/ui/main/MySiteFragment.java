@@ -91,6 +91,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -402,6 +403,7 @@ public class MySiteFragment extends Fragment implements
 
         rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
                 ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
                         DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
             }
@@ -803,6 +805,7 @@ public class MySiteFragment extends Fragment implements
                 break;
             case RequestCodes.DOMAIN_REGISTRATION:
                 if (resultCode == Activity.RESULT_OK && isAdded() && data != null) {
+                    AnalyticsTracker.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS);
                     String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
                     requestEmailValidation(getContext(), email);
                 }
