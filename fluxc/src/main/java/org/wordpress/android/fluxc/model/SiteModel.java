@@ -83,6 +83,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mIconUrl;
     @Column private boolean mHasFreePlan;
     @Column private String mUnmappedUrl;
+    @Column private String mWebEditor;
+    @Column private String mMobileEditor;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -511,6 +513,22 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setUnmappedUrl(String unMappedUrl) {
         mUnmappedUrl = unMappedUrl;
+    }
+
+    public String getWebEditor() {
+        return mWebEditor;
+    }
+
+    public void setWebEditor(String webEditor) {
+        mWebEditor = webEditor;
+    }
+
+    public String getMobileEditor() {
+        return mMobileEditor;
+    }
+
+    public void setMobileEditor(String mobileEditor) {
+        mMobileEditor = mobileEditor;
     }
 
     public boolean isJetpackInstalled() {
