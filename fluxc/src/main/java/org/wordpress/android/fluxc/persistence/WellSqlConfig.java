@@ -558,7 +558,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
                 db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
                 oldVersion++;
-
         }
         db.setTransactionSuccessful();
         db.endTransaction();
