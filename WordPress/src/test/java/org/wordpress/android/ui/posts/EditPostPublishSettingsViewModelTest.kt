@@ -14,11 +14,11 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 
-class EditPostPublishedSettingsViewModelTest : BaseUnitTest() {
+class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    private lateinit var viewModel: EditPostPublishedSettingsViewModel
+    private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     private val dateCreated = "2019-05-05T14:33:20+0200"
     private val currentCalendar = Calendar.getInstance()
@@ -26,7 +26,7 @@ class EditPostPublishedSettingsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = EditPostPublishedSettingsViewModel(resourceProvider, postSettingsUtils, localeManagerWrapper)
+        viewModel = EditPostPublishSettingsViewModel(resourceProvider, postSettingsUtils, localeManagerWrapper)
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(dateLabel)
@@ -89,7 +89,7 @@ class EditPostPublishedSettingsViewModelTest : BaseUnitTest() {
     fun `onDateSelected updates date and triggers onDatePicked`() {
         var datePicked: Unit? = null
         viewModel.onDatePicked.observeForever {
-            datePicked = it
+            datePicked = it?.getContentIfNotHandled()
         }
 
         val updatedYear = 2018
@@ -143,10 +143,10 @@ class EditPostPublishedSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(futureDate, post)
 
-        assertThat(post.status).isEqualTo(PostStatus.PUBLISHED.toString())
+        assertThat(post.status).isEqualTo(PostStatus.SCHEDULED.toString())
         assertThat(post.dateCreated).isNotNull()
 
-        assertThat(updatedStatus).isEqualTo(PostStatus.PUBLISHED)
+        assertThat(updatedStatus).isEqualTo(PostStatus.SCHEDULED)
         assertThat(dateLabel).isEqualTo(dateLabel)
     }
 
@@ -197,7 +197,7 @@ class EditPostPublishedSettingsViewModelTest : BaseUnitTest() {
 
         var toastMessage: String? = null
         viewModel.onToast.observeForever {
-            toastMessage = it
+            toastMessage = it?.getContentIfNotHandled()
         }
 
         viewModel.updatePost(currentCalendar, post)
