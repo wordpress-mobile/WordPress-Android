@@ -38,8 +38,6 @@ public enum SiteAction implements IAction {
     FETCH_PROFILE_XML_RPC,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE,
-    @Action(payloadType = SiteModel.class)
-    FETCH_SITE_EDITORS,
     @Action
     FETCH_SITES,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
@@ -48,6 +46,8 @@ public enum SiteAction implements IAction {
     CREATE_NEW_SITE,
     @Action(payloadType = SiteModel.class)
     FETCH_POST_FORMATS,
+    @Action(payloadType = SiteModel.class)
+    FETCH_SITE_EDITORS,
     @Action(payloadType = SiteModel.class)
     FETCH_USER_ROLES,
     @Action(payloadType = SiteModel.class)
