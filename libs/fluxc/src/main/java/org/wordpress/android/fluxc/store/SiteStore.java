@@ -112,6 +112,16 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DesignateMobileEditorPayload extends Payload<SiteEditorsError> {
+        public SiteModel site;
+        public String editor;
+
+        public DesignateMobileEditorPayload(@NonNull SiteModel site, @NonNull String editorName) {
+            this.site = site;
+            this.editor = editorName;
+        }
+    }
+
     public static class FetchedEditorsPayload extends Payload<SiteEditorsError> {
         public SiteModel site;
         public String webEditor;
@@ -1381,7 +1391,10 @@ public class SiteStore extends Store {
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
             case FETCH_SITE_EDITORS:
-                fetchSiteEditor((SiteModel) action.getPayload());
+                fetchSiteEditors((SiteModel) action.getPayload());
+                break;
+            case DESIGNATE_MOBILE_EDITOR:
+                designateMobileEditor((DesignateMobileEditorPayload) action.getPayload());
                 break;
             case FETCHED_SITE_EDITORS:
                 updateSiteEditors((FetchedEditorsPayload) action.getPayload());
@@ -1660,9 +1673,15 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void fetchSiteEditor(SiteModel site) {
+    private void fetchSiteEditors(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
             mSiteRestClient.fetchSiteEditors(site);
+        }
+    }
+
+    private void designateMobileEditor(DesignateMobileEditorPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mSiteRestClient.designateMobileEditor(payload.site, payload.editor);
         }
     }
 
@@ -1672,6 +1691,8 @@ public class SiteStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
+            site.setMobileEditor(payload.mobileEditor);
+            site.setWebEditor(payload.webEditor);
             try {
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
             } catch (Exception e) {
