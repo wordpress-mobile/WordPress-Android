@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayloa
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -37,6 +38,8 @@ public enum SiteAction implements IAction {
     FETCH_PROFILE_XML_RPC,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE,
+    @Action(payloadType = SiteModel.class)
+    FETCH_SITE_EDITORS,
     @Action
     FETCH_SITES,
     @Action(payloadType = RefreshSitesXMLRPCPayload.class)
@@ -89,6 +92,8 @@ public enum SiteAction implements IAction {
     CREATED_NEW_SITE,
     @Action(payloadType = FetchedPostFormatsPayload.class)
     FETCHED_POST_FORMATS,
+    @Action(payloadType = FetchedEditorsPayload.class)
+    FETCHED_SITE_EDITORS,
     @Action(payloadType = FetchedUserRolesPayload.class)
     FETCHED_USER_ROLES,
     @Action(payloadType = DeleteSiteResponsePayload.class)
