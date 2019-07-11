@@ -1,8 +1,8 @@
 12.9
 -----
 * Full screen comments view
+* Added Domain Registration functionality for customers with unclaimed domain credit
 
- 
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories

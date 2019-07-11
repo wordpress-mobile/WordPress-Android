@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -1155,9 +1154,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void toggleDomainRegistrationCtaVisibility() {
-        // only show the Domain Registration CTA if domain registration is enabled
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainCreditAvailable) {
-            AnalyticsTracker.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN);
+        if (mIsDomainCreditAvailable) {
             mDomainRegistrationCta.setVisibility(View.VISIBLE);
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);
@@ -1250,9 +1247,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void fetchSitePlans(@Nullable SiteModel site) {
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
-        }
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
