@@ -20,11 +20,11 @@ sealed class PostListItemType {
 }
 
 data class LoadingItemOptions(
-    val showEditButton : Boolean,
-    val showViewButton : Boolean,
-    val showMoreButton : Boolean ,
-    val showMoveToDraftButton : Boolean,
-    val showDeleteButton : Boolean
+    val showEditButton: Boolean,
+    val showViewButton: Boolean,
+    val showMoreButton: Boolean,
+    val showMoveToDraftButton: Boolean,
+    val showDeleteButton: Boolean
 )
 
 data class PostListItemUiStateData(
