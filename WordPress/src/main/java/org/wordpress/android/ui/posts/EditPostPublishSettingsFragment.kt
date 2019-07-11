@@ -23,6 +23,7 @@ class EditPostPublishSettingsFragment : Fragment() {
     private lateinit var publishNotificationContainer: LinearLayout
     private lateinit var addToCalendarContainer: LinearLayout
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var postModelProvider: EditPostModelProvider
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +48,6 @@ class EditPostPublishSettingsFragment : Fragment() {
                 showPostTimeSelectionDialog()
             }
         })
-        viewModel.onPublishedDateChanged.observe(this, Observer {
-            it?.let { date ->
-                viewModel.updatePost(date)
-            }
-        })
         viewModel.onPublishedLabelChanged.observe(this, Observer {
             it?.let { label ->
                 dateAndTime.text = label
@@ -67,7 +63,9 @@ class EditPostPublishSettingsFragment : Fragment() {
                 )
             }
         })
-        viewModel.start()
+        postModelProvider.livePostModel.observe(this, Observer {
+            viewModel.onPostChanged(it)
+        })
         return rootView
     }
 

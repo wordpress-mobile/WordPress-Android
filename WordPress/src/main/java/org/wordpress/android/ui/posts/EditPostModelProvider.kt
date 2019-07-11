@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import javax.inject.Inject
@@ -77,6 +78,62 @@ class EditPostModelProvider
     fun setFeaturedImageId(featuredImageId: Long) {
         postModel?.let {
             it.featuredImageId = featuredImageId
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setPostFormat(postFormat: String) {
+        postModel?.let {
+            it.postFormat = postFormat
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setExcerpt(excerpt: String) {
+        postModel?.let {
+            it.excerpt = excerpt
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setSlug(slug: String) {
+        postModel?.let {
+            it.slug = slug
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setPassword(password: String) {
+        postModel?.let {
+            it.password = password
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setCategoryIdList(categoryIdList: List<Long>) {
+        postModel?.let {
+            it.categoryIdList = categoryIdList
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setTagNameList(tagNameList: List<String>?) {
+        postModel?.let {
+            it.setTagNameList(tagNameList)
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun setLocation(postLocation: PostLocation) {
+        postModel?.let {
+            it.setLocation(postLocation.latitude, postLocation.longitude)
+            _livePostModel.postValue(it)
+        }
+    }
+
+    fun clearLocation() {
+        postModel?.let {
+            it.clearLocation()
             _livePostModel.postValue(it)
         }
     }

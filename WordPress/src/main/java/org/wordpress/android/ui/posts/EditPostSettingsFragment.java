@@ -359,7 +359,7 @@ public class EditPostSettingsFragment extends Fragment {
         });
         mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {
             @Override public void onChanged(PostStatus postStatus) {
-                updatePostStatus(postStatus.toString());
+                updatePostStatus(postStatus);
             }
         });
 
@@ -406,7 +406,6 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.start();
         updateCategoriesTextView();
         initLocation();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
@@ -514,7 +513,7 @@ public class EditPostSettingsFragment extends Fragment {
         switch (fragment.getDialogType()) {
             case POST_STATUS:
                 int index = fragment.getCheckedIndex();
-                String status = getPostStatusAtIndex(index).toString();
+                PostStatus status = getPostStatusAtIndex(index);
                 updatePostStatus(status);
                 break;
             case POST_FORMAT:
@@ -609,17 +608,17 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateExcerpt(String excerpt) {
-        getPost().setExcerpt(excerpt);
+        mPostProvider.setExcerpt(excerpt);
         mExcerptTextView.setText(excerpt);
     }
 
     private void updateSlug(String slug) {
-        getPost().setSlug(slug);
+        mPostProvider.setSlug(slug);
         mSlugTextView.setText(slug);
     }
 
     private void updatePassword(String password) {
-        getPost().setPassword(password);
+        mPostProvider.setPassword(password);
         mPasswordTextView.setText(password);
     }
 
@@ -627,25 +626,24 @@ public class EditPostSettingsFragment extends Fragment {
         if (categoryList == null) {
             return;
         }
-        getPost().setCategoryIdList(categoryList);
+        mPostProvider.setCategoryIdList(categoryList);
         updateCategoriesTextView();
     }
 
-    public void updatePostStatus(String postStatus) {
-        getPost().setStatus(postStatus);
+    public void updatePostStatus(PostStatus postStatus) {
+        mPostProvider.setStatus(postStatus);
         updatePostStatusRelatedViews();
         updateSaveButton();
     }
 
     private void updatePostFormat(String postFormat) {
-        getPost().setPostFormat(postFormat);
+        mPostProvider.setPostFormat(postFormat);
         updatePostFormatTextView();
     }
 
     public void updatePostStatusRelatedViews() {
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.onPostStatusChanged();
     }
 
     private void updateStatusTextView() {
@@ -660,12 +658,11 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateTags(String selectedTags) {
-        PostModel postModel = getPost();
         if (!TextUtils.isEmpty(selectedTags)) {
             String tags = selectedTags.replace("\n", " ");
-            postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+            mPostProvider.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         } else {
-            postModel.setTagNameList(null);
+            mPostProvider.setTagNameList(null);
         }
         updateTagsTextView();
     }
@@ -804,8 +801,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId) {
-        PostModel postModel = getPost();
-        postModel.setFeaturedImageId(featuredImageId);
+        mPostProvider.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }
 
@@ -945,9 +941,8 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void setLocation(@Nullable Place place) {
-        PostModel postModel = getPost();
         if (place == null) {
-            postModel.clearLocation();
+            mPostProvider.clearLocation();
             mLocationTextView.setText("");
             mPostLocation = null;
             return;
@@ -957,7 +952,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPostLocation.setLatitude(place.getLatLng().latitude);
         mPostLocation.setLongitude(place.getLatLng().longitude);
-        postModel.setLocation(mPostLocation);
+        mPostProvider.setLocation(mPostLocation);
         mLocationTextView.setText(place.getAddress());
     }
 

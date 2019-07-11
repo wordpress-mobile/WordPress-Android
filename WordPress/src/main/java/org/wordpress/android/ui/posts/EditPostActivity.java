@@ -1408,7 +1408,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void saveAsDraft() {
-        mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT.toString());
+        mEditPostSettingsFragment.updatePostStatus(PostStatus.DRAFT);
         ToastUtils.showToast(EditPostActivity.this,
                 getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT);
         UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
