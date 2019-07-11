@@ -2660,5 +2660,9 @@
 
     <string name="description_collapse">Collapse</string>
     <string name="description_expand">Expand</string>
+    <string name="post_waiting_for_connection_publish">Post will be published next time you device is online</string>
+    <string name="post_waiting_for_connection_pending">Post will be submitted for review next time your device is online</string>
+    <string name="post_waiting_for_connection_scheduled">Post will be scheduled next time your device is online</string>
+    <string name="post_waiting_for_connection_private">Private post will be published next time your device is online</string>
 
 </resources>

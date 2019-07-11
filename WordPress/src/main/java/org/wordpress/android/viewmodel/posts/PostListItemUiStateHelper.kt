@@ -11,9 +11,13 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
+import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -28,6 +32,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.NothingToUpload
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.widgets.PostListButtonType
@@ -62,7 +67,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus, postStatus)
+        val uploadUiState = createUploadUiState(uploadStatus, postStatus, post.isLocallyChanged || post.isLocalDraft)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -180,16 +185,40 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             }
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
+            uploadUiState is UploadWaitingForConnection -> {
+                when (uploadUiState.postStatus){
+                    UNKNOWN, PUBLISHED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_publish))
+                    PRIVATE -> labels.add(UiStringRes(R.string.post_waiting_for_connection_private))
+                    PENDING -> labels.add(UiStringRes(R.string.post_waiting_for_connection_pending))
+                    SCHEDULED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_scheduled))
+                    TRASHED -> AppLog.e(
+                            POSTS,
+                            "Developer error: This state shouldn't happen. Trashed post is in UploadWaitingForConnection state."
+                    )
+                    DRAFT -> labels.add(UiStringRes(R.string.local_changes))
+                }
+            }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
+
         }
 
         // we want to show either single error/progress label or 0-n info labels.
         if (labels.isEmpty()) {
             if (isLocalDraft) {
-                labels.add(UiStringRes(R.string.local_draft))
+                // TODO temporary log for testing - remove before this branch is merged into develop
+                AppLog.e(
+                        POSTS,
+                        "Developer error: This state shouldn't happen. All locally changed post should " +
+                                "be in UploadWaitingForConnection state."
+                )
             }
             if (isLocallyChanged) {
-                labels.add(UiStringRes(R.string.local_changes))
+                // TODO temporary log for testing - remove before this branch is merged into develop
+                AppLog.e(
+                        POSTS,
+                        "Developer error: This state shouldn't happen. All locally changed post should " +
+                                "be in UploadWaitingForConnection state."
+                )
             }
             if (postStatus == PRIVATE) {
                 labels.add(UiStringRes(R.string.post_status_post_private))
@@ -343,13 +372,15 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
         data class UploadFailed(val error: UploadError) : PostUploadUiState()
+        data class UploadWaitingForConnection(val postStatus: PostStatus): PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
     }
 
     private fun createUploadUiState(
         uploadStatus: PostListItemUploadStatus,
-        postStatus: PostStatus
+        postStatus: PostStatus,
+        postNotSynced: Boolean
     ): PostUploadUiState {
         return when {
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
@@ -359,6 +390,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued
+            postNotSynced -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
         }
     }
