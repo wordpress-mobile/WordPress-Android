@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +74,6 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -137,7 +135,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject PostSettingsUtils mPostSettingsUtils;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    private EditPostPublishedSettingsViewModel mPublishedViewModel;
+    private EditPostPublishSettingsViewModel mPublishedViewModel;
 
 
     interface EditPostActivityHook {
@@ -163,7 +161,7 @@ public class EditPostSettingsFragment extends Fragment {
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
         mPublishedViewModel =
-                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishedSettingsViewModel.class);
+                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishSettingsViewModel.class);
     }
 
     @Override
@@ -411,6 +409,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
+        mPublishedViewModel.start(postModel);
         updateCategoriesTextView();
         initLocation();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
@@ -653,6 +652,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatusRelatedViews() {
         updateStatusTextView();
         updatePublishDateTextView();
+        mPublishedViewModel.onPostStatusChanged(getPost());
     }
 
     private void updateStatusTextView() {
@@ -691,34 +691,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
         String postFormat = getPostFormatNameFromKey(getPost().getPostFormat());
         mPostFormatTextView.setText(postFormat);
-    }
-
-    private void updatePublishDate(Calendar calendar) {
-        getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
-        PostStatus initialPostStatus = PostStatus.fromPost(getPost());
-        boolean isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(getPost());
-        PostStatus finalPostStatus = initialPostStatus;
-        if (initialPostStatus == PostStatus.DRAFT && isPublishDateInTheFuture) {
-            // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
-            // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
-            finalPostStatus = PostStatus.PUBLISHED;
-        } else if (initialPostStatus == PostStatus.PUBLISHED && getPost().isLocalDraft()) {
-            // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
-            // is by running into the if case above. So, if they're updating the date again by calling
-            // `updatePublishDate()`, get it back to DRAFT.
-            finalPostStatus = PostStatus.DRAFT;
-        } else if (initialPostStatus == PostStatus.SCHEDULED && !isPublishDateInTheFuture) {
-            // if this is a SCHEDULED post and the user is trying to Back-date it now, let's update it to DRAFT.
-            // The other option was to make it published immediately but, let the user actively do that rather than
-            // having the app be smart about it - we don't want to accidentally publish a post.
-            finalPostStatus = PostStatus.DRAFT;
-            // show toast only once, when time is shown
-            ToastUtils.showToast(getActivity(),
-                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT, Gravity.TOP);
-        }
-        updatePostStatus(finalPostStatus.toString());
-        updatePublishDateTextView();
-        updateSaveButton();
     }
 
     private void updatePublishDateTextView() {

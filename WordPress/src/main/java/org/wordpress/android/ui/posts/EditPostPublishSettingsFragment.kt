@@ -19,19 +19,19 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
-class EditPostPublishedSettingsFragment : Fragment() {
+class EditPostPublishSettingsFragment : Fragment() {
     private lateinit var dateAndTime: TextView
     private lateinit var publishNotification: TextView
     private lateinit var publishNotificationContainer: LinearLayout
     private lateinit var addToCalendarContainer: LinearLayout
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: EditPostPublishedSettingsViewModel
+    private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.applicationContext as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
-                .get(EditPostPublishedSettingsViewModel::class.java)
+                .get(EditPostPublishSettingsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,7 +45,9 @@ class EditPostPublishedSettingsFragment : Fragment() {
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
 
         viewModel.onDatePicked.observe(this, Observer {
-            showPostTimeSelectionDialog()
+            it?.applyIfNotHandled {
+                showPostTimeSelectionDialog()
+            }
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
@@ -58,10 +60,10 @@ class EditPostPublishedSettingsFragment : Fragment() {
             }
         })
         viewModel.onToast.observe(this, Observer {
-            it?.let { message ->
+            it?.applyIfNotHandled {
                 ToastUtils.showToast(
                         context,
-                        message,
+                        this,
                         SHORT,
                         Gravity.TOP
                 )
@@ -102,7 +104,8 @@ class EditPostPublishedSettingsFragment : Fragment() {
             throw RuntimeException("$activity must implement EditPostActivityHook")
         }
     }
+
     companion object {
-        fun newInstance() = EditPostPublishedSettingsFragment()
+        fun newInstance() = EditPostPublishSettingsFragment()
     }
 }

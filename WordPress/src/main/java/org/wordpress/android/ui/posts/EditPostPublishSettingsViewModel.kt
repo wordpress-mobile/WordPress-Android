@@ -11,12 +11,13 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
 
-class EditPostPublishedSettingsViewModel
+class EditPostPublishSettingsViewModel
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val postSettingsUtils: PostSettingsUtils,
@@ -35,16 +36,16 @@ class EditPostPublishedSettingsViewModel
     var minute: Int? = null
         private set
 
-    private val _onDatePicked = MutableLiveData<Unit>()
-    val onDatePicked: LiveData<Unit> = _onDatePicked
+    private val _onDatePicked = MutableLiveData<Event<Unit>>()
+    val onDatePicked: LiveData<Event<Unit>> = _onDatePicked
     private val _onPublishedDateChanged = MutableLiveData<Calendar>()
     val onPublishedDateChanged: LiveData<Calendar> = _onPublishedDateChanged
     private val _onPostStatusChanged = MutableLiveData<PostStatus>()
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
     private val _onPublishedLabelChanged = MutableLiveData<String>()
     val onPublishedLabelChanged: LiveData<String> = _onPublishedLabelChanged
-    private val _onToast = MutableLiveData<String>()
-    val onToast: LiveData<String> = _onToast
+    private val _onToast = MutableLiveData<Event<String>>()
+    val onToast: LiveData<Event<String>> = _onToast
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
@@ -54,6 +55,10 @@ class EditPostPublishedSettingsViewModel
         day = startCalendar.get(Calendar.DAY_OF_MONTH)
         hour = startCalendar.get(Calendar.HOUR_OF_DAY)
         minute = startCalendar.get(Calendar.MINUTE)
+        onPostStatusChanged(postModel)
+    }
+
+    fun onPostStatusChanged(postModel: PostModel?) {
         canPublishImmediately = postModel?.let { PostUtils.shouldPublishImmediatelyOptionBeAvailable(it) } ?: false
         postModel?.let {
             _onPublishedLabelChanged.postValue(postSettingsUtils.getPublishDateLabel(postModel))
@@ -76,7 +81,7 @@ class EditPostPublishedSettingsViewModel
         this.year = year
         this.month = month
         this.day = dayOfMonth
-        _onDatePicked.postValue(Unit)
+        _onDatePicked.postValue(Event(Unit))
     }
 
     private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
@@ -96,9 +101,9 @@ class EditPostPublishedSettingsViewModel
             val isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(post)
             var finalPostStatus = initialPostStatus
             if (initialPostStatus == DRAFT && isPublishDateInTheFuture) {
-                // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
-                // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
-                finalPostStatus = PUBLISHED
+                // The previous logic was setting the status twice, once from draft to published and when the user
+                // picked the time, it set it from published to scheduled. This is now done in one step.
+                finalPostStatus = SCHEDULED
             } else if (initialPostStatus == PUBLISHED && post.isLocalDraft()) {
                 // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
                 // is by running into the if case above. So, if they're updating the date again by calling
@@ -110,7 +115,7 @@ class EditPostPublishedSettingsViewModel
                 // having the app be smart about it - we don't want to accidentally publish a post.
                 finalPostStatus = DRAFT
                 // show toast only once, when time is shown
-                _onToast.postValue(resourceProvider.getString(R.string.editor_post_converted_back_to_draft))
+                _onToast.postValue(Event(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)))
             }
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)

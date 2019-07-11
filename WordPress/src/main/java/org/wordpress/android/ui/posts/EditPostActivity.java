@@ -2282,7 +2282,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case PAGE_SETTINGS:
                     return EditPostSettingsFragment.newInstance();
                 case PAGE_PUBLISH_SETTINGS:
-                    return EditPostPublishedSettingsFragment.Companion.newInstance();
+                    return EditPostPublishSettingsFragment.Companion.newInstance();
                 case PAGE_HISTORY:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 case PAGE_PREVIEW:
