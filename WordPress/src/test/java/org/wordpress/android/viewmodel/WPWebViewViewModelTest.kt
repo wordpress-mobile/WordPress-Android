@@ -171,6 +171,23 @@ class WPWebViewViewModelTest {
     }
 
     @Test
+    fun `clicking on preview mode button toggles preview mode selector`() {
+        viewModel.start()
+
+        var previewModeSelectorVisible = false
+        viewModel.isPreviewModeSelectorVisible.observeForever {
+            previewModeSelectorVisible = it
+        }
+
+        assertThat(previewModeSelectorVisible).isFalse()
+        viewModel.togglePreviewModeSelectorVisibility(true)
+        assertThat(previewModeSelectorVisible).isTrue()
+
+        viewModel.togglePreviewModeSelectorVisibility(false)
+        assertThat(previewModeSelectorVisible).isFalse()
+    }
+
+    @Test
     fun `selecting a preview mode changes it if it's not already selected`() {
         viewModel.start()
 
