@@ -42,8 +42,8 @@ class WPWebViewViewModel
     private val _openInExternalBrowser = SingleLiveEvent<Unit>()
     val openExternalBrowser: LiveData<Unit> = _openInExternalBrowser
 
-    private val _showPreviewModeSelector = SingleLiveEvent<Unit>()
-    val showPreviewModeSelector: LiveData<Unit> = _showPreviewModeSelector
+    private val _isPreviewModeSelectorVisible = MutableLiveData<Boolean>()
+    val isPreviewModeSelectorVisible: LiveData<Boolean> = _isPreviewModeSelectorVisible
 
     private val _navbarUiState: MutableLiveData<NavBarUiState> = MutableLiveData()
     val navbarUiState: LiveData<NavBarUiState> = _navbarUiState
@@ -154,8 +154,8 @@ class WPWebViewViewModel
         _openInExternalBrowser.call()
     }
 
-    fun showPreviewModeSelector() {
-        _showPreviewModeSelector.call()
+    fun togglePreviewModeSelectorVisibility(isVisible: Boolean) {
+        _isPreviewModeSelectorVisible.value = isVisible
     }
 
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {

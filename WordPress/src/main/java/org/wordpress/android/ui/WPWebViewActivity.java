@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +18,9 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.PopupMenu.OnDismissListener;
+import androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -88,7 +92,8 @@ import kotlin.Unit;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener {
+public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener,
+        OnMenuItemClickListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -164,7 +169,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         mPreviewModeButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                mViewModel.showPreviewModeSelector();
+                mViewModel.togglePreviewModeSelectorVisibility(true);
             }
         });
 
@@ -249,21 +254,45 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             }
         });
 
-        mViewModel.getShowPreviewModeSelector().observe(this, new Observer<Unit>() {
+        mViewModel.isPreviewModeSelectorVisible().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(@Nullable Unit unit) {
-                // TODO show preview mode selector
+            public void onChanged(@Nullable Boolean isVisible) {
+                if (isVisible != null && isVisible) {
+                    showPreviewModeSelector();
+                }
             }
         });
 
         mViewModel.getPreviewMode().observe(this, new Observer<PreviewMode>() {
             @Override
             public void onChanged(@Nullable PreviewMode previewMode) {
-                // TODO updatedPreviewMode
+                mWebView.getSettings().setLoadWithOverviewMode(previewMode == PreviewMode.DESKTOP);
+                mWebView.getSettings().setUseWideViewPort(previewMode != PreviewMode.DESKTOP);
+                mWebView.setInitialScale(100);
             }
         });
         mViewModel.start();
     }
+
+    private void showPreviewModeSelector() {
+        mPreviewModeButton.post(new Runnable() {
+            @Override public void run() {
+                PopupMenu popup = new PopupMenu(WPWebViewActivity.this, mPreviewModeButton, Gravity.BOTTOM,
+                        R.attr.actionOverflowMenuStyle, 0);
+                popup.setOnMenuItemClickListener(WPWebViewActivity.this);
+                popup.setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(PopupMenu menu) {
+                        mViewModel.togglePreviewModeSelectorVisibility(false);
+                    }
+                });
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.site_preview_menu, popup.getMenu());
+                popup.show();
+            }
+        });
+    }
+
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url, null, null);
@@ -611,5 +640,19 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.preview_default:
+                mViewModel.selectPreviewMode(PreviewMode.DEFAULT);
+                return true;
+            case R.id.preview_desktop:
+                mViewModel.selectPreviewMode(PreviewMode.DESKTOP);
+                return true;
+            default:
+                return false;
+        }
     }
 }
