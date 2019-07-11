@@ -68,7 +68,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -81,7 +80,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -133,14 +131,13 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
     @Inject PostSettingsUtils mPostSettingsUtils;
+    @Inject EditPostModelProvider mPostProvider;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
 
 
     interface EditPostActivityHook {
-        PostModel getPost();
-
         SiteModel getSite();
     }
 
@@ -409,7 +406,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.start(postModel);
+        mPublishedViewModel.start();
         updateCategoriesTextView();
         initLocation();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
@@ -581,11 +578,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
-        if (getEditPostActivityHook() == null) {
-            // This can only happen during a callback while activity is re-created for some reason (config changes etc)
-            return null;
-        }
-        return getEditPostActivityHook().getPost();
+        return mPostProvider.getPostModel();
     }
 
     private SiteModel getSite() {
@@ -652,7 +645,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatusRelatedViews() {
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.onPostStatusChanged(getPost());
+        mPublishedViewModel.onPostStatusChanged();
     }
 
     private void updateStatusTextView() {
@@ -854,19 +847,6 @@ public class EditPostSettingsFragment extends Fragment {
         if (isAdded()) {
             ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
         }
-    }
-
-    // Publish Date Helpers
-
-    private Calendar getCurrentPublishDateAsCalendar() {
-        PostModel postModel = getPost();
-        Calendar calendar = Calendar.getInstance();
-        String dateCreated = postModel.getDateCreated();
-        // Set the currently selected time if available
-        if (!TextUtils.isEmpty(dateCreated)) {
-            calendar.setTime(DateTimeUtils.dateFromIso8601(dateCreated));
-        }
-        return calendar;
     }
 
     // FluxC events

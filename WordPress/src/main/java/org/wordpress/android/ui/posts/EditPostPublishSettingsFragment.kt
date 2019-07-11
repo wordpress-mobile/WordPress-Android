@@ -13,8 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
@@ -51,7 +49,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
-                viewModel.updatePost(date, getPost())
+                viewModel.updatePost(date)
             }
         })
         viewModel.onPublishedLabelChanged.observe(this, Observer {
@@ -69,7 +67,7 @@ class EditPostPublishSettingsFragment : Fragment() {
                 )
             }
         })
-        viewModel.start(getPost())
+        viewModel.start()
         return rootView
     }
 
@@ -89,20 +87,6 @@ class EditPostPublishSettingsFragment : Fragment() {
 
         val fragment = PostTimePickerDialogFragment.newInstance()
         fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
-    }
-
-    private fun getPost(): PostModel? {
-        return getEditPostActivityHook()?.post
-    }
-
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
-        val activity = activity ?: return null
-
-        return if (activity is EditPostActivityHook) {
-            activity
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
-        }
     }
 
     companion object {

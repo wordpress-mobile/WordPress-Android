@@ -316,10 +316,12 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
+    public static boolean updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
         if (shouldPublishImmediately(postModel)) {
             postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+            return true;
         }
+        return false;
     }
 
     static boolean updatePostTitleIfDifferent(PostModel post, String newTitle) {
