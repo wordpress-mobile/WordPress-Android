@@ -79,10 +79,13 @@ class WPWebViewViewModelTest {
     @Test
     fun `initially navigation is not enabled and preview mode is set to default`() {
         viewModel.start()
-        assertThat(viewModel.navbarUiState.value).isNotNull
+        assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
         assertThat(viewModel.navbarUiState.value!!.forwardNavigationEnabled).isFalse()
-        assertThat(viewModel.previewMode.value).isEqualTo(PreviewMode.DEFAULT)
+        assertThat(viewModel.previewMode.value).isEqualTo(DEFAULT)
+        assertThat(viewModel.previewModeSelector.value).isNotNull()
+        assertThat(viewModel.previewModeSelector.value!!.isVisible).isFalse()
+        assertThat(viewModel.previewModeSelector.value!!.selectedPreviewMode).isEqualTo(DEFAULT)
     }
 
     @Test

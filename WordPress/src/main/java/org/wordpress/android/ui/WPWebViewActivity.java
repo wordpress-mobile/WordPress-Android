@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
@@ -259,14 +260,23 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 if (previewModelSelectorStatus != null && previewModelSelectorStatus.isVisible()) {
                     mPreviewModeButton.post(new Runnable() {
                         @Override public void run() {
+                            int popupWidth = getResources().getDimensionPixelSize(R.dimen.web_preview_mode_popup_width);
+                            int popupOffset = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
+
                             final ListPopupWindow listPopup = new ListPopupWindow(WPWebViewActivity.this);
-                            listPopup.setWidth(
-                                    getResources().getDimensionPixelSize(R.dimen.web_preview_mode_menu_item_width));
+                            listPopup.setWidth(popupWidth);
                             listPopup.setAdapter(new PreviewModeMenuAdapter(WPWebViewActivity.this,
                                     previewModelSelectorStatus.getSelectedPreviewMode()));
                             listPopup.setDropDownGravity(Gravity.END);
                             listPopup.setAnchorView(mPreviewModeButton);
+                            listPopup.setHorizontalOffset(-popupOffset);
+                            listPopup.setVerticalOffset(popupOffset);
                             listPopup.setModal(true);
+                            listPopup.setOnDismissListener(new OnDismissListener() {
+                                @Override public void onDismiss() {
+                                    mViewModel.togglePreviewModeSelectorVisibility(false);
+                                }
+                            });
                             listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -293,7 +303,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         });
         mViewModel.start();
     }
-
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url, null, null);

@@ -11,7 +11,7 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode
 
-class PreviewModeMenuAdapter(context: Context, private val mSelectedPreviewMode: PreviewMode) : BaseAdapter() {
+class PreviewModeMenuAdapter(context: Context, private val selectedPreviewMode: PreviewMode) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val menuItems = arrayOf(PreviewMode.DEFAULT, PreviewMode.DESKTOP)
 
@@ -39,14 +39,14 @@ class PreviewModeMenuAdapter(context: Context, private val mSelectedPreviewMode:
         }
 
         val previewMode = menuItems[position]
-        val textResId = when (previewMode) {
+        val labelResId = when (previewMode) {
             PreviewMode.DEFAULT -> R.string.web_preview_default
             PreviewMode.DESKTOP -> R.string.web_preview_desktop
         }
 
-        holder.label.setText(textResId)
+        holder.label.setText(labelResId)
 
-        if (previewMode === mSelectedPreviewMode) {
+        if (previewMode === selectedPreviewMode) {
             holder.checkmark.visibility = View.VISIBLE
         } else {
             holder.checkmark.visibility = View.GONE
