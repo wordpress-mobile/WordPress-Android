@@ -55,7 +55,7 @@ class SiteCreationMainVM @Inject constructor(
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
                 Transformations.map(wizardManager.navigatorLiveData) {
-                    clearOldState(it)
+                    clearOldSiteCreationState(it)
                     WizardNavigationTarget(it, siteCreationState)
                 }
         )
@@ -119,12 +119,18 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
-    private fun clearOldState(wizardStep: SiteCreationStep) {
+    private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
         when (wizardStep) {
-            SEGMENTS -> siteCreationState = siteCreationState.copy(segmentId = null)
-            VERTICALS -> siteCreationState = siteCreationState.copy(verticalId = null)
-            SITE_INFO -> siteCreationState = siteCreationState.copy(siteTitle = null, siteTagLine = null)
-            DOMAINS -> siteCreationState = siteCreationState.copy(domain = null)
+            SEGMENTS -> siteCreationState.segmentId?.let {
+                siteCreationState = siteCreationState.copy(segmentId = null) }
+            VERTICALS -> siteCreationState.verticalId?.let {
+                siteCreationState = siteCreationState.copy(verticalId = null) }
+            SITE_INFO -> {
+                siteCreationState.siteTitle?.let { siteCreationState = siteCreationState.copy(siteTitle = null) }
+                siteCreationState.siteTagLine?.let { siteCreationState = siteCreationState.copy(siteTagLine = null) }
+            }
+            DOMAINS -> siteCreationState.domain?.let {
+                siteCreationState = siteCreationState.copy(domain = null) }
         }
     }
 
