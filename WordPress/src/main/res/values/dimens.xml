@@ -211,6 +211,7 @@
     <dimen name="stats_label_min_text_size">6sp</dimen>
     <dimen name="stats_activity_box_size">12dp</dimen>
     <dimen name="stats_activity_box_end_margin">4dp</dimen>
+    <dimen name="stats_map_legend_width">60dp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_icon_size">18dp</dimen>
@@ -430,5 +431,10 @@
     <dimen name="domain_suggestions_intro_vertical_padding">24dp</dimen>
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
+
+    <dimen name="keyline_first">16dp</dimen>
+    <dimen name="keyline_second">72dp</dimen>
+
+    <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
 
 </resources>

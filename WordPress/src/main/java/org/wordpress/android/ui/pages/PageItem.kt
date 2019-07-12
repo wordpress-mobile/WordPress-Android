@@ -67,13 +67,14 @@ sealed class PageItem(open val type: Type) {
         override val id: Long,
         override val title: String,
         override val date: Date,
+        override val labels: List<Int> = emptyList(),
         override var imageUrl: String? = null,
         override var actionsEnabled: Boolean = true
     ) : Page(
             id = id,
             title = title,
             date = date,
-            labels = emptyList(),
+            labels = labels,
             indent = 0,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),

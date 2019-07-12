@@ -39,7 +39,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
@@ -72,7 +72,7 @@ class PostListMainViewModel @Inject constructor(
     private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val localDraftUploadStarter: LocalDraftUploadStarter
+    private val uploadStarter: UploadStarter
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -231,7 +231,7 @@ class PostListMainViewModel @Inject constructor(
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
-        localDraftUploadStarter.queueUploadFromSite(site)
+        uploadStarter.queueUploadFromSite(site)
     }
 
     override fun onCleared() {

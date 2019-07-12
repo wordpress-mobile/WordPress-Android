@@ -41,4 +41,13 @@
             tools:text="15,908"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_retry_button"
+        style="@style/StatsWidgetRetryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:text="@string/retry"/>
 </LinearLayout>

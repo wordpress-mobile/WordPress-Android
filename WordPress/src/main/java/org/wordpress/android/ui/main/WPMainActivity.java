@@ -829,6 +829,11 @@ public class WPMainActivity extends AppCompatActivity implements
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.DOMAIN_REGISTRATION:
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 

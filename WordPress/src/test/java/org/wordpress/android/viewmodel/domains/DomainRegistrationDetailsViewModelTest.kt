@@ -14,6 +14,7 @@ import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.action.SiteAction
@@ -55,20 +56,23 @@ import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPay
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.PHONE
 import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainProductDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var transactionsStore: TransactionsStore
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var dispatcher: Dispatcher
+    @Mock private lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private var site: SiteModel = SiteModel()
 
     @Mock private lateinit var domainContactDetailsObserver: Observer<DomainContactModel>
     @Mock private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
     @Mock private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
     @Mock private lateinit var tosLinkObserver: Observer<Unit>
-    @Mock private lateinit var completedDomainRegistrationObserver: Observer<String>
+    @Mock private lateinit var completedDomainRegistrationObserver: Observer<DomainRegistrationCompletedEvent>
     @Mock private lateinit var errorMessageObserver: Observer<String>
 
     private val uiStateResults = mutableListOf<DomainRegistrationDetailsUiState>()
@@ -101,6 +105,11 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             "email@wordpress.org",
             "3124567890",
             ""
+    )
+
+    private val domainRegistrationCompletedEvent = DomainRegistrationCompletedEvent(
+            "testdomain.blog",
+            "email@wordpress.org"
     )
 
     private val shoppingCartCreateError = CreateShoppingCartError(GENERIC_ERROR, "Error Creating Cart")
@@ -142,6 +151,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
                 dispatcher,
                 transactionsStore,
                 siteStore,
+                analyticsTracker,
                 NoDelayCoroutineDispatcher()
         )
         // Setting up chain of actions
@@ -444,7 +454,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val domainRegisteredState = uiStateResults[1]
         assertThat(domainRegisteredState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
-        verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
+        verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
     }
 
     @Test
@@ -498,6 +508,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(errorRedeemingCartState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
         verify(errorMessageObserver).onChanged(shoppingCartRedeemError.message)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
     }
 
     @Test
@@ -529,7 +540,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         verify(errorMessageObserver).onChanged(siteChangedError.message)
 
-        verify(completedDomainRegistrationObserver).onChanged(domainProductDetails.domainName)
+        verify(completedDomainRegistrationObserver).onChanged(domainRegistrationCompletedEvent)
     }
 
     @Test
