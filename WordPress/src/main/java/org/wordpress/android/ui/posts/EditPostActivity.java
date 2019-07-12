@@ -3040,14 +3040,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     // user chose a featured image
-                    if (resultCode == RESULT_OK) {
-                        if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                            long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
-                            setFeaturedImageId(mediaId);
-                        } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_QUEUED)) {
-                            if (mEditPostSettingsFragment != null) {
-                                mEditPostSettingsFragment.refreshViews();
-                            }
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                        setFeaturedImageId(mediaId);
+                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_QUEUED)) {
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.refreshViews();
                         }
                     }
                     break;
