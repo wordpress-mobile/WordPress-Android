@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -123,7 +124,7 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
+            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post));
             return;
         }
 
@@ -236,8 +237,8 @@ public class UploadUtils {
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
         if (!NetworkUtils.isNetworkAvailable(activity)) {
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
+            // TODO this currently doesn't work as the post's status isn't set to "Publish" yet.
+            showSnackbar(activity.getWindow().getDecorView(), getDeviceOfflinePostNotUploadedMessage(post));
             return;
         }
 
@@ -398,5 +399,25 @@ public class UploadUtils {
                         }
                     });
         }
+    }
+
+    @StringRes
+    private static int getDeviceOfflinePostNotUploadedMessage(PostModel post) {
+        switch (PostStatus.fromPost(post)) {
+            case PUBLISHED:
+            case UNKNOWN:
+                return R.string.post_waiting_for_connection_publish;
+            case DRAFT:
+                return R.string.error_publish_no_network;
+            case PRIVATE:
+                return R.string.post_waiting_for_connection_publish;
+            case PENDING:
+                return R.string.post_waiting_for_connection_pending;
+            case SCHEDULED:
+                return R.string.post_waiting_for_connection_scheduled;
+            case TRASHED:
+                throw new IllegalArgumentException("Trashing posts should be handled in a different code path.");
+        }
+        throw new RuntimeException("This code should be unreachable. Missing case in switch statement.");
     }
 }
