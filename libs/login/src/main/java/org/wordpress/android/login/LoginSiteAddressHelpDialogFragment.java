@@ -38,6 +38,11 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         }
     }
 
+    @Override public void onDetach() {
+        super.onDetach();
+        mLoginListener = null;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
