@@ -255,6 +255,19 @@ class SiteCreationMainVMTest {
         verify(wizardManager).setCurrentStepIndex(index)
     }
 
+    @Test
+    fun oldSiteCreationDataClearedWhenReturningToPreviousStep() {
+        // See issue #10189 - unintended data retained if user goes backwards in wizard
+        whenever(wizardManager.showNextStep()).then {
+            wizardManagerNavigatorLiveData.value = SiteCreationStep.SITE_INFO
+            Unit
+        }
+        viewModel.onVerticalsScreenFinished(VERTICAL_ID)
+        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(VERTICAL_ID)
+        wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
+        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(null)
+    }
+
     private fun currentWizardState(vm: SiteCreationMainVM) =
             vm.navigationTargetObservable.lastEvent!!.wizardState
 }
