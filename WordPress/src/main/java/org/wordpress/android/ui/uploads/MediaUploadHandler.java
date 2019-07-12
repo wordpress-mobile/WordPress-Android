@@ -402,6 +402,21 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     private boolean isSameMediaFileQueuedForThisPost(MediaModel media1, MediaModel media2) {
+        /*
+            This method used to be called "compareBySiteAndFilePath" and compared just siteId and filePath. It made
+            sense since a media file is tied to a site and can be referenced from multiple posts on that site. This
+            approach tried to prevent wasting users' data.
+
+            The issue was that when a same image was added to content of two posts only a single MediaModel was
+            enqueued. However, MediaModel references only a single post (`localPostId`). When the upload finished
+            only the first post got updated with the url. The second post got uploaded to the server with a path to
+            local image. We decided to check whether the image belongs to the same post so we can be sure the local
+            path gets replaced with the url.
+
+            More info can be found here - https://github.com/wordpress-mobile/WordPress-Android/pull/10204.
+
+            Issue with a proper fix - https://github.com/wordpress-mobile/WordPress-Android/issues/10210
+         */
         return (media1.getLocalSiteId() == media2.getLocalSiteId() && media1.getLocalPostId() == media2.getLocalPostId()
                 && StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
