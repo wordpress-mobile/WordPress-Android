@@ -68,6 +68,7 @@ class EditPostPublishSettingsViewModel
         this.minute = selectedMinute
         val calendar = localeManagerWrapper.getCurrentCalendar()
         calendar.set(year!!, month!!, day!!, hour!!, minute!!)
+        calendar.timeZone = localeManagerWrapper.getTimeZone()
         updatePost(calendar)
     }
 
@@ -92,7 +93,7 @@ class EditPostPublishSettingsViewModel
     private fun updatePost(updatedDate: Calendar) {
         postModelProvider.setDateCreated(DateTimeUtils.iso8601FromDate(updatedDate.time))
         val initialPostStatus = postModelProvider.getStatus()
-        val isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(postModelProvider.postModel)
+        val isPublishDateInTheFuture = updatedDate.after(localeManagerWrapper.getCurrentCalendar())
         var finalPostStatus = initialPostStatus
         if (initialPostStatus == DRAFT && isPublishDateInTheFuture) {
             // The previous logic was setting the status twice, once from draft to published and when the user

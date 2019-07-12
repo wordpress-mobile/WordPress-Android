@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,6 +11,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
@@ -20,6 +23,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var postModelProvider: EditPostModelProvider
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     private val dateCreated = "2019-05-05T14:33:20+0000"
@@ -28,9 +32,19 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = EditPostPublishSettingsViewModel(resourceProvider, postSettingsUtils, localeManagerWrapper)
-        currentCalendar.set(2019, 6, 6, 10, 20)
-        whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
+        viewModel = EditPostPublishSettingsViewModel(
+                resourceProvider,
+                postSettingsUtils,
+                localeManagerWrapper,
+                postModelProvider
+        )
+        currentCalendar.set(2019, 6, 6, 10, 20, 0)
+        currentCalendar.timeZone = TimeZone.getTimeZone("GMT")
+        whenever(localeManagerWrapper.getCurrentCalendar()).thenAnswer {
+            val calendarInstance = Calendar.getInstance()
+            calendarInstance.time = currentCalendar.time
+            calendarInstance
+        }
         whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(dateLabel)
     }
@@ -47,13 +61,13 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             label = it
         }
 
-        viewModel.start(post)
+        viewModel.onPostChanged(post)
 
         assertThat(viewModel.year).isEqualTo(2019)
-        assertThat(viewModel.month).isEqualTo(4)
-        assertThat(viewModel.day).isEqualTo(5)
-        assertThat(viewModel.hour).isEqualTo(14)
-        assertThat(viewModel.minute).isEqualTo(33)
+        assertThat(viewModel.month).isEqualTo(6)
+        assertThat(viewModel.day).isEqualTo(6)
+        assertThat(viewModel.hour).isEqualTo(12)
+        assertThat(viewModel.minute).isEqualTo(20)
 
         assertThat(label).isEqualTo(expectedLabel)
     }
@@ -65,27 +79,15 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             label = it
         }
 
-        viewModel.start(null)
+        viewModel.onPostChanged(null)
 
         assertThat(viewModel.year).isEqualTo(2019)
         assertThat(viewModel.month).isEqualTo(6)
         assertThat(viewModel.day).isEqualTo(6)
-        assertThat(viewModel.hour).isEqualTo(10)
+        assertThat(viewModel.hour).isEqualTo(12)
         assertThat(viewModel.minute).isEqualTo(20)
 
         assertThat(label).isNull()
-    }
-
-    @Test
-    fun `on publishNow updates published date`() {
-        var publishedDate: Calendar? = null
-        viewModel.onPublishedDateChanged.observeForever {
-            publishedDate = it
-        }
-
-        viewModel.publishNow()
-
-        assertThat(publishedDate).isEqualTo(currentCalendar)
     }
 
     @Test
@@ -108,13 +110,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onTimeSelected updates time and triggers onPublishedDateChanged`() {
-        viewModel.start(null)
-
-        var publishedDate: Calendar? = null
-        viewModel.onPublishedDateChanged.observeForever {
-            publishedDate = it
-        }
+    fun `onTimeSelected updates time and triggers updatePost`() {
+        viewModel.onPostChanged(null)
 
         val updatedHour = 15
         val updatedMinute = 15
@@ -123,16 +120,13 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.hour).isEqualTo(updatedHour)
         assertThat(viewModel.minute).isEqualTo(updatedMinute)
-
-        assertThat(publishedDate).isNotNull()
     }
 
     @Test
-    fun `updatePost updates post status from DRAFT to PUBLISHED to published when date in the future`() {
+    fun `updatePost updates post status from DRAFT to SCHEDULED to published when date in the future`() {
         val post = PostModel()
-        post.status = PostStatus.DRAFT.toString()
-        val futureDate = Calendar.getInstance()
-        futureDate.add(Calendar.MINUTE, 15)
+        whenever(postModelProvider.getStatus()).thenReturn(DRAFT)
+        post.dateCreated = "2019-09-08T15:45:00+0000"
 
         var updatedStatus: PostStatus? = null
         viewModel.onPostStatusChanged.observeForever {
@@ -143,20 +137,22 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         viewModel.onPublishedLabelChanged.observeForever {
             dateLabel = it
         }
+        whenever(postModelProvider.postModel).thenReturn(post)
 
-        viewModel.updatePost(futureDate, post)
+        viewModel.onPostChanged(post)
+        viewModel.onTimeSelected(15, 45)
 
-        assertThat(post.status).isEqualTo(PostStatus.SCHEDULED.toString())
-        assertThat(post.dateCreated).isNotNull()
+        verify(postModelProvider).setDateCreated("2019-09-08T15:45:00+0000")
+        verify(postModelProvider).setStatus(SCHEDULED)
 
-        assertThat(updatedStatus).isEqualTo(PostStatus.SCHEDULED)
+        assertThat(updatedStatus).isEqualTo(SCHEDULED)
         assertThat(dateLabel).isEqualTo(dateLabel)
     }
 
     @Test
     fun `updatePost updates post status from PUBLISHED to DRAFT for local draft`() {
         val post = PostModel()
-        post.status = PostStatus.PUBLISHED.toString()
+        whenever(postModelProvider.getStatus()).thenReturn(PostStatus.PUBLISHED)
         post.setIsLocalDraft(true)
 
         var updatedStatus: PostStatus? = null
@@ -168,13 +164,14 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         viewModel.onPublishedLabelChanged.observeForever {
             dateLabel = it
         }
+        whenever(postModelProvider.postModel).thenReturn(post)
 
-        viewModel.updatePost(currentCalendar, post)
+        viewModel.publishNow()
 
-        assertThat(post.status).isEqualTo(PostStatus.DRAFT.toString())
-        assertThat(post.dateCreated).isNotNull()
+        verify(postModelProvider).setDateCreated("2019-07-06T10:20:00+0000")
+        verify(postModelProvider).setStatus(DRAFT)
 
-        assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
+        assertThat(updatedStatus).isEqualTo(DRAFT)
         assertThat(dateLabel).isEqualTo(dateLabel)
     }
 
@@ -184,11 +181,10 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)).thenReturn(
                 expectedToastMessage
         )
+        whenever(postModelProvider.getStatus()).thenReturn(SCHEDULED)
         val post = PostModel()
-        post.status = PostStatus.SCHEDULED.toString()
         post.setIsLocalDraft(true)
-        val pastDate = Calendar.getInstance()
-        pastDate.add(Calendar.MINUTE, -100)
+        post.dateCreated = "2019-06-05T12:10:00+0200"
 
         var updatedStatus: PostStatus? = null
         viewModel.onPostStatusChanged.observeForever {
@@ -204,13 +200,15 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         viewModel.onToast.observeForever {
             toastMessage = it?.getContentIfNotHandled()
         }
+        whenever(postModelProvider.postModel).thenReturn(post)
 
-        viewModel.updatePost(currentCalendar, post)
+        viewModel.onPostChanged(post)
+        viewModel.onTimeSelected(12, 10)
 
-        assertThat(post.status).isEqualTo(PostStatus.DRAFT.toString())
-        assertThat(post.dateCreated).isNotNull()
+        verify(postModelProvider).setDateCreated("2019-06-05T12:10:00+0000")
+        verify(postModelProvider).setStatus(DRAFT)
 
-        assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
+        assertThat(updatedStatus).isEqualTo(DRAFT)
         assertThat(dateLabel).isEqualTo(dateLabel)
 
         assertThat(toastMessage).isEqualTo(expectedToastMessage)
