@@ -116,6 +116,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
+    private ListPopupWindow mPreviewModeSelector;
 
     private View mNavigateForwardButton;
     private View mNavigateBackButton;
@@ -263,30 +264,30 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                             int popupWidth = getResources().getDimensionPixelSize(R.dimen.web_preview_mode_popup_width);
                             int popupOffset = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
 
-                            final ListPopupWindow listPopup = new ListPopupWindow(WPWebViewActivity.this);
-                            listPopup.setWidth(popupWidth);
-                            listPopup.setAdapter(new PreviewModeMenuAdapter(WPWebViewActivity.this,
+                            mPreviewModeSelector = new ListPopupWindow(WPWebViewActivity.this);
+                            mPreviewModeSelector.setWidth(popupWidth);
+                            mPreviewModeSelector.setAdapter(new PreviewModeMenuAdapter(WPWebViewActivity.this,
                                     previewModelSelectorStatus.getSelectedPreviewMode()));
-                            listPopup.setDropDownGravity(Gravity.END);
-                            listPopup.setAnchorView(mPreviewModeButton);
-                            listPopup.setHorizontalOffset(-popupOffset);
-                            listPopup.setVerticalOffset(popupOffset);
-                            listPopup.setModal(true);
-                            listPopup.setOnDismissListener(new OnDismissListener() {
+                            mPreviewModeSelector.setDropDownGravity(Gravity.END);
+                            mPreviewModeSelector.setAnchorView(mPreviewModeButton);
+                            mPreviewModeSelector.setHorizontalOffset(-popupOffset);
+                            mPreviewModeSelector.setVerticalOffset(popupOffset);
+                            mPreviewModeSelector.setModal(true);
+                            mPreviewModeSelector.setOnDismissListener(new OnDismissListener() {
                                 @Override public void onDismiss() {
                                     mViewModel.togglePreviewModeSelectorVisibility(false);
                                 }
                             });
-                            listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            mPreviewModeSelector.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    listPopup.dismiss();
+                                    mPreviewModeSelector.dismiss();
                                     PreviewModeMenuAdapter adapter = (PreviewModeMenuAdapter) parent.getAdapter();
                                     PreviewMode selectedMode = adapter.getItem(position);
                                     mViewModel.selectPreviewMode(selectedMode);
                                 }
                             });
-                            listPopup.show();
+                            mPreviewModeSelector.show();
                         }
                     });
                 }
@@ -650,5 +651,14 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPreviewModeSelector != null && mPreviewModeSelector.isShowing()) {
+            mPreviewModeSelector.setOnDismissListener(null);
+            mPreviewModeSelector.dismiss();
+        }
     }
 }
