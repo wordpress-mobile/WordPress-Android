@@ -142,6 +142,7 @@ public class SiteStore extends Store {
         @Nullable public Boolean onlyWordpressCom;
         @Nullable public Boolean includeWordpressCom;
         @Nullable public Boolean includeDotBlogSubdomain;
+        @Nullable public String tlds;
         @Nullable public Long segmentId;
         public int quantity;
         public boolean includeVendorDot;
@@ -152,6 +153,7 @@ public class SiteStore extends Store {
             this.onlyWordpressCom = onlyWordpressCom;
             this.includeWordpressCom = includeWordpressCom;
             this.includeDotBlogSubdomain = includeDotBlogSubdomain;
+            this.tlds = tlds;
             this.quantity = quantity;
             this.includeVendorDot = includeVendorDot;
         }
@@ -161,6 +163,12 @@ public class SiteStore extends Store {
             this.segmentId = segmentId;
             this.quantity = quantity;
             this.includeVendorDot = includeVendorDot;
+        }
+
+         public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
+            this.query = query;
+            this.quantity = quantity;
+            this.tlds = tlds;
         }
     }
 
@@ -1668,7 +1676,8 @@ public class SiteStore extends Store {
 
     private void suggestDomains(SuggestDomainsPayload payload) {
         mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot);
+                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot,
+                payload.tlds);
     }
 
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
