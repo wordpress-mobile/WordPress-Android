@@ -43,7 +43,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
-import java.lang.Math.max
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
@@ -286,9 +285,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload) &&
-                (isLocallyChanged || isLocalDraft || postStatus == PostStatus.DRAFT)
+                (isLocallyChanged || isLocalDraft || postStatus == DRAFT)
         val canShowStats = statsSupported &&
-                postStatus == PostStatus.PUBLISHED &&
+                postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
         val canShowViewButton = !canRetryUpload
@@ -322,11 +321,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
         when {
             isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
-            postStatus == PostStatus.TRASHED -> {
+            postStatus == TRASHED -> {
                 buttonTypes.add(PostListButtonType.BUTTON_DELETE)
                 buttonTypes.add(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
             }
-            postStatus != PostStatus.TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
+            postStatus != TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
         }
 
         if (canShowStats) {
@@ -347,7 +346,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
                     .map(createSinglePostListItem)
             val itemsUnderMore = buttonTypes.subList(
-                    max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
+                    kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
                     buttonTypes.size
             )
                     .map(createSinglePostListItem)
@@ -384,7 +383,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): PostUploadUiState {
         return when {
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
-            uploadStatus.isUploading -> UploadingPost(postStatus == PostStatus.DRAFT)
+            uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
             uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(uploadStatus.uploadError)
             uploadStatus.hasPendingMediaUpload ||
