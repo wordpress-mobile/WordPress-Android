@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -46,7 +47,9 @@ sealed class PostListItemViewHolder(
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
-
+    private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
+            android.R.attr.selectableItemBackground
+    )
     /**
      * Url of an image loaded in the `featuredImageView`.
      */
@@ -124,9 +127,7 @@ sealed class PostListItemViewHolder(
         if (data.disableRippleEffect) {
             container.background = null
         } else {
-            container.background = container.context.getDrawableFromAttribute(
-                    android.R.attr.selectableItemBackground
-            )
+            container.background = selectableBackground
         }
     }
 
