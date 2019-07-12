@@ -43,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-177"
-        versionCode 746
+        versionName "alpha-178"
+        versionCode 748
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -58,7 +58,6 @@ android {
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -75,8 +74,8 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            versionName "12.8-rc-1"
-            versionCode 745
+            versionName "12.8-rc-2"
+            versionCode 747
         }
 
         zalpha { // alpha version - enable experimental features
@@ -88,7 +87,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "true"
         }
     }
 

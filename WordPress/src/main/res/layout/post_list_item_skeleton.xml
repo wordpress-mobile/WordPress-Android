@@ -96,9 +96,9 @@
 
                 <org.wordpress.android.widgets.PostListButton
                     style="@style/PostListRowSkeletonButton"
-                    android:id="@+id/skeleton_button_delete"
+                    android:id="@+id/skeleton_button_delete_permanently"
                     android:visibility="gone"
-                    wp:wpPostButtonType="delete"/>
+                    wp:wpPostButtonType="deletePermanently"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

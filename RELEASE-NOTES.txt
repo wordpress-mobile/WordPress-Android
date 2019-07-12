@@ -3,6 +3,10 @@
 * Add Remote Preview support for Drafts, Published and Scheduled posts with local changes
 * Post List: Trashed post must now be restored before edit or preview
 
+-----
+* Full screen comments view
+* Added Domain Registration functionality for customers with unclaimed domain credit
+
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories

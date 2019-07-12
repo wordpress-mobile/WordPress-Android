@@ -16,11 +16,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 
 class PostListMainViewModelTest : BaseUnitTest() {
     lateinit var site: SiteModel
-    @Mock lateinit var localDraftUploadStarter: LocalDraftUploadStarter
+    @Mock lateinit var uploadStarter: UploadStarter
     private lateinit var viewModel: PostListMainViewModel
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
@@ -43,7 +43,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 mainDispatcher = Dispatchers.Unconfined,
                 bgDispatcher = Dispatchers.Unconfined,
                 postListEventListenerFactory = mock(),
-                localDraftUploadStarter = localDraftUploadStarter
+                uploadStarter = uploadStarter
         )
     }
 
@@ -51,7 +51,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `when started, it uploads all local drafts`() {
         viewModel.start(site, PostListRemotePreviewState.NONE)
 
-        verify(localDraftUploadStarter, times(1)).queueUploadFromSite(eq(site))
+        verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
 
     @Test
