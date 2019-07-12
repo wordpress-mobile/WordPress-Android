@@ -1,5 +1,6 @@
 12.9
 -----
+* Setting featured image on a post doesn't require network connection
 * Full screen comments view
 * Added Domain Registration functionality for customers with unclaimed domain credit
 
