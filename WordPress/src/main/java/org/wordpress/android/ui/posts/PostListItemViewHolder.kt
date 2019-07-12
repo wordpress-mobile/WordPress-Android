@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -22,6 +20,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
@@ -125,7 +124,9 @@ sealed class PostListItemViewHolder(
         if (data.disableRippleEffect) {
             container.background = null
         } else {
-            container.background = getDrawableFromAttribute(container.context, android.R.attr.selectableItemBackground)
+            container.background = container.context.getDrawableFromAttribute(
+                    android.R.attr.selectableItemBackground
+            )
         }
     }
 
@@ -144,13 +145,6 @@ sealed class PostListItemViewHolder(
             }
         }
         menu.show()
-    }
-
-    private fun getDrawableFromAttribute(context: Context, attributeId: Int): Drawable? {
-        val styledAttributes = context.obtainStyledAttributes(intArrayOf(attributeId))
-        val styledDrawable = styledAttributes.getDrawable(0)
-        styledAttributes.recycle()
-        return styledDrawable
     }
 
     private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
