@@ -98,9 +98,9 @@ class PostListItemDataSource(
             if (post == null) {
                 // If the post is not in cache, that means we'll be loading it
                 val options = if (postListType == TRASHED) {
-                    LoadingItemOptions(false, false, false, true, true)
+                    LoadingItemTrashedPost
                 } else {
-                    LoadingItemOptions(true, true, true, false, false)
+                    LoadingItemDefaultPost
                 }
                 LoadingItem(localOrRemoteId, options)
             } else {

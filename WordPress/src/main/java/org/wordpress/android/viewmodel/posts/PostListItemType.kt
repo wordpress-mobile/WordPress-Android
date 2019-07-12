@@ -19,12 +19,28 @@ sealed class PostListItemType {
     object EndListIndicatorItem : PostListItemType()
 }
 
-data class LoadingItemOptions(
+sealed class LoadingItemOptions(
     val showEditButton: Boolean,
     val showViewButton: Boolean,
     val showMoreButton: Boolean,
     val showMoveToDraftButton: Boolean,
     val showDeletePermanentlyButton: Boolean
+)
+
+object LoadingItemDefaultPost : LoadingItemOptions(
+        showEditButton = true,
+        showViewButton = true,
+        showMoreButton = true,
+        showMoveToDraftButton = false,
+        showDeletePermanentlyButton = false
+)
+
+object LoadingItemTrashedPost : LoadingItemOptions(
+        showEditButton = false,
+        showViewButton = false,
+        showMoreButton = false,
+        showMoveToDraftButton = true,
+        showDeletePermanentlyButton = true
 )
 
 data class PostListItemUiStateData(
