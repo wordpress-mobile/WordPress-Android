@@ -6,6 +6,5 @@ class PostViewHolderConfig(
     val photonWidth: Int,
     val photonHeight: Int,
     val isPhotonCapable: Boolean,
-    val imageManager: ImageManager,
-    val postListType: PostListType
+    val imageManager: ImageManager
 )

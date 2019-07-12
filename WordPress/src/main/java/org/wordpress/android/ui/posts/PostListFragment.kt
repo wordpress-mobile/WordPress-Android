@@ -73,8 +73,7 @@ class PostListFragment : Fragment() {
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
                 isPhotonCapable = SiteUtils.isPhotonCapable(site),
-                imageManager = imageManager,
-                postListType = postListType
+                imageManager = imageManager
         )
     }
 
