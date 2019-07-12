@@ -41,8 +41,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         currentCalendar.set(2019, 6, 6, 10, 20, 0)
         currentCalendar.timeZone = TimeZone.getTimeZone("GMT")
         whenever(localeManagerWrapper.getCurrentCalendar()).thenAnswer {
-            val calendarInstance = Calendar.getInstance()
+            val calendarInstance = Calendar.getInstance(Locale.US)
             calendarInstance.time = currentCalendar.time
+            calendarInstance.timeZone = currentCalendar.timeZone
             calendarInstance
         }
         whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
@@ -66,7 +67,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.year).isEqualTo(2019)
         assertThat(viewModel.month).isEqualTo(6)
         assertThat(viewModel.day).isEqualTo(6)
-        assertThat(viewModel.hour).isEqualTo(12)
+        assertThat(viewModel.hour).isEqualTo(10)
         assertThat(viewModel.minute).isEqualTo(20)
 
         assertThat(label).isEqualTo(expectedLabel)
@@ -84,7 +85,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.year).isEqualTo(2019)
         assertThat(viewModel.month).isEqualTo(6)
         assertThat(viewModel.day).isEqualTo(6)
-        assertThat(viewModel.hour).isEqualTo(12)
+        assertThat(viewModel.hour).isEqualTo(10)
         assertThat(viewModel.minute).isEqualTo(20)
 
         assertThat(label).isNull()
