@@ -24,7 +24,7 @@ data class LoadingItemOptions(
     val showViewButton: Boolean,
     val showMoreButton: Boolean,
     val showMoveToDraftButton: Boolean,
-    val showDeleteButton: Boolean
+    val showDeletePermanentlyButton: Boolean
 )
 
 data class PostListItemUiStateData(

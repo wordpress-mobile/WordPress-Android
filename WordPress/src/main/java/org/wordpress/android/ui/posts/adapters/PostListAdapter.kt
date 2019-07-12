@@ -110,14 +110,19 @@ class PostListAdapter(
         notifyDataSetChanged()
     }
 
-    private class LoadingViewHolder(val view: View) : ViewHolder(view) {
+    private class LoadingViewHolder(view: View) : ViewHolder(view) {
+        val editButton: View? = view.findViewById(R.id.skeleton_button_edit)
+        val viewButton: View? = view.findViewById(R.id.skeleton_button_view)
+        val buttonMore: View? = view.findViewById(R.id.skeleton_button_more)
+        val buttonMoveToDraft: View? = view.findViewById(R.id.skeleton_button_move_to_draft)
+        val buttonDeletePermanently: View? = view.findViewById(R.id.skeleton_button_delete_permanently)
+
         fun onBind(item: LoadingItem) {
-            (view.findViewById(R.id.skeleton_button_edit) as View?)?.setVisible(item.options.showEditButton)
-            (view.findViewById(R.id.skeleton_button_view) as View?)?.setVisible(item.options.showViewButton)
-            (view.findViewById(R.id.skeleton_button_more) as View?)?.setVisible(item.options.showMoreButton)
-            (view.findViewById(R.id.skeleton_button_move_to_draft) as View?)?.setVisible(
-                    item.options.showMoveToDraftButton)
-            (view.findViewById(R.id.skeleton_button_delete) as View?)?.setVisible(item.options.showDeleteButton)
+            editButton?.setVisible(item.options.showEditButton)
+            viewButton?.setVisible(item.options.showViewButton)
+            buttonMore?.setVisible(item.options.showMoreButton)
+            buttonMoveToDraft?.setVisible(item.options.showMoveToDraftButton)
+            buttonDeletePermanently?.setVisible(item.options.showDeletePermanentlyButton)
         }
     }
 
