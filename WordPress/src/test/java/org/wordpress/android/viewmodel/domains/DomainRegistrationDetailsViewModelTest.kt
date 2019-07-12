@@ -14,6 +14,7 @@ import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.action.SiteAction
@@ -57,12 +58,14 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var transactionsStore: TransactionsStore
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var dispatcher: Dispatcher
+    @Mock private lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private var site: SiteModel = SiteModel()
 
     @Mock private lateinit var domainContactDetailsObserver: Observer<DomainContactModel>
@@ -148,6 +151,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
                 dispatcher,
                 transactionsStore,
                 siteStore,
+                analyticsTracker,
                 NoDelayCoroutineDispatcher()
         )
         // Setting up chain of actions
@@ -504,6 +508,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(errorRedeemingCartState.isRegistrationProgressIndicatorVisible).isEqualTo(false)
 
         verify(errorMessageObserver).onChanged(shoppingCartRedeemError.message)
+        verify(analyticsTracker).track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
     }
 
     @Test

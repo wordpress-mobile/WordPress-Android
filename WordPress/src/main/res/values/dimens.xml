@@ -312,6 +312,7 @@
     <dimen name="post_settings_input_dialog_edit_text_side_margin">20dp</dimen>
     <dimen name="post_settings_input_dialog_hint_side_margin">24dp</dimen>
     <dimen name="tags_list_row_height">40dp</dimen>
+    <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
     <dimen name="margin_extra_extra_extra_large">92dp</dimen>
@@ -430,5 +431,10 @@
     <dimen name="domain_suggestions_intro_vertical_padding">24dp</dimen>
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
+
+    <dimen name="keyline_first">16dp</dimen>
+    <dimen name="keyline_second">72dp</dimen>
+
+    <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
 
 </resources>

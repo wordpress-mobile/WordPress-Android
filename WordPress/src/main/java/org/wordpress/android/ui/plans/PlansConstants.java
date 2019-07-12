@@ -11,6 +11,9 @@ public class PlansConstants {
     public static final long PREMIUM_PLAN_ID = 1003L;
     public static final long BUSINESS_PLAN_ID = 1008L;
 
+    public static final long BLOGGER_PLAN_ONE_YEAR_ID = 1010L;
+    public static final long BLOGGER_PLAN_TWO_YEARS_ID = 1030L;
+
     public static final long JETPACK_FREE_PLAN_ID = 2002L;
     public static final long JETPACK_PREMIUM_PLAN_ID = 2000L;
     public static final long JETPACK_BUSINESS_PLAN_ID = 2001L;
