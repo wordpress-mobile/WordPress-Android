@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
@@ -90,6 +90,7 @@ class EditPostPublishSettingsViewModel
         // Set the currently selected time if available
         if (!TextUtils.isEmpty(dateCreated)) {
             calendar.time = DateTimeUtils.dateFromIso8601(dateCreated)
+            calendar.timeZone = localeManagerWrapper.getTimeZone()
         }
         return calendar
     }

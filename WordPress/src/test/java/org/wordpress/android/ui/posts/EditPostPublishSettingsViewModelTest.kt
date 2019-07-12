@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -20,8 +22,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
-    private val dateCreated = "2019-05-05T14:33:20+0200"
-    private val currentCalendar = Calendar.getInstance()
+    private val dateCreated = "2019-05-05T14:33:20+0000"
+    private val currentCalendar = Calendar.getInstance(Locale.US)
     private val dateLabel = "Updated date"
 
     @Before
@@ -29,11 +31,12 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         viewModel = EditPostPublishSettingsViewModel(resourceProvider, postSettingsUtils, localeManagerWrapper)
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
+        whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(dateLabel)
     }
 
     @Test
-    fun `on start sets values and buils formatted label`() {
+    fun `on start sets values and builds formatted label`() {
         val post = PostModel()
         post.dateCreated = dateCreated
 
