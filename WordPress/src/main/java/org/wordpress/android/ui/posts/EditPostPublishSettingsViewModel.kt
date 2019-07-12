@@ -84,6 +84,7 @@ class EditPostPublishSettingsViewModel
         // Set the currently selected time if available
         if (!dateCreated.isNullOrEmpty()) {
             calendar.time = DateTimeUtils.dateFromIso8601(dateCreated)
+            calendar.timeZone = localeManagerWrapper.getTimeZone()
         }
         return calendar
     }
