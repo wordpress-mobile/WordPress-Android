@@ -1,0 +1,29 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/rest/v1.1/sites/158396482/posts/?number=60&context=edit&order_by=date&fields=ID%2Cmodified%2Cstatus&order=DESC&status=draft%2Cpending&locale=en_US",
+    "queryParameters": {
+      "context": {
+        "equalTo": "edit"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "found": 0,
+      "posts": [],
+      "meta": {
+        "links": {
+          "counts": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/post-counts\/post"
+        },
+        "wpcom": true
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Connection": "keep-alive",
+      "Cache-Control": "no-cache, must-revalidate, max-age=0"
+    }
+  }
+}

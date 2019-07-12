@@ -1,12 +1,13 @@
 {
   "request": {
-    "urlPath": "/rest/v1.1/sites/162709035/post-formats/?locale=en_US",
+    "urlPattern": "/rest/v1.1/sites/158396482/page/[0-9]+/diffs.*",
     "method": "GET"
   },
   "response": {
-    "status": 200,
+    "status": 400,
     "jsonBody": {
-      "formats": {}
+      "error": "User cannot edit this post",
+      "message": 403
     },
     "headers": {
       "Content-Type": "application/json",

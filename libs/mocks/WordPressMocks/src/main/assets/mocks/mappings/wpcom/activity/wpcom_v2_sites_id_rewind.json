@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/wpcom/v2/sites/158396482/rewind/?_locale=en_US"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "reason": "wpcom_site",
+      "state": "unavailable",
+      "last_updated": "2019-07-12T20:46:03.899+00:00"
+    }
+  }
+}

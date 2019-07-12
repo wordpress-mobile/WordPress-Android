@@ -1,0 +1,187 @@
+{
+  "scenarioName": "new-post",
+  "requiredScenarioState": "Started",
+  "request": {
+    "method": "GET",
+    "urlPattern": "/rest/v1.1/sites/158396482/posts/?number=20&context=edit&type=page&status=draft%2Cpublish%2Cfuture%2Cpending%2Cprivate%2Ctrash&locale=en_US",
+    "queryParameters": {
+      "context": {
+        "equalTo": "edit"
+      },
+      "status": {
+        "equalTo": "draft,publish,future,pending,private,trash"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "found": 1,
+      "posts": [{
+        "ID": 2,
+        "site_ID": 158396482,
+        "author": {
+          "ID": 152748359,
+          "login": "e2eflowtestingmobile",
+          "email": "e2eflowtestingmobile@example.com",
+          "name": "e2eflowtestingmobile",
+          "first_name": "",
+          "last_name": "",
+          "nice_name": "e2eflowtestingmobile",
+          "URL": "http://e2eflowtestingmobile.wordpress.com",
+          "avatar_URL": "https:\/\/1.gravatar.com\/avatar\/199e7fc02f0f968b009b5b639da42672?s=96&d=identicon&r=G",
+          "profile_URL": "http://en.gravatar.com/e2eflowtestingmobile",
+          "site_ID": 158396482
+        },
+        "date": "2019-07-10T20:41:36+00:00",
+        "modified": "2019-07-10T20:49:16+00:00",
+        "title": "Contact",
+        "URL": "http:\/\/e2eflowtestingmobile.wordpress.com\/contact__trashed\/",
+        "short_URL": "https:\/\/wp.me\/Pb7hen-2",
+        "content": "[contact-form][contact-field label=\"Name\" type=\"name\" required=\"1\"\/][contact-field label=\"Email\" type=\"email\" required=\"1\"\/][contact-field label=\"Comment\" type=\"textarea\" required=\"1\"\/][\/contact-form]",
+        "excerpt": "",
+        "slug": "contact__trashed",
+        "guid": "https:\/\/e2eflowtestingmobile.wordpress.com\/?page_id=2",
+        "status": "trash",
+        "sticky": false,
+        "password": "",
+        "parent": false,
+        "type": "page",
+        "discussion": {
+          "comments_open": false,
+          "comment_status": "closed",
+          "pings_open": false,
+          "ping_status": "closed",
+          "comment_count": 0
+        },
+        "likes_enabled": true,
+        "sharing_enabled": false,
+        "like_count": 0,
+        "i_like": false,
+        "is_reblogged": false,
+        "is_following": true,
+        "global_ID": "7433f389541a9fe9f46a507d359b9388",
+        "featured_image": "",
+        "post_thumbnail": {
+          "ID": 8,
+          "URL": "",
+          "guid": "",
+          "mime_type": "image\/jpeg",
+          "width": 1600,
+          "height": 819
+        },
+        "format": "standard",
+        "geo": false,
+        "menu_order": 3,
+        "page_template": "",
+        "publicize_URLs": [],
+        "terms": {},
+        "tags": {},
+        "categories": {
+          "Uncategorized": {
+            "ID": 1,
+            "name": "Uncategorized",
+            "slug": "uncategorized",
+            "description": "",
+            "post_count": 1,
+            "parent": 0,
+            "meta": {
+              "links": {
+                "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/categories\/slug:uncategorized",
+                "help": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/categories\/slug:uncategorized\/help",
+                "site": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482"
+              }
+            }
+          }
+        },
+        "attachments": {
+          "8": {
+            "ID": 8,
+            "URL": "",
+            "guid": "",
+            "date": "2019-07-10T20:46:37+00:00",
+            "post_ID": 2,
+            "author_ID": 152748359,
+            "file": "calm.jpg",
+            "mime_type": "image\/jpeg",
+            "extension": "jpg",
+            "title": "Placeholder Image",
+            "caption": "",
+            "description": "",
+            "alt": "",
+            "thumbnails": {
+            },
+            "height": 819,
+            "width": 1600,
+            "exif": {
+              "aperture": "0",
+              "credit": "",
+              "camera": "",
+              "caption": "",
+              "created_timestamp": "0",
+              "copyright": "",
+              "focal_length": "0",
+              "iso": "0",
+              "shutter_speed": "0",
+              "title": "",
+              "orientation": "0",
+              "keywords": []
+            },
+            "meta": {
+              "links": {
+                "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/media\/8",
+                "help": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/media\/8\/help",
+                "site": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482",
+                "parent": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/2"
+              }
+            }
+          }
+        },
+        "attachment_count": 1,
+        "metadata": [{
+          "id": "3",
+          "key": "sharing_disabled",
+          "value": [0]
+        }, {
+          "id": "4",
+          "key": "switch_like_status",
+          "value": [0]
+        }, {
+          "id": "33",
+          "key": "_thumbnail_id",
+          "value": "8"
+        }],
+        "meta": {
+          "links": {
+            "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/2",
+            "help": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/2\/help",
+            "site": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482",
+            "replies": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/2\/replies\/",
+            "likes": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/2\/likes\/"
+          }
+        },
+        "capabilities": {
+          "publish_post": true,
+          "delete_post": true,
+          "edit_post": true
+        },
+        "revisions": [4],
+        "other_URLs": {
+          "permalink_URL": "http:\/\/e2eflowtestingmobile.wordpress.com\/%pagename%\/",
+          "suggested_slug": "contact__trashed"
+        }
+      }],
+      "meta": {
+        "links": {
+          "counts": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/164274231\/post-counts\/page"
+        },
+        "wpcom": true
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Connection": "keep-alive",
+      "Cache-Control": "no-cache, must-revalidate, max-age=0"
+    }
+  }
+}

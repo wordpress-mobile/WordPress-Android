@@ -1,7 +1,7 @@
 {
   "request": {
-    "method": "GET",
-    "urlPath": "/rest/v1.1/sites/162709035/posts/?number=20&context=edit&type=page&status=draft%2Cpublish%2Cfuture%2Cpending%2Cprivate%2Ctrash&locale=en_US",
+    "method": "POST",
+    "urlPattern": "/rest/v1.2/sites/158396482/posts/new/?context=edit&locale=en_US",
     "queryParameters": {
       "context": {
         "equalTo": "edit"
@@ -11,11 +11,10 @@
   "response": {
     "status": 200,
     "jsonBody": {
-
-      "ID": 25,
-      "site_ID": 162709035,
+      "ID": 11,
+      "site_ID": 158396482,
       "author": {
-        "ID": 158154902,
+        "ID": 152748359,
         "login": "e2eflowtestingmobile",
         "email": "e2eflowtestingmobile@example.com",
         "name": "e2eflowtestingmobile",
@@ -23,19 +22,19 @@
         "last_name": "",
         "nice_name": "e2eflowtestingmobile",
         "URL": "http://e2eflowtestingmobile.wordpress.com",
-        "avatar_URL": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon&r=G",
+        "avatar_URL": "https:\/\/1.gravatar.com\/avatar\/199e7fc02f0f968b009b5b639da42672?s=96&d=identicon&r=G",
         "profile_URL": "http://en.gravatar.com/e2eflowtestingmobile",
-        "site_ID": 162709035
+        "site_ID": 158396482
       },
-      "date": "2019-07-05T04:33:17+00:00",
-      "modified": "2019-07-05T04:33:17+00:00",
+      "date": "2019-07-10T20:53:01+00:00",
+      "modified": "2019-07-10T20:53:01+00:00",
       "title": "Hello Espresso!",
-      "URL": "https://e2eflowtestingmobile.wordpress.com/2019/03/05/title-31/",
-      "short_URL": "https://wp.me/paIC9Y-1o",
+      "URL": "http://lowtestingmobile.wordpress.com\/hello-espresso\/",
+      "short_URL": "https:\/\/wp.me\/Pb7hen-b",
       "content": "Just a quick test.",
       "excerpt": "",
       "slug": "hello-espresso",
-      "guid": "https://e2eflowtestingmobile.wordpress.com/2019/03/05/title-31/",
+      "guid": "http://lowtestingmobile.wordpress.com\/hello-espresso\/",
       "status": "publish",
       "sticky": false,
       "password": "",
@@ -54,7 +53,7 @@
       "i_like": false,
       "is_reblogged": false,
       "is_following": true,
-      "global_ID": "1f6b00d579a457d151c73725d176677e",
+      "global_ID": "fcb5d18ac48327373dc73a886229a243",
       "featured_image": "",
       "post_thumbnail": null,
       "format": "standard",
@@ -70,13 +69,13 @@
           "name": "Uncategorized",
           "slug": "uncategorized",
           "description": "",
-          "post_count": 0,
+          "post_count": 1,
           "parent": 0,
           "meta": {
             "links": {
-              "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/162709035\/categories\/slug:uncategorized",
-              "help": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/162709035\/categories\/slug:uncategorized\/help",
-              "site": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/162709035"
+              "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/categories\/slug:uncategorized",
+              "help": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/158396482\/categories\/slug:uncategorized\/help",
+              "site": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/158396482"
             }
           }
         }
@@ -84,17 +83,17 @@
       "attachments": {},
       "attachment_count": 0,
       "metadata": [{
-        "id": "106",
+        "id": "46",
         "key": "jabber_published",
-        "value": "1562301202"
+        "value": "1562791998"
       }],
       "meta": {
         "links": {
-          "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/162709035\/posts\/25",
-          "help": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/162709035\/posts\/25\/help",
-          "site": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/162709035",
-          "replies": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/162709035\/posts\/25\/replies\/",
-          "likes": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/162709035\/posts\/25\/likes\/"
+          "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/11",
+          "help": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/158396482\/posts\/11\/help",
+          "site": "https:\/\/public-api.wordpress.com\/rest\/v1.2\/sites\/158396482",
+          "replies": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/11\/replies\/",
+          "likes": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/158396482\/posts\/11\/likes\/"
         }
       },
       "capabilities": {
@@ -109,5 +108,7 @@
       "Connection": "keep-alive",
       "Cache-Control": "no-cache, must-revalidate, max-age=0"
     }
-  }
+  },
+  "scenarioName": "new-post",
+  "newScenarioState": "site-page"
 }
