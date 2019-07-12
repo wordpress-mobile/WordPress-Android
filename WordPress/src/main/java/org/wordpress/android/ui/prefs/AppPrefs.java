@@ -113,8 +113,8 @@ public class AppPrefs {
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
-        GUTENBERG_EDITOR_ENABLED,
-        GUTENBERG_DEAFULT_FOR_NEW_POSTS,
+        GUTENBERG_DEFAULT_FOR_NEW_POSTS,
+        SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
 
         IS_QUICK_START_NOTICE_REQUIRED,
 
@@ -646,17 +646,21 @@ public class AppPrefs {
         return true;
     }
 
-    public static void enableGutenbergEditor(boolean enabled) {
-        setBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, enabled);
+    public static boolean isGutenbergAutoEnabledForTheNewPosts() {
+        return getBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, true);
+    }
+
+    public static void setGutenbergAutoEnabledForTheNewPosts(boolean enable) {
+        setBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, enable);
     }
 
     public static boolean isGutenbergDefaultForNewPosts() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, false);
+        return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
     }
 
     public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
         AnalyticsTracker.track(defaultForNewPosts ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED);
-        setBoolean(DeletablePrefKey.GUTENBERG_DEAFULT_FOR_NEW_POSTS, defaultForNewPosts);
+        setBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, defaultForNewPosts);
     }
 
     public static void setVideoOptimizeWidth(int width) {

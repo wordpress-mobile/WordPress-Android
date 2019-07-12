@@ -350,11 +350,9 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the block editor, so we\'ve also enabled it on this Post.
-        Switch back to the classic editor at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the block editor, so we\'ve also enabled it on this Page.
-        Switch back to the classic editor at any time by tapping  ⋮  in the top bar.</string>
-
+    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
+    
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -1542,7 +1540,10 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1650,7 +1651,6 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d followers</string>
-    <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
@@ -2588,7 +2588,7 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_search_prompt">Search posts</string>
+    <string name="post_list_search_prompt">Search published posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 
@@ -2669,4 +2669,8 @@
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
+
+    <string name="description_collapse">Collapse</string>
+    <string name="description_expand">Expand</string>
+
 </resources>
