@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -86,6 +87,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
+    public void onBackPressed() {
+        CollapseFullScreenDialogFragment fragment = (CollapseFullScreenDialogFragment)
+                getSupportFragmentManager().findFragmentByTag(CollapseFullScreenDialogFragment.TAG);
+
+        if (fragment != null) {
+            fragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

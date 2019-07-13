@@ -131,7 +131,7 @@
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_featured_image"/>
 
-                <LinearLayout
+                <RelativeLayout
                     style="@style/PostSettingsContainer">
 
                     <Button
@@ -140,16 +140,96 @@
                         android:layout_height="wrap_content"
                         android:text="@string/post_settings_set_featured_image"/>
 
-                    <ImageView
-                        android:id="@+id/post_featured_image"
+                    <FrameLayout
+                            android:id="@+id/post_featured_image_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxHeight="@dimen/post_settings_featured_image_height_max"
-                        android:minHeight="@dimen/post_settings_featured_image_height_min"
-                        android:contentDescription="@string/featured_image_desc"
-                        android:adjustViewBounds="true"
-                        android:visibility="gone"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/post_featured_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/featured_image_desc"
+                            android:maxHeight="@dimen/post_settings_featured_image_height_max"
+                            android:minHeight="@dimen/post_settings_featured_image_height_min"/>
+
+                        <ImageView
+                            android:id="@+id/post_featured_image_local"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/featured_image_desc"
+                            android:layout_gravity="start"
+                            android:maxHeight="@dimen/post_settings_featured_image_height_max"
+                            android:minHeight="@dimen/post_settings_featured_image_height_min"/>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:id="@+id/post_featured_image_retry_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignBottom="@id/post_featured_image_container"
+                        android:layout_alignEnd="@id/post_featured_image_container"
+                        android:layout_alignStart="@id/post_featured_image_container"
+                        android:layout_alignTop="@id/post_featured_image_container"
+                        android:layout_centerInParent="true"
+                        android:background="@color/black_translucent_50"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="@dimen/post_settings_retry_image_size"
+                            android:layout_height="@dimen/post_settings_retry_image_size"
+                            android:contentDescription="@string/retry"
+                            android:src="@drawable/media_retry_image"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/editor_failed_to_insert_media_tap_to_retry"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_sz_medium"/>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/post_featured_image_progress_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@+id/post_featured_image_container"
+                        android:layout_alignBottom="@id/post_featured_image_container"
+                        android:layout_alignEnd="@id/post_featured_image_container"
+                        android:layout_alignStart="@id/post_featured_image_container"
+                        android:layout_alignTop="@id/post_featured_image_container"
+                        android:layout_centerInParent="true"
+                        android:background="@color/black_translucent_50">
+
+                        <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/featured_image_progress_desc"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_centerHorizontal="true"
+                            android:indeterminate="true"
+                            android:indeterminateTint="@color/white"/>
+
+                        <TextView
+                            android:id="@+id/featured_image_progress_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:paddingTop="@dimen/margin_small"
+                            android:gravity="center"
+                            android:text="@string/post_settings_featured_image_uploading_tap_for_options"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_sz_medium"/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

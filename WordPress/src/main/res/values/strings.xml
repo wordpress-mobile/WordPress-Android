@@ -223,6 +223,7 @@
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
     <string name="create_a_link">Create a link</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
 
     <!-- page view -->
     <string name="title">Title</string>
@@ -271,7 +272,6 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_discard">Discard</string>
-    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
 
@@ -350,11 +350,9 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
-        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-
+    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
+    
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -1308,8 +1306,10 @@
     <string name="post_settings_post_format">Post Format</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
     <string name="post_settings_choose_featured_image">Choose featured image</string>
     <string name="post_settings_remove_featured_image">Remove featured image</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
@@ -1362,17 +1362,22 @@
     <string name="menu_visual_mode">Visual Mode</string>
     <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_debug">Debug Menu</string>
-    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
-    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
+    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
 
     <string name="post_title">Title</string>
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+
+    <string name="link_dialog_title">Insert link</string>
+    <string name="link_dialog_button_remove_link">Remove Link</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_button_cancel">Cancel</string>
 
     <!-- History -->
     <string name="description_user">User avatar</string>
@@ -1471,10 +1476,6 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
-    <string name="local_changes_discarded">Local changes discarded</string>
-    <string name="local_changes_discarding">Discarding local changes</string>
-    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
-    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
@@ -1532,7 +1533,10 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1640,7 +1644,6 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d followers</string>
-    <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
@@ -1789,6 +1792,8 @@
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
     <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
@@ -2204,8 +2209,9 @@
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
-        your post in this state. Would you like to remove all failed media?</string>
+        your post in this state.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="editor_retry_failed_uploads">Retry uploading</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
@@ -2575,7 +2581,7 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_search_prompt">Search posts</string>
+    <string name="post_list_search_prompt">Search published posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 
@@ -2656,4 +2662,8 @@
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
+
+    <string name="description_collapse">Collapse</string>
+    <string name="description_expand">Expand</string>
+
 </resources>

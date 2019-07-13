@@ -15,32 +15,33 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 /**
- * Tests for structured concurrency in [LocalDraftUploadStarter].
+ * Tests for structured concurrency in [UploadStarter].
  *
- * This is intentionally a separate class from [LocalDraftUploadStarterTest] because this contains non-deterministic
+ * This is intentionally a separate class from [UploadStarterTest] because this contains non-deterministic
  * tests.
  */
 @RunWith(MockitoJUnitRunner::class)
-class LocalDraftUploadStarterConcurrentTest {
+class UploadStarterConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     private val site = SiteModel()
-    private val posts = listOf(
-            PostModel(),
-            PostModel(),
-            PostModel(),
-            PostModel(),
-            PostModel()
+    private val draftPosts = listOf(
+            createDraftPostModel(),
+            createDraftPostModel(),
+            createDraftPostModel(),
+            createDraftPostModel(),
+            createDraftPostModel()
     )
 
     private val postStore = mock<PostStore> {
-        on { getLocalDraftPosts(eq(site)) } doReturn posts
+        on { getLocalDraftPosts(eq(site)) } doReturn draftPosts
     }
     private val pageStore = mock<PageStore> {
         onBlocking { getLocalDraftPages(any()) } doReturn emptyList()
@@ -51,7 +52,7 @@ class LocalDraftUploadStarterConcurrentTest {
         // Given
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        val starter = createLocalDraftUploadStarter(uploadServiceFacade)
+        val starter = createUploadStarter(uploadServiceFacade)
 
         // When
         runBlocking {
@@ -59,7 +60,7 @@ class LocalDraftUploadStarterConcurrentTest {
         }
 
         // Then
-        verify(uploadServiceFacade, times(posts.size)).uploadPost(
+        verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),
@@ -68,7 +69,7 @@ class LocalDraftUploadStarterConcurrentTest {
         )
     }
 
-    private fun createLocalDraftUploadStarter(uploadServiceFacade: UploadServiceFacade) = LocalDraftUploadStarter(
+    private fun createUploadStarter(uploadServiceFacade: UploadServiceFacade) = UploadStarter(
             context = mock(),
             postStore = postStore,
             pageStore = pageStore,
@@ -93,6 +94,10 @@ class LocalDraftUploadStarterConcurrentTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
+        }
+
+        fun createDraftPostModel() = PostModel().apply {
+            status = PostStatus.DRAFT.toString()
         }
     }
 }

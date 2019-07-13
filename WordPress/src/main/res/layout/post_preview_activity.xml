@@ -49,21 +49,6 @@
             android:layout_alignParentEnd="true">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/btn_discard_changes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="?android:selectableItemBackground"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingTop="@dimen/margin_medium"
-                android:text="@string/button_discard_changes"
-                android:textAllCaps="true"
-                android:textColor="@color/accent_300"
-                android:textSize="@dimen/text_sz_small"
-                android:paddingStart="@dimen/margin_extra_large"
-                android:paddingEnd="@dimen/margin_extra_large"/>
-
-            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_publish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
