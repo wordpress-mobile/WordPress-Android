@@ -834,7 +834,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                     break;
                 case 74:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                    db.execSQL("CREATE TABLE WCRevenueStatsModel(\n"
+                    db.execSQL("DROP TABLE IF EXISTS WCRevenueStatsModel");
+                    db.execSQL("CREATE TABLE WCOrderStatsV4Model(\n"
                                + "  LOCAL_SITE_ID INTEGER,\n"
                                + "  INTERVAL TEXT NOT NULL,\n"
                                + "  START_DATE TEXT NOT NULL,\n"
