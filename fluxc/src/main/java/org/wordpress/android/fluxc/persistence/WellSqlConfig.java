@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 75;
+        return 76;
     }
 
     @Override
@@ -554,6 +554,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
                 oldVersion++;
             case 74:
+                db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
+                db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
+                oldVersion++;
+            case 75:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
@@ -820,11 +824,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CARRIER_LINK TEXT NOT NULL,"
                                + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
-                 case 67:
-                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                     db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
-                     break;
-                 case 69:
+                case 67:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
+                    break;
+                case 69:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderModel ADD DATE_MODIFIED TEXT");
                     db.execSQL("CREATE TABLE WCOrderSummaryModel (LOCAL_SITE_ID INTEGER,REMOTE_ORDER_ID INTEGER,"
@@ -832,9 +836,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
                                + "UNIQUE (REMOTE_ORDER_ID, LOCAL_SITE_ID) ON CONFLICT REPLACE)");
                     break;
-                case 74:
+                case 75:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                    db.execSQL("DROP TABLE IF EXISTS WCRevenueStatsModel");
                     db.execSQL("CREATE TABLE WCOrderStatsV4Model(\n"
                                + "  LOCAL_SITE_ID INTEGER,\n"
                                + "  INTERVAL TEXT NOT NULL,\n"
