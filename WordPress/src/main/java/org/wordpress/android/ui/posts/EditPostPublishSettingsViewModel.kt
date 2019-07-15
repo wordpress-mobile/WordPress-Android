@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.os.SystemClock
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -51,6 +52,8 @@ class EditPostPublishSettingsViewModel
     val onShowNotificationDialog: LiveData<NotificationTime> = _onShowNotificationDialog
     private val _onNotificationTime = MutableLiveData<NotificationTime>()
     val onNotificationTime: LiveData<NotificationTime> = _onNotificationTime
+    private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
+    val onNotificationAdded: LiveData<Event<Notification>> = _onNotificationAdded
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
@@ -182,4 +185,10 @@ class EditPostPublishSettingsViewModel
         val notificationEnabled: Boolean = false,
         val notificationVisible: Boolean = true
     )
+
+    fun showNotification() {
+        _onNotificationAdded.postValue(Event(Notification(1, "Title", "Message", SystemClock.elapsedRealtime() + 1000)))
+    }
+
+    data class Notification(val id: Int, val title: String, val message: String, val scheduledTime: Long)
 }

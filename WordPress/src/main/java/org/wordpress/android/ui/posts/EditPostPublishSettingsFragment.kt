@@ -1,5 +1,9 @@
 package org.wordpress.android.ui.posts
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context.ALARM_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -7,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -42,6 +47,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         addToCalendarContainer = rootView.findViewById(R.id.post_add_to_calendar_container)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
+        publishNotificationContainer.setOnClickListener { viewModel.showNotification() }
 
         viewModel.onDatePicked.observe(this, Observer {
             it?.applyIfNotHandled {
@@ -86,6 +92,28 @@ class EditPostPublishSettingsFragment : Fragment() {
                         SHORT,
                         Gravity.TOP
                 )
+            }
+        })
+        viewModel.onNotificationAdded.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { notification ->
+                activity?.let {
+                    NotificationManagerCompat.from(it).cancel(notification.id)
+                    val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
+                    notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
+                    notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_TITLE, notification.title)
+                    notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_MESSAGE, notification.message)
+                    val pendingIntent = PendingIntent.getBroadcast(
+                            it,
+                            notification.id,
+                            notificationIntent,
+                            PendingIntent.FLAG_CANCEL_CURRENT
+                    )
+
+                    val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
+//                    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, notification.scheduledTime, pendingIntent)
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, notification.scheduledTime, pendingIntent)
+                }
             }
         })
         viewModel.start(getPost())
