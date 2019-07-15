@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-26 09:54:09+0000
+Translation-Revision-Date: 2019-07-09 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="stats_widget_error_no_access_token">להצגת הנתונים הסטטיסטיים שלך, יש להתחבר לחשבון WordPress.com.</string>
+    <string name="post_list_search_nothing_found">לא נמצאו פוסטים שמתאימים לחיפוש שלך</string>
+    <string name="domains_suggestions_intro_description">כאן הגולשים ימצאו אותך באינטרנט.</string>
+    <string name="domains_suggestions_intro_title">לבחור שם דומיין מתקדם</string>
+    <string name="my_site_custom_domain_name">כל התוכניות של WordPress.com כוללות דומיין אישי. ניתן להירשם ולקבל דומיין פרימים בחינם עכשיו.</string>
+    <string name="stats_widget_minified_name">מבט כללי</string>
+    <string name="stats_widget_today_insights_name">היום</string>
+    <string name="stats_widget_all_time_insights_name">כל הזמנים</string>
+    <string name="stats_widget_weekly_views_name">תצוגות השבוע</string>
+    <string name="stats_widget_log_in_message">עליך להתחבר לאפליקציה של WordPress כדי להוסיף וידג\'ט.</string>
+    <string name="stats_widget_error_no_network">אין רשת זמינה</string>
+    <string name="stats_widget_error_no_data">לא ניתן היה לטעון את הנתונים</string>
+    <string name="stats_widget_select_type">סוג</string>
+    <string name="stats_widget_select_color">צבע</string>
+    <string name="stats_widget_select_your_site">בחירת האתר שלך</string>
+    <string name="stats_widget_color_dark">צבעים כהים</string>
+    <string name="stats_widget_color_light">צבעים בהירים</string>
+    <string name="stats_widget_color">צבע</string>
+    <string name="stats_widget_site_caption">בחירת האתר שלך</string>
+    <string name="stats_widget_site">אתר</string>
+    <string name="stats_widget_all_time_title">כל הזמנים</string>
+    <string name="stats_widget_views_title">תצוגות השבוע</string>
+    <string name="stats_widget_add">הוספת וידג\'ט</string>
+    <string name="dialog_confirm_update_yes">לעדכן כעת</string>
+    <string name="dialog_confirm_update_message_page">העמוד הנוכחי שפורסם יעודכן מייד.</string>
+    <string name="dialog_confirm_update_message_post">הפוסט הנוכחי שפורסם יעודכן מייד.</string>
+    <string name="dialog_confirm_update_title">רוצה לעדכן כעת?</string>
+    <string name="plugin_fetching_error_after_at">הריענון של פרטי התוסף דורש יותר זמן מהרגיל. יש לבדוק שוב מאוחר יותר.</string>
+    <string name="plugin_install_site_ineligible_default_error">אם רשמת כרגע את שם הדומיין, עליך להמתין שנסיים להגדיר אותו ולנסות שוב.\n\nאם לא, נראה שמשהו השתבש ושבתוסף יש תכונה שאולי לא זמינה באתר זה.</string>
     <string name="domain_contact_information_state_not_available_hint">מדינה (לא זמין)</string>
     <string name="domain_registration_privacy_protection_tos">הרשמה לדומיין מהווה הסכמה מצדך %1$sלתנאים ולהתניות שלנו%2$s</string>
     <string name="error_network_connection">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
@@ -542,7 +571,6 @@ Language: he_IL
     <string name="plugin_install_site_ineligible_site_private">כדי להוסיף את התוסף, האתר חייב להיות ציבורי.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">כדי להוסיף את התוסף, יש להתחבר לתוכנית לעסקים.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">כדי להוסיף את התוסף, יש להגדיר דומיין אישי.</string>
-    <string name="plugin_install_site_ineligible_default_error">לא ניתן להגדיר את התוסף עבור האתר הזה.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">אנחנו מחילים את ההגדרות הסופיות - תכף נסיים…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">מתקין תוסף…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">התקנה</string>

@@ -552,7 +552,6 @@ Language: pl
     <string name="plugin_install_site_ineligible_site_private">Funkcjonalność wtyczek wymaga aby witryna była publiczna.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funkcjonalność wtyczek wymaga planu business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funkcjonalność wtyczek wymaga własnej domeny.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Dokonujemy finalnego ustawiania - prawie gotowe…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalowanie wtyczki…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Zainstaluj</string>

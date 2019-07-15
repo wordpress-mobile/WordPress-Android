@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-19 10:36:48+0000
+Translation-Revision-Date: 2019-07-10 00:54:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
+    <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
+    <string name="post_list_search_nothing_found">Es gibt keine Beiträge, die deiner Suche entsprechen</string>
+    <string name="domains_suggestions_intro_description">Hier finden dich andere im Internet.</string>
+    <string name="domains_suggestions_intro_title">Wähle einen Premium-Domainnamen</string>
+    <string name="my_site_custom_domain_name">Alle Pläne auf WordPress.com enthalten einen eigenen Domainnamen. Registriere dir jetzt deine kostenlose Domain.</string>
+    <string name="stats_widget_minified_name">Auf einen Blick</string>
+    <string name="stats_widget_today_insights_name">Heute</string>
+    <string name="stats_widget_all_time_insights_name">Gesamter Zeitraum</string>
+    <string name="stats_widget_weekly_views_name">Aufrufe diese Woche</string>
+    <string name="stats_widget_log_in_message">Bitte melde dich an, um ein Widget hinzuzufügen.</string>
+    <string name="stats_widget_error_no_network">Kein Netzwerk verfügbar</string>
+    <string name="stats_widget_error_no_data">Daten konnten nicht geladen werden</string>
+    <string name="stats_widget_select_type">Art</string>
+    <string name="stats_widget_select_color">Farbe</string>
+    <string name="stats_widget_select_your_site">Wähle deine Website</string>
+    <string name="stats_widget_color_dark">Dunkel</string>
+    <string name="stats_widget_color_light">Hell</string>
+    <string name="stats_widget_color">Farbe</string>
+    <string name="stats_widget_site_caption">Wähle deine Website</string>
+    <string name="stats_widget_site">Website</string>
+    <string name="stats_widget_all_time_title">Gesamter Zeitraum</string>
+    <string name="stats_widget_views_title">Aufrufe dieser Woche</string>
+    <string name="stats_widget_add">Widget hinzufügen</string>
+    <string name="dialog_confirm_update_yes">Jetzt aktualisieren</string>
+    <string name="dialog_confirm_update_message_page">Die veröffentlichte Seite wird sofort aktualisiert.</string>
+    <string name="dialog_confirm_update_message_post">Der veröffentlichte Beitrag wird sofort aktualisiert.</string>
+    <string name="dialog_confirm_update_title">Bereit für die Aktualisierung?</string>
+    <string name="plugin_fetching_error_after_at">Es dauert länger als üblich, die Details des Plugins zu aktualisieren. Bitte versuche es später noch einmal.</string>
+    <string name="plugin_install_site_ineligible_default_error">Falls du kürzlich einen Domainnamen registriert hast, warte bitte ab, bis diese fertig eingerichtet ist und probiere es noch einmal.\n\nFalls nicht, scheint etwas schiefgegangen zu sein und die Plugin-Funktion ist möglicherweise für diese Website nicht verfügbar.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (nicht verfügbar)</string>
-    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our %1$sBestimmungen und Konditionen%2$s</string>
+    <string name="domain_registration_privacy_protection_tos">Mit der Registrierung dieser Domain stimmst du unseren %1$sBestimmungen und Konditionen%2$s zu</string>
     <string name="error_network_connection">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
     <string name="error_browser_no_network">Diese Seite kann gerade nicht geladen werden.</string>
     <string name="error_disabled_apis">Die Einstellungen konnten nicht abgerufen werden: Einige APIs sind für diese OAuth-App-ID + Konto-Kombination nicht verfügbar.</string>
@@ -559,7 +589,6 @@ Language: de
     <string name="plugin_install_site_ineligible_site_private">Für das Plugin-Feature muss die Website öffentlich sein.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Für das Plugin-Feature ist ein Business-Tarif erforderlich.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Für das Plugin-Feature ist eine individuelle Domain erforderlich.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Die finale Einrichtung läuft – fast fertig …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wird installiert …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installieren</string>
