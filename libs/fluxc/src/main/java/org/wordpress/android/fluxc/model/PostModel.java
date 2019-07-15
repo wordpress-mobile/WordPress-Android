@@ -52,6 +52,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private double mLatitude = PostLocation.INVALID_LATITUDE;
     @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
+    @Column private String mPublishConfirmedAt; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+
     // Page specific
     @Column private boolean mIsPage;
     @Column private long mParentId;
@@ -278,6 +280,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLongitude = longitude;
     }
 
+    public String getPublishConfirmedAt() {
+        return mPublishConfirmedAt;
+    }
+
+    public void setPublishConfirmedAt(String publishConfirmedAt) {
+        mPublishConfirmedAt = publishConfirmedAt;
+    }
+
     public boolean isPage() {
         return mIsPage;
     }
@@ -391,7 +401,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
-                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
+                && StringUtils.equals(getPublishConfirmedAt(), ((PostModel) other).getPublishConfirmedAt());
     }
 
     public @Nullable JSONArray getJSONCustomFields() {
