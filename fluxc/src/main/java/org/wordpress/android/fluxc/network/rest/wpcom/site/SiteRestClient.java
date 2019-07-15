@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -55,6 +56,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesRespo
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -67,6 +69,8 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartError;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsError;
+import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
@@ -261,6 +265,64 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
         request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        add(request);
+    }
+
+    public void fetchSiteEditors(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
+        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                SiteEditorsResponse.class,
+                new Listener<SiteEditorsResponse>() {
+                    @Override
+                    public void onResponse(SiteEditorsResponse response) {
+                        if (response != null) {
+                            FetchedEditorsPayload payload;
+                            payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                        } else {
+                            AppLog.e(T.API, "Received empty response to /sites/$site/gutenberg for " + site.getUrl());
+                            FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                            payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                        }
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                        payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                    }
+                }
+                );
+        add(request);
+    }
+
+    public void designateMobileEditor(final SiteModel site, final String mobileEditorName) {
+        Map<String, Object> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
+        params.put("editor", mobileEditorName);
+        params.put("platform", "mobile");
+        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest
+                .buildPostRequest(url, params, SiteEditorsResponse.class,
+                        new Listener<SiteEditorsResponse>() {
+                            @Override
+                            public void onResponse(SiteEditorsResponse response) {
+                                FetchedEditorsPayload payload;
+                                payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        });
         add(request);
     }
 

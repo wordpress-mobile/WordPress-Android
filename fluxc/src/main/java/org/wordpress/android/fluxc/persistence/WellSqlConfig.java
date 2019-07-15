@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 75;
+        return 76;
     }
 
     @Override
@@ -554,6 +554,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
                 oldVersion++;
             case 74:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
+                oldVersion++;
+            case 75:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
