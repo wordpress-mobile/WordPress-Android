@@ -8,7 +8,6 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.NotificationModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.OFF
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,11 +42,11 @@ class PostSchedulingNotificationSqlUtils
 
     fun getScheduledTime(
         postId: Int
-    ): ScheduledTime {
+    ): ScheduledTime? {
         return WellSql.select(PostSchedulingNotificationBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.POST_ID, postId)
-                .endWhere().asModel.firstOrNull()?.scheduledTime?.let { ScheduledTime.valueOf(it) } ?: OFF
+                .endWhere().asModel.firstOrNull()?.scheduledTime?.let { ScheduledTime.valueOf(it) }
     }
 
     fun getNotification(
