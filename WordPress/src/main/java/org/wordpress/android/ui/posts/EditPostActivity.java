@@ -163,6 +163,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -394,6 +395,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject UiHelpers mUiHelpers;
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
+    @Inject FeaturedImageHelper mFeaturedImageHelper;
 
     private SiteModel mSite;
 
@@ -696,12 +698,18 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (useAztec) {
                     if (!AztecEditorFragment.isMediaInPostBody(this,
                             mPost.getContent(), String.valueOf(media.getId()))) {
-                        mediaToDeleteAssociationFor.add(media);
+                        // don't delete featured image uploads
+                        if (!media.getMarkedLocallyAsFeatured()) {
+                            mediaToDeleteAssociationFor.add(media);
+                        }
                     }
                 } else if (useGutenberg) {
                     if (!PostUtils.isMediaInGutenbergPostBody(
                             mPost.getContent(), String.valueOf(media.getId()))) {
-                        mediaToDeleteAssociationFor.add(media);
+                        // don't delete featured image uploads
+                        if (!media.getMarkedLocallyAsFeatured()) {
+                            mediaToDeleteAssociationFor.add(media);
+                        }
                     }
                 }
             }
@@ -1729,9 +1737,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void onUploadSuccess(MediaModel media) {
-        if (mEditorMediaUploadListener != null && media != null) {
+        // TODO Should this statement check media.getLocalPostId() == mPost.getId()?
+        if (media != null && !media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                                              FluxCUtils.mediaFileFromMediaModel(media));
+                    FluxCUtils.mediaFileFromMediaModel(media));
+        } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mPost.getId()) {
+            setFeaturedImageId(media.getMediaId());
         }
     }
 
@@ -1927,6 +1938,7 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
                 // Clear failed uploads
+                mFeaturedImageHelper.cancelFeaturedImageUpload(this, mSite, mPost, true);
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
@@ -2265,7 +2277,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        if (mEditorFragment.hasFailedMediaUploads()) {
+                        if (mEditorFragment.hasFailedMediaUploads()
+                            || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null) {
                             EditPostActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -2466,8 +2479,10 @@ public class EditPostActivity extends AppCompatActivity implements
                         setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+                        WPPrefUtils.setMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
                     } else if (mShowAztecEditor) {
+                        WPPrefUtils.setMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
@@ -3216,7 +3231,8 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO
+                              || requestCode == RequestCodes.PHOTO_PICKER))) {
             switch (requestCode) {
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
@@ -3227,9 +3243,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     // user chose a featured image
-                    if (resultCode == RESULT_OK && data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
                         setFeaturedImageId(mediaId);
+                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_QUEUED)) {
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.refreshViews();
+                        }
                     }
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
@@ -3974,7 +3994,10 @@ public class EditPostActivity extends AppCompatActivity implements
             if (failedMedia != null && !failedMedia.isEmpty()) {
                 HashSet<Integer> mediaIds = new HashSet<>();
                 for (MediaModel media : failedMedia) {
-                    mediaIds.add(media.getId());
+                    // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
+                    if (!media.getMarkedLocallyAsFeatured()) {
+                        mediaIds.add(media.getId());
+                    }
                 }
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }

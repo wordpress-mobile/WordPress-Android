@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -103,7 +104,8 @@ public class ReaderPhotoView extends RelativeLayout {
 
         showProgress();
 
-        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, mLoResImageUrl,
+        mImageManager
+                .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onLoadFailed(@Nullable Exception e) {

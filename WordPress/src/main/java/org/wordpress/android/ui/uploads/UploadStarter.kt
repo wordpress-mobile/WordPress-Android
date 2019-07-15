@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -142,6 +143,7 @@ open class UploadStarter @Inject constructor(
                 .filter {
                     uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
                 }
+                .filter { PostStatus.DRAFT.toString() == it.status }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,

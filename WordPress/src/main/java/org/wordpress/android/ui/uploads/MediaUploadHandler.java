@@ -111,6 +111,20 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return hasInProgressMediaUploadsForPost(postModel) || hasPendingMediaUploadsForPost(postModel);
     }
 
+    static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+        if (postModel == null) {
+            return null;
+        }
+        List<MediaModel> uploads = getPendingOrInProgressMediaUploadsForPost(postModel);
+        for (MediaModel model : uploads) {
+            if (model.getMarkedLocallyAsFeatured()) {
+                return model;
+            }
+        }
+
+        return null;
+    }
+
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
         if (postModel == null) {
             return Collections.emptyList();
@@ -415,10 +429,17 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
             More info can be found here - https://github.com/wordpress-mobile/WordPress-Android/pull/10204.
 
+            We also need to check the `markedLocallyAsFeatured` flag is equal as we might lose it otherwise. If the
+            user adds an image into the post content and they set the same image as featured image, we need to enqueue
+            both uploads. Otherwise, we could lose the information what we need to update - the featured image or post
+            content.
+
             Issue with a proper fix - https://github.com/wordpress-mobile/WordPress-Android/issues/10210
          */
-        return (media1.getLocalSiteId() == media2.getLocalSiteId() && media1.getLocalPostId() == media2.getLocalPostId()
-                && StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
+        return (media1.getLocalSiteId() == media2.getLocalSiteId()
+                && media1.getLocalPostId() == media2.getLocalPostId()
+                && StringUtils.equals(media1.getFilePath(), media2.getFilePath()))
+                && media1.getMarkedLocallyAsFeatured() == media2.getMarkedLocallyAsFeatured();
     }
 
     @Override

@@ -43,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-178"
-        versionCode 748
+        versionName "alpha-179"
+        versionCode 751
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -61,12 +61,10 @@ android {
     }
 
     // Gutenberg's dependency - react-native-video is using
-    // Java API 1.8 so we need this when building from source
-    if (rootProject.ext.buildGutenbergFromSource) {
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
+    // Java API 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     flavorDimensions "buildType"
@@ -74,8 +72,8 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            versionName "12.8-rc-2"
-            versionCode 747
+            versionName "12.8-rc-3"
+            versionCode 750
         }
 
         zalpha { // alpha version - enable experimental features
