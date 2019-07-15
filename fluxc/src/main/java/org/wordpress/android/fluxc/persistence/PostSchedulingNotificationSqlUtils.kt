@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.NotificationModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.OFF
 import javax.inject.Inject
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 class PostSchedulingNotificationSqlUtils
 @Inject constructor() {
     fun insert(
-        postId: Long,
+        postId: Int,
         scheduledTime: ScheduledTime
     ): Int? {
         deletePostSchedulingNotifications(postId)
@@ -32,7 +33,7 @@ class PostSchedulingNotificationSqlUtils
                 .endWhere().asModel.firstOrNull()?.id
     }
 
-    fun deletePostSchedulingNotifications(postId: Long) {
+    fun deletePostSchedulingNotifications(postId: Int) {
         WellSql.delete(PostSchedulingNotificationBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.POST_ID, postId)
@@ -41,7 +42,7 @@ class PostSchedulingNotificationSqlUtils
     }
 
     fun getScheduledTime(
-        postId: Long
+        postId: Int
     ): ScheduledTime {
         return WellSql.select(PostSchedulingNotificationBuilder::class.java)
                 .where()
@@ -49,19 +50,20 @@ class PostSchedulingNotificationSqlUtils
                 .endWhere().asModel.firstOrNull()?.scheduledTime?.let { ScheduledTime.valueOf(it) } ?: OFF
     }
 
-    fun isScheduled(
+    fun getNotification(
         notificationId: Int
-    ): Boolean {
+    ): NotificationModel? {
         return WellSql.select(PostSchedulingNotificationBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.ID, notificationId)
-                .endWhere().asModel.firstOrNull() != null
+                .endWhere().asModel.firstOrNull()
+                ?.let { NotificationModel(it.id, it.postId, ScheduledTime.valueOf(it.scheduledTime)) }
     }
 
     @Table(name = "PostSchedulingNotification")
     data class PostSchedulingNotificationBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
-        @Column var postId: Long,
+        @Column var postId: Int,
         @Column var scheduledTime: String
     ) : Identifiable {
         constructor() : this(-1, -1, "")
