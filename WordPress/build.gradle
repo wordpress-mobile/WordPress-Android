@@ -72,8 +72,8 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            versionName "12.8-rc-3"
-            versionCode 750
+            versionName "12.8"
+            versionCode 752
         }
 
         zalpha { // alpha version - enable experimental features
