@@ -97,6 +97,20 @@ public class PostStoreDbIntegrationTest {
     }
 
     @Test
+    public void testUpdatePublishedConfirmedAt() {
+        // Arrange
+        String dummyDate = "1955-11-05T14:15:00Z";
+        PostModel postModel = new PostModel();
+        postModel.setPublishConfirmedAt(dummyDate);
+
+        // Act
+        mPostSqlUtils.insertPostForResult(postModel);
+
+        // Assert
+        assertEquals(dummyDate, PostTestUtils.getPosts().get(0).getPublishConfirmedAt());
+    }
+
+    @Test
     public void testPushAndFetchCollision() throws InterruptedException {
         // Test uploading a post, fetching remote posts and updating the db from the fetch first
 
