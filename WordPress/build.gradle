@@ -43,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-179"
-        versionCode 751
+        versionName "alpha-180"
+        versionCode 754
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -72,8 +72,8 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            versionName "12.8"
-            versionCode 752
+            versionName "12.9-rc-1"
+            versionCode 753
         }
 
         zalpha { // alpha version - enable experimental features
