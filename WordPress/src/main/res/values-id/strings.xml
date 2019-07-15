@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-25 11:54:10+0000
+Translation-Revision-Date: 2019-07-09 07:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="stats_widget_error_no_access_token">Untuk melihat statistik Anda, login ke akun WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Tidak ada pos yang cocok dengan pencarian Anda</string>
+    <string name="domains_suggestions_intro_description">Di sinilah orang akan menemukan Anda di internet.</string>
+    <string name="domains_suggestions_intro_title">Pilih nama domain premium</string>
+    <string name="my_site_custom_domain_name">Semua paket WordPress.com menyertakan nama domain kustom. Daftarkan domain premium gratis Anda sekarang.</string>
+    <string name="stats_widget_minified_name">Sekilas</string>
+    <string name="stats_widget_today_insights_name">Hari Ini</string>
+    <string name="stats_widget_all_time_insights_name">Sepanjang waktu</string>
+    <string name="stats_widget_weekly_views_name">Dilihat minggu ini</string>
+    <string name="stats_widget_log_in_message">Silakan login ke aplikasi WordPress untuk menambahkan widget.</string>
+    <string name="stats_widget_error_no_network">Tidak ada jaringan</string>
+    <string name="stats_widget_error_no_data">Tidak dapat memuat data</string>
+    <string name="stats_widget_select_type">Jenis</string>
+    <string name="stats_widget_select_color">Warna</string>
+    <string name="stats_widget_select_your_site">Pilih situs Anda</string>
+    <string name="stats_widget_color_dark">Gelap</string>
+    <string name="stats_widget_color_light">Terang</string>
+    <string name="stats_widget_color">Warna</string>
+    <string name="stats_widget_site_caption">Pilih situs Anda</string>
+    <string name="stats_widget_site">Situs</string>
+    <string name="stats_widget_all_time_title">Sepanjang waktu</string>
+    <string name="stats_widget_views_title">Dilihat Minggu Ini</string>
+    <string name="stats_widget_add">Tambahkan widget</string>
+    <string name="dialog_confirm_update_yes">Perbarui sekarang</string>
+    <string name="dialog_confirm_update_message_page">Halaman yang telah diterbitkan ini akan segera diperbarui.</string>
+    <string name="dialog_confirm_update_message_post">Pos yang telah diterbitkan ini akan segera diperbarui.</string>
+    <string name="dialog_confirm_update_title">Siap Memperbarui?</string>
+    <string name="plugin_fetching_error_after_at">Diperlukan waktu yang lebih lama dari biasanya untuk menyegarkan detail plugin. Silakan periksa lagi nanti.</string>
+    <string name="plugin_install_site_ineligible_default_error">Jika Anda baru saja mendaftarkan nama domain, harap tunggu sampai kami selesai menyiapkannya dan silakan coba lagi.\n\nJika tidak, sepertinya terjadi kesalahan dan fitur plugin mungkin tidak tersedia di situs ini.</string>
     <string name="domain_contact_information_state_not_available_hint">Negara Bagian (Tidak Tersedia)</string>
     <string name="domain_registration_privacy_protection_tos">Dengan mendaftarkan domain ini, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
     <string name="error_network_connection">Periksa koneksi jaringan Anda dan coba lagi.</string>
@@ -528,7 +557,6 @@ Language: id
     <string name="plugin_install_site_ineligible_site_private">Fitur plugin memerlukan situs berstatus publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Fitur plugin memerlukan paket bisnis.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Fitur plugin memerlukan domain kustom.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Kami sedang mengerjakan penyiapan akhir — hampir selesai…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Menginstal plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instal</string>

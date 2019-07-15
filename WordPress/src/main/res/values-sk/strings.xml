@@ -346,7 +346,6 @@ Language: sk
     <string name="plugin_install_site_ineligible_site_private">Funkcia pluginu vyžaduje, aby webová stránka bola verejná.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funkcia pluginy vyžaduje biznis plán.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funkcia pluginu vyžaduje vlastnú doménu.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Robíme konečné nastavenie - takmer hotovo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Inštalácia pluginu…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Inštalovať</string>

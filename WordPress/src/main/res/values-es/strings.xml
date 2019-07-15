@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-20 07:01:18+0000
+Translation-Revision-Date: 2019-07-09 11:31:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="post_list_search_prompt">Buscar entradas publicadas</string>
+    <string name="stats_widget_error_no_access_token">Para ver tus estadísticas accede a la cuenta de WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Ninguna entrada coincide con tu búsqueda</string>
+    <string name="domains_suggestions_intro_description">Aquí es donde la gente te encuentra en Internet.</string>
+    <string name="domains_suggestions_intro_title">Elige un nombre de dominio premium</string>
+    <string name="my_site_custom_domain_name">Todos los planes de WordPress.com incluyen un nombre de dominio personalizado. Registra ahora tu dominio premium gratuito.</string>
+    <string name="stats_widget_minified_name">De un vistazo</string>
+    <string name="stats_widget_today_insights_name">Hoy</string>
+    <string name="stats_widget_all_time_insights_name">Histórico</string>
+    <string name="stats_widget_weekly_views_name">Visitas esta semana</string>
+    <string name="stats_widget_log_in_message">Por favor, accede a la aplicación WordPress para añadir un widget.</string>
+    <string name="stats_widget_error_no_network">No hay ninguna red disponible</string>
+    <string name="stats_widget_error_no_data">No se pudieron cargar los datos</string>
+    <string name="stats_widget_select_type">Tipo</string>
+    <string name="stats_widget_select_color">Color</string>
+    <string name="stats_widget_select_your_site">Selecciona tu sitio</string>
+    <string name="stats_widget_color_dark">Oscuro</string>
+    <string name="stats_widget_color_light">Claro</string>
+    <string name="stats_widget_color">Color</string>
+    <string name="stats_widget_site_caption">Selecciona tu sitio</string>
+    <string name="stats_widget_site">Sitio</string>
+    <string name="stats_widget_all_time_title">Histórico</string>
+    <string name="stats_widget_views_title">Visitas esta semana</string>
+    <string name="stats_widget_add">Añadir widget</string>
+    <string name="dialog_confirm_update_yes">Actualizar ahora</string>
+    <string name="dialog_confirm_update_message_page">Esta página publicada se actualizará inmediatamente.</string>
+    <string name="dialog_confirm_update_message_post">Esta entrada publicada se actualizará inmediatamente.</string>
+    <string name="dialog_confirm_update_title">¿Preparado para actualizar?</string>
+    <string name="plugin_fetching_error_after_at">Está tardando más tiempo del normal recargar los detalles del plugin. Por favor, compruébalo de nuevo más tarde.</string>
+    <string name="plugin_install_site_ineligible_default_error">Si acabas de registrar un nombre de dominio, por favor, espera hasta que terminemos de configurarlo e inténtalo de nuevo.\n\nEn caso contrario, parece que algo fue mal y la característica del plugin podría no estar disponible para este sitio.</string>
     <string name="domain_contact_information_state_not_available_hint">Estado (no disponible)</string>
     <string name="domain_registration_privacy_protection_tos">Al registrar este dominio aceptas nuestros %1$stérminos y condiciones%2$s</string>
     <string name="error_network_connection">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
@@ -559,7 +589,6 @@ Language: es
     <string name="plugin_install_site_ineligible_site_private">Una característica del plugin requiere que el sitio sea público.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Una característica del plugin requiere un plan business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Una característica del plugin requiere un dominio personalizado.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Estamos haciendo la configuración final, está casi listo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalando plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>
