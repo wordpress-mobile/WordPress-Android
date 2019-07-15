@@ -1449,26 +1449,18 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
-                if (mPost.isPage()) {
-                    mViewPager.setCurrentItem(PAGE_PREVIEW);
-                } else {
-                    PreviewLogicOperationResult opResult =
-                            mRemotePreviewLogicHelper.runPostPreviewLogic(
-                            this,
-                            mSite,
-                            mPost,
-                            getEditPostActivityStrategyFunctions()
-                    );
-
-                    if (
-                            opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
-                            || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
-                            || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
-                    ) {
-                        return false;
-                    } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
-                        updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
-                    }
+                PreviewLogicOperationResult opResult = mRemotePreviewLogicHelper.runPostPreviewLogic(
+                        this,
+                        mSite,
+                        mPost,
+                        getEditPostActivityStrategyFunctions());
+                if (opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
+                    || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
+                    || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
+                ) {
+                    return false;
+                } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
+                    updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
                 }
             } else if (itemId == R.id.menu_post_settings) {
                 if (mEditPostSettingsFragment != null) {
