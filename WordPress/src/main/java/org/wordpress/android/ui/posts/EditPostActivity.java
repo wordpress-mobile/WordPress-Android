@@ -246,8 +246,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
-    private static final int PAGE_PREVIEW = 2;
-    private static final int PAGE_HISTORY = 3;
+    private static final int PAGE_HISTORY = 2;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_PUBLISH_DIALOG_TAG = "ASYNC_PROMO_PUBLISH_DIALOG_TAG";
@@ -308,8 +307,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
-    private EditPostPreviewFragment mEditPostPreviewFragment;
-
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
     private ProgressDialog mProgressDialog;
@@ -619,24 +616,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                     hidePhotoPicker();
-                } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    hidePhotoPicker();
-                    savePostAsync(new AfterSavePostListener() {
-                        @Override
-                        public void onPostSave() {
-                            if (mEditPostPreviewFragment != null) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     hidePhotoPicker();
@@ -2454,9 +2433,9 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 4;
+        private static final int NUM_PAGES_EDITOR = 3;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -2464,7 +2443,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         // Enable gutenberg upon opening a block based post
@@ -2483,12 +2462,11 @@ public class EditPostActivity extends AppCompatActivity implements
                     } else {
                         return new LegacyEditorFragment();
                     }
-                case 1:
+                case PAGE_SETTINGS:
                     return EditPostSettingsFragment.newInstance();
-                case 3:
-                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
+                case PAGE_HISTORY:
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost, mSite);
+                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
             }
         }
 
@@ -2496,7 +2474,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
@@ -2523,11 +2501,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         reattachUploadingMediaForAztec();
                     }
                     break;
-                case 1:
+                case PAGE_SETTINGS:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
-                    break;
-                case 2:
-                    mEditPostPreviewFragment = (EditPostPreviewFragment) fragment;
                     break;
             }
             return fragment;
