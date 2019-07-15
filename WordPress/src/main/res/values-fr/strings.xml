@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-27 14:05:18+0000
+Translation-Revision-Date: 2019-07-08 09:00:50+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="stats_widget_error_no_access_token">Pour voir vos statistiques, connectez-vous à votre compte WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Aucun article ne correspond à votre recherche</string>
+    <string name="domains_suggestions_intro_description">C\'est ici que les internautes vous trouveront sur Internet.</string>
+    <string name="domains_suggestions_intro_title">Choisissez un nom de domaine Premium</string>
+    <string name="my_site_custom_domain_name">Tous les plans de WordPress.com comprennent un nom de domaine. Vous pouvez enregistrer votre nom de domaine Premium gratuit dès maintenant.</string>
+    <string name="stats_widget_minified_name">D’un coup d’œil</string>
+    <string name="stats_widget_today_insights_name">Aujourd\'hui</string>
+    <string name="stats_widget_all_time_insights_name">Depuis le début</string>
+    <string name="stats_widget_weekly_views_name">Vues cette semaine</string>
+    <string name="stats_widget_log_in_message">Veuillez vous connecter à l’app WordPress pour ajouter le widget.</string>
+    <string name="stats_widget_error_no_network">Pas de réseau disponible</string>
+    <string name="stats_widget_error_no_data">Impossible de charger les données</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_select_color">Couleur</string>
+    <string name="stats_widget_select_your_site">Sélectionner votre site</string>
+    <string name="stats_widget_color_dark">Sombre</string>
+    <string name="stats_widget_color_light">Lumineux</string>
+    <string name="stats_widget_color">Couleur</string>
+    <string name="stats_widget_site_caption">Sélectionner votre site</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_all_time_title">Depuis le début</string>
+    <string name="stats_widget_views_title">Vues cette semaine</string>
+    <string name="stats_widget_add">Ajouter le widget</string>
+    <string name="dialog_confirm_update_yes">Mettre à jour maintenant</string>
+    <string name="dialog_confirm_update_message_page">Cette page publiée sera immédiatement mise à jour.</string>
+    <string name="dialog_confirm_update_message_post">Cet article publié sera immédiatement mis à jour.</string>
+    <string name="dialog_confirm_update_title">Lancer la mise à jour ?</string>
+    <string name="plugin_fetching_error_after_at">Le chargement des détails de l’extension prend plus de temps que d’habitude. Veuillez réessayer plus tard.</string>
+    <string name="plugin_install_site_ineligible_default_error">Si vous venez de créer un nom de domaine, veuillez attendre que nous ayons fini de le mettre en place, et réessayez.\n\nDans le cas contraire, il semble qu’une erreur soit survenue et que la fonctionnalité de l’extension n’est pas disponible pour ce site.</string>
     <string name="domain_contact_information_state_not_available_hint">État (non disponible)</string>
     <string name="domain_registration_privacy_protection_tos">En enregistrant ce domaine vous acceptez nos %1$sconditions générales%2$s</string>
     <string name="error_network_connection">Vérifiez votre connexion réseau et réessayez.</string>
@@ -48,8 +77,8 @@ Language: fr
     <string name="stats_management_news_card_message">Choisissez les statistiques à consulter et concentrez-vous sur les données les plus importantes à vos yeux. Appuyez sur %1$s au bas des Tendances pour personnaliser vos statistiques.</string>
     <string name="stats_manage_your_stats">Gérer vos statistiques</string>
     <string name="history_fetching_revisions">Fetching revisions…</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
-    <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Échec de l’insertion du média.\nVeuillez appuyer pour voir les options.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">L’insertion du média a échoué.\nVeuillez appuyer pour réessayer.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_list_drafts">Brouillons</string>
@@ -559,7 +588,6 @@ Language: fr
     <string name="plugin_install_site_ineligible_site_private">La fonctionnalité d\'extension requiert que le site soit public.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Vous devez avoir souscrit au plan Business pour utiliser les extensions.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Vous devez avoir un domaine personnalisé pour utiliser les extensions.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Nous finalisons la configuration, nous aurons bientôt terminé…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installation de l\'extension en cours</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installer</string>

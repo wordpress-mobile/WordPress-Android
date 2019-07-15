@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-27 06:54:11+0000
+Translation-Revision-Date: 2019-07-11 00:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="stats_widget_error_no_access_token">統計情報を表示するには、WordPress.com アカウントにログインしてください。</string>
+    <string name="post_list_search_nothing_found">検索に一致する投稿はありません</string>
+    <string name="domains_suggestions_intro_description">これを使って、他の人があなたのサイトをインターネット上で見つけます。</string>
+    <string name="domains_suggestions_intro_title">プレミアムドメイン名を選択</string>
+    <string name="my_site_custom_domain_name">WordPress.com のすべてのプランにはカスタムドメイン名があります。無料プレミアムドメインを登録してください。</string>
+    <string name="stats_widget_minified_name">概要</string>
+    <string name="stats_widget_today_insights_name">今日</string>
+    <string name="stats_widget_all_time_insights_name">全期間</string>
+    <string name="stats_widget_weekly_views_name">今週の表示数</string>
+    <string name="stats_widget_log_in_message">ウィジェットを追加するには WordPress アプリにログインしてください。</string>
+    <string name="stats_widget_error_no_network">利用可能なネットワークがありません</string>
+    <string name="stats_widget_error_no_data">データを読み込めませんでした</string>
+    <string name="stats_widget_select_type">種類</string>
+    <string name="stats_widget_select_color">色</string>
+    <string name="stats_widget_select_your_site">サイトを選択</string>
+    <string name="stats_widget_color_dark">ダーク</string>
+    <string name="stats_widget_color_light">ライト</string>
+    <string name="stats_widget_color">色</string>
+    <string name="stats_widget_site_caption">サイトを選択</string>
+    <string name="stats_widget_site">サイト</string>
+    <string name="stats_widget_all_time_title">全期間</string>
+    <string name="stats_widget_views_title">今週の表示数</string>
+    <string name="stats_widget_add">ウィジェットを追加</string>
+    <string name="dialog_confirm_update_yes">今すぐ更新</string>
+    <string name="dialog_confirm_update_message_page">この公開済みページは間もなく更新されます。</string>
+    <string name="dialog_confirm_update_message_post">この公開済み投稿は間もなく更新されます。</string>
+    <string name="dialog_confirm_update_title">更新しますか ?</string>
+    <string name="plugin_fetching_error_after_at">プラグイン詳細の再読み込みには通常より時間がかかります。後ほどご確認ください。</string>
+    <string name="plugin_install_site_ineligible_default_error">ドメイン名を登録した直後の場合、設定が完了するまでお待ちいただき、もう一度お試しください。\n\nそれ以外の場合はエラーが発生していると考えられます。このサイトではプラグイン機能をご利用いただけない可能性があります。</string>
     <string name="domain_contact_information_state_not_available_hint">状態 (使用不可)</string>
     <string name="domain_registration_privacy_protection_tos">このドメインを登録することで、当社の%1$s利用規約%2$sに合意したことになります</string>
     <string name="error_network_connection">ネットワーク接続を確認して、もう一度お試しください。</string>
@@ -64,6 +93,9 @@ Language: ja_JP
     <string name="stats_insights_social">ソーシャル</string>
     <string name="stats_insights_annual_site_stats">年間サイト統計情報</string>
     <string name="stats_view_follower_totals">フォロワー合計数</string>
+    <string name="domain_suggestions_fetch_error">ドメインの提案が読み込めませんでした</string>
+    <string name="domain_suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
+    <string name="domains_suggestions_empty_list">提案が見つかりません</string>
     <string name="register_domain">ドメインを登録</string>
     <string name="jetpack_installed_message">Jetpack がインストールされたので、あとはセットアップするだけです。ほんの1分ほどで済みます。</string>
     <string name="stats_menu_remove">統計概要から削除</string>
@@ -101,6 +133,7 @@ Language: ja_JP
     <string name="plugin_install_custom_domain_required_dialog_register_btn">ドメインを登録</string>
     <string name="plugin_install_custom_domain_required_dialog_message">プラグインをインストールするには、カスタムドメインをサイトに関連付ける必要があります。</string>
     <string name="plugin_install_custom_domain_required_dialog_title">プラグインをインストール</string>
+    <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます。</string>
     <string name="publish_on">公開日:%s</string>
     <string name="schedule_for">予約:%s</string>
     <string name="published_on">公開日時:%s</string>
@@ -289,6 +322,7 @@ Language: ja_JP
     <string name="stats_insights_latest_post_with_no_engagement">「%2$s」を公開してから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう。</string>
     <string name="stats_insights_latest_post_empty">公開投稿はまだありません。公開すると、最新の投稿の概要がここに表示されます</string>
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
+    <string name="stats_insights_all_time_stats">全期間</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">フォロワー</string>
     <string name="stats_publicize_service_label">サービス</string>
@@ -307,6 +341,7 @@ Language: ja_JP
     <string name="stats_followers_count_message">Total %1$s Followers:%2$s</string>
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_manage_insights">インサイトを管理</string>
     <string name="stats_empty_insights_title">インサイトは追加されていません</string>
     <string name="stats_no_data_yet">データはまだありません</string>
     <string name="menu_debug">デバッグメニュー</string>
@@ -418,7 +453,9 @@ Language: ja_JP
     <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません。</string>
     <string name="jetpack_installation_problem">問題が発生しました</string>
     <string name="jetpack_installed">Jetpack がインストールされています</string>
+    <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかることがあります。</string>
     <string name="installing_jetpack">Jetpack をインストール</string>
+    <string name="install_jetpack_message">サイトのログイン情報は保存されず、Jetpack インストールのためのみに使用されます。</string>
     <string name="install_jetpack">Jetpack をインストール</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
@@ -551,7 +588,6 @@ Language: ja_JP
     <string name="plugin_install_site_ineligible_site_private">プラグイン機能を使うには、サイトが公開されていることが必要です。</string>
     <string name="plugin_install_site_ineligible_no_business_plan">プラグイン機能には、ビジネスプランが必要です。</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">プラグイン機能には、カスタムドメインが必要です。</string>
-    <string name="plugin_install_site_ineligible_default_error">このサイトでは、プラグイン機能はご利用いただけません。</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">最終セットアップを実行中です — あと少しです…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">プラグインのインストール中…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">インストール</string>
@@ -1039,6 +1075,8 @@ Language: ja_JP
     <string name="editor_dropped_text_error">テキストをドロップする際にエラーが発生しました</string>
     <string name="editor_dropped_html_images_not_allowed">HTML モードで画像をドロップすることはできません</string>
     <string name="editor_content_hint">あなたのストーリーをお聞かせください…</string>
+    <string name="post_list_trashed">ゴミ箱に移動済み</string>
+    <string name="post_list_scheduled">予約済み</string>
     <string name="post_status_post_private">非公開</string>
     <string name="post_status_draft">下書き</string>
     <string name="post_status_pending_review">レビュー待ち</string>
@@ -1171,6 +1209,7 @@ Language: ja_JP
     <string name="editor_post_saved_locally_failed_media">投稿はメディアアップロードに失敗し、ローカルに保存されました</string>
     <string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
     <string name="photo_picker_title">写真を選択</string>
+    <string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
     <string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>

@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-22 16:20:57+0000
+Translation-Revision-Date: 2019-07-09 10:33:31+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="post_list_search_prompt">Искать опубликованные записи</string>
+    <string name="stats_widget_error_no_access_token">Для просмотра статистики войдите в вашу учётную запись WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Нет записей по критериям поиска</string>
+    <string name="domains_suggestions_intro_description">Это то, где люди найдут вас в сети.</string>
+    <string name="domains_suggestions_intro_title">Выберите имя домена</string>
+    <string name="my_site_custom_domain_name">Все тарифы WordPress.com включают возможность зарегистрировать пользовательское имя домена. Сделайте это сейчас.</string>
+    <string name="stats_widget_minified_name">На виду</string>
+    <string name="stats_widget_today_insights_name">Сегодня</string>
+    <string name="stats_widget_all_time_insights_name">За всё время</string>
+    <string name="stats_widget_weekly_views_name">Просмотров на этой неделе</string>
+    <string name="stats_widget_log_in_message">Войдите в приложение WordPress для добавления виджета.</string>
+    <string name="stats_widget_error_no_network">Сеть недоступна</string>
+    <string name="stats_widget_error_no_data">Невозможно загрузить данные</string>
+    <string name="stats_widget_select_type">Тип</string>
+    <string name="stats_widget_select_color">Цвет</string>
+    <string name="stats_widget_select_your_site">Выберите сайт</string>
+    <string name="stats_widget_color_dark">Тёмный</string>
+    <string name="stats_widget_color_light">Светлый</string>
+    <string name="stats_widget_color">Цвет</string>
+    <string name="stats_widget_site_caption">Выберите ваш сайт</string>
+    <string name="stats_widget_site">Сайт</string>
+    <string name="stats_widget_all_time_title">За всё время</string>
+    <string name="stats_widget_views_title">Просмотров на этой неделе</string>
+    <string name="stats_widget_add">Добавить виджет</string>
+    <string name="dialog_confirm_update_yes">Обновить сейчас</string>
+    <string name="dialog_confirm_update_message_page">Опубликованная страница будет обновлена немедленно.</string>
+    <string name="dialog_confirm_update_message_post">Опубликованная запись будет обновлена немедленно.</string>
+    <string name="dialog_confirm_update_title">Готовы к обновлению?</string>
+    <string name="plugin_fetching_error_after_at">Обновление подробностей о плагине занимает больше времени чем обычно, попробуйте попозже.</string>
+    <string name="plugin_install_site_ineligible_default_error">Если вы только что зарегистрировали имя домена, пожалуйста, дождитесь завершения процесса регистрации и настройки и попробуйте снова\n\nВ ином случае, похоже что что-то пошло не так и возможности использования плагинов недоступны на этом сайте.</string>
     <string name="domain_contact_information_state_not_available_hint">Область/округ (не доступно)</string>
     <string name="domain_registration_privacy_protection_tos">Регистрируя этот домен, вы соглашаетесь с нашими %1$sправилами и условиями%2$s</string>
     <string name="error_network_connection">Проверьте ваше подключение к сети и попробуйте снова.</string>
@@ -559,7 +589,6 @@ Language: ru
     <string name="plugin_install_site_ineligible_site_private">Возможность установки плагинов требует открытого сайта.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Возможность установки плагинов требует бизнес тариф.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Возможность установки плагинов требует пользовательского домена.</string>
-    <string name="plugin_install_site_ineligible_default_error">Возможность установки плагинов недоступна для этого сайта.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Мы завершаем установку — почти готово…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Установка плагина…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Установить</string>
