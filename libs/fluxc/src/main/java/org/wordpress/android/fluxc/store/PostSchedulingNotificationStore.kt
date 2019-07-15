@@ -18,12 +18,12 @@ class PostSchedulingNotificationStore
         return sqlUtils.getNotification(notificationId)
     }
 
-    fun getScheduledTime(postId: Int): ScheduledTime {
+    fun getScheduledTime(postId: Int): ScheduledTime? {
         return sqlUtils.getScheduledTime(postId)
     }
 
     enum class ScheduledTime {
-        ONE_HOUR, TEN_MINUTES, WHEN_PUBLISHED, OFF
+        ONE_HOUR, TEN_MINUTES, WHEN_PUBLISHED
     }
 
     data class NotificationModel(val notificationId: Int, val postId: Int, val scheduledTime: ScheduledTime)
