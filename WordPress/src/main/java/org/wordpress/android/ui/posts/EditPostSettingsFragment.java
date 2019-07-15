@@ -699,7 +699,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         PostModel postModel = getPost();
         if (postModel != null && getActivity() != null) {
-            String labelToUse = mPostSettingsUtils.getPublishDateLabel(postModel, getActivity());
+            String labelToUse = mPostSettingsUtils.getPublishDateLabel(postModel);
             mPublishDateTextView.setText(labelToUse);
         }
     }

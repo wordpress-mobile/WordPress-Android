@@ -51,7 +51,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
-                viewModel.updatePost(date, getPost(), activity!!)
+                viewModel.updatePost(date, getPost())
             }
         })
         viewModel.onPublishedLabelChanged.observe(this, Observer {

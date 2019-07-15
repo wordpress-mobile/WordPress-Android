@@ -1,32 +1,28 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import androidx.lifecycle.ViewModel
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Calendar
 import javax.inject.Inject
-import javax.inject.Named
 
 class EditPostPublishSettingsViewModel
 @Inject constructor(
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val resourceProvider: ResourceProvider,
     private val postSettingsUtils: PostSettingsUtils,
-    private val context: Context
-) : ScopedViewModel(mainDispatcher) {
+    private val localeManagerWrapper: LocaleManagerWrapper
+) : ViewModel() {
     var canPublishImmediately: Boolean = false
 
     var year: Int? = null
@@ -52,7 +48,8 @@ class EditPostPublishSettingsViewModel
     val onToast: LiveData<Event<String>> = _onToast
 
     fun start(postModel: PostModel?) {
-        val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(postModel) } ?: Calendar.getInstance()
+        val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
+                ?: localeManagerWrapper.getCurrentCalendar()
         year = startCalendar.get(Calendar.YEAR)
         month = startCalendar.get(Calendar.MONTH)
         day = startCalendar.get(Calendar.DAY_OF_MONTH)
@@ -62,20 +59,20 @@ class EditPostPublishSettingsViewModel
     }
 
     fun onPostStatusChanged(postModel: PostModel?) {
-        canPublishImmediately = PostUtils.shouldPublishImmediatelyOptionBeAvailable(postModel)
+        canPublishImmediately = postModel?.let { PostUtils.shouldPublishImmediatelyOptionBeAvailable(it) } ?: false
         postModel?.let {
-            _onPublishedLabelChanged.postValue(postSettingsUtils.getPublishDateLabel(postModel, context))
+            _onPublishedLabelChanged.postValue(postSettingsUtils.getPublishDateLabel(postModel))
         }
     }
 
     fun publishNow() {
-        _onPublishedDateChanged.postValue(Calendar.getInstance())
+        _onPublishedDateChanged.postValue(localeManagerWrapper.getCurrentCalendar())
     }
 
     fun onTimeSelected(selectedHour: Int, selectedMinute: Int) {
         this.hour = selectedHour
         this.minute = selectedMinute
-        val calendar = Calendar.getInstance()
+        val calendar = localeManagerWrapper.getCurrentCalendar()
         calendar.set(year!!, month!!, day!!, hour!!, minute!!)
         _onPublishedDateChanged.postValue(calendar)
     }
@@ -88,16 +85,17 @@ class EditPostPublishSettingsViewModel
     }
 
     private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
-        val calendar = Calendar.getInstance()
+        val calendar = localeManagerWrapper.getCurrentCalendar()
         val dateCreated = postModel.dateCreated
         // Set the currently selected time if available
         if (!TextUtils.isEmpty(dateCreated)) {
             calendar.time = DateTimeUtils.dateFromIso8601(dateCreated)
+            calendar.timeZone = localeManagerWrapper.getTimeZone()
         }
         return calendar
     }
 
-    fun updatePost(updatedDate: Calendar, post: PostModel?, context: Context) {
+    fun updatePost(updatedDate: Calendar, post: PostModel?) {
         post?.let {
             post.dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
             val initialPostStatus = PostStatus.fromPost(post)
@@ -118,11 +116,11 @@ class EditPostPublishSettingsViewModel
                 // having the app be smart about it - we don't want to accidentally publish a post.
                 finalPostStatus = DRAFT
                 // show toast only once, when time is shown
-                _onToast.postValue(Event(resourceProvider.getString(string.editor_post_converted_back_to_draft)))
+                _onToast.postValue(Event(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)))
             }
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.postValue(finalPostStatus)
-            val publishDateLabel = postSettingsUtils.getPublishDateLabel(post, context)
+            val publishDateLabel = postSettingsUtils.getPublishDateLabel(post)
             _onPublishedLabelChanged.postValue(publishDateLabel)
         }
     }
