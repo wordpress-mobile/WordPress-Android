@@ -95,7 +95,7 @@ Here's an example of what this might look like,
 }
 ``` 
 
-These files are used to match network requests while the tests are being ran. For more on request matching with 
+These files are used to match network requests while the tests are being run. For more on request matching with 
 WireMock check out [their documentation](http://wiremock.org/docs/request-matching/). 
 
 ## License ##
