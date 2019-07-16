@@ -30,7 +30,7 @@ It's preferred to focus UI tests on entire user flows, and group tests with rela
 When you add a new test, you may need to add new screens, methods, and flows. When writing these I encourage you to check 
 `support/WPSupportUtils.java` for additional code to reuse to automate the task. Our tests are also used to generate screenshots
 and a lot of useful helper functions are made available through that auxillary file. Wherever possible, avoid the use
- of a string to select a UI element on the screen, the use of other identifiers such as id or content description is preferable 
+ of a string to select a UI element on the screen; the use of other identifiers such as id or content description is preferable 
   and should be used where possible, even if that means adding it to a UI element that might be missing the appropriate field.
    This ensures tests can be run regardless of the device language.
    
