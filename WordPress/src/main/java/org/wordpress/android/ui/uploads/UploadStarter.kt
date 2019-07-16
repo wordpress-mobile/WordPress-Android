@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.testing.OpenForTesting
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -40,7 +41,8 @@ import kotlin.coroutines.CoroutineContext
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
-open class UploadStarter @Inject constructor(
+@OpenForTesting
+class UploadStarter @Inject constructor(
     /**
      * The Application context
      */
@@ -90,7 +92,7 @@ open class UploadStarter @Inject constructor(
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
-    open fun queueUploadFromAllSites() = launch {
+    fun queueUploadFromAllSites() = launch {
         val sites = siteStore.sites
         try {
             checkConnectionAndUpload(sites = sites)
@@ -102,7 +104,7 @@ open class UploadStarter @Inject constructor(
     /**
      * Upload all local drafts from the given [site].
      */
-    open fun queueUploadFromSite(site: SiteModel) = launch {
+    fun queueUploadFromSite(site: SiteModel) = launch {
         try {
             checkConnectionAndUpload(sites = listOf(site))
         } catch (e: Exception) {
