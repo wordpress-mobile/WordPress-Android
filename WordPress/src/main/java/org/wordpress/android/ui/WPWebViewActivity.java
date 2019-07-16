@@ -224,14 +224,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mViewModel.getNavigateBack().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO navigate back
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                    refreshBackForwardNavButtons();
+                }
             }
         });
 
         mViewModel.getNavigateForward().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO navigate forward
+                if (mWebView.canGoForward()) {
+                    mWebView.goForward();
+                    refreshBackForwardNavButtons();
+                }
             }
         });
 
@@ -440,6 +446,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Override
     public void onWebViewPageLoaded() {
         mViewModel.onUrlLoaded();
+        refreshBackForwardNavButtons();
+    }
+
+    private void refreshBackForwardNavButtons() {
+        mViewModel.toggleBackNavigation(mWebView.canGoBack());
+        mViewModel.toggleForwardNavigation(mWebView.canGoForward());
     }
 
     @Override
@@ -611,5 +623,15 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            refreshBackForwardNavButtons();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
