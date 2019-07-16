@@ -20,6 +20,9 @@ import java.util.Set;
 public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
 
+    private static final String WP_LOGIN_URL_SUFFIX = "wp-login.php";
+    private static final String REMOTE_LOGIN_URL_SUFFIX = "remote-login.php";
+
     public URLFilteredWebViewClient(String url, ErrorManagedWebViewClientListener listener) {
         super(listener);
         mAllowedURLs.add(url);
@@ -52,11 +55,10 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
             // If a url is allowed without the trailing `/`, it should be allowed with it as well
             || mAllowedURLs.contains(StringUtils.removeTrailingSlash(url))) {
             boolean isComingFromLoginUrl =
-                    view.getUrl().endsWith("wp-login.php") || view.getUrl().endsWith("remote-login.php");
+                    view.getUrl().endsWith(WP_LOGIN_URL_SUFFIX) || view.getUrl().endsWith(REMOTE_LOGIN_URL_SUFFIX);
 
-
-            boolean isRemoteLoginUrl = url.endsWith("remote-login.php");
-            boolean isLoginUrl = url.endsWith("wp-login.php");
+            boolean isRemoteLoginUrl = url.endsWith(REMOTE_LOGIN_URL_SUFFIX);
+            boolean isLoginUrl = url.endsWith(WP_LOGIN_URL_SUFFIX);
 
             Uri currentUri = Uri.parse((view.getUrl()));
             Uri incomingUri = Uri.parse(url);
