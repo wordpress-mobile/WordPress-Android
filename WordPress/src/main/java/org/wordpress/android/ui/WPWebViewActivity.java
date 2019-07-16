@@ -40,6 +40,8 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 
 import java.io.UnsupportedEncodingException;
@@ -50,6 +52,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import kotlin.Unit;
 
 /**
  * Activity for opening external WordPress links in a webview.
@@ -108,6 +112,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
 
+    private View mNavigateForwardButton;
+    private View mNavigateBackButton;
+    private View mShareButton;
+    private View mExternalBrowserButton;
+    private View mPreviewModeButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
@@ -121,6 +131,42 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
         mFullScreenProgressLayout = findViewById(R.id.progress_layout);
         mWebView = findViewById(R.id.webView);
+
+        mNavigateBackButton = findViewById(R.id.back_button);
+        mNavigateForwardButton = findViewById(R.id.forward_button);
+        mShareButton = findViewById(R.id.share_button);
+        mExternalBrowserButton = findViewById(R.id.external_browser_button);
+        mPreviewModeButton = findViewById(R.id.preview_type_selector_button);
+
+        mNavigateBackButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mViewModel.navigateBack();
+            }
+        });
+
+        mNavigateForwardButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mViewModel.navigateForward();
+            }
+        });
+
+        mShareButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mViewModel.share();
+            }
+        });
+
+        mExternalBrowserButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mViewModel.openPageInExternalBrowser();
+            }
+        });
+
+        mPreviewModeButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mViewModel.showPreviewModeSelector();
+            }
+        });
 
         initRetryButton();
         initViewModel();
@@ -138,9 +184,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     private void initRetryButton() {
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View v) {
-                    mViewModel.loadIfNecessary();
-                }
+            @Override public void onClick(View v) {
+                mViewModel.loadIfNecessary();
+            }
         });
     }
 
@@ -162,6 +208,58 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 if (loadNeeded != null && loadNeeded) {
                     loadContent();
                 }
+            }
+        });
+
+        mViewModel.getNavbarUiState().observe(this, new Observer<NavBarUiState>() {
+            @Override
+            public void onChanged(@Nullable NavBarUiState navBarUiState) {
+                if (navBarUiState != null) {
+                    mNavigateBackButton.setEnabled(navBarUiState.getBackNavigationEnabled());
+                    mNavigateForwardButton.setEnabled(navBarUiState.getForwardNavigationEnabled());
+                }
+            }
+        });
+
+        mViewModel.getNavigateBack().observe(this, new Observer<Unit>() {
+            @Override
+            public void onChanged(@Nullable Unit unit) {
+                // TODO navigate back
+            }
+        });
+
+        mViewModel.getNavigateForward().observe(this, new Observer<Unit>() {
+            @Override
+            public void onChanged(@Nullable Unit unit) {
+                // TODO navigate forward
+            }
+        });
+
+        mViewModel.getShare().observe(this, new Observer<Unit>() {
+            @Override
+            public void onChanged(@Nullable Unit unit) {
+                // TODO share
+            }
+        });
+
+        mViewModel.getOpenExternalBrowser().observe(this, new Observer<Unit>() {
+            @Override
+            public void onChanged(@Nullable Unit unit) {
+                // TODO open page in external browser
+            }
+        });
+
+        mViewModel.getShowPreviewModeSelector().observe(this, new Observer<Unit>() {
+            @Override
+            public void onChanged(@Nullable Unit unit) {
+                // TODO show preview mode selector
+            }
+        });
+
+        mViewModel.getPreviewMode().observe(this, new Observer<PreviewMode>() {
+            @Override
+            public void onChanged(@Nullable PreviewMode previewMode) {
+                // TODO updatedPreviewMode
             }
         });
         mViewModel.start();
@@ -420,7 +518,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
-                                                    mAccountStore.getAccessToken());
+                mAccountStore.getAccessToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
@@ -437,7 +535,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
-            );
+                                           );
 
             // Add token authorization when signing in to WP.com
             if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)

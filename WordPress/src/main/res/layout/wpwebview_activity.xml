@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/webview_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@+id/toolbar" />
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
 
     <include
         layout="@layout/progress_layout"
@@ -18,23 +18,80 @@
         android:layout_below="@+id/toolbar"
         tools:visibility="gone"/>
 
-    <WebView
-        android:id="@+id/webView"
-        android:layout_below="@+id/toolbar"
+    <RelativeLayout
+        android:id="@+id/preview_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/divider"
+            android:layout_alignParentTop="true"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_above="@+id/navbar"
+            android:background="@color/neutral_100"/>
+
+        <LinearLayout
+            android:id="@+id/navbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/web_preview_navbar_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/navigate_back_desc"
+                android:src="@drawable/ic_arrow_left_white_24dp"/>
+
+            <ImageButton
+                android:id="@+id/forward_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/navigate_forward_desc"
+                android:src="@drawable/ic_arrow_right_white_24dp"/>
+
+            <ImageButton
+                android:id="@+id/share_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/share_desc"
+                android:src="@drawable/ic_share_white_24dp"/>
+
+            <ImageButton
+                android:id="@+id/external_browser_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/open_external_link_desc"
+                android:src="@drawable/ic_globe_white_24dp"/>
+
+            <ImageButton
+                android:id="@+id/preview_type_selector_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/preview_type_desc"
+                android:src="@drawable/ic_devices_white_24dp"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_default"
         android:layout_below="@+id/toolbar"
+        android:background="@color/background_default"
         android:visibility="gone"
         app:aevButton="@string/retry"
         app:aevImage="@drawable/img_illustration_cloud_off_152dp"
-        app:aevTitle="@string/error_browser_no_network"
         app:aevSubtitle="@string/error_network_connection"
+        app:aevTitle="@string/error_browser_no_network"
         tools:visibility="visible">
     </org.wordpress.android.ui.ActionableEmptyView>
 
@@ -43,8 +100,8 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/progress_bar_height"
+        android:layout_alignTop="@+id/preview_container"
         android:indeterminate="false"
-        android:layout_alignTop="@+id/webView"
-        android:progressDrawable="@drawable/progressbar_horizontal" />
+        android:progressDrawable="@drawable/progressbar_horizontal"/>
 
 </RelativeLayout>

@@ -862,7 +862,7 @@
         <item name="android:gravity">start</item>
     </style>
 
-      <style name="DomainRegistrationFormSubTitle">
+    <style name="DomainRegistrationFormSubTitle">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:textColor">@color/neutral_700</item>
         <item name="android:layout_width">match_parent</item>
@@ -903,6 +903,14 @@
         <item name="android:textColor">@color/neutral_400</item>
         <item name="android:text">@dimen/text_sz_large</item>
         <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="WebPreviewNavbarButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:tint">@drawable/web_preview_navbar_selector</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:layout_weight">20</item>
     </style>
 
 </resources>
