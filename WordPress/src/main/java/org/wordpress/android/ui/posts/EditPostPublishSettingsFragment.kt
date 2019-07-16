@@ -20,9 +20,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
 class EditPostPublishSettingsFragment : Fragment() {
-    private lateinit var dateAndTime: TextView
-    private lateinit var publishNotification: TextView
-    private lateinit var publishNotificationContainer: LinearLayout
     private lateinit var addToCalendarContainer: LinearLayout
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: EditPostPublishSettingsViewModel
@@ -36,10 +33,11 @@ class EditPostPublishSettingsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.edit_post_published_settings_fragment, container, false) as ViewGroup
-        dateAndTime = rootView.findViewById(R.id.publish_time_and_date)
+        val dateAndTime = rootView.findViewById<TextView>(R.id.publish_time_and_date)
         val dateAndTimeContainer = rootView.findViewById<LinearLayout>(R.id.publish_time_and_date_container)
-        publishNotification = rootView.findViewById(R.id.publish_notification)
-        publishNotificationContainer = rootView.findViewById(R.id.publish_notification_container)
+        val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)
+        val publishNotificationTitle = rootView.findViewById<TextView>(R.id.publish_notification_title)
+        val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
         addToCalendarContainer = rootView.findViewById(R.id.post_add_to_calendar_container)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
@@ -54,9 +52,24 @@ class EditPostPublishSettingsFragment : Fragment() {
                 viewModel.updatePost(date, getPost())
             }
         })
-        viewModel.onPublishedLabelChanged.observe(this, Observer {
-            it?.let { label ->
-                dateAndTime.text = label
+        viewModel.onNotificationTime.observe(this, Observer {
+            it?.let { notificationTime ->
+                viewModel.updateUiModel(notificationTime, getPost())
+            }
+        })
+        viewModel.onUiModel.observe(this, Observer {
+            it?.let { uiModel ->
+                dateAndTime.text = uiModel.publishDateLabel
+                publishNotificationTitle.isEnabled = uiModel.notificationEnabled
+                publishNotification.isEnabled = uiModel.notificationEnabled
+                publishNotificationContainer.isEnabled = uiModel.notificationEnabled
+                if (uiModel.notificationEnabled) {
+                    publishNotificationContainer.setOnClickListener { showNotificationTimeSelectionDialog() }
+                } else {
+                    publishNotificationContainer.setOnClickListener(null)
+                }
+                publishNotification.setText(it.notificationLabel)
+                publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
         viewModel.onToast.observe(this, Observer {
@@ -89,6 +102,15 @@ class EditPostPublishSettingsFragment : Fragment() {
 
         val fragment = PostTimePickerDialogFragment.newInstance()
         fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
+    }
+
+    private fun showNotificationTimeSelectionDialog() {
+        if (!isAdded) {
+            return
+        }
+
+        val fragment = PostNotificationTimeDialogFragment.newInstance()
+        fragment.show(activity!!.supportFragmentManager, PostNotificationTimeDialogFragment.TAG)
     }
 
     private fun getPost(): PostModel? {

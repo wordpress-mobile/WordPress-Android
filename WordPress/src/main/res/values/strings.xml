@@ -1315,6 +1315,11 @@
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
 
+    <string name="post_notification_off">Off</string>
+    <string name="post_notification_one_hour_before">1 hour before</string>
+    <string name="post_notification_ten_minutes_before">10 minutes before</string>
+    <string name="post_notification_when_published">When published</string>
+
     <!-- post date selection -->
     <string name="publish_date">Publish</string>
     <string name="immediately">Immediately</string>

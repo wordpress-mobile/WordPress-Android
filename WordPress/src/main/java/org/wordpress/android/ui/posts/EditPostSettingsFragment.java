@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -355,9 +356,9 @@ public class EditPostSettingsFragment extends Fragment {
             mFormatContainer.setVisibility(View.GONE);
         }
 
-        mPublishedViewModel.getOnPublishedLabelChanged().observe(this, new Observer<String>() {
-            @Override public void onChanged(String label) {
-                updatePublishDateTextView(label);
+        mPublishedViewModel.getOnUiModel().observe(this, new Observer<PublishUiModel>() {
+            @Override public void onChanged(PublishUiModel uiModel) {
+                updatePublishDateTextView(uiModel.getPublishDateLabel());
             }
         });
         mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {

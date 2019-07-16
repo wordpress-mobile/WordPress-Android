@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
+import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -42,14 +43,17 @@ class EditPostPublishSettingsViewModel
     val onPublishedDateChanged: LiveData<Calendar> = _onPublishedDateChanged
     private val _onPostStatusChanged = MutableLiveData<PostStatus>()
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
-    private val _onPublishedLabelChanged = MutableLiveData<String>()
-    val onPublishedLabelChanged: LiveData<String> = _onPublishedLabelChanged
+    private val _onUiModel = MutableLiveData<PublishUiModel>()
+    val onUiModel: LiveData<PublishUiModel> = _onUiModel
     private val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
+    private val _onNotificationTime = MutableLiveData<NotificationTime>()
+    val onNotificationTime: LiveData<NotificationTime> = _onNotificationTime
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
+        updateUiModel(post = postModel)
         year = startCalendar.get(Calendar.YEAR)
         month = startCalendar.get(Calendar.MONTH)
         day = startCalendar.get(Calendar.DAY_OF_MONTH)
@@ -60,9 +64,7 @@ class EditPostPublishSettingsViewModel
 
     fun onPostStatusChanged(postModel: PostModel?) {
         canPublishImmediately = postModel?.let { PostUtils.shouldPublishImmediatelyOptionBeAvailable(it) } ?: false
-        postModel?.let {
-            _onPublishedLabelChanged.postValue(postSettingsUtils.getPublishDateLabel(postModel))
-        }
+        updateUiModel(post = postModel)
     }
 
     fun publishNow() {
@@ -119,9 +121,44 @@ class EditPostPublishSettingsViewModel
                 _onToast.postValue(Event(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)))
             }
             post.status = finalPostStatus.toString()
-            _onPostStatusChanged.postValue(finalPostStatus)
-            val publishDateLabel = postSettingsUtils.getPublishDateLabel(post)
-            _onPublishedLabelChanged.postValue(publishDateLabel)
+            _onPostStatusChanged.value = finalPostStatus
+            updateUiModel(post = post)
         }
     }
+
+    fun updateUiModel(notificationTime: NotificationTime? = onNotificationTime.value, post: PostModel?) {
+        if (post != null) {
+            val publishDateLabel = postSettingsUtils.getPublishDateLabel(post)
+            val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
+            val now = localeManagerWrapper.getCurrentCalendar().timeInMillis - 10000
+            val dateCreated = (DateTimeUtils.dateFromIso8601(post.dateCreated)
+                    ?: localeManagerWrapper.getCurrentCalendar().time).time
+            val enableNotification = dateCreated > futureTime
+            val showNotification = dateCreated > now
+            val label = if (notificationTime != null && enableNotification && showNotification) {
+                notificationTime.toLabel()
+            } else {
+                R.string.post_notification_off
+            }
+            _onUiModel.value = PublishUiModel(
+                    publishDateLabel,
+                    notificationLabel = label,
+                    notificationEnabled = enableNotification,
+                    notificationVisible = showNotification
+            )
+        } else {
+            _onUiModel.value = PublishUiModel(resourceProvider.getString(R.string.immediately))
+        }
+    }
+
+    fun createNotification(notificationTime: NotificationTime) {
+        _onNotificationTime.value = notificationTime
+    }
+
+    data class PublishUiModel(
+        val publishDateLabel: String,
+        val notificationLabel: Int = R.string.post_notification_off,
+        val notificationEnabled: Boolean = false,
+        val notificationVisible: Boolean = true
+    )
 }
