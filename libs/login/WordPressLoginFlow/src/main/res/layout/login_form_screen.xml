@@ -47,6 +47,7 @@
             android:paddingRight="@dimen/margin_medium_large"
             android:paddingEnd="@dimen/margin_medium_large"
             android:layout_marginEnd="@dimen/margin_extra_large"
+            android:textAlignment="viewStart"
             android:gravity="start|center_vertical"
             tools:text="Secondary action"/>
 
