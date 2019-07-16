@@ -21,7 +21,7 @@ Great! When adding a new UI test, consider:
 
 * Whether you need to test a user flow (to accomplish a task or goal) or a specific feature (e.g. boundary testing).
 * What screens/pages are being tested (defined in `pages/`).
-* What user flows are being used(defined in `flows/`).
+* What user flows are being used (defined in `flows/`).
 * Any specific UI components being interacted with?(defined in `components/`).
 * What network requests are made during the test (defined in the `WordPressMocks` repo).
 
