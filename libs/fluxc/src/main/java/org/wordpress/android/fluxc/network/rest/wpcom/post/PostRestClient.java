@@ -339,6 +339,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setExcerpt(from.getExcerpt());
         post.setSlug(from.getSlug());
         post.setStatus(from.getStatus());
+        post.setRemoteStatus(from.getStatus());
         post.setPassword(from.getPassword());
         post.setIsPage(from.getType().equals("page"));
 

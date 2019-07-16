@@ -449,6 +449,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         post.setPassword(MapUtils.getMapStr(postMap, "post_password"));
         post.setStatus(MapUtils.getMapStr(postMap, "post_status"));
+        post.setRemoteStatus(MapUtils.getMapStr(postMap, "post_status"));
 
         if ("page".equals(MapUtils.getMapStr(postMap, "post_type"))) {
             post.setIsPage(true);
