@@ -38,6 +38,18 @@
             android:layout_above="@+id/navbar"
             android:background="@color/neutral_100"/>
 
+
+        <TextView
+            android:id="@+id/desktop_preview_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/navbar"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/preview_mode_indicator_background"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/web_preview_desktop"
+            android:textColor="@color/white"/>
+
         <LinearLayout
             android:id="@+id/navbar"
             android:layout_width="match_parent"
@@ -92,7 +104,7 @@
         app:aevImage="@drawable/img_illustration_cloud_off_152dp"
         app:aevSubtitle="@string/error_network_connection"
         app:aevTitle="@string/error_browser_no_network"
-        tools:visibility="visible">
+        tools:visibility="gone">
     </org.wordpress.android.ui.ActionableEmptyView>
 
     <ProgressBar
