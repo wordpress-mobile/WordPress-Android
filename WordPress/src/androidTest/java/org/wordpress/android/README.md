@@ -23,7 +23,7 @@ Great! When adding a new UI test, consider:
 * What screens/pages are being tested (defined in `pages/`).
 * What user flows are being used (defined in `flows/`).
 * Any specific UI components being interacted with?(defined in `components/`).
-* What network requests are made during the test (defined in the `WordPressMocks` repo).
+* What network requests are made during the test (defined in `libs/mocks/WordPressMocks`)).
 
 It's preferred to focus UI tests on entire user flows, and group tests with related flows or goals in the same test file.
 
