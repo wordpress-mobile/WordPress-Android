@@ -826,4 +826,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return mFragmentInjector;
     }
+
+    @Override public void showHelpFindingConnectedEmail() {
+        // Not used in WordPress app
+    }
+
+    @Override public void gotConnectedSiteInfo(String siteAddress, boolean hasJetpack) {
+        // Not used in WordPress app
+    }
 }

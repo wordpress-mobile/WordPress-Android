@@ -531,7 +531,6 @@ Language: zh_CN
     <string name="plugin_install_site_ineligible_site_private">使用插件功能需要站点处于公开状态。</string>
     <string name="plugin_install_site_ineligible_no_business_plan">使用插件功能需要具有商务版套餐。</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">使用插件功能需要具有自定义域。</string>
-    <string name="plugin_install_site_ineligible_default_error">插件功能不适用于此站点。</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">我们正在进行最后设置 - 即将完成…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">正在安装插件…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安装</string>

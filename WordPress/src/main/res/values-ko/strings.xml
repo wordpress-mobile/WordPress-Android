@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-26 09:54:09+0000
+Translation-Revision-Date: 2019-07-14 14:30:31+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="post_list_search_prompt">공개된 글 검색</string>
+    <string name="stats_widget_error_no_access_token">통계를 보려면 워드프레스닷컴 계정으로 로그인하세요.</string>
+    <string name="post_list_search_nothing_found">검색어와 일치하는 글 없음</string>
+    <string name="domains_suggestions_intro_description">사람들이 인터넷에서 회원님을 찾을 수 있는 곳입니다.</string>
+    <string name="domains_suggestions_intro_title">프리미엄 도메인 네임 선택</string>
+    <string name="my_site_custom_domain_name">모든 워드프레스닷컴 요금제에는 사용자 정의 도메인 네임이 포함됩니다. 지금 무료 프리미엄 도메인을 등록하세요.</string>
+    <string name="stats_widget_minified_name">둘러보기</string>
+    <string name="stats_widget_today_insights_name">오늘</string>
+    <string name="stats_widget_all_time_insights_name">모든 기간</string>
+    <string name="stats_widget_weekly_views_name">이번 주 보기</string>
+    <string name="stats_widget_log_in_message">위젯을 추가하려면 워드프레스 앱에 로그인하세요.</string>
+    <string name="stats_widget_error_no_network">지원되는 네트워크 없음</string>
+    <string name="stats_widget_error_no_data">데이터를 로드할 수 없음</string>
+    <string name="stats_widget_select_type">형식</string>
+    <string name="stats_widget_select_color">색상</string>
+    <string name="stats_widget_select_your_site">사이트 선택</string>
+    <string name="stats_widget_color_dark">검정</string>
+    <string name="stats_widget_color_light">밝음</string>
+    <string name="stats_widget_color">색상</string>
+    <string name="stats_widget_site_caption">사이트 선택</string>
+    <string name="stats_widget_site">사이트</string>
+    <string name="stats_widget_all_time_title">모든 기간</string>
+    <string name="stats_widget_views_title">이번 주 보기</string>
+    <string name="stats_widget_add">위젯 추가</string>
+    <string name="dialog_confirm_update_yes">지금 업데이트</string>
+    <string name="dialog_confirm_update_message_page">이 발행된 페이지는 바로 업데이트됩니다.</string>
+    <string name="dialog_confirm_update_message_post">이 발행된 글은 바로 업데이트됩니다.</string>
+    <string name="dialog_confirm_update_title">업데이트할 준비가 되셨나요?</string>
+    <string name="plugin_fetching_error_after_at">플러그인 세부정보를 새로 고치는 데 평소보다 오래 걸립니다. 나중에 다시 확인하세요.</string>
+    <string name="plugin_install_site_ineligible_default_error">방금 도메인 네임을 등록했다면 설정이 끝날 때까지 기다렸다가 다시 시도하세요.\n\n그렇지 않다면 문제가 발생하여 이 사이트에서 플러그인 기능을 사용할 수 없는 것일 수 있습니다.</string>
     <string name="domain_contact_information_state_not_available_hint">상태(사용할 수 없음)</string>
     <string name="domain_registration_privacy_protection_tos">이 도메인을 등록하면 %1$s이용 약관%2$s에 동의하는 것입니다.</string>
     <string name="error_network_connection">네트워크 연결을 확인하고 다시 시도하세요.</string>
@@ -559,7 +589,6 @@ Language: ko_KR
     <string name="plugin_install_site_ineligible_site_private">플러그인 기능을 사용하려면 사이트를 공개해야 합니다.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">플러그인 기능을 사용하려면 비즈니스 요금제가 필요합니다.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">플러그인 기능을 사용하려면 사용자 정의 도메인이 필요합니다.</string>
-    <string name="plugin_install_site_ineligible_default_error">이 사이트에서는 플러그인 기능을 사용할 수 없습니다.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">최종 설정을 완료하는 중입니다. 조금만 기다려 주세요…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">플러그인을 설치하는 중…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">설치</string>
@@ -1181,6 +1210,7 @@ Language: ko_KR
     <string name="editor_post_saved_locally_failed_media">글에 완료되지 않은 미디어 업로드가 있어 글이 로컬에 저장되었습니다.</string>
     <string name="sure_to_remove_account">앱에서 이 사이트를 제거할까요?</string>
     <string name="photo_picker_title">사진 선택</string>
+    <string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
     <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
