@@ -1,0 +1,173 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.1/sites/106707880/stats/visits/",
+        "queryParameters": {
+            "unit": {
+                "equalTo": "day"
+            },
+            "quantity": {
+                "equalTo": "15"
+            },
+            "date": {
+                "matches": "(.*)"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date": "{{fnow format='yyyy-MM-dd'}}",
+            "unit": "day",
+            "fields": [
+                "period",
+                "views",
+                "visitors",
+                "likes",
+                "reblogs",
+                "comments",
+                "posts"
+            ],
+            "data": [
+                [
+                    "{{fnow offset='-14 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-13 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-12 days' format='yyyy-MM-dd'}}",
+                    2,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-11 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-10 days' format='yyyy-MM-dd'}}",
+                    3,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-9 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-8 days' format='yyyy-MM-dd'}}",
+                    6,
+                    3,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-7 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-6 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-5 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-4 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-3 days' format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-2 days' format='yyyy-MM-dd'}}",
+                    1,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow offset='-1 days' format='yyyy-MM-dd'}}",
+                    1,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    "{{fnow format='yyyy-MM-dd'}}",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            ]
+        }
+    }
+}
