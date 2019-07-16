@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.os.SystemClock
 import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +11,11 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.ONE_HOUR
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.TEN_MINUTES
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.WHEN_PUBLISHED
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -23,7 +27,8 @@ class EditPostPublishSettingsViewModel
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val postSettingsUtils: PostSettingsUtils,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val postSchedulingNotificationStore: PostSchedulingNotificationStore
 ) : ViewModel() {
     var canPublishImmediately: Boolean = false
 
@@ -186,9 +191,28 @@ class EditPostPublishSettingsViewModel
         val notificationVisible: Boolean = true
     )
 
-    fun showNotification() {
-        _onNotificationAdded.postValue(Event(Notification(1, "Title", "Message", SystemClock.elapsedRealtime() + 1000)))
+    fun scheduleNotification(post: PostModel, scheduledTime: ScheduledTime?) {
+        if (scheduledTime == null) {
+            postSchedulingNotificationStore.deletePostSchedulingNotifications(post.id)
+        } else {
+            val notificationId = postSchedulingNotificationStore.schedule(post.id, scheduledTime)
+            val scheduledCalendar = localeManagerWrapper.getCurrentCalendar().apply {
+                timeInMillis = System.currentTimeMillis()
+                time = DateTimeUtils.dateFromIso8601(post.dateCreated)
+                val scheduledMinutes = when (scheduledTime) {
+                    ONE_HOUR -> -60
+                    TEN_MINUTES -> -10
+                    WHEN_PUBLISHED -> 0
+                }
+                add(Calendar.MINUTE, scheduledMinutes)
+            }
+            if (scheduledCalendar.after(localeManagerWrapper.getCurrentCalendar())) {
+                notificationId?.let {
+                    _onNotificationAdded.postValue(Event(Notification(notificationId, scheduledCalendar.timeInMillis)))
+                }
+            }
+        }
     }
 
-    data class Notification(val id: Int, val title: String, val message: String, val scheduledTime: Long)
+    data class Notification(val id: Int, val scheduledTime: Long)
 }
