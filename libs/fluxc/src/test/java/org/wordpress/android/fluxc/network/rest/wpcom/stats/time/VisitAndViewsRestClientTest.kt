@@ -64,7 +64,7 @@ class VisitAndViewsRestClientTest {
                 userAgent,
                 statsUtils
         )
-        whenever(statsUtils.getFormattedDate(eq(currentDate))).thenReturn(currentDateValue)
+        whenever(statsUtils.getFormattedDate(eq(currentDate), any())).thenReturn(currentDateValue)
     }
 
     @Test
