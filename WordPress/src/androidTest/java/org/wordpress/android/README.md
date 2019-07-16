@@ -11,7 +11,7 @@ defined in [WordPressMocks](https://github.com/wordpress-mobile/WordPressMocks).
 
 1. Follow the [build instructions](https://github.com/wordpress-mobile/WordPress-Android#build-instructions)
  (steps 1-7) to clone, build and run the project in Android Studio.
-2. Run the tests in `Tests in org.wordpress.android.e2e`
+2. Run the tests in `org.wordpress.android.e2e`
 
 There's no additional steps needed to make the tests run against the mock server -- that's configured set up by default
 
