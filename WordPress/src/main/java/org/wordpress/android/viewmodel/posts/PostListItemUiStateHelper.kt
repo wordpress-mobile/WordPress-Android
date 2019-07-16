@@ -103,7 +103,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         )
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
-            onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+            when (postStatus) {
+                TRASHED -> {}
+                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
+                        post,
+                        BUTTON_EDIT,
+                        POST_LIST_ITEM_SELECTED
+                )
+            }
         }
         val itemUiData = PostListItemUiStateData(
                 remotePostId = remotePostId,
@@ -122,7 +129,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 showOverlay = shouldShowOverlay(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
-                )
+                ),
+                disableRippleEffect = postStatus == PostStatus.TRASHED
         )
 
         return PostListItemUiState(
@@ -272,11 +280,13 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 postStatus == PostStatus.PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
-        val canShowViewButton = !canRetryUpload
+        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
-        buttonTypes.add(BUTTON_EDIT)
+        if (postStatus != PostStatus.TRASHED) {
+            buttonTypes.add(BUTTON_EDIT)
+        }
         if (canShowPublishButton) {
             buttonTypes.add(
                     if (!siteHasCapabilitiesToPublish) {
@@ -304,8 +314,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         when {
             isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
             postStatus == PostStatus.TRASHED -> {
-                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
                 buttonTypes.add(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
             }
             postStatus != PostStatus.TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
         }

@@ -95,6 +95,7 @@
             <enum name="submit" value="10" />
             <enum name="retry" value="11" />
             <enum name="moveToDraft" value="12" />
+            <enum name="deletePermanently" value="13"/>
         </attr>
     </declare-styleable>
 

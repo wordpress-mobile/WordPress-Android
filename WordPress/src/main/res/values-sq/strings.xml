@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-09 10:11:25+0000
+Translation-Revision-Date: 2019-07-09 10:36:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="post_list_search_prompt">Kërkoni te postimet e botuara</string>
+    <string name="stats_widget_error_no_access_token">Që të shihni statistikat tuaja, bëni hyrjen te llogaria WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Kërkimi juaj s’ka përputhje me ndonjë postim</string>
+    <string name="domains_suggestions_intro_description">Ky është vendi ku do t’ju gjejnë njerëzit në internet.</string>
+    <string name="domains_suggestions_intro_title">Zgjidhni një emër përkatësie me pagesë</string>
+    <string name="my_site_custom_domain_name">Krejt planet WordPress.com përmbajnë një emër përkatësie vetjake. Regjistrohuni që tani për të marrë falas përkatësinë tuaj me pagesë.</string>
+    <string name="stats_widget_minified_name">Me një vështrim</string>
+    <string name="stats_widget_today_insights_name">Sot</string>
+    <string name="stats_widget_all_time_insights_name">Për krejt kohën</string>
+    <string name="stats_widget_weekly_views_name">Parje këtë javë</string>
+    <string name="stats_widget_log_in_message">Ju lutemi, që të shtoni një &lt;em>widget&lt;/em>, bëni hyrjen te aplikacioni WordPress.</string>
+    <string name="stats_widget_error_no_network">S’ka rrjet gati</string>
+    <string name="stats_widget_error_no_data">S’u ngarkuan dot të dhëna</string>
+    <string name="stats_widget_select_type">Lloj</string>
+    <string name="stats_widget_select_color">Ngjyrë</string>
+    <string name="stats_widget_select_your_site">Përzgjidhni sajtin tuaj</string>
+    <string name="stats_widget_color_dark">E errët</string>
+    <string name="stats_widget_color_light">E çelët</string>
+    <string name="stats_widget_color">Ngjyrë</string>
+    <string name="stats_widget_site_caption">Përzgjidhni sajtin tuaj</string>
+    <string name="stats_widget_site">Sajt</string>
+    <string name="stats_widget_all_time_title">Për krejt kohën</string>
+    <string name="stats_widget_views_title">Parje Këtë Javë</string>
+    <string name="stats_widget_add">Shtoni widget</string>
+    <string name="dialog_confirm_update_yes">Përditësoje tani</string>
+    <string name="dialog_confirm_update_message_page">Kjo faqe e botuar do të përditësohet menjëherë.</string>
+    <string name="dialog_confirm_update_message_post">Ky postim i botuar do të përditësohet menjëherë.</string>
+    <string name="dialog_confirm_update_title">Gati për ta Përditësuar?</string>
+    <string name="plugin_fetching_error_after_at">Rifreskimi i hollësive të shtojcës do më shumë kohë se zakonisht. Ju lutemi, rikontrolloni më vonë.</string>
+    <string name="plugin_install_site_ineligible_default_error">Nëse sapo e regjistruat një emër përkatësie, Ju lutemi, pritni deri sa të përfundojmë ujdisjen e saj dhe riprovoni.\n\nNë të kundërt, duket si diç shkoi ters dhe veçoria e shtojcës mund të mos jetë e përdorshme në këtë sajt.</string>
+    <string name="domain_contact_information_state_not_available_hint">Gjendje (S’dihet)</string>
+    <string name="domain_registration_privacy_protection_tos">Duke regjistruar këtë përkatësi, ju pajtoheni me %1$stermat dhe kushtet tona%2$s</string>
+    <string name="error_network_connection">Kontrolloni lidhjen tuaj me rrjetin dhe riprovoni.</string>
+    <string name="error_browser_no_network">S’arrihet të ngarkohet kjo faqe hëpërhë.</string>
+    <string name="error_disabled_apis">S’u sollën dot rregullimet: Disa API s’janë gati për këtë ndërthurje ID aplikacioni OAuth + llogari.</string>
+    <string name="jetpack_connection_terms_and_conditions">Duke rregulluar Jetpack-un, ju pajtoheni me %1$stermat dhe kushtet tona%2$s</string>
+    <string name="site_settings_disconnected_toast">Pa lidhje. Përpunimi është i çaktivizuar.</string>
+    <string name="site_settings_update_password_message">Që të rilidhni aplikacionin te sajti juaj i vetëstrehuar, jepni këtu fjalëkalimin e ri të sajtit.</string>
+    <string name="site_settings_password_updated">Fjalëkalimi u përditësua</string>
+    <string name="site_settings_password_dialog_title">Përditësoje fjalëkalimin</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Po regjistrohet emër përkatësie…</string>
     <string name="domain_registration_state_picker_dialog_title">Përzgjidhni Shtet</string>
@@ -548,7 +588,6 @@ Language: sq_AL
     <string name="plugin_install_site_ineligible_site_private">Veçoria e shtojcës lyp që sajti të jetë publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Veçoria e shtojcës lyp paketë biznes.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Veçoria e shtojcës lyp një përkatësi vetjake.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Po kryejmë hapin përfundimtar — thuajse mbaruam…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Po instalohet shtojca…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instaloje</string>
@@ -1170,6 +1209,7 @@ Language: sq_AL
     <string name="editor_post_saved_locally_failed_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
     <string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
     <string name="photo_picker_title">Zgjidhni foto</string>
+    <string name="error_publish_no_network">Pajisja është e palidhur në internet. Postimi u ruajt lokalisht.</string>
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
     <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>

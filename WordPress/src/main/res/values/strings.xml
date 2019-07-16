@@ -269,6 +269,7 @@
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
+    <string name="button_delete_permanently">Delete Permanently</string>
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_discard">Discard</string>
@@ -2283,6 +2284,7 @@
     <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
@@ -2333,6 +2335,8 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
+    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
+    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>

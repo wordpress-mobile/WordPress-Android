@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.PopupMenu
 import android.widget.ProgressBar
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -19,6 +21,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
@@ -43,7 +46,10 @@ sealed class PostListItemViewHolder(
     private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
-
+    private val container: ConstraintLayout = itemView.findViewById(R.id.container)
+    private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
+            android.R.attr.selectableItemBackground
+    )
     /**
      * Url of an image loaded in the `featuredImageView`.
      */
@@ -118,6 +124,11 @@ sealed class PostListItemViewHolder(
         showFeaturedImage(data.imageUrl)
         updateProgressBarState(data.progressBarState)
         uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
+        if (data.disableRippleEffect) {
+            container.background = null
+        } else {
+            container.background = selectableBackground
+        }
     }
 
     protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {
