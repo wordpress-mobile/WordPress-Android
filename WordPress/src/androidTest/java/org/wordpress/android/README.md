@@ -27,7 +27,7 @@ Great! When adding a new UI test, consider:
 
 It's preferred to focus UI tests on entire user flows, and group tests with related flows or goals in the same test file.
 
-When you add a new test, you may need to add new screens, methods, and flows, when writing these I encourage to check 
+When you add a new test, you may need to add new screens, methods, and flows. When writing these I encourage you to check 
 `support/WPSupportUtils.java` for additional code to reuse to automating the task. Our tests are also used to generate screenshots
 and a lot of useful helper functions are made available through that auxillary file. Wherever possible, avoid the use
  of a string to select a UI element on the screen, the use of other identifiers such as id or content description is preferable 
