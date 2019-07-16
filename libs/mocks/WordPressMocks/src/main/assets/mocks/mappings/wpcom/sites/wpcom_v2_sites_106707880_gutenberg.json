@@ -1,0 +1,19 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/wpcom/v2/sites/106707880/gutenberg/",
+        "queryParameters": {
+            "_locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "editor_mobile": "classic",
+            "editor_web": "gutenberg",
+            "opt_out": "https:\/\/public-api.wordpress.com\/wpcom\/v2\/sites\/106707880\/gutenberg?editor=classic&platform=web"
+        }
+    }
+}

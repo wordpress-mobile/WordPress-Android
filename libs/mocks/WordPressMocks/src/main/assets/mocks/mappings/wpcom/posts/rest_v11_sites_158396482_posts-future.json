@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/158396482/posts/",
+        "urlPath": "/rest/v1.1/sites/106707880/posts/",
         "queryParameters": {
             "context": {
                 "equalTo": "edit"
@@ -21,7 +21,7 @@
             "posts": [],
             "meta": {
                 "links": {
-                    "counts": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/post-counts/post"
+                    "counts": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/post-counts/post"
                 },
                 "next_page": "value=&id=29",
                 "wpcom": true

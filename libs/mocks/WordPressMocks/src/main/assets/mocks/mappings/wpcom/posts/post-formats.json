@@ -1,0 +1,25 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.1/sites/106707880/post-formats/",
+        "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "formats": {
+                "aside": "Aside",
+                "image": "Image",
+                "video": "Video",
+                "quote": "Quote",
+                "link": "Link",
+                "status": "Status",
+                "gallery": "Gallery"
+            }
+        }
+    }
+}

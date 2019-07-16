@@ -1,0 +1,473 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.2/read/following/mine/",
+        "queryParameters": {
+            "meta": {
+                "equalTo": "site"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "subscriptions": [
+                {
+                    "ID": "449398071",
+                    "blog_ID": "53424024",
+                    "feed_ID": "41325786",
+                    "URL": "http://discover.wordpress.com",
+                    "date_subscribed": "2018-07-19T22:57:41+00:00",
+                    "delivery_methods": {
+                        "email": {
+                            "send_posts": true,
+                            "send_comments": false,
+                            "post_delivery_frequency": "instantly",
+                            "date_subscribed": "2018-07-19 22:57:41"
+                        },
+                        "notification": {
+                            "send_posts": false
+                        }
+                    },
+                    "is_owner": false,
+                    "meta": {
+                        "links": {
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/41325786"
+                        },
+                        "data": {
+                            "site": {
+                                "ID": 53424024,
+                                "name": "Discover",
+                                "description": "A daily selection of the best content published on WordPress, collected for you by humans who love to read.",
+                                "URL": "https://discover.wordpress.com",
+                                "jetpack": false,
+                                "post_count": 3657,
+                                "subscribers_count": 36663255,
+                                "lang": "en",
+                                "icon": {
+                                    "img": "https://secure.gravatar.com/blavatar/c9e4e04719c81ca4936a63ea2dce6ace",
+                                    "ico": "https://secure.gravatar.com/blavatar/c9e4e04719c81ca4936a63ea2dce6ace"
+                                },
+                                "logo": {
+                                    "id": 0,
+                                    "sizes": [],
+                                    "url": ""
+                                },
+                                "visible": true,
+                                "is_private": false,
+                                "is_following": true,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/53424024",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/53424024/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/53424024/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/53424024/comments/",
+                                        "xmlrpc": "https://discover.wordpress.com/xmlrpc.php",
+                                        "featured": "https://public-api.wordpress.com/rest/v1.2/read/sites/53424024/featured"
+                                    }
+                                },
+                                "launch_status": false,
+                                "capabilities": {
+                                    "edit_pages": false,
+                                    "edit_posts": false,
+                                    "edit_others_posts": false,
+                                    "edit_theme_options": false,
+                                    "list_users": false,
+                                    "manage_categories": false,
+                                    "manage_options": false,
+                                    "publish_posts": false,
+                                    "upload_files": false,
+                                    "view_stats": false
+                                },
+                                "is_multi_author": true,
+                                "feed_ID": 41325786,
+                                "feed_URL": "http://discover.wordpress.com",
+                                "header_image": false,
+                                "owner": {
+                                    "ID": 26957695,
+                                    "login": "a8cuser",
+                                    "name": "Automattic",
+                                    "first_name": "Automattic",
+                                    "last_name": "",
+                                    "nice_name": "a8cuser",
+                                    "URL": "",
+                                    "avatar_URL": "https://1.gravatar.com/avatar/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/a8cuser",
+                                    "ip_address": false,
+                                    "site_visible": true,
+                                    "has_avatar": true
+                                },
+                                "subscription": {
+                                    "delivery_methods": {
+                                        "email": {
+                                            "send_posts": true,
+                                            "send_comments": false,
+                                            "post_delivery_frequency": "instantly",
+                                            "date_subscribed": "2018-07-19 22:57:41"
+                                        },
+                                        "notification": {
+                                            "send_posts": false
+                                        }
+                                    }
+                                },
+                                "is_blocked": false
+                            }
+                        }
+                    }
+                },
+                {
+                    "ID": "449397853",
+                    "blog_ID": false,
+                    "feed_ID": "67436808",
+                    "URL": "http://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/magazine/rss.xml",
+                    "date_subscribed": "2018-07-19T22:56:23+00:00",
+                    "delivery_methods": {
+                        "notification": {
+                            "send_posts": false
+                        }
+                    },
+                    "is_owner": false,
+                    "meta": {
+                        "links": {
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/67436808"
+                        }
+                    }
+                },
+                {
+                    "ID": "204341640",
+                    "blog_ID": "58930066",
+                    "feed_ID": "82592455",
+                    "URL": "http://meretesting.wordpress.com",
+                    "date_subscribed": "2015-02-13T01:19:23+00:00",
+                    "delivery_methods": {
+                        "email": {
+                            "send_posts": true,
+                            "send_comments": false,
+                            "post_delivery_frequency": "instantly",
+                            "date_subscribed": "2015-02-13 01:19:23"
+                        },
+                        "notification": {
+                            "send_posts": false
+                        }
+                    },
+                    "is_owner": false,
+                    "meta": {
+                        "links": {
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/58930066",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/82592455"
+                        },
+                        "data": {
+                            "site": {
+                                "ID": 58930066,
+                                "name": "Blogging Fun Time",
+                                "description": "A not too fine WordPress.com site",
+                                "URL": "https://meretesting.wordpress.com",
+                                "jetpack": false,
+                                "post_count": 514,
+                                "subscribers_count": 12,
+                                "lang": "en",
+                                "logo": {
+                                    "id": 4205,
+                                    "sizes": {
+                                        "thumbnail": {
+                                            "height": 98,
+                                            "width": 150,
+                                            "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg?w=150",
+                                            "orientation": "landscape"
+                                        },
+                                        "medium": {
+                                            "height": 196,
+                                            "width": 300,
+                                            "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg?w=300",
+                                            "orientation": "landscape"
+                                        },
+                                        "blink-half": {
+                                            "height": 415,
+                                            "width": 635,
+                                            "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg?w=635&h=415&crop=1",
+                                            "orientation": "landscape"
+                                        },
+                                        "blink-logo": {
+                                            "height": 327,
+                                            "width": 500,
+                                            "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg?w=500",
+                                            "orientation": "landscape"
+                                        },
+                                        "jetpack-portfolio-admin-thumb": {
+                                            "height": 50,
+                                            "width": 50,
+                                            "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg?w=50&h=50&crop=1",
+                                            "orientation": "landscape"
+                                        },
+                                        "full": {
+                                            "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg",
+                                            "height": 415,
+                                            "width": 635,
+                                            "orientation": "landscape"
+                                        }
+                                    },
+                                    "url": "https://meretesting.files.wordpress.com/2015/07/sportnoy_20140618_1612-edit-edit.jpg"
+                                },
+                                "visible": true,
+                                "is_private": false,
+                                "is_following": true,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/58930066",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/58930066/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/58930066/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/58930066/comments/",
+                                        "xmlrpc": "https://meretesting.wordpress.com/xmlrpc.php"
+                                    }
+                                },
+                                "launch_status": false,
+                                "capabilities": {
+                                    "edit_pages": false,
+                                    "edit_posts": false,
+                                    "edit_others_posts": false,
+                                    "edit_theme_options": false,
+                                    "list_users": false,
+                                    "manage_categories": false,
+                                    "manage_options": false,
+                                    "publish_posts": false,
+                                    "upload_files": false,
+                                    "view_stats": false
+                                },
+                                "is_multi_author": true,
+                                "feed_ID": 82592455,
+                                "feed_URL": "http://meretesting.wordpress.com",
+                                "header_image": {
+                                    "thumbnail_url": "https://defaultcustomheadersdata.files.wordpress.com/2016/07/design2.jpg?resize=520,385.18518518519",
+                                    "url": "https://defaultcustomheadersdata.files.wordpress.com/2016/07/design2.jpg?resize=1080,800",
+                                    "description": "Design"
+                                },
+                                "owner": {
+                                    "ID": 25855508,
+                                    "login": "mervalstubing",
+                                    "name": "Meredith",
+                                    "first_name": "Meredith",
+                                    "last_name": "Bordoni",
+                                    "nice_name": "mervalstubing",
+                                    "URL": "http://stupidmatters.com",
+                                    "avatar_URL": "https://1.gravatar.com/avatar/a494890f130ef2b12dba43c21e1ea028?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/mervalstubing",
+                                    "ip_address": false,
+                                    "site_visible": true,
+                                    "has_avatar": true
+                                },
+                                "subscription": {
+                                    "delivery_methods": {
+                                        "email": {
+                                            "send_posts": true,
+                                            "send_comments": false,
+                                            "post_delivery_frequency": "instantly",
+                                            "date_subscribed": "2015-02-13 01:19:23"
+                                        },
+                                        "notification": {
+                                            "send_posts": false
+                                        }
+                                    }
+                                },
+                                "is_blocked": false
+                            }
+                        }
+                    }
+                },
+                {
+                    "ID": "204340827",
+                    "blog_ID": "53073777",
+                    "feed_ID": "25395360",
+                    "URL": "http://weddingshooray123.wordpress.com",
+                    "date_subscribed": "2015-02-13T01:09:58+00:00",
+                    "delivery_methods": {
+                        "notification": {
+                            "send_posts": false
+                        }
+                    },
+                    "is_owner": false,
+                    "meta": {
+                        "links": {
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/53073777",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/25395360"
+                        },
+                        "data": {
+                            "site": {
+                                "ID": 53073777,
+                                "name": "Out in Nature",
+                                "description": "Musings and photography",
+                                "URL": "https://weddingshooray123.wordpress.com",
+                                "jetpack": false,
+                                "post_count": 1,
+                                "subscribers_count": 1,
+                                "lang": "en",
+                                "logo": {
+                                    "id": 0,
+                                    "sizes": [],
+                                    "url": ""
+                                },
+                                "visible": true,
+                                "is_private": false,
+                                "is_following": true,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/53073777",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/53073777/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/53073777/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/53073777/comments/",
+                                        "xmlrpc": "https://weddingshooray123.wordpress.com/xmlrpc.php"
+                                    }
+                                },
+                                "launch_status": false,
+                                "capabilities": {
+                                    "edit_pages": false,
+                                    "edit_posts": false,
+                                    "edit_others_posts": false,
+                                    "edit_theme_options": false,
+                                    "list_users": false,
+                                    "manage_categories": false,
+                                    "manage_options": false,
+                                    "publish_posts": false,
+                                    "upload_files": false,
+                                    "view_stats": false
+                                },
+                                "is_multi_author": false,
+                                "feed_ID": 25395360,
+                                "feed_URL": "http://weddingshooray123.wordpress.com",
+                                "header_image": false,
+                                "owner": {
+                                    "ID": 10183950,
+                                    "login": "cherilucas",
+                                    "name": "Cheri Lucas Rowlands",
+                                    "first_name": "Cheri",
+                                    "last_name": "Rowlands",
+                                    "nice_name": "cherilucas",
+                                    "URL": "http://cherilucasrowlands.com",
+                                    "avatar_URL": "https://0.gravatar.com/avatar/36207d4c7c014b0999b995ca3971d383?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/cherilucas",
+                                    "ip_address": false,
+                                    "site_visible": true,
+                                    "has_avatar": true
+                                },
+                                "subscription": {
+                                    "delivery_methods": {
+                                        "email": null,
+                                        "notification": {
+                                            "send_posts": false
+                                        }
+                                    }
+                                },
+                                "is_blocked": false
+                            }
+                        }
+                    }
+                },
+                {
+                    "ID": "175680174",
+                    "blog_ID": "45151698",
+                    "feed_ID": "25601699",
+                    "URL": "http://thisismyportfolioyay.wordpress.com",
+                    "date_subscribed": "2014-10-27T19:58:11+00:00",
+                    "delivery_methods": {
+                        "email": {
+                            "send_posts": true,
+                            "send_comments": false,
+                            "post_delivery_frequency": "instantly",
+                            "date_subscribed": "2014-10-27 19:58:11"
+                        },
+                        "notification": {
+                            "send_posts": false
+                        }
+                    },
+                    "is_owner": false,
+                    "meta": {
+                        "links": {
+                            "site": "https://public-api.wordpress.com/rest/v1.2/read/sites/45151698",
+                            "feed": "https://public-api.wordpress.com/rest/v1.1/read/feed/25601699"
+                        },
+                        "data": {
+                            "site": {
+                                "ID": 45151698,
+                                "name": "Writing Bytes",
+                                "description": "",
+                                "URL": "https://thisismyportfolioyay.wordpress.com",
+                                "jetpack": false,
+                                "post_count": 1,
+                                "subscribers_count": 1,
+                                "lang": "en",
+                                "logo": {
+                                    "id": 0,
+                                    "sizes": [],
+                                    "url": ""
+                                },
+                                "visible": true,
+                                "is_private": false,
+                                "is_following": true,
+                                "meta": {
+                                    "links": {
+                                        "self": "https://public-api.wordpress.com/rest/v1.2/sites/45151698",
+                                        "help": "https://public-api.wordpress.com/rest/v1.2/sites/45151698/help",
+                                        "posts": "https://public-api.wordpress.com/rest/v1.2/sites/45151698/posts/",
+                                        "comments": "https://public-api.wordpress.com/rest/v1.1/sites/45151698/comments/",
+                                        "xmlrpc": "https://thisismyportfolioyay.wordpress.com/xmlrpc.php"
+                                    }
+                                },
+                                "launch_status": false,
+                                "capabilities": {
+                                    "edit_pages": false,
+                                    "edit_posts": false,
+                                    "edit_others_posts": false,
+                                    "edit_theme_options": false,
+                                    "list_users": false,
+                                    "manage_categories": false,
+                                    "manage_options": false,
+                                    "publish_posts": false,
+                                    "upload_files": false,
+                                    "view_stats": false
+                                },
+                                "is_multi_author": false,
+                                "feed_ID": 25601699,
+                                "feed_URL": "http://thisismyportfolioyay.wordpress.com",
+                                "header_image": false,
+                                "owner": {
+                                    "ID": 10183950,
+                                    "login": "cherilucas",
+                                    "name": "Cheri Lucas Rowlands",
+                                    "first_name": "Cheri",
+                                    "last_name": "Rowlands",
+                                    "nice_name": "cherilucas",
+                                    "URL": "http://cherilucasrowlands.com",
+                                    "avatar_URL": "https://0.gravatar.com/avatar/36207d4c7c014b0999b995ca3971d383?s=96&d=identicon&r=G",
+                                    "profile_URL": "https://en.gravatar.com/cherilucas",
+                                    "ip_address": false,
+                                    "site_visible": true,
+                                    "has_avatar": true
+                                },
+                                "subscription": {
+                                    "delivery_methods": {
+                                        "email": {
+                                            "send_posts": true,
+                                            "send_comments": false,
+                                            "post_delivery_frequency": "instantly",
+                                            "date_subscribed": "2014-10-27 19:58:11"
+                                        },
+                                        "notification": {
+                                            "send_posts": false
+                                        }
+                                    }
+                                },
+                                "is_blocked": false
+                            }
+                        }
+                    }
+                }
+            ],
+            "page": 1,
+            "number": 5,
+            "total_subscriptions": 5
+        }
+    }
+}
