@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.DiffOperations;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
@@ -97,17 +98,31 @@ public class PostStoreDbIntegrationTest {
     }
 
     @Test
-    public void testUpdatePublishedConfirmedAt() {
+    public void testUpdateChangesConfirmedAt() {
         // Arrange
         String dummyDate = "1955-11-05T14:15:00Z";
         PostModel postModel = new PostModel();
-        postModel.setPublishConfirmedAt(dummyDate);
+        postModel.setChangesConfirmedAt(dummyDate);
 
         // Act
         mPostSqlUtils.insertPostForResult(postModel);
 
         // Assert
-        assertEquals(dummyDate, PostTestUtils.getPosts().get(0).getPublishConfirmedAt());
+        assertEquals(dummyDate, PostTestUtils.getPosts().get(0).getChangesConfirmedAt());
+    }
+
+    @Test
+    public void testUpdateRemotePostStatus() {
+        // Arrange
+        String dummyStatus = PostStatus.PENDING.toString();
+        PostModel postModel = new PostModel();
+        postModel.setRemoteStatus(dummyStatus);
+
+        // Act
+        mPostSqlUtils.insertPostForResult(postModel);
+
+        // Assert
+        assertEquals(dummyStatus, PostTestUtils.getPosts().get(0).getRemoteStatus());
     }
 
     @Test
