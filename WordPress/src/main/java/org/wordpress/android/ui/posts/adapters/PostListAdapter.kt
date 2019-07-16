@@ -16,6 +16,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostViewHolderConfig
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
@@ -82,7 +83,7 @@ class PostListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // The only holders that require special setup are PostListItemViewHolder sealed subclasses
+        // The only holders that require special setup are PostListItemViewHolder and LoadingViewHolder subclasses
         if (holder is PostListItemViewHolder) {
             val item = getItem(position)
             assert(item is PostListItemUiState) {
@@ -90,6 +91,14 @@ class PostListAdapter(
                         "for position: $position"
             }
             holder.onBind((item as PostListItemUiState))
+        }
+        if (holder is LoadingViewHolder) {
+            val item = getItem(position)
+            assert(item is LoadingItem) {
+                "If we are presenting LoadingViewHolder, the item has to be of type LoadingItem " +
+                        "for position: $position"
+            }
+            holder.onBind((item as LoadingItem))
         }
     }
 
@@ -101,7 +110,22 @@ class PostListAdapter(
         notifyDataSetChanged()
     }
 
-    private class LoadingViewHolder(view: View) : ViewHolder(view)
+    private class LoadingViewHolder(view: View) : ViewHolder(view) {
+        val editButton: View? = view.findViewById(R.id.skeleton_button_edit)
+        val viewButton: View? = view.findViewById(R.id.skeleton_button_view)
+        val buttonMore: View? = view.findViewById(R.id.skeleton_button_more)
+        val buttonMoveToDraft: View? = view.findViewById(R.id.skeleton_button_move_to_draft)
+        val buttonDeletePermanently: View? = view.findViewById(R.id.skeleton_button_delete_permanently)
+
+        fun onBind(item: LoadingItem) {
+            editButton?.setVisible(item.options.showEditButton)
+            viewButton?.setVisible(item.options.showViewButton)
+            buttonMore?.setVisible(item.options.showMoreButton)
+            buttonMoveToDraft?.setVisible(item.options.showMoveToDraftButton)
+            buttonDeletePermanently?.setVisible(item.options.showDeletePermanentlyButton)
+        }
+    }
+
     private class EndListViewHolder(view: View) : ViewHolder(view)
 }
 

@@ -68,6 +68,7 @@ class PostListFragment : Fragment() {
     private val postViewHolderConfig: PostViewHolderConfig by lazy {
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
+        postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
         PostViewHolderConfig(
                 photonWidth = displayWidth - contentSpacing * 2,
                 photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),

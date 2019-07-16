@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
@@ -29,6 +30,7 @@ private val POST_STATE_SCHEDULED = PostStatus.SCHEDULED.toString()
 private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
 private val POST_STATE_PENDING = PostStatus.PENDING.toString()
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
+private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
@@ -269,6 +271,26 @@ class PostListItemUiStateHelperTest {
     fun `show overlay when uploading post`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
         assertThat(state.data.showOverlay).isTrue()
+    }
+
+    @Test
+    fun `show only delete and move to draft buttons on trashed posts`() {
+        val state = createPostListItemUiState(post = createPostModel(POST_STATE_TRASHED))
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
+        assertThat(state.actions).hasSize(2)
+    }
+
+    @Test
+    fun `show delete button on local draft with a media upload error`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocalDraft = true, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(MediaErrorType.GENERIC_ERROR)))
+        )
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(state.actions).hasSize(3)
     }
 
     private fun createPostModel(
