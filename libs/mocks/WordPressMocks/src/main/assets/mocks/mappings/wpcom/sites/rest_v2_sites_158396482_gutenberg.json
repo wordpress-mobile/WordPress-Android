@@ -19,7 +19,7 @@
     "jsonBody": {
       "editor_mobile": "aztec",
       "editor_web": "gutenberg",
-      "opt_in": "https:\/\/public-api.wordpress.com\/wpcom\/v2\/sites\/158396482\/gutenberg?editor=gutenberg&platform=mobile"
+      "opt_in": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/158396482/gutenberg?editor=gutenberg&platform=mobile"
     },
     "headers": {
       "Content-Type": "application/json",
