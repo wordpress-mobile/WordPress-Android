@@ -82,6 +82,7 @@ class WPWebViewViewModelTest {
         assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
         assertThat(viewModel.navbarUiState.value!!.forwardNavigationEnabled).isFalse()
+        assertThat(viewModel.navbarUiState.value!!.desktopPreviewHintVisible).isFalse()
         assertThat(viewModel.previewMode.value).isEqualTo(DEFAULT)
         assertThat(viewModel.previewModeSelector.value).isNotNull()
         assertThat(viewModel.previewModeSelector.value!!.isVisible).isFalse()
@@ -236,5 +237,23 @@ class WPWebViewViewModelTest {
         viewModel.selectPreviewMode(DESKTOP)
         assertThat(selectedPreviewModes.size).isEqualTo(2)
         assertThat(selectedPreviewModes[1]).isEqualTo(DESKTOP)
+    }
+
+    @Test
+    fun `selecting desktop preview mode shows hint label`() {
+        viewModel.start()
+
+        var isDektopPreviewModeHintVisible = false
+        viewModel.navbarUiState.observeForever {
+            isDektopPreviewModeHintVisible = it.desktopPreviewHintVisible
+        }
+
+        assertThat(isDektopPreviewModeHintVisible).isFalse()
+
+        viewModel.selectPreviewMode(DESKTOP)
+        assertThat(isDektopPreviewModeHintVisible).isTrue()
+
+        viewModel.selectPreviewMode(DEFAULT)
+        assertThat(isDektopPreviewModeHintVisible).isFalse()
     }
 }

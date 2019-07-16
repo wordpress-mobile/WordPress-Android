@@ -13,6 +13,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DEFAULT
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DESKTOP
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
@@ -71,7 +72,8 @@ class WPWebViewViewModel
 
         _navbarUiState.value = NavBarUiState(
                 forwardNavigationEnabled = false,
-                backNavigationEnabled = false
+                backNavigationEnabled = false,
+                desktopPreviewHintVisible = false
         )
 
         _previewMode.value = DEFAULT
@@ -162,12 +164,15 @@ class WPWebViewViewModel
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {
         if (previewMode.value != selectedPreviewMode) {
             _previewMode.value = selectedPreviewMode
+            _navbarUiState.value =
+                    navbarUiState.value!!.copy(desktopPreviewHintVisible = selectedPreviewMode == DESKTOP)
         }
     }
 
     data class NavBarUiState(
         val forwardNavigationEnabled: Boolean,
-        val backNavigationEnabled: Boolean
+        val backNavigationEnabled: Boolean,
+        val desktopPreviewHintVisible: Boolean
     )
 
     enum class PreviewMode {
