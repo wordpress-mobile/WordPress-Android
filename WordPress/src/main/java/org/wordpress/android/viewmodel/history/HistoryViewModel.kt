@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnRevisionsFetched
 import org.wordpress.android.models.Person
@@ -41,6 +43,7 @@ class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val networkUtils: NetworkUtilsWrapper,
+    private val postStore: PostStore,
     @Named(UI_THREAD) uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -67,8 +70,10 @@ class HistoryViewModel @Inject constructor(
     private var isStarted = false
 
     lateinit var revisionsList: ArrayList<Revision>
-    lateinit var post: PostModel
     lateinit var site: SiteModel
+
+    private val _post = MutableLiveData<PostModel?>()
+    val post: LiveData<PostModel?> = _post
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -83,15 +88,19 @@ class HistoryViewModel @Inject constructor(
         })
     }
 
-    fun create(post: PostModel, site: SiteModel) = launch {
+    fun create(localPostId: Int, site: SiteModel) = launch {
         if (isStarted) {
             return@launch
         }
 
+        val post: PostModel = withContext(bgDispatcher) {
+            postStore.getPostByLocalPostId(localPostId)
+        } ?: return@launch
+
         revisionsList = ArrayList()
         _revisions.value = emptyList()
 
-        this@HistoryViewModel.post = post
+        this@HistoryViewModel._post.value = post
         this@HistoryViewModel.site = site
 
         fetchRevisions()
@@ -150,6 +159,8 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun fetchRevisions() {
+        val post = this.post.value ?: return
+
         _listStatus.value = HistoryListStatus.FETCHING
         val payload = FetchRevisionsPayload(post, site)
         launch {
@@ -174,7 +185,7 @@ class HistoryViewModel @Inject constructor(
 
         if (revisions.isNotEmpty()) {
             val last = items.last() as Revision
-            val footer = if (post.isPage) {
+            val footer = if (post.value?.isPage == true) {
                 resourceProvider.getString(R.string.history_footer_page, last.formattedDate, last.formattedTime)
             } else {
                 resourceProvider.getString(R.string.history_footer_post, last.formattedDate, last.formattedTime)
