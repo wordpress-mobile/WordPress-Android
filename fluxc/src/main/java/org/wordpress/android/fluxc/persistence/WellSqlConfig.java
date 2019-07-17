@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.StringDef;
 
-import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.WellTableManager;
