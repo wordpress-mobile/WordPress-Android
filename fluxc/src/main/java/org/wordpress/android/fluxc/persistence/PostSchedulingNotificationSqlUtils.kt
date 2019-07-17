@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
-import com.wellsql.generated.PostSchedulingNotificationTable
+import com.wellsql.generated.PostSchedulingReminderTable
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
@@ -25,15 +25,15 @@ class PostSchedulingNotificationSqlUtils
         ).execute()
         return WellSql.select(PostSchedulingReminderBuilder::class.java)
                 .where()
-                .equals(PostSchedulingNotificationTable.POST_ID, postId)
-                .equals(PostSchedulingNotificationTable.SCHEDULED_TIME, scheduledTime.name)
+                .equals(PostSchedulingReminderTable.POST_ID, postId)
+                .equals(PostSchedulingReminderTable.SCHEDULED_TIME, scheduledTime.name)
                 .endWhere().asModel.firstOrNull()?.id
     }
 
     fun deletePostSchedulingNotifications(postId: Int) {
         WellSql.delete(PostSchedulingReminderBuilder::class.java)
                 .where()
-                .equals(PostSchedulingNotificationTable.POST_ID, postId)
+                .equals(PostSchedulingReminderTable.POST_ID, postId)
                 .endWhere()
                 .execute()
     }
@@ -43,7 +43,7 @@ class PostSchedulingNotificationSqlUtils
     ): SchedulingReminderDbModel.Period? {
         return WellSql.select(PostSchedulingReminderBuilder::class.java)
                 .where()
-                .equals(PostSchedulingNotificationTable.POST_ID, postId)
+                .equals(PostSchedulingReminderTable.POST_ID, postId)
                 .endWhere().asModel.firstOrNull()?.scheduledTime?.let { SchedulingReminderDbModel.Period.valueOf(it) }
     }
 
@@ -52,7 +52,7 @@ class PostSchedulingNotificationSqlUtils
     ): SchedulingReminderDbModel? {
         return WellSql.select(PostSchedulingReminderBuilder::class.java)
                 .where()
-                .equals(PostSchedulingNotificationTable.ID, notificationId)
+                .equals(PostSchedulingReminderTable.ID, notificationId)
                 .endWhere().asModel.firstOrNull()
                 ?.let { SchedulingReminderDbModel(it.id, it.postId, SchedulingReminderDbModel.Period.valueOf(it.scheduledTime)) }
     }

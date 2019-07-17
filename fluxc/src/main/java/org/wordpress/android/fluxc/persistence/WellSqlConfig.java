@@ -561,8 +561,8 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 75:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL(
-                        "CREATE TABLE PostSchedulingNotification (_id INTEGER PRIMARY KEY AUTOINCREMENT,POST_ID "
-                        + "INTEGER,SCHEDULED_TIME TEXT NOT NULL)");
+                        "CREATE TABLE PostSchedulingReminder (_id INTEGER PRIMARY KEY AUTOINCREMENT,POST_ID INTEGER,"
+                        + "SCHEDULED_TIME TEXT NOT NULL)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
