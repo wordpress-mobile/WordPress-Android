@@ -66,14 +66,17 @@ class EditPostPublishSettingsFragment : Fragment() {
                 publishNotificationContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
-                        showNotificationTimeSelectionDialog(uiModel.notificationTime)
+                        viewModel.onShowDialog(getPost())
                     }
                 } else {
                     publishNotificationContainer.setOnClickListener(null)
                 }
-                publishNotification.setText(uiModel.notificationTime.toLabel())
+                publishNotification.setText(uiModel.notificationLabel)
                 publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
+        })
+        viewModel.onShowNotificationDialog.observe(this, Observer {
+            showNotificationTimeSelectionDialog(it)
         })
         viewModel.onToast.observe(this, Observer {
             it?.applyIfNotHandled {

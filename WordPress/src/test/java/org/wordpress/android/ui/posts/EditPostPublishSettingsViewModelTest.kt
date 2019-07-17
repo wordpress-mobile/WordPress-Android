@@ -11,7 +11,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
-import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
 import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime.ONE_HOUR_BEFORE
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -156,7 +155,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(updatedStatus).isEqualTo(PostStatus.SCHEDULED)
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
-            assertThat(this.notificationTime).isEqualTo(NotificationTime.OFF)
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
             assertThat(this.notificationEnabled).isTrue()
             assertThat(this.notificationVisible).isTrue()
         }
@@ -186,7 +185,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
-            assertThat(this.notificationTime).isEqualTo(NotificationTime.OFF)
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
             assertThat(this.notificationEnabled).isFalse()
             assertThat(this.notificationVisible).isTrue()
         }
@@ -227,7 +226,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
-            assertThat(this.notificationTime).isEqualTo(NotificationTime.OFF)
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
             assertThat(this.notificationEnabled).isFalse()
             assertThat(this.notificationVisible).isTrue()
         }
@@ -253,7 +252,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
-            assertThat(this.notificationTime).isEqualTo(NotificationTime.OFF)
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
             assertThat(this.notificationEnabled).isFalse()
             assertThat(this.notificationVisible).isFalse()
         }
@@ -280,7 +279,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
             assertThat(this.notificationEnabled).isFalse()
             assertThat(this.notificationVisible).isTrue()
-            assertThat(this.notificationTime).isEqualTo(NotificationTime.OFF)
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
         }
     }
 
@@ -304,7 +303,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
             assertThat(this.notificationEnabled).isFalse()
             assertThat(this.notificationVisible).isTrue()
-            assertThat(this.notificationTime).isEqualTo(NotificationTime.OFF)
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
         }
     }
 }

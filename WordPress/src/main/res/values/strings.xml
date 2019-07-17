@@ -1319,6 +1319,7 @@
     <string name="post_notification_one_hour_before">1 hour before</string>
     <string name="post_notification_ten_minutes_before">10 minutes before</string>
     <string name="post_notification_when_published">When published</string>
+    <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
 
     <!-- post date selection -->
     <string name="publish_date">Publish</string>
