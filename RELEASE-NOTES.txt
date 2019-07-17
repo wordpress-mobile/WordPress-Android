@@ -1,9 +1,21 @@
-12.9
+13.0
 -----
  
+12.9
+-----
+* Block editor: Video block is now available in the Inserter
+* Block editor: Tapping on an empty editor area will create a new paragraph block
+* Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
+* Block editor: Adding a block from the Post Title now inserts the block at the top of the Post.
+ 
+* Setting featured image on a post doesn't require network connection
+* Full screen comments view
+* Added Domain Registration functionality for customers with unclaimed domain credit
+
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
+* Remove "Discard Local Changes" feature from the editor
 * Block Editor: Fix pasting simple text on Post Title
 * Block Editor: Remove editable empty line after list on the List block
 * Block Editor: Performance improvements on rich text editing
@@ -80,7 +92,7 @@
 * Added swiping between tabs in Notifications
 * Refreshed View all Stats screens, when digging into stats data
 * Visual update to Today's stats, All-time stats and Most popular stats blocks
-* Now sharing pictures to WordPress opens the Block editor
+* Now sharing pictures to WordPress opens the block editor
 * Fixed crash when inserting text right before an Image
 * Now sharing pictures to WordPress opens the block editor
 

@@ -40,7 +40,7 @@ import kotlin.coroutines.CoroutineContext
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
-open class LocalDraftUploadStarter @Inject constructor(
+open class UploadStarter @Inject constructor(
     /**
      * The Application context
      */
@@ -77,7 +77,7 @@ open class LocalDraftUploadStarter @Inject constructor(
      * This must be called during [org.wordpress.android.WordPress]' creation like so:
      *
      * ```
-     * mLocalDraftUploadStarter.activateAutoUploading(ProcessLifecycleOwner.get())
+     * mUploadStarter.activateAutoUploading(ProcessLifecycleOwner.get())
      * ```
      */
     fun activateAutoUploading(processLifecycleOwner: ProcessLifecycleOwner) {

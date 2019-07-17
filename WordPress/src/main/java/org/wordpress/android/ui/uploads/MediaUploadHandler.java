@@ -111,6 +111,20 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         return hasInProgressMediaUploadsForPost(postModel) || hasPendingMediaUploadsForPost(postModel);
     }
 
+    static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+        if (postModel == null) {
+            return null;
+        }
+        List<MediaModel> uploads = getPendingOrInProgressMediaUploadsForPost(postModel);
+        for (MediaModel model : uploads) {
+            if (model.getMarkedLocallyAsFeatured()) {
+                return model;
+            }
+        }
+
+        return null;
+    }
+
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
         if (postModel == null) {
             return Collections.emptyList();
@@ -384,7 +398,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                               + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
                                       .getFilePath()
                               + ", " + queuedMedia.getLocalSiteId());
-            if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
+            if (isSameMediaFileQueuedForThisPost(queuedMedia, mediaModel)) {
                 return true;
             }
         }
@@ -394,16 +408,38 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                               + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
                                       .getFilePath()
                               + ", " + queuedMedia.getLocalSiteId());
-            if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
+            if (isSameMediaFileQueuedForThisPost(queuedMedia, mediaModel)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
+    private boolean isSameMediaFileQueuedForThisPost(MediaModel media1, MediaModel media2) {
+        /*
+            This method used to be called "compareBySiteAndFilePath" and compared just siteId and filePath. It made
+            sense since a media file is tied to a site and can be referenced from multiple posts on that site. This
+            approach tried to prevent wasting users' data.
+
+            The issue was that when a same image was added to content of two posts only a single MediaModel was
+            enqueued. However, MediaModel references only a single post (`localPostId`). When the upload finished
+            only the first post got updated with the url. The second post got uploaded to the server with a path to
+            local image. We decided to check whether the image belongs to the same post so we can be sure the local
+            path gets replaced with the url.
+
+            More info can be found here - https://github.com/wordpress-mobile/WordPress-Android/pull/10204.
+
+            We also need to check the `markedLocallyAsFeatured` flag is equal as we might lose it otherwise. If the
+            user adds an image into the post content and they set the same image as featured image, we need to enqueue
+            both uploads. Otherwise, we could lose the information what we need to update - the featured image or post
+            content.
+
+            Issue with a proper fix - https://github.com/wordpress-mobile/WordPress-Android/issues/10210
+         */
         return (media1.getLocalSiteId() == media2.getLocalSiteId()
-                && StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
+                && media1.getLocalPostId() == media2.getLocalPostId()
+                && StringUtils.equals(media1.getFilePath(), media2.getFilePath()))
+                && media1.getMarkedLocallyAsFeatured() == media2.getMarkedLocallyAsFeatured();
     }
 
     @Override

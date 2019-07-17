@@ -22,13 +22,13 @@ import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 /**
- * Tests for structured concurrency in [LocalDraftUploadStarter].
+ * Tests for structured concurrency in [UploadStarter].
  *
- * This is intentionally a separate class from [LocalDraftUploadStarterTest] because this contains non-deterministic
+ * This is intentionally a separate class from [UploadStarterTest] because this contains non-deterministic
  * tests.
  */
 @RunWith(MockitoJUnitRunner::class)
-class LocalDraftUploadStarterConcurrentTest {
+class UploadStarterConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     private val site = SiteModel()
@@ -52,7 +52,7 @@ class LocalDraftUploadStarterConcurrentTest {
         // Given
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        val starter = createLocalDraftUploadStarter(uploadServiceFacade)
+        val starter = createUploadStarter(uploadServiceFacade)
 
         // When
         runBlocking {
@@ -69,7 +69,7 @@ class LocalDraftUploadStarterConcurrentTest {
         )
     }
 
-    private fun createLocalDraftUploadStarter(uploadServiceFacade: UploadServiceFacade) = LocalDraftUploadStarter(
+    private fun createUploadStarter(uploadServiceFacade: UploadServiceFacade) = UploadStarter(
             context = mock(),
             postStore = postStore,
             pageStore = pageStore,
