@@ -8,6 +8,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -76,9 +77,9 @@ public class PostEditorAnalyticsSession implements Serializable {
         }
     }
 
-    public void start(boolean hasUnsupportedBlocks) {
+    public void start(ArrayList<Object> unsupportedBlocksList) {
         if (!mStarted) {
-            mHasUnsupportedBlocks = hasUnsupportedBlocks;
+            mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             Map<String, Object> properties = getCommonProperties();
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
