@@ -26,7 +26,7 @@ class PublishNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         (context.applicationContext as WordPress).component().inject(this)
         val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
-        postSchedulingNotificationStore.getNotification(notificationId)?.let { notification ->
+        postSchedulingNotificationStore.getSchedulingReminder(notificationId)?.let { notification ->
             postStore.getPostByLocalPostId(notification.postId)?.let { post ->
                 val postStatus = PostStatus.fromPost(post)
                 if (postStatus == SCHEDULED) {

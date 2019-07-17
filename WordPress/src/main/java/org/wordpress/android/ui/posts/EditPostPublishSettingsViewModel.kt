@@ -184,7 +184,7 @@ class EditPostPublishSettingsViewModel
         post: PostModel,
         domainModel: SchedulingReminderModel.Period = OFF
     ) {
-        postSchedulingNotificationStore.deletePostSchedulingNotifications(post.id)
+        postSchedulingNotificationStore.deleteSchedulingReminders(post.id)
         if (domainModel != OFF) {
             val notificationId = postSchedulingNotificationStore.schedule(post.id, domainModel)
             val scheduledCalendar = localeManagerWrapper.getCurrentCalendar().apply {
