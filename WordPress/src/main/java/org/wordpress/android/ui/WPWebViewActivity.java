@@ -3,6 +3,9 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -170,16 +173,39 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         initRetryButton();
         initViewModel();
+        setupToolbar();
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                showSubtitle(actionBar);
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+
+                Drawable upIcon = toolbar.getNavigationIcon();
+                if (upIcon != null) {
+                    upIcon.setColorFilter(getResources().getColor(R.color.gray_600),
+                            PorterDuff.Mode.SRC_ATOP);
+                }
+            }
         }
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void showSubtitle(ActionBar actionBar) {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras == null) {
+            return;
         }
+
+        String originalUrl = extras.getString(URL_TO_LOAD);
+        Uri uri = Uri.parse(originalUrl);
+        actionBar.setSubtitle(uri.getHost());
     }
 
     private void initRetryButton() {
@@ -238,14 +264,28 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mViewModel.getShare().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO share
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                // Use the preferred shareable URL or the default webview URL
+                Bundle extras = getIntent().getExtras();
+                String shareableUrl = extras.getString(SHAREABLE_URL, null);
+                if (TextUtils.isEmpty(shareableUrl)) {
+                    shareableUrl = mWebView.getUrl();
+                }
+                share.putExtra(Intent.EXTRA_TEXT, shareableUrl);
+                String shareSubject = extras.getString(SHARE_SUBJECT, null);
+                if (!TextUtils.isEmpty(shareSubject)) {
+                    share.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                }
+                startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             }
         });
 
         mViewModel.getOpenExternalBrowser().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO open page in external browser
+                ReaderActivityLauncher.openUrl(WPWebViewActivity.this, mWebView.getUrl(),
+                        ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             }
         });
 
@@ -588,25 +628,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         int itemID = item.getItemId();
         if (itemID == R.id.menu_refresh) {
             mWebView.reload();
-            return true;
-        } else if (itemID == R.id.menu_share) {
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("text/plain");
-            // Use the preferred shareable URL or the default webview URL
-            Bundle extras = getIntent().getExtras();
-            String shareableUrl = extras.getString(SHAREABLE_URL, null);
-            if (TextUtils.isEmpty(shareableUrl)) {
-                shareableUrl = mWebView.getUrl();
-            }
-            share.putExtra(Intent.EXTRA_TEXT, shareableUrl);
-            String shareSubject = extras.getString(SHARE_SUBJECT, null);
-            if (!TextUtils.isEmpty(shareSubject)) {
-                share.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
-            }
-            startActivity(Intent.createChooser(share, getText(R.string.share_link)));
-            return true;
-        } else if (itemID == R.id.menu_browser) {
-            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             return true;
         }
 
