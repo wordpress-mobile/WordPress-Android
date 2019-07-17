@@ -38,7 +38,7 @@ class PostSchedulingNotificationStoreTest {
             store.schedule(postId, domainModel)
 
             inOrder(sqlUtils).apply {
-                this.verify(sqlUtils).deletePostSchedulingNotifications(postId)
+                this.verify(sqlUtils).deleteSchedulingReminders(postId)
                 this.verify(sqlUtils).insert(postId, dbModel)
             }
         }
@@ -48,28 +48,28 @@ class PostSchedulingNotificationStoreTest {
     fun `schedule deletes previous notification when OFF`() {
         store.schedule(postId, SchedulingReminderModel.Period.OFF)
 
-        verify(sqlUtils).deletePostSchedulingNotifications(postId)
+        verify(sqlUtils).deleteSchedulingReminders(postId)
         verify(sqlUtils, never()).insert(any(), any())
     }
 
     @Test
     fun `deletes notification per post`() {
-        store.deletePostSchedulingNotifications(postId)
+        store.deleteSchedulingReminders(postId)
 
-        verify(sqlUtils).deletePostSchedulingNotifications(postId)
+        verify(sqlUtils).deleteSchedulingReminders(postId)
     }
 
     @Test
     fun `returns notification from database`() {
         periodMappings.entries.forEach { (domainModel, dbModel) ->
-            whenever(sqlUtils.getNotification(notificationId)).thenReturn(
+            whenever(sqlUtils.getSchedulingReminder(notificationId)).thenReturn(
                     SchedulingReminderDbModel(
                             notificationId,
                             postId,
                             dbModel
                     )
             )
-            val schedulingReminderModel = store.getNotification(notificationId)
+            val schedulingReminderModel = store.getSchedulingReminder(notificationId)
 
             assertThat(schedulingReminderModel!!.notificationId).isEqualTo(notificationId)
             assertThat(schedulingReminderModel.postId).isEqualTo(postId)

@@ -29,7 +29,7 @@ class PostSchedulingNotificationSqlUtils
                 .endWhere().asModel.firstOrNull()?.id
     }
 
-    fun deletePostSchedulingNotifications(postId: Int) {
+    fun deleteSchedulingReminders(postId: Int) {
         WellSql.delete(PostSchedulingReminderBuilder::class.java)
                 .where()
                 .equals(PostSchedulingReminderTable.POST_ID, postId)
@@ -46,7 +46,7 @@ class PostSchedulingNotificationSqlUtils
                 .endWhere().asModel.firstOrNull()?.scheduledTime?.let { SchedulingReminderDbModel.Period.valueOf(it) }
     }
 
-    fun getNotification(
+    fun getSchedulingReminder(
         notificationId: Int
     ): SchedulingReminderDbModel? {
         return WellSql.select(PostSchedulingReminderBuilder::class.java)
