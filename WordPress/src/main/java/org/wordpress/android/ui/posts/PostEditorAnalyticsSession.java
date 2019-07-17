@@ -19,6 +19,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_CONTENT_TYPE = "content_type";
     private static final String KEY_EDITOR = "editor";
     private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
+    private static final String KEY_UNSUPPORTED_BLOCKS = "unsupported_blocks";
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
@@ -31,6 +32,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private Editor mCurrentEditor;
     private boolean mHasUnsupportedBlocks = false;
     private Outcome mOutcome = null;
+    private ArrayList<Object> mUnsupportedBlocks = null;
 
     enum Editor {
         GUTENBERG,
@@ -80,6 +82,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     public void start(ArrayList<Object> unsupportedBlocksList) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
+            mUnsupportedBlocks = unsupportedBlocksList;
             Map<String, Object> properties = getCommonProperties();
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
@@ -128,6 +131,9 @@ public class PostEditorAnalyticsSession implements Serializable {
         properties.put(KEY_BLOG_TYPE, mBlogType);
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
+        if (mUnsupportedBlocks != null && mUnsupportedBlocks.size() > 0) {
+            properties.put(KEY_UNSUPPORTED_BLOCKS, mUnsupportedBlocks);
+        }
         return properties;
     }
 }
