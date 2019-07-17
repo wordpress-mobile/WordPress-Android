@@ -561,11 +561,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 75:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_FOR_HASHCODE TEXT;");
-                db.execSQL("alter table PostModel add REMOTE_STATUS TEXT;");
-                // when a post is locally changed we don't know it's original/remote status anymore
-                db.execSQL("update PostModel SET REMOTE_STATUS = " + PostModelTable.STATUS + " WHERE "
-                        + PostModelTable.IS_LOCALLY_CHANGED + " = 0;");
+                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

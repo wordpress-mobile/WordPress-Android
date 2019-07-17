@@ -101,28 +101,14 @@ public class PostStoreDbIntegrationTest {
     public void testUpdateChangesConfirmedForHashcode() {
         // Arrange
         PostModel postModel = new PostModel();
-        postModel.updateChangesConfirmedForHashcode();
+        postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
         // Act
         mPostSqlUtils.insertPostForResult(postModel);
 
         // Assert
-        assertEquals(postModel.getChangesConfirmedForHashcode(),
-                PostTestUtils.getPosts().get(0).getChangesConfirmedForHashcode());
-    }
-
-    @Test
-    public void testUpdateRemotePostStatus() {
-        // Arrange
-        String dummyStatus = PostStatus.PENDING.toString();
-        PostModel postModel = new PostModel();
-        postModel.setRemoteStatus(dummyStatus);
-
-        // Act
-        mPostSqlUtils.insertPostForResult(postModel);
-
-        // Assert
-        assertEquals(dummyStatus, PostTestUtils.getPosts().get(0).getRemoteStatus());
+        assertEquals(postModel.getChangesConfirmedContentHashcode(),
+                PostTestUtils.getPosts().get(0).getChangesConfirmedContentHashcode());
     }
 
     @Test
