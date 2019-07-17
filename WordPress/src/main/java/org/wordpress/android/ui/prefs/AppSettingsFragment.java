@@ -304,7 +304,6 @@ public class AppSettingsFragment extends PreferenceFragment
             AppPrefs.setGutenbergDefaultForNewPosts((Boolean) newValue);
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
-            WPPrefUtils.setMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
         }

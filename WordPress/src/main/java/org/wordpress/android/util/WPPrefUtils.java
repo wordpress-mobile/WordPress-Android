@@ -9,14 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
-import org.wordpress.android.ui.prefs.AppPrefs;
-
-import java.util.List;
 
 /**
  * Design guidelines for Calypso-styled Site Settings (and likely other screens)
@@ -167,27 +159,5 @@ public class WPPrefUtils {
     public static void setTextViewAttributes(TextView textView, int size, int colorRes) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
         textView.setTextColor(textView.getResources().getColor(colorRes));
-    }
-
-    public static void setMobileEditorPreferenceToRemote(final Dispatcher dispatcher, final SiteStore siteStore) {
-        final List<SiteModel> sitesAccessedViaWPComRest = siteStore.getSitesAccessedViaWPComRest();
-        final boolean setDelay = sitesAccessedViaWPComRest.size() > 5;
-        final String editorSetting = AppPrefs.isGutenbergDefaultForNewPosts() ? "gutenberg" : "aztec";
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (SiteModel currentSite : sitesAccessedViaWPComRest) {
-                    dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                            new DesignateMobileEditorPayload(currentSite, editorSetting)));
-                    if (setDelay) {
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            // no-op
-                        }
-                    }
-                }
-            }
-        }).start();
     }
 }
