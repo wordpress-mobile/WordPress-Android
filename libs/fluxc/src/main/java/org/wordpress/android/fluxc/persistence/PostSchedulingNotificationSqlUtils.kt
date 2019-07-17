@@ -16,7 +16,6 @@ class PostSchedulingNotificationSqlUtils
         postId: Int,
         scheduledTime: SchedulingReminderDbModel.Period
     ): Int? {
-        deletePostSchedulingNotifications(postId)
         WellSql.insert(
                 PostSchedulingReminderBuilder(
                         postId = postId,
