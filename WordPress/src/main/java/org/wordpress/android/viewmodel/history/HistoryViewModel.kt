@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -21,6 +22,8 @@ import org.wordpress.android.fluxc.model.revisions.RevisionModel
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnRevisionsFetched
 import org.wordpress.android.models.Person
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
@@ -30,6 +33,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
@@ -41,8 +45,9 @@ class HistoryViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val networkUtils: NetworkUtilsWrapper,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    @Named(BG_THREAD) defaultDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
-) : ViewModel(), LifecycleOwner {
+) : ScopedViewModel(defaultDispatcher),  LifecycleOwner {
     enum class HistoryListStatus {
         DONE,
         ERROR,
