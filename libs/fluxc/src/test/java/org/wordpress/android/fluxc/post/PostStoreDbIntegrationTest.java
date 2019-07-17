@@ -98,17 +98,17 @@ public class PostStoreDbIntegrationTest {
     }
 
     @Test
-    public void testUpdateChangesConfirmedAt() {
+    public void testUpdateChangesConfirmedForHashcode() {
         // Arrange
-        String dummyDate = "1955-11-05T14:15:00Z";
         PostModel postModel = new PostModel();
-        postModel.setChangesConfirmedAt(dummyDate);
+        postModel.updateChangesConfirmedForHashcode();
 
         // Act
         mPostSqlUtils.insertPostForResult(postModel);
 
         // Assert
-        assertEquals(dummyDate, PostTestUtils.getPosts().get(0).getChangesConfirmedAt());
+        assertEquals(postModel.getChangesConfirmedForHashcode(),
+                PostTestUtils.getPosts().get(0).getChangesConfirmedForHashcode());
     }
 
     @Test

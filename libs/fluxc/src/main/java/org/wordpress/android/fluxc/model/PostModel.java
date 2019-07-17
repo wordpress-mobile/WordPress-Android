@@ -53,7 +53,13 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private double mLatitude = PostLocation.INVALID_LATITUDE;
     @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
-    @Column private String mChangesConfirmedAt; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    /**
+     * This field stores a hashcode value of the post when the user confirmed making the changes visible to the users.
+     * (Publish/Submit/Update/Schedule)
+     * <p>
+     * It is used to determine if the user actually confirmed the changes and if the post was edited since then.
+     */
+    @Column private int mChangesConfirmedForHashcode;
 
     // Page specific
     @Column private boolean mIsPage;
@@ -293,12 +299,12 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLongitude = longitude;
     }
 
-    public String getChangesConfirmedAt() {
-        return mChangesConfirmedAt;
+    public int getChangesConfirmedForHashcode() {
+        return mChangesConfirmedForHashcode;
     }
 
-    public void setChangesConfirmedAt(String changesConfirmedAt) {
-        mChangesConfirmedAt = changesConfirmedAt;
+    public void updateChangesConfirmedForHashcode() {
+        mChangesConfirmedForHashcode = hashCode();
     }
 
     public boolean isPage() {
@@ -415,8 +421,44 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
-                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
-                && StringUtils.equals(getChangesConfirmedAt(), ((PostModel) other).getChangesConfirmedAt());
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+    }
+
+    @Override public int hashCode() {
+        int result;
+        long temp;
+        result = mId;
+        result = 31 * result + mLocalSiteId;
+        result = 31 * result + (int) (mRemoteSiteId ^ (mRemoteSiteId >>> 32));
+        result = 31 * result + (int) (mRemotePostId ^ (mRemotePostId >>> 32));
+        result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
+        result = 31 * result + (mContent != null ? mContent.hashCode() : 0);
+        result = 31 * result + (mDateCreated != null ? mDateCreated.hashCode() : 0);
+        result = 31 * result + (mCategoryIds != null ? mCategoryIds.hashCode() : 0);
+        result = 31 * result + (mCustomFields != null ? mCustomFields.hashCode() : 0);
+        result = 31 * result + (mLink != null ? mLink.hashCode() : 0);
+        result = 31 * result + (mExcerpt != null ? mExcerpt.hashCode() : 0);
+        result = 31 * result + (mTagNames != null ? mTagNames.hashCode() : 0);
+        result = 31 * result + (mStatus != null ? mStatus.hashCode() : 0);
+        result = 31 * result + (mRemoteStatus != null ? mRemoteStatus.hashCode() : 0);
+        result = 31 * result + (mPassword != null ? mPassword.hashCode() : 0);
+        result = 31 * result + (int) (mFeaturedImageId ^ (mFeaturedImageId >>> 32));
+        result = 31 * result + (mPostFormat != null ? mPostFormat.hashCode() : 0);
+        result = 31 * result + (mSlug != null ? mSlug.hashCode() : 0);
+        temp = Double.doubleToLongBits(mLatitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(mLongitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (mIsPage ? 1 : 0);
+        result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
+        result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
+        result = 31 * result + (mIsLocalDraft ? 1 : 0);
+        result = 31 * result + (mIsLocallyChanged ? 1 : 0);
+        result = 31 * result + (mDateLocallyChanged != null ? mDateLocallyChanged.hashCode() : 0);
+        result = 31 * result + (mHasCapabilityPublishPost ? 1 : 0);
+        result = 31 * result + (mHasCapabilityEditPost ? 1 : 0);
+        result = 31 * result + (mHasCapabilityDeletePost ? 1 : 0);
+        return result;
     }
 
     public @Nullable JSONArray getJSONCustomFields() {
