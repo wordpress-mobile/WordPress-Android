@@ -117,7 +117,10 @@ class HistoryViewModel @Inject constructor(
 
         revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
         _revisions.value = getHistoryListItemsFromRevisionModels(revisions)
-        fetchRevisionAuthorDetails(revisionAuthorsId)
+
+        if (revisionAuthorsId.isNotEmpty()) {
+            fetchRevisionAuthorDetails(revisionAuthorsId)
+        }
     }
 
     private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
