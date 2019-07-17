@@ -74,7 +74,7 @@ public class CommentsActivity extends AppCompatActivity
 
         setContentView(R.layout.comment_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -192,28 +192,6 @@ public class CommentsActivity extends AppCompatActivity
     @Override
     public void onPostClicked(Note note, long remoteBlogId, int postId) {
         showReaderFragment(remoteBlogId, postId);
-    }
-
-    /*
-     * reload the comment list from existing data
-     */
-    private void reloadCommentList() {
-        CommentsListFragment listFragment = getListFragment();
-        if (listFragment != null) {
-            listFragment.loadComments();
-        }
-    }
-
-    /*
-     * tell the comment list to get recent comments from server
-     */
-    private void updateCommentList() {
-        CommentsListFragment listFragment = getListFragment();
-        if (listFragment != null) {
-            // listFragment.setRefreshing(true);
-            listFragment.setCommentStatusFilter(mCurrentCommentStatusType);
-            listFragment.updateComments(false);
-        }
     }
 
     @Override

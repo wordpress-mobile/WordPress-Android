@@ -22,8 +22,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.support.AndroidSupportInjection
-import org.apache.commons.lang3.StringEscapeUtils
 import kotlinx.android.synthetic.main.domain_registration_details_fragment.*
+import org.apache.commons.lang3.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.DomainContactModel
@@ -54,7 +54,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         private const val PHONE_NUMBER_CONNECTING_CHARACTER = "."
 
         private const val EXTRA_DOMAIN_PRODUCT_DETAILS = "EXTRA_DOMAIN_PRODUCT_DETAILS"
-        const val TAG = "DOMAIN_SUGGESTION_FRAGMENT_TAG"
+        const val TAG = "DOMAIN_REGISTRATION_DETAILS"
 
         fun newInstance(domainProductDetails: DomainProductDetails): DomainRegistrationDetailsFragment {
             val fragment = DomainRegistrationDetailsFragment()
@@ -67,6 +67,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: DomainRegistrationDetailsViewModel
+    private lateinit var mainViewModel: DomainRegistrationMainViewModel
 
     private var loadingProgressDialog: ProgressDialog? = null
 
@@ -83,7 +84,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+                .get(DomainRegistrationMainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
@@ -244,8 +247,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 })
 
         viewModel.handleCompletedDomainRegistration.observe(this,
-                Observer { domainName ->
-                    (activity as DomainRegistrationActivity).onDomainRegistered(StringUtils.notNullStr(domainName))
+                Observer { domainRegisteredEvent ->
+                    mainViewModel.completeDomainRegistration(domainRegisteredEvent)
                 })
 
         viewModel.showTos.observe(this,

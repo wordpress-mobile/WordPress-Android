@@ -28,8 +28,6 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/linkText"
     android:layout_alignParentEnd="true"
-    android:layout_alignParentRight="true"
-    android:layout_marginLeft="@dimen/margin_medium"
     android:layout_marginStart="@dimen/margin_medium"
     android:text="@android:string/ok" />
 
@@ -38,7 +36,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignTop="@id/ok"
-    android:layout_toLeftOf="@id/ok"
     android:layout_toStartOf="@id/ok"
     android:text="@android:string/cancel" />
 

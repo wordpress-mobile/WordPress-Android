@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -39,7 +40,7 @@ import kotlin.coroutines.CoroutineContext
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
-open class LocalDraftUploadStarter @Inject constructor(
+open class UploadStarter @Inject constructor(
     /**
      * The Application context
      */
@@ -76,7 +77,7 @@ open class LocalDraftUploadStarter @Inject constructor(
      * This must be called during [org.wordpress.android.WordPress]' creation like so:
      *
      * ```
-     * mLocalDraftUploadStarter.activateAutoUploading(ProcessLifecycleOwner.get())
+     * mUploadStarter.activateAutoUploading(ProcessLifecycleOwner.get())
      * ```
      */
     fun activateAutoUploading(processLifecycleOwner: ProcessLifecycleOwner) {
@@ -142,6 +143,7 @@ open class LocalDraftUploadStarter @Inject constructor(
                 .filter {
                     uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
                 }
+                .filter { PostStatus.DRAFT.toString() == it.status }
                 .forEach { localDraft ->
                     uploadServiceFacade.uploadPost(
                             context = context,

@@ -19,13 +19,13 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 import java.util.concurrent.TimeUnit.HOURS
 
 class UploadWorker(
     appContext: Context,
     workerParams: WorkerParameters,
-    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val uploadStarter: UploadStarter,
     private val siteStore: SiteStore
 ) : Worker(appContext, workerParams) {
     companion object {
@@ -35,8 +35,8 @@ class UploadWorker(
     override fun doWork(): Result {
         runBlocking {
             val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
-                UPLOAD_FROM_ALL_SITES -> localDraftUploadStarter.queueUploadFromAllSites()
-                else -> siteStore.getSiteByLocalId(localSiteId)?.let { localDraftUploadStarter.queueUploadFromSite(it) }
+                UPLOAD_FROM_ALL_SITES -> uploadStarter.queueUploadFromAllSites()
+                else -> siteStore.getSiteByLocalId(localSiteId)?.let { uploadStarter.queueUploadFromSite(it) }
             }
             job?.join()
         }
@@ -44,7 +44,7 @@ class UploadWorker(
     }
 
     class Factory(
-        private val localDraftUploadStarter: LocalDraftUploadStarter,
+        private val uploadStarter: UploadStarter,
         private val siteStore: SiteStore
     ) : WorkerFactory() {
         override fun createWorker(
@@ -53,7 +53,7 @@ class UploadWorker(
             workerParameters: WorkerParameters
         ): ListenableWorker? {
             // TODO This should use the [workerClassName] if there are other of Worker subclasses in the project
-            return UploadWorker(appContext, workerParameters, localDraftUploadStarter, siteStore)
+            return UploadWorker(appContext, workerParameters, uploadStarter, siteStore)
         }
     }
 }

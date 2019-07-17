@@ -263,13 +263,17 @@ public class UploadService extends Service {
                 mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
 
-            if (!hasPendingOrInProgressMediaUploadsForPost(post)) {
-                mPostUploadHandler.upload(post);
-            } else {
+
+            if (!getAllFailedMediaForPost(post).isEmpty()) {
+                boolean postHasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(post.getContent());
+                retryUpload(post, !postHasGutenbergBlocks);
+            } else if (hasPendingOrInProgressMediaUploadsForPost(post)) {
                 // Register the post (as PENDING) in the UploadStore, along with all media currently in progress for it
                 // If the post is already registered, the new media will be added to its list
                 List<MediaModel> activeMedia = MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
                 mUploadStore.registerPostModel(post, activeMedia);
+            } else {
+                mPostUploadHandler.upload(post);
             }
         }
     }
@@ -436,7 +440,11 @@ public class UploadService extends Service {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
             Set<MediaModel> completedMedia = sInstance.mUploadStore.getCompletedMediaForPost(post);
             for (MediaModel media : completedMedia) {
-                post = updatePostWithMediaUrl(post, media, processor);
+                if (media.getMarkedLocallyAsFeatured()) {
+                    post = updatePostWithNewFeaturedImg(post, media.getMediaId());
+                } else {
+                    post = updatePostWithMediaUrl(post, media, processor);
+                }
             }
 
             if (completedMedia != null && !completedMedia.isEmpty()) {
@@ -472,6 +480,10 @@ public class UploadService extends Service {
 
     public static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
+    }
+
+    public static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+        return MediaUploadHandler.getPendingOrInProgressFeaturedImageUploadForPost(postModel);
     }
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post) {
@@ -559,6 +571,14 @@ public class UploadService extends Service {
         }
     }
 
+    private static synchronized PostModel updatePostWithNewFeaturedImg(PostModel post, Long remoteMediaId) {
+        if (post != null && remoteMediaId != null) {
+            post.setFeaturedImageId(remoteMediaId);
+            post.setIsLocallyChanged(true);
+            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        }
+        return post;
+    }
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
@@ -744,17 +764,24 @@ public class UploadService extends Service {
     }
 
     private void retryUpload(PostModel post, boolean processWithAztec) {
+        if (mUploadStore.isPendingPost(post)) {
+            // The post is already pending upload so there is no need to manually retry it. Actually, the retry might
+            // result in the post being uploaded without its media. As if the media upload is in progress, the
+            // `getAllFailedMediaForPost()` methods returns an empty set. If we invoke `mPostUploadHandler.upload()`
+            // the post will be uploaded ignoring its media (we could upload content with paths to local storage).
+            return;
+        }
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_POST_ERROR_RETRY);
 
         if (processWithAztec) {
             aztecRegisterFailedMediaForThisPost(post);
         }
 
-        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
-        ArrayList<MediaModel> mediaToRetry = new ArrayList<>(failedMedia);
-        if (!failedMedia.isEmpty()) {
+        List<MediaModel> mediaToRetry = getAllFailedMediaForPost(post);
+
+        if (!mediaToRetry.isEmpty()) {
             // reset these media items to QUEUED
-            for (MediaModel media : failedMedia) {
+            for (MediaModel media : mediaToRetry) {
                 media.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             }
@@ -784,6 +811,22 @@ public class UploadService extends Service {
             // retry uploading the Post
             mPostUploadHandler.upload(post);
         }
+    }
+
+    private List<MediaModel> getAllFailedMediaForPost(PostModel postModel) {
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+        return filterOutRecentlyDeletedMedia(failedMedia);
+    }
+
+    private List<MediaModel> filterOutRecentlyDeletedMedia(Set<MediaModel> failedMedia) {
+        List<MediaModel> mediaToRetry = new ArrayList<>();
+        for (MediaModel mediaModel : failedMedia) {
+            String mediaIdToCompare = String.valueOf(mediaModel.getId());
+            if (!mUserDeletedMediaItemIds.contains(mediaIdToCompare)) {
+                mediaToRetry.add(mediaModel);
+            }
+        }
+        return mediaToRetry;
     }
 
     /**

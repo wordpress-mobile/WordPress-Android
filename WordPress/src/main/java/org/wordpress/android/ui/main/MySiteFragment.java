@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -59,6 +58,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -90,6 +91,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -106,6 +108,7 @@ import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskTy
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.RESULT_TASK;
+import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
 
 public class MySiteFragment extends Fragment implements
         SiteSettingsListener,
@@ -398,10 +401,11 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewDomainRegistrationActivity(getActivity(), getSelectedSite());
+        rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
+                ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
+                        DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
             }
         });
 
@@ -799,6 +803,13 @@ public class MySiteFragment extends Fragment implements
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
                 break;
+            case RequestCodes.DOMAIN_REGISTRATION:
+                if (resultCode == Activity.RESULT_OK && isAdded() && data != null) {
+                    AnalyticsTracker.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS);
+                    String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
+                    requestEmailValidation(getContext(), email);
+                }
+                break;
         }
     }
 
@@ -912,15 +923,13 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        if (SiteUtils.onFreePlan(site)) {
+        if (SiteUtils.onFreePlan(site) || SiteUtils.hasCustomDomain(site)) {
             mIsDomainCreditAvailable = false;
             toggleDomainRegistrationCtaVisibility();
+        } else if (!mIsDomainCreditChecked) {
+            fetchSitePlans(site);
         } else {
-            if (!SiteUtils.hasCustomDomain(site) && !mIsDomainCreditChecked) {
-                fetchSitePlans(site);
-            } else {
-                toggleDomainRegistrationCtaVisibility();
-            }
+            toggleDomainRegistrationCtaVisibility();
         }
 
         mScrollView.setVisibility(View.VISIBLE);
@@ -1105,7 +1114,7 @@ public class MySiteFragment extends Fragment implements
             case TAG_ADD_SITE_ICON_DIALOG:
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
-                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
+                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite(), null);
                 break;
             case TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG:
                 // no-op
@@ -1145,8 +1154,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void toggleDomainRegistrationCtaVisibility() {
-        // only show the Domain Registration CTA if domain registration is enabled
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainCreditAvailable) {
+        if (mIsDomainCreditAvailable) {
             mDomainRegistrationCta.setVisibility(View.VISIBLE);
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);
@@ -1239,9 +1247,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void fetchSitePlans(@Nullable SiteModel site) {
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
-        }
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -761,7 +762,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         if (SiteUtils.isPhotonCapable(mSite)) {
             imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
-        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, null,
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NotNull Drawable resource) {

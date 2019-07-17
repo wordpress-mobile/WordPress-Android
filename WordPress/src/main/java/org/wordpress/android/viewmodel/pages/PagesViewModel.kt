@@ -35,7 +35,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
@@ -76,7 +76,7 @@ class PagesViewModel
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
-    private val localDraftUploadStarter: LocalDraftUploadStarter,
+    private val uploadStarter: UploadStarter,
     private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
@@ -155,7 +155,7 @@ class PagesViewModel
 
             loadPagesAsync()
 
-            localDraftUploadStarter.queueUploadFromSite(site)
+            uploadStarter.queueUploadFromSite(site)
         }
     }
 
@@ -421,7 +421,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        localDraftUploadStarter.queueUploadFromSite(site)
+        uploadStarter.queueUploadFromSite(site)
 
         launch {
             reloadPages(FETCHING)

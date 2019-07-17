@@ -270,9 +270,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnEditorMountListener() {
                     @Override
-                    public void onEditorDidMount(boolean hasUnsupportedBlocks) {
+                    public void onEditorDidMount(ArrayList<Object> unsupportedBlocks) {
                         mEditorDidMount = true;
-                        mEditorFragmentListener.onEditorFragmentContentReady(hasUnsupportedBlocks);
+                        mEditorFragmentListener.onEditorFragmentContentReady(unsupportedBlocks.size() > 0);
 
                         // Hide the progress bar when editor is ready
                         new Handler(Looper.getMainLooper()).post(new Runnable() {

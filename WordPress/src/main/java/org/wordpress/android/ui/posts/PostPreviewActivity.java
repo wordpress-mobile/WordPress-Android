@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,39 +17,27 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,16 +46,8 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
-public class PostPreviewActivity extends AppCompatActivity implements
-        BasicFragmentDialog.BasicDialogNegativeClickInterface,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface {
-    private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
-
-    private boolean mIsDiscardingChanges;
-    private boolean mIsUpdatingPost;
-
+public class PostPreviewActivity extends AppCompatActivity {
     private PostModel mPost;
-    private PostModel mPostWithLocalChanges;
     private SiteModel mSite;
     private ViewGroup mMessageView;
 
@@ -110,7 +89,6 @@ public class PostPreviewActivity extends AppCompatActivity implements
             finish();
             return;
         }
-
 
         setTitle(mPost.isPage() ? getString(R.string.preview_page) : getString(R.string.preview_post));
     }
@@ -212,7 +190,6 @@ public class PostPreviewActivity extends AppCompatActivity implements
         mMessageView = findViewById(R.id.message_container);
 
         if (mPost == null
-            || mIsUpdatingPost
             || UploadService.isPostUploadingOrQueued(mPost)
             || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
@@ -238,20 +215,6 @@ public class PostPreviewActivity extends AppCompatActivity implements
                 publishPost();
             }
         });
-
-        // discard changes applies to only local changes
-        View btnDiscardChanges = mMessageView.findViewById(R.id.btn_discard_changes);
-        btnDiscardChanges.setVisibility(mPost.isLocallyChanged() ? View.VISIBLE : View.GONE);
-        if (mPost.isLocallyChanged()) {
-            btnDiscardChanges.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AniUtils.animateBottomBar(mMessageView, false);
-                    discardChanges();
-                    AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
-                }
-            });
-        }
 
         // if both buttons are visible, show them below the message instead of to the right of it
         if (mPost.isLocallyChanged()) {
@@ -281,26 +244,6 @@ public class PostPreviewActivity extends AppCompatActivity implements
                 }
             }
         }, 1000);
-    }
-
-    /*
-     * discard local changes for this post, replacing it with the latest version from the server
-     */
-    private void discardChanges() {
-        if (isFinishing() || !NetworkUtils.checkConnection(this)) {
-            return;
-        }
-
-        if (mIsUpdatingPost) {
-            AppLog.d(AppLog.T.POSTS, "post preview > already updating post");
-        } else {
-            mIsDiscardingChanges = true;
-            showProgress();
-            mPostWithLocalChanges = mPost.clone();
-
-            RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-            mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-        }
     }
 
     private void publishPost() {
@@ -343,82 +286,6 @@ public class PostPreviewActivity extends AppCompatActivity implements
     private void hideProgress() {
         if (!isFinishing()) {
             findViewById(R.id.progress).setVisibility(View.GONE);
-        }
-    }
-
-    private void showDialogError() {
-        BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(TAG_DISCARDING_CHANGES_ERROR_DIALOG, "", getString(R.string.local_changes_discarding_error),
-                getString(R.string.contact_support), getString(R.string.cancel), null);
-        dialog.show(getSupportFragmentManager(), TAG_DISCARDING_CHANGES_ERROR_DIALOG);
-    }
-
-    @Override
-    public void onNegativeClicked(@NotNull String tag) {
-        switch (tag) {
-            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
-                // noop
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog tag is not recognized");
-                throw new UnsupportedOperationException("Dialog tag is not recognized");
-        }
-    }
-
-    @Override
-    public void onPositiveClicked(@NotNull String tag) {
-        switch (tag) {
-            case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
-                mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog tag is not recognized");
-                throw new UnsupportedOperationException("Dialog tag is not recognized");
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
-            hideProgress();
-
-            if (!event.isError()) {
-                if (mIsUpdatingPost) {
-                    mIsUpdatingPost = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-                    refreshPreview();
-
-                    if (mMessageView != null) {
-                        WPSnackbar.make(mMessageView, getString(R.string.local_changes_discarded), Snackbar.LENGTH_LONG)
-                                .setAction(getString(R.string.undo), new OnClickListener() {
-                                    @Override public void onClick(View view) {
-                                        AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
-                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
-                                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostWithLocalChanges.clone();
-                                        refreshPreview();
-                                    }
-                                })
-                                .show();
-                    }
-                }
-
-                if (mIsDiscardingChanges) {
-                    mIsDiscardingChanges = false;
-                    mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-                    mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
-                    mIsUpdatingPost = true;
-                }
-            } else {
-                if (mIsDiscardingChanges) {
-                    showDialogError();
-                }
-
-                mIsDiscardingChanges = false;
-                mIsUpdatingPost = false;
-                AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
-            }
         }
     }
 
