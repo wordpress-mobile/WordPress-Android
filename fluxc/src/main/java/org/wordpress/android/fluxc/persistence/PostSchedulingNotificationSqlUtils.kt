@@ -53,7 +53,13 @@ class PostSchedulingNotificationSqlUtils
                 .where()
                 .equals(PostSchedulingReminderTable.ID, notificationId)
                 .endWhere().asModel.firstOrNull()
-                ?.let { SchedulingReminderDbModel(it.id, it.postId, SchedulingReminderDbModel.Period.valueOf(it.scheduledTime)) }
+                ?.let {
+                    SchedulingReminderDbModel(
+                            it.id,
+                            it.postId,
+                            SchedulingReminderDbModel.Period.valueOf(it.scheduledTime)
+                    )
+                }
     }
 
     data class SchedulingReminderDbModel(val notificationId: Int, val postId: Int, val period: Period) {
