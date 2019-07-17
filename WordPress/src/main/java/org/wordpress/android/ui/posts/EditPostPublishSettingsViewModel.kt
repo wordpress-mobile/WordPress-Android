@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
+import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime.OFF
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -126,7 +127,7 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    fun updateUiModel(notificationTime: NotificationTime? = onNotificationTime.value, post: PostModel?) {
+    fun updateUiModel(updatedNotificationTime: NotificationTime? = onNotificationTime.value, post: PostModel?) {
         if (post != null) {
             val publishDateLabel = postSettingsUtils.getPublishDateLabel(post)
             val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
@@ -135,14 +136,14 @@ class EditPostPublishSettingsViewModel
                     ?: localeManagerWrapper.getCurrentCalendar().time).time
             val enableNotification = dateCreated > futureTime
             val showNotification = dateCreated > now
-            val label = if (notificationTime != null && enableNotification && showNotification) {
-                notificationTime.toLabel()
+            val notificationTime = if (updatedNotificationTime != null && enableNotification && showNotification) {
+                updatedNotificationTime
             } else {
-                R.string.post_notification_off
+                OFF
             }
             _onUiModel.value = PublishUiModel(
                     publishDateLabel,
-                    notificationLabel = label,
+                    notificationTime = notificationTime,
                     notificationEnabled = enableNotification,
                     notificationVisible = showNotification
             )
@@ -157,7 +158,7 @@ class EditPostPublishSettingsViewModel
 
     data class PublishUiModel(
         val publishDateLabel: String,
-        val notificationLabel: Int = R.string.post_notification_off,
+        val notificationTime: NotificationTime = OFF,
         val notificationEnabled: Boolean = false,
         val notificationVisible: Boolean = true
     )

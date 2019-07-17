@@ -15,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
@@ -64,11 +65,13 @@ class EditPostPublishSettingsFragment : Fragment() {
                 publishNotification.isEnabled = uiModel.notificationEnabled
                 publishNotificationContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
-                    publishNotificationContainer.setOnClickListener { showNotificationTimeSelectionDialog() }
+                    publishNotificationContainer.setOnClickListener {
+                        showNotificationTimeSelectionDialog(uiModel.notificationTime)
+                    }
                 } else {
                     publishNotificationContainer.setOnClickListener(null)
                 }
-                publishNotification.setText(it.notificationLabel)
+                publishNotification.setText(uiModel.notificationTime.toLabel())
                 publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
@@ -104,12 +107,12 @@ class EditPostPublishSettingsFragment : Fragment() {
         fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
-    private fun showNotificationTimeSelectionDialog() {
+    private fun showNotificationTimeSelectionDialog(notificationTime: NotificationTime?) {
         if (!isAdded) {
             return
         }
 
-        val fragment = PostNotificationTimeDialogFragment.newInstance()
+        val fragment = PostNotificationTimeDialogFragment.newInstance(notificationTime)
         fragment.show(activity!!.supportFragmentManager, PostNotificationTimeDialogFragment.TAG)
     }
 

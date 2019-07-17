@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.RadioGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
@@ -27,12 +26,8 @@ class PostNotificationTimeDialogFragment : DialogFragment() {
         val alertDialogBuilder = AlertDialog.Builder(activity)
         val view = activity!!.layoutInflater.inflate(R.layout.post_notification_type_selector, null) as RadioGroup
         alertDialogBuilder.setView(view)
-        viewModel.onNotificationTime.observe(this, Observer { updatedNotificationTime ->
-            val currentDataType = view.checkedRadioButtonId.toNotificationTime()
-            if (updatedNotificationTime != currentDataType) {
-                updatedNotificationTime?.let { view.check(updatedNotificationTime.toViewId()) }
-            }
-        })
+        val notificationTime = arguments?.getString(ARG_NOTIFICATION_TIME)?.let { NotificationTime.valueOf(it) } ?: OFF
+        view.check(notificationTime.toViewId())
         alertDialogBuilder.setTitle(R.string.post_settings_notification)
 
         alertDialogBuilder.setPositiveButton(R.string.dialog_button_ok) { dialog, _ ->
@@ -81,9 +76,16 @@ class PostNotificationTimeDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG = "post_notification_time_dialog_fragment"
+        const val ARG_NOTIFICATION_TIME = "notification_time"
 
-        fun newInstance(): PostNotificationTimeDialogFragment {
-            return PostNotificationTimeDialogFragment()
+        fun newInstance(notificationTime: NotificationTime?): PostNotificationTimeDialogFragment {
+            val fragment = PostNotificationTimeDialogFragment()
+            notificationTime?.let {
+                val args = Bundle()
+                args.putString(ARG_NOTIFICATION_TIME, notificationTime.name)
+                fragment.arguments = args
+            }
+            return fragment
         }
     }
 }
