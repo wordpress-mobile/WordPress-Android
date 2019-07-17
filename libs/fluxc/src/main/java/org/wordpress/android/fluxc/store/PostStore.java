@@ -876,7 +876,18 @@ public class PostStore extends Store {
 
     private void updatePost(PostModel post, boolean changeLocalDate) {
         if (changeLocalDate) {
+            boolean changesConfirmed = false;
+            if (post.getChangesConfirmedForHashcode() == post.hashCode()) {
+                // the user explicitly confirmed this version of the post
+                changesConfirmed = true;
+            }
+
             post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
+
+            if (changesConfirmed) {
+                // We need to make sure to retain the confirmed status. Only dateLocallyChanged has changed.
+                post.updateChangesConfirmedForHashcode();
+            }
         }
         int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
