@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 77;
+        return 78;
     }
 
     @Override
@@ -565,6 +565,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
+            case 77:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -860,6 +864,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "  END_DATE TEXT NOT NULL,\n"
                                + "  DATA TEXT NOT NULL,\n"
                                + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                    break;
+                case 77:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCRevenueStatsModel ADD TOTAL TEXT");
                     break;
             }
         }
