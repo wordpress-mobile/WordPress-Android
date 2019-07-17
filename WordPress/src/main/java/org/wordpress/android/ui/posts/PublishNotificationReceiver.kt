@@ -6,13 +6,15 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.ONE_HOUR
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.TEN_MINUTES
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.WHEN_PUBLISHED
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -29,9 +31,10 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                 val postStatus = PostStatus.fromPost(post)
                 if (postStatus == SCHEDULED) {
                     val (titleRes, messageRes) = when (notification.scheduledTime) {
-                        ONE_HOUR -> R.string.notification_scheduled_post_one_hour_reminder to R.string.notification_post_will_be_published_in_one_hour
-                        TEN_MINUTES -> R.string.notification_scheduled_post_ten_minute_reminder to R.string.notification_post_will_be_published_in_ten_minutes
-                        WHEN_PUBLISHED -> R.string.notification_scheduled_post to R.string.notification_post_has_been_published
+                        ONE_HOUR -> string.notification_scheduled_post_one_hour_reminder to string.notification_post_will_be_published_in_one_hour
+                        TEN_MINUTES -> string.notification_scheduled_post_ten_minute_reminder to string.notification_post_will_be_published_in_ten_minutes
+                        WHEN_PUBLISHED -> string.notification_scheduled_post to string.notification_post_has_been_published
+                        OFF -> return
                     }
                     val title = resourceProvider.getString(titleRes)
                     val message = resourceProvider.getString(messageRes, post.title)

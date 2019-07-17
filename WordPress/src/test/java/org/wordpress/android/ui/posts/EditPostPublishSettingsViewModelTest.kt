@@ -10,8 +10,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
-import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime.ONE_HOUR_BEFORE
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
@@ -22,6 +24,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     private val dateCreated = "2019-05-05T14:33:20+0000"
@@ -30,12 +33,18 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = EditPostPublishSettingsViewModel(resourceProvider, postSettingsUtils, localeManagerWrapper)
+        viewModel = EditPostPublishSettingsViewModel(
+                resourceProvider,
+                postSettingsUtils,
+                localeManagerWrapper,
+                postSchedulingNotificationStore
+        )
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
         whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(dateLabel)
         whenever(resourceProvider.getString(R.string.immediately)).thenReturn("Immediately")
+        whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(any())).thenReturn(OFF)
     }
 
     @Test
@@ -237,6 +246,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `hides notification when publish date in the past`() {
         val post = PostModel()
+        val postId = 1
+        post.id = postId
         post.status = PostStatus.PUBLISHED.toString()
         post.dateCreated = "2019-05-05T14:33:20+0000"
         val pastDate = Calendar.getInstance()
@@ -248,7 +259,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             uiModel = it
         }
 
-        viewModel.updateUiModel(ONE_HOUR_BEFORE, post)
+        whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(postId)).thenReturn(ONE_HOUR)
+
+        viewModel.updateUiModel(post)
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
@@ -261,6 +274,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `DISABLES notification when publish date in NOW`() {
         val post = PostModel()
+        val postId = 1
+        post.id = postId
         post.status = PostStatus.PUBLISHED.toString()
         post.dateCreated = "2019-05-05T14:33:20+0000"
         val pastDate = Calendar.getInstance(Locale.US)
@@ -273,7 +288,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             uiModel = it
         }
 
-        viewModel.updateUiModel(ONE_HOUR_BEFORE, post)
+        whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(postId)).thenReturn(ONE_HOUR)
+
+        viewModel.updateUiModel(post)
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")
@@ -286,6 +303,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Test
     fun `DISABLES notification when publish date in missing`() {
         val post = PostModel()
+        val postId = 1
+        post.id = postId
         post.status = PostStatus.PUBLISHED.toString()
         val pastDate = Calendar.getInstance(Locale.US)
         pastDate.timeZone = TimeZone.getTimeZone("GMT")
@@ -297,7 +316,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             uiModel = it
         }
 
-        viewModel.updateUiModel(ONE_HOUR_BEFORE, post)
+        whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(postId)).thenReturn(ONE_HOUR)
+
+        viewModel.updateUiModel(post)
 
         uiModel?.apply {
             assertThat(this.publishDateLabel).isEqualTo("Updated date")

@@ -1335,9 +1335,9 @@
     <string name="notification_scheduled_post">Scheduled post</string>
     <string name="notification_scheduled_post_one_hour_reminder">Scheduled post: 1 hour reminder</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
-    <string name="notification_post_has_been_published">"%s" has been published</string>
-    <string name="notification_post_will_be_published_in_one_hour">"%s" will be published in 1 hour</string>
-    <string name="notification_post_will_be_published_in_ten_minutes">"%s" will be published in 10 minutes</string>
+    <string name="notification_post_has_been_published">\"%s\" has been published</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
 
     <!-- location -->
     <string name="post_settings_location">Location</string>

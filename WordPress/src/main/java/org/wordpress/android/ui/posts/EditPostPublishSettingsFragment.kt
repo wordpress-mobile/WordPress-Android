@@ -19,9 +19,8 @@ import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.WHEN_PUBLISHED
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
@@ -48,14 +47,6 @@ class EditPostPublishSettingsFragment : Fragment() {
         addToCalendarContainer = rootView.findViewById(R.id.post_add_to_calendar_container)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
-        publishNotificationContainer.setOnClickListener {
-            getPost()?.let {
-                viewModel.scheduleNotification(
-                        it,
-                        WHEN_PUBLISHED
-                )
-            }
-        }
 
         viewModel.onDatePicked.observe(this, Observer {
             it?.applyIfNotHandled {
@@ -69,7 +60,9 @@ class EditPostPublishSettingsFragment : Fragment() {
         })
         viewModel.onNotificationTime.observe(this, Observer {
             it?.let { notificationTime ->
-                viewModel.updateUiModel(notificationTime, getPost())
+                getPost()?.let { post ->
+                    viewModel.scheduleNotification(post, notificationTime)
+                }
             }
         })
         viewModel.onUiModel.observe(this, Observer {
@@ -146,13 +139,13 @@ class EditPostPublishSettingsFragment : Fragment() {
         fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
-    private fun showNotificationTimeSelectionDialog(notificationTime: NotificationTime?) {
+    private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
         if (!isAdded) {
             return
         }
 
-        val fragment = PostNotificationTimeDialogFragment.newInstance(notificationTime)
-        fragment.show(activity!!.supportFragmentManager, PostNotificationTimeDialogFragment.TAG)
+        val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(schedulingReminderPeriod)
+        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPost(): PostModel? {

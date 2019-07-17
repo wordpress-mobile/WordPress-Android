@@ -10,12 +10,12 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
-import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.ONE_HOUR
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.TEN_MINUTES
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime.WHEN_PUBLISHED
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -53,17 +53,16 @@ class EditPostPublishSettingsViewModel
     val onUiModel: LiveData<PublishUiModel> = _onUiModel
     private val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
-    private val _onShowNotificationDialog = MutableLiveData<NotificationTime>()
-    val onShowNotificationDialog: LiveData<NotificationTime> = _onShowNotificationDialog
-    private val _onNotificationTime = MutableLiveData<NotificationTime>()
-    val onNotificationTime: LiveData<NotificationTime> = _onNotificationTime
+    private val _onShowNotificationDialog = MutableLiveData<SchedulingReminderModel.Period>()
+    val onShowNotificationDialog: LiveData<SchedulingReminderModel.Period> = _onShowNotificationDialog
+    private val _onNotificationTime = MutableLiveData<SchedulingReminderModel.Period>()
+    val onNotificationTime: LiveData<SchedulingReminderModel.Period> = _onNotificationTime
     private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
     val onNotificationAdded: LiveData<Event<Notification>> = _onNotificationAdded
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
-        updateUiModel(post = postModel)
         year = startCalendar.get(Calendar.YEAR)
         month = startCalendar.get(Calendar.MONTH)
         day = startCalendar.get(Calendar.DAY_OF_MONTH)
@@ -141,19 +140,22 @@ class EditPostPublishSettingsViewModel
             }
             post.status = finalPostStatus.toString()
             _onPostStatusChanged.value = finalPostStatus
+            val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(post.id)
+            updateNotifications(post, scheduledTime)
             updateUiModel(post = post)
         }
     }
 
-    fun updateUiModel(notificationTime: NotificationTime? = onNotificationTime.value, post: PostModel?) {
+    fun updateUiModel(post: PostModel?) {
         if (post != null) {
+            val notificationTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(post.id)
             val publishDateLabel = postSettingsUtils.getPublishDateLabel(post)
             val now = localeManagerWrapper.getCurrentCalendar().timeInMillis - 10000
             val dateCreated = (DateTimeUtils.dateFromIso8601(post.dateCreated)
                     ?: localeManagerWrapper.getCurrentCalendar().time).time
             val enableNotification = areNotificationsEnabled(post)
             val showNotification = dateCreated > now
-            val notificationLabel = if (notificationTime != null && enableNotification && showNotification) {
+            val notificationLabel = if (enableNotification && showNotification) {
                 notificationTime.toLabel()
             } else {
                 R.string.post_notification_off
@@ -169,6 +171,41 @@ class EditPostPublishSettingsViewModel
         }
     }
 
+    fun onNotificationCreated(scheduleTime: SchedulingReminderModel.Period?) {
+        _onNotificationTime.value = scheduleTime
+    }
+
+    fun scheduleNotification(post: PostModel, notificationTime: SchedulingReminderModel.Period) {
+        updateNotifications(post, notificationTime)
+        updateUiModel(post)
+    }
+
+    private fun updateNotifications(
+        post: PostModel,
+        domainModel: SchedulingReminderModel.Period = OFF
+    ) {
+        postSchedulingNotificationStore.deletePostSchedulingNotifications(post.id)
+        if (domainModel != OFF) {
+            val notificationId = postSchedulingNotificationStore.schedule(post.id, domainModel)
+            val scheduledCalendar = localeManagerWrapper.getCurrentCalendar().apply {
+                timeInMillis = System.currentTimeMillis()
+                time = DateTimeUtils.dateFromIso8601(post.dateCreated)
+                val scheduledMinutes = when (domainModel) {
+                    ONE_HOUR -> -60
+                    TEN_MINUTES -> -10
+                    WHEN_PUBLISHED -> 0
+                    OFF -> return
+                }
+                add(Calendar.MINUTE, scheduledMinutes)
+            }
+            if (scheduledCalendar.after(localeManagerWrapper.getCurrentCalendar())) {
+                notificationId?.let {
+                    _onNotificationAdded.postValue(Event(Notification(notificationId, scheduledCalendar.timeInMillis)))
+                }
+            }
+        }
+    }
+
     private fun areNotificationsEnabled(post: PostModel?): Boolean {
         return if (post != null) {
             val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
@@ -180,8 +217,13 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    fun createNotification(notificationTime: NotificationTime) {
-        _onNotificationTime.value = notificationTime
+    private fun SchedulingReminderModel.Period.toLabel(): Int {
+        return when (this) {
+            OFF -> R.string.post_notification_off
+            ONE_HOUR -> R.string.post_notification_one_hour_before
+            TEN_MINUTES -> R.string.post_notification_ten_minutes_before
+            WHEN_PUBLISHED -> R.string.post_notification_when_published
+        }
     }
 
     data class PublishUiModel(
@@ -190,29 +232,6 @@ class EditPostPublishSettingsViewModel
         val notificationEnabled: Boolean = false,
         val notificationVisible: Boolean = true
     )
-
-    fun scheduleNotification(post: PostModel, scheduledTime: ScheduledTime?) {
-        if (scheduledTime == null) {
-            postSchedulingNotificationStore.deletePostSchedulingNotifications(post.id)
-        } else {
-            val notificationId = postSchedulingNotificationStore.schedule(post.id, scheduledTime)
-            val scheduledCalendar = localeManagerWrapper.getCurrentCalendar().apply {
-                timeInMillis = System.currentTimeMillis()
-                time = DateTimeUtils.dateFromIso8601(post.dateCreated)
-                val scheduledMinutes = when (scheduledTime) {
-                    ONE_HOUR -> -60
-                    TEN_MINUTES -> -10
-                    WHEN_PUBLISHED -> 0
-                }
-                add(Calendar.MINUTE, scheduledMinutes)
-            }
-            if (scheduledCalendar.after(localeManagerWrapper.getCurrentCalendar())) {
-                notificationId?.let {
-                    _onNotificationAdded.postValue(Event(Notification(notificationId, scheduledCalendar.timeInMillis)))
-                }
-            }
-        }
-    }
 
     data class Notification(val id: Int, val scheduledTime: Long)
 }
