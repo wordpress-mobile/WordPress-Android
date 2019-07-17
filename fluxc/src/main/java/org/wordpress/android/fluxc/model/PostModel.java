@@ -45,7 +45,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mExcerpt;
     @Column private String mTagNames;
     @Column private String mStatus;
-    @Column private String mRemoteStatus;
     @Column private String mPassword;
     @Column private long mFeaturedImageId;
     @Column private String mPostFormat;
@@ -54,12 +53,12 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
     /**
-     * This field stores a hashcode value of the post when the user confirmed making the changes visible to the users.
-     * (Publish/Submit/Update/Schedule)
+     * This field stores a hashcode value of the post content when the user confirmed making the changes visible to
+     * the users (Publish/Submit/Update/Schedule).
      * <p>
      * It is used to determine if the user actually confirmed the changes and if the post was edited since then.
      */
-    @Column private int mChangesConfirmedForHashcode;
+    @Column private int mChangesConfirmedContentHashcode;
 
     // Page specific
     @Column private boolean mIsPage;
@@ -221,18 +220,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mStatus = status;
     }
 
-    public @NonNull String getRemoteStatus() {
-        return StringUtils.notNullStr(mRemoteStatus);
-    }
-
-    /**
-     * This method shouldn't be called outside of FluxC. We should set it's modifier to internal when this class
-     * is converted to Kotlin.
-     */
-    public void setRemoteStatus(String status) {
-        mRemoteStatus = status;
-    }
-
     public @NonNull String getPassword() {
         return StringUtils.notNullStr(mPassword);
     }
@@ -299,20 +286,12 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLongitude = longitude;
     }
 
-    public int getChangesConfirmedForHashcode() {
-        return mChangesConfirmedForHashcode;
+    public int getChangesConfirmedContentHashcode() {
+        return mChangesConfirmedContentHashcode;
     }
 
-    /**
-     * @deprecated Only for WellSql - use `updateChangesConfirmedForHashcode` in non-generated code.
-     */
-    @Deprecated
-    public void setChangesConfirmedForHashcode(int changesConfirmedForHashcode) {
-        mChangesConfirmedForHashcode = changesConfirmedForHashcode;
-    }
-
-    public void updateChangesConfirmedForHashcode() {
-        mChangesConfirmedForHashcode = hashCode();
+    public void setChangesConfirmedContentHashcode(int changesConfirmedContentHashcode) {
+        mChangesConfirmedContentHashcode = changesConfirmedContentHashcode;
     }
 
     public boolean isPage() {
@@ -424,7 +403,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
                 && StringUtils.equals(getTagNames(), otherPost.getTagNames())
                 && StringUtils.equals(getStatus(), otherPost.getStatus())
-                && StringUtils.equals(getRemoteStatus(), otherPost.getRemoteStatus())
                 && StringUtils.equals(getPassword(), otherPost.getPassword())
                 && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
@@ -432,7 +410,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
-    @Override public int hashCode() {
+    public int contentHashcode() {
         int result;
         long temp;
         result = mId;
@@ -448,7 +426,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mExcerpt != null ? mExcerpt.hashCode() : 0);
         result = 31 * result + (mTagNames != null ? mTagNames.hashCode() : 0);
         result = 31 * result + (mStatus != null ? mStatus.hashCode() : 0);
-        result = 31 * result + (mRemoteStatus != null ? mRemoteStatus.hashCode() : 0);
         result = 31 * result + (mPassword != null ? mPassword.hashCode() : 0);
         result = 31 * result + (int) (mFeaturedImageId ^ (mFeaturedImageId >>> 32));
         result = 31 * result + (mPostFormat != null ? mPostFormat.hashCode() : 0);
@@ -460,9 +437,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mIsPage ? 1 : 0);
         result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
         result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
-        result = 31 * result + (mIsLocalDraft ? 1 : 0);
-        result = 31 * result + (mIsLocallyChanged ? 1 : 0);
-        result = 31 * result + (mDateLocallyChanged != null ? mDateLocallyChanged.hashCode() : 0);
         result = 31 * result + (mHasCapabilityPublishPost ? 1 : 0);
         result = 31 * result + (mHasCapabilityEditPost ? 1 : 0);
         result = 31 * result + (mHasCapabilityDeletePost ? 1 : 0);
