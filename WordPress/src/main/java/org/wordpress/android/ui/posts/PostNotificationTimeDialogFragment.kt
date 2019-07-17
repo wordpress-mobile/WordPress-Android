@@ -33,7 +33,7 @@ class PostNotificationTimeDialogFragment : DialogFragment() {
                 updatedNotificationTime?.let { view.check(updatedNotificationTime.toViewId()) }
             }
         })
-        alertDialogBuilder.setTitle(R.string.stats_widget_select_type)
+        alertDialogBuilder.setTitle(R.string.post_settings_notification)
 
         alertDialogBuilder.setPositiveButton(R.string.dialog_button_ok) { dialog, _ ->
             viewModel.createNotification(view.checkedRadioButtonId.toNotificationTime())
