@@ -44,7 +44,8 @@ class StatsSiteSelectionViewModel
     }
 
     fun loadSites() {
-        mutableSites.postValue(siteStore.sites.map { toUiModel(it) })
+        val sites = siteStore.sites.filter { it.isWPCom || it.isJetpackConnected }.map { toUiModel(it) }
+        mutableSites.postValue(sites)
     }
 
     private fun toUiModel(site: SiteModel): SiteUiModel {

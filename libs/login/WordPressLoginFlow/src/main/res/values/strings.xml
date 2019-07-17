@@ -15,6 +15,7 @@
     <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
     <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
     <string name="alternatively">Alternatively:</string>
@@ -100,7 +101,7 @@
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
-
+    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 
     <string name="notification_login_title_success">Logged in!</string>
@@ -139,4 +140,6 @@
     <!-- Placeholder for notification channel to be used by login service notification.
      This resource must be overwritten in the host project with a real notification channel id it has configured. -->
     <string name="login_notification_channel_id">placeholder</string>
+
+    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
 </resources>

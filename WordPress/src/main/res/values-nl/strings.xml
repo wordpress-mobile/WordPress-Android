@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-26 15:54:09+0000
+Translation-Revision-Date: 2019-07-09 14:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="stats_widget_error_no_access_token">Log in op je WordPress.com-account om je statistieken te bekijken.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (niet beschikbaar)</string>
     <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze %1$salgemene voorwaarden%2$s</string>
     <string name="error_network_connection">Controleer je netwerkverbinding en probeer het nogmaals.</string>
@@ -17,9 +18,9 @@ Language: nl
     <string name="site_settings_password_updated">Wachtwoord bijgewerkt</string>
     <string name="site_settings_password_dialog_title">Wachtwoord bijwerken</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd …</string>
-    <string name="domain_registration_state_picker_dialog_title">Staat selecteren</string>
-    <string name="domain_registration_country_picker_dialog_title">Land selecteren</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd…</string>
+    <string name="domain_registration_state_picker_dialog_title">Selecteer provincie</string>
+    <string name="domain_registration_country_picker_dialog_title">Selecteer land</string>
     <string name="domain_registration_result_continue_button">doorgaan</string>
     <string name="domain_registration_result_description">je nieuwe domein &lt;b>%s&lt;/b> wordt ingesteld. Je site\n maakt salto\'s uit vreugde!</string>
     <string name="domain_registration_result_title">Gefeliciteerd</string>
@@ -64,6 +65,7 @@ Language: nl
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
     <string name="stats_view_follower_totals">Aantal volgers</string>
+    <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
     <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
     <string name="stats_menu_remove">Verwijderen uit inzichten</string>
@@ -208,6 +210,11 @@ Language: nl
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
     <string name="notification_new_site_creation_failed">Er was een probleem</string>
     <string name="new_site_creation_button_skip">Overslaan</string>
+    <string name="new_site_creation_tag_line_hint">Ondertitel</string>
+    <string name="new_site_creation_site_info_header_title">Basis informatie</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Geen verbinding</string>
+    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast - alle sites blijven zich ontwikkelen!</string>
     <string name="local_changes_discarding_no_connection">Er is een verbinding vereist om deze actie uit te voeren. Controleer je verbinding en probeer het nogmaals.</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
@@ -483,7 +490,6 @@ Language: nl
     <string name="plugin_install_site_ineligible_site_private">Voor deze plugin-functie moet de site openbaar zijn.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Voor deze plugin-functie moet je een Business abonnement hebben.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Voor deze plugin-functie moet je een aangepast domein hebben.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We voeren de laatste instellingen door, nog even geduld …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wordt geïnstalleerd …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installeren</string>
@@ -943,6 +949,8 @@ Language: nl
     <string name="editor_dropped_text_error">Fout opgetreden bij het verslepen van tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Afbeeldingen in HTML-modus slepen, is niet toegestaan</string>
     <string name="editor_content_hint">Deel hier je verhaal…</string>
+    <string name="post_list_trashed">Verwijderd</string>
+    <string name="post_list_scheduled">Gepland</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Concept</string>
     <string name="post_status_pending_review">Beoordeling in behandeling</string>
@@ -1075,6 +1083,7 @@ Language: nl
     <string name="editor_post_saved_locally_failed_media">Het bericht bevat mislukte media-uploads en is lokaal opgeslagen</string>
     <string name="sure_to_remove_account">Deze site uit de app verwijderen?</string>
     <string name="photo_picker_title">Kies een foto</string>
+    <string name="error_publish_no_network">Apparaat is offline. Bericht lokaal opgeslagen.</string>
     <string name="editor_post_saved_online">Het bericht is online opgeslagen</string>
     <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het aanpassen van de grootte en het comprimeren van afbeeldingen inschakelen</string>

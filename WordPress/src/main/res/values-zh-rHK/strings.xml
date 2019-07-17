@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-27 11:54:10+0000
+Translation-Revision-Date: 2019-07-09 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="stats_widget_error_no_access_token">若要檢視統計資料，請登入 WordPress.com 帳號。</string>
+    <string name="post_list_search_nothing_found">沒有文章符合你的搜尋條件</string>
+    <string name="domains_suggestions_intro_description">這是人們在網際網路上找到你的地方。</string>
+    <string name="domains_suggestions_intro_title">選擇進階網域名稱</string>
+    <string name="my_site_custom_domain_name">所有 WordPress.com 方案都包含一個自訂網域名稱。立即註冊你的免費進階網域。</string>
+    <string name="stats_widget_minified_name">總覽</string>
+    <string name="stats_widget_today_insights_name">今天</string>
+    <string name="stats_widget_all_time_insights_name">有史以來</string>
+    <string name="stats_widget_weekly_views_name">本週瀏覽次數</string>
+    <string name="stats_widget_log_in_message">若要新增小工具，請登入 WordPress 應用程式。</string>
+    <string name="stats_widget_error_no_network">沒有可用網路</string>
+    <string name="stats_widget_error_no_data">無法載入資料</string>
+    <string name="stats_widget_select_type">類型</string>
+    <string name="stats_widget_select_color">顏色</string>
+    <string name="stats_widget_select_your_site">選擇你的網站</string>
+    <string name="stats_widget_color_dark">深色系</string>
+    <string name="stats_widget_color_light">淡色系</string>
+    <string name="stats_widget_color">顏色</string>
+    <string name="stats_widget_site_caption">選擇你的網站</string>
+    <string name="stats_widget_site">網站</string>
+    <string name="stats_widget_all_time_title">有史以來</string>
+    <string name="stats_widget_views_title">本週瀏覽次數</string>
+    <string name="stats_widget_add">新增小工具</string>
+    <string name="dialog_confirm_update_yes">立即更新</string>
+    <string name="dialog_confirm_update_message_page">此發佈頁面將立即更新。</string>
+    <string name="dialog_confirm_update_message_post">此發佈文章將立即更新。</string>
+    <string name="dialog_confirm_update_title">準備好要更新了嗎？</string>
+    <string name="plugin_fetching_error_after_at">重新整理外掛程式詳細資訊所需的時間比平時更長。請稍後再查看一次。</string>
+    <string name="plugin_install_site_ineligible_default_error">如果你剛註冊網域名稱，請等到我們完成設定後再試一次。\n\n如果不是剛註冊網域名稱，那麼看來是系統發生錯誤，且該網站可能無法使用外掛程式功能。</string>
     <string name="domain_contact_information_state_not_available_hint">州 (無法使用)</string>
     <string name="domain_registration_privacy_protection_tos">註冊此網域，即表示你同意我們的%1$s條款與條件%2$s</string>
     <string name="error_network_connection">請檢查你的網路連線並再試一次。</string>
@@ -538,7 +567,6 @@ Language: zh_TW
     <string name="plugin_install_site_ineligible_site_private">外掛功能需要該網站為公開網站。</string>
     <string name="plugin_install_site_ineligible_no_business_plan">外掛功能需要有商務版方案。</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">外掛功能需要有自訂網域。</string>
-    <string name="plugin_install_site_ineligible_default_error">外掛功能不適用於此網站。</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">我們正在進行最後的設定，作業即將完成……</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">正在安裝外掛程式……</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安裝</string>
