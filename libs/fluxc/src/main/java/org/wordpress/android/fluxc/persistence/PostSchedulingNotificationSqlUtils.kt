@@ -6,8 +6,6 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.NotificationModel
-import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.ScheduledTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,16 +14,16 @@ class PostSchedulingNotificationSqlUtils
 @Inject constructor() {
     fun insert(
         postId: Int,
-        scheduledTime: ScheduledTime
+        scheduledTime: SchedulingReminderDbModel.Period
     ): Int? {
         deletePostSchedulingNotifications(postId)
         WellSql.insert(
-                PostSchedulingNotificationBuilder(
+                PostSchedulingReminderBuilder(
                         postId = postId,
                         scheduledTime = scheduledTime.name
                 )
         ).execute()
-        return WellSql.select(PostSchedulingNotificationBuilder::class.java)
+        return WellSql.select(PostSchedulingReminderBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.POST_ID, postId)
                 .equals(PostSchedulingNotificationTable.SCHEDULED_TIME, scheduledTime.name)
@@ -33,34 +31,40 @@ class PostSchedulingNotificationSqlUtils
     }
 
     fun deletePostSchedulingNotifications(postId: Int) {
-        WellSql.delete(PostSchedulingNotificationBuilder::class.java)
+        WellSql.delete(PostSchedulingReminderBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.POST_ID, postId)
                 .endWhere()
                 .execute()
     }
 
-    fun getScheduledTime(
+    fun getSchedulingReminderPeriodDbModel(
         postId: Int
-    ): ScheduledTime? {
-        return WellSql.select(PostSchedulingNotificationBuilder::class.java)
+    ): SchedulingReminderDbModel.Period? {
+        return WellSql.select(PostSchedulingReminderBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.POST_ID, postId)
-                .endWhere().asModel.firstOrNull()?.scheduledTime?.let { ScheduledTime.valueOf(it) }
+                .endWhere().asModel.firstOrNull()?.scheduledTime?.let { SchedulingReminderDbModel.Period.valueOf(it) }
     }
 
     fun getNotification(
         notificationId: Int
-    ): NotificationModel? {
-        return WellSql.select(PostSchedulingNotificationBuilder::class.java)
+    ): SchedulingReminderDbModel? {
+        return WellSql.select(PostSchedulingReminderBuilder::class.java)
                 .where()
                 .equals(PostSchedulingNotificationTable.ID, notificationId)
                 .endWhere().asModel.firstOrNull()
-                ?.let { NotificationModel(it.id, it.postId, ScheduledTime.valueOf(it.scheduledTime)) }
+                ?.let { SchedulingReminderDbModel(it.id, it.postId, SchedulingReminderDbModel.Period.valueOf(it.scheduledTime)) }
     }
 
-    @Table(name = "PostSchedulingNotification")
-    data class PostSchedulingNotificationBuilder(
+    data class SchedulingReminderDbModel(val notificationId: Int, val postId: Int, val period: Period) {
+        enum class Period {
+            ONE_HOUR, TEN_MINUTES, WHEN_PUBLISHED
+        }
+    }
+
+    @Table(name = "PostSchedulingReminder")
+    data class PostSchedulingReminderBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var postId: Int,
         @Column var scheduledTime: String
