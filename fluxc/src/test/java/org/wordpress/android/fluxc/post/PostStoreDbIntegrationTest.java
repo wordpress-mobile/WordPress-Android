@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.DiffOperations;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
