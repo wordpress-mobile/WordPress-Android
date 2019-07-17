@@ -2075,6 +2075,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
+                boolean hasFailedMediaUploads = mEditorFragment.hasFailedMediaUploads()
+                                                || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null;
+                if (!hasFailedMediaUploads) {
+                    // the user explicitly confirmed an intention to upload the post
+                    mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
+                }
+
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
                     // just return, since the only case updatePostObject() can fail is when the editor
@@ -2093,8 +2100,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        if (mEditorFragment.hasFailedMediaUploads()
-                            || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null) {
+                        if (hasFailedMediaUploads) {
                             EditPostActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

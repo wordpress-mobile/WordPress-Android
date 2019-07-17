@@ -253,6 +253,9 @@ public class UploadUtils {
         boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
+        // the changes were explicitly confirmed by the user
+        post.setChangesConfirmedContentHashcode(post.contentHashcode());
+
         // save the post in the DB so the UploadService will get the latest change
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 

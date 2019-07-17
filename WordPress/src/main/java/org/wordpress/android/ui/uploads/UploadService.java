@@ -573,15 +573,24 @@ public class UploadService extends Service {
 
     private static synchronized PostModel updatePostWithNewFeaturedImg(PostModel post, Long remoteMediaId) {
         if (post != null && remoteMediaId != null) {
+            boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             post.setFeaturedImageId(remoteMediaId);
             post.setIsLocallyChanged(true);
             post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            if (changesConfirmed) {
+                /*
+                 * We are replacing local featured image with a remote version. We need to make sure
+                 * to retain the confirmation state.
+                 */
+                post.setChangesConfirmedContentHashcode(post.contentHashcode());
+            }
         }
         return post;
     }
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
+            boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             // actually replace the media ID with the media uri
             PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
                                                                              FluxCUtils.mediaFileFromMediaModel(media));
@@ -594,6 +603,13 @@ public class UploadService extends Service {
                 post.setIsLocallyChanged(true);
             }
             post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            if (changesConfirmed) {
+                /*
+                 * We are replacing image local path with a url. We need to make sure to retain the confirmation
+                 * state.
+                 */
+                post.setChangesConfirmedContentHashcode(post.contentHashcode());
+            }
         }
         return post;
     }
@@ -601,6 +617,7 @@ public class UploadService extends Service {
     private static synchronized PostModel updatePostWithFailedMedia(PostModel post, MediaModel media,
                                                                     MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
+            boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             // actually mark the media failed within the Post
             PostModel modifiedPost = processor.markMediaUploadFailedInPost(post, String.valueOf(media.getId()),
                                                                            FluxCUtils.mediaFileFromMediaModel(media));
@@ -613,6 +630,13 @@ public class UploadService extends Service {
                 post.setIsLocallyChanged(true);
             }
             post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            if (changesConfirmed) {
+                /*
+                 * We are updating media upload status, but we don't make any undesired changes to the post. We need to
+                 * make sure to retain the confirmation state.
+                 */
+                post.setChangesConfirmedContentHashcode(post.contentHashcode());
+            }
         }
         return post;
     }
