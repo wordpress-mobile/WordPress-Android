@@ -303,6 +303,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return mChangesConfirmedForHashcode;
     }
 
+    /**
+     * @deprecated Only for WellSql - use `updateChangesConfirmedForHashcode` in non-generated code.
+     */
+    @Deprecated
+    public void setChangesConfirmedForHashcode(int changesConfirmedForHashcode) {
+        mChangesConfirmedForHashcode = changesConfirmedForHashcode;
+    }
+
     public void updateChangesConfirmedForHashcode() {
         mChangesConfirmedForHashcode = hashCode();
     }
