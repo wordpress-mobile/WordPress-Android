@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -140,6 +141,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mShareButton = findViewById(R.id.share_button);
         mExternalBrowserButton = findViewById(R.id.external_browser_button);
         mPreviewModeButton = findViewById(R.id.preview_type_selector_button);
+
+        TooltipCompat.setTooltipText(mNavigateBackButton, mNavigateBackButton.getContentDescription());
+        TooltipCompat.setTooltipText(mNavigateForwardButton, mNavigateForwardButton.getContentDescription());
+        TooltipCompat.setTooltipText(mShareButton, mShareButton.getContentDescription());
+        TooltipCompat.setTooltipText(mExternalBrowserButton, mExternalBrowserButton.getContentDescription());
+        TooltipCompat.setTooltipText(mPreviewModeButton, mPreviewModeButton.getContentDescription());
 
         mNavigateBackButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
