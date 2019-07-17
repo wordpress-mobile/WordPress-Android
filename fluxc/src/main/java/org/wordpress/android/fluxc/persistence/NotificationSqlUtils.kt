@@ -204,7 +204,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         )
     }
 
-    @Table(name = "NotificationModel")
+    @Table(name = "SchedulingReminderModel")
     data class NotificationModelBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var remoteNoteId: Long,
