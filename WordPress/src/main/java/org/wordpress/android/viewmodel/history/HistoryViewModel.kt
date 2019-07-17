@@ -93,9 +93,7 @@ class HistoryViewModel @Inject constructor(
             return@launch
         }
 
-        val post: PostModel = withContext(bgDispatcher) {
-            postStore.getPostByLocalPostId(localPostId)
-        } ?: return@launch
+        val post: PostModel? = withContext(bgDispatcher) { postStore.getPostByLocalPostId(localPostId) }
 
         revisionsList = ArrayList()
         _revisions.value = emptyList()
@@ -159,12 +157,17 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun fetchRevisions() {
-        val post = this.post.value ?: return
+        val post = this.post.value
 
-        _listStatus.value = HistoryListStatus.FETCHING
-        val payload = FetchRevisionsPayload(post, site)
-        launch {
-            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+        if (post != null) {
+            _listStatus.value = HistoryListStatus.FETCHING
+            val payload = FetchRevisionsPayload(post, site)
+            launch {
+                dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+            }
+        } else {
+            _listStatus.value = HistoryListStatus.DONE
+            createRevisionsList(emptyList())
         }
     }
 
