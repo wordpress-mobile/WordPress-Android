@@ -15,12 +15,8 @@ class PostSchedulingNotificationStore
 @Inject constructor(private val sqlUtils: PostSchedulingNotificationSqlUtils) {
     fun schedule(postId: Int, schedulingReminderPeriod: Period): Int? {
         val dbModel = schedulingReminderPeriod.toDbModel()
-        return if (dbModel == null) {
-            sqlUtils.deletePostSchedulingNotifications(postId)
-            null
-        } else {
-            sqlUtils.insert(postId, dbModel)
-        }
+        sqlUtils.deletePostSchedulingNotifications(postId)
+        return dbModel?.let { sqlUtils.insert(postId, dbModel) }
     }
 
     fun deletePostSchedulingNotifications(postId: Int) {
