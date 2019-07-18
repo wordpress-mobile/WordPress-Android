@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +27,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
-import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.LocaleManager;
@@ -324,8 +322,8 @@ public class PublicizeListActivity extends AppCompatActivity
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_DISCONNECTED, mSite, analyticsProperties);
             }
         } else {
-            if (event.getReason() != null) {
-                showAlertForFailureReason(event.getReason());
+            if (event.getReasonResId() != null) {
+                showAlertForFailureReason(event.getReasonResId());
             } else {
                 ToastUtils.showToast(this, R.string.error_generic);
             }
@@ -379,10 +377,9 @@ public class PublicizeListActivity extends AppCompatActivity
                             .commit();
     }
 
-    private void showAlertForFailureReason(@NonNull ActionCompleted.Reason reason) {
+    private void showAlertForFailureReason(int reasonResId) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(reason.getMessageResId());
-        builder.setNeutralButton(R.string.learn_more, (dialog, which) -> dialog.dismiss());
+        builder.setMessage(reasonResId);
         builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         builder.show();
     }

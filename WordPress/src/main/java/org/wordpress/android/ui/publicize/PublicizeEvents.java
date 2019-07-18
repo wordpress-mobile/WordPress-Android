@@ -25,18 +25,18 @@ public class PublicizeEvents {
         /**
          * The reason for why {@link #mSucceeded} is false.
          */
-        @Nullable private final Reason mReason;
+        @Nullable private final Integer mReasonResId;
         private String mService;
 
         public ActionCompleted(boolean succeeded, ConnectAction action, String service) {
             this(succeeded, action, service, null);
         }
 
-        ActionCompleted(boolean succeeded, ConnectAction action, String service, @Nullable Reason reason) {
+        ActionCompleted(boolean succeeded, ConnectAction action, String service, @Nullable Integer reasonResId) {
             mSucceeded = succeeded;
             mAction = action;
             mService = service;
-            mReason = reason;
+            mReasonResId = reasonResId;
         }
 
         public ConnectAction getAction() {
@@ -51,29 +51,8 @@ public class PublicizeEvents {
             return mService;
         }
 
-        @Nullable public Reason getReason() {
-            return mReason;
-        }
-
-        public static class Reason {
-            private final int mMessageResId;
-            /**
-             * A resource Id containing a URL which points to a page, explaining more about {@link #mMessageResId}.
-             */
-            private final int mExplanationURLResId;
-
-            Reason(int messageResId, int explanationURLResId) {
-                mMessageResId = messageResId;
-                mExplanationURLResId = explanationURLResId;
-            }
-
-            public int getMessageResId() {
-                return mMessageResId;
-            }
-
-            public int getExplanationURLResId() {
-                return mExplanationURLResId;
-            }
+        @Nullable public Integer getReasonResId() {
+            return mReasonResId;
         }
     }
 

@@ -18,7 +18,6 @@ import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
-import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted.Reason;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -39,10 +38,10 @@ public class PublicizeActions {
     }
 
     private static class PublicizeConnectionValidationException extends Exception {
-        @NonNull private final Reason mReason;
+        private final int mReasonResId;
 
-        PublicizeConnectionValidationException(@NonNull Reason reason) {
-            mReason = reason;
+        PublicizeConnectionValidationException(int reasonResId) {
+            mReasonResId = reasonResId;
         }
     }
 
@@ -128,7 +127,9 @@ public class PublicizeActions {
                 try {
                     showChooserDialog = shouldShowChooserDialog(siteId, serviceId, jsonObject);
                 } catch (PublicizeConnectionValidationException e) {
-                    EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId, e.mReason));
+                    final ActionCompleted event =
+                            new ActionCompleted(false, ConnectAction.CONNECT, serviceId, e.mReasonResId);
+                    EventBus.getDefault().post(event);
                     return;
                 }
 
@@ -213,9 +214,7 @@ public class PublicizeActions {
             final boolean hasExternalAccounts = totalExternalAccounts > 0;
             if (PublicizeTable.onlyExternalConnections(serviceId)) {
                 if (!hasExternalAccounts && serviceId.equals(PublicizeService.FACEBOOK_SERVICE_ID)) {
-                    final Reason reason = new Reason(R.string.sharing_facebook_account_must_have_pages,
-                            R.string.sharing_facebook_account_must_have_pages_explanation_url);
-                    throw new PublicizeConnectionValidationException(reason);
+                    throw new PublicizeConnectionValidationException(R.string.sharing_facebook_account_must_have_pages);
                 } else {
                     return hasExternalAccounts;
                 }
