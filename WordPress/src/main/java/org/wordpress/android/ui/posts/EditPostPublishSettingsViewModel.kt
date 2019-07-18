@@ -182,15 +182,15 @@ class EditPostPublishSettingsViewModel
 
     private fun updateNotifications(
         post: PostModel,
-        domainModel: SchedulingReminderModel.Period = OFF
+        schedulingReminderPeriod: SchedulingReminderModel.Period = OFF
     ) {
         postSchedulingNotificationStore.deleteSchedulingReminders(post.id)
-        if (domainModel != OFF) {
-            val notificationId = postSchedulingNotificationStore.schedule(post.id, domainModel)
+        if (schedulingReminderPeriod != OFF) {
+            val notificationId = postSchedulingNotificationStore.schedule(post.id, schedulingReminderPeriod)
             val scheduledCalendar = localeManagerWrapper.getCurrentCalendar().apply {
                 timeInMillis = System.currentTimeMillis()
                 time = DateTimeUtils.dateFromIso8601(post.dateCreated)
-                val scheduledMinutes = when (domainModel) {
+                val scheduledMinutes = when (schedulingReminderPeriod) {
                     ONE_HOUR -> -60
                     TEN_MINUTES -> -10
                     WHEN_PUBLISHED -> 0

@@ -31,9 +31,18 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                 val postStatus = PostStatus.fromPost(post)
                 if (postStatus == SCHEDULED) {
                     val (titleRes, messageRes) = when (notification.scheduledTime) {
-                        ONE_HOUR -> string.notification_scheduled_post_one_hour_reminder to string.notification_post_will_be_published_in_one_hour
-                        TEN_MINUTES -> string.notification_scheduled_post_ten_minute_reminder to string.notification_post_will_be_published_in_ten_minutes
-                        WHEN_PUBLISHED -> string.notification_scheduled_post to string.notification_post_has_been_published
+                        ONE_HOUR -> Pair(
+                                string.notification_scheduled_post_one_hour_reminder,
+                                string.notification_post_will_be_published_in_one_hour
+                        )
+                        TEN_MINUTES -> Pair(
+                                string.notification_scheduled_post_ten_minute_reminder,
+                                string.notification_post_will_be_published_in_ten_minutes
+                        )
+                        WHEN_PUBLISHED -> Pair(
+                                string.notification_scheduled_post,
+                                string.notification_post_has_been_published
+                        )
                         OFF -> return
                     }
                     val title = resourceProvider.getString(titleRes)
