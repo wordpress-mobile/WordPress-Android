@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 78;
+        return 76;
     }
 
     @Override
@@ -561,14 +561,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
-            case 76:
-                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
-                oldVersion++;
-            case 77:
-                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
-                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -846,28 +838,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                     break;
                 case 75:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                    db.execSQL("CREATE TABLE WCOrderStatsV4Model(\n"
-                               + "  LOCAL_SITE_ID INTEGER,\n"
-                               + "  INTERVAL TEXT NOT NULL,\n"
-                               + "  START_DATE TEXT NOT NULL,\n"
-                               + "  END_DATE TEXT NOT NULL,\n"
-                               + "  DATA TEXT NOT NULL,\n"
-                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
-                    break;
-                case 76:
-                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                    db.execSQL("DROP TABLE IF EXISTS WCOrderStatsV4Model");
                     db.execSQL("CREATE TABLE WCRevenueStatsModel(\n"
                                + "  LOCAL_SITE_ID INTEGER,\n"
                                + "  INTERVAL TEXT NOT NULL,\n"
                                + "  START_DATE TEXT NOT NULL,\n"
                                + "  END_DATE TEXT NOT NULL,\n"
                                + "  DATA TEXT NOT NULL,\n"
+                               + "  TOTAL TEXT NOT NULL,\n"
                                + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
-                    break;
-                case 77:
-                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                    db.execSQL("ALTER TABLE WCRevenueStatsModel ADD TOTAL TEXT");
                     break;
             }
         }
