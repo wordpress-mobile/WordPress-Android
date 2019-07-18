@@ -5,6 +5,8 @@ public class WCWPAPIEndpoint {
 
     private static final String WC_PREFIX_V2 = "wc/v2";
 
+    private static final String WC_PREFIX_V4 = "wc/v4";
+
     private final String mEndpoint;
 
     public WCWPAPIEndpoint(String endpoint) {
@@ -29,5 +31,9 @@ public class WCWPAPIEndpoint {
 
     public String getPathV2() {
         return "/" + WC_PREFIX_V2 + mEndpoint;
+    }
+
+    public String getPathV4() {
+        return "/" + WC_PREFIX_V4 + mEndpoint;
     }
 }
