@@ -50,7 +50,6 @@ import androidx.viewpager.widget.ViewPager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -4155,14 +4154,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         } else if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
-            if (!event.isError()) {
-                mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-            } else {
+            if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
-                updatePostLoadingAndDialogState(PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR, mPost);
             }
-            RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-            mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+            mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+            handleRemoteAutoSave(event.isError(), mPost);
         }
     }
 
@@ -4178,16 +4174,37 @@ public class EditPostActivity extends AppCompatActivity implements
                 || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
     }
 
-    private void updatePostOnSuccessfulUpload(@NotNull OnPostUploaded event, PostModel post) {
-        if (!event.isError()) {
-            mPost = post;
-            mIsNewPost = false;
-            invalidateOptionsMenu();
-        }
+    private void updatePostOnSuccessfulUpload(PostModel post) {
+        mPost = post;
+        mIsNewPost = false;
+        invalidateOptionsMenu();
     }
 
     private boolean isRemoteAutoSaveError() {
         return mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
+    }
+
+    private void handleRemoteAutoSave(boolean isError, PostModel post) {
+        // We are in the process of remote previewing a post from the editor
+        if (!isError && isUploadingPostForPreview()) {
+            // We were uploading post for preview and we got no error:
+            // update post status and preview it in the internal browser
+            updatePostOnSuccessfulUpload(post);
+            ActivityLauncher.previewPostOrPageForResult(
+                    EditPostActivity.this,
+                    mSite,
+                    post,
+                    mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
+                            ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
+                            : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                                                       );
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
+        } else if (isError || isRemoteAutoSaveError()) {
+            // We got an error from the uploading or from the remote auto save of a post: show snackbar error
+            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
+                    getString(R.string.remote_preview_operation_error));
+        }
     }
 
     @SuppressWarnings("unused")
@@ -4200,28 +4217,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 View snackbarAttachView = findViewById(R.id.editor_activity);
                 UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                         event.isError() ? event.error.message : null, getSite(), mDispatcher);
-                updatePostOnSuccessfulUpload(event, post);
-            } else {
-                // We are in the process of remote previewing a post from the editor
-                if (!event.isError() && isUploadingPostForPreview()) {
-                    // We were uploading post for preview and we got no error:
-                    // update post status and preview it in the internal browser
-                    updatePostOnSuccessfulUpload(event, post);
-                    ActivityLauncher.previewPostOrPageForResult(
-                            EditPostActivity.this,
-                            mSite,
-                            post,
-                            mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                                    ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
-                                    : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                            );
-                    updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
-                } else if (event.isError() || isRemoteAutoSaveError()) {
-                    // We got an error from the uploading or from the remote auto save of a post: show snackbar error
-                    updatePostLoadingAndDialogState(PostLoadingState.NONE);
-                    UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
-                            getString(R.string.remote_preview_operation_error));
+                if (!event.isError()) {
+                    updatePostOnSuccessfulUpload(post);
                 }
+            } else {
+                handleRemoteAutoSave(event.isError(), post);
             }
         }
     }
