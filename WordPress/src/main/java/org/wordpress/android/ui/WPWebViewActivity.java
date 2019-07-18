@@ -287,20 +287,27 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         openWPCOMURL(context, url, null, null, false);
     }
 
-    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url,
+    public static void openUrlByUsingGlobalWPCOMCredentials(Context context,
+                                                            String url,
                                                             boolean allowPreviewModeSelection) {
         openWPCOMURL(context, url, null, null, allowPreviewModeSelection);
     }
 
-    public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
+    public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context,
+                                                                String url,
+                                                                String shareableUrl,
                                                                 String shareSubject,
                                                                 boolean allowPreviewModeSelection) {
         openWPCOMURL(context, url, shareableUrl, shareSubject, allowPreviewModeSelection);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
-    public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
-                                                  String frameNonce, boolean allowPreviewModeSelection) {
+    public static void openJetpackBlogPostPreview(Context context,
+                                                  String url,
+                                                  String shareableUrl,
+                                                  String shareSubject,
+                                                  String frameNonce,
+                                                  boolean allowPreviewModeSelection) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
@@ -318,8 +325,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
-    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
-                                                     String[] listOfAllowedURLs, boolean disableLinks,
+    public static void openUrlByUsingBlogCredentials(Context context,
+                                                     SiteModel site,
+                                                     PostModel post,
+                                                     String url,
+                                                     String[] listOfAllowedURLs,
+                                                     boolean disableLinks,
                                                      boolean allowPreviewModeSelection) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
