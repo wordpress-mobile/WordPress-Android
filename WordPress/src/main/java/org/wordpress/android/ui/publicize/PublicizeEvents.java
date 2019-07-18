@@ -1,7 +1,12 @@
 package org.wordpress.android.ui.publicize;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONObject;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
+
+import java.net.URL;
 
 /**
  * Publicize-related EventBus event classes
@@ -17,12 +22,21 @@ public class PublicizeEvents {
     public static class ActionCompleted {
         private final boolean mSucceeded;
         private final ConnectAction mAction;
+        /**
+         * The reason for why {@link #mSucceeded} is false.
+         */
+        @Nullable private final Reason mReason;
         private String mService;
 
         public ActionCompleted(boolean succeeded, ConnectAction action, String service) {
+            this(succeeded, action, service, null);
+        }
+
+        ActionCompleted(boolean succeeded, ConnectAction action, String service, @Nullable Reason reason) {
             mSucceeded = succeeded;
             mAction = action;
             mService = service;
+            mReason = reason;
         }
 
         public ConnectAction getAction() {
@@ -35,6 +49,31 @@ public class PublicizeEvents {
 
         public String getService() {
             return mService;
+        }
+
+        @Nullable public Reason getReason() {
+            return mReason;
+        }
+
+        public static class Reason {
+            private final int mMessageResId;
+            /**
+             * A URL that the user can be forward to in order to explain more about the {@link #mMessageResId}.
+             */
+            @NonNull private final URL mExplanationURL;
+
+            Reason(int messageResId, @NonNull URL explanationURL) {
+                mMessageResId = messageResId;
+                mExplanationURL = explanationURL;
+            }
+
+            public int getMessageResId() {
+                return mMessageResId;
+            }
+
+            @NonNull public URL getExplanationURL() {
+                return mExplanationURL;
+            }
         }
     }
 
