@@ -40,6 +40,7 @@
         style="@style/PostSettingsContainer">
 
         <TextView
+            android:id="@+id/post_add_to_calendar"
             style="@style/PostSettingsTitle"
             android:enabled="false"
             android:text="@string/post_settings_add_to_calendar"/>

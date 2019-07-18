@@ -59,6 +59,8 @@ class EditPostPublishSettingsViewModel
     val onNotificationTime: LiveData<SchedulingReminderModel.Period> = _onNotificationTime
     private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
     val onNotificationAdded: LiveData<Event<Notification>> = _onNotificationAdded
+    private val _onAddToCalendar = MutableLiveData<Event<CalendarEvent>>()
+    val onAddToCalendar: LiveData<Event<CalendarEvent>> = _onAddToCalendar
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
@@ -95,7 +97,7 @@ class EditPostPublishSettingsViewModel
         _onDatePicked.postValue(Event(Unit))
     }
 
-    fun onShowDialog(postModel: PostModel?) {
+    fun onShowDialog(postModel: PostModel) {
         if (areNotificationsEnabled(postModel)) {
             // This will be replaced by loading notification time from the DB
             _onShowNotificationDialog.postValue(onNotificationTime.value)
@@ -206,15 +208,11 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    private fun areNotificationsEnabled(post: PostModel?): Boolean {
-        return if (post != null) {
-            val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
-            val dateCreated = (DateTimeUtils.dateFromIso8601(post.dateCreated)
-                    ?: localeManagerWrapper.getCurrentCalendar().time).time
-            return dateCreated > futureTime
-        } else {
-            false
-        }
+    private fun areNotificationsEnabled(post: PostModel): Boolean {
+        val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
+        val dateCreated = (DateTimeUtils.dateFromIso8601(post.dateCreated)
+                ?: localeManagerWrapper.getCurrentCalendar().time).time
+        return dateCreated > futureTime
     }
 
     private fun SchedulingReminderModel.Period.toLabel(): Int {
@@ -226,6 +224,12 @@ class EditPostPublishSettingsViewModel
         }
     }
 
+    fun onAddToCalendar(post: PostModel) {
+        val startTime = DateTimeUtils.dateFromIso8601(post.dateCreated).time
+        val title = resourceProvider.getString(R.string.calendar_scheduled_post_title, post.title)
+        _onAddToCalendar.value = Event(CalendarEvent(title, startTime))
+    }
+
     data class PublishUiModel(
         val publishDateLabel: String,
         val notificationLabel: Int = R.string.post_notification_off,
@@ -234,4 +238,6 @@ class EditPostPublishSettingsViewModel
     )
 
     data class Notification(val id: Int, val scheduledTime: Long)
+
+    data class CalendarEvent(val title: String, val startTime: Long)
 }
