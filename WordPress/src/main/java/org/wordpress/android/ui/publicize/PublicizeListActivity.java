@@ -378,7 +378,8 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     private void showAlertForFailureReason(int reasonResId) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         builder.setMessage(reasonResId);
         builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
         builder.show();
