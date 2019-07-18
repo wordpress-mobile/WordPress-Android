@@ -32,7 +32,6 @@ public class PostEditorAnalyticsSession implements Serializable {
     private Editor mCurrentEditor;
     private boolean mHasUnsupportedBlocks = false;
     private Outcome mOutcome = null;
-    private ArrayList<Object> mUnsupportedBlocks = null;
 
     enum Editor {
         GUTENBERG,
@@ -82,10 +81,9 @@ public class PostEditorAnalyticsSession implements Serializable {
     public void start(ArrayList<Object> unsupportedBlocksList) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
-            mUnsupportedBlocks = unsupportedBlocksList;
             Map<String, Object> properties = getCommonProperties();
-            if (mUnsupportedBlocks != null && mUnsupportedBlocks.size() > 0) {
-                properties.put(KEY_UNSUPPORTED_BLOCKS, mUnsupportedBlocks);
+            if (unsupportedBlocksList != null && unsupportedBlocksList.size() > 0) {
+                properties.put(KEY_UNSUPPORTED_BLOCKS, unsupportedBlocksList);
             }
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
