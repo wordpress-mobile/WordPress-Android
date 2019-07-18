@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -28,7 +29,8 @@ class EditPostPublishSettingsViewModel
     private val resourceProvider: ResourceProvider,
     private val postSettingsUtils: PostSettingsUtils,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val postSchedulingNotificationStore: PostSchedulingNotificationStore
+    private val postSchedulingNotificationStore: PostSchedulingNotificationStore,
+    private val siteStore: SiteStore
 ) : ViewModel() {
     var canPublishImmediately: Boolean = false
 
@@ -226,7 +228,12 @@ class EditPostPublishSettingsViewModel
 
     fun onAddToCalendar(post: PostModel) {
         val startTime = DateTimeUtils.dateFromIso8601(post.dateCreated).time
-        val title = resourceProvider.getString(R.string.calendar_scheduled_post_title, post.title)
+        val site = siteStore.getSiteByLocalId(post.localSiteId)
+        val title = resourceProvider.getString(
+                R.string.calendar_scheduled_post_title,
+                post.title,
+                site.name ?: site.url
+        )
         _onAddToCalendar.value = Event(CalendarEvent(title, startTime))
     }
 
