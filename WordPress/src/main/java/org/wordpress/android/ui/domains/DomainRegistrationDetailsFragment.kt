@@ -86,7 +86,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
@@ -431,7 +431,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            if (targetFragment == null) {
+                throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
+            }
+            
+            viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
@@ -477,7 +481,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            if (targetFragment == null) {
+                throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
+            }
+
+            viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
