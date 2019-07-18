@@ -124,7 +124,15 @@ public class PublicizeActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                if (shouldShowChooserDialog(siteId, serviceId, jsonObject)) {
+                final boolean showChooserDialog;
+                try {
+                    showChooserDialog = shouldShowChooserDialog(siteId, serviceId, jsonObject);
+                } catch (PublicizeConnectionValidationException e) {
+                    EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT, serviceId, e.mReason));
+                    return;
+                }
+
+                if (showChooserDialog) {
                     // show dialog showing multiple options
                     EventBus.getDefault()
                             .post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
