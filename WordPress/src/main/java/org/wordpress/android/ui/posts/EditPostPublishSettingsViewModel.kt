@@ -47,8 +47,8 @@ class EditPostPublishSettingsViewModel
     val onUiModel: LiveData<PublishUiModel> = _onUiModel
     private val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
-    private val _onShowNotificationDialog = MutableLiveData<NotificationTime>()
-    val onShowNotificationDialog: LiveData<NotificationTime> = _onShowNotificationDialog
+    private val _onShowNotificationDialog = MutableLiveData<Event<NotificationTime?>>()
+    val onShowNotificationDialog: LiveData<Event<NotificationTime?>> = _onShowNotificationDialog
     private val _onNotificationTime = MutableLiveData<NotificationTime>()
     val onNotificationTime: LiveData<NotificationTime> = _onNotificationTime
 
@@ -91,7 +91,7 @@ class EditPostPublishSettingsViewModel
     fun onShowDialog(postModel: PostModel?) {
         if (areNotificationsEnabled(postModel)) {
             // This will be replaced by loading notification time from the DB
-            _onShowNotificationDialog.postValue(onNotificationTime.value)
+            _onShowNotificationDialog.postValue(Event(onNotificationTime.value))
         } else {
             _onToast.postValue(Event(resourceProvider.getString(R.string.post_notification_error)))
         }

@@ -76,7 +76,9 @@ class EditPostPublishSettingsFragment : Fragment() {
             }
         })
         viewModel.onShowNotificationDialog.observe(this, Observer {
-            showNotificationTimeSelectionDialog(it)
+            it?.getContentIfNotHandled()?.let { notificationTime ->
+                showNotificationTimeSelectionDialog(notificationTime)
+            }
         })
         viewModel.onToast.observe(this, Observer {
             it?.applyIfNotHandled {
