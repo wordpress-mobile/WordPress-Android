@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
@@ -24,9 +24,18 @@ class PublishNotificationViewModel
                 val postStatus = PostStatus.fromPost(post)
                 if (postStatus == SCHEDULED) {
                     val (titleRes, messageRes) = when (notification.scheduledTime) {
-                        ONE_HOUR -> string.notification_scheduled_post_one_hour_reminder to string.notification_post_will_be_published_in_one_hour
-                        TEN_MINUTES -> string.notification_scheduled_post_ten_minute_reminder to string.notification_post_will_be_published_in_ten_minutes
-                        WHEN_PUBLISHED -> string.notification_scheduled_post to string.notification_post_has_been_published
+                        ONE_HOUR -> Pair(
+                                R.string.notification_scheduled_post_one_hour_reminder,
+                                R.string.notification_post_will_be_published_in_one_hour
+                        )
+                        TEN_MINUTES -> Pair(
+                                R.string.notification_scheduled_post_ten_minute_reminder,
+                                R.string.notification_post_will_be_published_in_ten_minutes
+                        )
+                        WHEN_PUBLISHED -> Pair(
+                                R.string.notification_scheduled_post,
+                                R.string.notification_post_has_been_published
+                        )
                         OFF -> throw IllegalArgumentException("Cannot create title and message for notification that's turned off")
                     }
                     val title = resourceProvider.getString(titleRes)

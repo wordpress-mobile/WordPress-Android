@@ -53,8 +53,8 @@ class EditPostPublishSettingsViewModel
     val onUiModel: LiveData<PublishUiModel> = _onUiModel
     private val _onToast = MutableLiveData<Event<String>>()
     val onToast: LiveData<Event<String>> = _onToast
-    private val _onShowNotificationDialog = MutableLiveData<SchedulingReminderModel.Period>()
-    val onShowNotificationDialog: LiveData<SchedulingReminderModel.Period> = _onShowNotificationDialog
+    private val _onShowNotificationDialog = MutableLiveData<Event<SchedulingReminderModel.Period?>>()
+    val onShowNotificationDialog: LiveData<Event<SchedulingReminderModel.Period?>> = _onShowNotificationDialog
     private val _onNotificationTime = MutableLiveData<SchedulingReminderModel.Period>()
     val onNotificationTime: LiveData<SchedulingReminderModel.Period> = _onNotificationTime
     private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
@@ -99,8 +99,8 @@ class EditPostPublishSettingsViewModel
 
     fun onShowDialog(postModel: PostModel) {
         if (areNotificationsEnabled(postModel)) {
-            // This will be replaced by loading notification time from the DB
-            _onShowNotificationDialog.postValue(onNotificationTime.value)
+            val currentPeriod = postSchedulingNotificationStore.getSchedulingReminderPeriod(postModel.id)
+            _onShowNotificationDialog.postValue(Event(currentPeriod))
         } else {
             _onToast.postValue(Event(resourceProvider.getString(R.string.post_notification_error)))
         }
@@ -184,15 +184,15 @@ class EditPostPublishSettingsViewModel
 
     private fun updateNotifications(
         post: PostModel,
-        domainModel: SchedulingReminderModel.Period = OFF
+        schedulingReminderPeriod: SchedulingReminderModel.Period = OFF
     ) {
         postSchedulingNotificationStore.deleteSchedulingReminders(post.id)
-        if (domainModel != OFF) {
-            val notificationId = postSchedulingNotificationStore.schedule(post.id, domainModel)
+        if (schedulingReminderPeriod != OFF) {
+            val notificationId = postSchedulingNotificationStore.schedule(post.id, schedulingReminderPeriod)
             val scheduledCalendar = localeManagerWrapper.getCurrentCalendar().apply {
                 timeInMillis = System.currentTimeMillis()
                 time = DateTimeUtils.dateFromIso8601(post.dateCreated)
-                val scheduledMinutes = when (domainModel) {
+                val scheduledMinutes = when (schedulingReminderPeriod) {
                     ONE_HOUR -> -60
                     TEN_MINUTES -> -10
                     WHEN_PUBLISHED -> 0
