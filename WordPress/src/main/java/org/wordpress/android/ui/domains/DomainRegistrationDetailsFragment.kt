@@ -434,7 +434,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             if (targetFragment == null) {
                 throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
             }
-            
+
             viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
