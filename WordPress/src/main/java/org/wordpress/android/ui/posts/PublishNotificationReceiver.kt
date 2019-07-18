@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
@@ -32,16 +31,16 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                 if (postStatus == SCHEDULED) {
                     val (titleRes, messageRes) = when (notification.scheduledTime) {
                         ONE_HOUR -> Pair(
-                                string.notification_scheduled_post_one_hour_reminder,
-                                string.notification_post_will_be_published_in_one_hour
+                                R.string.notification_scheduled_post_one_hour_reminder,
+                                R.string.notification_post_will_be_published_in_one_hour
                         )
                         TEN_MINUTES -> Pair(
-                                string.notification_scheduled_post_ten_minute_reminder,
-                                string.notification_post_will_be_published_in_ten_minutes
+                                R.string.notification_scheduled_post_ten_minute_reminder,
+                                R.string.notification_post_will_be_published_in_ten_minutes
                         )
                         WHEN_PUBLISHED -> Pair(
-                                string.notification_scheduled_post,
-                                string.notification_post_has_been_published
+                                R.string.notification_scheduled_post,
+                                R.string.notification_post_has_been_published
                         )
                         OFF -> return
                     }
@@ -49,7 +48,7 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                     val message = resourceProvider.getString(messageRes, post.title)
                     val notificationCompat = NotificationCompat.Builder(
                             context,
-                            context.getString(R.string.notification_channel_normal_id)
+                            context.getString(R.string.notification_channel_reminder_id)
                     )
                             .setContentTitle(title)
                             .setContentText(message)
