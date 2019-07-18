@@ -137,8 +137,6 @@ class EditPostPublishSettingsFragment : Fragment() {
                 calIntent.data = Events.CONTENT_URI
                 calIntent.type = "vnd.android.cursor.item/event"
                 calIntent.putExtra(Events.TITLE, calendarEvent.title)
-                calIntent.putExtra(Events.EVENT_COLOR, R.color.color_primary)
-                calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
                 calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
                 startActivity(calIntent)
             }
