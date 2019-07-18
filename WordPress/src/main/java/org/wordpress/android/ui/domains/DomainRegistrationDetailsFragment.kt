@@ -86,7 +86,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
@@ -293,14 +293,22 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 country_input, address_first_line_input, city_input, postal_code_input
         )
 
+        var fieldToFocusOn: TextInputEditText? = null
+
         requiredFields.forEach {
             if (TextUtils.isEmpty(it.text)) {
+                if (fieldToFocusOn == null) {
+                    fieldToFocusOn = it
+                }
                 showEmptyFieldError(it)
                 if (formIsCompleted) {
                     formIsCompleted = false
                 }
             }
         }
+
+        // focusing on first empty field
+        fieldToFocusOn?.requestFocus()
 
         return formIsCompleted
     }
