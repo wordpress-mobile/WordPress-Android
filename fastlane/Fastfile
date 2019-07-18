@@ -111,6 +111,48 @@ ENV["HAS_ALPHA_VERSION"]="true"
       source_files: files, 
       release_version: options[:version])
   end 
+
+  #####################################################################################
+  # new_beta_release
+  # -----------------------------------------------------------------------------------
+  # This lane updates the release branch for a new beta release. It will update the
+  # current release branch by default. If you want to update a different branch
+  # (i.e. hotfix branch) pass the related version with the 'base_version' param
+  # (example: base_version:10.6.1 will work on the 10.6.1 branch)
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane new_beta_release [skip_confirm:<skip confirm>] [base_version:<version>]
+  #
+  # Example:
+  # bundle exec fastlane new_beta_release
+  # bundle exec fastlane new_beta_release skip_confirm:true
+  # bundle exec fastlane new_beta_release base_version:10.6.1
+  #####################################################################################
+  desc "Updates a release branch for a new beta release"
+  lane :new_beta_release do | options |
+    android_betabuild_prechecks(options)
+    android_bump_version_beta()
+    android_tag_build()
+  end
+
+  #####################################################################################
+  # new_hotfix_release
+  # -----------------------------------------------------------------------------------
+  # This lane updates the release branch for a new hotix release. 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version:<version>]
+  #
+  # Example:
+  # bundle exec fastlane new_hotfix_release version:10.6.1
+  # bundle exec fastlane new_hotfix_release skip_confirm:true version:10.6.1
+  #####################################################################################
+  desc "Creates a new hotfix branch from the given tag"
+  lane :new_hotfix_release do | options |
+    prev_ver = android_hotfix_prechecks(version_name: options[:version_name], skip_confirm: options[:skip_confirm])
+    android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code])
+    android_tag_build(tag_alpha: false)
+  end
   
   #####################################################################################
   # finalize_release
@@ -127,7 +169,18 @@ ENV["HAS_ALPHA_VERSION"]="true"
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
     android_finalize_prechecks(options)
-    android_update_metadata(options) unless android_current_branch_is_hotfix
+    hotfix = android_current_branch_is_hotfix
+    android_update_metadata(options) unless hotfix
+    android_bump_version_final_release() unless hotfix
+    version = android_get_release_version() unless hotfix
+    download_metadata_strings(version: version["name"], build_number: version["code"]) unless hotfix
+    android_tag_build(tag_alpha: false)
+
+    # Wrap up
+    removebranchprotection(repository:GHHELPER_REPO, branch: "release/#{version["name"]}")
+    setfrozentag(repository:GHHELPER_REPO, milestone: version["name"], freeze: false)
+    close_milestone(repository:GHHELPER_REPO, milestone: version["name"])
+    create_new_milestone(repository:GHHELPER_REPO)
   end
 
   #####################################################################################
@@ -245,11 +298,15 @@ ENV["HAS_ALPHA_VERSION"]="true"
     }
 
     delete_old_changelogs(build: options[:build_number])
+    download_path=Dir.pwd + "/metadata/android"
     gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
       target_files: files, 
       locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
       source_locale: "en-US",
-      download_path: Dir.pwd + "/metadata/android")
+      download_path: download_path)
+    
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
+    sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push")
   end 
 
 ########################################################################
