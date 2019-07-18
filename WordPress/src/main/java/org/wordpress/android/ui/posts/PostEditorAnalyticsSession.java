@@ -84,6 +84,9 @@ public class PostEditorAnalyticsSession implements Serializable {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             mUnsupportedBlocks = unsupportedBlocksList;
             Map<String, Object> properties = getCommonProperties();
+            if (mUnsupportedBlocks != null && mUnsupportedBlocks.size() > 0) {
+                properties.put(KEY_UNSUPPORTED_BLOCKS, mUnsupportedBlocks);
+            }
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
         } else {
@@ -131,9 +134,6 @@ public class PostEditorAnalyticsSession implements Serializable {
         properties.put(KEY_BLOG_TYPE, mBlogType);
         properties.put(KEY_SESSION_ID, mSessionId);
         properties.put(KEY_HAS_UNSUPPORTED_BLOCKS, mHasUnsupportedBlocks ? "1" : "0");
-        if (mUnsupportedBlocks != null && mUnsupportedBlocks.size() > 0) {
-            properties.put(KEY_UNSUPPORTED_BLOCKS, mUnsupportedBlocks);
-        }
         return properties;
     }
 }
