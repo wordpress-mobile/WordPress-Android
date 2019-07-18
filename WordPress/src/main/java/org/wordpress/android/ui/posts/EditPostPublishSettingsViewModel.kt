@@ -95,10 +95,10 @@ class EditPostPublishSettingsViewModel
         _onDatePicked.postValue(Event(Unit))
     }
 
-    fun onShowDialog(postModel: PostModel?) {
+    fun onShowDialog(postModel: PostModel) {
         if (areNotificationsEnabled(postModel)) {
-            // This will be replaced by loading notification time from the DB
-            _onShowNotificationDialog.postValue(Event(onNotificationTime.value))
+            val currentPeriod = postSchedulingNotificationStore.getSchedulingReminderPeriod(postModel.id)
+            _onShowNotificationDialog.postValue(Event(currentPeriod))
         } else {
             _onToast.postValue(Event(resourceProvider.getString(R.string.post_notification_error)))
         }

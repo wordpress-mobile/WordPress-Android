@@ -73,7 +73,9 @@ class EditPostPublishSettingsFragment : Fragment() {
                 publishNotificationContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
-                        viewModel.onShowDialog(getPost())
+                        getPost()?.let { post ->
+                            viewModel.onShowDialog(post)
+                        }
                     }
                 } else {
                     publishNotificationContainer.setOnClickListener(null)
