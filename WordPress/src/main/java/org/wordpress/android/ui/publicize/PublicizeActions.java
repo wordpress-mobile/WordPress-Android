@@ -11,12 +11,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
+import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted.Reason;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -34,6 +36,14 @@ public class PublicizeActions {
         void onRequestDisconnect(PublicizeConnection connection);
 
         void onRequestReconnect(PublicizeService service, PublicizeConnection connection);
+    }
+
+    private static class PublicizeConnectionValidationException extends Exception {
+        @NonNull private final Reason mReason;
+
+        PublicizeConnectionValidationException(@NonNull Reason reason) {
+            mReason = reason;
+        }
     }
 
     /*
@@ -169,10 +179,11 @@ public class PublicizeActions {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
-    private static boolean shouldShowChooserDialog(long siteId, String serviceId, JSONObject jsonObject) {
+    private static boolean shouldShowChooserDialog(long siteId, String serviceId, JSONObject jsonObject)
+            throws PublicizeConnectionValidationException {
         JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
 
-        if (jsonConnectionList == null || jsonConnectionList.length() <= 1) {
+        if (jsonConnectionList == null || jsonConnectionList.length() <= 0) {
             return false;
         }
 
@@ -191,10 +202,17 @@ public class PublicizeActions {
                 }
             }
 
+            final boolean hasExternalAccounts = totalExternalAccounts > 0;
             if (PublicizeTable.onlyExternalConnections(serviceId)) {
-                return totalExternalAccounts > 0;
+                if (!hasExternalAccounts && serviceId.equals(PublicizeService.FACEBOOK_SERVICE_ID)) {
+                    final Reason reason = new Reason(R.string.sharing_facebook_account_must_have_pages,
+                            R.string.sharing_facebook_account_must_have_pages_explanation_url);
+                    throw new PublicizeConnectionValidationException(reason);
+                } else {
+                    return hasExternalAccounts;
+                }
             } else {
-                return totalAccounts > 0 || totalExternalAccounts > 0;
+                return totalAccounts > 0 || hasExternalAccounts;
             }
         } catch (JSONException e) {
             return false;

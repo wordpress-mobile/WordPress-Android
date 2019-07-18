@@ -58,21 +58,21 @@ public class PublicizeEvents {
         public static class Reason {
             private final int mMessageResId;
             /**
-             * A URL that the user can be forward to in order to explain more about the {@link #mMessageResId}.
+             * A resource Id containing a URL which points to a page, explaining more about {@link #mMessageResId}.
              */
-            @NonNull private final URL mExplanationURL;
+            private final int mExplanationURLResId;
 
-            Reason(int messageResId, @NonNull URL explanationURL) {
+            Reason(int messageResId, int explanationURLResId) {
                 mMessageResId = messageResId;
-                mExplanationURL = explanationURL;
+                mExplanationURLResId = explanationURLResId;
             }
 
             public int getMessageResId() {
                 return mMessageResId;
             }
 
-            @NonNull public URL getExplanationURL() {
-                return mExplanationURL;
+            public int getExplanationURLResId() {
+                return mExplanationURLResId;
             }
         }
     }
