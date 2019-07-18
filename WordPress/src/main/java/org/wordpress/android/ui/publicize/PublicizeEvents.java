@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.publicize;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
-
-import java.net.URL;
 
 /**
  * Publicize-related EventBus event classes
