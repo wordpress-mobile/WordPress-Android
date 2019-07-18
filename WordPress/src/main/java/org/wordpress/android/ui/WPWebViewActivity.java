@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
@@ -102,6 +103,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
     public static final String ENCODING_UTF8 = "UTF-8";
+    public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -112,6 +114,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
 
+
+    private View mNavBarContainer;
+    private LinearLayout mNavBar;
     private View mNavigateForwardButton;
     private View mNavigateBackButton;
     private View mShareButton;
@@ -131,6 +136,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mActionableEmptyView = findViewById(R.id.actionable_empty_view);
         mFullScreenProgressLayout = findViewById(R.id.progress_layout);
         mWebView = findViewById(R.id.webView);
+
+        mNavBarContainer = findViewById(R.id.navbar_container);
+        mNavBar = findViewById(R.id.navbar);
 
         mNavigateBackButton = findViewById(R.id.back_button);
         mNavigateForwardButton = findViewById(R.id.forward_button);
@@ -167,6 +175,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 mViewModel.showPreviewModeSelector();
             }
         });
+
+        final Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            boolean isPreviewModeChangeAllowed = extras.getBoolean(SHOW_PREVIEW_MODE_TOGGLE, false);
+            if (!isPreviewModeChangeAllowed) {
+                mNavBar.setWeightSum(80);
+                mPreviewModeButton.setVisibility(View.GONE);
+            }
+        }
 
         initRetryButton();
         initViewModel();
@@ -266,23 +284,30 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url, null, null);
+        openWPCOMURL(context, url, null, null, false);
+    }
+
+    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url,
+                                                            boolean allowPreviewModeSelection) {
+        openWPCOMURL(context, url, null, null, allowPreviewModeSelection);
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
-                                                                String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject);
+                                                                String shareSubject,
+                                                                boolean allowPreviewModeSelection) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, allowPreviewModeSelection);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
     public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
-                                                  String frameNonce) {
+                                                  String frameNonce, boolean allowPreviewModeSelection) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
         if (!TextUtils.isEmpty(shareableUrl)) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, shareableUrl);
         }
@@ -294,7 +319,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
-                                                     String[] listOfAllowedURLs, boolean disableLinks) {
+                                                     String[] listOfAllowedURLs, boolean disableLinks,
+                                                     boolean allowPreviewModeSelection) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -319,6 +345,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, disableLinks);
+        intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
         intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
@@ -329,11 +356,29 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         context.startActivity(intent);
     }
 
+    protected void toggleNavbarVisibility(boolean isVisible) {
+        if (mNavBarContainer != null) {
+            if (isVisible) {
+                mNavBarContainer.setVisibility(View.VISIBLE);
+            } else {
+                mNavBarContainer.setVisibility(View.GONE);
+            }
+        }
+    }
+
     public static void openURL(Context context, String url) {
-        openURL(context, url, null);
+        openURL(context, url, false);
     }
 
     public static void openURL(Context context, String url, String referrer) {
+        openURL(context, url, referrer, false);
+    }
+
+    public static void openURL(Context context, String url, boolean allowPreviewModeSelection) {
+        openURL(context, url, null, allowPreviewModeSelection);
+    }
+
+    public static void openURL(Context context, String url, String referrer, boolean allowPreviewModeSelection) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -347,6 +392,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
         if (!TextUtils.isEmpty(referrer)) {
             intent.putExtra(REFERRER_URL, referrer);
         }
@@ -368,6 +414,11 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false);
+    }
+
+    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject,
+                                     boolean allowPreviewModeSelection) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -376,6 +427,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
         if (!TextUtils.isEmpty(shareableUrl)) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, shareableUrl);
         }
