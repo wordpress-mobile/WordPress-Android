@@ -432,7 +432,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             if (targetFragment == null) {
-                throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
+                throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
             }
 
             viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
