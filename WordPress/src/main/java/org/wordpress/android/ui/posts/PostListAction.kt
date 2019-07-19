@@ -36,50 +36,6 @@ sealed class PostListAction {
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
 
-private fun getPostsListStrategyFunctions(
-    activity: FragmentActivity,
-    action: PostListAction.PreviewPost
-) = object : RemotePreviewLogicHelper.RemotePreviewHelperFunctions {
-    override fun notifyUploadInProgress(post: PostModel): Boolean {
-        return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-            action.showToast.invoke(action.messageMediaUploading)
-            true
-        } else {
-            false
-        }
-    }
-
-    override fun startUploading(isRemoteAutoSave: Boolean, post: PostModel) {
-        if (isRemoteAutoSave) {
-            action.triggerPreviewStateUpdate.invoke(
-                    PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
-                    PostInfoType.PostNoInfo
-            )
-            if (!UploadService.isPostUploadingOrQueued(post)) {
-                UploadService.uploadPost(activity, post, true)
-            } else {
-                AppLog.d(
-                        AppLog.T.POSTS,
-                        "Remote auto save for preview not possible: post already uploading or queued"
-                )
-            }
-        } else {
-            action.triggerPreviewStateUpdate.invoke(
-                    PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
-                    PostInfoType.PostNoInfo
-            )
-            if (!UploadService.isPostUploadingOrQueued(post)) {
-                UploadService.uploadPost(activity, post)
-            } else {
-                AppLog.d(
-                        AppLog.T.POSTS,
-                        "Upload for preview not possible: post already uploading or queued"
-                )
-            }
-        }
-    }
-}
-
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
@@ -100,7 +56,7 @@ fun handlePostListAction(
                         activity = activity,
                         site = action.site,
                         post = action.post,
-                        helperFunctions = getPostsListStrategyFunctions(activity, action)
+                        helperFunctions = getUploadStrategyFunctions(activity, action)
                 )
 
                 // TODO: consider to remove this once the modifications related to
