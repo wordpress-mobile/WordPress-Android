@@ -19,6 +19,7 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.PublicizeEvents.ActionCompleted;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.HashMap;
@@ -214,6 +215,9 @@ public class PublicizeActions {
             final boolean hasExternalAccounts = totalExternalAccounts > 0;
             if (PublicizeTable.onlyExternalConnections(serviceId)) {
                 if (!hasExternalAccounts && serviceId.equals(PublicizeService.FACEBOOK_SERVICE_ID)) {
+                    AppLog.i(T.SHARING,
+                            "The Facebook account cannot be linked because either there was no Page selected or the "
+                            + "Page is set as not published.");
                     throw new PublicizeConnectionValidationException(R.string.sharing_facebook_account_must_have_pages);
                 } else {
                     return hasExternalAccounts;
