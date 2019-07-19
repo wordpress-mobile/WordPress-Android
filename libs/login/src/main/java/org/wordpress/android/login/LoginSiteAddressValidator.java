@@ -11,7 +11,7 @@ import org.wordpress.android.util.helpers.Debouncer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Encapsulates the site address validation, cleaning, and error handling of {@link LoginSiteAddressFragment}.
+ * Encapsulates the site address validation, cleaning, and error reporting of {@link LoginSiteAddressFragment}.
  */
 class LoginSiteAddressValidator {
     private static final int SECONDS_DELAY_BEFORE_SHOWING_ERROR_MESSAGE = 2;
@@ -49,9 +49,10 @@ class LoginSiteAddressValidator {
         mIsValid.setValue(isValid);
         mErrorMessageResId.setValue(null);
 
+        // Call debounce regardless if there was an error so that the previous Runnable will be cancelled.
         mDebouncer.debounce(Void.class, new Runnable() {
             @Override public void run() {
-                if (!isValid) {
+                if (!isValid && !mCleanedSiteAddress.isEmpty()) {
                     mErrorMessageResId.postValue(R.string.login_invalid_site_url);
                 }
             }
