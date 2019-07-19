@@ -6,31 +6,56 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.util.helpers.Debouncer;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Encapsulates the site address validation, cleaning, and error handling of {@link LoginSiteAddressFragment}.
  */
 class LoginSiteAddressValidator {
+    private static final int SECONDS_DELAY_BEFORE_SHOWING_ERROR_MESSAGE = 2;
+
     private MutableLiveData<Boolean> mIsValid = new MutableLiveData<>();
+    private MutableLiveData<Integer> mErrorMessageResId = new MutableLiveData<>();
 
-    @NonNull private String mCleanedSiteAddress = "";
+    private String mCleanedSiteAddress = "";
+    private Debouncer mDebouncer = new Debouncer();
 
-    LiveData<Boolean> getIsValid() {
+    @NonNull LiveData<Boolean> getIsValid() {
         return mIsValid;
     }
 
-    @NotNull String getCleanedSiteAddress() {
+    @NonNull LiveData<Integer> getErrorMessageResId() {
+        return mErrorMessageResId;
+    }
+
+    @NonNull String getCleanedSiteAddress() {
         return mCleanedSiteAddress;
     }
 
     LoginSiteAddressValidator() {
-        mIsValid.postValue(false);
+        mIsValid.setValue(false);
     }
 
-    public void setAddress(@NonNull String siteAddress) {
+    void dispose() {
+        mDebouncer.shutdown();
+    }
+
+    void setAddress(@NonNull String siteAddress) {
         mCleanedSiteAddress = cleanSiteAddress(siteAddress);
-        mIsValid.postValue(siteAddressIsValid(mCleanedSiteAddress));
+        final boolean isValid = siteAddressIsValid(mCleanedSiteAddress);
+
+        mIsValid.setValue(isValid);
+        mErrorMessageResId.setValue(null);
+
+        mDebouncer.debounce(Void.class, new Runnable() {
+            @Override public void run() {
+                if (!isValid) {
+                    mErrorMessageResId.postValue(R.string.login_invalid_site_url);
+                }
+            }
+        }, SECONDS_DELAY_BEFORE_SHOWING_ERROR_MESSAGE, TimeUnit.SECONDS);
     }
 
     private static String cleanSiteAddress(@NonNull String siteAddress) {

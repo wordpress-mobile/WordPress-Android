@@ -56,7 +56,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     private String mRequestedSiteAddress;
 
-    private LoginSiteAddressValidator mLoginSiteAddressValidator = new LoginSiteAddressValidator();
+    private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -140,14 +140,21 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
-    }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        mLoginSiteAddressValidator = new LoginSiteAddressValidator();
 
         mLoginSiteAddressValidator.getIsValid().observe(this, new Observer<Boolean>() {
-            @Override public void onChanged(Boolean aBoolean) {
-                getPrimaryButton().setEnabled(aBoolean);
+            @Override public void onChanged(Boolean enabled) {
+                getPrimaryButton().setEnabled(enabled);
+            }
+        });
+        mLoginSiteAddressValidator.getErrorMessageResId().observe(this, new Observer<Integer>() {
+            @Override public void onChanged(Integer resId) {
+                if (resId != null) {
+                    showError(resId);
+                } else {
+                    mSiteAddressInput.setError(null);
+                }
             }
         });
     }
@@ -157,6 +164,11 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mLoginSiteAddressValidator.dispose();
     }
 
     protected void discover() {
