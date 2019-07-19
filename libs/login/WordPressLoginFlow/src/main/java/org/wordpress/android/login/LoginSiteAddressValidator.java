@@ -20,7 +20,7 @@ class LoginSiteAddressValidator {
     private MutableLiveData<Integer> mErrorMessageResId = new MutableLiveData<>();
 
     private String mCleanedSiteAddress = "";
-    private Debouncer mDebouncer = new Debouncer();
+    private final Debouncer mDebouncer;
 
     @NonNull LiveData<Boolean> getIsValid() {
         return mIsValid;
@@ -35,7 +35,12 @@ class LoginSiteAddressValidator {
     }
 
     LoginSiteAddressValidator() {
+        this(new Debouncer());
+    }
+
+    LoginSiteAddressValidator(@NonNull Debouncer debouncer) {
         mIsValid.setValue(false);
+        mDebouncer = debouncer;
     }
 
     void dispose() {
