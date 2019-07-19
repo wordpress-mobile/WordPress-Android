@@ -638,7 +638,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostChanged(OnPostChanged event) {
-        AppLog.e(T.API, "causeOfChange: " + event.causeOfChange);
         if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
             int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
             PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
