@@ -183,6 +183,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreferenceWithValidation mPasswordPref;
 
     // Writing settings
+    private WPSwitchPreference mGutenbergDefaultForNewPosts;
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
     private WPPreference mDateFormatPref;
@@ -732,6 +733,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mTimezonePref) {
             setTimezonePref(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
+        } else if (preference == mGutenbergDefaultForNewPosts) {
+            AppPrefs.setGutenbergDefaultForNewPosts((Boolean) newValue);
+            // we need to refresh metadata as gutenberg_enabled is now part of the user data
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else {
             return false;
         }
@@ -900,6 +905,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
         mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
+        mGutenbergDefaultForNewPosts =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_default_for_new_posts);
+        // TODO: nigrate to site settings interface
+        mGutenbergDefaultForNewPosts.setChecked(AppPrefs.isGutenbergDefaultForNewPosts());
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -938,7 +947,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
-                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
+                mGutenbergDefaultForNewPosts
         };
 
         for (Preference preference : editablePreference) {
@@ -1244,6 +1254,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
         mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
+        // TODO: this needs to be migrated to site settings
+        mGutenbergDefaultForNewPosts.setChecked(AppPrefs.isGutenbergDefaultForNewPosts());
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
