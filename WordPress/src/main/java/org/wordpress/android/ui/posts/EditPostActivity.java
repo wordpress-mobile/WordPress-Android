@@ -1255,7 +1255,7 @@ public class EditPostActivity extends AppCompatActivity implements
             // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
             //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
             //  is empty but the user hasn't enabled "Use Gutenberg for new posts" App setting, don't offer the switch.
-            switchToGutenbergMenuItem.setVisible(hasBlocks || (AppPrefs.isGutenbergDefaultForNewPosts() && isEmpty));
+            switchToGutenbergMenuItem.setVisible(hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(mSite) && isEmpty));
         }
 
         return super.onPrepareOptionsMenu(menu);

@@ -8,12 +8,23 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
+    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+        if (TextUtils.isEmpty(site.getMobileEditor())) {
+            // Read from app settings
+            //TODO Need to check the userID and return true for new users!
+            return AppPrefs.isGutenbergDefaultForNewPosts();
+        } else {
+            return site.getMobileEditor().equals("gutenberg");
+        }
+    }
+
     public static String getSiteNameOrHomeURL(SiteModel site) {
         String siteName = site.getName();
         if (siteName == null) {

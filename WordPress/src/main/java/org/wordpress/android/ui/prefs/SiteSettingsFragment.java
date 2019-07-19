@@ -65,6 +65,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -734,7 +735,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             setTimezonePref(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
         } else if (preference == mGutenbergDefaultForNewPosts) {
-            AppPrefs.setGutenbergDefaultForNewPosts((Boolean) newValue);
+            mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                    new DesignateMobileEditorPayload(mSite, ((Boolean) newValue) ? "gutenberg" : "aztec")));
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else {
@@ -907,8 +909,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         sortLanguages();
         mGutenbergDefaultForNewPosts =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_default_for_new_posts);
-        // TODO: nigrate to site settings interface
-        mGutenbergDefaultForNewPosts.setChecked(AppPrefs.isGutenbergDefaultForNewPosts());
+        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -1254,8 +1255,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
         mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
-        // TODO: this needs to be migrated to site settings
-        mGutenbergDefaultForNewPosts.setChecked(AppPrefs.isGutenbergDefaultForNewPosts());
+        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());

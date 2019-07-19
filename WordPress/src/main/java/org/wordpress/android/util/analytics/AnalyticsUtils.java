@@ -105,7 +105,10 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
+        // Use the first site in the list. Should be the default
+        if (!siteStore.getSites().isEmpty()) {
+            metadata.setGutenbergEnabled(SiteUtils.isBlockEditorDefaultForNewPost(siteStore.getSites().get(0)));
+        }
 
         AnalyticsTracker.refreshMetadata(metadata);
     }
@@ -127,7 +130,8 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(1);
         metadata.setUsername(username);
         metadata.setEmail(email);
-        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
+        // GB is enabled for new users
+        metadata.setGutenbergEnabled(true);
         AnalyticsTracker.refreshMetadata(metadata);
     }
 
