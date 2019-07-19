@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -56,6 +55,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
+
+    private LoginSiteAddressValidator mLoginSiteAddressValidator = new LoginSiteAddressValidator();
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -141,6 +142,16 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
     }
 
+    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mLoginSiteAddressValidator.getIsValid().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(Boolean aBoolean) {
+                getPrimaryButton().setEnabled(aBoolean);
+            }
+        });
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -153,19 +164,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             return;
         }
 
-        String cleanedSiteAddress = getCleanedSiteAddress();
-
-        if (TextUtils.isEmpty(cleanedSiteAddress)) {
-            showError(R.string.login_empty_site_url);
-            return;
-        }
-
-        if (!Patterns.WEB_URL.matcher(cleanedSiteAddress).matches()) {
-            showError(R.string.login_invalid_site_url);
-            return;
-        }
-
-        mRequestedSiteAddress = cleanedSiteAddress;
+        mRequestedSiteAddress = mLoginSiteAddressValidator.getCleanedSiteAddress();
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
 
@@ -182,10 +181,6 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         startProgress();
     }
 
-    private String getCleanedSiteAddress() {
-        return EditTextUtils.getText(mSiteAddressInput.getEditText()).trim().replaceAll("[\r\n]", "");
-    }
-
     @Override
     public void onEditorCommit() {
         discover();
@@ -193,6 +188,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @Override
     public void afterTextChanged(Editable s) {
+        mLoginSiteAddressValidator.setAddress(EditTextUtils.getText(mSiteAddressInput.getEditText()));
     }
 
     @Override
