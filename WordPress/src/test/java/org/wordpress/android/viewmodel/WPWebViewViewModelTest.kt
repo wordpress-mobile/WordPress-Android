@@ -18,6 +18,7 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DEFAULT
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DESKTOP
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
@@ -78,10 +79,14 @@ class WPWebViewViewModelTest {
     @Test
     fun `initially navigation is not enabled and preview mode is set to default`() {
         viewModel.start()
-        assertThat(viewModel.navbarUiState.value).isNotNull
+        assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
         assertThat(viewModel.navbarUiState.value!!.forwardNavigationEnabled).isFalse()
-        assertThat(viewModel.previewMode.value).isEqualTo(PreviewMode.DEFAULT)
+        assertThat(viewModel.navbarUiState.value!!.desktopPreviewHintVisible).isFalse()
+        assertThat(viewModel.previewMode.value).isEqualTo(DEFAULT)
+        assertThat(viewModel.previewModeSelector.value).isNotNull()
+        assertThat(viewModel.previewModeSelector.value!!.isVisible).isFalse()
+        assertThat(viewModel.previewModeSelector.value!!.selectedPreviewMode).isEqualTo(DEFAULT)
     }
 
     @Test
@@ -171,6 +176,48 @@ class WPWebViewViewModelTest {
     }
 
     @Test
+    fun `clicking on preview mode button toggles preview mode selector`() {
+        viewModel.start()
+
+        var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
+        viewModel.previewModeSelector.observeForever {
+            previewModeSelectorStatus = it
+        }
+
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+
+        viewModel.togglePreviewModeSelectorVisibility(true)
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
+
+        viewModel.togglePreviewModeSelectorVisibility(false)
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+    }
+
+    @Test
+    fun `selected preview mode is reflected in preview mode selector`() {
+        viewModel.start()
+
+        var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
+        viewModel.previewModeSelector.observeForever {
+            previewModeSelectorStatus = it
+        }
+
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
+        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DEFAULT)
+
+        viewModel.selectPreviewMode(DESKTOP)
+        viewModel.togglePreviewModeSelectorVisibility(true)
+
+        assertThat(previewModeSelectorStatus).isNotNull()
+        assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
+        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DESKTOP)
+    }
+
+    @Test
     fun `selecting a preview mode changes it if it's not already selected`() {
         viewModel.start()
 
@@ -190,5 +237,23 @@ class WPWebViewViewModelTest {
         viewModel.selectPreviewMode(DESKTOP)
         assertThat(selectedPreviewModes.size).isEqualTo(2)
         assertThat(selectedPreviewModes[1]).isEqualTo(DESKTOP)
+    }
+
+    @Test
+    fun `selecting desktop preview mode shows hint label`() {
+        viewModel.start()
+
+        var isDektopPreviewModeHintVisible = false
+        viewModel.navbarUiState.observeForever {
+            isDektopPreviewModeHintVisible = it.desktopPreviewHintVisible
+        }
+
+        assertThat(isDektopPreviewModeHintVisible).isFalse()
+
+        viewModel.selectPreviewMode(DESKTOP)
+        assertThat(isDektopPreviewModeHintVisible).isTrue()
+
+        viewModel.selectPreviewMode(DEFAULT)
+        assertThat(isDektopPreviewModeHintVisible).isFalse()
     }
 }

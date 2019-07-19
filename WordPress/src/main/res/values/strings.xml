@@ -2585,6 +2585,10 @@
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
 
+    <!-- Web Preview -->
+    <string name="web_preview_default">Default</string>
+    <string name="web_preview_desktop">Desktop</string>
+
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
     <!-- Never reuse same keys for new announcements! The new value might not be translated before the release

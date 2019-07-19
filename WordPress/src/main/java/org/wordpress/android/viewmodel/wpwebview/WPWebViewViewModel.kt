@@ -13,6 +13,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DEFAULT
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DESKTOP
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
@@ -42,8 +43,8 @@ class WPWebViewViewModel
     private val _openInExternalBrowser = SingleLiveEvent<Unit>()
     val openExternalBrowser: LiveData<Unit> = _openInExternalBrowser
 
-    private val _showPreviewModeSelector = SingleLiveEvent<Unit>()
-    val showPreviewModeSelector: LiveData<Unit> = _showPreviewModeSelector
+    private val _previewModeSelector = MutableLiveData<PreviewModeSelectorStatus>()
+    val previewModeSelector: LiveData<PreviewModeSelectorStatus> = _previewModeSelector
 
     private val _navbarUiState: MutableLiveData<NavBarUiState> = MutableLiveData()
     val navbarUiState: LiveData<NavBarUiState> = _navbarUiState
@@ -71,10 +72,12 @@ class WPWebViewViewModel
 
         _navbarUiState.value = NavBarUiState(
                 forwardNavigationEnabled = false,
-                backNavigationEnabled = false
+                backNavigationEnabled = false,
+                desktopPreviewHintVisible = false
         )
 
         _previewMode.value = DEFAULT
+        _previewModeSelector.value = PreviewModeSelectorStatus(false, DEFAULT)
 
         // If there is no internet show the error screen
         if (networkUtils.isNetworkAvailable()) {
@@ -154,25 +157,30 @@ class WPWebViewViewModel
         _openInExternalBrowser.call()
     }
 
-    fun showPreviewModeSelector() {
-        _showPreviewModeSelector.call()
+    fun togglePreviewModeSelectorVisibility(isVisible: Boolean) {
+        _previewModeSelector.value = PreviewModeSelectorStatus(isVisible, previewMode.value!!)
     }
 
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {
         if (previewMode.value != selectedPreviewMode) {
             _previewMode.value = selectedPreviewMode
+            _navbarUiState.value =
+                    navbarUiState.value!!.copy(desktopPreviewHintVisible = selectedPreviewMode == DESKTOP)
         }
     }
 
     data class NavBarUiState(
         val forwardNavigationEnabled: Boolean,
-        val backNavigationEnabled: Boolean
+        val backNavigationEnabled: Boolean,
+        val desktopPreviewHintVisible: Boolean
     )
 
     enum class PreviewMode {
         DEFAULT,
         DESKTOP
     }
+
+    data class PreviewModeSelectorStatus(val isVisible: Boolean, val selectedPreviewMode: PreviewMode)
 
     sealed class WebPreviewUiState(
         val fullscreenProgressLayoutVisibility: Boolean = false,
