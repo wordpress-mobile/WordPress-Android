@@ -110,6 +110,7 @@
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
+    <string name="ok">OK</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -1903,6 +1904,7 @@
     <string name="connecting_account">Connecting account</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
