@@ -183,7 +183,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
     @Override
     public void onEditorCommit() {
-        discover();
+        if (getPrimaryButton().isEnabled()) {
+            discover();
+        }
     }
 
     @Override
@@ -355,7 +357,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 return;
             } else {
                 AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name()
-                        + " - " + event.error.toString());
+                                + " - " + event.error.toString());
                 handleDiscoveryError(event.error, event.failedEndpoint);
                 return;
             }
