@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.pages
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -42,11 +43,20 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.PostInfoType
+import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PostListRemotePreviewState
+import org.wordpress.android.ui.posts.ProgressDialogHelper
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
+import org.wordpress.android.ui.posts.getUploadStrategyFunctions
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -72,7 +82,11 @@ class PagesFragment : Fragment() {
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var quickStartStore: QuickStartStore
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     private var quickStartEvent: QuickStartEvent? = null
+    private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
 
@@ -280,7 +294,25 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPagePreview(this, page) }
+            page?.let {
+                previewPage(activity, page)
+            }
+        })
+
+        viewModel.browsePreview.observe(this, Observer { preview ->
+            preview?.let {
+                val post = postStore.getPostByLocalPostId(preview.pageId)
+                ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, post, preview.previewType)
+            }
+        })
+
+        viewModel.previewState.observe(this, Observer {
+            progressDialog = progressDialogHelper.updateProgressDialogState(
+                    activity,
+                    progressDialog,
+                    it.progressDialogUiState,
+                    uiHelpers
+            )
         })
 
         viewModel.setPageParent.observe(this, Observer { page ->
