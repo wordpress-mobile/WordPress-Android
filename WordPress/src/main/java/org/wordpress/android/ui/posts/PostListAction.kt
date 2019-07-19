@@ -5,10 +5,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -18,9 +16,7 @@ sealed class PostListAction {
         val site: SiteModel,
         val post: PostModel,
         val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
-        val showSnackbar: (SnackbarMessageHolder) -> Unit,
         val showToast: (ToastMessageHolder) -> Unit,
-        val messageNoNetwork: SnackbarMessageHolder,
         val messageMediaUploading: ToastMessageHolder
     ) : PostListAction()
     class RemotePreviewPost(
