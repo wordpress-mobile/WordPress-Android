@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
@@ -172,6 +173,7 @@ public abstract class SiteSettingsInterface {
 
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
 
     protected SiteSettingsInterface(Context host, SiteModel site, SiteSettingsListener listener) {
         ((WordPress) host.getApplicationContext()).component().inject(this);
@@ -1138,12 +1140,18 @@ public abstract class SiteSettingsInterface {
             return;
         }
 
-        // Migrate the previous value in App Settings to site model here
-        //TODO We also need to take in consideration new users
+        // Migrate the previous value in App Settings to site model if it's still empty
         if (TextUtils.isEmpty(event.site.getMobileEditor())) {
+            String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts() ? "gutenberg" : "aztec";
+
+            // On wpcom accounts we need to check if it's a new account, and enable GB by default
+            if (event.site.isUsingWpComRestApi()
+                && mAccountStore.getAccount().getUserId()
+                   > SiteUtils.MIN_NEW_USER_ID_FOR_WPCOM_TO_GET_GB_AS_DEFAULT_EDITOR) {
+                defaultEditor = "gutenberg";
+            }
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                    new DesignateMobileEditorPayload(event.site,
-                            AppPrefs.isGutenbergDefaultForNewPosts() ? "gutenberg" : "aztec")));
+                    new DesignateMobileEditorPayload(event.site, defaultEditor)));
         }
 
         notifyUpdatedOnUiThread();

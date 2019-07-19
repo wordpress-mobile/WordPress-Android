@@ -143,7 +143,7 @@ class SiteCreationActivity : AppCompatActivity(),
     }
 
     override fun onHelpClicked(origin: Origin) {
-        ActivityLauncher.viewHelpAndSupport(this, origin, null, null)
+        ActivityLauncher.viewHelpAndSupport(this, origin, null, null, null)
     }
 
     override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -15,10 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
-    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+    public static final int MIN_NEW_USER_ID_FOR_WPCOM_TO_GET_GB_AS_DEFAULT_EDITOR = 162691862;
+
+    public static boolean isBlockEditorDefaultForNewPost(SiteModel site, AccountStore accountStore) {
         if (TextUtils.isEmpty(site.getMobileEditor())) {
-            // Read from app settings
-            //TODO Need to check the userID and return true for new users!
+            // On wpcom accounts we need to check if it's a new account, and enable GB by default
+            if (site.isUsingWpComRestApi()
+                && accountStore.getAccount() != null
+                && accountStore.getAccount().getUserId() > MIN_NEW_USER_ID_FOR_WPCOM_TO_GET_GB_AS_DEFAULT_EDITOR) {
+                return true;
+            }
+
             return AppPrefs.isGutenbergDefaultForNewPosts();
         } else {
             return site.getMobileEditor().equals("gutenberg");

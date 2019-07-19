@@ -416,7 +416,7 @@ public class WPMainActivity extends AppCompatActivity implements
         // init selected site, this is the same as in onResume
         initSelectedSite();
 
-        ActivityLauncher.viewZendeskTickets(this, getSelectedSite());
+        ActivityLauncher.viewZendeskTickets(this, getSelectedSite(), mAccountStore);
     }
 
     /*

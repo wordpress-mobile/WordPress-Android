@@ -909,7 +909,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         sortLanguages();
         mGutenbergDefaultForNewPosts =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_default_for_new_posts);
-        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
+        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite, mAccountStore));
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -1255,7 +1255,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
         mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
-        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
+        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite, mAccountStore));
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
