@@ -7,7 +7,9 @@
     <application
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
-        android:supportsRtl="true">
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:supportsRtl="true"
+        tools:ignore="UnusedAttribute">
     </application>
 
     <!--
