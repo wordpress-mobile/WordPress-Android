@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -261,6 +262,44 @@ class PagesFragment : Fragment() {
         }
 
         viewModel.start(site)
+    }
+
+    private fun showToast(toastMessageHolder: ToastMessageHolder) {
+        context?.let {
+            toastMessageHolder.show(it)
+        }
+    }
+
+    private fun previewPage(activity: FragmentActivity, page: PageModel) {
+        val post = postStore.getPostByLocalPostId(page.pageId)
+        val action = PreviewPost(
+                site = viewModel.site,
+                post = post,
+                triggerPreviewStateUpdate = viewModel::updatePreviewAndDialogState,
+                showToast = this::showToast,
+                messageMediaUploading = ToastMessageHolder(
+                        string.editor_toast_uploading_please_wait,
+                        SHORT
+                )
+        )
+        val helperFunctions = getUploadStrategyFunctions(activity, action)
+        val opResult = remotePreviewLogicHelper.runPostPreviewLogic(
+                activity = activity,
+                site = viewModel.site,
+                post = post,
+                helperFunctions = helperFunctions
+        )
+
+        // TODO: consider to remove this once the modifications related to
+        // https://github.com/wordpress-mobile/WordPress-Android/issues/10106 will be available.
+        // In current implementation only Trashed posts can trigger the below condition but
+        // once the above is implemented should not be possible to trigger below condition anymore.
+        if (opResult == RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW) {
+            action.triggerPreviewStateUpdate.invoke(
+                    PostListRemotePreviewState.PREVIEWING,
+                    PostInfoType.PostNoInfo
+            )
+        }
     }
 
     private fun setupObservers(activity: FragmentActivity) {
