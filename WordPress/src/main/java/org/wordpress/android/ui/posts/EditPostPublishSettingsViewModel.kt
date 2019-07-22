@@ -67,11 +67,7 @@ class EditPostPublishSettingsViewModel
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
-        year = startCalendar.get(Calendar.YEAR)
-        month = startCalendar.get(Calendar.MONTH)
-        day = startCalendar.get(Calendar.DAY_OF_MONTH)
-        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
-        minute = startCalendar.get(Calendar.MINUTE)
+        updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postModel)
     }
 
@@ -81,7 +77,9 @@ class EditPostPublishSettingsViewModel
     }
 
     fun publishNow() {
-        _onPublishedDateChanged.postValue(localeManagerWrapper.getCurrentCalendar())
+        val currentCalendar = localeManagerWrapper.getCurrentCalendar()
+        updateDateAndTimeFromCalendar(currentCalendar)
+        _onPublishedDateChanged.postValue(currentCalendar)
     }
 
     fun onTimeSelected(selectedHour: Int, selectedMinute: Int) {
@@ -178,10 +176,15 @@ class EditPostPublishSettingsViewModel
         val site = siteStore.getSiteByLocalId(post.localSiteId)
         val title = resourceProvider.getString(
                 R.string.calendar_scheduled_post_title,
-                post.title,
-                site.name ?: site.url
+                post.title
         )
-        _onAddToCalendar.value = Event(CalendarEvent(title, startTime))
+        val description = resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                post.title,
+                site.name ?: site.url,
+                post.link
+        )
+        _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
     }
 
     private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
@@ -237,6 +240,14 @@ class EditPostPublishSettingsViewModel
         }
     }
 
+    private fun updateDateAndTimeFromCalendar(startCalendar: Calendar) {
+        year = startCalendar.get(Calendar.YEAR)
+        month = startCalendar.get(Calendar.MONTH)
+        day = startCalendar.get(Calendar.DAY_OF_MONTH)
+        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
+        minute = startCalendar.get(Calendar.MINUTE)
+    }
+
     data class PublishUiModel(
         val publishDateLabel: String,
         val notificationLabel: Int = R.string.post_notification_off,
@@ -246,5 +257,5 @@ class EditPostPublishSettingsViewModel
 
     data class Notification(val id: Int, val scheduledTime: Long)
 
-    data class CalendarEvent(val title: String, val startTime: Long)
+    data class CalendarEvent(val title: String, val description: String, val startTime: Long)
 }

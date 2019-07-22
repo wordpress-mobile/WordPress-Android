@@ -92,6 +92,7 @@ class EditPostPublishSettingsFragment : Fragment() {
                 }
                 publishNotification.setText(uiModel.notificationLabel)
                 publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
+                addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
         viewModel.onShowNotificationDialog.observe(this, Observer {
@@ -137,6 +138,7 @@ class EditPostPublishSettingsFragment : Fragment() {
                 calIntent.data = Events.CONTENT_URI
                 calIntent.type = "vnd.android.cursor.item/event"
                 calIntent.putExtra(Events.TITLE, calendarEvent.title)
+                calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
                 calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
                 startActivity(calIntent)
             }
