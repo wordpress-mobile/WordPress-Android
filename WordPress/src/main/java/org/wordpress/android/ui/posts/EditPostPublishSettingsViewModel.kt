@@ -63,11 +63,7 @@ class EditPostPublishSettingsViewModel
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
-        year = startCalendar.get(Calendar.YEAR)
-        month = startCalendar.get(Calendar.MONTH)
-        day = startCalendar.get(Calendar.DAY_OF_MONTH)
-        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
-        minute = startCalendar.get(Calendar.MINUTE)
+        updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postModel)
     }
 
@@ -77,7 +73,9 @@ class EditPostPublishSettingsViewModel
     }
 
     fun publishNow() {
-        _onPublishedDateChanged.postValue(localeManagerWrapper.getCurrentCalendar())
+        val currentCalendar = localeManagerWrapper.getCurrentCalendar()
+        updateDateAndTimeFromCalendar(currentCalendar)
+        _onPublishedDateChanged.postValue(currentCalendar)
     }
 
     fun onTimeSelected(selectedHour: Int, selectedMinute: Int) {
@@ -102,6 +100,14 @@ class EditPostPublishSettingsViewModel
         } else {
             _onToast.postValue(Event(resourceProvider.getString(R.string.post_notification_error)))
         }
+    }
+
+    private fun updateDateAndTimeFromCalendar(startCalendar: Calendar) {
+        year = startCalendar.get(Calendar.YEAR)
+        month = startCalendar.get(Calendar.MONTH)
+        day = startCalendar.get(Calendar.DAY_OF_MONTH)
+        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
+        minute = startCalendar.get(Calendar.MINUTE)
     }
 
     private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
