@@ -10,6 +10,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
+import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime.ONE_HOUR_BEFORE
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
@@ -33,6 +35,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)
         whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(dateLabel)
+        whenever(resourceProvider.getString(R.string.immediately)).thenReturn("Immediately")
     }
 
     @Test
@@ -42,9 +45,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         val expectedLabel = "Scheduled for 2019"
         whenever(postSettingsUtils.getPublishDateLabel(post)).thenReturn(expectedLabel)
-        var label: String? = null
-        viewModel.onPublishedLabelChanged.observeForever {
-            label = it
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
         }
 
         viewModel.start(post)
@@ -55,14 +58,14 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.hour).isEqualTo(14)
         assertThat(viewModel.minute).isEqualTo(33)
 
-        assertThat(label).isEqualTo(expectedLabel)
+        assertThat(uiModel!!.publishDateLabel).isEqualTo(expectedLabel)
     }
 
     @Test
     fun `on start sets current date when post not present`() {
-        var label: String? = null
-        viewModel.onPublishedLabelChanged.observeForever {
-            label = it
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
         }
 
         viewModel.start(null)
@@ -73,7 +76,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.hour).isEqualTo(10)
         assertThat(viewModel.minute).isEqualTo(20)
 
-        assertThat(label).isNull()
+        assertThat(uiModel!!.publishDateLabel).isEqualTo("Immediately")
     }
 
     @Test
@@ -139,9 +142,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             updatedStatus = it
         }
 
-        var dateLabel: String? = null
-        viewModel.onPublishedLabelChanged.observeForever {
-            dateLabel = it
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
         }
 
         viewModel.updatePost(futureDate, post)
@@ -150,7 +153,12 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(post.dateCreated).isNotNull()
 
         assertThat(updatedStatus).isEqualTo(PostStatus.SCHEDULED)
-        assertThat(dateLabel).isEqualTo(dateLabel)
+        uiModel?.apply {
+            assertThat(this.publishDateLabel).isEqualTo("Updated date")
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
+            assertThat(this.notificationEnabled).isTrue()
+            assertThat(this.notificationVisible).isTrue()
+        }
     }
 
     @Test
@@ -164,9 +172,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             updatedStatus = it
         }
 
-        var dateLabel: String? = null
-        viewModel.onPublishedLabelChanged.observeForever {
-            dateLabel = it
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
         }
 
         viewModel.updatePost(currentCalendar, post)
@@ -175,7 +183,12 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(post.dateCreated).isNotNull()
 
         assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
-        assertThat(dateLabel).isEqualTo(dateLabel)
+        uiModel?.apply {
+            assertThat(this.publishDateLabel).isEqualTo("Updated date")
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
+            assertThat(this.notificationEnabled).isFalse()
+            assertThat(this.notificationVisible).isTrue()
+        }
     }
 
     @Test
@@ -195,9 +208,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             updatedStatus = it
         }
 
-        var dateLabel: String? = null
-        viewModel.onPublishedLabelChanged.observeForever {
-            dateLabel = it
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
         }
 
         var toastMessage: String? = null
@@ -211,8 +224,86 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(post.dateCreated).isNotNull()
 
         assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
-        assertThat(dateLabel).isEqualTo(dateLabel)
+        uiModel?.apply {
+            assertThat(this.publishDateLabel).isEqualTo("Updated date")
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
+            assertThat(this.notificationEnabled).isFalse()
+            assertThat(this.notificationVisible).isTrue()
+        }
 
         assertThat(toastMessage).isEqualTo(expectedToastMessage)
+    }
+
+    @Test
+    fun `hides notification when publish date in the past`() {
+        val post = PostModel()
+        post.status = PostStatus.PUBLISHED.toString()
+        post.dateCreated = "2019-05-05T14:33:20+0000"
+        val pastDate = Calendar.getInstance()
+        pastDate.set(2019, 6, 6, 10, 10, 10)
+        whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(pastDate)
+
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
+        }
+
+        viewModel.updateUiModel(ONE_HOUR_BEFORE, post)
+
+        uiModel?.apply {
+            assertThat(this.publishDateLabel).isEqualTo("Updated date")
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
+            assertThat(this.notificationEnabled).isFalse()
+            assertThat(this.notificationVisible).isFalse()
+        }
+    }
+
+    @Test
+    fun `DISABLES notification when publish date in NOW`() {
+        val post = PostModel()
+        post.status = PostStatus.PUBLISHED.toString()
+        post.dateCreated = "2019-05-05T14:33:20+0000"
+        val pastDate = Calendar.getInstance(Locale.US)
+        pastDate.timeZone = TimeZone.getTimeZone("GMT")
+        pastDate.set(2019, 4, 5, 14, 33, 20)
+        whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(pastDate)
+
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
+        }
+
+        viewModel.updateUiModel(ONE_HOUR_BEFORE, post)
+
+        uiModel?.apply {
+            assertThat(this.publishDateLabel).isEqualTo("Updated date")
+            assertThat(this.notificationEnabled).isFalse()
+            assertThat(this.notificationVisible).isTrue()
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
+        }
+    }
+
+    @Test
+    fun `DISABLES notification when publish date in missing`() {
+        val post = PostModel()
+        post.status = PostStatus.PUBLISHED.toString()
+        val pastDate = Calendar.getInstance(Locale.US)
+        pastDate.timeZone = TimeZone.getTimeZone("GMT")
+        pastDate.set(2019, 4, 5, 14, 33, 20)
+        whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(pastDate)
+
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
+        }
+
+        viewModel.updateUiModel(ONE_HOUR_BEFORE, post)
+
+        uiModel?.apply {
+            assertThat(this.publishDateLabel).isEqualTo("Updated date")
+            assertThat(this.notificationEnabled).isFalse()
+            assertThat(this.notificationVisible).isTrue()
+            assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
+        }
     }
 }

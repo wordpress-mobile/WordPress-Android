@@ -23,6 +23,7 @@
         style="@style/PostSettingsContainer">
 
         <TextView
+            android:id="@+id/publish_notification_title"
             style="@style/PostSettingsTitle"
             android:enabled="false"
             android:text="@string/post_settings_notification"/>
@@ -31,7 +32,7 @@
             android:id="@+id/publish_notification"
             style="@style/PostSettingsSubtitle"
             android:enabled="false"
-            android:hint="@string/off"/>
+            android:hint="@string/post_notification_off"/>
     </LinearLayout>
 
     <LinearLayout
