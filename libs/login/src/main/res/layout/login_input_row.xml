@@ -12,6 +12,7 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:importantForAccessibility="no"
         tools:srcCompat="@drawable/ic_user_grey_24dp"
@@ -23,6 +24,7 @@
         android:id="@+id/input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icon"
         android:layout_toEndOf="@+id/icon"
         android:importantForAccessibility="no">
 
@@ -32,7 +34,9 @@
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/textinputlayout_correction_margin_right"
             android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
+            android:paddingRight="@dimen/textinputlayout_correction_padding_right"
             android:paddingEnd="@dimen/textinputlayout_correction_padding_right"
             tools:hint="@string/email_address"/>
     </org.wordpress.android.util.widgets.WPTextInputLayout>
