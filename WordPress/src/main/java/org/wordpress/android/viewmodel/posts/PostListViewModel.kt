@@ -349,7 +349,8 @@ class PostListViewModel @Inject constructor(
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
                     capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
-                    featuredImageUrl = convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
+                    featuredImageUrl =
+                    convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
                     formattedDate = PostUtils.getFormattedDate(post),
                     performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
                     onAction = { postModel, buttonType, statEvent ->
