@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:paddingTop="@dimen/margin_extra_large"
-                                                   android:paddingBottom="@dimen/margin_extra_large"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:importantForAccessibility="no"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large">
 
-
-    <TextView
-        android:id="@+id/start_label"
-        style="@style/StatsBlockQuickScanLabel"
+    <LinearLayout
+        android:id="@+id/start_value_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/unknown"
-        app:layout_constraintBottom_toTopOf="@id/start_value"
-        app:layout_constraintEnd_toStartOf="@+id/horizontal_divider"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/start_value"
-        style="@style/StatsBlockQuickScanValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/unknown"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:focusable="true"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/horizontal_divider"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/start_label"
+            style="@style/StatsBlockQuickScanLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/end_value"
+            android:text="@string/unknown"/>
+
+        <TextView
+            android:id="@+id/start_value"
+            style="@style/StatsBlockQuickScanValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"/>
+    </LinearLayout>
 
     <View
         android:id="@+id/horizontal_divider"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:background="@color/grey_lighten_30"
+        android:focusable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -43,28 +49,33 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
 
-    <TextView
-        android:id="@+id/end_label"
-        style="@style/StatsBlockQuickScanLabel"
+    <LinearLayout
+        android:id="@+id/end_value_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/unknown"
-        app:layout_constraintBottom_toTopOf="@id/end_value"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/horizontal_divider"/>
-
-    <TextView
-        android:id="@+id/end_value"
-        style="@style/StatsBlockQuickScanValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/unknown"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:focusable="true"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/horizontal_divider"/>
+        app:layout_constraintStart_toEndOf="@id/horizontal_divider">
+
+        <TextView
+            android:id="@+id/end_label"
+            style="@style/StatsBlockQuickScanLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/end_value"
+            android:text="@string/unknown"/>
+
+        <TextView
+            android:id="@+id/end_value"
+            style="@style/StatsBlockQuickScanValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
