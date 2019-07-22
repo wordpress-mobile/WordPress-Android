@@ -15,9 +15,9 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
@@ -33,7 +33,7 @@ import org.wordpress.android.widgets.WPTextView
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
     parent: ViewGroup,
-    private val config: PostViewHolderConfig,
+    private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
@@ -52,9 +52,9 @@ sealed class PostListItemViewHolder(
 
     class Standard(
         parent: ViewGroup,
-        config: PostViewHolderConfig,
+        imageManager: ImageManager,
         private val uiHelpers: UiHelpers
-    ) : PostListItemViewHolder(R.layout.post_list_item, parent, config, uiHelpers) {
+    ) : PostListItemViewHolder(R.layout.post_list_item, parent, imageManager, uiHelpers) {
         private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
         private val actionButtons: List<PostListButton> = listOf(
                 itemView.findViewById(R.id.btn_primary),
@@ -95,9 +95,9 @@ sealed class PostListItemViewHolder(
 
     class Compact(
         parent: ViewGroup,
-        config: PostViewHolderConfig,
+        imageManager: ImageManager,
         private val uiHelpers: UiHelpers
-    ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, config, uiHelpers) {
+    ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, imageManager, uiHelpers) {
         private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
 
         override fun onBind(item: PostListItemUiState) {
@@ -170,15 +170,12 @@ sealed class PostListItemViewHolder(
             // Suppress blinking as the media upload progresses
             return
         }
-        if (imageUrl == null) {
+        if (imageUrl.isNullOrBlank()) {
             featuredImageView.visibility = View.GONE
-            config.imageManager.cancelRequestAndClearImageView(featuredImageView)
+            imageManager.cancelRequestAndClearImageView(featuredImageView)
         } else {
-            val photonUrl = ReaderUtils.getResizedImageUrl(
-                    imageUrl, config.photonWidth, config.photonHeight, !config.isPhotonCapable
-            )
             featuredImageView.visibility = View.VISIBLE
-            config.imageManager.load(featuredImageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
+            imageManager.load(featuredImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP)
         }
         loadedFeaturedImgUrl = imageUrl
     }

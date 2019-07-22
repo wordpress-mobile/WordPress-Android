@@ -22,6 +22,7 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.uploads.UploadStarter
 
+private const val DEFAULT_PHOTON_DIMENSIONS = -9
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter
@@ -34,33 +35,16 @@ class PostListViewModelTest : BaseUnitTest() {
         val listStore = mock<ListStore>()
         val postList = mock<PagedListWrapper<PostListItemType>>()
 
-        whenever(
-                postList.listError
-        ).thenReturn(mock())
-
-        whenever(
-                postList.isFetchingFirstPage
-        ).thenReturn(mock())
-
-        whenever(
-                postList.isEmpty
-        ).thenReturn(mock())
-
-        whenever(
-                postList.data
-        ).thenReturn(mock())
-
-        whenever(
-                postList.isLoadingMore
-        ).thenReturn(mock())
-
-        whenever(
-                listStore.getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(
+        whenever(postList.listError).thenReturn(mock())
+        whenever(postList.isFetchingFirstPage).thenReturn(mock())
+        whenever(postList.isEmpty).thenReturn(mock())
+        whenever(postList.data).thenReturn(mock())
+        whenever(postList.isLoadingMore).thenReturn(mock())
+        whenever(listStore.getList<PostListDescriptorForXmlRpcSite, PostListItemIdentifier, PostListItemType>(
                         any(),
                         any(),
                         any()
-                )
-        ).thenReturn(postList)
+                )).thenReturn(postList)
 
         viewModel = PostListViewModel(
                 dispatcher = mock(),
@@ -70,6 +54,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 listItemUiStateHelper = mock(),
                 networkUtilsWrapper = mock(),
                 uploadStarter = uploadStarter,
+                readerUtilsWrapper = mock(),
                 connectionStatus = mock(),
                 uiDispatcher = TEST_DISPATCHER,
                 bgDispatcher = TEST_DISPATCHER
@@ -78,7 +63,11 @@ class PostListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when swiping to refresh, it uploads all local drafts`() {
-        viewModel.start(createPostListViewModelConnector(site = site, postListType = DRAFTS))
+        viewModel.start(
+                createPostListViewModelConnector(site = site, postListType = DRAFTS),
+                DEFAULT_PHOTON_DIMENSIONS,
+                DEFAULT_PHOTON_DIMENSIONS
+        )
 
         // When
         viewModel.swipeToRefresh()
@@ -89,7 +78,11 @@ class PostListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `empty search query should show search prompt`() {
-        viewModel.start(createPostListViewModelConnector(site = site, postListType = SEARCH))
+        viewModel.start(
+                createPostListViewModelConnector(site = site, postListType = SEARCH),
+                DEFAULT_PHOTON_DIMENSIONS,
+                DEFAULT_PHOTON_DIMENSIONS
+        )
 
         val emptyViewStateResults = mutableListOf<PostListEmptyUiState>()
 
