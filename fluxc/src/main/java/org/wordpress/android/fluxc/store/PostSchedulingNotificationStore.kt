@@ -25,7 +25,13 @@ class PostSchedulingNotificationStore
 
     fun getSchedulingReminder(notificationId: Int): SchedulingReminderModel? {
         val dmModel = sqlUtils.getSchedulingReminder(notificationId)
-        return dmModel?.let { SchedulingReminderModel(it.notificationId, it.postId, it.period.toSchedulingReminderPeriod()) }
+        return dmModel?.let {
+            SchedulingReminderModel(
+                    it.notificationId,
+                    it.postId,
+                    it.period.toSchedulingReminderPeriod()
+            )
+        }
     }
 
     fun getSchedulingReminderPeriod(postId: Int): Period {
