@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 76;
+        return 77;
     }
 
     @Override
@@ -560,6 +560,12 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 75:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 76:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE PostSchedulingReminder (_id INTEGER PRIMARY KEY AUTOINCREMENT,POST_ID INTEGER,"
+                        + "SCHEDULED_TIME TEXT NOT NULL)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
