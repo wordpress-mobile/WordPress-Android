@@ -436,8 +436,8 @@ public class PostStore extends Store {
     /**
      * Returns all posts that are local drafts or has been locally changed.
      */
-    public List<PostModel> getLocallyChangedPosts(@NonNull SiteModel site) {
-        return mPostSqlUtils.getLocallyChangedPosts(site.getId(), false);
+    public List<PostModel> getPostsWithLocalChanges(@NonNull SiteModel site) {
+        return mPostSqlUtils.getPostsWithLocalChanges(site.getId(), false);
     }
 
     /**

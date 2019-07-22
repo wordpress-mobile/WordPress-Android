@@ -475,7 +475,7 @@ public class PostStoreDbIntegrationTest {
     }
 
     @Test
-    public void testGetLocallyChangedPostsReturnsLocalDraftsAndChangedPostsOnly() {
+    public void testGetPostsWithLocalChangesReturnsLocalDraftsAndChangedPostsOnly() {
         // Arrange
         final SiteModel site = new SiteModel();
         site.setId(PostTestUtils.DEFAULT_LOCAL_SITE_ID);
@@ -527,7 +527,7 @@ public class PostStoreDbIntegrationTest {
                 unchangedPublishedPost.getId());
 
         // Act
-        final List<PostModel> locallyChangedPosts = mPostStore.getLocallyChangedPosts(site);
+        final List<PostModel> locallyChangedPosts = mPostStore.getPostsWithLocalChanges(site);
 
         // Assert
         assertEquals(expectedPostIds.size(), locallyChangedPosts.size());

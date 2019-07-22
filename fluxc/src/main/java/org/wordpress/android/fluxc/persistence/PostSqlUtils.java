@@ -147,7 +147,7 @@ public class PostSqlUtils {
                       .getAsModel();
     }
 
-    public List<PostModel> getLocallyChangedPosts(@NonNull Integer localSiteId, boolean isPage) {
+    public List<PostModel> getPostsWithLocalChanges(@NonNull Integer localSiteId, boolean isPage) {
         return WellSql.select(PostModel.class)
                       .where()
                       .equals(PostModelTable.IS_PAGE, isPage)

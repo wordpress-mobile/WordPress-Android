@@ -79,7 +79,7 @@ class PageStoreLocalChangesTest {
     }
 
     @Test
-    fun `getLocallyChangedPages returns local draft and locally changed pages only`() = test {
+    fun `getPagesWithLocalChanges returns local draft and locally changed pages only`() = test {
         // Arrange
         val site = SiteModel().apply { id = 3_000 }
 
@@ -121,7 +121,7 @@ class PageStoreLocalChangesTest {
         expectedPages.plus(unexpectedPosts).forEach { postSqlUtils.insertPostForResult(it) }
 
         // Act
-        val locallyChangedPages = pageStore.getLocallyChangedPages(site)
+        val locallyChangedPages = pageStore.getPagesWithLocalChanges(site)
 
         // Assert
         assertThat(locallyChangedPages).hasSize(expectedPages.size)
