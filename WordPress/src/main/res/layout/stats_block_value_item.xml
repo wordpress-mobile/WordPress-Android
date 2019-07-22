@@ -4,6 +4,7 @@
     android:id="@+id/value_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="8dp"

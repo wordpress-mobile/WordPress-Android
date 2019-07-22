@@ -40,6 +40,7 @@ class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             else -> {
                 columnLayouts.forEachIndexed { index, layout ->
                     layout.setOnClickListener {
+                        it.announceForAccessibility(it.resources.getString(R.string.stats_graph_updated))
                         columns.onColumnSelected?.invoke(index)
                     }
                     layout.key().setText(columns.headers[index])

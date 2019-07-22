@@ -4,6 +4,7 @@
               android:id="@+id/link_wrapper"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:contentDescription="@string/stats_bar_chart_content_description"
               android:layout_marginBottom="24dp"
               android:orientation="vertical"
               android:paddingEnd="@dimen/margin_extra_large"
