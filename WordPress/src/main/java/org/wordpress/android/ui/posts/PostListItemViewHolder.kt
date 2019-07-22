@@ -18,7 +18,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
@@ -174,23 +173,12 @@ sealed class PostListItemViewHolder(
         if (imageUrl == null) {
             featuredImageView.visibility = View.GONE
             config.imageManager.cancelRequestAndClearImageView(featuredImageView)
-        } else if (imageUrl.startsWith("http")) {
+        } else {
             val photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, config.photonWidth, config.photonHeight, !config.isPhotonCapable
             )
             featuredImageView.visibility = View.VISIBLE
             config.imageManager.load(featuredImageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
-        } else {
-            val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    featuredImageView.context, imageUrl, config.photonWidth
-            )
-            if (bmp != null) {
-                featuredImageView.visibility = View.VISIBLE
-                config.imageManager.load(featuredImageView, bmp)
-            } else {
-                featuredImageView.visibility = View.GONE
-                config.imageManager.cancelRequestAndClearImageView(featuredImageView)
-            }
         }
         loadedFeaturedImgUrl = imageUrl
     }
