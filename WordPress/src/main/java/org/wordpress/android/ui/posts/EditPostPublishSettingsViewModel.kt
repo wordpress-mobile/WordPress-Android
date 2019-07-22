@@ -237,10 +237,15 @@ class EditPostPublishSettingsViewModel
         val site = siteStore.getSiteByLocalId(post.localSiteId)
         val title = resourceProvider.getString(
                 R.string.calendar_scheduled_post_title,
-                post.title,
-                site.name ?: site.url
+                post.title
         )
-        _onAddToCalendar.value = Event(CalendarEvent(title, startTime))
+        val description = resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                post.title,
+                site.name ?: site.url,
+                post.link
+        )
+        _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
     }
 
     data class PublishUiModel(
@@ -252,5 +257,5 @@ class EditPostPublishSettingsViewModel
 
     data class Notification(val id: Int, val scheduledTime: Long)
 
-    data class CalendarEvent(val title: String, val startTime: Long)
+    data class CalendarEvent(val title: String, val description: String, val startTime: Long)
 }
