@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
+import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime.OFF
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -56,11 +57,7 @@ class EditPostPublishSettingsViewModel
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
         updateUiModel(post = postModel)
-        year = startCalendar.get(Calendar.YEAR)
-        month = startCalendar.get(Calendar.MONTH)
-        day = startCalendar.get(Calendar.DAY_OF_MONTH)
-        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
-        minute = startCalendar.get(Calendar.MINUTE)
+        updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postModel)
     }
 
@@ -70,7 +67,9 @@ class EditPostPublishSettingsViewModel
     }
 
     fun publishNow() {
-        _onPublishedDateChanged.postValue(localeManagerWrapper.getCurrentCalendar())
+        val currentCalendar = localeManagerWrapper.getCurrentCalendar()
+        updateDateAndTimeFromCalendar(currentCalendar)
+        _onPublishedDateChanged.postValue(currentCalendar)
     }
 
     fun onTimeSelected(selectedHour: Int, selectedMinute: Int) {
@@ -91,10 +90,18 @@ class EditPostPublishSettingsViewModel
     fun onShowDialog(postModel: PostModel?) {
         if (areNotificationsEnabled(postModel)) {
             // This will be replaced by loading notification time from the DB
-            _onShowNotificationDialog.postValue(Event(onNotificationTime.value))
+            _onShowNotificationDialog.postValue(Event(onNotificationTime.value ?: OFF))
         } else {
             _onToast.postValue(Event(resourceProvider.getString(R.string.post_notification_error)))
         }
+    }
+
+    private fun updateDateAndTimeFromCalendar(startCalendar: Calendar) {
+        year = startCalendar.get(Calendar.YEAR)
+        month = startCalendar.get(Calendar.MONTH)
+        day = startCalendar.get(Calendar.DAY_OF_MONTH)
+        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
+        minute = startCalendar.get(Calendar.MINUTE)
     }
 
     private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
