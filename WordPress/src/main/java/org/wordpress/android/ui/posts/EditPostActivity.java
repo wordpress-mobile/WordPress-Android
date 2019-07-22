@@ -518,7 +518,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
                             : RestartEditorOptions.valueOf(restartEditorOptionName);
 
-            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
+            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost, mSite, mAccountStore)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
@@ -1941,7 +1941,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             savePostToDb();
-            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
+            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()), mAccountStore);
 
             UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {
