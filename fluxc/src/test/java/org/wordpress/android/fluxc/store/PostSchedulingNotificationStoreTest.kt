@@ -34,8 +34,8 @@ class PostSchedulingNotificationStoreTest {
 
     @Test
     fun `schedule deletes previous notification and inserts update when set`() {
-        periodMappings.entries.forEach { (domainModel, dbModel) ->
-            store.schedule(postId, domainModel)
+        periodMappings.entries.forEach { (schedulingReminderModel, dbModel) ->
+            store.schedule(postId, schedulingReminderModel)
 
             inOrder(sqlUtils).apply {
                 this.verify(sqlUtils).deleteSchedulingReminders(postId)
@@ -61,7 +61,7 @@ class PostSchedulingNotificationStoreTest {
 
     @Test
     fun `returns notification from database`() {
-        periodMappings.entries.forEach { (domainModel, dbModel) ->
+        periodMappings.entries.forEach { (schedulingReminderModel, dbModel) ->
             whenever(sqlUtils.getSchedulingReminder(notificationId)).thenReturn(
                     SchedulingReminderDbModel(
                             notificationId,
@@ -69,21 +69,21 @@ class PostSchedulingNotificationStoreTest {
                             dbModel
                     )
             )
-            val schedulingReminderModel = store.getSchedulingReminder(notificationId)
+            val schedulingReminder = store.getSchedulingReminder(notificationId)
 
-            assertThat(schedulingReminderModel!!.notificationId).isEqualTo(notificationId)
-            assertThat(schedulingReminderModel.postId).isEqualTo(postId)
-            assertThat(schedulingReminderModel.scheduledTime).isEqualTo(domainModel)
+            assertThat(schedulingReminder!!.notificationId).isEqualTo(notificationId)
+            assertThat(schedulingReminder.postId).isEqualTo(postId)
+            assertThat(schedulingReminder.scheduledTime).isEqualTo(schedulingReminderModel)
         }
     }
 
     @Test
     fun `returns scheduling reminder period from database`() {
-        periodMappings.entries.forEach { (domainModel, dbModel) ->
+        periodMappings.entries.forEach { (schedulingReminderModel, dbModel) ->
             whenever(sqlUtils.getSchedulingReminderPeriodDbModel(postId)).thenReturn(dbModel)
             val schedulingReminderPeriod = store.getSchedulingReminderPeriod(postId)
 
-            assertThat(schedulingReminderPeriod).isEqualTo(domainModel)
+            assertThat(schedulingReminderPeriod).isEqualTo(schedulingReminderModel)
         }
     }
 }
