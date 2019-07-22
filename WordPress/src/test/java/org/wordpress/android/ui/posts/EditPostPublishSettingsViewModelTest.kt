@@ -344,6 +344,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         post.title = postTitle
         val localSiteId = 2
         post.localSiteId = localSiteId
+        val postLink = "link.com"
+        post.link = postLink
 
         val site = SiteModel()
         val siteTitle = "Site title"
@@ -356,16 +358,23 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         }
 
         val eventTitle = "Event title"
+        val eventDescription = "Event description"
         whenever(resourceProvider.getString(
                 R.string.calendar_scheduled_post_title,
-                postTitle,
-                siteTitle
+                postTitle
         )).thenReturn(eventTitle)
+        whenever(resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                postTitle,
+                siteTitle,
+                postLink
+        )).thenReturn(eventDescription)
 
         viewModel.onAddToCalendar(post)
 
-        assertThat(calendarEvent!!.startTime).isEqualTo(213)
+        assertThat(calendarEvent!!.startTime).isEqualTo(1557066800000L)
         assertThat(calendarEvent!!.title).isEqualTo(eventTitle)
+        assertThat(calendarEvent!!.description).isEqualTo(eventDescription)
     }
 
     @Test
