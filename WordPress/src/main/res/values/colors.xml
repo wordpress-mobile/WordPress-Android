@@ -264,11 +264,11 @@
     <color name="orange_90">#361f00</color>
     <color name="orange_100">#1f1200</color>
     <color name="pink_0">#f5ecef</color>
+    <color name="pink_5">#faccdc</color>
     <color name="pink_100">#ebc6d5</color>
     <color name="pink_200">#e1a7bf</color>
     <color name="pink_300">#d688aa</color>
     <color name="pink_400">#c96895</color>
-    <color name="pink_50">#f2dee6</color>
     <color name="pink_500">#bc4681</color>
     <color name="pink_600">#9b3c69</color>
     <color name="pink_700">#7b3252</color>
