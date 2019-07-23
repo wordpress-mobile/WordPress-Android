@@ -80,7 +80,7 @@
     <color name="primary_600">@color/blue_70</color>
     <color name="primary_700">@color/blue_80</color>
     <color name="primary_800">@color/blue_90</color>
-    <color name="primary_900">@color/blue_900</color>
+    <color name="primary_900">@color/blue_100</color>
     <color name="primary_dark">@color/blue_80</color>
     <color name="primary_light">@color/blue_30</color>
     <color name="success">@color/hot_green_500</color>
@@ -125,7 +125,7 @@
     <color name="blue_70">#0a4b78</color>
     <color name="blue_80">#043959</color>
     <color name="blue_90">#01263a</color>
-    <color name="blue_900">#111215</color>
+    <color name="blue_100">#00131c</color>
     <color name="celadon_0">#f3f6f5</color>
     <color name="celadon_100">#bad1cb</color>
     <color name="celadon_200">#93bab0</color>
