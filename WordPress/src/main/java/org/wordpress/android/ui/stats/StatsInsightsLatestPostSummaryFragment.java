@@ -236,7 +236,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             }
         }
         icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
-        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.neutral_700);
+        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.neutral_70);
 
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS) {
             currentTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);

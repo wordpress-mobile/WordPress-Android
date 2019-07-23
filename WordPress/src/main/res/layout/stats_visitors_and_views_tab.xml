@@ -35,7 +35,7 @@
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"
-                android:textColor="@color/neutral_700"
+                android:textColor="@color/neutral_70"
                 android:textSize="@dimen/text_sz_extra_small"
                 android:maxLines="1"
                 android:ellipsize="end"

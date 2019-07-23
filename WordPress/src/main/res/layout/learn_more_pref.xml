@@ -31,7 +31,7 @@
             android:id="@+id/learn_more_caption"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textColor="@color/neutral_700_neutral_20_selector"
+            android:textColor="@color/neutral_70_neutral_20_selector"
             android:visibility="invisible"
             tools:text="Learn more text"
             tools:visibility="visible"

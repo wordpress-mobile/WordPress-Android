@@ -250,7 +250,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalTextColor = context.getResources().getColor(R.color.neutral_700);
+        mNormalTextColor = context.getResources().getColor(R.color.neutral_70);
         mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
         mAgoTextColor = context.getResources().getColor(R.color.neutral);
         mUnapprovedTextColor = context.getResources().getColor(R.color.warning_600);

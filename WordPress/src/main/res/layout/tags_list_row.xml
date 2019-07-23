@@ -14,7 +14,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="@dimen/margin_medium"
-        android:textColor="@color/neutral_700"
+        android:textColor="@color/neutral_70"
         android:textSize="@dimen/text_sz_medium"/>
 
     <View

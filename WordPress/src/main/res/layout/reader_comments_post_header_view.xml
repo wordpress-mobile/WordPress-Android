@@ -52,7 +52,7 @@
                     android:layout_gravity="center_vertical"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/neutral_700"
+                    android:textColor="@color/neutral_70"
                     android:textSize="@dimen/text_sz_small"
                     tools:text="text_blog_name" />
 
@@ -66,7 +66,7 @@
                 android:maxLines="2"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_medium"
-                android:textColor="@color/neutral_700"
+                android:textColor="@color/neutral_70"
                 android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"
                 tools:text="text_post_title" />

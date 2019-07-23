@@ -72,10 +72,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_visible_on_white_24dp"
-                    android:tint="@color/neutral_700" />
+                    android:tint="@color/neutral_70" />
 
                 <TextView
-                    android:textColor="@color/neutral_700"
+                    android:textColor="@color/neutral_70"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -119,10 +119,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_user_white_24dp"
-                    android:tint="@color/neutral_700" />
+                    android:tint="@color/neutral_70" />
 
                 <TextView
-                    android:textColor="@color/neutral_700"
+                    android:textColor="@color/neutral_70"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -166,10 +166,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_star_white_24dp"
-                    android:tint="@color/neutral_700" />
+                    android:tint="@color/neutral_70" />
 
                 <TextView
-                    android:textColor="@color/neutral_700"
+                    android:textColor="@color/neutral_70"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"
@@ -213,10 +213,10 @@
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_comment_white_24dp"
-                    android:tint="@color/neutral_700" />
+                    android:tint="@color/neutral_70" />
 
                 <TextView
-                    android:textColor="@color/neutral_700"
+                    android:textColor="@color/neutral_70"
                     android:textSize="@dimen/stats_widget_text_sz_small"
                     android:textAllCaps="true"
                     android:maxLines="1"

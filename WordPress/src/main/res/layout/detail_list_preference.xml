@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:gravity="start"
             android:textAlignment="viewStart"
             tools:text="Main Text" />

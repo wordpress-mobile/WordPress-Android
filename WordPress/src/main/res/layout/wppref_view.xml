@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:textSize="@dimen/text_sz_large"
             tools:text="text_title"
             android:textAlignment="viewStart"

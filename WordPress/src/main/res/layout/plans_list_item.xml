@@ -44,7 +44,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/neutral_700"
+                android:textColor="@color/neutral_70"
                 tools:text="Free Plan"/>
 
             <org.wordpress.android.widgets.WPTextView

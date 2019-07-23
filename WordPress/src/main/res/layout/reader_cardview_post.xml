@@ -109,7 +109,7 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="wrap_content"
                 android:maxLines="1"
-                android:shadowColor="@color/neutral_700"
+                android:shadowColor="@color/neutral_70"
                 android:shadowDx="@dimen/reader_photo_title_shadow_offset"
                 android:shadowDy="@dimen/reader_photo_title_shadow_offset"
                 android:shadowRadius="@dimen/reader_photo_title_shadow_radius"

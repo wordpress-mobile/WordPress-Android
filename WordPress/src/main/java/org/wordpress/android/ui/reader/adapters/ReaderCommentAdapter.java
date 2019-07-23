@@ -151,7 +151,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
         mColorAuthor = ContextCompat.getColor(context, R.color.primary_400);
-        mColorNotAuthor = ContextCompat.getColor(context, R.color.neutral_700);
+        mColorNotAuthor = ContextCompat.getColor(context, R.color.neutral_70);
         mColorHighlight = ContextCompat.getColor(context, R.color.neutral_0);
 
         setHasStableIds(true);

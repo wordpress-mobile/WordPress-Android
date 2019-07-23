@@ -67,7 +67,7 @@
     </style>
 
     <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
     </style>
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
@@ -169,7 +169,7 @@
     <style name="MediaSettings.Label">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -193,7 +193,7 @@
 
     <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@android:color/white</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
@@ -301,7 +301,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -382,7 +382,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
@@ -414,7 +414,7 @@
     <style name="MyProfileLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -583,7 +583,7 @@
     <style name="PostSettingsTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -606,7 +606,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -651,7 +651,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -687,7 +687,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -750,7 +750,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -772,7 +772,7 @@
 
     <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -790,7 +790,7 @@
 
     <style name="PageListTopLevelItemTextStyle">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:maxLines">1</item>
         <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
@@ -855,7 +855,7 @@
     <style name="DomainRegistrationFormTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -864,7 +864,7 @@
 
       <style name="DomainRegistrationFormSubTitle">
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>

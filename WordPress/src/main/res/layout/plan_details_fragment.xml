@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:textSize="@dimen/text_sz_extra_large"
             tools:text="Personal Plan"/>
 

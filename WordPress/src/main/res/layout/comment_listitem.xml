@@ -78,7 +78,7 @@
             android:ellipsize="end"
             android:lines="2"
             android:maxLines="2"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:textSize="@dimen/text_sz_large"
             tools:text="title"
             android:textAlignment="viewStart"

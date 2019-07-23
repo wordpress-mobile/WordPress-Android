@@ -253,7 +253,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                int color = itemView.getContext().getResources().getColor(R.color.neutral_700);
+                int color = itemView.getContext().getResources().getColor(R.color.neutral_70);
                 mTxtAuthorAndBlogName.setTextColor(color);
                 // remove the ripple background
                 postHeaderView.setBackground(null);
