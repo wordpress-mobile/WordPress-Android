@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/active"
                         android:textAllCaps="true"
-                        android:textColor="@color/primary_50"
+                        android:textColor="@color/primary_5"
                         android:textSize="@dimen/text_sz_extra_small"
                         android:textStyle="bold"
                         android:visibility="gone"
