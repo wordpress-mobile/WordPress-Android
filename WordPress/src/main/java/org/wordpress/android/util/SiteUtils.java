@@ -16,16 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
-    public static final int MIN_WPCOM_USER_ID_TO_DEFAULT_GB = 162691862;
+    public static final int MIN_WPCOM_USER_ID_TO_DEFAULT_GB = 148923566;
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site, AccountStore accountStore) {
         if (TextUtils.isEmpty(site.getMobileEditor())) {
-            // If the editor preference is still not set, the migration didn't happen yet. So let's fallback to
-            // the old app preference.
-            // On wpcom accounts we need to check if it's a new account, and enable GB by default
+            // If the editor preference is still not set, the migration didn't happen yet for some reason.
+            // So let's fallback to the old app preference value: On wpcom accounts we need to check if
+            // a new account, and enable GB by default, making sure to re-use the same logic of the web.
             if (site.isUsingWpComRestApi()
                 && accountStore.getAccount() != null
-                && accountStore.getAccount().getUserId() > MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
+                && accountStore.getAccount().getUserId() > MIN_WPCOM_USER_ID_TO_DEFAULT_GB
+                && onFreePlan(site)) {
                 return true;
             }
 
