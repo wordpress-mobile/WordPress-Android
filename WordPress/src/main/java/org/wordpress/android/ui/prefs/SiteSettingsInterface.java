@@ -1147,7 +1147,7 @@ public abstract class SiteSettingsInterface {
             // On wpcom accounts we need to check if it's a new account, and enable GB by default
             if (event.site.isUsingWpComRestApi()
                 && mAccountStore.getAccount().getUserId()
-                   > SiteUtils.MIN_NEW_USER_ID_FOR_WPCOM_TO_GET_GB_AS_DEFAULT_EDITOR) {
+                   > SiteUtils.MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
                 defaultEditor = "gutenberg";
             }
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(

@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
-    public static final int MIN_NEW_USER_ID_FOR_WPCOM_TO_GET_GB_AS_DEFAULT_EDITOR = 162691862;
+    public static final int MIN_WPCOM_USER_ID_TO_DEFAULT_GB = 162691862;
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site, AccountStore accountStore) {
         if (TextUtils.isEmpty(site.getMobileEditor())) {
             // On wpcom accounts we need to check if it's a new account, and enable GB by default
             if (site.isUsingWpComRestApi()
                 && accountStore.getAccount() != null
-                && accountStore.getAccount().getUserId() > MIN_NEW_USER_ID_FOR_WPCOM_TO_GET_GB_AS_DEFAULT_EDITOR) {
+                && accountStore.getAccount().getUserId() > MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
                 return true;
             }
 
