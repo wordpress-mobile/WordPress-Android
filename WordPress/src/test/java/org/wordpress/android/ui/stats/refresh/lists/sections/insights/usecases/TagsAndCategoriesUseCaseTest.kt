@@ -73,7 +73,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 any(),
                 any<String>(),
                 any(),
-                any()
+                any<Int>()
         )).thenReturn(contentDescription)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),

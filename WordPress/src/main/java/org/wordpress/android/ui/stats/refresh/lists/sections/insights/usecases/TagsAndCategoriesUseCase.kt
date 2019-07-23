@@ -139,15 +139,14 @@ class TagsAndCategoriesUseCase
 
     private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
         val item = tag.items.first()
-        val value = tag.views.toFormattedString()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
-                value = value,
+                value = tag.views.toFormattedString(),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick),
-                contentDescription = buildContentDescription(item.name, value)
+                contentDescription = buildContentDescription(item.name, tag.views)
         )
     }
 
@@ -158,14 +157,13 @@ class TagsAndCategoriesUseCase
                 else -> resourceProvider.getString(R.string.stats_category_folded_name, acc, item.name)
             }
         }
-        val value = tag.views.toFormattedString()
         return ListItemWithIcon(
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
-                value = value,
+                value = tag.views.toFormattedString(),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
-                contentDescription = buildContentDescription(text, value)
+                contentDescription = buildContentDescription(text, tag.views)
         )
     }
 
@@ -197,12 +195,12 @@ class TagsAndCategoriesUseCase
         popupMenuHandler.onMenuClick(view, type)
     }
 
-    private fun buildContentDescription(key: String, value: String): String {
+    private fun buildContentDescription(key: String, value: Long): String {
         return contentDescriptionHelper.buildContentDescription(
                 R.string.stats_tags_and_categories_title_label,
                 key,
                 R.string.stats_tags_and_categories_views_label,
-                value
+                value.toInt()
         )
     }
 

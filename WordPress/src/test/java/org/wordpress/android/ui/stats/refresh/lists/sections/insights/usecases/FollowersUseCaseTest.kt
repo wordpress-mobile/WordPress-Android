@@ -91,9 +91,9 @@ class FollowersUseCaseTest : BaseUnitTest() {
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
-                any<String>(),
                 any(),
-                any()
+                any(),
+                any<String>()
         )).thenReturn(contentDescription)
     }
 

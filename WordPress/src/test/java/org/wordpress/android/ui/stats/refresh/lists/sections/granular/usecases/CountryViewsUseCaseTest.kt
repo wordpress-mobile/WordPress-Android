@@ -80,7 +80,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 any(),
                 any<String>(),
                 any(),
-                any()
+                any<Int>()
         )).thenReturn("title, views")
     }
 

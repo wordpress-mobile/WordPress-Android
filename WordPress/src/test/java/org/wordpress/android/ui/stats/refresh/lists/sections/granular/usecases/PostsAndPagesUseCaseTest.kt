@@ -82,7 +82,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 eq(string.stats_posts_and_pages_title_label),
                 any<String>(),
                 eq(string.stats_posts_and_pages_views_label),
-                any()
+                any<Int>()
         )).thenReturn(contentDescription)
     }
 

@@ -111,11 +111,10 @@ constructor(
                     POST -> R.drawable.ic_posts_white_24dp
                     HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
                 }
-                val value = viewsModel.views.toFormattedString()
                 ListItemWithIcon(
                         icon = icon,
                         text = viewsModel.title,
-                        value = value,
+                        value = viewsModel.views.toFormattedString(),
                         showDivider = index < domainModel.views.size - 1,
                         barWidth = getBarWidth(viewsModel.views, maxViews),
                         navigationAction = create(
@@ -126,7 +125,7 @@ constructor(
                                 R.string.stats_posts_and_pages_title_label,
                                 viewsModel.title,
                                 R.string.stats_posts_and_pages_views_label,
-                                value
+                                viewsModel.views
                         )
                 )
             })

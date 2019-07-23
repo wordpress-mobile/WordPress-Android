@@ -92,18 +92,17 @@ class CommentsUseCase
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
             mutableItems.addAll(authors.mapIndexed { index, author ->
-                val value = author.comments.toFormattedString()
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
                         text = author.name,
-                        value = value,
+                        value = author.comments.toFormattedString(),
                         showDivider = index < authors.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_comments_author_label,
                                 author.name,
                                 R.string.stats_comments_label,
-                                value
+                                author.comments
                         )
                 )
             })
@@ -118,16 +117,15 @@ class CommentsUseCase
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
             mutableItems.addAll(posts.mapIndexed { index, post ->
-                val value = post.comments.toFormattedString()
                 ListItem(
                         post.name,
-                        value,
+                        post.comments.toFormattedString(),
                         index < posts.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_comments_title_label,
                                 post.name,
                                 R.string.stats_comments_label,
-                                value
+                                post.comments
                         )
                 )
             })

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/StatsBlockLine"
     android:layout_width="match_parent"
+    android:importantForAccessibility="no"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 

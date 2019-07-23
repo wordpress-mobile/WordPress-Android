@@ -101,17 +101,16 @@ constructor(
         } else {
             items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
             domainModel.groups.forEachIndexed { index, group ->
-                val value = group.views?.toFormattedString()
                 val groupName = group.name
                 val contentDescription = contentDescriptionHelper.buildContentDescription(
-                            R.string.stats_clicks_link_label,
-                            groupName ?: "",
-                            R.string.stats_clicks_label,
-                            value ?: ""
-                    )
+                        R.string.stats_clicks_link_label,
+                        groupName ?: "",
+                        R.string.stats_clicks_label,
+                        group.views ?: 0
+                )
                 val headerItem = ListItemWithIcon(
                         text = groupName,
-                        value = value,
+                        value = group.views?.toFormattedString(),
                         showDivider = index < domainModel.groups.size - 1,
                         navigationAction = group.url?.let { create(it, this::onItemClick) },
                         contentDescription = contentDescription
@@ -125,18 +124,17 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
-                            val clickValue = click.views.toFormattedString()
                             ListItemWithIcon(
                                     text = click.name,
                                     textStyle = LIGHT,
-                                    value = clickValue,
+                                    value = click.views.toFormattedString(),
                                     showDivider = false,
                                     navigationAction = click.url?.let { create(it, this::onItemClick) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             R.string.stats_clicks_link_label,
                                             click.name,
                                             R.string.stats_clicks_label,
-                                            clickValue
+                                            click.views
                                     )
                             )
                         })

@@ -111,7 +111,7 @@ constructor(
                             R.string.stats_referrer_label,
                             text ?: "",
                             R.string.stats_referrer_views_label,
-                            value
+                            group.total ?: 0
                     )
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
@@ -145,21 +145,20 @@ constructor(
                             } else {
                                 NORMAL
                             }
-                            val referrerValue = referrer.views.toFormattedString()
                             ListItemWithIcon(
                                     icon = referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     iconStyle = iconStyle,
                                     textStyle = LIGHT,
                                     text = referrer.name,
-                                    value = referrerValue,
+                                    value = referrer.views.toFormattedString(),
                                     showDivider = false,
                                     navigationAction = referrer.url?.let { create(it, this::onItemClick) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             R.string.stats_referrer_label,
                                             referrer.name,
                                             R.string.stats_referrer_views_label,
-                                            referrerValue
+                                            referrer.views
                                     )
                             )
                         })

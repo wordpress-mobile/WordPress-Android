@@ -30,6 +30,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         val header = expandableItem.header
         iconContainer.setIconOrAvatar(header, imageManager)
         text.setTextOrHide(header.textResource, header.text)
+        text.contentDescription = header.contentDescription
         expandButton.visibility = View.VISIBLE
         value.setTextOrHide(header.valueResource, header.value)
         divider.setVisible(header.showDivider && !expandableItem.isExpanded)
@@ -48,6 +49,12 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         }
         itemView.isClickable = true
         itemView.setOnClickListener {
+            val announcement = if (expandableItem.isExpanded) {
+                itemView.resources.getString(R.string.stats_item_collapsed)
+            } else {
+                itemView.resources.getString(R.string.stats_item_expanded)
+            }
+            itemView.announceForAccessibility(announcement)
             expandableItem.onExpandClicked(!expandableItem.isExpanded)
         }
     }

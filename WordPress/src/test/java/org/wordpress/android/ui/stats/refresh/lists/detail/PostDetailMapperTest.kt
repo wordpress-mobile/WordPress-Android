@@ -39,7 +39,7 @@ class PostDetailMapperTest : BaseUnitTest() {
                 eq(R.string.stats_months_and_years_period_label),
                 any<String>(),
                 eq(R.string.stats_months_and_years_views_label),
-                any()
+                any<Int>()
         )).thenReturn(contentDescription)
     }
 

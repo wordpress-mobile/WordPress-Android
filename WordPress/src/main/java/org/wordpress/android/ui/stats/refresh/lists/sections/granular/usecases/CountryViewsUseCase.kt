@@ -121,18 +121,17 @@ constructor(
             items.add(MapLegend(startLabel, endLabel))
             items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
-                val value = group.views.toFormattedString()
                 items.add(
                         ListItemWithIcon(
                                 iconUrl = group.flagIconUrl,
                                 text = group.fullName,
-                                value = value,
+                                value = group.views.toFormattedString(),
                                 showDivider = index < domainModel.countries.size - 1,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
                                         R.string.stats_country_label,
                                         group.fullName,
                                         R.string.stats_country_views_label,
-                                        value
+                                        group.views
                                 )
                         )
                 )

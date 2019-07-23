@@ -79,7 +79,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 eq(R.string.stats_videos_title_label),
                 any<String>(),
                 eq(R.string.stats_videos_views_label),
-                any()
+                any<Int>()
         )).thenReturn(contentDescription)
     }
 

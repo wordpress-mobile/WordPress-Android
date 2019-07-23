@@ -33,18 +33,17 @@ class ServiceMapper
         return services.mapIndexed { index, service ->
             val mappedService = getService(service.name)
             val text = if (mappedService?.nameResource == null) service.name else null
-            val value = service.followers.toFormattedString()
             val contentDescription = contentDescriptionHelper.buildContentDescription(
                     keyLabel,
                     text ?: "",
                     valueLabel,
-                    value
+                    service.followers
             )
             ListItemWithIcon(
                     iconUrl = mappedService?.iconUrl?.let { it + dimension },
                     text = text,
                     textResource = mappedService?.nameResource,
-                    value = value,
+                    value = service.followers.toFormattedString(),
                     showDivider = index < services.size - 1,
                     contentDescription = contentDescription
             )

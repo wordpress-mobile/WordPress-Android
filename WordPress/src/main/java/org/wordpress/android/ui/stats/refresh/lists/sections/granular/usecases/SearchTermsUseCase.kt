@@ -100,32 +100,30 @@ constructor(
             items.add(Header(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label))
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
-                val value = searchTerm.views.toFormattedString()
                 ListItemWithIcon(
                         text = searchTerm.text,
-                        value = value,
+                        value = searchTerm.views.toFormattedString(),
                         showDivider = index < domainModel.searchTerms.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_search_terms_label,
                                 searchTerm.text,
                                 R.string.stats_search_terms_views_label,
-                                value
+                                searchTerm.views
                         )
                 )
             }
             if (hasEncryptedCount) {
                 items.addAll(mappedSearchTerms.take(mappedSearchTerms.size - 1))
-                val value = domainModel.unknownSearchCount.toFormattedString()
                 items.add(
                         ListItemWithIcon(
                                 textResource = R.string.stats_search_terms_unknown_search_terms,
-                                value = value,
+                                value = domainModel.unknownSearchCount.toFormattedString(),
                                 showDivider = false,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
                                         R.string.stats_search_terms_label,
                                         R.string.stats_search_terms_unknown_search_terms,
                                         R.string.stats_search_terms_views_label,
-                                        value
+                                        domainModel.unknownSearchCount
                                 )
                         )
                 )

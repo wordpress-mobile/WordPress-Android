@@ -49,17 +49,16 @@ class PostDetailMapper
                 if (isExpanded) {
                     yearList.addAll(year.months.sortedByDescending { it.month }.map { month ->
                         val text = DateFormatSymbols(localeManagerWrapper.getLocale()).shortMonths[month.month - 1]
-                        val value = month.count.toFormattedString(locale = localeManagerWrapper.getLocale())
                         ListItemWithIcon(
                                 text = text,
-                                value = value,
+                                value = month.count.toFormattedString(locale = localeManagerWrapper.getLocale()),
                                 textStyle = LIGHT,
                                 showDivider = false,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
                                         keyLabel,
                                         text,
                                         valueLabel,
-                                        value
+                                        month.count
                                 )
                         )
                     })
@@ -82,17 +81,16 @@ class PostDetailMapper
         keyLabel: Int,
         valueLabel: Int
     ): ListItemWithIcon {
-        val value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale())
         val text = year.year.toString()
         return ListItemWithIcon(
                 text = text,
-                value = value,
+                value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale()),
                 showDivider = isNextNotExpanded && index < size - 1,
                 contentDescription = contentDescriptionHelper.buildContentDescription(
                         keyLabel,
                         text,
                         valueLabel,
-                        value
+                        year.value
                 )
         )
     }
@@ -131,8 +129,8 @@ class PostDetailMapper
                 if (isExpanded) {
                     weekList.addAll(week.days
                             .map { day ->
-                                val value = day.average.toFormattedString(locale = localeManagerWrapper.getLocale())
                                 val text = statsDateFormatter.printDayWithoutYear(day.date)
+                                val value = day.average.toFormattedString(locale = localeManagerWrapper.getLocale())
                                 ListItemWithIcon(
                                         text = text,
                                         value = value,
@@ -142,7 +140,7 @@ class PostDetailMapper
                                                 keyLabel,
                                                 text,
                                                 valueLabel,
-                                                value
+                                                day.average
                                         )
                                 )
                             })
@@ -187,7 +185,7 @@ class PostDetailMapper
                         keyLabel,
                         label,
                         valueLabel,
-                        value
+                        week.weekAverage
                 )
         )
     }

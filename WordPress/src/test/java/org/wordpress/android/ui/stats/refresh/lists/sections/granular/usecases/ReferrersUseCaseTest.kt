@@ -87,7 +87,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 any(),
                 any<String>(),
                 any(),
-                any()
+                any<Int>()
         )).thenReturn(contentDescription)
     }
 

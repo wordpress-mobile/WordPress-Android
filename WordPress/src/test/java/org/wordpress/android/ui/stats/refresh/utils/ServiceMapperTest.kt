@@ -23,7 +23,7 @@ class ServiceMapperTest : BaseUnitTest() {
                 eq(R.string.stats_publicize_service_label),
                 any<String>(),
                 eq(R.string.stats_publicize_followers_label),
-                any()
+                any<Int>()
         )).thenReturn("title, views")
     }
 

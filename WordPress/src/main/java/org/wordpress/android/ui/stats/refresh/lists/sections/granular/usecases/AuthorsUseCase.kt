@@ -107,19 +107,18 @@ constructor(
             items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
             val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
-                val value = author.views.toFormattedString()
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatarUrl,
                         iconStyle = AVATAR,
                         text = author.name,
                         barWidth = getBarWidth(author.views, maxViews),
-                        value = value,
+                        value = author.views.toFormattedString(),
                         showDivider = index < domainModel.authors.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_author_label,
                                 author.name,
                                 R.string.stats_author_views_label,
-                                value
+                                author.views
                         )
                 )
                 if (author.posts.isEmpty()) {
@@ -131,10 +130,9 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(author.posts.map { post ->
-                            val postViews = post.views.toFormattedString()
                             ListItemWithIcon(
                                     text = post.title,
-                                    value = postViews,
+                                    value = post.views.toFormattedString(),
                                     iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
                                     textStyle = LIGHT,
                                     showDivider = false,
@@ -146,7 +144,7 @@ constructor(
                                             R.string.stats_post_label,
                                             post.title,
                                             R.string.stats_post_views_label,
-                                            postViews
+                                            post.views
                                     )
                             )
                         })

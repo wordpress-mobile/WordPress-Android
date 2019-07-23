@@ -96,17 +96,16 @@ constructor(
         } else {
             items.add(Header(R.string.stats_videos_title_label, R.string.stats_videos_views_label))
             items.addAll(domainModel.plays.mapIndexed { index, videoPlays ->
-                val value = videoPlays.plays.toFormattedString()
                 ListItemWithIcon(
                         text = videoPlays.title,
-                        value = value,
+                        value = videoPlays.plays.toFormattedString(),
                         showDivider = index < domainModel.plays.size - 1,
                         navigationAction = videoPlays.url?.let { NavigationAction.create(it, this::onItemClick) },
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_videos_title_label,
                                 videoPlays.title,
                                 R.string.stats_videos_views_label,
-                                value
+                                videoPlays.plays
                         )
                 )
             })
