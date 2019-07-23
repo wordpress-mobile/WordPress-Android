@@ -69,7 +69,7 @@
     <color name="neutral_60">@color/gray_60</color>
     <color name="neutral_70">@color/gray_70</color>
     <color name="neutral_80">@color/gray_80</color>
-    <color name="neutral_900">@color/gray_100</color>
+    <color name="neutral_90">@color/gray_90</color>
     <color name="primary">@color/blue_50</color>
     <color name="primary_0">@color/blue_0</color>
     <color name="primary_100">@color/blue_10</color>
