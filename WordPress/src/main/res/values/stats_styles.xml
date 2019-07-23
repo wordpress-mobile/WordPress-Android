@@ -313,7 +313,7 @@
     </style>
 
     <style name="StatsWidgetErrorMessage.Dark">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsWidgetRetryButton" parent="TextAppearance.AppCompat.Body1">
@@ -367,7 +367,7 @@
     </style>
 
     <style name="StatsWidgetValue.Dark">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsChange" parent="TextAppearance.AppCompat.Body1">
@@ -382,7 +382,7 @@
     </style>
 
     <style name="StatsChange.NeutralDark" parent="StatsChange">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsChange.PositiveLight" parent="StatsChange">
@@ -420,7 +420,7 @@
     </style>
 
     <style name="StatsWidgetBlockValue.Dark">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsWidgetBlockValue.Light">
