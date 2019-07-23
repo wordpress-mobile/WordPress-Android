@@ -222,14 +222,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Overlapping data")
-        dataSet.color = ContextCompat.getColor(context, R.color.primary_700)
+        dataSet.color = ContextCompat.getColor(context, R.color.primary_70)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.primary_700
+                        R.color.primary_70
                 ), ContextCompat.getColor(
                 context,
-                R.color.primary_700
+                R.color.primary_70
         )
         )
         dataSet.formLineWidth = 0f
