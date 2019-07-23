@@ -20,6 +20,8 @@ public class SiteUtils {
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site, AccountStore accountStore) {
         if (TextUtils.isEmpty(site.getMobileEditor())) {
+            // If the editor preference is still not set, the migration didn't happen yet. So let's fallback to
+            // the old app preference.
             // On wpcom accounts we need to check if it's a new account, and enable GB by default
             if (site.isUsingWpComRestApi()
                 && accountStore.getAccount() != null
