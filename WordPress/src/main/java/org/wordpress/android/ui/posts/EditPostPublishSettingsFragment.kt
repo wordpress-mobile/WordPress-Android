@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
+import android.provider.CalendarContract.Events
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +28,6 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
 class EditPostPublishSettingsFragment : Fragment() {
-    private lateinit var addToCalendarContainer: LinearLayout
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
@@ -44,7 +45,8 @@ class EditPostPublishSettingsFragment : Fragment() {
         val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)
         val publishNotificationTitle = rootView.findViewById<TextView>(R.id.publish_notification_title)
         val publishNotificationContainer = rootView.findViewById<LinearLayout>(R.id.publish_notification_container)
-        addToCalendarContainer = rootView.findViewById(R.id.post_add_to_calendar_container)
+        val addToCalendarContainer = rootView.findViewById<LinearLayout>(R.id.post_add_to_calendar_container)
+        val addToCalendar = rootView.findViewById<TextView>(R.id.post_add_to_calendar)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
 
@@ -71,17 +73,26 @@ class EditPostPublishSettingsFragment : Fragment() {
                 publishNotificationTitle.isEnabled = uiModel.notificationEnabled
                 publishNotification.isEnabled = uiModel.notificationEnabled
                 publishNotificationContainer.isEnabled = uiModel.notificationEnabled
+                addToCalendar.isEnabled = uiModel.notificationEnabled
+                addToCalendarContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
                         getPost()?.let { post ->
                             viewModel.onShowDialog(post)
                         }
                     }
+                    addToCalendarContainer.setOnClickListener {
+                        getPost()?.let { post ->
+                            viewModel.onAddToCalendar(post)
+                        }
+                    }
                 } else {
                     publishNotificationContainer.setOnClickListener(null)
+                    addToCalendarContainer.setOnClickListener(null)
                 }
                 publishNotification.setText(uiModel.notificationLabel)
                 publishNotificationContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
+                addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
         viewModel.onShowNotificationDialog.observe(this, Observer {
@@ -119,6 +130,17 @@ class EditPostPublishSettingsFragment : Fragment() {
                             pendingIntent
                     )
                 }
+            }
+        })
+        viewModel.onAddToCalendar.observe(this, Observer {
+            it?.getContentIfNotHandled()?.let { calendarEvent ->
+                val calIntent = Intent(Intent.ACTION_INSERT)
+                calIntent.data = Events.CONTENT_URI
+                calIntent.type = "vnd.android.cursor.item/event"
+                calIntent.putExtra(Events.TITLE, calendarEvent.title)
+                calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
+                calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
+                startActivity(calIntent)
             }
         })
         viewModel.start(getPost())

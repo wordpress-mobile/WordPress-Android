@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -25,6 +26,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var postSchedulingNotificationStore: PostSchedulingNotificationStore
+    @Mock lateinit var siteStore: SiteStore
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     private val dateCreated = "2019-05-05T14:33:20+0000"
@@ -37,7 +39,8 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
                 resourceProvider,
                 postSettingsUtils,
                 localeManagerWrapper,
-                postSchedulingNotificationStore
+                postSchedulingNotificationStore,
+                siteStore
         )
         currentCalendar.set(2019, 6, 6, 10, 20)
         whenever(localeManagerWrapper.getCurrentCalendar()).thenReturn(currentCalendar)

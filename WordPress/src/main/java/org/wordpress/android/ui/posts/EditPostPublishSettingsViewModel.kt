@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -28,7 +29,8 @@ class EditPostPublishSettingsViewModel
     private val resourceProvider: ResourceProvider,
     private val postSettingsUtils: PostSettingsUtils,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val postSchedulingNotificationStore: PostSchedulingNotificationStore
+    private val postSchedulingNotificationStore: PostSchedulingNotificationStore,
+    private val siteStore: SiteStore
 ) : ViewModel() {
     var canPublishImmediately: Boolean = false
 
@@ -59,6 +61,8 @@ class EditPostPublishSettingsViewModel
     val onNotificationTime: LiveData<SchedulingReminderModel.Period> = _onNotificationTime
     private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
     val onNotificationAdded: LiveData<Event<Notification>> = _onNotificationAdded
+    private val _onAddToCalendar = MutableLiveData<Event<CalendarEvent>>()
+    val onAddToCalendar: LiveData<Event<CalendarEvent>> = _onAddToCalendar
 
     fun start(postModel: PostModel?) {
         val startCalendar = postModel?.let { getCurrentPublishDateAsCalendar(it) }
@@ -212,15 +216,11 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    private fun areNotificationsEnabled(post: PostModel?): Boolean {
-        return if (post != null) {
-            val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
-            val dateCreated = (DateTimeUtils.dateFromIso8601(post.dateCreated)
-                    ?: localeManagerWrapper.getCurrentCalendar().time).time
-            return dateCreated > futureTime
-        } else {
-            false
-        }
+    private fun areNotificationsEnabled(post: PostModel): Boolean {
+        val futureTime = localeManagerWrapper.getCurrentCalendar().timeInMillis + 6000
+        val dateCreated = (DateTimeUtils.dateFromIso8601(post.dateCreated)
+                ?: localeManagerWrapper.getCurrentCalendar().time).time
+        return dateCreated > futureTime
     }
 
     private fun SchedulingReminderModel.Period.toLabel(): Int {
@@ -232,6 +232,22 @@ class EditPostPublishSettingsViewModel
         }
     }
 
+    fun onAddToCalendar(post: PostModel) {
+        val startTime = DateTimeUtils.dateFromIso8601(post.dateCreated).time
+        val site = siteStore.getSiteByLocalId(post.localSiteId)
+        val title = resourceProvider.getString(
+                R.string.calendar_scheduled_post_title,
+                post.title
+        )
+        val description = resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                post.title,
+                site.name ?: site.url,
+                post.link
+        )
+        _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
+    }
+
     data class PublishUiModel(
         val publishDateLabel: String,
         val notificationLabel: Int = R.string.post_notification_off,
@@ -240,4 +256,6 @@ class EditPostPublishSettingsViewModel
     )
 
     data class Notification(val id: Int, val scheduledTime: Long)
+
+    data class CalendarEvent(val title: String, val description: String, val startTime: Long)
 }
