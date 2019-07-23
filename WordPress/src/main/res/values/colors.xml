@@ -46,7 +46,7 @@
     <color name="error">@color/hot_red_500</color>
     <color name="error_0">@color/hot_red_0</color>
     <color name="error_5">@color/hot_red_50</color>
-    <color name="error_100">@color/hot_red_100</color>
+    <color name="error_10">@color/hot_red_100</color>
     <color name="error_200">@color/hot_red_200</color>
     <color name="error_300">@color/hot_red_300</color>
     <color name="error_400">@color/hot_red_400</color>
