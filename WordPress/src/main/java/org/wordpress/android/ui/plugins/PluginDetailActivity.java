@@ -665,7 +665,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
-            textView.setTextColor(getResources().getColor(R.color.neutral_200));
+            textView.setTextColor(getResources().getColor(R.color.neutral_20));
             textView.setText(R.string.plugin_empty_text);
         }
     }

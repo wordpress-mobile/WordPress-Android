@@ -102,7 +102,7 @@
                         android:contentDescription="@string/button_more"
                         android:padding="@dimen/theme_browser_more_button_padding"
                         android:src="@drawable/ic_ellipsis_white_24dp"
-                        android:tint="@color/neutral_200" />
+                        android:tint="@color/neutral_20" />
 
                 </LinearLayout>
 

@@ -66,9 +66,9 @@ public class DetailListPreference extends ListPreference
         super.onBindView(view);
 
         setupView((TextView) view.findViewById(android.R.id.title),
-                  R.dimen.text_sz_large, R.color.neutral_700, R.color.neutral_200);
+                  R.dimen.text_sz_large, R.color.neutral_700, R.color.neutral_20);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                  R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_200);
+                  R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_20);
     }
 
     @Override
