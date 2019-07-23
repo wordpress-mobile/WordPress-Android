@@ -1149,8 +1149,7 @@ public abstract class SiteSettingsInterface {
 
             // Enable GB as default for mobile on "new" users. Let's make sure the same logic of the web is used here.
             if (event.site.isUsingWpComRestApi()
-                && mAccountStore.getAccount().getUserId() > SiteUtils.MIN_WPCOM_USER_ID_TO_DEFAULT_GB
-                && SiteUtils.onFreePlan(mSite)) {
+                && mAccountStore.getAccount().getUserId() > SiteUtils.MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
                 defaultEditor = "gutenberg";
             }
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
