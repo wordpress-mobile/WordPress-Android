@@ -288,11 +288,11 @@
     <color name="purple_90">#35163b</color>
     <color name="purple_100">#1e0c21</color>
     <color name="red_0">#f7edee</color>
+    <color name="red_5">#ffccd0</color>
     <color name="red_100">#f8bfb4</color>
     <color name="red_200">#f19d8d</color>
     <color name="red_300">#e77a68</color>
     <color name="red_400">#da5544</color>
-    <color name="red_50">#fadad3</color>
     <color name="red_500">#ca2622</color>
     <color name="red_600">#a82620</color>
     <color name="red_700">#87241d</color>
