@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-        android:textColor="@color/neutral_400"
+        android:textColor="@color/neutral_40"
         tools:text="Feature Description">
     </org.wordpress.android.widgets.WPTextView>
 

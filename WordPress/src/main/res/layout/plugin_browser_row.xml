@@ -37,7 +37,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/neutral_400"
+        android:textColor="@color/neutral_40"
         android:textSize="@dimen/text_sz_small"
         tools:text="plugin_author" />
 

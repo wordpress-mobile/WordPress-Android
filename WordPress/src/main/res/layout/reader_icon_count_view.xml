@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:layout_width="wrap_content"
-        android:textColor="@color/neutral_accent_neutral_400_selector"
+        android:textColor="@color/neutral_accent_neutral_40_selector"
         android:textSize="@dimen/text_sz_medium"
         tools:text="2" >
     </TextView>

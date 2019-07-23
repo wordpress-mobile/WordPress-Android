@@ -102,7 +102,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsCaption(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.neutral_400);
+        setTextViewAttributes(view, size, R.color.neutral_40);
     }
 
     /**

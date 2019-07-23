@@ -154,7 +154,7 @@ class StatsBarGraph extends GraphView {
         GraphViewStyle gStyle = getGraphViewStyle();
         gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
         gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.neutral_600));
-        gStyle.setVerticalLabelsColor(getResources().getColor(R.color.neutral_400));
+        gStyle.setVerticalLabelsColor(getResources().getColor(R.color.neutral_40));
         gStyle.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_sz_extra_small));
         gStyle.setGridXColor(Color.TRANSPARENT);
         gStyle.setGridYColor(getResources().getColor(R.color.neutral_0));

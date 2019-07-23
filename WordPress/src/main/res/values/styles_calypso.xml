@@ -25,7 +25,7 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionModeCloseButtonStyle">@style/Calypso.ActionMode.Button</item>
         <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
-        <item name="colorPrimaryDark">@color/neutral_400</item>
+        <item name="colorPrimaryDark">@color/neutral_40</item>
 
         <item name="android:windowContentOverlay">@color/neutral_0</item>
         <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
@@ -50,7 +50,7 @@
 
     <style name="Calypso.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="android:titleTextStyle">@style/Calypso.ActionMode.Text</item>
-        <item name="android:background">@color/neutral_400</item>
+        <item name="android:background">@color/neutral_40</item>
     </style>
 
     <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">

@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/neutral_400"
+                android:textColor="@color/neutral_40"
                 android:textSize="@dimen/text_sz_extra_small"
                 tools:text="text_site_name" />
         </LinearLayout>

@@ -61,7 +61,7 @@
 
     <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:textColor">@color/neutral_40</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 

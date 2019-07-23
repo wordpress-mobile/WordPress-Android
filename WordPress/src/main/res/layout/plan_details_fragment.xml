@@ -44,7 +44,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_large"
             android:gravity="center_horizontal"
-            android:textColor="@color/neutral_400"
+            android:textColor="@color/neutral_40"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="italic"
             tools:text="Best for beginners"/>

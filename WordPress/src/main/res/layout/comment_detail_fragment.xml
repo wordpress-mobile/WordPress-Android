@@ -65,7 +65,7 @@
                     android:maxLines="1"
                     android:paddingBottom="@dimen/margin_extra_small"
                     android:paddingTop="@dimen/margin_extra_small"
-                    android:textColor="@color/neutral_400"
+                    android:textColor="@color/neutral_40"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="text_post_title"
                     android:textAlignment="viewStart"

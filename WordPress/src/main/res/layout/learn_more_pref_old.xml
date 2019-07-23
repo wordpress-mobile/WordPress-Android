@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/neutral_400" />
+        android:textColor="@color/neutral_40" />
 
     <Button
         android:id="@+id/learn_more_button"
