@@ -199,14 +199,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
-        dataSet.color = ContextCompat.getColor(context, R.color.blue_400)
+        dataSet.color = ContextCompat.getColor(context, R.color.blue_40)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.blue_400
+                        R.color.blue_40
                 ), ContextCompat.getColor(
                 context,
-                R.color.blue_400
+                R.color.blue_40
         )
         )
         dataSet.formLineWidth = 0f
