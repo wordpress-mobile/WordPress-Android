@@ -28,7 +28,7 @@
 
     <!-- SEMANTIC -->
     <color name="accent">@color/hot_pink_500</color>
-    <color name="accent_0">@color/hot_pink_0</color>
+    <color name="accent_0">@color/pink_0</color>
     <color name="accent_100">@color/hot_pink_100</color>
     <color name="accent_200">@color/hot_pink_200</color>
     <color name="accent_300">@color/hot_pink_300</color>
