@@ -88,7 +88,7 @@
     <color name="success_100">@color/green_10</color>
     <color name="success_200">@color/green_20</color>
     <color name="success_300">@color/green_30</color>
-    <color name="success_400">@color/hot_green_400</color>
+    <color name="success_400">@color/green_40</color>
     <color name="success_50">@color/green_5</color>
     <color name="success_500">@color/hot_green_500</color>
     <color name="success_600">@color/hot_green_600</color>
