@@ -32,6 +32,7 @@
     <string name="pref_key_site_screen" translatable="false">wp_pref_site_screen</string>
     <string name="pref_key_site_general" translatable="false">wp_pref_site_general</string>
     <string name="pref_key_site_account" translatable="false">wp_pref_site_account</string>
+    <string name="pref_key_site_editor" translatable="false">wp_pref_site_editor</string>
     <string name="pref_key_site_writing" translatable="false">wp_pref_site_writing</string>
     <string name="pref_key_site_title" translatable="false">wp_pref_site_title</string>
     <string name="pref_key_site_tagline" translatable="false">wp_pref_site_tagline</string>

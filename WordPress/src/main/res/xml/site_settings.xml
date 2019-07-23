@@ -90,11 +90,10 @@
 
     </PreferenceCategory>
 
-    <!-- Writing Settings -->
+    <!-- Editor Settings -->
     <PreferenceCategory
-        android:id="@+id/pref_site_writing"
-        android:key="@string/pref_key_site_writing"
-        android:title="@string/site_settings_writing_header">
+        android:title="@string/site_settings_editor"
+        android:key="@string/pref_key_site_editor">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_gutenberg_default_for_new_posts"
@@ -102,6 +101,14 @@
             android:layout="@layout/wp_preference_layout"
             android:title="@string/site_settings_gutenberg_default_for_new_posts"
             android:summary="@string/site_settings_gutenberg_default_for_new_posts_summary"/>
+
+    </PreferenceCategory>
+
+    <!-- Writing Settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_site_writing"
+        android:key="@string/pref_key_site_writing"
+        android:title="@string/site_settings_writing_header">
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_category"
