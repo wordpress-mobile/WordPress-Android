@@ -67,7 +67,7 @@
             android:contentDescription="@string/send"
             android:enabled="false"
             android:padding="@dimen/margin_medium"
-            android:src="@drawable/ic_send_accent_neutral_300_24dp"
+            android:src="@drawable/ic_send_accent_neutral_30_24dp"
             android:layout_marginEnd="@dimen/content_margin"/>
     </LinearLayout>
 

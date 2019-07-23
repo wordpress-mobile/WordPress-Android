@@ -63,7 +63,7 @@
     <color name="neutral_5">@color/gray_5</color>
     <color name="neutral_10">@color/gray_10</color>
     <color name="neutral_20">@color/gray_20</color>
-    <color name="neutral_300">@color/gray_30</color>
+    <color name="neutral_30">@color/gray_30</color>
     <color name="neutral_400">@color/gray_40</color>
     <color name="neutral_500">@color/gray_50</color>
     <color name="neutral_600">@color/gray_60</color>

@@ -79,7 +79,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         data = BarData(dataSets)
         val greyColor = ContextCompat.getColor(
                 context,
-                R.color.neutral_300
+                R.color.neutral_30
         )
         val lightGreyColor = ContextCompat.getColor(
                 context,

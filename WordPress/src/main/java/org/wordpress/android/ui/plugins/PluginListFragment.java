@@ -279,7 +279,7 @@ public class PluginListFragment extends Fragment {
                     drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;
-                    colorResId = R.color.neutral_300;
+                    colorResId = R.color.neutral_30;
                     drawableResId = R.drawable.ic_cross_white_24dp;
                 }
                 int color = getResources().getColor(colorResId);

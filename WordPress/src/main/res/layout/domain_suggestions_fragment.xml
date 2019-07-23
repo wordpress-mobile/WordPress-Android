@@ -47,7 +47,7 @@
                 android:layout_marginStart="@dimen/margin_extra_extra_small"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_search_white_24dp"
-                android:tint="@color/neutral_300"/>
+                android:tint="@color/neutral_30"/>
 
             <ProgressBar
                 android:id="@+id/suggestion_progress_bar"

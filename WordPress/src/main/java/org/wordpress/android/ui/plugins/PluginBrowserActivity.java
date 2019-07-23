@@ -435,7 +435,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;
-                    colorResId = R.color.neutral_300;
+                    colorResId = R.color.neutral_30;
                     drawableResId = R.drawable.ic_cross_white_24dp;
                 }
                 holder.mStatusText.setText(textResId);

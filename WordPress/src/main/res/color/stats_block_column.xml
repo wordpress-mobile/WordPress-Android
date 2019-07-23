@@ -11,6 +11,6 @@
         android:color="@color/neutral_700"
         android:state_focused="true"/>
 
-    <item android:color="@color/neutral_300"/>
+    <item android:color="@color/neutral_30"/>
 
 </selector>

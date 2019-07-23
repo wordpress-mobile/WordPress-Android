@@ -75,7 +75,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         NEGATIVE("error", R.drawable.bg_oval_error_50),
         INFO("warning", R.drawable.bg_oval_primary_500),
         POSITIVE("success", R.drawable.bg_oval_success_500),
-        NEUTRAL("", R.drawable.bg_oval_neutral_300);
+        NEUTRAL("", R.drawable.bg_oval_neutral_30);
 
         companion object {
             private val map = values().associateBy(Status::value)

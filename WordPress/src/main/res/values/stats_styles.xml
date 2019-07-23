@@ -143,7 +143,7 @@
     </style>
 
     <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_300</item>
+        <item name="android:textColor">@color/neutral_30</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -163,7 +163,7 @@
     </style>
 
     <style name="StatsGraphLabel">
-        <item name="android:textColor">@color/neutral_300</item>
+        <item name="android:textColor">@color/neutral_30</item>
         <item name="android:textSize">@dimen/text_sz_extra_small</item>
     </style>
 

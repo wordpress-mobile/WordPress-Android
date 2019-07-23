@@ -39,7 +39,7 @@
                     android:layout_marginEnd="12dp"
                     android:visibility="gone"
                     android:src="@drawable/ic_plans_white_24dp"
-                    android:tint="@color/neutral_300"
+                    android:tint="@color/neutral_30"
                     android:contentDescription="@string/activity_log_jetpack_icon"/>
 
                 <LinearLayout

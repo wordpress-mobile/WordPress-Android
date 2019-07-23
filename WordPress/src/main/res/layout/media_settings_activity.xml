@@ -39,7 +39,7 @@
                     android:contentDescription="@string/media_settings_image_preview_desc"
                     tools:layout_height="224dp"
                     tools:src="@drawable/ic_audio_white_24dp"
-                    tools:tint="@color/neutral_300" >
+                    tools:tint="@color/neutral_30" >
                 </ImageView>
 
                 <ImageView

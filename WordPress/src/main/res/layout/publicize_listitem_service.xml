@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/neutral_300"
+            android:textColor="@color/neutral_30"
             android:textSize="@dimen/text_sz_medium"
             android:textAlignment="viewStart"
             android:layout_gravity="start"

@@ -25,7 +25,7 @@
             android:layout_height="@dimen/activity_log_icon_size"
             android:layout_margin="@dimen/activity_log_icon_margin"
             android:layout_width="@dimen/activity_log_icon_size"
-            android:src="@drawable/bg_oval_neutral_300_user_32dp" >
+            android:src="@drawable/bg_oval_neutral_30_user_32dp" >
         </ImageView>
 
         <LinearLayout

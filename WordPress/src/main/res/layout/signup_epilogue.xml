@@ -122,7 +122,7 @@
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 app:wpIconDrawable="@drawable/ic_user_white_24dp"
-                app:wpIconDrawableTint="@color/neutral_300" >
+                app:wpIconDrawableTint="@color/neutral_30" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -135,7 +135,7 @@
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 app:wpIconDrawable="@drawable/ic_mention_white_24dp"
-                app:wpIconDrawableTint="@color/neutral_300" >
+                app:wpIconDrawableTint="@color/neutral_30" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
             <org.wordpress.android.login.widgets.WPLoginInputRow
@@ -149,9 +149,9 @@
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:visibility="gone"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/neutral_300"
+                app:passwordToggleTint="@color/neutral_30"
                 app:wpIconDrawable="@drawable/ic_lock_white_24dp"
-                app:wpIconDrawableTint="@color/neutral_300"
+                app:wpIconDrawableTint="@color/neutral_30"
                 tools:visibility="visible" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>
 
