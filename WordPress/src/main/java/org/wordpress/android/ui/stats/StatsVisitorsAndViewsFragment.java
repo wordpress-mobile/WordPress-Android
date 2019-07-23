@@ -466,7 +466,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
             secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
             secondarySeries.getStyle().color = getResources().getColor(R.color.primary_dark);
-            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.accent_600);
+            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.accent_60);
             mGraphView.addSeries(secondarySeries);
         }
 
