@@ -8,7 +8,7 @@
             android:shape="oval" >
 
             <solid
-                android:color="@color/primary_500" >
+                android:color="@color/primary_50" >
             </solid>
 
         </shape>

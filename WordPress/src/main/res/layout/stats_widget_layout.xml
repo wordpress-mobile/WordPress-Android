@@ -87,7 +87,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_views"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary_50"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -134,7 +134,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_visitors"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary_50"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -181,7 +181,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_likes"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary_50"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"
@@ -228,7 +228,7 @@
 
             <TextView
                 android:id="@+id/stats_widget_comments"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary_50"
                 android:textSize="@dimen/stats_widget_text_sz"
                 android:paddingTop="@dimen/margin_extra_small"
                 android:maxLines="1"

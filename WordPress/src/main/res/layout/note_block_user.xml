@@ -56,7 +56,7 @@
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/primary_500"
+                    android:textColor="@color/primary_50"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="Paint with Me" />
 

@@ -114,7 +114,7 @@
                                 android:layout_height="wrap_content"
                                 android:linksClickable="true"
                                 android:textColor="@color/neutral_70"
-                                android:textColorLink="@color/primary_500"
+                                android:textColorLink="@color/primary_50"
                                 android:textSize="@dimen/text_sz_medium"
                                 tools:text="text_byline"
                                 android:layout_marginStart="@dimen/margin_extra_large"/>

@@ -5,7 +5,7 @@
 
     <gradient
         android:endColor="@android:color/transparent"
-        android:startColor="@color/primary_500">
+        android:startColor="@color/primary_50">
     </gradient>
 
 </shape>
