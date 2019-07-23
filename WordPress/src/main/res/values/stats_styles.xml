@@ -390,7 +390,7 @@
     </style>
 
     <style name="StatsChange.PositiveDark" parent="StatsChange">
-        <item name="android:textColor">@color/hot_green_300</item>
+        <item name="android:textColor">@color/green_30</item>
     </style>
 
     <style name="StatsChange.NegativeLight" parent="StatsChange">
