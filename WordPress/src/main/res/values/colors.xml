@@ -66,7 +66,7 @@
     <color name="neutral_50">@color/gray_5</color>
     <color name="neutral_500">@color/gray_50</color>
     <color name="neutral_600">@color/gray_60</color>
-    <color name="neutral_700">@color/gray_700</color>
+    <color name="neutral_700">@color/gray_70</color>
     <color name="neutral_800">@color/gray_800</color>
     <color name="neutral_900">@color/gray_900</color>
     <color name="primary">@color/blue_50</color>
@@ -147,7 +147,7 @@
     <color name="gray_40">#7f808a</color>
     <color name="gray_50">#676a74</color>
     <color name="gray_60">#51565f</color>
-    <color name="gray_700">#3d4145</color>
+    <color name="gray_70">#3d444b</color>
     <color name="gray_800">#2b2d2f</color>
     <color name="gray_900">#1a1a1a</color>
     <color name="green_0">#f3f6f1</color>
