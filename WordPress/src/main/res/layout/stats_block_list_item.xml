@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/margin_medium_large"
         android:background="@color/transparent"
+        android:importantForAccessibility="no"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/text"
         app:layout_constraintEnd_toStartOf="@+id/value"
@@ -52,6 +53,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
+        android:importantForAccessibility="no"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,7 +65,7 @@
             android:id="@+id/icon"
             android:layout_width="@dimen/stats_block_icon_size"
             android:layout_height="@dimen/stats_block_icon_size"
-            android:contentDescription="@string/icon"
+            android:contentDescription="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_share_white_24dp"/>
 
@@ -71,7 +73,7 @@
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
-            android:contentDescription="@string/reader_avatar_desc"
+            android:contentDescription="@null"
             android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
             android:visibility="gone"/>
     </LinearLayout>
@@ -113,6 +115,7 @@
         android:layout_height="5dp"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_key"
+        android:importantForAccessibility="no"
         android:progressDrawable="@drawable/stats_bar_background"
         android:text="@string/unknown"
         android:visibility="gone"
@@ -129,6 +132,7 @@
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
+        android:importantForAccessibility="no"
         android:background="@color/neutral_0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

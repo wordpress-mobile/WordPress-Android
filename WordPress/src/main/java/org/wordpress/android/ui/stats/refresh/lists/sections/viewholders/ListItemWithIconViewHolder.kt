@@ -54,5 +54,6 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
             bar.visibility = View.GONE
             topMargin.visibility = View.GONE
         }
+        itemView.contentDescription = item.contentDescription
     }
 }

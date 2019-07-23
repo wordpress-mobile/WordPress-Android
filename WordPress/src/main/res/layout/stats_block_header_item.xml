@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               style="@style/StatsBlockLine"
-              android:paddingStart="@dimen/margin_extra_large"
-              android:paddingEnd="@dimen/margin_extra_large"
               android:layout_width="match_parent"
               android:layout_height="@dimen/stats_header_height"
-              android:orientation="horizontal">
+              android:importantForAccessibility="no"
+              android:orientation="horizontal"
+              android:paddingEnd="@dimen/margin_extra_large"
+              android:paddingStart="@dimen/margin_extra_large">
 
     <TextView
         android:id="@+id/start_label"
@@ -16,10 +17,11 @@
         android:layout_gravity="center_vertical"
         android:text="@string/unknown"
         tools:text="First item"/>
+
     <View
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/end_label"

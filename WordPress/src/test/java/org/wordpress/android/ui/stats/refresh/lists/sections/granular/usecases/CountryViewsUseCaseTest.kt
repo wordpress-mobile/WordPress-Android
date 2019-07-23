@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -51,6 +53,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: CountryViewsUseCase
     private val country = Country("CZ", "Czech Republic", 500, "flag.jpg", "flatFlag.jpg")
     @Before
@@ -62,6 +65,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -72,6 +76,12 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any(),
+                any()
+        )).thenReturn("title, views")
     }
 
     @Test

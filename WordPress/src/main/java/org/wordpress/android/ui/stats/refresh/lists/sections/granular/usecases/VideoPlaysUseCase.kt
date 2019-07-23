@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -43,6 +44,7 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<VideoPlaysModel>(
         VIDEOS,
@@ -94,11 +96,18 @@ constructor(
         } else {
             items.add(Header(R.string.stats_videos_title_label, R.string.stats_videos_views_label))
             items.addAll(domainModel.plays.mapIndexed { index, videoPlays ->
+                val value = videoPlays.plays.toFormattedString()
                 ListItemWithIcon(
                         text = videoPlays.title,
-                        value = videoPlays.plays.toFormattedString(),
+                        value = value,
                         showDivider = index < domainModel.plays.size - 1,
-                        navigationAction = videoPlays.url?.let { NavigationAction.create(it, this::onItemClick) }
+                        navigationAction = videoPlays.url?.let { NavigationAction.create(it, this::onItemClick) },
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_videos_title_label,
+                                videoPlays.title,
+                                R.string.stats_videos_views_label,
+                                value
+                        )
                 )
             })
 
@@ -135,7 +144,8 @@ constructor(
         private val store: VideoPlaysStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 VideoPlaysUseCase(
@@ -145,6 +155,7 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

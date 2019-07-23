@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Month
@@ -16,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.Expa
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
@@ -24,11 +28,19 @@ import java.util.Locale
 class PostDetailMapperTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var postDetailMapper: PostDetailMapper
+    private val contentDescription = "period, views"
     @Before
     fun setUp() {
-        postDetailMapper = PostDetailMapper(localeManagerWrapper, statsDateFormatter)
+        postDetailMapper = PostDetailMapper(localeManagerWrapper, statsDateFormatter, contentDescriptionHelper)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                eq(R.string.stats_months_and_years_period_label),
+                any<String>(),
+                eq(R.string.stats_months_and_years_views_label),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -37,7 +49,12 @@ class PostDetailMapperTest : BaseUnitTest() {
         val year2019 = PostDetailStatsModel.Year(2019, listOf(Month(1, 50)), 100)
         val years = listOf(year2018, year2019)
         var expandedYear: Int? = null
-        val result = postDetailMapper.mapYears(years, ExpandedYearUiState()) {
+        val result = postDetailMapper.mapYears(
+                years,
+                ExpandedYearUiState(),
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+        ) {
             expandedYear = it.expandedYear
         }
         assertThat(result).hasSize(2)
@@ -46,12 +63,14 @@ class PostDetailMapperTest : BaseUnitTest() {
             assertThat(this.header.text).isEqualTo("2018")
             assertThat(this.header.value).isEqualTo("50")
             assertThat(this.header.showDivider).isTrue()
+            assertThat(this.header.contentDescription).isEqualTo(contentDescription)
         }
         (result[1] as ExpandableItem).apply {
             assertThat(this.isExpanded).isFalse()
             assertThat(this.header.text).isEqualTo("2019")
             assertThat(this.header.value).isEqualTo("100")
             assertThat(this.header.showDivider).isFalse()
+            assertThat(this.header.contentDescription).isEqualTo(contentDescription)
 
             this.onExpandClicked.invoke(true)
 
@@ -64,7 +83,12 @@ class PostDetailMapperTest : BaseUnitTest() {
         val january = Month(1, 50)
         val february = Month(2, 40)
         val years = listOf(PostDetailStatsModel.Year(2019, listOf(january, february), 100))
-        val result = postDetailMapper.mapYears(years, ExpandedYearUiState(expandedYear = 2019)) { }
+        val result = postDetailMapper.mapYears(
+                years,
+                ExpandedYearUiState(expandedYear = 2019),
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+        ) { }
         assertThat(result).hasSize(5)
         assertThat(result[0] is Divider).isTrue()
         (result[1] as ExpandableItem).apply {
@@ -72,16 +96,19 @@ class PostDetailMapperTest : BaseUnitTest() {
             assertThat(this.header.text).isEqualTo("2019")
             assertThat(this.header.value).isEqualTo("100")
             assertThat(this.header.showDivider).isFalse()
+            assertThat(this.header.contentDescription).isEqualTo(contentDescription)
         }
         (result[2] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Feb")
             assertThat(this.value).isEqualTo("40")
             assertThat(this.showDivider).isFalse()
+            assertThat(this.contentDescription).isEqualTo(contentDescription)
         }
         (result[3] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Jan")
             assertThat(this.value).isEqualTo("50")
             assertThat(this.showDivider).isFalse()
+            assertThat(this.contentDescription).isEqualTo(contentDescription)
         }
         assertThat(result[4] is Divider).isTrue()
     }
@@ -109,7 +136,13 @@ class PostDetailMapperTest : BaseUnitTest() {
         val secondWeekLabel = "Jan 9 - Jan 16, 2019"
         whenever(statsDateFormatter.printWeek(secondWeekFirstDay, secondWeekLastDay)).thenReturn(secondWeekLabel)
 
-        val result = postDetailMapper.mapWeeks(weeks, 1, ExpandedWeekUiState()) {}
+        val result = postDetailMapper.mapWeeks(
+                weeks,
+                1,
+                ExpandedWeekUiState(),
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+        ) {}
 
         assertThat(result).hasSize(1)
         (result[0] as ExpandableItem).apply {
@@ -117,6 +150,7 @@ class PostDetailMapperTest : BaseUnitTest() {
             assertThat(this.header.text).isEqualTo(secondWeekLabel)
             assertThat(this.header.value).isEqualTo("350")
             assertThat(this.header.showDivider).isFalse()
+            assertThat(this.header.contentDescription).isEqualTo(contentDescription)
         }
     }
 
@@ -138,7 +172,13 @@ class PostDetailMapperTest : BaseUnitTest() {
         val weekLabel = "Jan 9 - Jan 16, 2019"
         whenever(statsDateFormatter.printWeek(firstDay, lastDay)).thenReturn(weekLabel)
 
-        val result = postDetailMapper.mapWeeks(weeks, 1, ExpandedWeekUiState(firstDay)) {}
+        val result = postDetailMapper.mapWeeks(
+                weeks,
+                1,
+                ExpandedWeekUiState(firstDay),
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+        ) {}
 
         assertThat(result).hasSize(5)
         assertThat(result[0] is Divider).isTrue()
@@ -147,16 +187,19 @@ class PostDetailMapperTest : BaseUnitTest() {
             assertThat(this.header.text).isEqualTo(weekLabel)
             assertThat(this.header.value).isEqualTo("350")
             assertThat(this.header.showDivider).isFalse()
+            assertThat(this.header.contentDescription).isEqualTo(contentDescription)
         }
         (result[2] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Jan 16")
             assertThat(this.value).isEqualTo("400")
             assertThat(this.showDivider).isFalse()
+            assertThat(this.contentDescription).isEqualTo(contentDescription)
         }
         (result[3] as ListItemWithIcon).apply {
             assertThat(this.text).isEqualTo("Jan 9")
             assertThat(this.value).isEqualTo("300")
             assertThat(this.showDivider).isFalse()
+            assertThat(this.contentDescription).isEqualTo(contentDescription)
         }
         assertThat(result[4] is Divider).isTrue()
     }

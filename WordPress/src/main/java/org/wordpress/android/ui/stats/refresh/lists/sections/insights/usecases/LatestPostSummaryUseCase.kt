@@ -93,7 +93,11 @@ class LatestPostSummaryUseCase
                             R.drawable.ic_star_white_24dp,
                             textResource = R.string.stats_likes,
                             value = postLikeCount,
-                            showDivider = true
+                            showDivider = true,
+                            contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    R.string.stats_likes,
+                                    postLikeCount
+                            )
                     )
             )
             val postCommentCount = domainModel.postCommentCount.toFormattedString()
@@ -102,7 +106,10 @@ class LatestPostSummaryUseCase
                             R.drawable.ic_comment_white_24dp,
                             textResource = R.string.stats_comments,
                             value = postCommentCount,
-                            showDivider = false
+                            showDivider = false,
+                            contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    R.string.stats_comments, postCommentCount
+                            )
                     )
             )
         }

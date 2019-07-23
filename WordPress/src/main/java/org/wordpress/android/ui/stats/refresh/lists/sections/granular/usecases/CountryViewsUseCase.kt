@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -44,6 +45,7 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<CountryViewsModel>(
         COUNTRIES,
@@ -119,12 +121,19 @@ constructor(
             items.add(MapLegend(startLabel, endLabel))
             items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
+                val value = group.views.toFormattedString()
                 items.add(
                         ListItemWithIcon(
                                 iconUrl = group.flagIconUrl,
                                 text = group.fullName,
-                                value = group.views.toFormattedString(),
-                                showDivider = index < domainModel.countries.size - 1
+                                value = value,
+                                showDivider = index < domainModel.countries.size - 1,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_country_label,
+                                        group.fullName,
+                                        R.string.stats_country_views_label,
+                                        value
+                                )
                         )
                 )
             }
@@ -157,7 +166,8 @@ constructor(
         private val store: CountryViewsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 CountryViewsUseCase(
@@ -167,6 +177,7 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

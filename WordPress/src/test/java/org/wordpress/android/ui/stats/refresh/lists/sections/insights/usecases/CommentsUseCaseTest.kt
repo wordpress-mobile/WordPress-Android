@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -44,6 +45,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
@@ -52,15 +54,23 @@ class CommentsUseCaseTest : BaseUnitTest() {
     private val url = "www.url.com"
     private val totalCount = 50
     private val blockItemCount = 6
+    private val contentDescription = "title, views"
     @Before
     fun setUp() {
         useCase = CommentsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
-                popupMenuHandler
+                popupMenuHandler,
+                contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -171,6 +181,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat((userItem as ListItem).text).isEqualTo(postTitle)
         assertThat(userItem.showDivider).isEqualTo(false)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
+        assertThat(userItem.contentDescription).isEqualTo(contentDescription)
         return tabsItem
     }
 
@@ -196,6 +207,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(userItem.iconStyle).isEqualTo(AVATAR)
         assertThat(userItem.text).isEqualTo(user)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
+        assertThat(userItem.contentDescription).isEqualTo(contentDescription)
         return tabsItem
     }
 

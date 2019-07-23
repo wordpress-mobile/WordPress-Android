@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -32,7 +33,8 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val popupMenuHandler: ItemPopupMenuHandler
+    private val popupMenuHandler: ItemPopupMenuHandler,
+    private val contentDescriptionHelper: ContentDescriptionHelper
 ) : BaseStatsUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
         val fetchMode = LimitMode.Top(BLOCK_ITEM_COUNT)
@@ -90,12 +92,19 @@ class CommentsUseCase
         if (authors.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
             mutableItems.addAll(authors.mapIndexed { index, author ->
+                val value = author.comments.toFormattedString()
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
                         text = author.name,
-                        value = author.comments.toFormattedString(),
-                        showDivider = index < authors.size - 1
+                        value = value,
+                        showDivider = index < authors.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_comments_author_label,
+                                author.name,
+                                R.string.stats_comments_label,
+                                value
+                        )
                 )
             })
         } else {
@@ -109,10 +118,17 @@ class CommentsUseCase
         if (posts.isNotEmpty()) {
             mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
             mutableItems.addAll(posts.mapIndexed { index, post ->
+                val value = post.comments.toFormattedString()
                 ListItem(
                         post.name,
-                        post.comments.toFormattedString(),
-                        index < posts.size - 1
+                        value,
+                        index < posts.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_comments_title_label,
+                                post.name,
+                                R.string.stats_comments_label,
+                                value
+                        )
                 )
             })
         } else {

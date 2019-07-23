@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -53,12 +55,14 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 30
     private val singleReferrer = Group("group1", "Group 1", "group1.jpg", "group1.com", firstGroupViews, listOf())
     private val referrer = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com")
     private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(referrer))
+    private val contentDescription = "title, views"
     @Before
     fun setUp() {
         useCase = ReferrersUseCase(
@@ -68,6 +72,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -78,6 +83,12 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -221,6 +232,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             assertThat(item.value).isNull()
         }
         assertThat(item.iconUrl).isEqualTo(icon)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertExpandableItem(
@@ -233,6 +245,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toFormattedString())
         assertThat(item.header.iconUrl).isEqualTo(icon)
+        assertThat(item.header.contentDescription).isEqualTo(contentDescription)
         return item
     }
 

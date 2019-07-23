@@ -1,8 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
@@ -11,10 +15,22 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 
 @RunWith(MockitoJUnitRunner::class)
 class AnnualStatsMapperTest {
-    private val annualStatsMapper = AnnualStatsMapper()
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    private lateinit var annualStatsMapper: AnnualStatsMapper
+    private val contentDescription = "title, views"
+    @Before
+    fun setUp() {
+        annualStatsMapper = AnnualStatsMapper(contentDescriptionHelper)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any()
+        )).thenReturn(contentDescription)
+    }
+
     @Test
     fun `maps year insights for the card`() {
         val mappedYear = YearInsights(
@@ -104,5 +120,6 @@ class AnnualStatsMapperTest {
         val item = blockListItem as ListItemWithIcon
         assertThat(item.textResource).isEqualTo(label)
         assertThat(item.value).isEqualTo(value)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 }

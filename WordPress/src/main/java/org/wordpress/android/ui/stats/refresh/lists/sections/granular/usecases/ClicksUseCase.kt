@@ -22,13 +22,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.SelectedClicksGroup
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -48,6 +48,7 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
@@ -100,11 +101,20 @@ constructor(
         } else {
             items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
             domainModel.groups.forEachIndexed { index, group ->
+                val value = group.views?.toFormattedString()
+                val groupName = group.name
+                val contentDescription = contentDescriptionHelper.buildContentDescription(
+                            R.string.stats_clicks_link_label,
+                            groupName ?: "",
+                            R.string.stats_clicks_label,
+                            value ?: ""
+                    )
                 val headerItem = ListItemWithIcon(
-                        text = group.name,
-                        value = group.views?.toFormattedString(),
+                        text = groupName,
+                        value = value,
                         showDivider = index < domainModel.groups.size - 1,
-                        navigationAction = group.url?.let { NavigationAction.create(it, this::onItemClick) }
+                        navigationAction = group.url?.let { create(it, this::onItemClick) },
+                        contentDescription = contentDescription
                 )
                 if (group.clicks.isEmpty()) {
                     items.add(headerItem)
@@ -115,12 +125,19 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
+                            val clickValue = click.views.toFormattedString()
                             ListItemWithIcon(
                                     text = click.name,
                                     textStyle = LIGHT,
-                                    value = click.views.toFormattedString(),
+                                    value = clickValue,
                                     showDivider = false,
-                                    navigationAction = click.url?.let { create(it, this::onItemClick) }
+                                    navigationAction = click.url?.let { create(it, this::onItemClick) },
+                                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                                            R.string.stats_clicks_link_label,
+                                            click.name,
+                                            R.string.stats_clicks_label,
+                                            clickValue
+                                    )
                             )
                         })
                         items.add(Divider)
@@ -163,6 +180,7 @@ constructor(
         private val store: ClicksStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -173,6 +191,7 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
@@ -71,7 +72,11 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(services)).thenReturn(listOf(mockedItem))
+        whenever(serviceMapper.map(
+                services,
+                string.stats_publicize_service_label,
+                string.stats_publicize_followers_label
+        )).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 
@@ -102,7 +107,11 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(services.take(5))).thenReturn(listOf(mockedItem))
+        whenever(serviceMapper.map(
+                services.take(5),
+                string.stats_publicize_service_label,
+                string.stats_publicize_followers_label
+        )).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 

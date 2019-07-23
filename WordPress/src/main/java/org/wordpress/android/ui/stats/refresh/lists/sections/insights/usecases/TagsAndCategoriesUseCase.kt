@@ -3,8 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
@@ -29,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
@@ -49,6 +48,7 @@ class TagsAndCategoriesUseCase
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
@@ -91,8 +91,8 @@ class TagsAndCategoriesUseCase
         } else {
             items.add(
                     Header(
-                            string.stats_tags_and_categories_title_label,
-                            string.stats_tags_and_categories_views_label
+                            R.string.stats_tags_and_categories_title_label,
+                            R.string.stats_tags_and_categories_views_label
                     )
             )
             val tagsList = mutableListOf<BlockListItem>()
@@ -131,7 +131,7 @@ class TagsAndCategoriesUseCase
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
 
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
         return tagA.items == tagB?.items && tagA.views == tagB.views
@@ -139,13 +139,15 @@ class TagsAndCategoriesUseCase
 
     private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
         val item = tag.items.first()
+        val value = tag.views.toFormattedString()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
-                value = tag.views.toFormattedString(),
+                value = value,
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
-                navigationAction = NavigationAction.create(item.link, this::onTagClick)
+                navigationAction = NavigationAction.create(item.link, this::onTagClick),
+                contentDescription = buildContentDescription(item.name, value)
         )
     }
 
@@ -156,12 +158,14 @@ class TagsAndCategoriesUseCase
                 else -> resourceProvider.getString(R.string.stats_category_folded_name, acc, item.name)
             }
         }
+        val value = tag.views.toFormattedString()
         return ListItemWithIcon(
                 icon = R.drawable.ic_folder_multiple_white_24dp,
                 text = text,
-                value = tag.views.toFormattedString(),
+                value = value,
                 barWidth = getBarWidth(tag.views, maxViews),
-                showDivider = index < listSize - 1
+                showDivider = index < listSize - 1,
+                contentDescription = buildContentDescription(text, value)
         )
     }
 
@@ -171,12 +175,13 @@ class TagsAndCategoriesUseCase
                 textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
-                navigationAction = NavigationAction.create(item.link, this::onTagClick)
+                navigationAction = NavigationAction.create(item.link, this::onTagClick),
+                contentDescription = buildContentDescription(item.name)
         )
     }
 
     private fun getIcon(type: String) =
-            if (type == "tag") drawable.ic_tag_white_24dp else drawable.ic_folder_white_24dp
+            if (type == "tag") R.drawable.ic_tag_white_24dp else R.drawable.ic_folder_white_24dp
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
@@ -192,6 +197,22 @@ class TagsAndCategoriesUseCase
         popupMenuHandler.onMenuClick(view, type)
     }
 
+    private fun buildContentDescription(key: String, value: String): String {
+        return contentDescriptionHelper.buildContentDescription(
+                R.string.stats_tags_and_categories_title_label,
+                key,
+                R.string.stats_tags_and_categories_views_label,
+                value
+        )
+    }
+
+    private fun buildContentDescription(key: String): String {
+        return contentDescriptionHelper.buildContentDescription(
+                R.string.stats_tags_and_categories_title_label,
+                key
+        )
+    }
+
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 
     class TagsAndCategoriesUseCaseFactory
@@ -201,6 +222,7 @@ class TagsAndCategoriesUseCase
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
         private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
@@ -211,6 +233,7 @@ class TagsAndCategoriesUseCase
                         resourceProvider,
                         analyticsTracker,
                         popupMenuHandler,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

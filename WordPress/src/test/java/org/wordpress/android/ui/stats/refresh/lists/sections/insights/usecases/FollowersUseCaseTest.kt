@@ -37,6 +37,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -51,6 +52,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCaseFactory: FollowersUseCaseFactory
     private lateinit var useCase: FollowersUseCase
     private val avatar = "avatar.jpg"
@@ -65,7 +67,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val blockInitialMode = PagedMode(blockPageSize, false)
     private val viewAllInitialLoadMode = PagedMode(viewAllPageSize, false)
     private val viewAllMoreLoadMode = PagedMode(viewAllPageSize, true)
-    val message = "Total followers count is 50"
+    private val message = "Total followers count is 50"
+    private val contentDescription = "title, views"
     @Before
     fun setUp() {
         useCaseFactory = FollowersUseCaseFactory(
@@ -76,7 +79,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 statsUtilsWrapper,
                 resourceProvider,
                 popupMenuHandler,
-                tracker
+                tracker,
+                contentDescriptionHelper
         )
         useCase = useCaseFactory.build(BLOCK)
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
@@ -85,6 +89,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 message
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -328,6 +338,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(follower.text).isEqualTo(user)
         assertThat(follower.value).isEqualTo(sinceLabel)
         assertThat(follower.showDivider).isEqualTo(true)
+        assertThat(follower.contentDescription).isEqualTo(contentDescription)
 
         assertThat(this[12] is ListItemWithIcon).isTrue()
 
@@ -362,6 +373,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(follower.text).isEqualTo(user)
         assertThat(follower.value).isEqualTo(sinceLabel)
         assertThat(follower.showDivider).isEqualTo(false)
+        assertThat(follower.contentDescription).isEqualTo(contentDescription)
         return tabsItem
     }
 

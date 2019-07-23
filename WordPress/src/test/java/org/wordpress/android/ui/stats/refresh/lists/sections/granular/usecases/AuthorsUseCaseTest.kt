@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -52,12 +54,14 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: AuthorsUseCase
     private val firstAuthorViews = 20
     private val secondAuthorViews = 40
     private val authorWithoutPosts = Author("group1", firstAuthorViews, "group1.jpg", listOf())
     private val post = Post("Post1", "Post title", 20, "post.com")
     private val authorWithPosts = Author("group2", secondAuthorViews, "group2.jpg", listOf(post))
+    private val contentDescription = "title, views"
     @Before
     fun setUp() {
         useCase = AuthorsUseCase(
@@ -67,6 +71,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -77,6 +82,12 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -257,6 +268,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
             assertThat(item.barWidth).isNull()
         }
         assertThat(item.iconUrl).isEqualTo(icon)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertExpandableItem(
@@ -271,6 +283,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         assertThat(item.header.value).isEqualTo(views.toFormattedString())
         assertThat(item.header.iconUrl).isEqualTo(icon)
         assertThat(item.header.barWidth).isEqualTo(bar)
+        assertThat(item.header.contentDescription).isEqualTo(contentDescription)
         return item
     }
 

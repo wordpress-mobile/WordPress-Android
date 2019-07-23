@@ -73,7 +73,14 @@ class PostRecentWeeksUseCase(
                         R.string.stats_months_and_years_views_label
                 )
         )
-        val yearList = postDetailMapper.mapWeeks(domainModel.weekViews, itemsToLoad, uiState, this::onUiState)
+        val yearList = postDetailMapper.mapWeeks(
+                domainModel.weekViews,
+                itemsToLoad,
+                uiState,
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label,
+                this::onUiState
+        )
 
         items.addAll(yearList)
         if (useCaseMode == BLOCK && domainModel.weekViews.size > itemsToLoad) {

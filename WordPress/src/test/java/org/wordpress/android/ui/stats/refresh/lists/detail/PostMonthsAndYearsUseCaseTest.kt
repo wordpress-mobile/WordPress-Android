@@ -81,15 +81,40 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         )
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
-        whenever(postDetailMapper.mapYears(eq(data), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                })
+        whenever(
+                postDetailMapper.mapYears(
+                        eq(data),
+                        eq(nonExpandedUiState),
+                        eq(R.string.stats_months_and_years_period_label),
+                        eq(R.string.stats_months_and_years_views_label),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                                false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        })
         )
-        whenever(postDetailMapper.mapYears(eq(data), eq(expandedUiState), expandCaptor.capture())).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                }, ListItemWithIcon(text = "Jan", value = "100"))
+        whenever(
+                postDetailMapper.mapYears(
+                        eq(data),
+                        eq(expandedUiState),
+                        eq(R.string.stats_months_and_years_period_label),
+                        eq(R.string.stats_months_and_years_views_label),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                                false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        }, ListItemWithIcon(text = "Jan", value = "100", contentDescription = "2010: 150")
+                )
         )
 
         val result = loadData(true, forced)
@@ -140,12 +165,18 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
                 postDetailMapper.mapYears(
                         eq(data.takeLast(6)),
                         eq(nonExpandedUiState),
+                        eq(R.string.stats_months_and_years_period_label),
+                        eq(R.string.stats_months_and_years_views_label),
                         expandCaptor.capture()
                 )
         ).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                })
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                                false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        })
         )
 
         val result = loadData(true, forced)

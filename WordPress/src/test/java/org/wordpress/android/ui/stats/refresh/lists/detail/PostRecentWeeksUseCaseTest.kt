@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
@@ -86,19 +87,48 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
         val lastDayCalendar = Calendar.getInstance()
         lastDayCalendar.set(2019, 3, 24)
         val expandedUiState = ExpandedWeekUiState(expandedWeekFirstDay = lastDayCalendar.time)
-        whenever(postDetailMapper.mapWeeks(eq(data), eq(6), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                })
-        )
-        whenever(postDetailMapper.mapWeeks(eq(data), eq(6), eq(expandedUiState), expandCaptor.capture())).thenReturn(
+        whenever(
+                postDetailMapper.mapWeeks(
+                        eq(data),
+                        eq(6),
+                        eq(nonExpandedUiState),
+                        any(),
+                        any(),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
                 listOf(
                         ExpandableItem(
-                                ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"),
+                                ListItemWithIcon(
+                                        text = "Mar 18 - Mar 24, 2019",
+                                        value = "150",
+                                        contentDescription = "Mar: 150"
+                                ), false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        })
+        )
+        whenever(
+                postDetailMapper.mapWeeks(
+                        eq(data),
+                        eq(6),
+                        eq(expandedUiState),
+                        any(),
+                        any(),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(
+                                        text = "Mar 18 - Mar 24, 2019",
+                                        value = "150",
+                                        contentDescription = "Mar: 150"
+                                ),
                                 false
                         ) { expandCaptor.lastValue.invoke(expandedUiState) },
-                        ListItemWithIcon(text = "Mar 18", value = "50"),
-                        ListItemWithIcon(text = "Mar 24", value = "100")
+                        ListItemWithIcon(text = "Mar 18", value = "50", contentDescription = "Mar: 50"),
+                        ListItemWithIcon(text = "Mar 24", value = "100", contentDescription = "Mar: 100")
                 )
         )
 
@@ -149,12 +179,21 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
                         eq(data),
                         eq(6),
                         eq(nonExpandedUiState),
+                        any(),
+                        any(),
                         expandCaptor.capture()
                 )
         ).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "Mar 18 - Mar 24, 2019", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                })
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(
+                                        text = "Mar 18 - Mar 24, 2019",
+                                        value = "150",
+                                        contentDescription = "Mar: 150"
+                                ), false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        })
         )
 
         val result = loadData(true, forced)

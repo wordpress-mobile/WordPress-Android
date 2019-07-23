@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -48,8 +50,10 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: SearchTermsUseCase
     private val searchTerm = SearchTerm("search term", 10)
+    private val contentDescription = "title, views"
 
     private val limitMode = Top(ITEMS_TO_LOAD)
     @Before
@@ -61,6 +65,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -71,6 +76,18 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<Int>(),
+                any(),
+                any()
+        )).thenReturn(contentDescription)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -223,6 +240,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertLink(item: BlockListItem) {

@@ -30,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.SelectedGroup
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -49,6 +50,7 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
@@ -102,23 +104,34 @@ constructor(
             items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
             domainModel.groups.forEachIndexed { index, group ->
                 val icon = buildIcon(group.icon)
+                val text = group.name
+                val value = (group.total ?: 0).toFormattedString()
+                val contentDescription =
+                    contentDescriptionHelper.buildContentDescription(
+                            R.string.stats_referrer_label,
+                            text ?: "",
+                            R.string.stats_referrer_views_label,
+                            value
+                    )
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
-                            text = group.name,
-                            value = group.total?.toFormattedString(),
+                            text = text,
+                            value = value,
                             showDivider = index < domainModel.groups.size - 1,
-                            navigationAction = group.url?.let { create(it, this::onItemClick) }
+                            navigationAction = group.url?.let { create(it, this::onItemClick) },
+                            contentDescription = contentDescription
                     )
                     items.add(headerItem)
                 } else {
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
-                            text = group.name,
-                            value = group.total?.toFormattedString(),
-                            showDivider = index < domainModel.groups.size - 1
+                            text = text,
+                            value = value,
+                            showDivider = index < domainModel.groups.size - 1,
+                            contentDescription = contentDescription
                     )
                     val isExpanded = group.groupId == uiState.groupId
                     items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
@@ -132,15 +145,22 @@ constructor(
                             } else {
                                 NORMAL
                             }
+                            val referrerValue = referrer.views.toFormattedString()
                             ListItemWithIcon(
                                     icon = referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     iconStyle = iconStyle,
                                     textStyle = LIGHT,
                                     text = referrer.name,
-                                    value = referrer.views.toFormattedString(),
+                                    value = referrerValue,
                                     showDivider = false,
-                                    navigationAction = referrer.url?.let { create(it, this::onItemClick) }
+                                    navigationAction = referrer.url?.let { create(it, this::onItemClick) },
+                                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                                            R.string.stats_referrer_label,
+                                            referrer.name,
+                                            R.string.stats_referrer_views_label,
+                                            referrerValue
+                                    )
                             )
                         })
                         items.add(Divider)
@@ -191,6 +211,7 @@ constructor(
         private val referrersStore: ReferrersStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -201,6 +222,7 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

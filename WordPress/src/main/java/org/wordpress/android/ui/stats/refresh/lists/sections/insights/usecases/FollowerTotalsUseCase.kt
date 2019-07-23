@@ -20,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.F
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase.FollowerType.EMAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase.FollowerType.SOCIAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase.FollowerType.WP_COM
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -31,7 +32,8 @@ class FollowerTotalsUseCase
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val followersStore: FollowersStore,
     private val publicizeStore: PublicizeStore,
-    private val statsSiteProvider: StatsSiteProvider
+    private val statsSiteProvider: StatsSiteProvider,
+    private val contentDescriptionHelper: ContentDescriptionHelper
 ) : StatelessUseCase<Map<FollowerType, Int>>(FOLLOWER_TOTALS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_follower_totals))
 
@@ -137,12 +139,20 @@ class FollowerTotalsUseCase
 
         if (domainModel.isNotEmpty()) {
             domainModel.entries.forEach {
-                items.add(ListItemWithIcon(
-                        icon = getIcon(it.key),
-                        textResource = getTitle(it.key),
-                        value = it.value.toFormattedString(),
-                        showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1
-                ))
+                val textResource = getTitle(it.key)
+                val value = it.value.toFormattedString()
+                items.add(
+                        ListItemWithIcon(
+                                icon = getIcon(it.key),
+                                textResource = textResource,
+                                value = value,
+                                showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        textResource,
+                                        value
+                                )
+                        )
+                )
             }
         } else {
             items.add(Empty())

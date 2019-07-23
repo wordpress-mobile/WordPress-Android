@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -52,6 +53,7 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
@@ -105,13 +107,20 @@ constructor(
             items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
             val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
+                val value = author.views.toFormattedString()
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatarUrl,
                         iconStyle = AVATAR,
                         text = author.name,
                         barWidth = getBarWidth(author.views, maxViews),
-                        value = author.views.toFormattedString(),
-                        showDivider = index < domainModel.authors.size - 1
+                        value = value,
+                        showDivider = index < domainModel.authors.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_author_label,
+                                author.name,
+                                R.string.stats_author_views_label,
+                                value
+                        )
                 )
                 if (author.posts.isEmpty()) {
                     items.add(headerItem)
@@ -122,15 +131,22 @@ constructor(
                     })
                     if (isExpanded) {
                         items.addAll(author.posts.map { post ->
+                            val postViews = post.views.toFormattedString()
                             ListItemWithIcon(
                                     text = post.title,
-                                    value = post.views.toFormattedString(),
+                                    value = postViews,
                                     iconStyle = if (author.avatarUrl != null) EMPTY_SPACE else NORMAL,
                                     textStyle = LIGHT,
                                     showDivider = false,
                                     navigationAction = create(
                                             PostClickParams(post.id, post.url, post.title),
                                             this::onPostClicked
+                                    ),
+                                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                                            R.string.stats_post_label,
+                                            post.title,
+                                            R.string.stats_post_views_label,
+                                            postViews
                                     )
                             )
                         })
@@ -187,7 +203,8 @@ constructor(
         private val authorsStore: AuthorsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 AuthorsUseCase(
@@ -197,6 +214,7 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.FACEBOOK
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.GOOGLE_PLUS
@@ -21,17 +20,33 @@ private const val LINKED_IN_ICON = "https://secure.gravatar.com/blavatar/f54db46
 private const val PATH_ICON = "https://secure.gravatar.com/blavatar/3a03c8ce5bf1271fb3760bb6e79b02c1?s="
 
 class ServiceMapper
-@Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun map(services: List<PublicizeModel.Service>): List<ListItemWithIcon> {
+@Inject constructor(
+    private val resourceProvider: ResourceProvider,
+    private val contentDescriptionHelper: ContentDescriptionHelper
+) {
+    fun map(
+        services: List<org.wordpress.android.fluxc.model.stats.PublicizeModel.Service>,
+        keyLabel: Int,
+        valueLabel: Int
+    ): List<ListItemWithIcon> {
         val dimension = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)
         return services.mapIndexed { index, service ->
             val mappedService = getService(service.name)
+            val text = if (mappedService?.nameResource == null) service.name else null
+            val value = service.followers.toFormattedString()
+            val contentDescription = contentDescriptionHelper.buildContentDescription(
+                    keyLabel,
+                    text ?: "",
+                    valueLabel,
+                    value
+            )
             ListItemWithIcon(
                     iconUrl = mappedService?.iconUrl?.let { it + dimension },
-                    text = if (mappedService?.nameResource == null) service.name else null,
+                    text = text,
                     textResource = mappedService?.nameResource,
-                    value = service.followers.toFormattedString(),
-                    showDivider = index < services.size - 1
+                    value = value,
+                    showDivider = index < services.size - 1,
+                    contentDescription = contentDescription
             )
         }
     }
