@@ -31,7 +31,7 @@
             android:contentDescription="@null"
             android:visibility="gone"
             tools:src="@drawable/ic_info_white_24dp"
-            tools:tint="@color/gray_800"
+            tools:tint="@color/gray_80"
             tools:visibility="visible"/>
 
         <LinearLayout

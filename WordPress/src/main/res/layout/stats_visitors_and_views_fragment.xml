@@ -89,7 +89,7 @@
                     android:contentDescription="@null"
                     android:paddingEnd="@dimen/margin_medium"
                     android:src="@drawable/ic_info_white_24dp"
-                    android:tint="@color/gray_800"/>
+                    android:tint="@color/gray_80"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
