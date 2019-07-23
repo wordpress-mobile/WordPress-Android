@@ -1683,7 +1683,7 @@ public class SiteStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mSiteRestClient.designateMobileEditor(payload.site, payload.editor);
         } else {
-            // Just update the editor pref on the DB
+            // .ORG sites: Just update the editor pref on the DB and emit the change
             SiteModel site = payload.site;
             site.setMobileEditor(payload.editor);
             OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
