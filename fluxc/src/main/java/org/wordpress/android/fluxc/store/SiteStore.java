@@ -1682,6 +1682,17 @@ public class SiteStore extends Store {
     private void designateMobileEditor(DesignateMobileEditorPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mSiteRestClient.designateMobileEditor(payload.site, payload.editor);
+        } else {
+            // Just update the editor pref on the DB
+            SiteModel site = payload.site;
+            site.setMobileEditor(payload.editor);
+            OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
+            try {
+                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (Exception e) {
+                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+            }
+            emitChange(event);
         }
     }
 
