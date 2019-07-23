@@ -830,7 +830,7 @@
     <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">@color/neutral_800</item>
+        <item name="android:textColor">@color/neutral_80</item>
     </style>
 
     <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">

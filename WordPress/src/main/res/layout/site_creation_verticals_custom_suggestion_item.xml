@@ -17,7 +17,7 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_800"
+        android:textColor="@color/neutral_80"
         android:textSize="@dimen/text_sz_large"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"

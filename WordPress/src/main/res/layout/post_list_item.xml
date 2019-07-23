@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="2"
-            android:textColor="@color/neutral_800"
+            android:textColor="@color/neutral_80"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

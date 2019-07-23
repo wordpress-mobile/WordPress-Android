@@ -53,7 +53,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/neutral_800">
+                    android:textColor="@color/neutral_80">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/neutral_30"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/neutral_800">
+                    android:textColor="@color/neutral_80">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
