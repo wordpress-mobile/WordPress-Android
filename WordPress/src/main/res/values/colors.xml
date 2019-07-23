@@ -35,7 +35,7 @@
     <color name="accent_400">@color/pink_40</color>
     <color name="accent_50">@color/pink_50</color>
     <color name="accent_500">@color/pink_50</color>
-    <color name="accent_600">@color/hot_pink_600</color>
+    <color name="accent_600">@color/pink_60</color>
     <color name="accent_700">@color/hot_pink_700</color>
     <color name="accent_800">@color/hot_pink_800</color>
     <color name="accent_900">@color/hot_pink_900</color>
