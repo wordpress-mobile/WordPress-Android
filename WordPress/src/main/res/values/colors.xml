@@ -128,11 +128,11 @@
     <color name="blue_90">#01263a</color>
     <color name="blue_100">#00131c</color>
     <color name="celadon_0">#ecf7f4</color>
+    <color name="celadon_5">#a6ebd6</color>
     <color name="celadon_100">#bad1cb</color>
     <color name="celadon_200">#93bab0</color>
     <color name="celadon_300">#6da296</color>
     <color name="celadon_400">#438c7d</color>
-    <color name="celadon_50">#d8e3e0</color>
     <color name="celadon_500">#007565</color>
     <color name="celadon_600">#195d52</color>
     <color name="celadon_700">#20473f</color>
