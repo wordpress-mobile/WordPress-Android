@@ -93,7 +93,7 @@
     <color name="success_500">@color/green_50</color>
     <color name="success_600">@color/green_60</color>
     <color name="success_700">@color/green_70</color>
-    <color name="success_800">@color/hot_green_800</color>
+    <color name="success_800">@color/green_80</color>
     <color name="success_900">@color/hot_green_900</color>
     <color name="success_dark">@color/green_70</color>
     <color name="success_light">@color/green_30</color>
