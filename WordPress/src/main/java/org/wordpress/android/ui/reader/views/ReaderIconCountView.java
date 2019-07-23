@@ -62,7 +62,7 @@ public class ReaderIconCountView extends LinearLayout {
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.ic_comment_white_24dp));
                         mImageView.setImageTintList(getResources().getColorStateList(
-                                R.color.neutral_primary_400_neutral_40_selector));
+                                R.color.neutral_primary_40_neutral_40_selector));
                         break;
                 }
             } finally {

@@ -10,7 +10,7 @@
             android:shape="oval" >
 
             <solid
-                android:color="@color/primary_400" >
+                android:color="@color/primary_40" >
             </solid>
 
         </shape>

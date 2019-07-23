@@ -16,7 +16,7 @@
     android:focusable="true" >
 
     <RadioButton
-        android:buttonTint="@color/primary_400_gray_200_gray_400_selector"
+        android:buttonTint="@color/primary_40_gray_20_gray_40_selector"
         android:id="@+id/radio"
         android:focusable="false"
         android:clickable="false"

@@ -113,7 +113,7 @@ public class PeopleListFragment extends Fragment {
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
         // the following will change the look and feel of the toolbar to match the current design
-        mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.primary_400));
+        mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.primary_40));
         mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
         mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(

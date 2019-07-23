@@ -120,7 +120,7 @@
     </style>
 
     <style name="Toolbar.Secondary" parent="@style/Toolbar.Primary">
-        <item name="android:background">@color/primary_400</item>
+        <item name="android:background">@color/primary_40</item>
         <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
     </style>
 
@@ -544,7 +544,7 @@
     </style>
 
     <style name="SwitchBlueMedium">
-        <item name="colorControlActivated">@color/primary_400</item>
+        <item name="colorControlActivated">@color/primary_40</item>
     </style>
 
     <!--Post Settings Styles-->
@@ -713,13 +713,13 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/primary_400</item>
+        <item name="android:textColor">@color/primary_40</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="WPRatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
-        <item name="android:progressTint">@color/primary_400</item>
+        <item name="android:progressTint">@color/primary_40</item>
     </style>
 
     <!--Comment Styles-->

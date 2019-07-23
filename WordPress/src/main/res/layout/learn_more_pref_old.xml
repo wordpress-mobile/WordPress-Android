@@ -28,7 +28,7 @@
         android:textAllCaps="true"
         android:text="@string/learn_more"
         android:textSize="@dimen/text_sz_medium"
-        android:textColor="@color/primary_400"
+        android:textColor="@color/primary_40"
         android:focusable="false"
         android:clickable="false"
         android:fontFamily="sans-serif-light" />

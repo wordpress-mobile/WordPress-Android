@@ -79,7 +79,7 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
-        <item name="android:textColor">@color/primary_400</item>
+        <item name="android:textColor">@color/primary_40</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -92,8 +92,8 @@
     </style>
 
     <style name="BlueMediumProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:colorAccent">@color/primary_400</item>
-        <item name="android:indeterminateTint">@color/primary_400</item>
+        <item name="android:colorAccent">@color/primary_40</item>
+        <item name="android:indeterminateTint">@color/primary_40</item>
     </style>
 
     <!-- Stats Refresh -->

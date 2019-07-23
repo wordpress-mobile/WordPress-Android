@@ -137,7 +137,7 @@
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_history_white_24dp"
-                    android:tint="@color/primary_400"/>
+                    android:tint="@color/primary_40"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -146,7 +146,7 @@
                     android:text="@string/rewind"
                     android:textAllCaps="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/primary_400"/>
+                    android:textColor="@color/primary_40"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

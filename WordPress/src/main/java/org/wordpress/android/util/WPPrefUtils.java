@@ -110,7 +110,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsFlatButton(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.primary_400);
+        setTextViewAttributes(view, size, R.color.primary_40);
     }
 
     /**
@@ -137,7 +137,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerSelected(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_triple_extra_large);
-        setTextViewAttributes(view, size, R.color.primary_400);
+        setTextViewAttributes(view, size, R.color.primary_40);
     }
 
     /**
