@@ -75,7 +75,7 @@
     <color name="primary_200">@color/blue_200</color>
     <color name="primary_300">@color/blue_300</color>
     <color name="primary_400">@color/blue_400</color>
-    <color name="primary_50">@color/blue_50</color>
+    <color name="primary_50">@color/blue_5</color>
     <color name="primary_500">@color/blue_500</color>
     <color name="primary_600">@color/blue_600</color>
     <color name="primary_700">@color/blue_700</color>
@@ -116,11 +116,11 @@
 
     <!-- STUDIO -->
     <color name="blue_0">#eff3f7</color>
+    <color name="blue_5">#c6def6</color>
     <color name="blue_100">#bbc9d5</color>
     <color name="blue_200">#95adc1</color>
     <color name="blue_300">#6f93ad</color>
     <color name="blue_400">#46799a</color>
-    <color name="blue_50">#d8dee4</color>
     <color name="blue_500">#016087</color>
     <color name="blue_600">#204a69</color>
     <color name="blue_700">#23354b</color>

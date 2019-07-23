@@ -68,7 +68,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_50"
+        android:fillColor="@color/blue_5"
         android:pathData="M108.1 49h81.1v72.9h-81.1z">
     </path>
 
@@ -93,7 +93,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_50"
+        android:fillColor="@color/blue_5"
         android:pathData="M0 152.4h81.1v72.9H0z">
     </path>
 
@@ -138,7 +138,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_50"
+        android:fillColor="@color/blue_5"
         android:pathData="M107.1 152.4h81.1v72.9h-81.1z">
     </path>
 

@@ -90,7 +90,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_50"
+        android:fillColor="@color/blue_5"
         android:pathData="M140.6 180.1l16.7-28.9c5.2-9 2.6-20.3-5.7-25.1-8.3-4.8-19.4-1.4-24.6 7.6l-26.8 46.4h40.4z">
     </path>
 
