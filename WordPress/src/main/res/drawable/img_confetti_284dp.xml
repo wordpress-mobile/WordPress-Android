@@ -75,7 +75,7 @@
     </path>
 
     <path
-        android:fillColor="@color/green_200"
+        android:fillColor="@color/green_20"
         android:pathData="M187.45,76.07l8.5,-19.35">
     </path>
 
