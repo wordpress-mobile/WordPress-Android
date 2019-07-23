@@ -310,6 +310,7 @@
     <color name="yellow_70">#5c4b00</color>
     <color name="yellow_80">#453900</color>
     <color name="yellow_90">#302800</color>
+    <color name="yellow_100">#1c1700</color>
 
     <!-- TRANSLUCENT -->
     <color name="black_translucent_20">#33000000</color>
