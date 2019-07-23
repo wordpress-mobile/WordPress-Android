@@ -112,7 +112,7 @@
     <color name="warning_40">@color/yellow_40</color>
     <color name="warning_50">@color/yellow_50</color>
     <color name="warning_60">@color/yellow_60</color>
-    <color name="warning_700">@color/yellow_40</color>
+    <color name="warning_70">@color/yellow_70</color>
     <color name="warning_800">@color/yellow_50</color>
     <color name="warning_900">@color/yellow_60</color>
     <color name="warning_dark">@color/yellow_40</color>

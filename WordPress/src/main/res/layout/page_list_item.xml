@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="3dp"
-                android:textColor="@color/warning_700"
+                android:textColor="@color/warning_70"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/time_posted"
                 app:layout_constraintTop_toBottomOf="@+id/page_title"
