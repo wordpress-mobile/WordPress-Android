@@ -104,7 +104,7 @@
     <color name="warning_200">@color/hot_yellow_200</color>
     <color name="warning_300">@color/hot_yellow_300</color>
     <color name="warning_400">@color/hot_yellow_400</color>
-    <color name="warning_50">@color/hot_yellow_50</color>
+    <color name="warning_50">@color/yellow_0</color>
     <color name="warning_500">@color/hot_yellow_500</color>
     <color name="warning_600">@color/hot_yellow_600</color>
     <color name="warning_700">@color/hot_yellow_700</color>
