@@ -115,7 +115,7 @@
     <color name="warning_light">@color/hot_yellow_300</color>
 
     <!-- STUDIO -->
-    <color name="blue_0">#f3f5f6</color>
+    <color name="blue_0">#eff3f7</color>
     <color name="blue_100">#bbc9d5</color>
     <color name="blue_200">#95adc1</color>
     <color name="blue_300">#6f93ad</color>
