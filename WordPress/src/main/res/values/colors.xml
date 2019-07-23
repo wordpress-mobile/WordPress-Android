@@ -83,13 +83,13 @@
     <color name="primary_900">@color/blue_100</color>
     <color name="primary_dark">@color/blue_80</color>
     <color name="primary_light">@color/blue_30</color>
-    <color name="success">@color/hot_green_500</color>
+    <color name="success">@color/green_5</color>
     <color name="success_0">@color/green_0</color>
     <color name="success_100">@color/hot_green_100</color>
     <color name="success_200">@color/hot_green_200</color>
     <color name="success_300">@color/hot_green_300</color>
     <color name="success_400">@color/hot_green_400</color>
-    <color name="success_50">@color/hot_green_50</color>
+    <color name="success_50">@color/green_5</color>
     <color name="success_500">@color/hot_green_500</color>
     <color name="success_600">@color/hot_green_600</color>
     <color name="success_700">@color/hot_green_700</color>
