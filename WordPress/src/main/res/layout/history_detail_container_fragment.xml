@@ -63,7 +63,7 @@
                 android:layout_marginEnd="@dimen/margin_small_medium"
                 android:layout_marginStart="@dimen/margin_small_medium"
                 android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_error_500_minus_white_16dp"
+                android:drawableStart="@drawable/bg_oval_error_50_minus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColor="@color/neutral_400"
                 android:visibility="gone"
