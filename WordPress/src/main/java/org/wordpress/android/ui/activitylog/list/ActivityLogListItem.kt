@@ -74,7 +74,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
     enum class Status(val value: String, @DrawableRes val color: Int) {
         NEGATIVE("error", R.drawable.bg_oval_error_50),
         INFO("warning", R.drawable.bg_oval_primary_50),
-        POSITIVE("success", R.drawable.bg_oval_success_500),
+        POSITIVE("success", R.drawable.bg_oval_success_50),
         NEUTRAL("", R.drawable.bg_oval_neutral_30);
 
         companion object {

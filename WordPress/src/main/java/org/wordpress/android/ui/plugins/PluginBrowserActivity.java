@@ -423,7 +423,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 boolean isAutoManaged = PluginUtils.isAutoManaged(mViewModel.getSite(), plugin);
                 if (isAutoManaged) {
                     textResId = R.string.plugin_auto_managed;
-                    colorResId = R.color.success_500;
+                    colorResId = R.color.success_50;
                     drawableResId = android.R.color.transparent;
                 } else if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
@@ -431,7 +431,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     drawableResId = R.drawable.ic_sync_white_24dp;
                 } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
-                    colorResId = R.color.success_500;
+                    colorResId = R.color.success_50;
                     drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;

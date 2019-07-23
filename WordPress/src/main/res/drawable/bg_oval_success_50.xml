@@ -3,5 +3,5 @@
        xmlns:tools="http://schemas.android.com/tools"
        android:shape="oval"
        tools:ignore="UnusedResources">
-    <solid android:color="@color/success_500" />
+    <solid android:color="@color/success_50" />
 </shape>

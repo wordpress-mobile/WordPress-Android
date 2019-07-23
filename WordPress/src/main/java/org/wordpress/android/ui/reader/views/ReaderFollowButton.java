@@ -77,7 +77,7 @@ public class ReaderFollowButton extends LinearLayout {
         int colorId;
         if (mIsFollowed) {
             drawableId = R.drawable.ic_reader_following_white_24dp;
-            colorId = R.color.success_500;
+            colorId = R.color.success_50;
         } else {
             drawableId = R.drawable.ic_reader_follow_white_24dp;
             colorId = R.color.primary_40;
