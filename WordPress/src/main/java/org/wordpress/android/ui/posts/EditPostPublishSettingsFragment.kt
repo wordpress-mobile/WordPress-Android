@@ -1,5 +1,9 @@
 package org.wordpress.android.ui.posts
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context.ALARM_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -7,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,8 +19,8 @@ import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PostNotificationTimeDialogFragment.NotificationTime
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
@@ -55,7 +60,9 @@ class EditPostPublishSettingsFragment : Fragment() {
         })
         viewModel.onNotificationTime.observe(this, Observer {
             it?.let { notificationTime ->
-                viewModel.updateUiModel(notificationTime, getPost())
+                getPost()?.let { post ->
+                    viewModel.scheduleNotification(post, notificationTime)
+                }
             }
         })
         viewModel.onUiModel.observe(this, Observer {
@@ -66,7 +73,9 @@ class EditPostPublishSettingsFragment : Fragment() {
                 publishNotificationContainer.isEnabled = uiModel.notificationEnabled
                 if (uiModel.notificationEnabled) {
                     publishNotificationContainer.setOnClickListener {
-                        viewModel.onShowDialog(getPost())
+                        getPost()?.let { post ->
+                            viewModel.onShowDialog(post)
+                        }
                     }
                 } else {
                     publishNotificationContainer.setOnClickListener(null)
@@ -88,6 +97,28 @@ class EditPostPublishSettingsFragment : Fragment() {
                         SHORT,
                         Gravity.TOP
                 )
+            }
+        })
+        viewModel.onNotificationAdded.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let { notification ->
+                activity?.let {
+                    NotificationManagerCompat.from(it).cancel(notification.id)
+                    val notificationIntent = Intent(it, PublishNotificationReceiver::class.java)
+                    notificationIntent.putExtra(PublishNotificationReceiver.NOTIFICATION_ID, notification.id)
+                    val pendingIntent = PendingIntent.getBroadcast(
+                            it,
+                            notification.id,
+                            notificationIntent,
+                            PendingIntent.FLAG_CANCEL_CURRENT
+                    )
+
+                    val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
+                    alarmManager.set(
+                            AlarmManager.RTC_WAKEUP,
+                            notification.scheduledTime,
+                            pendingIntent
+                    )
+                }
             }
         })
         viewModel.start(getPost())
@@ -112,13 +143,13 @@ class EditPostPublishSettingsFragment : Fragment() {
         fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
-    private fun showNotificationTimeSelectionDialog(notificationTime: NotificationTime?) {
+    private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
         if (!isAdded) {
             return
         }
 
-        val fragment = PostNotificationTimeDialogFragment.newInstance(notificationTime)
-        fragment.show(activity!!.supportFragmentManager, PostNotificationTimeDialogFragment.TAG)
+        val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(schedulingReminderPeriod)
+        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPost(): PostModel? {
