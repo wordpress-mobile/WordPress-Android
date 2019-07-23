@@ -95,7 +95,7 @@
     <color name="success_40">@color/green_40</color>
     <color name="success_50">@color/green_50</color>
     <color name="success_60">@color/green_60</color>
-    <color name="success_700">@color/green_70</color>
+    <color name="success_70">@color/green_70</color>
     <color name="success_800">@color/green_80</color>
     <color name="success_900">@color/green_90</color>
     <color name="success_dark">@color/green_70</color>
