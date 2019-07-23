@@ -79,7 +79,7 @@
     <color name="primary_30">@color/blue_30</color>
     <color name="primary_40">@color/blue_40</color>
     <color name="primary_50">@color/blue_50</color>
-    <color name="primary_600">@color/blue_70</color>
+    <color name="primary_60">@color/blue_70</color>
     <color name="primary_700">@color/blue_80</color>
     <color name="primary_800">@color/blue_90</color>
     <color name="primary_900">@color/blue_100</color>
