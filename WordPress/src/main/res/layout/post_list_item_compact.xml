@@ -77,7 +77,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
             android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            android:tint="@color/neutral_600"
+            android:tint="@color/neutral_60"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

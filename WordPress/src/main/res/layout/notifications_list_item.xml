@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/note_avatar_container"
             android:layout_width="wrap_content"
-            android:textColor="@color/neutral_600"
+            android:textColor="@color/neutral_60"
             android:textSize="@dimen/text_sz_large"
             android:visibility="gone"
             tools:text="What an amazing post!"

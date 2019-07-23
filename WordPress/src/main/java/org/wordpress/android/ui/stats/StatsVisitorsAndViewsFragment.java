@@ -490,7 +490,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.getGraphViewStyle().setTextSize(
                 getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
-        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_600));
+        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_60));
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
                 mainSeriesItems, selectedStatsType));

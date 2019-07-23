@@ -66,7 +66,7 @@
     <color name="neutral_30">@color/gray_30</color>
     <color name="neutral_40">@color/gray_40</color>
     <color name="neutral_50">@color/gray_50</color>
-    <color name="neutral_600">@color/gray_60</color>
+    <color name="neutral_60">@color/gray_60</color>
     <color name="neutral_700">@color/gray_70</color>
     <color name="neutral_800">@color/gray_80</color>
     <color name="neutral_900">@color/gray_100</color>

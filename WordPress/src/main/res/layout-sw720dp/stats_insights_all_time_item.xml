@@ -45,7 +45,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_posts"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/neutral_600"
+            android:textColor="@color/neutral_60"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -92,7 +92,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_views"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/neutral_600"
+            android:textColor="@color/neutral_60"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -139,7 +139,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_visitors"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/neutral_600"
+            android:textColor="@color/neutral_60"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -187,7 +187,7 @@
         <org.wordpress.android.util.widgets.AutoResizeTextView
             android:id="@+id/stats_all_time_bestever"
             style="@style/StatsInsightsValues"
-            android:textColor="@color/neutral_600"
+            android:textColor="@color/neutral_60"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"

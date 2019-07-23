@@ -130,7 +130,7 @@
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_views"
-                    android:textColor="@color/neutral_600"/>
+                    android:textColor="@color/neutral_60"/>
             </LinearLayout>
             <LinearLayout
                 android:focusable="false"
@@ -150,7 +150,7 @@
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_visitors"
-                    android:textColor="@color/neutral_600"/>
+                    android:textColor="@color/neutral_60"/>
             </LinearLayout>
         </LinearLayout>
 

@@ -757,7 +757,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtName.setOnClickListener(authorListener);
             txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.link_reader));
         } else {
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_600));
+            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_60));
         }
 
         showPostTitle(mSite, mComment.getRemotePostId());
