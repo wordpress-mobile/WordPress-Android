@@ -1142,7 +1142,7 @@ public abstract class SiteSettingsInterface {
 
         // This is where the migration of the old editor preference happens and stored to remote.
         // 1. Read the "old" app preference setting: If the user has disabled GB,
-        // or didn't set the value before it returns false from preference, so Aztec is set.
+        // or didn't set the value before, it returns false from preference, so Aztec is set.
         // 2. Users which ID > MIN_WPCOM_USER_ID_TO_DEFAULT_GB will get GB enabled by default (New wpcom users).
         if (TextUtils.isEmpty(event.site.getMobileEditor())) {
             String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts() ? "gutenberg" : "aztec";
