@@ -73,7 +73,7 @@
     <color name="primary_0">@color/blue_0</color>
     <color name="primary_100">@color/blue_10</color>
     <color name="primary_200">@color/blue_20</color>
-    <color name="primary_300">@color/blue_300</color>
+    <color name="primary_300">@color/blue_30</color>
     <color name="primary_400">@color/blue_400</color>
     <color name="primary_50">@color/blue_5</color>
     <color name="primary_500">@color/blue_500</color>
@@ -82,7 +82,7 @@
     <color name="primary_800">@color/blue_800</color>
     <color name="primary_900">@color/blue_900</color>
     <color name="primary_dark">@color/blue_700</color>
-    <color name="primary_light">@color/blue_300</color>
+    <color name="primary_light">@color/blue_30</color>
     <color name="success">@color/hot_green_500</color>
     <color name="success_0">@color/hot_green_0</color>
     <color name="success_100">@color/hot_green_100</color>
@@ -119,7 +119,7 @@
     <color name="blue_5">#c6def6</color>
     <color name="blue_10">#9ac6f0</color>
     <color name="blue_20">#72aee6</color>
-    <color name="blue_300">#6f93ad</color>
+    <color name="blue_30">#5198d9</color>
     <color name="blue_400">#46799a</color>
     <color name="blue_500">#016087</color>
     <color name="blue_600">#204a69</color>

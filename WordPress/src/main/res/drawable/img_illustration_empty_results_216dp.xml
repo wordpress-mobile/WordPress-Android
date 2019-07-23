@@ -130,12 +130,12 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_300"
+        android:fillColor="@color/blue_30"
         android:pathData="M117.9,63.4l-2.2,3.4L79,35.2l5.4,-5.1l33,28.5C118.8,59.8 119,61.9 117.9,63.4z">
     </path>
 
     <path
-        android:fillColor="@color/blue_300"
+        android:fillColor="@color/blue_30"
         android:pathData="M70.3,38c-3.3,0 -6.6,-0.9 -9.6,-2.9c-8,-5.3 -10.2,-16.1 -4.9,-24.1l0,0c5.3,-8 16.1,-10.1 24.1,-4.9c8,5.3 10.2,16.1 4.9,24.1C81.4,35.3 75.9,38 70.3,38zM60.3,14c-3.6,5.5 -2.1,12.9 3.4,16.6c5.5,3.7 13,2.2 16.6,-3.3c3.6,-5.5 2.1,-12.9 -3.4,-16.6C71.4,7 63.9,8.5 60.3,14L60.3,14z">
     </path>
 
@@ -235,7 +235,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_300"
+        android:fillColor="@color/blue_30"
         android:pathData="M127.9,80.1c-0.1,0 -0.1,0 -0.2,0c-0.2,-0.1 -0.2,-0.3 -0.1,-0.5l4.1,-7.2c0.1,-0.2 0.3,-0.2 0.5,-0.1c0.2,0.1 0.2,0.3 0.1,0.5l-4.1,7.2C128.2,80 128.1,80.1 127.9,80.1z">
     </path>
 
