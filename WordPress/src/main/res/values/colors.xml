@@ -59,7 +59,7 @@
     <color name="error_light">@color/hot_red_300</color>
     <color name="neutral">@color/gray_500</color>
     <color name="neutral_0">@color/gray_0</color>
-    <color name="neutral_100">@color/gray_100</color>
+    <color name="neutral_100">@color/gray_10</color>
     <color name="neutral_200">@color/gray_200</color>
     <color name="neutral_300">@color/gray_300</color>
     <color name="neutral_400">@color/gray_400</color>
@@ -141,7 +141,7 @@
     <color name="celadon_100">#001c17</color>
     <color name="gray_0">#f7f4f5</color>
     <color name="gray_5">#e3dfe2</color>
-    <color name="gray_100">#ccced0</color>
+    <color name="gray_10">#cdc9cd</color>
     <color name="gray_200">#b0b5b8</color>
     <color name="gray_300">#969ca1</color>
     <color name="gray_400">#7c848b</color>

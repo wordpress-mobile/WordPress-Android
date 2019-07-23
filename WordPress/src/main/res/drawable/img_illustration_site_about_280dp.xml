@@ -10,7 +10,7 @@
     tools:ignore="VectorRaster">
 
     <path
-        android:fillColor="@color/gray_100"
+        android:fillColor="@color/gray_10"
         android:pathData="M33,159a101.5,1 0,1 0,203 0a101.5,1 0,1 0,-203 0z">
     </path>
 
