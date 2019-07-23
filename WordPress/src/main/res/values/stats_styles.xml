@@ -117,7 +117,7 @@
     </style>
 
     <style name="StatsBlockBigTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
@@ -297,7 +297,7 @@
     </style>
 
     <style name="StatsWidgetTitle.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsWidgetTitle.Dark">
@@ -336,7 +336,7 @@
     </style>
 
     <style name="StatsWidgetKey.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsWidgetKey.Dark">
@@ -350,7 +350,7 @@
     </style>
 
     <style name="StatsMinifiedWidgetKey.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsMinifiedWidgetKey.Dark">
@@ -411,7 +411,7 @@
     </style>
 
     <style name="StatsWidgetBlockKey.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsWidgetBlockValue" parent="TextAppearance.AppCompat.Body1">
