@@ -398,7 +398,7 @@
     </style>
 
     <style name="StatsChange.NegativeDark" parent="StatsChange">
-        <item name="android:textColor">@color/hot_red_400</item>
+        <item name="android:textColor">@color/red_40</item>
     </style>
 
     <style name="StatsWidgetBlockKey" parent="TextAppearance.AppCompat.Body1">

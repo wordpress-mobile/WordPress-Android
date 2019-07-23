@@ -49,7 +49,7 @@
     <color name="error_10">@color/red_10</color>
     <color name="error_20">@color/red_20</color>
     <color name="error_30">@color/red_30</color>
-    <color name="error_40">@color/hot_red_400</color>
+    <color name="error_40">@color/red_40</color>
     <color name="error_50">@color/hot_red_500</color>
     <color name="error_60">@color/hot_red_600</color>
     <color name="error_70">@color/hot_red_700</color>
