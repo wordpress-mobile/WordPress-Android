@@ -53,7 +53,7 @@
     <color name="error_50">@color/hot_red_500</color>
     <color name="error_60">@color/hot_red_600</color>
     <color name="error_70">@color/hot_red_700</color>
-    <color name="error_800">@color/hot_red_800</color>
+    <color name="error_80">@color/hot_red_800</color>
     <color name="error_900">@color/hot_red_900</color>
     <color name="error_dark">@color/hot_red_700</color>
     <color name="error_light">@color/hot_red_300</color>
