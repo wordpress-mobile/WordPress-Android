@@ -36,7 +36,7 @@
             android:layout_below="@+id/title"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textColor="@color/neutral_50"
+            android:textColor="@color/neutral_5"
             android:textSize="@dimen/text_sz_medium"
             android:visibility="gone"
             tools:text="Connect your favorite social media services to automatically share new posts with friend"

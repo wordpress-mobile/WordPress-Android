@@ -60,11 +60,11 @@
     <color name="error_light">@color/hot_red_300</color>
     <color name="neutral">@color/gray_50</color>
     <color name="neutral_0">@color/gray_0</color>
+    <color name="neutral_5">@color/gray_5</color>
     <color name="neutral_100">@color/gray_10</color>
     <color name="neutral_200">@color/gray_20</color>
     <color name="neutral_300">@color/gray_30</color>
     <color name="neutral_400">@color/gray_40</color>
-    <color name="neutral_50">@color/gray_5</color>
     <color name="neutral_500">@color/gray_50</color>
     <color name="neutral_600">@color/gray_60</color>
     <color name="neutral_700">@color/gray_70</color>

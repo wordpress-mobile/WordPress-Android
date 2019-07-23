@@ -37,7 +37,7 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val emptyColor = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
-                            R.color.neutral_50
+                            R.color.neutral_5
                     ) and 0xffffff
             )
             val htmlPage = ("<html>" +
