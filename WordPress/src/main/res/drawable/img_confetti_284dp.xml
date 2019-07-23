@@ -10,7 +10,7 @@
     tools:ignore="VectorRaster">
 
     <path
-        android:fillColor="@color/blue_600"
+        android:fillColor="@color/blue_70"
         android:pathData="M23.32,93.07L7.55,79">
     </path>
 
