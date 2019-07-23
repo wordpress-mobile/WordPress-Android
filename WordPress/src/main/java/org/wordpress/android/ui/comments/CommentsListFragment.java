@@ -381,7 +381,7 @@ public class CommentsListFragment extends Fragment {
         // the following will change the look and feel of the toolbar to match the current design
         mFilteredCommentsView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.primary_400));
         mFilteredCommentsView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
-        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
+        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));

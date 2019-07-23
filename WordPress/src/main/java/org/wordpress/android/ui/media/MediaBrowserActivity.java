@@ -286,7 +286,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void setupTabs() {
         if (shouldShowTabs()) {
-            int normalColor = ContextCompat.getColor(this, R.color.primary_300);
+            int normalColor = ContextCompat.getColor(this, R.color.primary_30);
             int selectedColor = ContextCompat.getColor(this, android.R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 

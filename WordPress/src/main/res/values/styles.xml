@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="colorControlActivated">@color/primary_300</item>
+        <item name="colorControlActivated">@color/primary_30</item>
         <item name="colorControlHighlight">@color/neutral_10</item>
 
         <item name="android:windowBackground">@color/background_default</item>
@@ -540,7 +540,7 @@
     </style>
 
     <style name="SwitchBlueLight">
-        <item name="colorControlActivated">@color/primary_300</item>
+        <item name="colorControlActivated">@color/primary_30</item>
     </style>
 
     <style name="SwitchBlueMedium">

@@ -20,7 +20,7 @@
     <!-- LOGIN -->
     <color name="color_primary">@color/primary</color>
     <color name="login_background_color">@color/background_default</color>
-    <color name="login_edit_text_color_control_activated">@color/primary_300</color>
+    <color name="login_edit_text_color_control_activated">@color/primary_30</color>
     <color name="login_edit_text_color_control_highlight">@color/neutral_10</color>
     <color name="login_google_button_text_color">@color/primary</color>
     <color name="login_secondary_button_text_color">@color/primary</color>
@@ -76,7 +76,7 @@
     <color name="primary_5">@color/blue_5</color>
     <color name="primary_10">@color/blue_10</color>
     <color name="primary_20">@color/blue_20</color>
-    <color name="primary_300">@color/blue_30</color>
+    <color name="primary_30">@color/blue_30</color>
     <color name="primary_400">@color/blue_40</color>
     <color name="primary_500">@color/blue_50</color>
     <color name="primary_600">@color/blue_70</color>
