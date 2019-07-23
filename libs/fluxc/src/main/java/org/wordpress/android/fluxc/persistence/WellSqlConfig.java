@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 77;
+        return 78;
     }
 
     @Override
@@ -563,6 +563,12 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 76:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE PostSchedulingReminder (_id INTEGER PRIMARY KEY AUTOINCREMENT,POST_ID INTEGER,"
+                        + "SCHEDULED_TIME TEXT NOT NULL)");
+                oldVersion++;
+            case 77:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
@@ -851,7 +857,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "  TOTAL TEXT NOT NULL,\n"
                                + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
-                case 76:
+                case 77:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("CREATE TABLE WCVisitorStatsModel(\n"
                                + "  LOCAL_SITE_ID INTEGER,\n"
