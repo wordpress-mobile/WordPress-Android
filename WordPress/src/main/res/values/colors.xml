@@ -115,6 +115,7 @@
     <color name="warning_70">@color/yellow_70</color>
     <color name="warning_80">@color/yellow_80</color>
     <color name="warning_90">@color/yellow_90</color>
+    <color name="warning_100">@color/yellow_100</color>
     <color name="warning_dark">@color/yellow_40</color>
     <color name="warning_light">@color/yellow_5</color>
 
