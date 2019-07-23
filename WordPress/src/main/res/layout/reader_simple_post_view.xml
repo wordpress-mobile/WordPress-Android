@@ -103,7 +103,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:ellipsize="end"
         android:maxLines="3"
-        android:textColor="@color/neutral_500"
+        android:textColor="@color/neutral_50"
         android:textSize="@dimen/text_sz_medium"
         android:fontFamily="serif"
         tools:text="text_simple_post_excerpt\ntext_simple_post_excerpt\ntext_simple_post_excerpt"

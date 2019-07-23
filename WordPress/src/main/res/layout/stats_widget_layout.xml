@@ -252,7 +252,7 @@
         <TextView
             android:id="@+id/stats_widget_error_text"
             android:textSize="@dimen/stats_widget_text_sz"
-            android:textColor="@color/neutral_500"
+            android:textColor="@color/neutral_50"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

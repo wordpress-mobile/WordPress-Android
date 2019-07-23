@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/margin_extra_large"
-                        android:textColor="@color/neutral_500"
+                        android:textColor="@color/neutral_50"
                         android:textSize="@dimen/text_sz_extra_large"
                         android:visibility="gone"
                         tools:text="@string/empty_list_default"
