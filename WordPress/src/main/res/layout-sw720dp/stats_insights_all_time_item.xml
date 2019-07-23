@@ -170,11 +170,11 @@
                 android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_trophy_white_24dp"
-                android:tint="@color/warning_500" />
+                android:tint="@color/warning_50" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
-                android:textColor="@color/warning_500"
+                android:textColor="@color/warning_50"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"

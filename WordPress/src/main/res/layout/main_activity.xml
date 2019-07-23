@@ -30,7 +30,7 @@
             android:id="@+id/connection_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/warning_500"
+            android:background="@color/warning_50"
             android:gravity="center"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_medium"

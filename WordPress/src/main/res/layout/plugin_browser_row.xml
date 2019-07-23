@@ -63,7 +63,7 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_sync_white_24dp"
-                tools:tint="@color/warning_500" />
+                tools:tint="@color/warning_50" />
 
             <TextView
                 android:id="@+id/plugin_status_text"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:maxLines="2"
-                android:textColor="@color/warning_500"
+                android:textColor="@color/warning_50"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="@string/plugin_needs_update" />
         </LinearLayout>
