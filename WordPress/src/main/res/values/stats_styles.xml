@@ -309,7 +309,7 @@
     </style>
 
     <style name="StatsWidgetErrorMessage.Light">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 
     <style name="StatsWidgetErrorMessage.Dark">
@@ -363,7 +363,7 @@
     </style>
 
     <style name="StatsWidgetValue.Light">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 
     <style name="StatsWidgetValue.Dark">
@@ -378,7 +378,7 @@
     </style>
 
     <style name="StatsChange.NeutralLight" parent="StatsChange">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 
     <style name="StatsChange.NeutralDark" parent="StatsChange">
@@ -424,6 +424,6 @@
     </style>
 
     <style name="StatsWidgetBlockValue.Light">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 </resources>
