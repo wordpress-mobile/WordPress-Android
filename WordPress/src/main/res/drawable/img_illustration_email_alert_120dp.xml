@@ -253,7 +253,7 @@
     </path>
 
     <path
-        android:fillColor="@color/success_300"
+        android:fillColor="@color/success_30"
         android:pathData="M50.5,14.3m-8.5,0a8.5,8.5 0,1 1,17 0a8.5,8.5 0,1 1,-17 0">
     </path>
 
