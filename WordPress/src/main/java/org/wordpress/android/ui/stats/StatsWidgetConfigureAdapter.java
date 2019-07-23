@@ -96,7 +96,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         mTextColorHidden = context.getResources().getColor(R.color.neutral_300);
 
         mSelectedItemBackground =
-                new ColorDrawable(context.getResources().getColor(R.color.gray_50));
+                new ColorDrawable(context.getResources().getColor(R.color.gray_5));
 
         loadSites();
     }
