@@ -75,7 +75,7 @@
                         style="@style/StatsInsightsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/warning_600"
+                        android:textColor="@color/warning_60"
                         android:text="@string/stats_default_number_zero"
                         android:layout_alignParentEnd="true"/>
 
