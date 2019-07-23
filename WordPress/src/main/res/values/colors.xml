@@ -32,7 +32,7 @@
     <color name="accent_5">@color/pink_5</color>
     <color name="accent_10">@color/pink_10</color>
     <color name="accent_20">@color/pink_20</color>
-    <color name="accent_300">@color/pink_30</color>
+    <color name="accent_30">@color/pink_30</color>
     <color name="accent_400">@color/pink_40</color>
     <color name="accent_500">@color/pink_50</color>
     <color name="accent_600">@color/pink_60</color>
