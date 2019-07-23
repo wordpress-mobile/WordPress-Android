@@ -33,7 +33,7 @@
     <color name="accent_200">@color/hot_pink_200</color>
     <color name="accent_300">@color/hot_pink_300</color>
     <color name="accent_400">@color/hot_pink_400</color>
-    <color name="accent_50">@color/hot_pink_50</color>
+    <color name="accent_50">@color/pink_50</color>
     <color name="accent_500">@color/hot_pink_500</color>
     <color name="accent_600">@color/hot_pink_600</color>
     <color name="accent_700">@color/hot_pink_700</color>
