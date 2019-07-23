@@ -72,7 +72,7 @@
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@string/reader_avatar_desc"
-            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
             android:visibility="gone"/>
     </LinearLayout>
 

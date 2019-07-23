@@ -21,7 +21,7 @@
     <color name="color_primary">@color/primary</color>
     <color name="login_background_color">@color/background_default</color>
     <color name="login_edit_text_color_control_activated">@color/primary_300</color>
-    <color name="login_edit_text_color_control_highlight">@color/neutral_100</color>
+    <color name="login_edit_text_color_control_highlight">@color/neutral_10</color>
     <color name="login_google_button_text_color">@color/primary</color>
     <color name="login_secondary_button_text_color">@color/primary</color>
     <color name="login_theme_accent_color">@color/accent</color>
@@ -61,7 +61,7 @@
     <color name="neutral">@color/gray_50</color>
     <color name="neutral_0">@color/gray_0</color>
     <color name="neutral_5">@color/gray_5</color>
-    <color name="neutral_100">@color/gray_10</color>
+    <color name="neutral_10">@color/gray_10</color>
     <color name="neutral_200">@color/gray_20</color>
     <color name="neutral_300">@color/gray_30</color>
     <color name="neutral_400">@color/gray_40</color>

@@ -29,7 +29,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:src="@drawable/bg_rectangle_neutral_100_user_32dp"
+                    android:src="@drawable/bg_rectangle_neutral_10_user_32dp"
                     android:contentDescription="@null"/>
 
                 <ImageView

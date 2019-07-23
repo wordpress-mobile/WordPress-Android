@@ -25,7 +25,7 @@
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
             android:contentDescription="@string/blavatar_desc"/>
 
         <LinearLayout
@@ -67,7 +67,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/neutral_100"
+        android:background="@color/neutral_10"
         android:visibility="gone"
         tools:visibility="visible"/>
 

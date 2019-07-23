@@ -69,7 +69,7 @@
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
-                            tools:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+                            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
                             tools:ignore="UnusedAttribute" />
 
                         <LinearLayout

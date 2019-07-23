@@ -73,7 +73,7 @@
         android:id="@+id/very_low_box"
         style="@style/StatsActivityBox"
         android:layout_marginStart="8dp"
-        android:background="@color/neutral_100"
+        android:background="@color/neutral_10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fewer_posts_label"

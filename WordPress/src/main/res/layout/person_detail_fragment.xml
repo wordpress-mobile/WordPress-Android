@@ -119,6 +119,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/people_list_divider_height"
         android:layout_below="@id/person_role_container"
-        android:background="@color/neutral_100"/>
+        android:background="@color/neutral_10"/>
 
 </RelativeLayout>

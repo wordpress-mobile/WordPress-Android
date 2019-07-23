@@ -45,7 +45,7 @@
             android:id="@+id/navbar_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/neutral_100"/>
+            android:background="@color/neutral_10"/>
 
         <org.wordpress.android.ui.main.WPMainNavigationView
             android:id="@+id/bottom_navigation"

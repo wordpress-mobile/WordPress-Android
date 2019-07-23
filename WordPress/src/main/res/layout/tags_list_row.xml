@@ -22,6 +22,6 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/margin_medium"
-        android:background="@color/neutral_100"/>
+        android:background="@color/neutral_10"/>
 
 </RelativeLayout>

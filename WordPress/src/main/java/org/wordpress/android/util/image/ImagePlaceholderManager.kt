@@ -8,10 +8,10 @@ import javax.inject.Singleton
 class ImagePlaceholderManager @Inject constructor() {
     fun getErrorResource(imgType: ImageType): Int? {
         return when (imgType) {
-            ImageType.AVATAR -> R.drawable.bg_rectangle_neutral_100_user_32dp
+            ImageType.AVATAR -> R.drawable.bg_rectangle_neutral_10_user_32dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_neutral_300_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
-            ImageType.BLAVATAR -> R.drawable.bg_rectangle_neutral_100_globe_32dp
+            ImageType.BLAVATAR -> R.drawable.bg_rectangle_neutral_10_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.neutral_0
             ImageType.PLAN -> R.drawable.bg_oval_neutral_300_plans_32dp
@@ -34,7 +34,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.PHOTO -> R.color.neutral_0
             ImageType.PLAN -> R.drawable.bg_oval_neutral_300_plans_32dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
-            ImageType.THEME -> R.drawable.bg_rectangle_neutral_100_themes_100dp
+            ImageType.THEME -> R.drawable.bg_rectangle_neutral_10_themes_100dp
             ImageType.UNKNOWN -> R.drawable.legacy_dashicon_format_image_big_grey
             ImageType.VIDEO -> R.color.neutral_0
             ImageType.ICON -> R.drawable.bg_rectangle_neutral_0_radius_2dp
