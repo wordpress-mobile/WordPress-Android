@@ -427,10 +427,17 @@ public class PostStore extends Store {
     }
 
     /**
-     * Returns all posts and pages that are local drafts for the given site.
+     * Returns all posts that are local drafts for the given site.
      */
     public List<PostModel> getLocalDraftPosts(@NonNull SiteModel site) {
         return mPostSqlUtils.getLocalDrafts(site.getId(), false);
+    }
+
+    /**
+     * Returns all posts that are local drafts or has been locally changed.
+     */
+    public List<PostModel> getPostsWithLocalChanges(@NonNull SiteModel site) {
+        return mPostSqlUtils.getPostsWithLocalChanges(site.getId(), false);
     }
 
     /**
@@ -739,7 +746,7 @@ public class PostStore extends Store {
 
     /**
      * Saves the changes for the trashed post in the DB, lets ListStore know about updated lists.
-     *
+     * <p>
      * If the trashed post is for an XML-RPC site, it'll also fetch the updated post from remote since XML-RPC delete
      * call doesn't return the updated post.
      */
