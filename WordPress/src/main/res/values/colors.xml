@@ -38,7 +38,7 @@
     <color name="accent_600">@color/pink_60</color>
     <color name="accent_700">@color/pink_70</color>
     <color name="accent_800">@color/pink_80</color>
-    <color name="accent_900">@color/hot_pink_900</color>
+    <color name="accent_900">@color/pink_90</color>
     <color name="accent_dark">@color/pink_70</color>
     <color name="accent_light">@color/pink_30</color>
     <color name="divider">@color/gray_5</color>
