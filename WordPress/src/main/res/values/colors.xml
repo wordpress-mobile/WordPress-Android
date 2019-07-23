@@ -44,7 +44,7 @@
     <color name="accent_light">@color/pink_30</color>
     <color name="divider">@color/gray_5</color>
     <color name="error">@color/hot_red_500</color>
-    <color name="error_0">@color/hot_red_0</color>
+    <color name="error_0">@color/red_0</color>
     <color name="error_5">@color/hot_red_50</color>
     <color name="error_10">@color/hot_red_100</color>
     <color name="error_20">@color/hot_red_200</color>
