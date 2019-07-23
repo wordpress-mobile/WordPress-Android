@@ -50,7 +50,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_100"
+        android:fillColor="@color/blue_10"
         android:pathData="M140.5 85.1h10.1v54.4h-10.1z">
     </path>
 
@@ -60,7 +60,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_100"
+        android:fillColor="@color/blue_10"
         android:pathData="M166.7 59.7h10.1v79.7h-10.1z">
     </path>
 
@@ -70,7 +70,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_100"
+        android:fillColor="@color/blue_10"
         android:pathData="M193 72.7h10.1v66.7H193z">
     </path>
 
@@ -105,7 +105,7 @@
     </path>
 
     <path
-        android:fillColor="@color/blue_100"
+        android:fillColor="@color/blue_10"
         android:pathData="M139.8 167.6L121 156.8c-0.6-0.4-0.8-1.1-0.5-1.8 0.4-0.6 1.1-0.8 1.8-0.5l18.8 10.8c0.6 0.4 0.8 1.1 0.5 1.8-0.4 0.7-1.2 0.9-1.8 0.5zm-2.8 4.9l-18.8-10.8c-0.6-0.4-0.8-1.1-0.5-1.8 0.4-0.6 1.1-0.8 1.8-0.5l18.8 10.8c0.6 0.4 0.8 1.1 0.5 1.8-0.4 0.6-1.2 0.9-1.8 0.5z">
     </path>
 
