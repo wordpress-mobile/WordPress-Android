@@ -99,7 +99,7 @@
     <color name="text">@color/gray_80</color>
     <color name="text_subtle">@color/gray_50</color>
     <color name="warning">@color/hot_yellow_500</color>
-    <color name="warning_0">@color/hot_yellow_0</color>
+    <color name="warning_0">@color/yellow_0</color>
     <color name="warning_100">@color/hot_yellow_100</color>
     <color name="warning_200">@color/hot_yellow_200</color>
     <color name="warning_300">@color/hot_yellow_300</color>
