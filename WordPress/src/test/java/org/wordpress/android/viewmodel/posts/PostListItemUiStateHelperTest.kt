@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 
@@ -270,15 +271,64 @@ class PostListItemUiStateHelperTest {
         assertThat(state.data.showOverlay).isTrue()
     }
 
+    @Test
+    fun `date and author label contains all date, authorFirstName and authorLastName`() {
+        // Arrange
+        val firstName = "John"
+        val lastName = "Novak"
+        val state = createPostListItemUiState(
+                post = createPostModel(
+                        authorFirstName = firstName,
+                        authorLastName = lastName
+                ), formattedDate = FORMATTER_DATE
+        )
+
+        // Assert
+        assertThat((state.data.dateAndAuthor as UiStringText).text)
+                .isEqualTo("$FORMATTER_DATE  ·  $firstName $lastName")
+    }
+
+    @Test
+    fun `date and author label contains only date when author name is null`() {
+        // Arrange
+        val state = createPostListItemUiState(
+                post = createPostModel(
+                        authorFirstName = null,
+                        authorLastName = null
+                ), formattedDate = FORMATTER_DATE
+        )
+
+        // Assert
+        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
+    }
+
+    @Test
+    fun `date and author label contains only date when author name is empty`() {
+        // Arrange
+        val state = createPostListItemUiState(
+                post = createPostModel(
+                        authorFirstName = "",
+                        authorLastName = ""
+                ), formattedDate = FORMATTER_DATE
+        )
+
+        // Assert
+        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
+    }
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
-        isLocallyChanged: Boolean = false
+        isLocallyChanged: Boolean = false,
+        authorFirstName: String? = null,
+        authorLastName: String? = null
     ): PostModel {
         val post = PostModel()
         post.status = status
         post.setIsLocalDraft(isLocalDraft)
         post.setIsLocallyChanged(isLocallyChanged)
+        post.authorFirstName = authorFirstName
+        post.authorLastName = authorLastName
         return post
     }
 

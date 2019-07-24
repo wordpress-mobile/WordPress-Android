@@ -29,7 +29,7 @@
             android:textColor="@color/neutral_800"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/date"
+            app:layout_constraintBottom_toTopOf="@+id/date_and_author"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/date"
+            android:id="@+id/date_and_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
@@ -107,11 +107,11 @@
             android:maxLines="1"
             android:textAlignment="textStart"
             android:textColor="@color/warning_500"
-            app:layout_constraintBottom_toBottomOf="@+id/date"
+            app:layout_constraintBottom_toBottomOf="@+id/date_and_author"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@+id/date"
-            app:layout_constraintTop_toTopOf="@+id/date"
+            app:layout_constraintStart_toEndOf="@+id/date_and_author"
+            app:layout_constraintTop_toTopOf="@+id/date_and_author"
             tools:text="Private · Local Changes"/>
 
         <ProgressBar

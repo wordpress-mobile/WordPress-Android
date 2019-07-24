@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.text.TextUtils
 import androidx.annotation.ColorRes
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
@@ -86,7 +87,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
         val title = getTitle(post = post)
-        val date = UiStringText(text = formattedDate)
+        val dateAndAuthor = getDateAndAuthorLabel(formattedDate, post.authorFirstName, post.authorLastName)
         val statuses = getStatuses(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
@@ -111,7 +112,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 title = title,
                 excerpt = getExcerpt(post = post),
                 imageUrl = featuredImageUrl,
-                date = date,
+                dateAndAuthor = dateAndAuthor,
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
@@ -131,6 +132,18 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 compactActions = compactActions,
                 onSelected = onSelected
         )
+    }
+
+    private fun getDateAndAuthorLabel(
+        formattedDate: String,
+        authorFirstName: String?,
+        authorLastName: String?
+    ): UiString {
+        val fullName = listOf(authorFirstName, authorLastName).filterNot { TextUtils.isEmpty(it) }
+                .joinToString(separator = " ")
+        val joinedStrings = listOf(formattedDate, fullName).filterNot { TextUtils.isEmpty(it) }
+                .joinToString(separator = "  ·  ")
+        return UiStringText(joinedStrings)
     }
 
     private fun getTitle(post: PostModel): UiString {
