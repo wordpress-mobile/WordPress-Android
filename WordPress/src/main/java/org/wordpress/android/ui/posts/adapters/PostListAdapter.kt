@@ -93,12 +93,13 @@ class PostListAdapter(
         }
     }
 
-    fun updateItemLayoutType(updatedItemLayoutType: PostListViewLayoutType) {
+    fun updateItemLayoutType(updatedItemLayoutType: PostListViewLayoutType): Boolean {
         if (updatedItemLayoutType == itemLayoutType) {
-            return
+            return false
         }
         itemLayoutType = updatedItemLayoutType
         notifyDataSetChanged()
+        return true
     }
 
     private class LoadingViewHolder(view: View) : ViewHolder(view)

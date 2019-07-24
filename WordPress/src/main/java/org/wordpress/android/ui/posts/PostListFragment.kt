@@ -124,19 +124,28 @@ class PostListFragment : Fragment() {
                     }
                 }
 
-                recyclerView?.scrollToPosition(0)
-                postListAdapter.updateItemLayoutType(layoutType)
+                if (postListAdapter.updateItemLayoutType(layoutType)) {
+                    recyclerView?.scrollToPosition(0)
+                }
+            }
+        })
+
+        mainViewModel.authorSelectionUpdated.observe(this, Observer {
+            if (it != null) {
+                if (viewModel.updateAuthorFilterIfNotSearch(it)) {
+                    recyclerView?.scrollToPosition(0)
+                }
             }
         })
 
         actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
 
-        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
-                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(postListType)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(postListViewModelConnector)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListViewModel::class.java)
+
+        // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
+        viewModel.start(postListViewModelConnector, mainViewModel.authorSelectionUpdated.value!!)
 
         initObservers()
     }
@@ -266,13 +275,11 @@ class PostListFragment : Fragment() {
         @JvmStatic
         fun newInstance(
             site: SiteModel,
-            authorFilter: AuthorFilterSelection,
             postListType: PostListType
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
-            bundle.putSerializable(EXTRA_POST_LIST_AUTHOR_FILTER, authorFilter)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             fragment.arguments = bundle
             return fragment

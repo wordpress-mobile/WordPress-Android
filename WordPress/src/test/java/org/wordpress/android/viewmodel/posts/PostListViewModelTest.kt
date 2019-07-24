@@ -17,11 +17,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.uploads.UploadStarter
 
+private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter
@@ -78,7 +80,10 @@ class PostListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when swiping to refresh, it uploads all local drafts`() {
-        viewModel.start(createPostListViewModelConnector(site = site, postListType = DRAFTS))
+        viewModel.start(
+                createPostListViewModelConnector(site = site, postListType = DRAFTS),
+                DEFAULT_AUTHOR_FILTER
+        )
 
         // When
         viewModel.swipeToRefresh()
@@ -89,7 +94,10 @@ class PostListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `empty search query should show search prompt`() {
-        viewModel.start(createPostListViewModelConnector(site = site, postListType = SEARCH))
+        viewModel.start(
+                createPostListViewModelConnector(site = site, postListType = SEARCH),
+                DEFAULT_AUTHOR_FILTER
+        )
 
         val emptyViewStateResults = mutableListOf<PostListEmptyUiState>()
 
@@ -107,7 +115,6 @@ class PostListViewModelTest : BaseUnitTest() {
         fun createPostListViewModelConnector(site: SiteModel, postListType: PostListType) = PostListViewModelConnector(
                 site = site,
                 postListType = postListType,
-                authorFilter = mock(),
                 postActionHandler = mock(),
                 getUploadStatus = mock(),
                 doesPostHaveUnhandledConflict = mock(),
