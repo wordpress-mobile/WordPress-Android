@@ -87,28 +87,27 @@ class LatestPostSummaryUseCase
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
-            val postLikeCount = domainModel.postLikeCount.toFormattedString()
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_star_white_24dp,
                             textResource = R.string.stats_likes,
-                            value = postLikeCount,
+                            value = domainModel.postLikeCount.toFormattedString(),
                             showDivider = true,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
                                     R.string.stats_likes,
-                                    postLikeCount
+                                    domainModel.postLikeCount.toLong()
                             )
                     )
             )
-            val postCommentCount = domainModel.postCommentCount.toFormattedString()
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_comment_white_24dp,
                             textResource = R.string.stats_comments,
-                            value = postCommentCount,
+                            value = domainModel.postCommentCount.toFormattedString(),
                             showDivider = false,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
-                                    R.string.stats_comments, postCommentCount
+                                    R.string.stats_comments,
+                                    domainModel.postCommentCount.toLong()
                             )
                     )
             )
