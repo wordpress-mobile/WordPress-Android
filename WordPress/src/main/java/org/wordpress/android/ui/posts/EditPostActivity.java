@@ -1546,7 +1546,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts()
             && !mIsNewPost
             && !SiteUtils.isBlockEditorDefaultForNewPost(mSite, mAccountStore)) {
-            AppPrefs.setGutenbergDefaultForNewPosts(true);
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                     new DesignateMobileEditorPayload(mSite, SiteUtils.GB_EDITOR_NAME)));
             AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);

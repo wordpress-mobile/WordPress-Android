@@ -658,11 +658,6 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
     }
 
-    public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
-        AnalyticsTracker.track(defaultForNewPosts ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED);
-        setBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, defaultForNewPosts);
-    }
-
     public static void setVideoOptimizeWidth(int width) {
         setInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, width);
     }
