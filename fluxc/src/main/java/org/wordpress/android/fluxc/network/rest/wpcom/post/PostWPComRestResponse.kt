@@ -26,7 +26,8 @@ data class PostWPComRestResponse(
     @SerializedName("geo") val geo: GeoLocation? = null,
     @SerializedName("tags") val tags: Map<String, TermWPComRestResponse>? = null,
     @SerializedName("categories") val categories: Map<String, TermWPComRestResponse>? = null,
-    @SerializedName("capabilities") val capabilities: Capabilities? = null
+    @SerializedName("capabilities") val capabilities: Capabilities? = null,
+    @SerializedName("author") val author: Author? = null
 ) {
     data class PostsResponse(
         @SerializedName("posts") val posts: List<PostWPComRestResponse>
@@ -45,5 +46,10 @@ data class PostWPComRestResponse(
         @SerializedName("publish_post") val publishPost: Boolean = false,
         @SerializedName("edit_post") val editPost: Boolean = false,
         @SerializedName("delete_post") val deletePost: Boolean = false
+    )
+    data class Author(
+        @SerializedName("ID") val id: Long = 0,
+        @SerializedName("first_name") val firstName: String?,
+        @SerializedName("last_name") val lastName: String?
     )
 }
