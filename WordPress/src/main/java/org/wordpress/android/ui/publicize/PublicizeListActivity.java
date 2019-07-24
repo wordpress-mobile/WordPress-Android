@@ -322,7 +322,11 @@ public class PublicizeListActivity extends AppCompatActivity
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_DISCONNECTED, mSite, analyticsProperties);
             }
         } else {
-            ToastUtils.showToast(this, R.string.error_generic);
+            if (event.getReasonResId() != null) {
+                showAlertForFailureReason(event.getReasonResId());
+            } else {
+                ToastUtils.showToast(this, R.string.error_generic);
+            }
         }
     }
 
@@ -371,5 +375,13 @@ public class PublicizeListActivity extends AppCompatActivity
                             .addToBackStack(null)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                             .commit();
+    }
+
+    private void showAlertForFailureReason(int reasonResId) {
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
+        builder.setMessage(reasonResId);
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 }

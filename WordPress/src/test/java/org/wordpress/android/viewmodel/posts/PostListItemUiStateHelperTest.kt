@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 
@@ -166,12 +165,12 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `error uploading post label shown when the post upload fails`() {
+    fun `generic error message shown when upload fails from unknown reason`() {
         val errorMsg = "testing error message"
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR, errorMsg)))
         )
-        assertThat(state.data.statuses).contains(UiStringText(errorMsg))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_generic_error))
     }
 
     @Test
