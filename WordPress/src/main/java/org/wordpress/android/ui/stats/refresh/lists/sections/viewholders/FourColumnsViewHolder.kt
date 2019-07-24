@@ -21,7 +21,7 @@ class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     )
 
     fun bind(
-        columns: Columns,
+        item: Columns,
         payloads: List<Any>
     ) {
         val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
@@ -29,23 +29,25 @@ class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         when {
             tabSelected -> {
                 columnLayouts.forEachIndexed { index, layout ->
-                    layout.setSelection(columns.selectedColumn == index)
+                    layout.setSelection(item.selectedColumn == index)
                 }
             }
             valuesChanged -> {
                 columnLayouts.forEachIndexed { index, layout ->
-                    layout.value().text = columns.values[index]
+                    layout.value().text = item.columns[index].value
                 }
             }
             else -> {
                 columnLayouts.forEachIndexed { index, layout ->
                     layout.setOnClickListener {
                         it.announceForAccessibility(it.resources.getString(R.string.stats_graph_updated))
-                        columns.onColumnSelected?.invoke(index)
+                        item.onColumnSelected?.invoke(index)
                     }
-                    layout.key().setText(columns.headers[index])
-                    layout.value().text = columns.values[index]
-                    layout.setSelection(columns.selectedColumn == null || columns.selectedColumn == index)
+                    val currentColumn = item.columns[index]
+                    layout.key().setText(currentColumn.header)
+                    layout.value().text = currentColumn.value
+                    layout.setSelection(item.selectedColumn == null || item.selectedColumn == index)
+                    layout.contentDescription = currentColumn.contentDescription
                 }
             }
         }
