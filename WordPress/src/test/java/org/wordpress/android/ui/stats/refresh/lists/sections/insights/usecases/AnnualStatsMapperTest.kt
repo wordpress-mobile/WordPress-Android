@@ -27,7 +27,7 @@ class AnnualStatsMapperTest {
         annualStatsMapper = AnnualStatsMapper(contentDescriptionHelper)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
-                any()
+                any<String>()
         )).thenReturn(contentDescription)
     }
 

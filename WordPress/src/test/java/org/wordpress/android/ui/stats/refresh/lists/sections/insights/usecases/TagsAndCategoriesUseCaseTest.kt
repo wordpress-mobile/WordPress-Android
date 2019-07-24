@@ -77,7 +77,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         )).thenReturn(contentDescription)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
-                any()
+                any<String>()
         )).thenReturn(contentDescription)
     }
 
