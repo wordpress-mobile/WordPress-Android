@@ -26,7 +26,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -63,23 +62,11 @@ class PostListFragment : Fragment() {
     private lateinit var postListType: PostListType
 
     private lateinit var nonNullActivity: FragmentActivity
-    private lateinit var site: SiteModel
-
-    private val postViewHolderConfig: PostViewHolderConfig by lazy {
-        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
-        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
-        PostViewHolderConfig(
-                photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
-                isPhotonCapable = SiteUtils.isPhotonCapable(site),
-                imageManager = imageManager
-        )
-    }
 
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
                 context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig,
+                imageManager = imageManager,
                 uiHelpers = uiHelpers
         )
     }
@@ -89,18 +76,12 @@ class PostListFragment : Fragment() {
         nonNullActivity = checkNotNull(activity)
         (nonNullActivity.application as WordPress).component().inject(this)
 
-        val site: SiteModel? = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
+        val nonNullIntent = checkNotNull(nonNullActivity.intent)
+        val site: SiteModel? = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
 
         if (site == null) {
             ToastUtils.showToast(nonNullActivity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             nonNullActivity.finish()
-        } else {
-            this.site = site
         }
     }
 
@@ -144,8 +125,14 @@ class PostListFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListViewModel::class.java)
 
+        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
+
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
-        viewModel.start(postListViewModelConnector, mainViewModel.authorSelectionUpdated.value!!)
+        viewModel.start(postListViewModelConnector,
+                mainViewModel.authorSelectionUpdated.value!!,
+                photonWidth = displayWidth - contentSpacing * 2,
+                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height))
 
         initObservers()
     }
@@ -180,11 +167,6 @@ class PostListFragment : Fragment() {
                 recyclerView?.scrollToPosition(index)
             }
         })
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, site)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

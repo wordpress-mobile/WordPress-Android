@@ -35,6 +35,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -48,6 +49,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.properties.Delegates
 
 typealias PagedPostList = PagedList<PostListItemType>
 
@@ -64,6 +66,7 @@ class PostListViewModel @Inject constructor(
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val uploadStarter: UploadStarter,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -73,6 +76,9 @@ class PostListViewModel @Inject constructor(
     }
     private var isStarted: Boolean = false
     private lateinit var connector: PostListViewModelConnector
+
+    private var photonWidth by Delegates.notNull<Int>()
+    private var photonHeight by Delegates.notNull<Int>()
 
     private var scrollToLocalPostId: LocalPostId? = null
 
@@ -117,11 +123,15 @@ class PostListViewModel @Inject constructor(
 
     fun start(
         postListViewModelConnector: PostListViewModelConnector,
-        value: AuthorFilterSelection
+        value: AuthorFilterSelection,
+        photonWidth: Int,
+        photonHeight: Int
     ) {
         if (isStarted) {
             return
         }
+        this.photonHeight = photonHeight
+        this.photonWidth = photonWidth
         connector = postListViewModelConnector
 
         isStarted = true
@@ -348,7 +358,8 @@ class PostListViewModel @Inject constructor(
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
                     capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
-                    featuredImageUrl = connector.getFeaturedImageUrl(post.featuredImageId),
+                    featuredImageUrl =
+                    convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
                     formattedDate = PostUtils.getFormattedDate(post),
                     performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
                     onAction = { postModel, buttonType, statEvent ->
@@ -365,6 +376,14 @@ class PostListViewModel @Inject constructor(
             fetchFirstPage()
         }
     }
+
+    private fun convertToPhotonUrlIfPossible(featuredImageUrl: String?): String? =
+            readerUtilsWrapper.getResizedImageUrl(
+                    featuredImageUrl,
+                    photonWidth,
+                    photonHeight,
+                    !SiteUtils.isPhotonCapable(connector.site)
+            )
 
     fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {
         if (connector.postListType != SEARCH && this.authorFilterSelection != authorFilterSelection) {
