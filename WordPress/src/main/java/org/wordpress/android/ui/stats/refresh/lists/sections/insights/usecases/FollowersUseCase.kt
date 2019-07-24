@@ -197,8 +197,9 @@ class FollowersUseCase(
                             )
                     )
             )
-            mutableItems.add(Header(R.string.stats_follower_label, R.string.stats_follower_since_label))
-            model.followers.toUserItems(R.string.stats_follower_label, R.string.stats_follower_since_label)
+            val header = Header(R.string.stats_follower_label, R.string.stats_follower_since_label)
+            mutableItems.add(header)
+            model.followers.toUserItems(header)
                     .let { mutableItems.addAll(it) }
         } else {
             mutableItems.add(Empty())
@@ -206,7 +207,7 @@ class FollowersUseCase(
         return mutableItems
     }
 
-    private fun List<FollowerModel>.toUserItems(keyLabel: Int, valueLabel: Int): List<ListItemWithIcon> {
+    private fun List<FollowerModel>.toUserItems(header: Header): List<ListItemWithIcon> {
         return this.mapIndexed { index, follower ->
             val value = statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed)
             ListItemWithIcon(
@@ -216,9 +217,8 @@ class FollowersUseCase(
                     value = value,
                     showDivider = index < this.size - 1,
                     contentDescription = contentDescriptionHelper.buildContentDescription(
-                            keyLabel,
+                            header,
                             follower.label,
-                            valueLabel,
                             value
                     )
             )

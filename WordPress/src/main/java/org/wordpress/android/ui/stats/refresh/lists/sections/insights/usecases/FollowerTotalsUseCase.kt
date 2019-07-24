@@ -139,17 +139,16 @@ class FollowerTotalsUseCase
 
         if (domainModel.isNotEmpty()) {
             domainModel.entries.forEach {
-                val textResource = getTitle(it.key)
-                val value = it.value.toFormattedString()
+                val title = getTitle(it.key)
                 items.add(
                         ListItemWithIcon(
                                 icon = getIcon(it.key),
-                                textResource = textResource,
-                                value = value,
+                                textResource = title,
+                                value = it.value.toFormattedString(),
                                 showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        textResource,
-                                        value
+                                        title,
+                                        it.value
                                 )
                         )
                 )

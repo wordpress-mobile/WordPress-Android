@@ -105,20 +105,18 @@ constructor(
             items.add(header)
             domainModel.groups.forEachIndexed { index, group ->
                 val icon = buildIcon(group.icon)
-                val text = group.name
-                val value = (group.total ?: 0).toFormattedString()
                 val contentDescription =
                     contentDescriptionHelper.buildContentDescription(
                             header,
-                            text ?: "",
+                            group.name ?: "",
                             group.total ?: 0
                     )
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
-                            text = text,
-                            value = value,
+                            text = group.name,
+                            value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1,
                             navigationAction = group.url?.let { create(it, this::onItemClick) },
                             contentDescription = contentDescription
@@ -128,8 +126,8 @@ constructor(
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
-                            text = text,
-                            value = value,
+                            text = group.name,
+                            value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1,
                             contentDescription = contentDescription
                     )

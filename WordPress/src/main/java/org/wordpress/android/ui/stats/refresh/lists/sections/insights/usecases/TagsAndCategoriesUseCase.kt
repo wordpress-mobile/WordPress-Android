@@ -147,7 +147,11 @@ class TagsAndCategoriesUseCase
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick),
-                contentDescription = buildContentDescription(header, item.name, tag.views)
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        item.name,
+                        tag.views
+                )
         )
     }
 
@@ -170,7 +174,11 @@ class TagsAndCategoriesUseCase
                 value = tag.views.toFormattedString(),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
-                contentDescription = buildContentDescription(header, text, tag.views)
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        text,
+                        tag.views
+                )
         )
     }
 
@@ -181,7 +189,10 @@ class TagsAndCategoriesUseCase
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick),
-                contentDescription = buildContentDescription(header, item.name)
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header.startLabel,
+                        item.name
+                )
         )
     }
 
@@ -200,21 +211,6 @@ class TagsAndCategoriesUseCase
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)
-    }
-
-    private fun buildContentDescription(header: Header, key: String, value: Long): String {
-        return contentDescriptionHelper.buildContentDescription(
-                header,
-                key,
-                value.toInt()
-        )
-    }
-
-    private fun buildContentDescription(header: Header, key: String): String {
-        return contentDescriptionHelper.buildContentDescription(
-                header.startLabel,
-                key
-        )
     }
 
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)

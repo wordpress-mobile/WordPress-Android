@@ -80,34 +80,36 @@ class LatestPostSummaryUseCase
                             R.string.stats_views,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
                                     R.string.stats_views,
-                                    domainModel.postViewsCount.toLong()
+                                    domainModel.postViewsCount
                             )
                     )
             )
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
+            val postLikeCount = domainModel.postLikeCount.toFormattedString()
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_star_white_24dp,
                             textResource = R.string.stats_likes,
-                            value = domainModel.postLikeCount.toFormattedString(),
+                            value = postLikeCount,
                             showDivider = true,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
                                     R.string.stats_likes,
-                                    domainModel.postLikeCount.toLong()
+                                    domainModel.postLikeCount
                             )
                     )
             )
+            val postCommentCount = domainModel.postCommentCount.toFormattedString()
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_comment_white_24dp,
                             textResource = R.string.stats_comments,
-                            value = domainModel.postCommentCount.toFormattedString(),
+                            value = postCommentCount,
                             showDivider = false,
                             contentDescription = contentDescriptionHelper.buildContentDescription(
                                     R.string.stats_comments,
-                                    domainModel.postCommentCount.toLong()
+                                    domainModel.postCommentCount
                             )
                     )
             )

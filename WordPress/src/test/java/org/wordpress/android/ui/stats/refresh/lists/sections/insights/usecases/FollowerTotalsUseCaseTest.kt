@@ -62,7 +62,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
         whenever(publicizeStore.getPublicizeData(site, LimitMode.All)).thenReturn(socialModel)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
-                any<String>()
+                any<Int>()
         )).thenReturn(contentDescription)
     }
 

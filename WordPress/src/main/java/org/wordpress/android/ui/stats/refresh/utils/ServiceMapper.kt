@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.FACEBOOK
@@ -26,7 +27,7 @@ class ServiceMapper
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     fun map(
-        services: List<org.wordpress.android.fluxc.model.stats.PublicizeModel.Service>,
+        services: List<PublicizeModel.Service>,
         header: Header
     ): List<ListItemWithIcon> {
         val dimension = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)
