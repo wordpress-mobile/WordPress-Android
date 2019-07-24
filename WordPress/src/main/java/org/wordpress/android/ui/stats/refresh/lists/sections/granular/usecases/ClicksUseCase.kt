@@ -99,13 +99,13 @@ constructor(
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
+            val header = Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label)
+            items.add(header)
             domainModel.groups.forEachIndexed { index, group ->
                 val groupName = group.name
                 val contentDescription = contentDescriptionHelper.buildContentDescription(
-                        R.string.stats_clicks_link_label,
+                        header,
                         groupName ?: "",
-                        R.string.stats_clicks_label,
                         group.views ?: 0
                 )
                 val headerItem = ListItemWithIcon(
@@ -131,9 +131,8 @@ constructor(
                                     showDivider = false,
                                     navigationAction = click.url?.let { create(it, this::onItemClick) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            R.string.stats_clicks_link_label,
+                                            header,
                                             click.name,
-                                            R.string.stats_clicks_label,
                                             click.views
                                     )
                             )

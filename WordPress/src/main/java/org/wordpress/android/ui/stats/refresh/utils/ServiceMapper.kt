@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.FACEBOOK
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper.Service.GOOGLE_PLUS
@@ -26,17 +27,15 @@ class ServiceMapper
 ) {
     fun map(
         services: List<org.wordpress.android.fluxc.model.stats.PublicizeModel.Service>,
-        keyLabel: Int,
-        valueLabel: Int
+        header: Header
     ): List<ListItemWithIcon> {
         val dimension = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)
         return services.mapIndexed { index, service ->
             val mappedService = getService(service.name)
             val text = if (mappedService?.nameResource == null) service.name else null
             val contentDescription = contentDescriptionHelper.buildContentDescription(
-                    keyLabel,
+                    header,
                     text ?: "",
-                    valueLabel,
                     service.followers
             )
             ListItemWithIcon(

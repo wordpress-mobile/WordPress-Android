@@ -79,14 +79,12 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<Int>(),
-                any(),
                 any()
         )).thenReturn(contentDescription)
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
-                any(),
-                any<Int>()
+                any()
         )).thenReturn(contentDescription)
     }
 

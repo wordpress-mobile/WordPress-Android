@@ -104,7 +104,8 @@ constructor(
         if (domainModel.authors.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
+            val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
+            items.add(header)
             val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
@@ -115,9 +116,8 @@ constructor(
                         value = author.views.toFormattedString(),
                         showDivider = index < domainModel.authors.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_author_label,
+                                header,
                                 author.name,
-                                R.string.stats_author_views_label,
                                 author.views
                         )
                 )

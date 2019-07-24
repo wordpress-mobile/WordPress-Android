@@ -101,16 +101,16 @@ constructor(
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
+            val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
+            items.add(header)
             domainModel.groups.forEachIndexed { index, group ->
                 val icon = buildIcon(group.icon)
                 val text = group.name
                 val value = (group.total ?: 0).toFormattedString()
                 val contentDescription =
                     contentDescriptionHelper.buildContentDescription(
-                            R.string.stats_referrer_label,
+                            header,
                             text ?: "",
-                            R.string.stats_referrer_views_label,
                             group.total ?: 0
                     )
                 if (group.referrers.isEmpty()) {
@@ -155,9 +155,8 @@ constructor(
                                     showDivider = false,
                                     navigationAction = referrer.url?.let { create(it, this::onItemClick) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
-                                            R.string.stats_referrer_label,
+                                            header,
                                             referrer.name,
-                                            R.string.stats_referrer_views_label,
                                             referrer.views
                                     )
                             )

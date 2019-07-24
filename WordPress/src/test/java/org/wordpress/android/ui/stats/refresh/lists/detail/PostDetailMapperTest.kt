@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.Expa
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -36,10 +36,9 @@ class PostDetailMapperTest : BaseUnitTest() {
         postDetailMapper = PostDetailMapper(localeManagerWrapper, statsDateFormatter, contentDescriptionHelper)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
         whenever(contentDescriptionHelper.buildContentDescription(
-                eq(R.string.stats_months_and_years_period_label),
+                any(),
                 any<String>(),
-                eq(R.string.stats_months_and_years_views_label),
-                any<Int>()
+                any()
         )).thenReturn(contentDescription)
     }
 
@@ -52,8 +51,7 @@ class PostDetailMapperTest : BaseUnitTest() {
         val result = postDetailMapper.mapYears(
                 years,
                 ExpandedYearUiState(),
-                R.string.stats_months_and_years_period_label,
-                R.string.stats_months_and_years_views_label
+                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
         ) {
             expandedYear = it.expandedYear
         }
@@ -86,8 +84,7 @@ class PostDetailMapperTest : BaseUnitTest() {
         val result = postDetailMapper.mapYears(
                 years,
                 ExpandedYearUiState(expandedYear = 2019),
-                R.string.stats_months_and_years_period_label,
-                R.string.stats_months_and_years_views_label
+                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
         ) { }
         assertThat(result).hasSize(5)
         assertThat(result[0] is Divider).isTrue()
@@ -140,8 +137,7 @@ class PostDetailMapperTest : BaseUnitTest() {
                 weeks,
                 1,
                 ExpandedWeekUiState(),
-                R.string.stats_months_and_years_period_label,
-                R.string.stats_months_and_years_views_label
+                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
         ) {}
 
         assertThat(result).hasSize(1)
@@ -176,8 +172,7 @@ class PostDetailMapperTest : BaseUnitTest() {
                 weeks,
                 1,
                 ExpandedWeekUiState(firstDay),
-                R.string.stats_months_and_years_period_label,
-                R.string.stats_months_and_years_views_label
+                Header(R.string.stats_months_and_years_period_label, R.string.stats_months_and_years_views_label)
         ) {}
 
         assertThat(result).hasSize(5)

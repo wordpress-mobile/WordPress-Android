@@ -93,7 +93,6 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
                         eq(6),
                         eq(nonExpandedUiState),
                         any(),
-                        any(),
                         expandCaptor.capture()
                 )
         ).thenReturn(
@@ -113,7 +112,6 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
                         eq(data),
                         eq(6),
                         eq(expandedUiState),
-                        any(),
                         any(),
                         expandCaptor.capture()
                 )
@@ -179,7 +177,6 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
                         eq(data),
                         eq(6),
                         eq(nonExpandedUiState),
-                        any(),
                         any(),
                         expandCaptor.capture()
                 )

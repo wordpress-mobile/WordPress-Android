@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
@@ -85,8 +86,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
                 postDetailMapper.mapYears(
                         eq(data),
                         eq(nonExpandedUiState),
-                        eq(R.string.stats_months_and_years_period_label),
-                        eq(R.string.stats_months_and_years_views_label),
+                        any(),
                         expandCaptor.capture()
                 )
         ).thenReturn(
@@ -102,8 +102,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
                 postDetailMapper.mapYears(
                         eq(data),
                         eq(expandedUiState),
-                        eq(R.string.stats_months_and_years_period_label),
-                        eq(R.string.stats_months_and_years_views_label),
+                        any(),
                         expandCaptor.capture()
                 )
         ).thenReturn(
@@ -165,8 +164,7 @@ class PostAverageViewsPerDayUseCaseTest : BaseUnitTest() {
                 postDetailMapper.mapYears(
                         eq(data.takeLast(6)),
                         eq(nonExpandedUiState),
-                        eq(R.string.stats_months_and_years_period_label),
-                        eq(R.string.stats_months_and_years_views_label),
+                        any(),
                         expandCaptor.capture()
                 )
         ).thenReturn(

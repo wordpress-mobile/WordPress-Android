@@ -1,12 +1,23 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class ContentDescriptionHelper
 @Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun buildContentDescription(keyLabel: Int, key: String, valueLabel: Int, value: Int): String {
+    fun buildContentDescription(header: Header, key: String, value: Int): String {
+        return buildContentDescription(header.startLabel, key, header.endLabel, value)
+    }
+
+    fun buildContentDescription(
+        @StringRes keyLabel: Int,
+        key: String,
+        @StringRes valueLabel: Int,
+        value: Any
+    ): String {
         return resourceProvider.getString(
                 R.string.stats_list_item_description,
                 resourceProvider.getString(keyLabel),
@@ -16,27 +27,20 @@ class ContentDescriptionHelper
         )
     }
 
-    fun buildContentDescription(keyLabel: Int, key: String, valueLabel: Int, value: String): String {
-        return resourceProvider.getString(
-                R.string.stats_list_item_description,
-                resourceProvider.getString(keyLabel),
-                key,
-                resourceProvider.getString(valueLabel),
-                value
-        )
+    fun buildContentDescription(
+        @StringRes keyLabel: Int,
+        @StringRes key: Int,
+        @StringRes valueLabel: Int,
+        value: Int
+    ): String {
+        return buildContentDescription(keyLabel, resourceProvider.getString(key), valueLabel, value)
     }
 
-    fun buildContentDescription(keyLabel: Int, key: Int, valueLabel: Int, value: Int): String {
-        return resourceProvider.getString(
-                R.string.stats_list_item_description,
-                resourceProvider.getString(keyLabel),
-                resourceProvider.getString(key),
-                resourceProvider.getString(valueLabel),
-                value
-        )
+    fun buildContentDescription(header: Header, @StringRes key: Int, value: Int): String {
+        return buildContentDescription(header, resourceProvider.getString(key), value)
     }
 
-    fun buildContentDescription(keyLabel: Int, key: String): String {
+    fun buildContentDescription(@StringRes keyLabel: Int, key: String): String {
         return resourceProvider.getString(
                 R.string.stats_list_item_short_description,
                 resourceProvider.getString(keyLabel),
@@ -44,7 +48,7 @@ class ContentDescriptionHelper
         )
     }
 
-    fun buildContentDescription(keyLabel: Int, key: Long): String {
+    fun buildContentDescription(@StringRes keyLabel: Int, key: Any): String {
         return resourceProvider.getString(
                 R.string.stats_list_item_short_description,
                 resourceProvider.getString(keyLabel),

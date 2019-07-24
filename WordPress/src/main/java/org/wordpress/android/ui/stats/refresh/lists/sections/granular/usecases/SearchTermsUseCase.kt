@@ -97,7 +97,8 @@ constructor(
         if (domainModel.searchTerms.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label))
+            val header = Header(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label)
+            items.add(header)
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
                 ListItemWithIcon(
@@ -105,9 +106,8 @@ constructor(
                         value = searchTerm.views.toFormattedString(),
                         showDivider = index < domainModel.searchTerms.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_search_terms_label,
+                                header,
                                 searchTerm.text,
-                                R.string.stats_search_terms_views_label,
                                 searchTerm.views
                         )
                 )
@@ -120,9 +120,8 @@ constructor(
                                 value = domainModel.unknownSearchCount.toFormattedString(),
                                 showDivider = false,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_search_terms_label,
+                                        header,
                                         R.string.stats_search_terms_unknown_search_terms,
-                                        R.string.stats_search_terms_views_label,
                                         domainModel.unknownSearchCount
                                 )
                         )

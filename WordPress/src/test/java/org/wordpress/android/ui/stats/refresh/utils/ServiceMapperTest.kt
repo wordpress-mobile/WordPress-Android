@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,6 +9,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class ServiceMapperTest : BaseUnitTest() {
@@ -20,10 +20,9 @@ class ServiceMapperTest : BaseUnitTest() {
     fun setUp() {
         serviceMapper = ServiceMapper(resourceProvider, contentDescriptionHelper)
         whenever(contentDescriptionHelper.buildContentDescription(
-                eq(R.string.stats_publicize_service_label),
+                any(),
                 any<String>(),
-                eq(R.string.stats_publicize_followers_label),
-                any<Int>()
+                any()
         )).thenReturn("title, views")
     }
 
@@ -35,8 +34,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -59,8 +57,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -83,8 +80,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -107,8 +103,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -131,8 +126,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -155,8 +149,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -180,8 +173,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -205,8 +197,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
                 listOf(service1, service2, service3),
-                R.string.stats_publicize_service_label,
-                R.string.stats_publicize_followers_label
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
         )
 
         assertThat(result).hasSize(3)

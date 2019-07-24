@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -76,10 +75,9 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever(contentDescriptionHelper.buildContentDescription(
-                eq(R.string.stats_videos_title_label),
+                any(),
                 any<String>(),
-                eq(R.string.stats_videos_views_label),
-                any<Int>()
+                any()
         )).thenReturn(contentDescription)
     }
 

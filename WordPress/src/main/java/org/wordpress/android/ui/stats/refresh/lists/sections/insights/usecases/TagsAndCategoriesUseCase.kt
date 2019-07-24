@@ -89,29 +89,30 @@ class TagsAndCategoriesUseCase
         if (domainModel.tags.isEmpty()) {
             items.add(Empty())
         } else {
+            val header = Header(
+                    R.string.stats_tags_and_categories_title_label,
+                    R.string.stats_tags_and_categories_views_label
+            )
             items.add(
-                    Header(
-                            R.string.stats_tags_and_categories_title_label,
-                            R.string.stats_tags_and_categories_views_label
-                    )
+                    header
             )
             val tagsList = mutableListOf<BlockListItem>()
             val maxViews = domainModel.tags.maxBy { it.views }?.views ?: 0
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
-                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews))
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews, header))
                     }
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, domainModel.tags.size, maxViews),
+                                mapCategory(tag, index, domainModel.tags.size, maxViews, header),
                                 isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
                         })
                         if (isExpanded) {
-                            tagsList.addAll(tag.items.map { subTag -> mapItem(subTag) })
+                            tagsList.addAll(tag.items.map { subTag -> mapItem(subTag, header) })
                             tagsList.add(Divider)
                         }
                     }
@@ -137,7 +138,7 @@ class TagsAndCategoriesUseCase
         return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
-    private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
+    private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long, header: Header): ListItemWithIcon {
         val item = tag.items.first()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
@@ -146,11 +147,17 @@ class TagsAndCategoriesUseCase
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick),
-                contentDescription = buildContentDescription(item.name, tag.views)
+                contentDescription = buildContentDescription(header, item.name, tag.views)
         )
     }
 
-    private fun mapCategory(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
+    private fun mapCategory(
+        tag: TagModel,
+        index: Int,
+        listSize: Int,
+        maxViews: Long,
+        header: Header
+    ): ListItemWithIcon {
         val text = tag.items.foldIndexed("") { itemIndex, acc, item ->
             when (itemIndex) {
                 0 -> item.name
@@ -163,18 +170,18 @@ class TagsAndCategoriesUseCase
                 value = tag.views.toFormattedString(),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
-                contentDescription = buildContentDescription(text, tag.views)
+                contentDescription = buildContentDescription(header, text, tag.views)
         )
     }
 
-    private fun mapItem(item: TagModel.Item): ListItemWithIcon {
+    private fun mapItem(item: TagModel.Item, header: Header): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
                 navigationAction = NavigationAction.create(item.link, this::onTagClick),
-                contentDescription = buildContentDescription(item.name)
+                contentDescription = buildContentDescription(header, item.name)
         )
     }
 
@@ -195,18 +202,17 @@ class TagsAndCategoriesUseCase
         popupMenuHandler.onMenuClick(view, type)
     }
 
-    private fun buildContentDescription(key: String, value: Long): String {
+    private fun buildContentDescription(header: Header, key: String, value: Long): String {
         return contentDescriptionHelper.buildContentDescription(
-                R.string.stats_tags_and_categories_title_label,
+                header,
                 key,
-                R.string.stats_tags_and_categories_views_label,
                 value.toInt()
         )
     }
 
-    private fun buildContentDescription(key: String): String {
+    private fun buildContentDescription(header: Header, key: String): String {
         return contentDescriptionHelper.buildContentDescription(
-                R.string.stats_tags_and_categories_title_label,
+                header.startLabel,
                 key
         )
     }

@@ -104,7 +104,8 @@ constructor(
         if (domainModel.views.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label))
+            val header = Header(R.string.stats_posts_and_pages_title_label, R.string.stats_posts_and_pages_views_label)
+            items.add(header)
             val maxViews = domainModel.views.maxBy { it.views }?.views ?: 0
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
@@ -122,9 +123,8 @@ constructor(
                                 this::onLinkClicked
                         ),
                         contentDescription = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_posts_and_pages_title_label,
+                                header,
                                 viewsModel.title,
-                                R.string.stats_posts_and_pages_views_label,
                                 viewsModel.views
                         )
                 )

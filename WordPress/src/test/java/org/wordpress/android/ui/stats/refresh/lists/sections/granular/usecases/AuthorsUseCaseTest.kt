@@ -85,6 +85,11 @@ class AuthorsUseCaseTest : BaseUnitTest() {
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
                 any<String>(),
+                any()
+        )).thenReturn(contentDescription)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
                 any(),
                 any<Int>()
         )).thenReturn(contentDescription)

@@ -119,7 +119,8 @@ constructor(
             val endLabel = (maxViews ?: 0).toFormattedString()
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
             items.add(MapLegend(startLabel, endLabel))
-            items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
+            val header = Header(R.string.stats_country_label, R.string.stats_country_views_label)
+            items.add(header)
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
                         ListItemWithIcon(
@@ -128,9 +129,8 @@ constructor(
                                 value = group.views.toFormattedString(),
                                 showDivider = index < domainModel.countries.size - 1,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        R.string.stats_country_label,
+                                        header,
                                         group.fullName,
-                                        R.string.stats_country_views_label,
                                         group.views
                                 )
                         )

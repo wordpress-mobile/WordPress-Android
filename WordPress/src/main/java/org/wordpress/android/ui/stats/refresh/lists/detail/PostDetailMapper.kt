@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
@@ -25,8 +26,7 @@ class PostDetailMapper
     fun mapYears(
         shownYears: List<Year>,
         expandedYearUiState: ExpandedYearUiState,
-        keyLabel: Int,
-        valueLabel: Int,
+        header: Header,
         onUiState: (ExpandedYearUiState) -> Unit
     ): List<BlockListItem> {
         val yearList = mutableListOf<BlockListItem>()
@@ -40,7 +40,7 @@ class PostDetailMapper
                 }
                 yearList.add(
                         ExpandableItem(
-                                mapYear(year, index, shownYears.size, isNextNotExpanded, keyLabel, valueLabel),
+                                mapYear(year, index, shownYears.size, isNextNotExpanded, header),
                                 isExpanded = isExpanded
                         ) { changedExpandedState ->
                             val expandedYear = if (changedExpandedState) year.year else null
@@ -55,9 +55,8 @@ class PostDetailMapper
                                 textStyle = LIGHT,
                                 showDivider = false,
                                 contentDescription = contentDescriptionHelper.buildContentDescription(
-                                        keyLabel,
+                                        header,
                                         text,
-                                        valueLabel,
                                         month.count
                                 )
                         )
@@ -66,7 +65,7 @@ class PostDetailMapper
                 }
             } else {
                 yearList.add(
-                        mapYear(year, index, shownYears.size, isNextNotExpanded, keyLabel, valueLabel)
+                        mapYear(year, index, shownYears.size, isNextNotExpanded, header)
                 )
             }
         }
@@ -78,8 +77,7 @@ class PostDetailMapper
         index: Int,
         size: Int,
         isNextNotExpanded: Boolean,
-        keyLabel: Int,
-        valueLabel: Int
+        header: Header
     ): ListItemWithIcon {
         val text = year.year.toString()
         return ListItemWithIcon(
@@ -87,9 +85,8 @@ class PostDetailMapper
                 value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale()),
                 showDivider = isNextNotExpanded && index < size - 1,
                 contentDescription = contentDescriptionHelper.buildContentDescription(
-                        keyLabel,
+                        header,
                         text,
-                        valueLabel,
                         year.value
                 )
         )
@@ -99,8 +96,7 @@ class PostDetailMapper
         weeks: List<PostDetailStatsModel.Week>,
         visibleCount: Int,
         uiState: ExpandedWeekUiState,
-        keyLabel: Int,
-        valueLabel: Int,
+        header: Header,
         onUiState: (ExpandedWeekUiState) -> Unit
     ): List<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()
@@ -120,7 +116,7 @@ class PostDetailMapper
                 }
                 weekList.add(
                         ExpandableItem(
-                                mapWeek(week, index, visibleWeeks.size, isNextNotExpanded, keyLabel, valueLabel),
+                                mapWeek(week, index, visibleWeeks.size, isNextNotExpanded, header),
                                 isExpanded = isExpanded
                         ) { changedExpandedState ->
                             val expandedFirstDay = if (changedExpandedState) week.firstDay else null
@@ -137,9 +133,8 @@ class PostDetailMapper
                                         textStyle = LIGHT,
                                         showDivider = false,
                                         contentDescription = contentDescriptionHelper.buildContentDescription(
-                                                keyLabel,
+                                                header,
                                                 text,
-                                                valueLabel,
                                                 day.average
                                         )
                                 )
@@ -147,7 +142,7 @@ class PostDetailMapper
                     weekList.add(Divider)
                 }
             } else {
-                weekList.add(mapWeek(week, index, visibleWeeks.size, isNextNotExpanded, keyLabel, valueLabel))
+                weekList.add(mapWeek(week, index, visibleWeeks.size, isNextNotExpanded, header))
             }
         }
         return weekList
@@ -167,8 +162,7 @@ class PostDetailMapper
         index: Int,
         size: Int,
         isNextNotExpanded: Boolean,
-        keyLabel: Int,
-        valueLabel: Int
+        header: Header
     ): ListItemWithIcon {
         val lastDay = week.lastDay
         val label = if (lastDay != null) {
@@ -176,15 +170,13 @@ class PostDetailMapper
         } else {
             statsDateFormatter.printGranularDate(week.firstDay, DAYS)
         }
-        val value = week.weekAverage.toFormattedString(locale = localeManagerWrapper.getLocale())
         return ListItemWithIcon(
                 text = label,
-                value = value,
+                value = week.weekAverage.toFormattedString(locale = localeManagerWrapper.getLocale()),
                 showDivider = isNextNotExpanded && index < size - 1,
                 contentDescription = contentDescriptionHelper.buildContentDescription(
-                        keyLabel,
+                        header,
                         label,
-                        valueLabel,
                         week.weekAverage
                 )
         )

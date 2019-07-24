@@ -83,13 +83,10 @@ class PublicizeUseCase
         if (domainModel.services.isEmpty()) {
             items.add(Empty())
         } else {
-            items.add(Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label))
+            val header = Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            items.add(header)
             items.addAll(domainModel.services.let {
-                mapper.map(
-                        it,
-                        R.string.stats_publicize_service_label,
-                        R.string.stats_publicize_followers_label
-                )
+                mapper.map(it, header)
             })
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(

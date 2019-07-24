@@ -94,7 +94,8 @@ constructor(
         if (domainModel.plays.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_videos_title_label, R.string.stats_videos_views_label))
+            val header = Header(R.string.stats_videos_title_label, R.string.stats_videos_views_label)
+            items.add(header)
             items.addAll(domainModel.plays.mapIndexed { index, videoPlays ->
                 ListItemWithIcon(
                         text = videoPlays.title,
@@ -102,9 +103,8 @@ constructor(
                         showDivider = index < domainModel.plays.size - 1,
                         navigationAction = videoPlays.url?.let { NavigationAction.create(it, this::onItemClick) },
                         contentDescription = contentDescriptionHelper.buildContentDescription(
-                                R.string.stats_videos_title_label,
+                                header,
                                 videoPlays.title,
-                                R.string.stats_videos_views_label,
                                 videoPlays.plays
                         )
                 )
