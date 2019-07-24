@@ -17,6 +17,8 @@ import java.util.List;
 
 public class SiteUtils {
     public static final int MIN_WPCOM_USER_ID_TO_DEFAULT_GB = 149287441;
+    public static final String GB_EDITOR_NAME = "gutenberg";
+    public static final String AZTEC_EDITOR_NAME = "aztec";
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site, AccountStore accountStore) {
         if (TextUtils.isEmpty(site.getMobileEditor())) {
@@ -32,7 +34,7 @@ public class SiteUtils {
 
             return AppPrefs.isGutenbergDefaultForNewPosts();
         } else {
-            return site.getMobileEditor().equals("gutenberg");
+            return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
     }
 

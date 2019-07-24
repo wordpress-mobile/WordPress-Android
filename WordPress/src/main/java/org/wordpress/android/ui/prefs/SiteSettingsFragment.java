@@ -736,7 +736,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setTimezone(newValue.toString());
         } else if (preference == mGutenbergDefaultForNewPosts) {
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                    new DesignateMobileEditorPayload(mSite, ((Boolean) newValue) ? "gutenberg" : "aztec")));
+                    new DesignateMobileEditorPayload(mSite, ((Boolean) newValue)
+                            ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME)));
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else {

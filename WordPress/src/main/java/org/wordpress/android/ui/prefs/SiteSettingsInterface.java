@@ -1145,12 +1145,13 @@ public abstract class SiteSettingsInterface {
         // or didn't set the value before, it returns false from preference, so Aztec is set.
         // 2. Users which ID > MIN_WPCOM_USER_ID_TO_DEFAULT_GB will get GB enabled by default (New wpcom users).
         if (TextUtils.isEmpty(event.site.getMobileEditor())) {
-            String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts() ? "gutenberg" : "aztec";
+            String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts()
+                    ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;
 
             // Enable GB as default for mobile on "new" users. Let's make sure the same logic of the web is used here.
             if (event.site.isUsingWpComRestApi()
                 && mAccountStore.getAccount().getUserId() > SiteUtils.MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
-                defaultEditor = "gutenberg";
+                defaultEditor = SiteUtils.GB_EDITOR_NAME;
             }
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                     new DesignateMobileEditorPayload(event.site, defaultEditor)));
