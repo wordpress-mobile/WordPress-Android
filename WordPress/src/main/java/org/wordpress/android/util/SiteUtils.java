@@ -24,6 +24,7 @@ public class SiteUtils {
             // So let's fallback to the old app preference value: On wpcom accounts we need to check if
             // a new account, and enable GB by default, making sure to re-use the same logic of the web.
             if (site.isUsingWpComRestApi()
+                && accountStore != null
                 && accountStore.getAccount() != null
                 && accountStore.getAccount().getUserId() > MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
                 return true;
