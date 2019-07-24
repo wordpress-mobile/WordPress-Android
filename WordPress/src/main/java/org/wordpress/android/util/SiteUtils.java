@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -16,19 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
-    public static final int MIN_WPCOM_USER_ID_TO_DEFAULT_GB = 149287441;
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
 
-    public static boolean isBlockEditorDefaultForNewPost(SiteModel site, AccountStore accountStore) {
+    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
         if (TextUtils.isEmpty(site.getMobileEditor())) {
             // If the editor preference is still not set, the migration didn't happen yet for some reason.
             // So let's fallback to the old app preference value: On wpcom accounts we need to check if
             // a new account, and enable GB by default, making sure to re-use the same logic of the web.
-            if (site.isUsingWpComRestApi()
-                && accountStore != null
-                && accountStore.getAccount() != null
-                && accountStore.getAccount().getUserId() > MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
+            if (site.isUsingWpComRestApi()) {
                 return true;
             }
 

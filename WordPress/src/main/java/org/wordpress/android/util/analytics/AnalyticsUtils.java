@@ -113,7 +113,7 @@ public class AnalyticsUtils {
             // If saved site exist, then add info
             if (selectedSite != null) {
                 metadata.setGutenbergEnabled(
-                        SiteUtils.isBlockEditorDefaultForNewPost(selectedSite, accountStore));
+                        SiteUtils.isBlockEditorDefaultForNewPost(selectedSite));
             }
         }
 

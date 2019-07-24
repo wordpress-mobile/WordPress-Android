@@ -585,7 +585,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void viewHelpAndSupport(Origin origin) {
         List<String> extraSupportTags = getLoginMode() == LoginMode.JETPACK_STATS ? Collections
                 .singletonList(ZendeskExtraTags.connectingJetpack) : null;
-        ActivityLauncher.viewHelpAndSupport(this, origin, null, null, extraSupportTags);
+        ActivityLauncher.viewHelpAndSupport(this, origin, null, extraSupportTags);
     }
 
     @Override

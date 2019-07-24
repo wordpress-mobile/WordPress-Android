@@ -73,7 +73,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     private SparseArray<CountDownLatch> mMediaLatchMap = new SparseArray<>();
 
     @Inject Dispatcher mDispatcher;
-    @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
@@ -297,8 +296,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                                 // and the PostModel contains Gutenberg blocks.
                                 // As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The choice is
                                 // loosely made knowing the other check ("contains blocks") is in place.
-                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost,
-                                        selectedSite, mAccountStore)
+                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost, selectedSite)
                                         ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     }
                 }

@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -75,7 +74,6 @@ public class UploadService extends Service {
 
 
     @Inject Dispatcher mDispatcher;
-    @Inject AccountStore mAccountStore;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
@@ -241,8 +239,7 @@ public class UploadService extends Service {
             // analytics before starting the upload process.
             if (intent.getBooleanExtra(KEY_SHOULD_PUBLISH, false)) {
                 makePostPublishable(post);
-                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()),
-                        mAccountStore);
+                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
             }
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {

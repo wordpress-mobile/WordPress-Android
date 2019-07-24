@@ -185,7 +185,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             @Override
             public void onClick(View v) {
                 ActivityLauncher
-                        .viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, getSelectedSite(), mAccountStore,
+                        .viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, getSelectedSite(),
                                 null);
             }
         });

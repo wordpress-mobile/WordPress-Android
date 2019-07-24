@@ -1148,9 +1148,9 @@ public abstract class SiteSettingsInterface {
             String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts()
                     ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;
 
-            // Enable GB as default for mobile on "new" users. Let's make sure the same logic of the web is used here.
-            if (event.site.isUsingWpComRestApi()
-                && mAccountStore.getAccount().getUserId() > SiteUtils.MIN_WPCOM_USER_ID_TO_DEFAULT_GB) {
+            // Enable GB as default for new installation of the app on wpcom site.
+            // NOTE: .ORG sites will not get the block editor enabled by default.
+            if (event.site.isUsingWpComRestApi()) {
                 defaultEditor = SiteUtils.GB_EDITOR_NAME;
             }
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(

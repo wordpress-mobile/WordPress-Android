@@ -518,7 +518,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
                             : RestartEditorOptions.valueOf(restartEditorOptionName);
 
-            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost, mSite, mAccountStore)
+            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost, mSite)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
@@ -1258,7 +1258,7 @@ public class EditPostActivity extends AppCompatActivity implements
             //  is empty but the user hasn't enabled "Use Gutenberg for new posts" in Site Setting,
             //  don't offer the switch.
             switchToGutenbergMenuItem.setVisible(
-                    hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(mSite, mAccountStore) && isEmpty));
+                    hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(mSite) && isEmpty));
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1545,7 +1545,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void setGutenbergEnabledIfNeeded() {
         if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts()
             && !mIsNewPost
-            && !SiteUtils.isBlockEditorDefaultForNewPost(mSite, mAccountStore)) {
+            && !SiteUtils.isBlockEditorDefaultForNewPost(mSite)) {
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                     new DesignateMobileEditorPayload(mSite, SiteUtils.GB_EDITOR_NAME)));
             AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);
@@ -1941,7 +1941,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             savePostToDb();
-            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()), mAccountStore);
+            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {

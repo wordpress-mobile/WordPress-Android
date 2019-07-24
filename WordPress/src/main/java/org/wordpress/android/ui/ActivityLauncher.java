@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -626,18 +625,17 @@ public class ActivityLauncher {
     }
 
     public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
-                                          @Nullable SiteModel selectedSite, @Nullable AccountStore account,
+                                          @Nullable SiteModel selectedSite,
                                           @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
-        context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, account, extraSupportTags));
+        context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
     public static void viewZendeskTickets(@NonNull Context context,
-                                          @Nullable SiteModel selectedSite,
-                                          @Nullable AccountStore account) {
-        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, account, null);
+                                          @Nullable SiteModel selectedSite) {
+        viewHelpAndSupport(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {

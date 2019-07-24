@@ -168,7 +168,6 @@ class HelpActivity : AppCompatActivity() {
             context: Context,
             origin: Origin,
             selectedSite: SiteModel?,
-            accountStore: AccountStore?,
             extraSupportTags: List<String>?
         ): Intent {
             val intent = Intent(context, HelpActivity::class.java)
@@ -177,10 +176,7 @@ class HelpActivity : AppCompatActivity() {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
 
-            val tagsList: ArrayList<String>? = if (SiteUtils.isBlockEditorDefaultForNewPost(
-                            selectedSite,
-                            accountStore
-                    )) {
+            val tagsList: ArrayList<String>? = if (SiteUtils.isBlockEditorDefaultForNewPost(selectedSite)) {
                 // construct a mutable list to add the Gutenberg related extra tag
                 val list = ArrayList<String>()
 

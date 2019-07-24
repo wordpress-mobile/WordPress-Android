@@ -66,7 +66,7 @@ class PostConflictResolver(
         val onDismissAction = {
             if (!isUndoed) {
                 localPostIdForFetchingRemoteVersionOfConflictedPost = null
-                PostUtils.trackSavePostAnalytics(post, site, null)
+                PostUtils.trackSavePostAnalytics(post, site)
                 dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
             }
         }
