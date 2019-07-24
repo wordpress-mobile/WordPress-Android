@@ -241,7 +241,8 @@ public class UploadService extends Service {
             // analytics before starting the upload process.
             if (intent.getBooleanExtra(KEY_SHOULD_PUBLISH, false)) {
                 makePostPublishable(post);
-                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()), mAccountStore);
+                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()),
+                        mAccountStore);
             }
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
