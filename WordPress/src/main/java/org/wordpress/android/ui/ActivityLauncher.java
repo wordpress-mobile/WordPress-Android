@@ -624,9 +624,9 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
-                                          @Nullable SiteModel selectedSite,
-                                          @Nullable List<String> extraSupportTags) {
+    public static void
+    viewHelpAndSupport(@NonNull Context context, @NonNull Origin origin,
+                                          @Nullable SiteModel selectedSite, @Nullable List<String> extraSupportTags) {
         Map<String, String> properties = new HashMap<>();
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);

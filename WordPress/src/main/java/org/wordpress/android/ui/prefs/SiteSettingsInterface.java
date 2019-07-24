@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
@@ -173,7 +172,6 @@ public abstract class SiteSettingsInterface {
 
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
-    @Inject AccountStore mAccountStore;
 
     protected SiteSettingsInterface(Context host, SiteModel site, SiteSettingsListener listener) {
         ((WordPress) host.getApplicationContext()).component().inject(this);
@@ -1143,7 +1141,7 @@ public abstract class SiteSettingsInterface {
         // This is where the migration of the old editor preference happens and stored to remote.
         // 1. Read the "old" app preference setting: If the user has disabled GB,
         // or didn't set the value before, it returns false from preference, so Aztec is set.
-        // 2. Users which ID > MIN_WPCOM_USER_ID_TO_DEFAULT_GB will get GB enabled by default (New wpcom users).
+        // 2. If the remote preference is empty we force GB for WPCOM users.
         if (TextUtils.isEmpty(event.site.getMobileEditor())) {
             String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts()
                     ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;

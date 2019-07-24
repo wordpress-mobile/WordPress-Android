@@ -184,9 +184,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         rootView.findViewById(R.id.row_support).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher
-                        .viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, getSelectedSite(),
-                                null);
+                ActivityLauncher.viewHelpAndSupport(getActivity(), Origin.ME_SCREEN_HELP, getSelectedSite(), null);
             }
         });
 
