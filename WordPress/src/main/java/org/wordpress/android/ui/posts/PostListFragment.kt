@@ -108,7 +108,6 @@ class PostListFragment : Fragment() {
                 if (postListAdapter.updateItemLayoutType(layoutType)) {
                     recyclerView?.scrollToPosition(0)
                 }
-                postListAdapter.updateItemLayoutType(layoutType)
             }
         })
 
