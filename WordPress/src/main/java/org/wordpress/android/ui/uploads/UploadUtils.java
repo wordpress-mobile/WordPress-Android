@@ -262,7 +262,7 @@ public class UploadUtils {
             UploadService.uploadPost(activity, post);
         }
 
-        PostUtils.trackSavePostAnalytics(post, site);
+        PostUtils.trackSavePostAnalytics(post, site, null);
     }
 
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,

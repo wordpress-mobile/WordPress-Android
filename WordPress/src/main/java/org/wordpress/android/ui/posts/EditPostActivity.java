@@ -1941,7 +1941,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             savePostToDb();
-            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
+            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()), mAccountStore);
 
             UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {
