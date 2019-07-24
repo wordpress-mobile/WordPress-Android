@@ -435,7 +435,10 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
                     hasJetpack = true;
                 }
-                mLoginListener.gotConnectedSiteInfo(event.info.url, hasJetpack);
+                mLoginListener.gotConnectedSiteInfo(
+                        event.info.url,
+                        event.info.urlAfterRedirects,
+                        hasJetpack);
             }
         }
     }
