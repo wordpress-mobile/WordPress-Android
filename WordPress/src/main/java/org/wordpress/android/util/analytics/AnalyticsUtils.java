@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -104,10 +105,16 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        // Use the first site in the list. Should be the default
-        if (!siteStore.getSites().isEmpty()) {
-            metadata.setGutenbergEnabled(
-                    SiteUtils.isBlockEditorDefaultForNewPost(siteStore.getSites().get(0), accountStore));
+
+        int siteLocalId = AppPrefs.getSelectedSite();
+        if (siteLocalId != -1) {
+            // Site previously selected, use it
+            SiteModel selectedSite = siteStore.getSiteByLocalId(siteLocalId);
+            // If saved site exist, then add info
+            if (selectedSite != null) {
+                metadata.setGutenbergEnabled(
+                        SiteUtils.isBlockEditorDefaultForNewPost(selectedSite, accountStore));
+            }
         }
 
         AnalyticsTracker.refreshMetadata(metadata);
