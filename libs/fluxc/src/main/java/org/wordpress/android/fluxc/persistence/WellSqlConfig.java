@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 77;
+        return 78;
     }
 
     @Override
@@ -566,6 +566,12 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL(
                         "CREATE TABLE PostSchedulingReminder (_id INTEGER PRIMARY KEY AUTOINCREMENT,POST_ID INTEGER,"
                         + "SCHEDULED_TIME TEXT NOT NULL)");
+                oldVersion++;
+            case 77:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add AUTHOR_ID INTEGER;");
+                db.execSQL("alter table PostModel add AUTHOR_FIRST_NAME TEXT;");
+                db.execSQL("alter table PostModel add AUTHOR_LAST_NAME TEXT;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
