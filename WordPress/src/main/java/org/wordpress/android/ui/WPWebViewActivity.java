@@ -3,8 +3,12 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,11 +17,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -30,6 +38,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
@@ -42,6 +51,7 @@ import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.NavBarUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode;
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 
 import java.io.UnsupportedEncodingException;
@@ -111,12 +121,14 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
+    private ListPopupWindow mPreviewModeSelector;
 
     private View mNavigateForwardButton;
     private View mNavigateBackButton;
     private View mShareButton;
     private View mExternalBrowserButton;
     private View mPreviewModeButton;
+    private View mDesktopPreviewHint;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,6 +149,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mShareButton = findViewById(R.id.share_button);
         mExternalBrowserButton = findViewById(R.id.external_browser_button);
         mPreviewModeButton = findViewById(R.id.preview_type_selector_button);
+        mDesktopPreviewHint = findViewById(R.id.desktop_preview_hint);
+
+        TooltipCompat.setTooltipText(mNavigateBackButton, mNavigateBackButton.getContentDescription());
+        TooltipCompat.setTooltipText(mNavigateForwardButton, mNavigateForwardButton.getContentDescription());
+        TooltipCompat.setTooltipText(mShareButton, mShareButton.getContentDescription());
+        TooltipCompat.setTooltipText(mExternalBrowserButton, mExternalBrowserButton.getContentDescription());
+        TooltipCompat.setTooltipText(mPreviewModeButton, mPreviewModeButton.getContentDescription());
 
         mNavigateBackButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
@@ -164,22 +183,45 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
         mPreviewModeButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                mViewModel.showPreviewModeSelector();
+                mViewModel.togglePreviewModeSelectorVisibility(true);
             }
         });
 
         initRetryButton();
         initViewModel();
+        setupToolbar();
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                showSubtitle(actionBar);
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+
+                Drawable upIcon = toolbar.getNavigationIcon();
+                if (upIcon != null) {
+                    upIcon.setColorFilter(getResources().getColor(R.color.gray_600),
+                            PorterDuff.Mode.SRC_ATOP);
+                }
+            }
         }
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void showSubtitle(ActionBar actionBar) {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras == null) {
+            return;
         }
+
+        String originalUrl = extras.getString(URL_TO_LOAD);
+        Uri uri = Uri.parse(originalUrl);
+        actionBar.setSubtitle(uri.getHost());
     }
 
     private void initRetryButton() {
@@ -217,6 +259,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 if (navBarUiState != null) {
                     mNavigateBackButton.setEnabled(navBarUiState.getBackNavigationEnabled());
                     mNavigateForwardButton.setEnabled(navBarUiState.getForwardNavigationEnabled());
+                    AniUtils.animateBottomBar(mDesktopPreviewHint, navBarUiState.getDesktopPreviewHintVisible());
                 }
             }
         });
@@ -244,28 +287,76 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mViewModel.getShare().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO share
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                // Use the preferred shareable URL or the default webview URL
+                Bundle extras = getIntent().getExtras();
+                String shareableUrl = extras.getString(SHAREABLE_URL, null);
+                if (TextUtils.isEmpty(shareableUrl)) {
+                    shareableUrl = mWebView.getUrl();
+                }
+                share.putExtra(Intent.EXTRA_TEXT, shareableUrl);
+                String shareSubject = extras.getString(SHARE_SUBJECT, null);
+                if (!TextUtils.isEmpty(shareSubject)) {
+                    share.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                }
+                startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             }
         });
 
         mViewModel.getOpenExternalBrowser().observe(this, new Observer<Unit>() {
             @Override
             public void onChanged(@Nullable Unit unit) {
-                // TODO open page in external browser
+                ReaderActivityLauncher.openUrl(WPWebViewActivity.this, mWebView.getUrl(),
+                        ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             }
         });
 
-        mViewModel.getShowPreviewModeSelector().observe(this, new Observer<Unit>() {
+        mViewModel.getPreviewModeSelector().observe(this, new Observer<PreviewModeSelectorStatus>() {
             @Override
-            public void onChanged(@Nullable Unit unit) {
-                // TODO show preview mode selector
+            public void onChanged(final @Nullable PreviewModeSelectorStatus previewModelSelectorStatus) {
+                if (previewModelSelectorStatus != null && previewModelSelectorStatus.isVisible()) {
+                    mPreviewModeButton.post(new Runnable() {
+                        @Override public void run() {
+                            int popupWidth = getResources().getDimensionPixelSize(R.dimen.web_preview_mode_popup_width);
+                            int popupOffset = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
+
+                            mPreviewModeSelector = new ListPopupWindow(WPWebViewActivity.this);
+                            mPreviewModeSelector.setWidth(popupWidth);
+                            mPreviewModeSelector.setAdapter(new PreviewModeMenuAdapter(WPWebViewActivity.this,
+                                    previewModelSelectorStatus.getSelectedPreviewMode()));
+                            mPreviewModeSelector.setDropDownGravity(Gravity.END);
+                            mPreviewModeSelector.setAnchorView(mPreviewModeButton);
+                            mPreviewModeSelector.setHorizontalOffset(-popupOffset);
+                            mPreviewModeSelector.setVerticalOffset(popupOffset);
+                            mPreviewModeSelector.setModal(true);
+                            mPreviewModeSelector.setOnDismissListener(new OnDismissListener() {
+                                @Override public void onDismiss() {
+                                    mViewModel.togglePreviewModeSelectorVisibility(false);
+                                }
+                            });
+                            mPreviewModeSelector.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    mPreviewModeSelector.dismiss();
+                                    PreviewModeMenuAdapter adapter = (PreviewModeMenuAdapter) parent.getAdapter();
+                                    PreviewMode selectedMode = adapter.getItem(position);
+                                    mViewModel.selectPreviewMode(selectedMode);
+                                }
+                            });
+                            mPreviewModeSelector.show();
+                        }
+                    });
+                }
             }
         });
 
         mViewModel.getPreviewMode().observe(this, new Observer<PreviewMode>() {
             @Override
             public void onChanged(@Nullable PreviewMode previewMode) {
-                // TODO updatedPreviewMode
+                mWebView.getSettings().setLoadWithOverviewMode(previewMode == PreviewMode.DESKTOP);
+                mWebView.getSettings().setUseWideViewPort(previewMode != PreviewMode.DESKTOP);
+                mWebView.setInitialScale(100);
             }
         });
         mViewModel.start();
@@ -601,28 +692,17 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (itemID == R.id.menu_refresh) {
             mWebView.reload();
             return true;
-        } else if (itemID == R.id.menu_share) {
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("text/plain");
-            // Use the preferred shareable URL or the default webview URL
-            Bundle extras = getIntent().getExtras();
-            String shareableUrl = extras.getString(SHAREABLE_URL, null);
-            if (TextUtils.isEmpty(shareableUrl)) {
-                shareableUrl = mWebView.getUrl();
-            }
-            share.putExtra(Intent.EXTRA_TEXT, shareableUrl);
-            String shareSubject = extras.getString(SHARE_SUBJECT, null);
-            if (!TextUtils.isEmpty(shareSubject)) {
-                share.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
-            }
-            startActivity(Intent.createChooser(share, getText(R.string.share_link)));
-            return true;
-        } else if (itemID == R.id.menu_browser) {
-            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPreviewModeSelector != null && mPreviewModeSelector.isShowing()) {
+            mPreviewModeSelector.setOnDismissListener(null);
+            mPreviewModeSelector.dismiss();
+        }
     }
 
     @Override

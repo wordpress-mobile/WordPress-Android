@@ -7,9 +7,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:elevation="@dimen/appbar_elevation"
+        app:contentInsetEnd="@dimen/toolbar_content_offset_end"
+        app:contentInsetLeft="@dimen/toolbar_content_offset"
+        app:contentInsetRight="@dimen/toolbar_content_offset_end"
+        app:contentInsetStart="@dimen/toolbar_content_offset"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <include
         layout="@layout/progress_layout"
@@ -37,6 +47,18 @@
             android:layout_height="@dimen/list_divider_height"
             android:layout_above="@+id/navbar"
             android:background="@color/neutral_100"/>
+
+
+        <TextView
+            android:id="@+id/desktop_preview_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/navbar"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/preview_mode_indicator_background"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/web_preview_desktop"
+            android:textColor="@color/white"/>
 
         <LinearLayout
             android:id="@+id/navbar"
@@ -92,7 +114,7 @@
         app:aevImage="@drawable/img_illustration_cloud_off_152dp"
         app:aevSubtitle="@string/error_network_connection"
         app:aevTitle="@string/error_browser_no_network"
-        tools:visibility="visible">
+        tools:visibility="gone">
     </org.wordpress.android.ui.ActionableEmptyView>
 
     <ProgressBar
