@@ -27,8 +27,8 @@ class PostDayViewsMapper
         val value = selectedItem.count
         val previousValue = previousItem?.count
         val positive = value >= (previousValue ?: 0)
-        val change = buildChange(previousValue, value, positive)
-        val unformattedChange = buildChange(previousValue, value, positive) { this.toString() }
+        val change = buildChange(previousValue, value, positive, isFormattedNumber = true)
+        val unformattedChange = buildChange(previousValue, value, positive, isFormattedNumber = false)
 
         val state = when {
             isLast -> State.NEUTRAL
@@ -55,20 +55,28 @@ class PostDayViewsMapper
         previousValue: Int?,
         value: Int,
         positive: Boolean,
-        print: Int.() -> String = { this.toFormattedString() }
+        isFormattedNumber: Boolean
     ): String? {
         return previousValue?.let {
             val difference = value - previousValue
             val percentage = when (previousValue) {
                 value -> "0"
                 0 -> "∞"
-                else -> (difference * 100 / previousValue).print()
+                else -> mapIntToString((difference * 100 / previousValue), isFormattedNumber)
             }
+            val formattedDifference = mapIntToString(difference, isFormattedNumber)
             if (positive) {
-                resourceProvider.getString(R.string.stats_traffic_increase, difference.print(), percentage)
+                resourceProvider.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
             } else {
-                resourceProvider.getString(R.string.stats_traffic_change, difference.print(), percentage)
+                resourceProvider.getString(R.string.stats_traffic_change, formattedDifference, percentage)
             }
+        }
+    }
+
+    private fun mapIntToString(value: Int, isFormattedNumber: Boolean): String {
+        return when (isFormattedNumber) {
+            true -> value.toFormattedString()
+            false -> value.toString()
         }
     }
 
