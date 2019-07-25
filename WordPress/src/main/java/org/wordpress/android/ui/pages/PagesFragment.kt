@@ -359,7 +359,7 @@ class PagesFragment : Fragment() {
                 getString(R.string.delete),
                 getString(R.string.cancel)
         )
-        dialog.show(fragmentManager, page.id.toString())
+        dialog.show(fragmentManager!!, page.id.toString())
     }
 
     override fun onStart() {

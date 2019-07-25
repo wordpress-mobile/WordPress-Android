@@ -151,7 +151,7 @@ class ActivityLogDetailFragment : Fragment() {
                     getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.cancel))
-            dialog.show(fragmentManager, it)
+            dialog.show(fragmentManager!!, it)
         }
     }
 }

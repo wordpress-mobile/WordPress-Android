@@ -36,7 +36,7 @@ class InsightsManagementFragment : DaggerFragment() {
         return inflater.inflate(R.layout.insights_management_fragment, container, false)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
         inflater?.inflate(R.menu.menu_insights_management, menu)

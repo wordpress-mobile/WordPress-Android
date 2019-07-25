@@ -46,7 +46,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var widgetType: WidgetType
 
-    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
         activity?.let {
             val styledAttributes = it.obtainStyledAttributes(attrs, R.styleable.statsWidget)
@@ -102,13 +102,13 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         siteSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetSiteSelectionDialogFragment().show(fragmentManager, "stats_site_selection_fragment")
+                StatsWidgetSiteSelectionDialogFragment().show(fragmentManager!!, "stats_site_selection_fragment")
             }
         })
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(fragmentManager, "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(fragmentManager!!, "stats_view_mode_selection_fragment")
             }
         })
 
