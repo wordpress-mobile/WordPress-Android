@@ -8,14 +8,12 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     private AccountStore mAccountStore;
     private SiteStore mSiteStore;
-    @Inject
     public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore) {
         this.mAccountStore = accountStore;
         this.mSiteStore = siteStore;
