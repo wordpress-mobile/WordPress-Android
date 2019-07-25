@@ -99,7 +99,8 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
 
         dataTypeSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetDataTypeSelectionDialogFragment().show(fragmentManager!!, "stats_data_type_selection_fragment")
+                StatsWidgetDataTypeSelectionDialogFragment()
+                        .show(fragmentManager!!, "stats_data_type_selection_fragment")
             }
         })
 
