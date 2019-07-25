@@ -570,8 +570,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 77:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table PostModel add AUTHOR_ID INTEGER;");
-                db.execSQL("alter table PostModel add AUTHOR_FIRST_NAME TEXT;");
-                db.execSQL("alter table PostModel add AUTHOR_LAST_NAME TEXT;");
+                db.execSQL("alter table PostModel add AUTHOR_DISPLAY_NAME TEXT;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

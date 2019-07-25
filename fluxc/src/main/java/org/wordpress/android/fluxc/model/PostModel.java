@@ -53,8 +53,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
     @Column private long mAuthorId;
-    @Column private String mAuthorFirstName;
-    @Column private String mAuthorLastName;
+    @Column private String mAuthorDisplayName;
 
     // Page specific
     @Column private boolean mIsPage;
@@ -290,20 +289,12 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         this.mAuthorId = authorId;
     }
 
-    public String getAuthorFirstName() {
-        return mAuthorFirstName;
+    public String getAuthorDisplayName() {
+        return mAuthorDisplayName;
     }
 
-    public void setAuthorFirstName(String authorFirstName) {
-        this.mAuthorFirstName = authorFirstName;
-    }
-
-    public String getAuthorLastName() {
-        return mAuthorLastName;
-    }
-
-    public void setAuthorLastName(String authorLastName) {
-        this.mAuthorLastName = authorLastName;
+    public void setAuthorDisplayName(String authorDisplayName) {
+        mAuthorDisplayName = authorDisplayName;
     }
 
     public boolean isPage() {
@@ -420,8 +411,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
-                && StringUtils.equals(getAuthorFirstName(), otherPost.getAuthorFirstName())
-                && StringUtils.equals(getAuthorLastName(), otherPost.getAuthorLastName())
+                && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
