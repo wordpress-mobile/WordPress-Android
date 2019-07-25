@@ -658,6 +658,11 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
     }
 
+    public static boolean isDefaultAppWideEditorPreferenceSet() {
+        // Check if the default editor pref was previously set
+        return !"".equals(getString(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS));
+    }
+
     public static void setVideoOptimizeWidth(int width) {
         setInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, width);
     }

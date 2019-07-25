@@ -1138,21 +1138,14 @@ public abstract class SiteSettingsInterface {
             return;
         }
 
-        // This is where the migration of the old editor preference happens and stored to remote.
-        // 1. Read the "old" app preference setting: If the user has disabled GB,
-        // or didn't set the value before, it returns false from preference, so Aztec is set.
-        // 2. If the remote preference is empty we enable GB for WPCOM users.
+        // Migrate the old app-wide editor preference to the remote backend if it was previously set
         if (TextUtils.isEmpty(event.site.getMobileEditor())) {
-            String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts()
-                    ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;
-
-            // Enable GB as default for new installation of the app on wpcom site.
-            // NOTE: .ORG sites will not get the block editor enabled by default.
-            if (event.site.isUsingWpComRestApi()) {
-                defaultEditor = SiteUtils.GB_EDITOR_NAME;
+            if (AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+                String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts()
+                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;
+                mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                        new DesignateMobileEditorPayload(event.site, defaultEditor)));
             }
-            mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                    new DesignateMobileEditorPayload(event.site, defaultEditor)));
         }
 
         notifyUpdatedOnUiThread();
