@@ -58,11 +58,11 @@ class StatsStore
     private val preferenceUtils: PreferenceUtilsWrapper,
     private val statsSqlUtils: StatsSqlUtils
 ) {
-    suspend fun deleteAllData() = withContext(coroutineContext) {
+    fun deleteAllData() {
         statsSqlUtils.deleteAllStats()
     }
 
-    suspend fun deleteSiteData(site: SiteModel) = withContext(coroutineContext) {
+    fun deleteSiteData(site: SiteModel) {
         statsSqlUtils.deleteSiteStats(site)
     }
 
