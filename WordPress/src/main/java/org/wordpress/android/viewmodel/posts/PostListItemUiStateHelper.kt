@@ -87,7 +87,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
         val title = getTitle(post = post)
-        val dateAndAuthor = getDateAndAuthorLabel(formattedDate, post.authorFirstName, post.authorLastName)
+        val dateAndAuthor = getDateAndAuthorLabel(formattedDate, post.authorDisplayName)
         val statuses = getStatuses(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
@@ -136,12 +136,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
     private fun getDateAndAuthorLabel(
         formattedDate: String,
-        authorFirstName: String?,
-        authorLastName: String?
+        displayName: String?
     ): UiString {
-        val fullName = listOf(authorFirstName, authorLastName).filterNot { TextUtils.isEmpty(it) }
-                .joinToString(separator = " ")
-        val joinedStrings = listOf(formattedDate, fullName).filterNot { TextUtils.isEmpty(it) }
+        val joinedStrings = listOf(formattedDate, displayName).filterNot { TextUtils.isEmpty(it) }
                 .joinToString(separator = "  ·  ")
         return UiStringText(joinedStrings)
     }

@@ -272,20 +272,18 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `date and author label contains all date, authorFirstName and authorLastName`() {
+    fun `date and author label contains both date and authorDisplayName`() {
         // Arrange
-        val firstName = "John"
-        val lastName = "Novak"
+        val authorDisplayName = "John Novak"
         val state = createPostListItemUiState(
                 post = createPostModel(
-                        authorFirstName = firstName,
-                        authorLastName = lastName
+                        authorDisplayName = authorDisplayName
                 ), formattedDate = FORMATTER_DATE
         )
 
         // Assert
         assertThat((state.data.dateAndAuthor as UiStringText).text)
-                .isEqualTo("$FORMATTER_DATE  ·  $firstName $lastName")
+                .isEqualTo("$FORMATTER_DATE  ·  $authorDisplayName")
     }
 
     @Test
@@ -293,8 +291,7 @@ class PostListItemUiStateHelperTest {
         // Arrange
         val state = createPostListItemUiState(
                 post = createPostModel(
-                        authorFirstName = null,
-                        authorLastName = null
+                        authorDisplayName = null
                 ), formattedDate = FORMATTER_DATE
         )
 
@@ -307,8 +304,7 @@ class PostListItemUiStateHelperTest {
         // Arrange
         val state = createPostListItemUiState(
                 post = createPostModel(
-                        authorFirstName = "",
-                        authorLastName = ""
+                        authorDisplayName = ""
                 ), formattedDate = FORMATTER_DATE
         )
 
@@ -320,15 +316,13 @@ class PostListItemUiStateHelperTest {
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
         isLocallyChanged: Boolean = false,
-        authorFirstName: String? = null,
-        authorLastName: String? = null
+        authorDisplayName: String? = null
     ): PostModel {
         val post = PostModel()
         post.status = status
         post.setIsLocalDraft(isLocalDraft)
         post.setIsLocallyChanged(isLocallyChanged)
-        post.authorFirstName = authorFirstName
-        post.authorLastName = authorLastName
+        post.authorDisplayName = authorDisplayName
         return post
     }
 
