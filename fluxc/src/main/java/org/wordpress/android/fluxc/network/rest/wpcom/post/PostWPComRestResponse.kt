@@ -49,7 +49,6 @@ data class PostWPComRestResponse(
     )
     data class Author(
         @SerializedName("ID") val id: Long = 0,
-        @SerializedName("first_name") val firstName: String?,
-        @SerializedName("last_name") val lastName: String?
+        @SerializedName("name") val name: String?
     )
 }
