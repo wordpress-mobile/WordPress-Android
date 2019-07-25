@@ -344,8 +344,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (from.getAuthor() != null) {
             post.setAuthorId(from.getAuthor().getId());
-            post.setAuthorFirstName(from.getAuthor().getFirstName());
-            post.setAuthorLastName(from.getAuthor().getLastName());
+            post.setAuthorDisplayName(from.getAuthor().getName());
         }
 
         if (from.getPostThumbnail() != null) {
