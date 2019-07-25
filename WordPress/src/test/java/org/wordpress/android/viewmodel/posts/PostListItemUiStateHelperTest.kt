@@ -294,6 +294,31 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
+    fun `verify post pending review with publishing rights actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PENDING)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+    }
+
+    @Test
+    fun `verify post pending review without publishing rights`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PENDING),
+                capabilitiesToPublish = false
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+    }
+
+    @Test
     fun `label has progress color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
         assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
