@@ -114,12 +114,12 @@ public class WPLoginInputRow extends RelativeLayout {
                 }
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {
-                    mTextInputLayout.setPasswordVisibilityToggleEnabled(
-                            a.getBoolean(R.styleable.wpLoginInputRow_passwordToggleEnabled, false));
+                    mTextInputLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+                    mTextInputLayout.setEndIconDrawable(R.drawable.selector_password_visibility);
                 }
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleTint)) {
-                    mTextInputLayout.setPasswordVisibilityToggleTintList(
+                    mTextInputLayout.setEndIconTintList(
                             a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
