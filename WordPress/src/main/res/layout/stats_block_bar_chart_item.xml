@@ -13,14 +13,12 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/stats_bar_chart_height"
-        android:importantForAccessibility="no"/>
+        android:layout_height="@dimen/stats_bar_chart_height"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
-        android:importantForAccessibility="no"
         android:layoutDirection="ltr"
         android:paddingEnd="15dp"
         android:paddingStart="33dp">
