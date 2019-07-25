@@ -231,7 +231,6 @@ class PostListItemUiStateHelperTest {
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
         assertThat(state.actions).hasSize(3)
-
     }
 
     @Test
