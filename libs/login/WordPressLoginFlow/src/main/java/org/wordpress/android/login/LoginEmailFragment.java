@@ -443,7 +443,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void onLoginFinished() {
-        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mAnalyticsListener.trackAnalyticsSignIn(true);
         mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
     }
 
