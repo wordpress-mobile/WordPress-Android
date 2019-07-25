@@ -1543,9 +1543,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts()
-            && !mIsNewPost
-            && !SiteUtils.isBlockEditorDefaultForNewPost(mSite)) {
+        if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts() && TextUtils.isEmpty(mSite.getMobileEditor())) {
             mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                     new DesignateMobileEditorPayload(mSite, SiteUtils.GB_EDITOR_NAME)));
             AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);
@@ -2286,7 +2284,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
-                        // Enable gutenberg upon opening a block based post
+                        // Enable gutenberg on the site & show the informative popup upon opening
+                        // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
