@@ -344,8 +344,6 @@ class PostListItemUiStateHelperTest {
         assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
     }
 
-
-
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
