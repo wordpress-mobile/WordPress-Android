@@ -16,6 +16,9 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -282,8 +285,7 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat((state.data.dateAndAuthor as UiStringText).text)
-                .isEqualTo("$FORMATTER_DATE  ·  $authorDisplayName")
+        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo("$FORMATTER_DATE  ·  $authorDisplayName")
     }
 
     @Test
@@ -312,6 +314,38 @@ class PostListItemUiStateHelperTest {
         assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
     }
 
+    @Test
+    fun `author name is displayed when author filter is EVERYONE`() {
+        // Arrange
+        val authorDisplayName = "John Novak"
+        val state = createPostListItemUiState(
+                authorFilterSelection = EVERYONE,
+                post = createPostModel(
+                        authorDisplayName = authorDisplayName
+                ), formattedDate = FORMATTER_DATE
+        )
+
+        // Assert
+        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo("$FORMATTER_DATE  ·  $authorDisplayName")
+    }
+
+    @Test
+    fun `author name is NOT displayed when author filter is ME`() {
+        // Arrange
+        val authorDisplayName = "John Novak"
+        val state = createPostListItemUiState(
+                authorFilterSelection = ME,
+                post = createPostModel(
+                        authorDisplayName = authorDisplayName
+                ), formattedDate = FORMATTER_DATE
+        )
+
+        // Assert
+        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
+    }
+
+
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
@@ -327,6 +361,7 @@ class PostListItemUiStateHelperTest {
     }
 
     private fun createPostListItemUiState(
+        authorFilterSelection: AuthorFilterSelection = EVERYONE,
         post: PostModel = PostModel(),
         uploadStatus: PostListItemUploadStatus = createUploadStatus(),
         unhandledConflicts: Boolean = false,
@@ -337,6 +372,7 @@ class PostListItemUiStateHelperTest {
         performingCriticalAction: Boolean = false,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit = { _, _, _ -> }
     ): PostListItemUiState = helper.createPostListItemUiState(
+            authorFilterSelection,
             post = post,
             uploadStatus = uploadStatus,
             unhandledConflicts = unhandledConflicts,

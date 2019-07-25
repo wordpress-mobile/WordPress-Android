@@ -21,6 +21,9 @@ import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
+import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils
@@ -57,6 +60,7 @@ const val STATE_INFO_COLOR = R.color.warning_dark
  */
 class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
     fun createPostListItemUiState(
+        authorFilterSelection: AuthorFilterSelection,
         post: PostModel,
         uploadStatus: PostListItemUploadStatus,
         unhandledConflicts: Boolean,
@@ -87,7 +91,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
         val title = getTitle(post = post)
-        val dateAndAuthor = getDateAndAuthorLabel(formattedDate, post.authorDisplayName)
+        val dateAndAuthor = getDateAndAuthorLabel(formattedDate, post.authorDisplayName, authorFilterSelection)
         val statuses = getStatuses(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
@@ -136,11 +140,17 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
 
     private fun getDateAndAuthorLabel(
         formattedDate: String,
-        displayName: String?
+        displayName: String?,
+        authorFilterSelection: AuthorFilterSelection
     ): UiString {
-        val joinedStrings = listOf(formattedDate, displayName).filterNot { TextUtils.isEmpty(it) }
-                .joinToString(separator = "  ·  ")
-        return UiStringText(joinedStrings)
+        return when (authorFilterSelection) {
+            EVERYONE -> {
+                val joinedStrings = listOf(formattedDate, displayName).filterNot { TextUtils.isEmpty(it) }
+                        .joinToString(separator = "  ·  ")
+                UiStringText(joinedStrings)
+            }
+            ME -> UiStringText(formattedDate)
+        }
     }
 
     private fun getTitle(post: PostModel): UiString {
