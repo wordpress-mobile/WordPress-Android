@@ -217,6 +217,7 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             long commentId = data.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1);
             String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);
