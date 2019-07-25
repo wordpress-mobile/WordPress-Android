@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.OldStatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.LocaleManager
@@ -58,6 +57,9 @@ class StatsActivity : AppCompatActivity() {
 
     companion object {
         const val INITIAL_SELECTED_PERIOD_KEY = "INITIAL_SELECTED_PERIOD_KEY"
+        const val ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM"
+        const val ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME"
+        const val ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID"
         @JvmStatic
         fun start(context: Context, site: SiteModel) {
             context.startActivity(buildIntent(context, site))
@@ -81,9 +83,14 @@ class StatsActivity : AppCompatActivity() {
         ): Intent {
             val intent = Intent(context, StatsActivity::class.java)
             intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-            statsTimeframe?.let { intent.putExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME, statsTimeframe) }
+            statsTimeframe?.let { intent.putExtra(ARG_DESIRED_TIMEFRAME, statsTimeframe) }
             period?.let { intent.putExtra(INITIAL_SELECTED_PERIOD_KEY, period) }
             return intent
         }
+    }
+
+    enum class StatsLaunchedFrom {
+        STATS_WIDGET,
+        NOTIFICATIONS
     }
 }

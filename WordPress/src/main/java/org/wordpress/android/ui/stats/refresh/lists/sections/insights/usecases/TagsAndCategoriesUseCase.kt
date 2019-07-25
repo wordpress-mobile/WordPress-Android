@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -176,7 +175,7 @@ class TagsAndCategoriesUseCase
     }
 
     private fun getIcon(type: String) =
-            if (type == "tag") drawable.ic_tag_white_24dp else drawable.ic_folder_white_24dp
+            if (type == "tag") R.drawable.ic_tag_white_24dp else R.drawable.ic_folder_white_24dp
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
