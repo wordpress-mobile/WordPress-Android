@@ -54,6 +54,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -217,6 +218,15 @@ public class SitePickerActivity extends AppCompatActivity
                         setResult(resultCode, data);
                         finish();
                     }
+                }
+                break;
+        }
+        // Enable GB on the site created by the "new user" on mobile
+        switch (requestCode) {
+            case RequestCodes.CREATE_SITE:
+                if (data != null) {
+                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    SiteUtils.enableBlockEditorForNewUsers(mDispatcher, mAccountStore, mSiteStore, newSiteLocalID);
                 }
                 break;
         }

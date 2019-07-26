@@ -98,6 +98,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -769,6 +770,12 @@ public class WPMainActivity extends AppCompatActivity implements
                 }
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
+
+                // Enable GB on the first site created by "new users" on mobile
+                if (data != null) {
+                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    SiteUtils.enableBlockEditorForNewUsers(mDispatcher, mAccountStore, mSiteStore, newSiteLocalID);
+                }
 
                 setSite(data);
                 showQuickStartDialog();
