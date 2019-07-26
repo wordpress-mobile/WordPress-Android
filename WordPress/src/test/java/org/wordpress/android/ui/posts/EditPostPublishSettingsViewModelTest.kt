@@ -9,11 +9,14 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
+import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -329,5 +332,60 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             assertThat(this.notificationVisible).isTrue()
             assertThat(this.notificationLabel).isEqualTo(R.string.post_notification_off)
         }
+    }
+
+    @Test
+    fun `onAddToCalendar adds a calendar event`() {
+        val post = PostModel()
+        val postId = 1
+        post.id = postId
+        post.dateCreated = "2019-05-05T14:33:20+0000"
+        val postTitle = "Post title"
+        post.title = postTitle
+        val localSiteId = 2
+        post.localSiteId = localSiteId
+        val postLink = "link.com"
+        post.link = postLink
+
+        val site = SiteModel()
+        val siteTitle = "Site title"
+        site.name = siteTitle
+        whenever(siteStore.getSiteByLocalId(localSiteId)).thenReturn(site)
+
+        var calendarEvent: CalendarEvent? = null
+        viewModel.onAddToCalendar.observeForever {
+            calendarEvent = it?.getContentIfNotHandled()
+        }
+
+        val eventTitle = "Event title"
+        val eventDescription = "Event description"
+        whenever(resourceProvider.getString(
+                R.string.calendar_scheduled_post_title,
+                postTitle
+        )).thenReturn(eventTitle)
+        whenever(resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                postTitle,
+                siteTitle,
+                postLink
+        )).thenReturn(eventDescription)
+
+        viewModel.onAddToCalendar(post)
+
+        assertThat(calendarEvent!!.startTime).isEqualTo(1557066800000L)
+        assertThat(calendarEvent!!.title).isEqualTo(eventTitle)
+        assertThat(calendarEvent!!.description).isEqualTo(eventDescription)
+    }
+
+    @Test
+    fun `onNotificationCreated updates notification`() {
+        var schedulingReminderPeriod: SchedulingReminderModel.Period? = null
+        viewModel.onNotificationTime.observeForever {
+            schedulingReminderPeriod = it
+        }
+
+        viewModel.onNotificationCreated(ONE_HOUR)
+
+        assertThat(schedulingReminderPeriod).isEqualTo(ONE_HOUR)
     }
 }

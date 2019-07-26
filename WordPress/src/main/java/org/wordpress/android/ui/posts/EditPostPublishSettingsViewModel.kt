@@ -106,25 +106,6 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    private fun updateDateAndTimeFromCalendar(startCalendar: Calendar) {
-        year = startCalendar.get(Calendar.YEAR)
-        month = startCalendar.get(Calendar.MONTH)
-        day = startCalendar.get(Calendar.DAY_OF_MONTH)
-        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
-        minute = startCalendar.get(Calendar.MINUTE)
-    }
-
-    private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
-        val calendar = localeManagerWrapper.getCurrentCalendar()
-        val dateCreated = postModel.dateCreated
-        // Set the currently selected time if available
-        if (!TextUtils.isEmpty(dateCreated)) {
-            calendar.time = DateTimeUtils.dateFromIso8601(dateCreated)
-            calendar.timeZone = localeManagerWrapper.getTimeZone()
-        }
-        return calendar
-    }
-
     fun updatePost(updatedDate: Calendar, post: PostModel?) {
         post?.let {
             post.dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
@@ -190,6 +171,33 @@ class EditPostPublishSettingsViewModel
         updateUiModel(post)
     }
 
+    fun onAddToCalendar(post: PostModel) {
+        val startTime = DateTimeUtils.dateFromIso8601(post.dateCreated).time
+        val site = siteStore.getSiteByLocalId(post.localSiteId)
+        val title = resourceProvider.getString(
+                R.string.calendar_scheduled_post_title,
+                post.title
+        )
+        val description = resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                post.title,
+                site.name ?: site.url,
+                post.link
+        )
+        _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
+    }
+
+    private fun getCurrentPublishDateAsCalendar(postModel: PostModel): Calendar {
+        val calendar = localeManagerWrapper.getCurrentCalendar()
+        val dateCreated = postModel.dateCreated
+        // Set the currently selected time if available
+        if (!TextUtils.isEmpty(dateCreated)) {
+            calendar.time = DateTimeUtils.dateFromIso8601(dateCreated)
+            calendar.timeZone = localeManagerWrapper.getTimeZone()
+        }
+        return calendar
+    }
+
     private fun updateNotifications(
         post: PostModel,
         schedulingReminderPeriod: SchedulingReminderModel.Period = OFF
@@ -232,20 +240,12 @@ class EditPostPublishSettingsViewModel
         }
     }
 
-    fun onAddToCalendar(post: PostModel) {
-        val startTime = DateTimeUtils.dateFromIso8601(post.dateCreated).time
-        val site = siteStore.getSiteByLocalId(post.localSiteId)
-        val title = resourceProvider.getString(
-                R.string.calendar_scheduled_post_title,
-                post.title
-        )
-        val description = resourceProvider.getString(
-                R.string.calendar_scheduled_post_description,
-                post.title,
-                site.name ?: site.url,
-                post.link
-        )
-        _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
+    private fun updateDateAndTimeFromCalendar(startCalendar: Calendar) {
+        year = startCalendar.get(Calendar.YEAR)
+        month = startCalendar.get(Calendar.MONTH)
+        day = startCalendar.get(Calendar.DAY_OF_MONTH)
+        hour = startCalendar.get(Calendar.HOUR_OF_DAY)
+        minute = startCalendar.get(Calendar.MINUTE)
     }
 
     data class PublishUiModel(
