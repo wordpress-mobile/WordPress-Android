@@ -1147,10 +1147,6 @@ public abstract class SiteSettingsInterface {
                         ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;
                 mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                         new DesignateMobileEditorPayload(event.site, defaultEditor)));
-                AnalyticsUtils.trackWithSiteDetails(
-                        AppPrefs.isGutenbergDefaultForNewPosts() ? Stat.EDITOR_GUTENBERG_ENABLED
-                                : Stat.EDITOR_GUTENBERG_DISABLED,
-                        mSite);
             }
         }
 
