@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 class OverviewUseCaseTest : BaseUnitTest() {
@@ -39,6 +41,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var overviewMapper: OverviewMapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var columns: Columns
     @Mock lateinit var title: ValueItem
@@ -62,13 +65,15 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 overviewMapper,
                 Dispatchers.Unconfined,
-                analyticsTrackerWrapper
+                analyticsTrackerWrapper,
+                resourceProvider
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), isNull(), any(), any(), any())).thenReturn(title)
+        whenever(overviewMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
+        whenever(resourceProvider.getString(R.string.stats_loading_card)).thenReturn("Loading")
     }
 
     @Test
