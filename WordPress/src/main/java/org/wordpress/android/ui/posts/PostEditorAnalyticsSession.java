@@ -80,8 +80,8 @@ public class PostEditorAnalyticsSession implements Serializable {
 
     public void start(ArrayList<Object> unsupportedBlocksList) {
         if (!mStarted) {
-            Map<String, Object> properties = getCommonProperties();
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
+            Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_UNSUPPORTED_BLOCKS,
                     unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
