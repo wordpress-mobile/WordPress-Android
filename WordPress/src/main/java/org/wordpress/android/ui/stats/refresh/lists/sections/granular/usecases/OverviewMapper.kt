@@ -43,8 +43,8 @@ class OverviewMapper
         val value = selectedItem.getValue(selectedPosition) ?: 0
         val previousValue = previousItem?.getValue(selectedPosition)
         val positive = value >= (previousValue ?: 0)
-        val change = buildChange(previousValue, value, positive)
-        val unformattedChange = buildChange(previousValue, value, positive) { this.toString() }
+        val change = buildChange(previousValue, value, positive, isFormattedNumber = true)
+        val unformattedChange = buildChange(previousValue, value, positive, isFormattedNumber = false)
         val state = when {
             isLast -> State.NEUTRAL
             positive -> State.POSITIVE
@@ -70,20 +70,28 @@ class OverviewMapper
         previousValue: Long?,
         value: Long,
         positive: Boolean,
-        print: Long.() -> String = { this.toFormattedString() }
+        isFormattedNumber: Boolean
     ): String? {
         return previousValue?.let {
             val difference = value - previousValue
             val percentage = when (previousValue) {
                 value -> "0"
                 0L -> "∞"
-                else -> (difference * 100 / previousValue).print()
+                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
             }
+            val formattedDifference = mapLongToString(difference, isFormattedNumber)
             if (positive) {
-                resourceProvider.getString(R.string.stats_traffic_increase, difference.print(), percentage)
+                resourceProvider.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
             } else {
-                resourceProvider.getString(R.string.stats_traffic_change, difference.print(), percentage)
+                resourceProvider.getString(R.string.stats_traffic_change, formattedDifference, percentage)
             }
+        }
+    }
+
+    private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
+        return when (isFormattedNumber) {
+            true -> value.toFormattedString()
+            false -> value.toString()
         }
     }
 
