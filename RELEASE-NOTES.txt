@@ -1,5 +1,6 @@
 13.0
 -----
+* Block editor: Default to the block editor unless user opted out in v12.9.
 * Block editor: Added the ability to enable/disable the block editor on a per site basis.
  
 12.9
