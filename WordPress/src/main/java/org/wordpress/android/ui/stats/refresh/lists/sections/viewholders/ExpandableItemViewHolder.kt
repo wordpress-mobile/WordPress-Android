@@ -32,6 +32,11 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         text.setTextOrHide(header.textResource, header.text)
         text.contentDescription = header.contentDescription
         expandButton.visibility = View.VISIBLE
+        val expandButtonDescription = when (expandableItem.isExpanded) {
+            true -> R.string.stats_collapse_content_description
+            false -> R.string.stats_expand_content_description
+        }
+        expandButton.contentDescription = itemView.resources.getString(expandButtonDescription)
         value.setTextOrHide(header.valueResource, header.value)
         divider.setVisible(header.showDivider && !expandableItem.isExpanded)
         if (header.barWidth != null) {
