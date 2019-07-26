@@ -411,6 +411,15 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
+        // FIXME: Make sure to use the latest fresh info about the site we've in the DB
+        // set only the editor setting for now.
+        if (mSite != null) {
+            SiteModel refreshedSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            if (refreshedSite != null) {
+                mSite.setMobileEditor(refreshedSite.getMobileEditor());
+            }
+        }
+
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
