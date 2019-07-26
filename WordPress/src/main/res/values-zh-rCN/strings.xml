@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-26 10:54:08+0000
+Translation-Revision-Date: 2019-07-25 00:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="description_expand">展开</string>
+    <string name="description_collapse">Collapse</string>
+    <string name="editor_retry_failed_uploads">Retry uploading</string>
+    <string name="editor_toast_failed_uploads">部分媒体上传失败。您无法保存或发布\n此状态下的文章。</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media.Post not submitted.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media.Post not scheduled.</string>
+    <string name="error_media_recover_post_not_published">Could not upload media.Post not published.</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="link_dialog_button_cancel">取消</string>
+    <string name="link_dialog_button_ok">确定</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">删除链接</string>
+    <string name="link_dialog_title">插入链接</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\n请轻点以查看选项。</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages.To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts.To enable the classic editor, go to Me > App Settings.</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
+    <string name="post_list_search_prompt">搜索已发布文章</string>
     <string name="domain_contact_information_state_not_available_hint">州/省/自治区/直辖市（不可用）</string>
     <string name="domain_registration_privacy_protection_tos">注册此域即表示，您同意我们的%1$s条款和条件%2$s</string>
     <string name="error_network_connection">请检查您的网络连接，然后重试。</string>
@@ -146,14 +167,10 @@ Language: zh_CN
     <string name="plans_loading_error_no_plans_subtitle">我们暂时无法加载套餐。请稍后重试。</string>
     <string name="plans_loading_error_no_plans_title">无法加载套餐</string>
     <string name="plans_loading_error_network_title">无连接</string>
-    <string name="menu_switch_to_gutenberg_editor">切换到区块编辑器</string>
-    <string name="menu_switch_to_aztec_editor">切换到经典编辑器</string>
     <string name="stats_loading_block_error">加载数据时出现问题，请刷新页面以重试。</string>
     <string name="stats_loading_error">无法加载数据</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用区块编辑器编辑新的文章和页面</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用区块编辑器</string>
-    <string name="dialog_gutenberg_informative_description_page">此页面最初是在区块编辑器中创建的，因此我们也在此页面中启用了它。\n轻点顶栏中的  ⋮  可随时切换回经典编辑器。</string>
-    <string name="dialog_gutenberg_informative_description_post">此文章最初是在区块编辑器中创建的，因此我们也在此文章中启用了它。\n轻点顶栏中的  ⋮  可随时切换回经典编辑器。</string>
     <string name="dialog_gutenberg_informative_title">已启用区块编辑器</string>
     <string name="exit">退出</string>
     <string name="quick_start_sites_type_subtitle">已完成 %1$d 个（共 %2$d 个）</string>
@@ -241,7 +258,6 @@ Language: zh_CN
     <string name="dialog_confirm_load_remote_post_body_2">本地\n在 %s保存\n\nWeb\n在 %s保存\n</string>
     <string name="dialog_confirm_load_remote_post_body">此文章有两个冲突的版本。请选择您想放弃的版本。\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">解决同步冲突</string>
-    <string name="local_changes_discarding_no_connection">必须连接后才能执行此操作。请检查您的连接，然后重试。</string>
     <string name="stats_no_data_for_period">没有此时间段的数据</string>
     <string name="preference_strip_image_location">从媒体删除位置信息</string>
     <string name="stats_cannot_be_started">我们现在无法打开统计信息。请稍后重试</string>
@@ -436,11 +452,6 @@ Language: zh_CN
     <string name="blavatar_desc">站点图标</string>
     <string name="theme_image_desc">主题图片</string>
     <string name="featured_image_desc">特色图片</string>
-    <string name="local_changes_discarding_error">放弃您的本地更改时出现错误。请联系支持人员，获取更多帮助。</string>
-    <string name="local_changes_discarding">正在放弃本地更改</string>
-    <string name="local_changes_discarded">本地更改已放弃</string>
-    <string name="menu_discard_changes">放弃本地更改</string>
-    <string name="button_discard_changes">放弃更改</string>
     <string name="button_discard">放弃</string>
     <string name="reader_avatar_desc">个人资料照片</string>
     <string name="reader_blavatar_desc">站点图标</string>
@@ -847,7 +858,6 @@ Language: zh_CN
     <string name="login_text_otp_another">再发一条短信验证码。</string>
     <string name="enter_verification_code_sms">我们已经向尾号 %s 的手机号码发送短信。请输入短信中的验证码。</string>
     <string name="error_generic_error">无法执行操作</string>
-    <string name="error_media_recover_post">无法上传文章中的媒体</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">还剩一个文件</string>
     <string name="uploading_subtitle_media_only">还剩 %1$d / %2$d 个文件</string>
@@ -1342,7 +1352,6 @@ Language: zh_CN
     <string name="start_over">从头开始</string>
     <string name="me_btn_app_settings">应用程序设置</string>
     <string name="editor_remove_failed_uploads">删除上传失败的内容</string>
-    <string name="editor_toast_failed_uploads">部分媒体上传失败。您无法保存或发布\n此状态下的文章。是否删除所有上传失败的媒体？</string>
     <string name="site_settings_advanced_header">高级</string>
     <string name="comments_empty_list_filtered_trashed">无已移至回收站的评论</string>
     <string name="comments_empty_list_filtered_pending">无待审评论</string>
@@ -1572,7 +1581,6 @@ Language: zh_CN
     <string name="stats_enable_rest_api_in_jetpack">如需查看您的统计信息，请在 Jetpack 启用 JSON API 模块。</string>
     <string name="reader_short_comment_count_multi">%s 条评论</string>
     <string name="reader_short_comment_count_one">一条评论</string>
-    <string name="reader_label_submit_comment">发送</string>
     <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">访问 %s</string>
     <string name="reader_discover_attribution_blog">最初发布在 %s 上</string>

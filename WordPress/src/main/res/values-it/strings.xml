@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-09 11:54:10+0000
+Translation-Revision-Date: 2019-07-26 01:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="description_expand">Expand</string>
+    <string name="description_collapse">Collapse</string>
+    <string name="editor_retry_failed_uploads">Retry uploading</string>
+    <string name="editor_toast_failed_uploads">Alcuni caricamenti di file multimediali non sono riusciti. You can\'t save or publish\n your post in this state.</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="link_dialog_button_cancel">Annulla</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Rimuovi link</string>
+    <string name="link_dialog_title">Insert link</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nTocca per le opzioni.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
+    <string name="post_list_search_prompt">Cerca articoli pubblicati</string>
     <string name="stats_widget_error_no_access_token">Per visualizzare le statistiche, accedi all\'account WordPress.com.</string>
     <string name="post_list_search_nothing_found">Nessun articolo corrispondente alla ricerca</string>
     <string name="domains_suggestions_intro_description">Ecco dove gli utenti ti troveranno su Internet.</string>
@@ -169,14 +190,10 @@ Language: it
     <string name="plans_loading_error_no_plans_subtitle">Al momento non è possibile caricare i Piani. Riprova più tardi.</string>
     <string name="plans_loading_error_no_plans_title">Impossibile caricare i Piani</string>
     <string name="plans_loading_error_network_title">Nessuna connessione</string>
-    <string name="menu_switch_to_gutenberg_editor">Passa all\'editor a blocchi</string>
-    <string name="menu_switch_to_aztec_editor">Passa all\'editor classico.</string>
     <string name="stats_loading_block_error">Si è verificato un problema con il caricamento dei dati. Aggiorna la pagina per riprovare.</string>
     <string name="stats_loading_error">Dati non caricati</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifica i nuovi articoli e pagine con l’editor a blocchi</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usa editor a blocchi</string>
-    <string name="dialog_gutenberg_informative_description_page">Questa pagina è stata creata nell’editor a blocchi, pertanto l’abbiamo abilitata anche su questo Articolo.\n Torna a Classic in qualsiasi momento toccando  ⋮  nella barra superiore.</string>
-    <string name="dialog_gutenberg_informative_description_post">Questo articolo è stato creato nell’editor a blocchi, pertanto lo abbiamo abilitato anche su questo Articolo.\n Torna a Classic in qualsiasi momento toccando  ⋮  nella barra superiore.</string>
     <string name="dialog_gutenberg_informative_title">Editor a blocchi abilitato</string>
     <string name="exit">esci</string>
     <string name="quick_start_sites">Passi successivi</string>
@@ -250,7 +267,6 @@ Language: it
     <string name="dialog_confirm_load_remote_post_body_2">Locale\nSalvato su %s\n\nWeb\nSalvato su %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Questo articolo ha due versioni che sono in conflitto. Seleziona la versione che desideri eliminare.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Risoluzione del conflitto di sincronizzazione</string>
-    <string name="local_changes_discarding_no_connection">È richiesta una connessione per eseguire questa azione. Controlla la connessione e riprova.</string>
     <string name="preference_strip_image_location">Rimuovi posizione dal contenuto multimediale</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Alcuni caricamenti multimediali non sono riusciti a causa di un errore di rete.</string>
@@ -444,11 +460,6 @@ Language: it
     <string name="blavatar_desc">icona del sito</string>
     <string name="theme_image_desc">Immagine del tema</string>
     <string name="featured_image_desc">Immagine in evidenza</string>
-    <string name="local_changes_discarding_error">Si è verificato un errore scartando le modifiche locali. Si prega di contattare il supporto utenti per assistenza.</string>
-    <string name="local_changes_discarding">Scartando le modifiche locali</string>
-    <string name="local_changes_discarded">Modifiche locali scartate</string>
-    <string name="menu_discard_changes">Scarta le modifiche locali</string>
-    <string name="button_discard_changes">Scarta le modifiche</string>
     <string name="button_discard">Scarta</string>
     <string name="reader_avatar_desc">immagine del profilo</string>
     <string name="reader_blavatar_desc">icona del sito</string>
@@ -861,7 +872,6 @@ Language: it
     <string name="login_text_otp_another">Inviami invece un messaggio con un altro codice.</string>
     <string name="enter_verification_code_sms">Abbiamo inviato un messaggio di testo al numero di telefono che termina in %s. Inserisci il codice di verifica contenuto nell\'SMS.</string>
     <string name="error_generic_error">Impossibile eseguire l\'operazione</string>
-    <string name="error_media_recover_post">Impossibile caricare il contenuto multimediale di questo articolo</string>
     <string name="image_size">Dimensione</string>
     <string name="uploading_subtitle_media_only_one">1 file rimanente</string>
     <string name="uploading_subtitle_media_only">%1$d di %2$d file rimanenti</string>
@@ -1356,7 +1366,6 @@ Language: it
     <string name="start_over">Ricomincia</string>
     <string name="me_btn_app_settings">Impostazioni applicazione</string>
     <string name="editor_remove_failed_uploads">Rimuovi i caricamenti falliti</string>
-    <string name="editor_toast_failed_uploads">Il caricamento di qualche media è fallito. Tu puoi non salvare oppure pubblicare \n il tuo articolo così. Vuoi rimuovere i file dei media il cui caricamento è fallito?</string>
     <string name="site_settings_advanced_header">Avanzato</string>
     <string name="comments_empty_list_filtered_trashed">Nessun commento nel cestino</string>
     <string name="comments_empty_list_filtered_pending">Nessun commento in sospeso</string>
@@ -1587,7 +1596,6 @@ Language: it
     <string name="stats_enable_rest_api_in_jetpack">Per visualizzare le tue statistiche, abilita il modulo JSON API di Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s commenti</string>
     <string name="reader_short_comment_count_one">1 Commento</string>
-    <string name="reader_label_submit_comment">SPEDISCI</string>
     <string name="reader_hint_comment_on_post">Rispondi all’articolo…</string>
     <string name="reader_discover_visit_blog">Visite %s</string>
     <string name="reader_discover_attribution_blog">Pubblicato originariamente su %s</string>

@@ -186,14 +186,10 @@ Language: ko_KR
     <string name="plans_loading_error_no_plans_subtitle">현재는 요금제를 로드할 수 없습니다. 나중에 다시 시도하세요.</string>
     <string name="plans_loading_error_no_plans_title">요금제를 로드할 수 없음</string>
     <string name="plans_loading_error_network_title">연결 없음</string>
-    <string name="menu_switch_to_gutenberg_editor">블록 편집기로 전환</string>
-    <string name="menu_switch_to_aztec_editor">구 버전 편집기로 전환</string>
     <string name="stats_loading_block_error">데이터 로드 중에 문제가 발생했습니다. 페이지를 새로 고치고 다시 시도하세요.</string>
     <string name="stats_loading_error">데이터가 로드되지 않음</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
     <string name="site_settings_gutenberg_default_for_new_posts">블록 편집기 사용</string>
-    <string name="dialog_gutenberg_informative_description_page">이 페이지는 원래 블록 편집기에서 작성된 것이므로,이 페이지에서도 활성화되었습니다.\n 상단 표시줄에서   ⋮  을 탭하여 언제든지 클래식으로 다시 전환하세요.</string>
-    <string name="dialog_gutenberg_informative_description_post">이 글은 원래 블록 편집기에서 작성된 것이므로,이 페이지에서도 활성화되었습니다.\n 상단 표시줄에서   ⋮  을 탭하여 언제든지 클래식으로 다시 전환하세요.</string>
     <string name="dialog_gutenberg_informative_title">블록 편집기가 활성화됨</string>
     <string name="exit">종료</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d 완료</string>
@@ -281,7 +277,6 @@ Language: ko_KR
     <string name="dialog_confirm_load_remote_post_body_2">로컬\n%s에 저장됨\n\n웹\n%s에 저장됨\n</string>
     <string name="dialog_confirm_load_remote_post_body">이 글에 있는 두 가지 버전이 서로 충돌합니다. 취소할 버전을 선택하세요.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">동기화 충돌 문제 해결</string>
-    <string name="local_changes_discarding_no_connection">이 작업을 수행하려면 연결이 필수입니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
     <string name="preference_strip_image_location">미디어에서 위치 제거</string>
     <string name="stats_cannot_be_started">지금은 통계를 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
@@ -494,11 +489,6 @@ Language: ko_KR
     <string name="blavatar_desc">사이트 아이콘</string>
     <string name="theme_image_desc">테마 이미지</string>
     <string name="featured_image_desc">특성 이미지</string>
-    <string name="local_changes_discarding_error">로컬 변경 사항을 취소하는 중 오류가 발생했습니다. 추가 지원이 필요한 경우 지원팀에 문의하세요.</string>
-    <string name="local_changes_discarding">로컬 변경 사항을 취소하는 중</string>
-    <string name="local_changes_discarded">로컬 변경 사항이 취소됨</string>
-    <string name="menu_discard_changes">로컬 변경 사항 취소</string>
-    <string name="button_discard_changes">변경 사항 취소</string>
     <string name="button_discard">취소</string>
     <string name="reader_avatar_desc">프로필 사진</string>
     <string name="reader_blavatar_desc">사이트 아이콘</string>
@@ -911,7 +901,6 @@ Language: ko_KR
     <string name="login_text_otp_another">대신 다른 코드를 문자로 받습니다.</string>
     <string name="enter_verification_code_sms">%s(으)로 끝나는 전화 번호로 문자 메시지를 보냈습니다. SMS의 확인 코드를 입력하세요.</string>
     <string name="error_generic_error">작업을 수행할 수 없습니다.</string>
-    <string name="error_media_recover_post">이 글의 미디어를 업로드할 수 없습니다.</string>
     <string name="image_size">크기</string>
     <string name="uploading_subtitle_media_only_one">1개 파일 남음</string>
     <string name="uploading_subtitle_media_only">%1$d/%2$d개 파일 남음</string>
@@ -1409,7 +1398,6 @@ Language: ko_KR
     <string name="start_over">시작하기</string>
     <string name="me_btn_app_settings">앱 설정</string>
     <string name="editor_remove_failed_uploads">실패한 업로드 제거</string>
-    <string name="editor_toast_failed_uploads">일부 미디어 업로드에 실패했습니다. 이 상태의 글은 저장하거나 게시할 수\n 없습니다. 실패한 미디어를 모두 제거하시겠습니까?</string>
     <string name="site_settings_advanced_header">고급</string>
     <string name="comments_empty_list_filtered_trashed">삭제된 댓글 없음</string>
     <string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
@@ -1643,7 +1631,6 @@ Language: ko_KR
     <string name="stats_enable_rest_api_in_jetpack">통계를 보기 위해서는 Jetpack에서 JSON API 모듈을 활성화하세요.</string>
     <string name="reader_short_comment_count_multi">%s 댓글</string>
     <string name="reader_short_comment_count_one">1 댓글</string>
-    <string name="reader_label_submit_comment">보내기</string>
     <string name="reader_hint_comment_on_post">글에 답장하기…</string>
     <string name="reader_discover_visit_blog">%s 방문</string>
     <string name="reader_discover_attribution_blog">원래 %s에 게시됨</string>
