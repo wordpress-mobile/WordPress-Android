@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-19 11:10:47+0000
+Translation-Revision-Date: 2019-07-09 10:12:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="post_list_search_prompt">Sök publicerade inlägg</string>
+    <string name="stats_widget_error_no_access_token">Logga in till ditt konto hos WordPress.com för att se din statistik.</string>
+    <string name="post_list_search_nothing_found">Inga inlägg passar in på dina sökbegrepp</string>
+    <string name="domains_suggestions_intro_description">Det är här du kommer att hittas på internet.</string>
+    <string name="domains_suggestions_intro_title">Välj ett premium-domännamn</string>
+    <string name="my_site_custom_domain_name">Alla prispaket hos WordPress.com innehåller ett anpassat domännamn. Registrera ditt fria premium-domännamn nu.</string>
+    <string name="stats_widget_minified_name">I korthet</string>
+    <string name="stats_widget_today_insights_name">Idag</string>
+    <string name="stats_widget_all_time_insights_name">Sedan starten</string>
+    <string name="stats_widget_weekly_views_name">Visningar denna vecka</string>
+    <string name="stats_widget_log_in_message">Logga in i WordPress-appen för att lägga till en widget.</string>
+    <string name="stats_widget_error_no_network">Inget nätverk är tillgängligt</string>
+    <string name="stats_widget_error_no_data">Det gick inte att ladda data</string>
+    <string name="stats_widget_select_type">Typ</string>
+    <string name="stats_widget_select_color">Färg</string>
+    <string name="stats_widget_select_your_site">Välj önskad webbplats</string>
+    <string name="stats_widget_color_dark">Mörk</string>
+    <string name="stats_widget_color_light">Ljus</string>
+    <string name="stats_widget_color">Färg</string>
+    <string name="stats_widget_site_caption">Välj önskad webbplats</string>
+    <string name="stats_widget_site">Webbplats</string>
+    <string name="stats_widget_all_time_title">Sedan starten</string>
+    <string name="stats_widget_views_title">Visningar denna vecka</string>
+    <string name="stats_widget_add">Lägg till widget</string>
+    <string name="dialog_confirm_update_yes">Uppdatera nu</string>
+    <string name="dialog_confirm_update_message_page">Denna publicerade sida kommer att uppdateras omedelbart.</string>
+    <string name="dialog_confirm_update_message_post">Detta publicerade inlägg kommer att uppdateras omedelbart.</string>
+    <string name="dialog_confirm_update_title">Är du klar att uppdatera?</string>
+    <string name="plugin_fetching_error_after_at">Det verkar ta längre tid än vanligt att uppdatera uppgifterna om tilläggen. Försök igen senare.</string>
+    <string name="plugin_install_site_ineligible_default_error">Om du alldeles nyss registrerat ett domännamn behöver du vänta tills vi har hunnit konfigurera det innan du försöker igen.\n\nOm så inte är fallet måste något ha blivit fel och i så fall kanske hantering av tillägg inte är tillgängligt för denna webbplats.</string>
     <string name="domain_contact_information_state_not_available_hint">Delstat (Inte tillgänglig)</string>
     <string name="domain_registration_privacy_protection_tos">I och med att du registrerar denna domän accepterar du våra %1$savtalsvillkor%2$s</string>
     <string name="error_network_connection">Kontrollera din nätverksanslutning och försök igen.</string>
@@ -559,7 +589,6 @@ Language: sv_SE
     <string name="plugin_install_site_ineligible_site_private">För funktionen med tillägg krävs att webbplatsen är publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">För funktionen med tillägg krävs ett business-konto.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Vi genomför de sista förberedelserna – nästan klart…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installerar tillägget…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>

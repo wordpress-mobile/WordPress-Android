@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-19 22:05:44+0000
+Translation-Revision-Date: 2019-07-09 10:03:23+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="post_list_search_prompt">Caută în articolele publicate</string>
+    <string name="stats_widget_error_no_access_token">Pentru a vizualiza statisticile, autentifică-te în contul WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Nu se potrivește niciun articol cu căutarea ta</string>
+    <string name="domains_suggestions_intro_description">Aici vei fi găsit pe internet.</string>
+    <string name="domains_suggestions_intro_title">Alege un nume de domeniu premium</string>
+    <string name="my_site_custom_domain_name">Toate planurile WordPress.com includ un nume de domeniu personalizat. Înregistrează-ți domeniul premium gratuit acum.</string>
+    <string name="stats_widget_minified_name">Dintr-o privire</string>
+    <string name="stats_widget_today_insights_name">Azi</string>
+    <string name="stats_widget_all_time_insights_name">Total general</string>
+    <string name="stats_widget_weekly_views_name">Vizualizări în această săptămână</string>
+    <string name="stats_widget_log_in_message">Te rog autentifică-te în aplicația WordPress pentru a adăuga o piesă.</string>
+    <string name="stats_widget_error_no_network">Nu este disponibilă nicio rețea</string>
+    <string name="stats_widget_error_no_data">Nu am putut încărca datele</string>
+    <string name="stats_widget_select_type">Tip</string>
+    <string name="stats_widget_select_color">Culoare</string>
+    <string name="stats_widget_select_your_site">Selectează-ți situl</string>
+    <string name="stats_widget_color_dark">Întunecat</string>
+    <string name="stats_widget_color_light">Luminos</string>
+    <string name="stats_widget_color">Culoare</string>
+    <string name="stats_widget_site_caption">Selectează-ți situl</string>
+    <string name="stats_widget_site">Sit</string>
+    <string name="stats_widget_all_time_title">Total general</string>
+    <string name="stats_widget_views_title">Vizualizări în această săptămână</string>
+    <string name="stats_widget_add">Adaugă o piesă</string>
+    <string name="dialog_confirm_update_yes">Actualizează acum</string>
+    <string name="dialog_confirm_update_message_page">Această pagină publicată va fi actualizată imediat.</string>
+    <string name="dialog_confirm_update_message_post">Acest articol publicat va fi actualizat imediat.</string>
+    <string name="dialog_confirm_update_title">Ești gata să actualizezi?</string>
+    <string name="plugin_fetching_error_after_at">Reîmprospătarea detaliilor modulului durează mai mult decât de obicei. Te rog verifică din nou mai târziu.</string>
+    <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest sit.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
     <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu %1$stermenii și condițiile%2$s.</string>
     <string name="error_network_connection">Verifică conexiunea rețelei și încearcă din nou.</string>
@@ -559,7 +589,6 @@ Language: ro
     <string name="plugin_install_site_ineligible_site_private">Funcționalitatea modulului necesită ca situl să fie public.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funcționalitatea modulului necesită un plan Business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funcționalitatea modulului necesită un domeniu personalizat.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Facem inițializarea finală - este aproape gata…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalez modulul…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalează</string>

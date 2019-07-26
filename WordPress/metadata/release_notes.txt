@@ -1,4 +1,3 @@
-* In Posts and Pages, Authors, Tags, and Categories Stats cards, a percentage bar has been added to communicate the impact of each item.
-* You can now search posts on the Post List page.
-* New! Widgets for All-time, Today, and Weekly Stats are now available.
-* Block Editor: Fixed a bug that affected pasting text into the Post Title.
+* Customers with unclaimed domain credits can register domains in the app.
+* You can expand the Comment Editor to Full Screen for more space while editing.
+* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.

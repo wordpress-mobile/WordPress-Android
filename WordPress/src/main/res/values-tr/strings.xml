@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-19 20:48:58+0000
+Translation-Revision-Date: 2019-07-12 14:55:33+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="post_list_search_prompt">Yayımlanmış yazıları ara</string>
+    <string name="stats_widget_error_no_access_token">İstatistiklerinizi görüntülemek için WordPress.com hesabında oturum açın.</string>
+    <string name="post_list_search_nothing_found">Aramanızla eşleşen gönderi yok</string>
+    <string name="domains_suggestions_intro_description">Bu, insanların sizi internette bulacakları yerdir.</string>
+    <string name="domains_suggestions_intro_title">Bir premium alan adı seçin</string>
+    <string name="my_site_custom_domain_name">Tüm WordPress.com planları kişisel bir alan adı içerir. Ücretsiz premium alan adınızı hemen kaydedin.</string>
+    <string name="stats_widget_minified_name">Bir bakışta</string>
+    <string name="stats_widget_today_insights_name">Bugün</string>
+    <string name="stats_widget_all_time_insights_name">Tüm zamanlar</string>
+    <string name="stats_widget_weekly_views_name">Bu haftadan görünümler</string>
+    <string name="stats_widget_log_in_message">Bir pencere öğesi eklemek için lütfen WordPress uygulamasında oturum açın.</string>
+    <string name="stats_widget_error_no_network">Ağ yok</string>
+    <string name="stats_widget_error_no_data">Veri yüklenemedi</string>
+    <string name="stats_widget_select_type">Tür</string>
+    <string name="stats_widget_select_color">Renk</string>
+    <string name="stats_widget_select_your_site">Sitenizi seçin</string>
+    <string name="stats_widget_color_dark">Koyu</string>
+    <string name="stats_widget_color_light">Açık</string>
+    <string name="stats_widget_color">Renk</string>
+    <string name="stats_widget_site_caption">Sitenizi Seçin</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_all_time_title">Tüm zamanlar</string>
+    <string name="stats_widget_views_title">Bu Haftadan Görünümler</string>
+    <string name="stats_widget_add">Pencere öğesi ekle</string>
+    <string name="dialog_confirm_update_yes">Şimdi güncelle</string>
+    <string name="dialog_confirm_update_message_page">Yayınlanan bu sayfa hemen güncellenecek.</string>
+    <string name="dialog_confirm_update_message_post">Yayınlanan bu gönderi hemen güncellenecek.</string>
+    <string name="dialog_confirm_update_title">Güncellemeye Hazır mısınız?</string>
+    <string name="plugin_fetching_error_after_at">Eklenti ayrıntılarının yenilenmesi normalden daha uzun sürer. Lütfen daha sonra tekrar kontrol edin.</string>
+    <string name="plugin_install_site_ineligible_default_error">Bir alan adı kaydettirdiyseniz lütfen kayıt tamamlanana kadar bekleyin ve ardından yeniden deneyin.\n\nAksi takdirde, bir şeyler yanlış gitmiş olabilir ve eklenti özelliği bu site için kullanılamayabilir.</string>
     <string name="domain_contact_information_state_not_available_hint">Eyalet (mevcut değil)</string>
     <string name="domain_registration_privacy_protection_tos">Bu etki alanını kaydettirerek %1$sşartlar ve koşulları%2$s kabul etmiş sayılırsınız.</string>
     <string name="error_network_connection">Ağ bağlantınızı kontrol edin ve tekrar deneyin.</string>
@@ -59,17 +89,17 @@ Language: tr
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
     <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler Insights (İçgörüler) adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
-    <string name="stats_insights_add_insights_header">Insights Ekle</string>
+    <string name="stats_insights_add_insights_header">Tek bakışa ekle</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. İçgörülerinizi aşağıya ekleyin ve düzenleyin.</string>
     <string name="stats_insights_social">Sosyal</string>
-    <string name="stats_insights_annual_site_stats">Yıllık Site İstatistikleri</string>
+    <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
     <string name="stats_view_follower_totals">Toplam Takipçi Sayısı</string>
     <string name="domain_suggestions_fetch_error">Alan adı önerileri yüklenemedi</string>
     <string name="domain_suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
     <string name="domains_suggestions_empty_list">Hiçir öneri bulunamadı</string>
     <string name="register_domain">Alan Adını Kaydet</string>
     <string name="jetpack_installed_message">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
-    <string name="stats_menu_remove">İçgörülerden çıkar</string>
+    <string name="stats_menu_remove">Tek bakıştan çıkar</string>
     <string name="stats_menu_move_down">Aşağı taşı</string>
     <string name="stats_menu_move_up">Yukarı taşı</string>
     <string name="stats_item_settings">İstatistikler öğesi ayarları</string>
@@ -206,7 +236,7 @@ Language: tr
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
     <string name="stats_most_popular_percent_views">Görüntülemelere ait %1$d%%</string>
-    <string name="stats_insights_popular">En Popüler Zaman</string>
+    <string name="stats_insights_popular">En popüler zaman</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
@@ -559,7 +589,6 @@ Language: tr
     <string name="plugin_install_site_ineligible_site_private">Eklenti özelliği sitenin herkese açık olmasını gerektirir.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Eklenti özelliği business paket gerektirir.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Eklenti özelliği özel alan adı gerektirir.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Son kurulumu yapıyoruz — neredeyse bitti…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Eklenti yükleniyor…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Yükle</string>

@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -53,7 +56,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
@@ -61,21 +64,22 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
 import java.lang.reflect.Field;
@@ -102,6 +106,8 @@ public class EditPostSettingsFragment extends Fragment {
 
     private static final int CHOOSE_FEATURED_IMAGE_MENU_ID = 100;
     private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 101;
+    private static final int REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID = 102;
+    private static final int RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID = 103;
 
     private SiteSettingsInterface mSiteSettings;
 
@@ -119,7 +125,10 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
     private ImageView mFeaturedImageView;
+    private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
+    private ViewGroup mFeaturedImageRetryOverlay;
+    private ViewGroup mFeaturedImageProgressOverlay;
 
     private PostLocation mPostLocation;
 
@@ -129,10 +138,11 @@ public class EditPostSettingsFragment extends Fragment {
     private ArrayList<String> mPostFormatNames;
 
     @Inject SiteStore mSiteStore;
-    @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject UiHelpers mUiHelpers;
     @Inject PostSettingsUtils mPostSettingsUtils;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
@@ -251,17 +261,31 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
+        mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
         mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
-        CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
+        mFeaturedImageRetryOverlay = rootView.findViewById(R.id.post_featured_image_retry_overlay);
+        mFeaturedImageProgressOverlay = rootView.findViewById(R.id.post_featured_image_progress_overlay);
+
+        final CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            registerForContextMenu(mFeaturedImageView);
-            mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
+            OnClickListener showContextMenuListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     view.showContextMenu();
                 }
-            });
+            };
+
+            mFeaturedImageView.setOnClickListener(showContextMenuListener);
+            mLocalFeaturedImageView.setOnClickListener(showContextMenuListener);
+            mFeaturedImageRetryOverlay.setOnClickListener(showContextMenuListener);
+            mFeaturedImageProgressOverlay.setOnClickListener(showContextMenuListener);
+
+            registerForContextMenu(mFeaturedImageView);
+            registerForContextMenu(mLocalFeaturedImageView);
+            registerForContextMenu(mFeaturedImageRetryOverlay);
+            registerForContextMenu(mFeaturedImageProgressOverlay);
+
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -372,21 +396,42 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
-        menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        if (mFeaturedImageRetryOverlay.getVisibility() == View.VISIBLE) {
+            menu.add(0, RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
+                    getString(R.string.post_settings_retry_featured_image));
+            menu.add(0, REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
+                    getString(R.string.post_settings_remove_featured_image));
+        } else {
+            menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
+            menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
+                mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
                 launchFeaturedMediaPicker();
                 return true;
+            case REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID:
             case REMOVE_FEATURED_IMAGE_MENU_ID:
+                mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
                 clearFeaturedImage();
+                return true;
+            case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
+                retryFeaturedImageUpload();
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void retryFeaturedImageUpload() {
+        MediaModel mediaModel =
+                mFeaturedImageHelper.retryFeaturedImageUpload(getContext(), getSite(), getPost());
+        if (mediaModel == null) {
+            clearFeaturedImage();
         }
     }
 
@@ -413,9 +458,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishedViewModel.start(postModel);
         updateCategoriesTextView();
         initLocation();
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImageView();
-        }
+        updateFeaturedImageView();
     }
 
     @Override
@@ -822,38 +865,47 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateFeaturedImageView() {
-        if (!isAdded()) {
+        Context context = getContext();
+        PostModel post = getPost();
+        SiteModel site = getSite();
+        if (!isAdded() || post == null || site == null || context == null) {
             return;
         }
-        PostModel postModel = getPost();
-        if (!postModel.hasFeaturedImage()) {
-            mFeaturedImageView.setVisibility(View.GONE);
-            mFeaturedImageButton.setVisibility(View.VISIBLE);
-            return;
+        final FeaturedImageData currentFeaturedImageState =
+                mFeaturedImageHelper.createCurrentFeaturedImageState(context, site, post);
+
+        FeaturedImageState uiState = currentFeaturedImageState.getUiState();
+        updateFeaturedImageViews(currentFeaturedImageState.getUiState());
+        if (currentFeaturedImageState.getMediaUri() != null) {
+            if (uiState == FeaturedImageState.REMOTE_IMAGE_LOADING) {
+                /*
+                 *  Fetch the remote image, but keep showing the local image (when present) until "onResourceReady"
+                 *  is invoked.  We use this hack to prevent showing an empty view when the local image is replaced
+                 *  with a remote image.
+                 */
+                mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
+                        currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
+                        null, new RequestListener<Drawable>() {
+                            @Override public void onLoadFailed(@org.jetbrains.annotations.Nullable Exception e) {
+                            }
+
+                            @Override public void onResourceReady(Drawable resource) {
+                                if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
+                                    updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
+                                }
+                            }
+                        });
+            } else {
+                mImageManager.load(mLocalFeaturedImageView, ImageType.IMAGE, currentFeaturedImageState.getMediaUri(),
+                        ScaleType.FIT_CENTER);
+            }
         }
-
-        SiteModel siteModel = getSite();
-        MediaModel media = mMediaStore.getSiteMediaWithId(siteModel, postModel.getFeaturedImageId());
-        if (media == null) {
-            return;
-        }
-
-        mFeaturedImageView.setVisibility(View.VISIBLE);
-        mFeaturedImageButton.setVisibility(View.GONE);
-
-        // Get max width for photon thumbnail
-        int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-        int height = DisplayUtils.getDisplayPixelHeight(getActivity());
-
-        String mediaUri = StringUtils.notNullStr(media.getThumbnailUrl());
-        String photonUrl = ReaderUtils.getResizedImageUrl(
-                mediaUri, width, height, !SiteUtils.isPhotonCapable(siteModel));
-        mImageManager.load(mFeaturedImageView, ImageType.PHOTO, photonUrl, ScaleType.FIT_CENTER);
     }
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
+            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
+                    getPost().getId());
         }
     }
 
@@ -1034,6 +1086,24 @@ public class EditPostSettingsFragment extends Fragment {
             // no op, icons won't show
         }
         popupMenu.show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.media.getMarkedLocallyAsFeatured()) {
+            refreshViews();
+        }
+    }
+
+    private void updateFeaturedImageViews(FeaturedImageState state) {
+        mUiHelpers.updateVisibility(mFeaturedImageView, state.getImageViewVisible());
+        mUiHelpers.updateVisibility(mLocalFeaturedImageView, state.getLocalImageViewVisible());
+        mUiHelpers.updateVisibility(mFeaturedImageButton, state.getButtonVisible());
+        mUiHelpers.updateVisibility(mFeaturedImageRetryOverlay, state.getRetryOverlayVisible());
+        mUiHelpers.updateVisibility(mFeaturedImageProgressOverlay, state.getProgressOverlayVisible());
+        if (!state.getLocalImageViewVisible()) {
+            mImageManager.cancelRequestAndClearImageView(mLocalFeaturedImageView);
+        }
     }
 
     interface EditPostSettingsCallback {

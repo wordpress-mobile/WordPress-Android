@@ -18,13 +18,13 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
 
 private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
+private val POST_STATE_SCHEDULED = PostStatus.SCHEDULED.toString()
 private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
 private val POST_STATE_PENDING = PostStatus.PENDING.toString()
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
@@ -165,12 +165,12 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `error uploading post label shown when the post upload fails`() {
+    fun `generic error message shown when upload fails from unknown reason`() {
         val errorMsg = "testing error message"
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR, errorMsg)))
         )
-        assertThat(state.data.statuses).contains(UiStringText(errorMsg))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_generic_error))
     }
 
     @Test
@@ -179,8 +179,34 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post))
-        assertThat(state.data.statuses).hasSize(1)
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_published))
+    }
+
+    @Test
+    fun `media upload error shown with specific message for pending post`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted))
+    }
+
+    @Test
+    fun `media upload error shown with specific message for scheduled post`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled))
+    }
+
+    @Test
+    fun `base media upload error shown for draft`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post))
     }
 
     @Test

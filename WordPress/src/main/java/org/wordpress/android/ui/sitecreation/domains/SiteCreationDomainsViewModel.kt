@@ -57,6 +57,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         get() = bgDispatcher + job
     private var isStarted = false
     private var segmentId by Delegates.notNull<Long>()
+    private var siteTitle: String? = null
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -92,6 +93,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             return
         }
         this.segmentId = segmentId
+        this.siteTitle = siteTitle
         isStarted = true
         tracker.trackDomainsAccessed()
         // isNullOrBlank not smart-casting for some reason..
@@ -119,7 +121,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
-        updateQueryInternal(UserQuery(query))
+        val siteTitle: String? = this.siteTitle
+        if (query.isBlank() && !siteTitle.isNullOrBlank()) {
+            updateQueryInternal(TitleQuery(siteTitle))
+        } else {
+            updateQueryInternal(UserQuery(query))
+        }
     }
 
     private fun updateQueryInternal(query: DomainSuggestionsQuery?) {

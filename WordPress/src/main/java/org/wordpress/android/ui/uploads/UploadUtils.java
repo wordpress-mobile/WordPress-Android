@@ -27,7 +27,8 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
-import org.wordpress.android.ui.utils.UiString.UiStringText;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -81,9 +82,8 @@ public class UploadUtils {
             case INVALID_RESPONSE:
             case GENERIC_ERROR:
             default:
-                // In case of a generic or uncaught error, return the message from the API response or the error type
-                return TextUtils.isEmpty(error.message) ? new UiStringText(error.type.toString())
-                        : new UiStringText(error.message);
+                AppLog.w(T.MAIN, "Error message: " + error.message + " ,Error Type: " + error.type);
+                return new UiStringRes(R.string.error_generic_error);
         }
     }
 
