@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -19,9 +20,21 @@ class PostDayViewsMapperTest : BaseUnitTest() {
     private lateinit var mapper: PostDayViewsMapper
     private val count = 20
     private val selectedItem = PostDetailStatsModel.Day("2010-10-10", count)
+    private val views = "Views"
+    private val date = "10. 10. 2010"
+    private val contentDescription = "Content description"
     @Before
     fun setUp() {
         mapper = PostDayViewsMapper(resourceProvider, statsDateFormatter)
+        whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(views)
+        whenever(statsDateFormatter.printDate(any())).thenReturn(date)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(count),
+                eq(views),
+                eq(date),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -32,6 +45,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         assertThat(title.unit).isEqualTo(R.string.stats_views)
         assertThat(title.change).isNull()
         assertThat(title.state).isEqualTo(State.POSITIVE)
+        assertThat(title.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -48,6 +62,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         assertThat(title.unit).isEqualTo(R.string.stats_views)
         assertThat(title.change).isEqualTo(positiveLabel)
         assertThat(title.state).isEqualTo(State.POSITIVE)
+        assertThat(title.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -64,6 +79,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         assertThat(title.unit).isEqualTo(R.string.stats_views)
         assertThat(title.change).isEqualTo(positiveLabel)
         assertThat(title.state).isEqualTo(State.POSITIVE)
+        assertThat(title.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -89,6 +105,13 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         val negativeLabel = "-20 (-100%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
                 .thenReturn(negativeLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(newCount),
+                eq(views),
+                eq(date),
+                any()
+        )).thenReturn(contentDescription)
 
         val title = mapper.buildTitle(newItem, selectedItem, false)
 
@@ -96,6 +119,7 @@ class PostDayViewsMapperTest : BaseUnitTest() {
         assertThat(title.unit).isEqualTo(R.string.stats_views)
         assertThat(title.change).isEqualTo(negativeLabel)
         assertThat(title.state).isEqualTo(State.NEGATIVE)
+        assertThat(title.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test

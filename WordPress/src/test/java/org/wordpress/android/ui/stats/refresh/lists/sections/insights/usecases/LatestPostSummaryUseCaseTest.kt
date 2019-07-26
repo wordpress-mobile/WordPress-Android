@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -41,6 +42,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() = test {
@@ -50,10 +52,15 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 latestPostSummaryMapper,
                 tracker,
-                popupMenuHandler
+                popupMenuHandler,
+                contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         useCase.navigationTarget.observeForever {}
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any()
+        )).thenReturn("likes: 10")
     }
 
     @Test
