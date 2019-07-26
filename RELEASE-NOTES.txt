@@ -1,5 +1,6 @@
 13.0
 -----
+* Improve accessibility in the Stats
  
 12.9
 -----
