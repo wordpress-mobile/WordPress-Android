@@ -736,9 +736,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             setTimezonePref(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
         } else if (preference == mGutenbergDefaultForNewPosts) {
-            mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                    new DesignateMobileEditorPayload(mSite, ((Boolean) newValue)
-                            ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME)));
+            if (((Boolean) newValue)) {
+                SiteUtils.enableBlockEditor(mDispatcher, mSite);
+            } else {
+                SiteUtils.disableBlockEditor(mDispatcher, mSite);
+            }
             AnalyticsUtils.trackWithSiteDetails(
                     ((Boolean) newValue) ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED,
                     mSite);

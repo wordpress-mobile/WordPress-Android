@@ -221,12 +221,13 @@ public class SitePickerActivity extends AppCompatActivity
                 }
                 break;
         }
-        // Enable GB on the site created by the "new user" on mobile
+
+        // Enable the block editor on sites created on mobile
         switch (requestCode) {
             case RequestCodes.CREATE_SITE:
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                    SiteUtils.enableBlockEditorForNewUsers(mDispatcher, mAccountStore, mSiteStore, newSiteLocalID);
+                    SiteUtils.enableBlockEditor(mDispatcher, mSiteStore, newSiteLocalID);
                 }
                 break;
         }

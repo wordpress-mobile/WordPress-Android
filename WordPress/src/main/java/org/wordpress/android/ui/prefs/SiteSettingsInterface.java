@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.SubscriptionRestResponse.Meta.Data.Site;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
@@ -1138,13 +1139,14 @@ public abstract class SiteSettingsInterface {
             return;
         }
 
-        // Migrate the old app-wide editor preference to the remote backend if it was previously set
         if (TextUtils.isEmpty(event.site.getMobileEditor())) {
+            // Migrate the old app-wide editor preference to the remote backend if it was previously set
             if (AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
-                String defaultEditor = AppPrefs.isGutenbergDefaultForNewPosts()
-                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME;
-                mDispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                        new DesignateMobileEditorPayload(event.site, defaultEditor)));
+                if (AppPrefs.isGutenbergDefaultForNewPosts()) {
+                    SiteUtils.enableBlockEditor(mDispatcher, mSite);
+                } else {
+                    SiteUtils.disableBlockEditor(mDispatcher, mSite);
+                }
             }
         }
 

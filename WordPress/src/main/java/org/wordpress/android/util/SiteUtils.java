@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
@@ -22,19 +21,23 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
 
-    public static boolean enableBlockEditorForNewUsers(Dispatcher dispatcher, AccountStore accountStore,
-                                                       SiteStore siteStore, int siteLocalSiteID) {
-
-        if (accountStore != null && accountStore.getAccount() != null
-            && accountStore.getAccount().getUserId() > 164355512) { // new users of any plan (July 26, 2019)
-            SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
-            if (newSiteModel != null) {
-                dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                        new DesignateMobileEditorPayload(newSiteModel, SiteUtils.GB_EDITOR_NAME)));
-                return true;
-            }
+    public static boolean enableBlockEditor(Dispatcher dispatcher, SiteStore siteStore, int siteLocalSiteID) {
+        SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
+        if (newSiteModel != null) {
+           enableBlockEditor(dispatcher, newSiteModel);
+            return true;
         }
         return false;
+    }
+
+    public static void enableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                    new DesignateMobileEditorPayload(siteModel, SiteUtils.GB_EDITOR_NAME)));
+    }
+
+    public static void disableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
+        dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                new DesignateMobileEditorPayload(siteModel, SiteUtils.AZTEC_EDITOR_NAME)));
     }
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {

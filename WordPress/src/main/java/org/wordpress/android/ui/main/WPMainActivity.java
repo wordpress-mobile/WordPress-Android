@@ -771,10 +771,10 @@ public class WPMainActivity extends AppCompatActivity implements
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
 
-                // Enable GB on the first site created by "new users" on mobile
+                // Enable the block editor on sites created on mobile
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                    SiteUtils.enableBlockEditorForNewUsers(mDispatcher, mAccountStore, mSiteStore, newSiteLocalID);
+                    SiteUtils.enableBlockEditor(mDispatcher, mSiteStore, newSiteLocalID);
                 }
 
                 setSite(data);
