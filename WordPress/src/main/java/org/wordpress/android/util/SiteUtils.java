@@ -22,8 +22,8 @@ public class SiteUtils {
     public static final String AZTEC_EDITOR_NAME = "aztec";
 
     /**
-     * Migrate the old app-wide editor preference value to per-site setting. DotCom sites will make a network call
-     * and store the value on the backend. DotORG sites just store the value in the local DB in FluxC
+     * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
+     * and store the value on the backend. selfHosted sites just store the value in the local DB in FluxC
      *
      * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
      * -- 12.9 ON -> turn all sites ON in 13.0
