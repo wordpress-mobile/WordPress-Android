@@ -78,8 +78,8 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
-import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
@@ -94,6 +94,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
@@ -854,6 +855,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // making ANY modification to this stat please refer to: p4qSXL-35X-p2
             AnalyticsTracker.track(Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Let's migrate the old editor preference if available in AppPrefs to the remote backend
+                SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
+
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
                     NotificationsUpdateServiceStarter.startService(getContext());

@@ -21,6 +21,48 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
 
+    /**
+     * Migrate the old app-wide editor preference value to per-site setting. DotCom sites will make a network call
+     * and store the value on the backend. DotORG sites just store the value in the local DB in FluxC
+     *
+     * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
+     * -- 12.9 ON -> turn all sites ON in 13.0
+     * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
+     *
+     * @param dispatcher FluxC dispatcher
+     * @param siteStore  SiteStore
+     */
+    public static void migrateAppWideMobileEditorPreferenceToRemote(final Dispatcher dispatcher,
+                                                                    final SiteStore siteStore) {
+        if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+            return;
+        }
+        final boolean oldAppWidePreferenceValue = AppPrefs.isGutenbergDefaultForNewPosts();
+        final List<SiteModel> sites = siteStore.getSites();
+        final boolean setDelay = sites.size() > 5;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // be optimistic and remove the old app-wide preference before we start the calls
+                AppPrefs.removeAppWideEditorPreference();
+                for (SiteModel currentSite : sites) {
+                    if (oldAppWidePreferenceValue) {
+                        enableBlockEditor(dispatcher, currentSite);
+                    } else {
+                        disableBlockEditor(dispatcher, currentSite);
+                    }
+                    if (setDelay) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            // no-op
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
     public static boolean enableBlockEditor(Dispatcher dispatcher, SiteStore siteStore, int siteLocalSiteID) {
         SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
         if (newSiteModel != null) {

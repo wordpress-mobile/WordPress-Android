@@ -1137,17 +1137,6 @@ public abstract class SiteSettingsInterface {
             return;
         }
 
-        if (TextUtils.isEmpty(event.site.getMobileEditor())) {
-            // Migrate the old app-wide editor preference to the remote backend if it was previously set
-            if (AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
-                if (AppPrefs.isGutenbergDefaultForNewPosts()) {
-                    SiteUtils.enableBlockEditor(mDispatcher, mSite);
-                } else {
-                    SiteUtils.disableBlockEditor(mDispatcher, mSite);
-                }
-            }
-        }
-
         notifyUpdatedOnUiThread();
     }
 }

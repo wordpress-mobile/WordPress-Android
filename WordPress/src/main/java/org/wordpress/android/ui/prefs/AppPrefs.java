@@ -663,6 +663,10 @@ public class AppPrefs {
         return !"".equals(getString(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS));
     }
 
+    public static void removeAppWideEditorPreference() {
+        remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
+    }
+
     public static void setVideoOptimizeWidth(int width) {
         setInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, width);
     }
