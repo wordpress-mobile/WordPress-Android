@@ -5,7 +5,8 @@
     android:id="@+id/link_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:contentDescription="@string/stats_posting_activity_graph">
 
     <include
         android:id="@+id/first_activity"
@@ -35,8 +36,7 @@
         app:layout_constraintEnd_toStartOf="@+id/third_activity"
         app:layout_constraintStart_toEndOf="@+id/first_activity"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginEnd="@dimen/margin_extra_large"
-        />
+        app:layout_goneMarginEnd="@dimen/margin_extra_large"/>
 
     <include
         android:id="@+id/third_activity"
@@ -50,8 +50,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fewer_posts_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/second_activity"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/fewer_posts_label"

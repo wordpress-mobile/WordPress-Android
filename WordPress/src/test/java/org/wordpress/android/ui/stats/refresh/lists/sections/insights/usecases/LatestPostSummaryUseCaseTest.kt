@@ -59,7 +59,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         useCase.navigationTarget.observeForever {}
         whenever(contentDescriptionHelper.buildContentDescription(
                 any(),
-                any()
+                any<Int>()
         )).thenReturn("likes: 10")
     }
 
