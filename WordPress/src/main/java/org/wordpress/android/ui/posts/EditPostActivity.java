@@ -3799,13 +3799,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            mPostEditorAnalyticsSession.start(false);
+            mPostEditorAnalyticsSession.start(null);
         }
     }
 
     @Override
-    public void onEditorFragmentContentReady(boolean hasUnsupportedContent) {
-        mPostEditorAnalyticsSession.start(hasUnsupportedContent);
+    public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
+        mPostEditorAnalyticsSession.start(unsupportedBlocksList);
     }
 
     @Override

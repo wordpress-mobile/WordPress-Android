@@ -36,5 +36,6 @@ class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val topMargin = if (item.isFirst) container.resources.getDimensionPixelSize(R.dimen.margin_medium) else 0
         params.setMargins(0, topMargin, 0, 0)
         container.layoutParams = params
+        container.contentDescription = item.contentDescription
     }
 }

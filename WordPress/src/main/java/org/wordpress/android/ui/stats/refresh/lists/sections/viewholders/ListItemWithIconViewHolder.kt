@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -39,12 +40,14 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         }
         val clickAction = item.navigationAction
         if (clickAction != null) {
-            itemView.isClickable = true
+            val outValue = TypedValue()
+            itemView.context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+            itemView.setBackgroundResource(outValue.resourceId)
             itemView.setOnClickListener { clickAction.click() }
         } else {
-            itemView.isClickable = false
-            itemView.background = null
             itemView.setOnClickListener(null)
+            itemView.background = null
+            itemView.isClickable = false
         }
         if (item.barWidth != null) {
             bar.visibility = View.VISIBLE
@@ -54,5 +57,6 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
             bar.visibility = View.GONE
             topMargin.visibility = View.GONE
         }
+        itemView.contentDescription = item.contentDescription
     }
 }
