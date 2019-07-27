@@ -682,6 +682,7 @@ public class AppPrefs {
         if (urls != null) {
             newUrls.addAll(urls);
         }
+        newUrls.add(siteURL);
 
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
