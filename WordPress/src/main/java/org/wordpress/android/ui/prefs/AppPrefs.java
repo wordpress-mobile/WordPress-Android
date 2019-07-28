@@ -24,9 +24,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
