@@ -452,7 +452,7 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_600);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_60);
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.photo_picker_action_mode, menu);
             hideBottomBar();

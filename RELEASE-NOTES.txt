@@ -2,6 +2,7 @@
 -----
 * Block editor: Default to the block editor unless user opted out in v12.9.
 * Block editor: You can now enable and disable the block editor on a per-site basis.
+* Improve accessibility in the Stats
 * Block editor: Adding a block from the post title now shows the add block here indicator.
 * Block editor: Deselect post title any time a block is added
 * Block editor: Fix loss of center alignment in image captions

@@ -6,8 +6,10 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -18,11 +20,13 @@ import javax.inject.Inject
 class PostDetailMapper
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     fun mapYears(
         shownYears: List<Year>,
         expandedYearUiState: ExpandedYearUiState,
+        header: Header,
         onUiState: (ExpandedYearUiState) -> Unit
     ): List<BlockListItem> {
         val yearList = mutableListOf<BlockListItem>()
@@ -36,25 +40,32 @@ class PostDetailMapper
                 }
                 yearList.add(
                         ExpandableItem(
-                                mapYear(year, index, shownYears.size, isNextNotExpanded), isExpanded = isExpanded
+                                mapYear(year, index, shownYears.size, isNextNotExpanded, header),
+                                isExpanded = isExpanded
                         ) { changedExpandedState ->
                             val expandedYear = if (changedExpandedState) year.year else null
                             onUiState(expandedYearUiState.copy(expandedYear = expandedYear))
                         })
                 if (isExpanded) {
                     yearList.addAll(year.months.sortedByDescending { it.month }.map { month ->
+                        val text = DateFormatSymbols(localeManagerWrapper.getLocale()).shortMonths[month.month - 1]
                         ListItemWithIcon(
-                                text = DateFormatSymbols(localeManagerWrapper.getLocale()).shortMonths[month.month - 1],
+                                text = text,
                                 value = month.count.toFormattedString(locale = localeManagerWrapper.getLocale()),
                                 textStyle = LIGHT,
-                                showDivider = false
+                                showDivider = false,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        header,
+                                        text,
+                                        month.count
+                                )
                         )
                     })
                     yearList.add(Divider)
                 }
             } else {
                 yearList.add(
-                        mapYear(year, index, shownYears.size, isNextNotExpanded)
+                        mapYear(year, index, shownYears.size, isNextNotExpanded, header)
                 )
             }
         }
@@ -65,12 +76,19 @@ class PostDetailMapper
         year: Year,
         index: Int,
         size: Int,
-        isNextNotExpanded: Boolean
+        isNextNotExpanded: Boolean,
+        header: Header
     ): ListItemWithIcon {
+        val text = year.year.toString()
         return ListItemWithIcon(
-                text = year.year.toString(),
+                text = text,
                 value = year.value.toFormattedString(locale = localeManagerWrapper.getLocale()),
-                showDivider = isNextNotExpanded && index < size - 1
+                showDivider = isNextNotExpanded && index < size - 1,
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        text,
+                        year.value
+                )
         )
     }
 
@@ -78,6 +96,7 @@ class PostDetailMapper
         weeks: List<PostDetailStatsModel.Week>,
         visibleCount: Int,
         uiState: ExpandedWeekUiState,
+        header: Header,
         onUiState: (ExpandedWeekUiState) -> Unit
     ): List<BlockListItem> {
         val weekList = mutableListOf<BlockListItem>()
@@ -97,7 +116,8 @@ class PostDetailMapper
                 }
                 weekList.add(
                         ExpandableItem(
-                                mapWeek(week, index, visibleWeeks.size, isNextNotExpanded), isExpanded = isExpanded
+                                mapWeek(week, index, visibleWeeks.size, isNextNotExpanded, header),
+                                isExpanded = isExpanded
                         ) { changedExpandedState ->
                             val expandedFirstDay = if (changedExpandedState) week.firstDay else null
                             onUiState(uiState.copy(expandedWeekFirstDay = expandedFirstDay))
@@ -105,18 +125,24 @@ class PostDetailMapper
                 if (isExpanded) {
                     weekList.addAll(week.days
                             .map { day ->
+                                val text = statsDateFormatter.printDayWithoutYear(day.date)
                                 val value = day.average.toFormattedString(locale = localeManagerWrapper.getLocale())
                                 ListItemWithIcon(
-                                        text = statsDateFormatter.printDayWithoutYear(day.date),
+                                        text = text,
                                         value = value,
                                         textStyle = LIGHT,
-                                        showDivider = false
+                                        showDivider = false,
+                                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                                header,
+                                                text,
+                                                day.average
+                                        )
                                 )
                             })
                     weekList.add(Divider)
                 }
             } else {
-                weekList.add(mapWeek(week, index, visibleWeeks.size, isNextNotExpanded))
+                weekList.add(mapWeek(week, index, visibleWeeks.size, isNextNotExpanded, header))
             }
         }
         return weekList
@@ -131,7 +157,13 @@ class PostDetailMapper
         val weekAverage: Int
     )
 
-    private fun mapWeek(week: WeekUiModel, index: Int, size: Int, isNextNotExpanded: Boolean): ListItemWithIcon {
+    private fun mapWeek(
+        week: WeekUiModel,
+        index: Int,
+        size: Int,
+        isNextNotExpanded: Boolean,
+        header: Header
+    ): ListItemWithIcon {
         val lastDay = week.lastDay
         val label = if (lastDay != null) {
             statsDateFormatter.printWeek(week.firstDay, lastDay)
@@ -141,7 +173,12 @@ class PostDetailMapper
         return ListItemWithIcon(
                 text = label,
                 value = week.weekAverage.toFormattedString(locale = localeManagerWrapper.getLocale()),
-                showDivider = isNextNotExpanded && index < size - 1
+                showDivider = isNextNotExpanded && index < size - 1,
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        label,
+                        week.weekAverage
+                )
         )
     }
 

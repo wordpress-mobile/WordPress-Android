@@ -270,7 +270,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         if (!mAction.isEmpty()) {
             Menu menu = toolbar.getMenu();
             mMenuAction = menu.add(0, ID_ACTION, 0, this.mAction);
-            mMenuAction.setIcon(R.drawable.ic_send_accent_neutral_300_24dp);
+            mMenuAction.setIcon(R.drawable.ic_send_accent_neutral_30_24dp);
             mMenuAction.setEnabled(false);
             mMenuAction.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             mMenuAction.setOnMenuItemClickListener(

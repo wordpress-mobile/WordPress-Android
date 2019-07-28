@@ -68,7 +68,7 @@
                 android:padding="@dimen/margin_large"
                 android:text="@string/button_preview"
                 android:textAllCaps="true"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary_50"
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"/>
 
@@ -83,7 +83,7 @@
                 android:padding="@dimen/margin_large"
                 android:text="@string/add_count"
                 android:textAllCaps="true"
-                android:textColor="@color/primary_500"
+                android:textColor="@color/primary_50"
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"/>
 

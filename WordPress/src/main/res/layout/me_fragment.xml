@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/frame_avatar"
-                    android:textColor="@color/primary_500"
+                    android:textColor="@color/primary_50"
                     android:padding="8dp"
                     android:textAllCaps="true"
                     android:textSize="10sp"
@@ -95,7 +95,7 @@
                         android:ellipsize="end"
                         android:fontFamily="sans-serif-light"
                         android:maxLines="1"
-                        android:textColor="@color/neutral_700"
+                        android:textColor="@color/neutral_70"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold"
                         tools:text="Full Name" />
@@ -108,7 +108,7 @@
                         android:layout_centerHorizontal="true"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/neutral_500"
+                        android:textColor="@color/neutral_50"
                         android:textSize="@dimen/text_sz_medium"
                         tools:text="username" />
                 </RelativeLayout>

@@ -32,12 +32,12 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
             // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
             // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_50) and 0xffffff)
+            val colorLow = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent_5) and 0xffffff)
             val colorHigh = Integer.toHexString(ContextCompat.getColor(itemView.context, R.color.accent) and 0xffffff)
             val emptyColor = Integer.toHexString(
                     ContextCompat.getColor(
                             itemView.context,
-                            R.color.neutral_50
+                            R.color.neutral_5
                     ) and 0xffffff
             )
             val htmlPage = ("<html>" +
