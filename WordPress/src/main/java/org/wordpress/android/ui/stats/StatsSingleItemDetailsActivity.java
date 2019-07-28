@@ -233,7 +233,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     }
                 });
             } else {
-                mStatsForLabel.setTextColor(getResources().getColor(R.color.neutral_500));
+                mStatsForLabel.setTextColor(getResources().getColor(R.color.neutral_50));
             }
         } else {
             mStatsForLabel.setVisibility(View.GONE);
@@ -447,7 +447,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mCurrentSeriesOnScreen.getStyle().highlightColor =
                 getResources().getColor(R.color.accent);
         mCurrentSeriesOnScreen.getStyle().outerhighlightColor =
-                getResources().getColor(R.color.accent_100);
+                getResources().getColor(R.color.accent_10);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 5);
 
         StatsBarGraph mGraphView;
@@ -464,7 +464,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.addSeries(mCurrentSeriesOnScreen);
         // mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
-        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_600));
+        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_60));
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.getGraphViewStyle().setTextSize(
@@ -598,7 +598,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.warning_500);
+                        R.color.warning_50);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -691,7 +691,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.warning_500);
+                        R.color.warning_50);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -783,7 +783,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.warning_500);
+                        R.color.warning_50);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);
@@ -852,7 +852,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 ColorUtils.INSTANCE.setImageResourceWithTint(holder.imgMore, R.drawable.ic_trophy_white_24dp,
-                        R.color.warning_500);
+                        R.color.warning_50);
                 holder.imgMore.setBackgroundColor(Color.TRANSPARENT); // Hide the default click indicator
             } else {
                 holder.imgMore.setVisibility(View.GONE);

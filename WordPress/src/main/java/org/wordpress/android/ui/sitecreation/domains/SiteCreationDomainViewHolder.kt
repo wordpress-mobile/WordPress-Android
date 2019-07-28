@@ -26,7 +26,7 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
         init {
             suggestion.buttonTintList = ContextCompat.getColorStateList(
                     parentView.context,
-                    R.color.neutral_100_primary_400_selector
+                    R.color.neutral_10_primary_40_selector
             )
             container.setOnClickListener {
                 onDomainSelected?.invoke()

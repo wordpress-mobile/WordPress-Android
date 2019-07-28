@@ -76,7 +76,7 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/bg_rectangle_neutral_100_globe_32dp"
+            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
             android:visibility="gone"/>
     </LinearLayout>
 
@@ -102,7 +102,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:contentDescription="@string/stats_expand_content_description"
         android:src="@drawable/ic_chevron_down_white_16dp"
-        android:tint="@color/neutral_500"
+        android:tint="@color/neutral_50"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

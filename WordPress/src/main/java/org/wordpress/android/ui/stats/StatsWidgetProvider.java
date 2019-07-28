@@ -95,7 +95,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
         remoteViews.setTextViewText(viewId, FormatUtils.formatDecimal(value));
         if (text.equals("0")) {
-            remoteViews.setTextColor(viewId, context.getResources().getColor(R.color.neutral_300));
+            remoteViews.setTextColor(viewId, context.getResources().getColor(R.color.neutral_30));
         }
     }
 

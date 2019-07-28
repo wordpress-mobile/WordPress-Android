@@ -19,7 +19,7 @@
 
     <style name="StatsInsightsLabel">
         <item name="android:textSize">@dimen/text_sz_extra_small</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">bottom</item>
         <!--  item name="android:fontFamily">sans-serif-light</item -->
@@ -32,14 +32,14 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingEnd">@dimen/margin_large</item>
         <item name="android:paddingStart">@dimen/margin_large</item>
-        <item name="android:textColor">@color/primary_500</item>
+        <item name="android:textColor">@color/primary_50</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="StatsModuleTitle" parent="WordPress">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -49,7 +49,7 @@
     <!-- TextViews -->
 
     <style name="JetpackConnectionText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
@@ -61,13 +61,13 @@
 
     <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/neutral_400</item>
+        <item name="android:textColor">@color/neutral_40</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 
     <style name="JetpackInstallMessageText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
@@ -79,7 +79,7 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
-        <item name="android:textColor">@color/primary_400</item>
+        <item name="android:textColor">@color/primary_40</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -87,13 +87,13 @@
         <item name="android:autoLink">all</item>
         <item name="android:linksClickable">false</item>
         <item name="android:selectAllOnFocus">false</item>
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="BlueMediumProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:colorAccent">@color/primary_400</item>
-        <item name="android:indeterminateTint">@color/primary_400</item>
+        <item name="android:colorAccent">@color/primary_40</item>
+        <item name="android:indeterminateTint">@color/primary_40</item>
     </style>
 
     <!-- Stats Refresh -->
@@ -112,43 +112,43 @@
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockBigTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
     <style name="StatsBlockItem" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_500</item>
+        <item name="android:textColor">@color/neutral_50</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_500</item>
+        <item name="android:textColor">@color/neutral_50</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_500</item>
+        <item name="android:textColor">@color/neutral_50</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
     <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_300</item>
+        <item name="android:textColor">@color/neutral_30</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/primary_500</item>
+        <item name="android:textColor">@color/primary_50</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -163,28 +163,28 @@
     </style>
 
     <style name="StatsGraphLabel">
-        <item name="android:textColor">@color/neutral_300</item>
+        <item name="android:textColor">@color/neutral_30</item>
         <item name="android:textSize">@dimen/text_sz_extra_small</item>
     </style>
 
     <style name="StatsBlockBigValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_key</item>
     </style>
 
     <style name="StatsBlockBigValueUnit" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockPostingActivityLabel" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
     <style name="StatsBlockPostingActivityLegend" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -194,9 +194,9 @@
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:textColor">@color/neutral_500</item>
+        <item name="android:textColor">@color/neutral_50</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:drawableStart">@drawable/bg_rectangle_primary_700_16dp</item>
+        <item name="android:drawableStart">@drawable/bg_rectangle_primary_70_16dp</item>
     </style>
 
     <style name="StatsList">
@@ -249,7 +249,7 @@
     </style>
 
     <style name="StatsMapLegend" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_700</item>
+        <item name="android:textColor">@color/neutral_70</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
@@ -297,7 +297,7 @@
     </style>
 
     <style name="StatsWidgetTitle.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsWidgetTitle.Dark">
@@ -309,11 +309,11 @@
     </style>
 
     <style name="StatsWidgetErrorMessage.Light">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 
     <style name="StatsWidgetErrorMessage.Dark">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsWidgetRetryButton" parent="TextAppearance.AppCompat.Body1">
@@ -336,7 +336,7 @@
     </style>
 
     <style name="StatsWidgetKey.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsWidgetKey.Dark">
@@ -350,7 +350,7 @@
     </style>
 
     <style name="StatsMinifiedWidgetKey.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsMinifiedWidgetKey.Dark">
@@ -363,11 +363,11 @@
     </style>
 
     <style name="StatsWidgetValue.Light">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 
     <style name="StatsWidgetValue.Dark">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsChange" parent="TextAppearance.AppCompat.Body1">
@@ -378,27 +378,27 @@
     </style>
 
     <style name="StatsChange.NeutralLight" parent="StatsChange">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 
     <style name="StatsChange.NeutralDark" parent="StatsChange">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsChange.PositiveLight" parent="StatsChange">
-        <item name="android:textColor">@color/hot_green_500</item>
+        <item name="android:textColor">@color/green_5</item>
     </style>
 
     <style name="StatsChange.PositiveDark" parent="StatsChange">
-        <item name="android:textColor">@color/hot_green_300</item>
+        <item name="android:textColor">@color/green_30</item>
     </style>
 
     <style name="StatsChange.NegativeLight" parent="StatsChange">
-        <item name="android:textColor">@color/hot_red_500</item>
+        <item name="android:textColor">@color/red_50</item>
     </style>
 
     <style name="StatsChange.NegativeDark" parent="StatsChange">
-        <item name="android:textColor">@color/hot_red_400</item>
+        <item name="android:textColor">@color/red_40</item>
     </style>
 
     <style name="StatsWidgetBlockKey" parent="TextAppearance.AppCompat.Body1">
@@ -411,7 +411,7 @@
     </style>
 
     <style name="StatsWidgetBlockKey.Light">
-        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textColor">@color/gray_100</item>
     </style>
 
     <style name="StatsWidgetBlockValue" parent="TextAppearance.AppCompat.Body1">
@@ -420,10 +420,10 @@
     </style>
 
     <style name="StatsWidgetBlockValue.Dark">
-        <item name="android:textColor">@color/gray_200</item>
+        <item name="android:textColor">@color/gray_20</item>
     </style>
 
     <style name="StatsWidgetBlockValue.Light">
-        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textColor">@color/gray_50</item>
     </style>
 </resources>
