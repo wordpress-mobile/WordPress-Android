@@ -1550,12 +1550,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.shouldAutoEnableGutenbergForTheNewPosts(mSite.getUrl())
-            && !mIsNewPost
-            && !SiteUtils.isBlockEditorDefaultForNewPost(mSite)) {
+        if (TextUtils.isEmpty(mSite.getMobileEditor())
+            && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite);
-            AppPrefs.setGutenbergAutoEnabledForTheNewPosts(mSite.getUrl());
             showGutenbergInformativeDialog();
         }
     }

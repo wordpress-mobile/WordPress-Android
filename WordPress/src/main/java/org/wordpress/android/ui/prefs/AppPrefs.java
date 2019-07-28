@@ -648,47 +648,6 @@ public class AppPrefs {
         return true;
     }
 
-    public static boolean shouldAutoEnableGutenbergForTheNewPosts(String siteURL) {
-        if (TextUtils.isEmpty(siteURL)) {
-            return false;
-        }
-
-        Set<String> urls;
-        try {
-            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
-        } catch (ClassCastException exp) {
-            // It's an old value already stored, means we've already shown the prompt on v12.9
-            return false;
-        }
-        // if the pref was not set before, or doesn't contain the value we can return true
-        return urls == null || !urls.contains(siteURL);
-    }
-
-    public static void setGutenbergAutoEnabledForTheNewPosts(String siteURL) {
-        if (TextUtils.isEmpty(siteURL)) {
-            return;
-        }
-        Set<String> urls;
-        try {
-            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
-        } catch (ClassCastException exp) {
-            // It's an old value, means that we've already shown the prompt
-            // we should not here anyway, since the check returned to not show the prompt
-            return;
-        }
-
-        Set<String> newUrls = new HashSet<>();
-        // re-add the old urls here
-        if (urls != null) {
-            newUrls.addAll(urls);
-        }
-        newUrls.add(siteURL);
-
-        SharedPreferences.Editor editor = prefs().edit();
-        editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
-        editor.apply();
-    }
-
     public static boolean isGutenbergDefaultForNewPosts() {
         return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
     }
