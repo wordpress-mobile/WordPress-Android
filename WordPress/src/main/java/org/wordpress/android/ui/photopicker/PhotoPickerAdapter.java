@@ -4,10 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -367,6 +370,14 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                     return true;
                 }
             });
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                mImgThumbnail.setOnContextClickListener(new OnContextClickListener() {
+                    @Override
+                    public boolean onContextClick(View v) {
+                        return v.performLongClick();
+                    }
+                });
+            }
 
             mVideoOverlay.setOnClickListener(new View.OnClickListener() {
                 @Override
