@@ -186,6 +186,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
             if (selectedSite != null) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+                // Reload editor details from the remote backend
+                if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+                    // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(selectedSite));
+                }
             }
             return true;
         }
