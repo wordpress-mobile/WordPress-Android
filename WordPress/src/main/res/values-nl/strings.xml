@@ -231,7 +231,7 @@ Language: nl
     <string name="new_site_creation_site_info_header_title">Basis informatie</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">Geen verbinding</string>
-    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast -- alle sites blijven zich ontwikkelen!</string>
+    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast – alle sites blijven zich ontwikkelen!</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
