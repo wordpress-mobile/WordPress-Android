@@ -290,6 +290,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 return true;
             }
         });
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            buttonExpand.setOnContextClickListener(new OnContextClickListener() {
+                @Override
+                public boolean onContextClick(View v) {
+                    return v.performLongClick();
+                }
+            });
+        }
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
