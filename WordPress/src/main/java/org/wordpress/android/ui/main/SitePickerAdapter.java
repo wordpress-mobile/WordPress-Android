@@ -156,11 +156,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mDataLoadedListener = dataLoadedListener;
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
-        mTextColorNormal = context.getResources().getColor(R.color.neutral_700);
-        mTextColorHidden = context.getResources().getColor(R.color.neutral_300);
+        mTextColorNormal = context.getResources().getColor(R.color.neutral_70);
+        mTextColorHidden = context.getResources().getColor(R.color.neutral_30);
 
         mSelectedItemBackground =
-                new ColorDrawable(context.getResources().getColor(R.color.gray_50));
+                new ColorDrawable(context.getResources().getColor(R.color.gray_5));
 
         mHeaderHandler = headerHandler;
         mSelectedItemPos = getPositionOffset();

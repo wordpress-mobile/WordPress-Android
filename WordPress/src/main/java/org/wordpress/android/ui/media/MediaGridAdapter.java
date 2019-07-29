@@ -191,7 +191,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mFileTypeView.setText(fileExtension.toUpperCase(Locale.ROOT));
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             ColorUtils.INSTANCE.setImageResourceWithTint(holder.mFileTypeImageView, placeholderResId,
-                    R.color.neutral_300);
+                    R.color.neutral_30);
             mImageManager.cancelRequestAndClearImageView(holder.mImageView);
         }
         holder.mImageView.setContentDescription(mContext.getString(R.string.media_grid_item_image_desc,

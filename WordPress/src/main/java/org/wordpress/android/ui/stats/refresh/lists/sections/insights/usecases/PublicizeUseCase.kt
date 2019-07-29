@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
@@ -84,12 +83,15 @@ class PublicizeUseCase
         if (domainModel.services.isEmpty()) {
             items.add(Empty())
         } else {
-            items.add(Header(string.stats_publicize_service_label, string.stats_publicize_followers_label))
-            items.addAll(domainModel.services.let { mapper.map(it) })
+            val header = Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            items.add(header)
+            items.addAll(domainModel.services.let {
+                mapper.map(it, header)
+            })
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = NavigationAction.create(this::onLinkClick)
                         )
                 )

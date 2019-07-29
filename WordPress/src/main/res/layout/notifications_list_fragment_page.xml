@@ -41,7 +41,7 @@
 
     <LinearLayout
         android:id="@+id/layout_new_notificatons"
-        android:background="@drawable/bg_rectangle_rounded_primary_dark_ripple_primary_50"
+        android:background="@drawable/bg_rectangle_rounded_primary_dark_ripple_primary_5"
         android:elevation="@dimen/message_bar_elevation"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

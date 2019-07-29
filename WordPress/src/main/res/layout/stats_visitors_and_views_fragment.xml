@@ -89,7 +89,7 @@
                     android:contentDescription="@null"
                     android:paddingEnd="@dimen/margin_medium"
                     android:src="@drawable/ic_info_white_24dp"
-                    android:tint="@color/gray_800"/>
+                    android:tint="@color/gray_80"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_views"
-                    android:textColor="@color/neutral_600"/>
+                    android:textColor="@color/neutral_60"/>
             </LinearLayout>
             <LinearLayout
                 android:focusable="false"
@@ -150,7 +150,7 @@
                     android:drawablePadding="@dimen/margin_medium"
                     android:textSize="@dimen/text_sz_small"
                     android:text="@string/stats_visitors"
-                    android:textColor="@color/neutral_600"/>
+                    android:textColor="@color/neutral_60"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -164,6 +164,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_small"
-        android:textColor="@color/neutral_500"
+        android:textColor="@color/neutral_50"
         tools:text="Date"/>
 </LinearLayout>
