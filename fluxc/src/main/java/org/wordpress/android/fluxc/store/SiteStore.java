@@ -1526,6 +1526,11 @@ public class SiteStore extends Store {
             event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
         } else {
             try {
+                // The REST API doesn't return info about the editor(s). Make sure to copy current values
+                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The apps will dispatch the action to update editor(s) when necessary.
+                SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
+                siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
                 event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
