@@ -24,7 +24,9 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
@@ -657,6 +659,60 @@ public class AppPrefs {
 
     public static void removeAppWideEditorPreference() {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
+    }
+
+    public static boolean shouldShowGutenbergInfoPopup(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return false;
+        }
+
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+        } catch (ClassCastException exp) {
+            // no operation - This should not happen.
+            return false;
+        }
+        // Check if the current site address is available in the set.
+        boolean flag = false;
+        if (urls != null) {
+            if (urls.contains(siteURL)) {
+                flag = true;
+                // remove the flag from Prefs
+                setShowGutenbergInfoPopup(siteURL, false);
+            }
+        }
+
+        return flag;
+    }
+
+    public static void setShowGutenbergInfoPopup(String siteURL, boolean show) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+        } catch (ClassCastException exp) {
+            // nope - this should never happens
+            return;
+        }
+
+        Set<String> newUrls = new HashSet<>();
+        // re-add the old urls here
+        if (urls != null) {
+            newUrls.addAll(urls);
+        }
+
+        // 1. First remove & 2. add if necessary
+        newUrls.remove(siteURL);
+        if (show) {
+            newUrls.add(siteURL);
+        }
+
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
+        editor.apply();
     }
 
     public static void setVideoOptimizeWidth(int width) {
