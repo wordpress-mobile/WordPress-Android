@@ -1530,6 +1530,11 @@ public class SiteStore extends Store {
                 // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
                 // The apps will dispatch the action to update editor(s) when necessary.
                 SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
+                if (freshSiteFromDB != null) {
+                    AppLog.d(T.API, "impostato il vecchio valore per editor mobile: " + freshSiteFromDB.getMobileEditor());
+                } else {
+                    AppLog.d(T.API, "Il sito non era stato trovato " + siteModel.getUrl());
+                }
                 siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
