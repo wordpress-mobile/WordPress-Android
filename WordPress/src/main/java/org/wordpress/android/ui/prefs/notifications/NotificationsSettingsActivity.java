@@ -3,10 +3,13 @@ package org.wordpress.android.ui.prefs.notifications;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnContextClickListener;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -168,6 +171,14 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                 return true;
             }
         });
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            mToolbarSwitch.setOnContextClickListener(new OnContextClickListener() {
+                @Override
+                public boolean onContextClick(View v) {
+                    return v.performLongClick();
+                }
+            });
+        }
     }
 
     private void setToolbarTitleContentDescription() {
