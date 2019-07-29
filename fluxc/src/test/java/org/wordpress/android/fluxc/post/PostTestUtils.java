@@ -45,11 +45,15 @@ public class PostTestUtils {
         return example;
     }
 
-    public static PostModel generateSampleLocallyChangedPost() {
+    static PostModel generateSampleLocallyChangedPost() {
+        return generateSampleLocallyChangedPost("A test post");
+    }
+
+    static PostModel generateSampleLocallyChangedPost(@NonNull String title) {
         PostModel example = new PostModel();
         example.setLocalSiteId(DEFAULT_LOCAL_SITE_ID);
         example.setRemotePostId(7);
-        example.setTitle("A test post");
+        example.setTitle(title);
         example.setContent("Bunch of content here");
         example.setIsLocallyChanged(true);
         return example;
