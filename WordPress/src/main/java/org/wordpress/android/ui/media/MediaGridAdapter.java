@@ -4,11 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -331,6 +334,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     return true;
                 }
             });
+
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                itemView.setOnContextClickListener(new OnContextClickListener() {
+                    @Override
+                    public boolean onContextClick(View v) {
+                        return v.performLongClick();
+                    }
+                });
+            }
 
             mSelectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override
