@@ -757,7 +757,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             txtName.setOnClickListener(authorListener);
             txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.link_reader));
         } else {
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_600));
+            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_60));
         }
 
         showPostTitle(mSite, mComment.getRemotePostId());
@@ -1000,11 +1000,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (commentStatus) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_600);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_60);
                 break;
             case UNAPPROVED:
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_600);
+                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_60);
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
