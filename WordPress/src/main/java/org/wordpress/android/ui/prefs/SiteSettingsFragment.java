@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -28,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnContextClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -1587,6 +1590,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return true;
             }
         });
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            button.setOnContextClickListener(new OnContextClickListener() {
+                @Override
+                public boolean onContextClick(View v) {
+                    return v.performLongClick();
+                }
+            });
+        }
 
         return view;
     }
