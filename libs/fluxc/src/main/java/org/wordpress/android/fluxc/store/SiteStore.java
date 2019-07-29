@@ -1494,7 +1494,6 @@ public class SiteStore extends Store {
 
     private void fetchSite(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
-            AppLog.d(T.API, "Fetching the site with local ID: " + site.getId());
             mSiteRestClient.fetchSite(site);
         } else {
             mSiteXMLRPCClient.fetchSite(site);
