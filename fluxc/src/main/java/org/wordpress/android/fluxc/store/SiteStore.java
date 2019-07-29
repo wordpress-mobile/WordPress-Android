@@ -1532,6 +1532,7 @@ public class SiteStore extends Store {
                 SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
                 if (freshSiteFromDB != null) {
                     siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
+                    siteModel.setWebEditor(freshSiteFromDB.getWebEditor());
                 }
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
