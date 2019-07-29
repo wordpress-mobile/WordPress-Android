@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.LinearInterpolator;
@@ -250,6 +253,14 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             itemView.setOnClickListener(clickListener);
             itemView.setOnLongClickListener(longClickListener);
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                itemView.setOnContextClickListener(new OnContextClickListener() {
+                    @Override
+                    public boolean onContextClick(View v) {
+                        return v.performLongClick();
+                    }
+                });
+            }
         }
     }
 
