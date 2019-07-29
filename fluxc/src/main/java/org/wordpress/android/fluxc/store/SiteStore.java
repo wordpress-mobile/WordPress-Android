@@ -1532,10 +1532,7 @@ public class SiteStore extends Store {
                 // The apps will dispatch the action to update editor(s) when necessary.
                 SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
                 if (freshSiteFromDB != null) {
-                    AppLog.d(T.API, "Old value for editor mobile: " + freshSiteFromDB.getMobileEditor());
                     siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
-                } else {
-                    AppLog.d(T.API, "site not found " + siteModel.getUrl() + " " + siteModel.getId());
                 }
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
