@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnContextClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -203,6 +206,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 return true;
             }
         });
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            mSubmitReplyBtn.setOnContextClickListener(new OnContextClickListener() {
+                @Override
+                public boolean onContextClick(View v) {
+                    return v.performLongClick();
+                }
+            });
+        }
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
