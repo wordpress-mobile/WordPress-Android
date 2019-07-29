@@ -58,6 +58,7 @@ public class UploadService extends Service {
     private static final String KEY_UPLOAD_MEDIA_FROM_EDITOR = "mediaFromEditor";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
+    private static final String KEY_IS_REMOTE_AUTO_SAVE = "isRemoteAutoSave";
 
     private static @Nullable UploadService sInstance;
 
@@ -231,6 +232,11 @@ public class UploadService extends Service {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
+            boolean isRemoteAutoSave = intent.getBooleanExtra(KEY_IS_REMOTE_AUTO_SAVE, false);
+            if (isRemoteAutoSave) {
+                mPostUploadHandler.registerPostForRemoteAutoSave(post);
+            }
+
             // cancel any outstanding "end" notification for this Post before we start processing it again
             // i.e. dismiss success or error notification for the post.
             mPostUploadNotifier.cancelFinalNotification(this, post);
@@ -309,11 +315,17 @@ public class UploadService extends Service {
 
     public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
                                                     boolean publish, boolean isRetry) {
+        return getUploadPostServiceIntent(context, post, trackAnalytics, publish, isRetry, false);
+    }
+
+    public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
+                                                    boolean publish, boolean isRetry, boolean isRemoteAutoSave) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
         intent.putExtra(KEY_SHOULD_PUBLISH, publish);
         intent.putExtra(KEY_SHOULD_RETRY, isRetry);
+        intent.putExtra(KEY_IS_REMOTE_AUTO_SAVE, isRemoteAutoSave);
         return intent;
     }
 
@@ -329,9 +341,14 @@ public class UploadService extends Service {
      * Adds a post to the queue.
      */
     public static void uploadPost(Context context, @NonNull PostModel post) {
+        uploadPost(context, post, false);
+    }
+
+    public static void uploadPost(Context context, @NonNull PostModel post, boolean isRemoteAutoSave) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
+        intent.putExtra(KEY_IS_REMOTE_AUTO_SAVE, isRemoteAutoSave);
         context.startService(intent);
     }
 
@@ -341,9 +358,14 @@ public class UploadService extends Service {
      * to published.
      */
     public static void uploadPostAndTrackAnalytics(Context context, @NonNull PostModel post) {
+        uploadPostAndTrackAnalytics(context, post, false);
+    }
+
+    public static void uploadPostAndTrackAnalytics(Context context, @NonNull PostModel post, boolean isRemoteAutoSave) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, true);
+        intent.putExtra(KEY_IS_REMOTE_AUTO_SAVE, isRemoteAutoSave);
         context.startService(intent);
     }
 
@@ -740,6 +762,7 @@ public class UploadService extends Service {
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
+        mPostUploadHandler.unregisterPostForRemoteAutoSave(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel));
 
         return true;
@@ -978,6 +1001,7 @@ public class UploadService extends Service {
                         }
 
                         mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
+                        mPostUploadHandler.unregisterPostForRemoteAutoSave(postModel);
                         EventBus.getDefault().post(
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {

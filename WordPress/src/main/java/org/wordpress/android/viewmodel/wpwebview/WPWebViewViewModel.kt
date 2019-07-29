@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.wpwebview
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -7,14 +8,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.R
+import org.wordpress.android.ui.WPWebViewUsageCategory
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
+        .WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
+        .WebPreviewFullscreenProgressUiState
 import javax.inject.Inject
 
 class WPWebViewViewModel
@@ -23,6 +29,7 @@ class WPWebViewViewModel
     connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private var isStarted = false
+    private var wpWebViewUsageCategory: WPWebViewUsageCategory = WPWebViewUsageCategory.WEBVIEW_STANDARD
 
     private val _uiState: MutableLiveData<WebPreviewUiState> = MutableLiveData()
     val uiState: LiveData<WebPreviewUiState> = _uiState
@@ -41,16 +48,20 @@ class WPWebViewViewModel
         })
     }
 
-    fun start() {
+    fun start(webViewUsageCategory: WPWebViewUsageCategory) {
         if (isStarted) {
             return
         }
         isStarted = true
-        // If there is no internet show the error screen
-        if (networkUtils.isNetworkAvailable()) {
+        wpWebViewUsageCategory = webViewUsageCategory
+
+        if (WPWebViewUsageCategory.isActionableDirectUsage(wpWebViewUsageCategory)) {
+            updateUiState(WPWebViewUsageCategory.actionableDirectUsageToWebPreviewUiState(wpWebViewUsageCategory))
+        } else if (networkUtils.isNetworkAvailable()) {
+            // If there is no internet show the error screen
             updateUiState(WebPreviewFullscreenProgressUiState)
         } else {
-            updateUiState(WebPreviewFullscreenErrorUiState)
+            updateUiState(WebPreviewFullscreenErrorUiState())
         }
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
@@ -88,17 +99,25 @@ class WPWebViewViewModel
             return
         }
         if (uiState.value !is WebPreviewFullscreenErrorUiState) {
-            updateUiState(WebPreviewFullscreenErrorUiState)
+            updateUiState(WebPreviewFullscreenErrorUiState())
         }
         _loadNeeded.value = false
     }
 
     fun loadIfNecessary() {
-        if (uiState.value !is WebPreviewFullscreenProgressUiState && uiState.value !is WebPreviewContentUiState) {
+        if (isActionableDirectUsage()) return
+
+        if (uiState.value !is WebPreviewFullscreenProgressUiState &&
+                uiState.value !is WebPreviewContentUiState
+        ) {
             updateUiState(WebPreviewFullscreenProgressUiState)
             _loadNeeded.value = true
         }
     }
+
+    fun isActionableDirectUsage() = WPWebViewUsageCategory.isActionableDirectUsage(wpWebViewUsageCategory)
+
+    fun getMenuUiState() = wpWebViewUsageCategory.menuUiState
 
     sealed class WebPreviewUiState(
         val fullscreenProgressLayoutVisibility: Boolean = false,
@@ -113,8 +132,27 @@ class WPWebViewViewModel
                 fullscreenProgressLayoutVisibility = true
         )
 
-        object WebPreviewFullscreenErrorUiState : WebPreviewUiState(
-                actionableEmptyView = true
-        )
+        sealed class WebPreviewFullscreenUiState : WebPreviewUiState(actionableEmptyView = true) {
+            abstract val imageRes: Int
+            abstract val titleText: UiStringRes?
+            abstract val subtitleText: UiStringRes?
+            abstract val buttonVisibility: Boolean
+
+            data class WebPreviewFullscreenErrorUiState(
+                @DrawableRes
+                override val imageRes: Int = R.drawable.img_illustration_cloud_off_152dp,
+                override val titleText: UiStringRes = UiStringRes(R.string.error_browser_no_network),
+                override val subtitleText: UiStringRes = UiStringRes(R.string.error_network_connection),
+                override val buttonVisibility: Boolean = true
+            ) : WebPreviewFullscreenUiState()
+
+            object WebPreviewFullscreenNotAvailableUiState : WebPreviewFullscreenUiState() {
+                @DrawableRes
+                override val imageRes: Int = R.drawable.img_illustration_empty_results_216dp
+                override val titleText: UiStringRes = UiStringRes(R.string.preview_unavailable_self_hosted_sites)
+                override val subtitleText: UiStringRes? = null
+                override val buttonVisibility: Boolean = false
+            }
+        }
     }
 }

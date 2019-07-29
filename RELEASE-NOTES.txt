@@ -2,6 +2,8 @@
 -----
  
 12.9
+* Add Remote Preview support for Drafts, Published and Scheduled posts with local changes
+
 -----
 * Block editor: Video block is now available in the Inserter
 * Block editor: Tapping on an empty editor area will create a new paragraph block
