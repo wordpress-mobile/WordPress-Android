@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-25 00:54:11+0000
+Translation-Revision-Date: 2019-07-26 16:07:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
@@ -10,21 +10,21 @@ Language: de
     <string name="description_collapse">Einklappen</string>
     <string name="editor_retry_failed_uploads">Hochladen erneut starten</string>
     <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. Das Speichern oder Veröffentlichen\n deines Beitrags ist in diesem Status nicht möglich.</string>
-    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
-    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
-    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
-    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
-    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
-    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="my_site_verify_your_email_without_email">Prüfe deinen Posteingang – eine Anleitung wurde an deine E-Mail-Adresse gesendet</string>
+    <string name="my_site_verify_your_email">Prüfe deinen Posteingang – eine Anleitung wurde an %s gesendet</string>
+    <string name="error_media_recover_post_not_submitted">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht übermittelt.</string>
+    <string name="error_media_recover_post_not_scheduled">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht geplant.</string>
+    <string name="error_media_recover_post_not_published">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht veröffentlicht.</string>
+    <string name="error_media_recover_post">Medien konnten nicht hochgeladen werden</string>
     <string name="link_dialog_button_cancel">Abbrechen</string>
     <string name="link_dialog_button_ok">OK</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
     <string name="link_dialog_button_remove_link">Link entfernen</string>
     <string name="link_dialog_title">Link einfügen</string>
     <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
-    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
-    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen hier tippen.</string>
+    <string name="dialog_gutenberg_informative_description_page">Für diese Seite wird der Block-Editor verwendet. Dies ist der Standard-Editor für neue Seiten. Um den klassischen Editor zu aktivieren, gehe zu „Ich“ > „App-Einstellungen“.</string>
+    <string name="dialog_gutenberg_informative_description_post">Für diesen Beitrag wird der Block-Editor verwendet. Dies ist der Standard-Editor für neue Beiträge. Um den klassischen Editor zu aktivieren, gehe zu „Ich“ > „App-Einstellungen“.</string>
     <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
     <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>

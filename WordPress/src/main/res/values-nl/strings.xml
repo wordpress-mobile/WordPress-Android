@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-25 00:54:12+0000
+Translation-Revision-Date: 2019-07-26 16:13:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
-    <string name="description_expand">Expand</string>
-    <string name="description_collapse">Collapse</string>
-    <string name="editor_retry_failed_uploads">Retry uploading</string>
+    <string name="description_expand">Uitklappen</string>
+    <string name="description_collapse">Inklappen</string>
+    <string name="editor_retry_failed_uploads">Upload opnieuw proberen</string>
     <string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Het opslaan of publiceren\n van je bericht is niet mogelijk in deze staat.</string>
-    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
-    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
-    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
-    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
-    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
-    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="my_site_verify_your_email_without_email">Je e-mail verifiëren: er zijn instructies naar je e-mailadres verzonden.</string>
+    <string name="my_site_verify_your_email">Je e-mail verifiëren: er zijn instructies naar %s verzonden</string>
+    <string name="error_media_recover_post_not_submitted">Kan geen media uploaden. Bericht niet verzonden.</string>
+    <string name="error_media_recover_post_not_scheduled">Kan geen media uploaden. Bericht niet gepland.</string>
+    <string name="error_media_recover_post_not_published">Kan geen media uploaden. Bericht niet gepubliceerd.</string>
+    <string name="error_media_recover_post">Kan geen media uploaden.</string>
     <string name="link_dialog_button_cancel">Annuleren</string>
     <string name="link_dialog_button_ok">OK</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_remove_link">Link verwijderen</string>
-    <string name="link_dialog_title">Link invoeren</string>
-    <string name="post_settings_retry_featured_image">Retry uploading</string>
-    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nTik voor opties.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
-    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
-    <string name="link_open_new_window">Open link in a new window/tab</string>
+    <string name="link_dialog_button_remove_link">Koppeling verwijderen</string>
+    <string name="link_dialog_title">Koppeling invoeren</string>
+    <string name="post_settings_retry_featured_image">Upload opnieuw proberen</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Media worden geüpload.\nTik voor opties.</string>
+    <string name="dialog_gutenberg_informative_description_page">Deze pagina gebruikt de blokeditor, die de standaardeditor is voor nieuwe pagina\'s. Je kunt de klassieke editor inschakelen via Mij > App-instellingen.</string>
+    <string name="dialog_gutenberg_informative_description_post">Dit bericht gebruikt de blokeditor, die de standaardeditor is voor nieuwe berichten. Je kunt de klassieke editor inschakelen via Mij > App-instellingen.</string>
+    <string name="link_open_new_window">Open koppeling in een nieuw venster/tab</string>
     <string name="post_list_search_prompt">Zoeken in gepubliceerde berichten</string>
     <string name="stats_widget_error_no_access_token">Log in op je WordPress.com-account om je statistieken te bekijken.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (niet beschikbaar)</string>
@@ -231,7 +231,7 @@ Language: nl
     <string name="new_site_creation_site_info_header_title">Basis informatie</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">Geen verbinding</string>
-    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast - alle sites blijven zich ontwikkelen!</string>
+    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast -- alle sites blijven zich ontwikkelen!</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
