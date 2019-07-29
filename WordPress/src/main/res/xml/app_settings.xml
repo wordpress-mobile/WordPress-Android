@@ -58,19 +58,6 @@
         android:title="@string/preference_open_device_settings"/>
 
     <PreferenceCategory
-        android:key="@string/pref_key_editor"
-        android:layout="@layout/wp_preference_category"
-        android:title="@string/preference_editor">
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_gutenberg_default_for_new_posts"
-            android:key="@string/pref_key_gutenberg_default_for_new_posts"
-            android:layout="@layout/wp_preference_layout"
-            android:title="@string/site_settings_gutenberg_default_for_new_posts"
-            android:summary="@string/site_settings_gutenberg_default_for_new_posts_summary"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:key="@string/pref_key_optimize_media"
         android:layout="@layout/wp_preference_category"
         android:title="@string/media">

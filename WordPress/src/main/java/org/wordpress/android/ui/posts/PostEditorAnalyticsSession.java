@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.SiteUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class PostEditorAnalyticsSession implements Serializable {
         if (isNewPost) {
             mContentType = "new";
         } else if (PostUtils.contentContainsGutenbergBlocks(postContent)) {
-            mContentType = "gutenberg";
+            mContentType = SiteUtils.GB_EDITOR_NAME;
         } else {
             mContentType = "classic";
         }
