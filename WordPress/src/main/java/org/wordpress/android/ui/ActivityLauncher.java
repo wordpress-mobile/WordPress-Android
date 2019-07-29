@@ -129,11 +129,15 @@ public class ActivityLauncher {
 
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
-                                                @Nullable SiteModel site) {
+                                                @Nullable SiteModel site,
+                                                @Nullable Integer localPostId) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
+        }
+        if (localPostId != null) {
+            intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
         }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }

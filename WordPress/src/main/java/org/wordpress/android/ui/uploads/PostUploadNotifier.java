@@ -81,7 +81,7 @@ class PostUploadNotifier {
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
                 context.getString(R.string.notification_channel_transient_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
-                            .setColor(context.getResources().getColor(R.color.primary_500))
+                            .setColor(context.getResources().getColor(R.color.primary_50))
                             .setOnlyAlertOnce(true);
     }
 
@@ -320,7 +320,7 @@ class PostUploadNotifier {
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_500));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
 
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
@@ -391,7 +391,7 @@ class PostUploadNotifier {
                                                                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_500));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
 
         String notificationTitle = buildSuccessMessageForMedia(mediaList.size());
         String notificationMessage =

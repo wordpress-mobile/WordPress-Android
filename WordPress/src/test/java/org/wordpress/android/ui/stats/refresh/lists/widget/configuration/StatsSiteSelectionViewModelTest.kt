@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.widget.configuration
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -19,36 +19,75 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock private lateinit var site: SiteModel
+    private lateinit var wpComSite: SiteModel
+    private lateinit var jetpackSite: SiteModel
+    private lateinit var nonJetpackSite: SiteModel
     private lateinit var viewModel: StatsSiteSelectionViewModel
     private val siteId = 15L
     private val siteName = "WordPress"
+    private val jetpackSiteName = "Jetpack"
+    private val nonJetpackSiteName = "Non-Jetpack"
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
     @Before
     fun setUp() {
         viewModel = StatsSiteSelectionViewModel(Dispatchers.Unconfined, siteStore, accountStore, appPrefsWrapper)
-        whenever(site.siteId).thenReturn(siteId)
-        whenever(site.name).thenReturn(siteName)
-        whenever(site.url).thenReturn(siteUrl)
-        whenever(site.iconUrl).thenReturn(iconUrl)
+        wpComSite = SiteModel()
+        wpComSite.siteId = siteId
+        wpComSite.name = siteName
+        wpComSite.url = siteUrl
+        wpComSite.iconUrl = iconUrl
+        wpComSite.setIsJetpackConnected(false)
+        wpComSite.setIsWPCom(true)
+        jetpackSite = SiteModel()
+        jetpackSite.siteId = siteId
+        jetpackSite.name = jetpackSiteName
+        jetpackSite.url = siteUrl
+        jetpackSite.iconUrl = iconUrl
+        jetpackSite.setIsJetpackConnected(true)
+        jetpackSite.setIsWPCom(false)
+        nonJetpackSite = SiteModel()
+        nonJetpackSite.siteId = siteId
+        nonJetpackSite.name = nonJetpackSiteName
+        nonJetpackSite.url = siteUrl
+        nonJetpackSite.iconUrl = iconUrl
+        nonJetpackSite.setIsJetpackConnected(false)
+        nonJetpackSite.setIsWPCom(false)
     }
+
     @Test
     fun `loads sites`() {
         var sites: List<SiteUiModel>? = null
         viewModel.sites.observeForever { sites = it }
 
-        whenever(siteStore.sites).thenReturn(listOf(site))
+        whenever(siteStore.sites).thenReturn(listOf(wpComSite))
 
         viewModel.loadSites()
 
-        Assertions.assertThat(sites).isNotNull
-        Assertions.assertThat(sites).hasSize(1)
+        assertThat(sites).isNotNull
+        assertThat(sites).hasSize(1)
         val loadedSite = sites!![0]
-        Assertions.assertThat(loadedSite.iconUrl).isEqualTo(iconUrl)
-        Assertions.assertThat(loadedSite.siteId).isEqualTo(siteId)
-        Assertions.assertThat(loadedSite.title).isEqualTo(siteName)
-        Assertions.assertThat(loadedSite.url).isEqualTo(siteUrl)
+        assertThat(loadedSite.iconUrl).isEqualTo(iconUrl)
+        assertThat(loadedSite.siteId).isEqualTo(siteId)
+        assertThat(loadedSite.title).isEqualTo(siteName)
+        assertThat(loadedSite.url).isEqualTo(siteUrl)
+    }
+
+    @Test
+    fun `filters out non-jetpack self-hosted sites`() {
+        var sites: List<SiteUiModel>? = null
+        viewModel.sites.observeForever { sites = it }
+
+        whenever(siteStore.sites).thenReturn(listOf(jetpackSite, wpComSite, nonJetpackSite))
+
+        viewModel.loadSites()
+
+        assertThat(sites).isNotNull
+        assertThat(sites).hasSize(2)
+        val jetpackSite = sites!![0]
+        assertThat(jetpackSite.title).isEqualTo(jetpackSiteName)
+        val wpComSite = sites!![1]
+        assertThat(wpComSite.title).isEqualTo(siteName)
     }
 
     @Test
@@ -56,12 +95,12 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
         var sites: List<SiteUiModel>? = null
         viewModel.sites.observeForever { sites = it }
 
-        whenever(siteStore.sites).thenReturn(listOf(site))
+        whenever(siteStore.sites).thenReturn(listOf(wpComSite))
 
         viewModel.loadSites()
 
-        Assertions.assertThat(sites).isNotNull
-        Assertions.assertThat(sites).hasSize(1)
+        assertThat(sites).isNotNull
+        assertThat(sites).hasSize(1)
         val loadedSite = sites!![0]
 
         var hideSiteDialog: Unit? = null
@@ -69,7 +108,7 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
 
         loadedSite.click()
 
-        Assertions.assertThat(hideSiteDialog).isNotNull
+        assertThat(hideSiteDialog).isNotNull
     }
 
     @Test
@@ -82,7 +121,7 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
 
         viewModel.openSiteDialog()
 
-        Assertions.assertThat(event).isNotNull
+        assertThat(event).isNotNull
     }
 
     @Test
@@ -95,7 +134,7 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
 
         viewModel.openSiteDialog()
 
-        Assertions.assertThat(notification).isNotNull
-        Assertions.assertThat(notification?.getContentIfNotHandled()).isEqualTo(R.string.stats_widget_log_in_message)
+        assertThat(notification).isNotNull
+        assertThat(notification?.getContentIfNotHandled()).isEqualTo(R.string.stats_widget_log_in_message)
     }
 }

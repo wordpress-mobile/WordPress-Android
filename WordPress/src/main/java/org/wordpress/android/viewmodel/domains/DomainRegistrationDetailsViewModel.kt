@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TransactionAction.FETCH_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -47,6 +49,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val transactionsStore: TransactionsStore, // needed for events to work
     private val siteStore: SiteStore,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     private lateinit var site: SiteModel
@@ -213,6 +216,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCartRedeemed(event: OnShoppingCartRedeemed) {
         if (event.isError) {
+            analyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED)
             _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = false)
             _formError.value = event.error
             _showErrorMessage.value = event.error.message

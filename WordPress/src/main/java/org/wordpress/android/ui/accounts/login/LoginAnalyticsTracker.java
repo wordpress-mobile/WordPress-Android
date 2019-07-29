@@ -236,4 +236,18 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     public void trackWpComBackgroundServiceUpdate(Map<String, ?> properties) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, properties);
     }
+
+    @Override public void trackConnectedSiteInfoRequested(String url) {
+        // Not used in WordPress app
+    }
+
+    @Override
+    public void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType,
+                                             String errorDescription) {
+        // Not used in WordPress app
+    }
+
+    @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
+        // Not used in WordPress app
+    }
 }

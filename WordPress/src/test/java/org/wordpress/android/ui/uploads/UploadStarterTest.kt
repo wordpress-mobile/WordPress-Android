@@ -26,6 +26,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -43,35 +44,40 @@ class UploadStarterTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     private val sites = listOf(SiteModel(), SiteModel())
-    private val sitesAndPosts: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(createPostModel(), createPostModel()),
+    private val sitesAndDraftPosts: Map<SiteModel, List<PostModel>> = mapOf(
+            sites[0] to listOf(createDraftPostModel(), createDraftPostModel()),
             sites[1] to listOf(
-                    createPostModel(),
-                    createPostModel(),
-                    createPostModel(),
-                    createPostModel(),
-                    createPostModel()
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel()
             )
     )
-    private val posts = sitesAndPosts.values.flatten()
+    private val draftPosts = sitesAndDraftPosts.values.flatten()
 
-    private val sitesAndPages: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(createPostModel(), createPostModel()),
-            sites[1] to listOf(createPostModel(), createPostModel(), createPostModel(), createPostModel())
+    private val sitesAndDraftPages: Map<SiteModel, List<PostModel>> = mapOf(
+            sites[0] to listOf(createDraftPostModel(), createDraftPostModel()),
+            sites[1] to listOf(
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel(),
+                    createDraftPostModel()
+            )
     )
-    private val pages = sitesAndPages.values.flatten()
+    private val draftPages = sitesAndDraftPages.values.flatten()
 
     private val siteStore = mock<SiteStore> {
         on { sites } doReturn sites
     }
     private val postStore = mock<PostStore> {
         sites.forEach {
-            on { getLocalDraftPosts(eq(it)) } doReturn sitesAndPosts.getValue(it)
+            on { getLocalDraftPosts(eq(it)) } doReturn sitesAndDraftPosts.getValue(it)
         }
     }
     private val pageStore = mock<PageStore> {
         sites.forEach {
-            onBlocking { getLocalDraftPages(eq(it)) } doReturn sitesAndPages.getValue(it)
+            onBlocking { getLocalDraftPages(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
         }
     }
 
@@ -95,7 +101,7 @@ class UploadStarterTest {
         connectionStatus.postValue(AVAILABLE)
 
         // Then
-        verify(uploadServiceFacade, times(posts.size + pages.size)).uploadPost(
+        verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),
@@ -144,7 +150,7 @@ class UploadStarterTest {
         lifecycle.handleLifecycleEvent(Event.ON_START)
 
         // Then
-        verify(uploadServiceFacade, times(posts.size + pages.size)).uploadPost(
+        verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any(),
@@ -167,7 +173,8 @@ class UploadStarterTest {
         starter.queueUploadFromSite(site)
 
         // Then
-        val expectedUploadPostExecutions = sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size
+        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size +
+                sitesAndDraftPages.getValue(site).size
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
@@ -187,7 +194,7 @@ class UploadStarterTest {
         val postUtilsWrapper = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doAnswer {
                 // return isPublishable = false on the first post of the site
-                it.getArgument<PostModel>(0) != sitesAndPosts[site]?.get(0)!!
+                it.getArgument<PostModel>(0) != sitesAndDraftPosts[site]?.get(0)!!
             }
         }
 
@@ -198,7 +205,8 @@ class UploadStarterTest {
 
         // Then
         // subtract - 1 as we've returned isPublishable = false for the first post of the site
-        val expectedUploadPostExecutions = sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size - 1
+        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size +
+                sitesAndDraftPages.getValue(site).size - 1
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
@@ -212,14 +220,14 @@ class UploadStarterTest {
     fun `when uploading, it ignores local drafts that are already queued`() {
         // Given
         val site: SiteModel = sites[1]
-        val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndPosts.getValue(site).let { posts ->
+        val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndDraftPosts.getValue(site).let { posts ->
             // Split into halves of already queued and what should be uploaded
             return@let Pair(
                     posts.subList(0, posts.size / 2),
                     posts.subList(posts.size / 2, posts.size)
             )
         }
-        val (expectedQueuedPages, expectedUploadedPages) = sitesAndPages.getValue(site).let { pages ->
+        val (expectedQueuedPages, expectedUploadedPages) = sitesAndDraftPages.getValue(site).let { pages ->
             // Split into halves of already queued and what should be uploaded
             return@let Pair(
                     pages.subList(0, pages.size / 2),
@@ -252,7 +260,7 @@ class UploadStarterTest {
         )
         verify(
                 uploadServiceFacade,
-                times(sitesAndPosts.getValue(site).size + sitesAndPages.getValue(site).size)
+                times(sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages.getValue(site).size)
         ).isPostUploadingOrQueued(any())
         verifyNoMoreInteractions(uploadServiceFacade)
     }
@@ -331,9 +339,10 @@ class UploadStarterTest {
             on { this.lifecycle } doReturn lifecycle
         }
 
-        fun createPostModel() = PostModel().apply {
+        fun createDraftPostModel() = PostModel().apply {
             id = Random.nextInt()
             title = UUID.randomUUID().toString()
+            status = PostStatus.DRAFT.toString()
         }
     }
 }

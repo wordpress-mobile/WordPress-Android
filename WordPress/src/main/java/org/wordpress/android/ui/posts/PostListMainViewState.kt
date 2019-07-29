@@ -60,7 +60,7 @@ fun getAuthorFilterItems(
             ME -> AuthorFilterListItemUIState.Me(avatarUrl, backgroundColorRes)
             EVERYONE -> AuthorFilterListItemUIState.Everyone(
                     backgroundColorRes,
-                    R.drawable.bg_oval_neutral_300_multiple_users_white_40dp
+                    R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
             )
         }
     }

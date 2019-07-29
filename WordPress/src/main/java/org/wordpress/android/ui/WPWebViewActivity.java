@@ -223,8 +223,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
                 Drawable upIcon = toolbar.getNavigationIcon();
                 if (upIcon != null) {
-                    upIcon.setColorFilter(getResources().getColor(R.color.gray_600),
-                            PorterDuff.Mode.SRC_ATOP);
+                    upIcon.setColorFilter(getResources().getColor(R.color.gray_60), PorterDuff.Mode.SRC_ATOP);
                 }
             }
         }

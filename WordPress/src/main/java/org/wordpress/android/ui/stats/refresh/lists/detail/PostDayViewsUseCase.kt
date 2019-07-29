@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -28,7 +29,8 @@ class PostDayViewsUseCase
     private val selectedDateProvider: SelectedDateProvider,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
-    private val postDetailStore: PostDetailStore
+    private val postDetailStore: PostDetailStore,
+    private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<PostDetailStatsModel, UiState>(
         PostDetailType.POST_OVERVIEW,
         mainDispatcher,
@@ -106,7 +108,14 @@ class PostDayViewsUseCase
     }
 
     override fun buildLoadingItem(): List<BlockListItem> {
-        return listOf(ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true))
+        return listOf(
+                ValueItem(
+                        value = 0.toFormattedString(),
+                        unit = R.string.stats_views,
+                        isFirst = true,
+                        contentDescription = resourceProvider.getString(R.string.stats_loading_card)
+                )
+        )
     }
 
     private fun onBarSelected(period: String?) {

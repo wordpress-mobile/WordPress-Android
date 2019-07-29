@@ -219,7 +219,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     StringEscapeUtils.unescapeHtml4(blogNames[position]));
             blogUsername.setText(
                     StringEscapeUtils.unescapeHtml4(username));
-            blavatar.setErrorImageResId(R.drawable.bg_rectangle_neutral_100_globe_32dp);
+            blavatar.setErrorImageResId(R.drawable.bg_rectangle_neutral_10_globe_32dp);
             blavatar.setImageUrl(blavatars[position], mImageLoader);
 
             return view;

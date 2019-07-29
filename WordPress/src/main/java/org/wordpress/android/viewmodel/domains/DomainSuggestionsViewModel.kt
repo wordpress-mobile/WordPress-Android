@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.helpers.Debouncer
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -65,6 +66,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     companion object {
         private const val SEARCH_QUERY_DELAY_MS = 250L
         private const val SUGGESTIONS_REQUEST_COUNT = 20
+        private const val BLOG_DOMAIN_TLDS = "blog"
     }
 
     // Bind Dispatcher to Lifecycle
@@ -97,8 +99,12 @@ class DomainSuggestionsViewModel @Inject constructor(
     private fun fetchSuggestions() {
         suggestions = ListState.Loading(suggestions)
 
-        val suggestDomainsPayload =
-                SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
+        val suggestDomainsPayload = if (SiteUtils.onBloggerPlan(site)) {
+            SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, BLOG_DOMAIN_TLDS)
+        } else {
+            SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT, false)
+        }
+
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
 
         // Reset the selected suggestion, if list is updated

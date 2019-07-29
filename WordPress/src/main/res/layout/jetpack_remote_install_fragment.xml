@@ -26,7 +26,7 @@
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:contentDescription="@string/content_description_people_looking_charts"
                 android:src="@drawable/ic_plans_white_24dp"
-                tools:tint="@color/jetpack"/>
+                tools:tint="@color/jetpack_green_50"/>
 
             <TextView
                 android:id="@+id/jetpack_install_title"
