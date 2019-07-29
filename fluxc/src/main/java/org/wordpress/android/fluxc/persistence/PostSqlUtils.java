@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.content.ContentValues;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
+import com.yarolegovich.wellsql.mapper.InsertMapper;
 
 import org.wordpress.android.fluxc.model.LocalOrRemoteId;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
@@ -20,6 +22,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -258,6 +261,25 @@ public class PostSqlUtils {
                 .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
                 .endGroup().endWhere()
                 .getAsCursor().getCount();
+    }
+
+    public int updatePostsAutoSave(SiteModel site, final PostRemoteAutoSaveModel autoSaveModel) {
+        return WellSql.update(PostModel.class)
+               .where().beginGroup()
+               .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
+               .equals(PostModelTable.REMOTE_POST_ID, autoSaveModel.getRemotePostId())
+               .endGroup().endWhere()
+               .put(autoSaveModel, new InsertMapper<PostRemoteAutoSaveModel>() {
+                   @Override
+                   public ContentValues toCv(PostRemoteAutoSaveModel item) {
+                       ContentValues cv = new ContentValues();
+                       cv.put(PostModelTable.AUTO_SAVE_REVISION_ID, autoSaveModel.getRevisionId());
+                       cv.put(PostModelTable.AUTO_SAVE_MODIFIED, autoSaveModel.getModified());
+                       cv.put(PostModelTable.AUTO_SAVE_PREVIEW_URL, autoSaveModel.getPreviewUrl());
+                       cv.put(PostModelTable.REMOTE_AUTO_SAVE_MODIFIED, autoSaveModel.getModified());
+                       return cv;
+                   }
+               }).execute();
     }
 
     public void insertOrUpdateLocalRevision(LocalRevisionModel revision, List<LocalDiffModel> diffs) {

@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 79;
+        return 80;
     }
 
     @Override
@@ -555,7 +555,17 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 74:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
+
+
+
+
+                // TODO DO NOT MERGE!!!! `remote-autosave-branch` removed db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;"); which was already released
+
+
+
+
+
+
                 db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
                 oldVersion++;
             case 75:
@@ -576,6 +586,13 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 78:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
+                oldVersion++;
+            case 79:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REMOTE_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_PREVIEW_URL TEXT");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
@@ -624,6 +641,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
 
+    @SuppressWarnings({"MethodLength"})
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {

@@ -80,6 +80,7 @@
 
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
+/sites/$site/posts/$post_ID/autosave/
 /sites/$site/posts/$post_ID/delete/
 /sites/$site/posts/$post_ID/restore/
 /sites/$site/posts/$post_ID/replies/new

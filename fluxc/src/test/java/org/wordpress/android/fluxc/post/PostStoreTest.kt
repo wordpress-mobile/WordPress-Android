@@ -233,12 +233,14 @@ class PostStoreTest {
         post.remotePostId = 1
         post.status = postStatus.toString()
         post.setIsLocallyChanged(isLocallyChanged)
+        post.autoSaveModified = "1955-11-05T14:15:00Z"
         return post
     }
 
     private fun createRemotePostListItem(
         post: PostModel,
         status: String = post.status,
-        lastModified: String = post.lastModified
-    ) = PostListItem(post.remotePostId, lastModified, status)
+        lastModified: String = post.lastModified,
+        autoSaveModified: String = post.autoSaveModified
+    ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified)
 }
