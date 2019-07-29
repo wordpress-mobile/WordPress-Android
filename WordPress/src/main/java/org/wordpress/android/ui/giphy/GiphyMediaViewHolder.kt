@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.giphy
 
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,6 +67,9 @@ class GiphyMediaViewHolder(
                 val mediaViewModel = mediaViewModel ?: return@setOnLongClickListener false
                 onLongClickListener(mediaViewModel)
                 true
+            }
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                setOnContextClickListener { it.performLongClick() }
             }
         }
     }
