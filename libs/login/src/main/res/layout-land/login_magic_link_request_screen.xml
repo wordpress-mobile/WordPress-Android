@@ -20,6 +20,7 @@
 
             <ImageView
                 android:id="@+id/gravatar"
+                android:importantForAccessibility="no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

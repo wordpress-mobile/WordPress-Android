@@ -429,7 +429,10 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 // Not a WordPress site
                 showError(R.string.enter_wordpress_site);
             } else {
-                mLoginListener.gotConnectedSiteInfo(event.info.url, hasJetpack);
+                mLoginListener.gotConnectedSiteInfo(
+                        event.info.url,
+                        event.info.urlAfterRedirects,
+                        hasJetpack);
             }
         }
     }
