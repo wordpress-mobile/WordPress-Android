@@ -214,7 +214,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                R.color.accent_40
+                R.color.accent_30
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -263,7 +263,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                R.color.accent_40
+                R.color.accent_30
         )
         dataSet.setDrawValues(false)
         dataSet.highLightAlpha = 51
