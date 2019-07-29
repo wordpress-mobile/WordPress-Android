@@ -140,6 +140,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         imageView: ImageView,
         imageType: ImageType,
         imgUrl: String,
+        scaleType: ScaleType = CENTER,
         thumbnailUrl: String? = null,
         requestListener: RequestListener<Drawable>
     ) {
@@ -150,6 +151,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
+                .applyScaleType(scaleType)
                 .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()

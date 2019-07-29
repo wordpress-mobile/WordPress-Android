@@ -5,6 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginBottom="24dp"
+              android:contentDescription="@string/stats_bar_chart_content_description"
               android:orientation="vertical"
               android:paddingEnd="@dimen/margin_extra_large"
               android:paddingStart="@dimen/margin_key">
@@ -24,19 +25,23 @@
 
         <TextView
             android:id="@+id/label_start"
+            style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="January 2019"
-            style="@style/StatsGraphLabel"/>
+            android:importantForAccessibility="no"
+            tools:text="January 2019"/>
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/label_end"
-            tools:text="December 2019"
+            style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/StatsGraphLabel"/>
+            android:importantForAccessibility="no"
+            tools:text="December 2019"/>
     </LinearLayout>
 </LinearLayout>

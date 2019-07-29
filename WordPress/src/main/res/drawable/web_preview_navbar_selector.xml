@@ -2,7 +2,7 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:color="@color/gray_200" android:state_enabled="false"/>
-    <item android:color="@color/grey_600"/>
+    <item android:color="@color/gray_30" android:state_enabled="false"/>
+    <item android:color="@color/gray_60"/>
 
 </selector>

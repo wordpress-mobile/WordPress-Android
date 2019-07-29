@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,7 +37,8 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         OVERVIEW,
         mainDispatcher,
@@ -50,7 +52,12 @@ constructor(
 
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
-                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
+                    ValueItem(
+                            value = 0.toFormattedString(),
+                            unit = R.string.stats_views,
+                            isFirst = true,
+                            contentDescription = resourceProvider.getString(R.string.stats_loading_card)
+                    )
             )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
@@ -115,7 +122,8 @@ constructor(
                             selectedItem,
                             previousItem,
                             uiState.selectedPosition,
-                            isLast = selectedItem == domainModel.dates.last()
+                            isLast = selectedItem == domainModel.dates.last(),
+                            statsGranularity = statsGranularity
                     )
             )
             items.addAll(
@@ -166,7 +174,8 @@ constructor(
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
         private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 OverviewUseCase(
@@ -177,7 +186,8 @@ constructor(
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,
-                        analyticsTracker
+                        analyticsTracker,
+                        resourceProvider
                 )
     }
 }

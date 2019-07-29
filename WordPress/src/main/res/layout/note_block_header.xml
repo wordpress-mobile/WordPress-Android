@@ -43,7 +43,7 @@
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/neutral_700"
+                    android:textColor="@color/neutral_70"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="Bob Ross" />
 
@@ -54,7 +54,7 @@
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textColor="@color/primary_500"
+                    android:textColor="@color/primary_50"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="www.bobross.com" />
 

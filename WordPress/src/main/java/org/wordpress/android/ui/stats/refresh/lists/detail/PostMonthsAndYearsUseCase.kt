@@ -67,14 +67,20 @@ class PostMonthsAndYearsUseCase(
         if (useCaseMode == BLOCK) {
             items.add(Title(R.string.stats_detail_months_and_years))
         }
+        val header = Header(
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+        )
         items.add(
-                Header(
-                        R.string.stats_months_and_years_period_label,
-                        R.string.stats_months_and_years_views_label
-                )
+                header
         )
         val shownYears = domainModel.yearsTotal.sortedByDescending { it.year }.takeLast(itemsToLoad)
-        val yearList = postDetailMapper.mapYears(shownYears, uiState, this::onUiState)
+        val yearList = postDetailMapper.mapYears(
+                shownYears,
+                uiState,
+                header,
+                this::onUiState
+        )
 
         items.addAll(yearList)
         if (useCaseMode == BLOCK && domainModel.yearsTotal.size > itemsToLoad) {

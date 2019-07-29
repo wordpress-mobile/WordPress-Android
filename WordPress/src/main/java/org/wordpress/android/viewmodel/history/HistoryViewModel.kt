@@ -7,9 +7,9 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -18,10 +18,12 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnRevisionsFetched
 import org.wordpress.android.models.Person
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.people.utils.PeopleUtils
@@ -30,6 +32,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
@@ -40,9 +43,11 @@ class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val networkUtils: NetworkUtilsWrapper,
-    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    private val postStore: PostStore,
+    @Named(UI_THREAD) uiDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
-) : ViewModel(), LifecycleOwner {
+) : ScopedViewModel(uiDispatcher), LifecycleOwner {
     enum class HistoryListStatus {
         DONE,
         ERROR,
@@ -65,8 +70,10 @@ class HistoryViewModel @Inject constructor(
     private var isStarted = false
 
     lateinit var revisionsList: ArrayList<Revision>
-    lateinit var post: PostModel
     lateinit var site: SiteModel
+
+    private val _post = MutableLiveData<PostModel?>()
+    val post: LiveData<PostModel?> = _post
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -81,15 +88,18 @@ class HistoryViewModel @Inject constructor(
         })
     }
 
-    fun create(post: PostModel, site: SiteModel) {
+    fun create(localPostId: Int, site: SiteModel) = launch {
         if (isStarted) {
-            return
+            return@launch
         }
 
-        this.revisionsList = ArrayList()
-        this.post = post
-        this.site = site
-        this._revisions.value = emptyList()
+        val post: PostModel? = withContext(bgDispatcher) { postStore.getPostByLocalPostId(localPostId) }
+
+        revisionsList = ArrayList()
+        _revisions.value = emptyList()
+
+        this@HistoryViewModel._post.value = post
+        this@HistoryViewModel.site = site
 
         fetchRevisions()
 
@@ -107,7 +117,10 @@ class HistoryViewModel @Inject constructor(
 
         revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
         _revisions.value = getHistoryListItemsFromRevisionModels(revisions)
-        fetchRevisionAuthorDetails(revisionAuthorsId)
+
+        if (revisionAuthorsId.isNotEmpty()) {
+            fetchRevisionAuthorDetails(revisionAuthorsId)
+        }
     }
 
     private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
@@ -147,10 +160,17 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun fetchRevisions() {
-        _listStatus.value = HistoryListStatus.FETCHING
-        val payload = FetchRevisionsPayload(post, site)
-        uiScope.launch {
-            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+        val post = this.post.value
+
+        if (post != null) {
+            _listStatus.value = HistoryListStatus.FETCHING
+            val payload = FetchRevisionsPayload(post, site)
+            launch {
+                dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+            }
+        } else {
+            _listStatus.value = HistoryListStatus.DONE
+            createRevisionsList(emptyList())
         }
     }
 
@@ -171,7 +191,7 @@ class HistoryViewModel @Inject constructor(
 
         if (revisions.isNotEmpty()) {
             val last = items.last() as Revision
-            val footer = if (post.isPage) {
+            val footer = if (post.value?.isPage == true) {
                 resourceProvider.getString(R.string.history_footer_page, last.formattedDate, last.formattedTime)
             } else {
                 resourceProvider.getString(R.string.history_footer_post, last.formattedDate, last.formattedTime)

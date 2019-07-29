@@ -47,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
@@ -335,6 +336,7 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
                 String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
                 requestEmailValidation(this, email);
             }
+            AnalyticsTracker.track(Stat.AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASED);
             confirmInstallPluginForAutomatedTransfer();
         }
     }
@@ -659,11 +661,11 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(getResources().getColor(R.color.neutral_700));
+            textView.setTextColor(getResources().getColor(R.color.neutral_70));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
-            textView.setTextColor(getResources().getColor(R.color.neutral_200));
+            textView.setTextColor(getResources().getColor(R.color.neutral_20));
             textView.setText(R.string.plugin_empty_text);
         }
     }

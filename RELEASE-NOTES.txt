@@ -1,6 +1,21 @@
+13.0
+-----
+* Improve accessibility in the Stats
+* Block editor: Adding a block from the post title now shows the add block here indicator.
+* Block editor: Deselect post title any time a block is added
+* Block editor: Fix loss of center alignment in image captions
+ 
 12.9
 -----
+* Block editor: Video block is now available in the Inserter
+* Block editor: Tapping on an empty editor area will create a new paragraph block
+* Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
+* Block editor: Adding a block from the Post Title now inserts the block at the top of the Post.
  
+* Setting featured image on a post doesn't require network connection
+* Full screen comments view
+* Added Domain Registration functionality for customers with unclaimed domain credit
+
 12.8
 -----
 * Add percentage bar to following Stats cards - Posts and Pages, Authors, Tags and Categories
@@ -9,6 +24,10 @@
 * Block Editor: Remove editable empty line after list on the List block
 * Block Editor: Performance improvements on rich text editing
 * Add All-time, Today, Weekly and Minified widgets
+
+12.7.1
+------
+* Fix issue where local draft with "Publish" status got automatically published
 
 12.7
 -----

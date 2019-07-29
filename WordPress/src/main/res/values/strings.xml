@@ -110,6 +110,7 @@
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
+    <string name="ok">OK</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -838,6 +839,18 @@
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
 
+    <!-- Stats accessibility strings -->
+    <string name="stats_loading_card">Loading selected card data</string>
+    <string name="stats_bar_chart_content_description">Graph of site views.</string>
+    <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_graph_updated">Graph updated.</string>
+    <string name="stats_expand_content_description">Expand</string>
+    <string name="stats_collapse_content_description">Collapse</string>
+    <string name="stats_item_expanded">Item expanded</string>
+    <string name="stats_item_collapsed">Item collapsed</string>
+    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
     <string name="stats_management_try_it_now">Try it now</string>
@@ -1119,6 +1132,8 @@
     <string name="stats_authors">Authors</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_author_views_label">Views</string>
+    <string name="stats_post_label">Post</string>
+    <string name="stats_post_views_label">Views</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
@@ -1306,8 +1321,10 @@
     <string name="post_settings_post_format">Post Format</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
     <string name="post_settings_choose_featured_image">Choose featured image</string>
     <string name="post_settings_remove_featured_image">Remove featured image</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
@@ -1531,7 +1548,10 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1639,7 +1659,6 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d followers</string>
-    <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
@@ -1899,6 +1918,7 @@
     <string name="connecting_account">Connecting account</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -2270,6 +2290,7 @@
     <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
@@ -2291,7 +2312,7 @@
     <string name="login_continue">Continue</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
-    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
@@ -2302,8 +2323,7 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
-    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
-    <string name="login_empty_site_url">Please enter a site address</string>
+    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
@@ -2320,6 +2340,8 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
+    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
+    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
@@ -2666,4 +2688,8 @@
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
+
+    <string name="description_collapse">Collapse</string>
+    <string name="description_expand">Expand</string>
+
 </resources>

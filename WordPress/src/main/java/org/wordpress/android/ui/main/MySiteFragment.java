@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -92,6 +91,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -403,6 +403,7 @@ public class MySiteFragment extends Fragment implements
 
         rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
                 ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
                         DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
             }
@@ -607,12 +608,12 @@ public class MySiteFragment extends Fragment implements
                     countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted));
 
             if (countGrowUncompleted > 0) {
-                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_500_multiple_users_white_40dp);
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(true);
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_neutral_300_multiple_users_white_40dp);
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(false);
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -804,6 +805,7 @@ public class MySiteFragment extends Fragment implements
                 break;
             case RequestCodes.DOMAIN_REGISTRATION:
                 if (resultCode == Activity.RESULT_OK && isAdded() && data != null) {
+                    AnalyticsTracker.track(Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS);
                     String email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL);
                     requestEmailValidation(getContext(), email);
                 }
@@ -1112,7 +1114,7 @@ public class MySiteFragment extends Fragment implements
             case TAG_ADD_SITE_ICON_DIALOG:
             case TAG_CHANGE_SITE_ICON_DIALOG:
                 ActivityLauncher.showPhotoPickerForResult(getActivity(),
-                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite());
+                        MediaBrowserType.SITE_ICON_PICKER, getSelectedSite(), null);
                 break;
             case TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG:
                 // no-op
@@ -1152,8 +1154,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void toggleDomainRegistrationCtaVisibility() {
-        // only show the Domain Registration CTA if domain registration is enabled
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED && mIsDomainCreditAvailable) {
+        if (mIsDomainCreditAvailable) {
             mDomainRegistrationCta.setVisibility(View.VISIBLE);
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);
@@ -1246,9 +1247,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void fetchSitePlans(@Nullable SiteModel site) {
-        if (BuildConfig.DOMAIN_REGISTRATION_ENABLED) {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
-        }
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

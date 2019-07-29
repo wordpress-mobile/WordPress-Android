@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!-- Clear text traffic is required for communication with self hosted site without SSL -->
+    <!-- The default configuration for apps targeting Android 7.0 (API level 24) to Android 8.1 (API level 27) is as follows:  -->
+    <!-- https://developer.android.com/training/articles/security-config#CleartextTrafficPermitted -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
     <debug-overrides>
         <trust-anchors>
             <!-- Trust user added certificate authorities while debuggable only -->
