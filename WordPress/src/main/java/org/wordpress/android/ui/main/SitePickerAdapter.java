@@ -5,10 +5,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -300,6 +303,14 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return false;
                 }
             });
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                holder.itemView.setOnContextClickListener(new OnContextClickListener() {
+                    @Override
+                    public boolean onContextClick(View v) {
+                        return v.performLongClick();
+                    }
+                });
+            }
         }
 
         if (mIsSingleItemSelectionEnabled) {
