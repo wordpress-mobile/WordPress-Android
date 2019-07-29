@@ -152,10 +152,9 @@ open class UploadStarter @Inject constructor(
                 }
                 .toList()
                 .forEach { post ->
-                    var action: DummyEnum;
-                    action = when {
-                        post.isLocalDraft -> UPLOAD_AS_DRAFT
+                    val action: DummyEnum = when {
                         post.contentHashcode() == post.changesConfirmedContentHashcode -> AUTOUPLOAD
+                        post.isLocalDraft -> UPLOAD_AS_DRAFT
                         else -> REMOTE_AUTO_SAVE
                     }
                     AppLog.d(AppLog.T.POSTS, "Title: ${post.title}, LocalStatus: ${post.status}, Action:$action")
