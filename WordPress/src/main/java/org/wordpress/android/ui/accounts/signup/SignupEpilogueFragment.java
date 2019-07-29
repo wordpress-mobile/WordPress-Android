@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -174,6 +177,14 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 return true;
             }
         });
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            headerAvatarLayout.setOnContextClickListener(new OnContextClickListener() {
+                @Override
+                public boolean onContextClick(View v) {
+                    return v.performLongClick();
+                }
+            });
+        }
         mHeaderAvatarAdd = rootView.findViewById(R.id.signup_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
         mHeaderAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);
