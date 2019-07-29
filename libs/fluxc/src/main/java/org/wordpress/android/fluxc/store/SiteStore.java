@@ -1494,6 +1494,7 @@ public class SiteStore extends Store {
 
     private void fetchSite(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
+            AppLog.d(T.API, "aggiorno il sito con local id " + site.getId());
             mSiteRestClient.fetchSite(site);
         } else {
             mSiteXMLRPCClient.fetchSite(site);
@@ -1532,10 +1533,10 @@ public class SiteStore extends Store {
                 SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
                 if (freshSiteFromDB != null) {
                     AppLog.d(T.API, "impostato il vecchio valore per editor mobile: " + freshSiteFromDB.getMobileEditor());
+                    siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
                 } else {
                     AppLog.d(T.API, "Il sito non era stato trovato " + siteModel.getUrl());
                 }
-                siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
                 event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
