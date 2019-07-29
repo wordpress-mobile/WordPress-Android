@@ -3,8 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,7 +12,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnContextClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -69,6 +66,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -206,14 +204,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 return true;
             }
         });
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            mSubmitReplyBtn.setOnContextClickListener(new OnContextClickListener() {
-                @Override
-                public boolean onContextClick(View v) {
-                    return v.performLongClick();
-                }
-            });
-        }
+        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -290,14 +281,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 return true;
             }
         });
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            buttonExpand.setOnContextClickListener(new OnContextClickListener() {
-                @Override
-                public boolean onContextClick(View v) {
-                    return v.performLongClick();
-                }
-            });
-        }
+        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {

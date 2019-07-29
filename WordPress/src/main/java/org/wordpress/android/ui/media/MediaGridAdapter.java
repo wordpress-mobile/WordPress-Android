@@ -4,14 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -37,6 +34,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -334,14 +332,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     return true;
                 }
             });
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                itemView.setOnContextClickListener(new OnContextClickListener() {
-                    @Override
-                    public boolean onContextClick(View v) {
-                        return v.performLongClick();
-                    }
-                });
-            }
+            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
 
             mSelectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override

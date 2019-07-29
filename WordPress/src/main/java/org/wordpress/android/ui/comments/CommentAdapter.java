@@ -2,14 +2,11 @@ package org.wordpress.android.ui.comments;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -109,13 +107,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                itemView.setOnContextClickListener(new OnContextClickListener() {
-                    @Override public boolean onContextClick(View v) {
-                        return v.performLongClick();
-                    }
-                });
-            }
+            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
         }
 
         @Override

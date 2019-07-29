@@ -3,8 +3,6 @@ package org.wordpress.android.ui.stockmedia;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
@@ -12,7 +10,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnContextClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -59,6 +56,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -764,14 +762,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     return true;
                 }
             });
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                mImageView.setOnContextClickListener(new OnContextClickListener() {
-                    @Override
-                    public boolean onContextClick(View v) {
-                        return v.performLongClick();
-                    }
-                });
-            }
+            ViewUtilsKt.redirectContextClickToLongPressListener(mImageView);
         }
     }
 

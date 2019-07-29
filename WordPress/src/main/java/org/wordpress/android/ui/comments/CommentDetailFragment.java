@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -17,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnContextClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -92,6 +89,7 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -251,6 +249,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onDestroy();
     }
 
+    // touching the file resulted in the MethodLength, it's suppressed until we get time to refactor this method
+    @SuppressWarnings("checkstyle:MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
@@ -295,14 +295,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return true;
             }
         });
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            mSubmitReplyBtn.setOnContextClickListener(new OnContextClickListener() {
-                @Override
-                public boolean onContextClick(View v) {
-                    return v.performLongClick();
-                }
-            });
-        }
+        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.addTextChangedListener(new TextWatcher() {
@@ -371,14 +364,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return true;
             }
         });
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            buttonExpand.setOnContextClickListener(new OnContextClickListener() {
-                @Override
-                public boolean onContextClick(View v) {
-                    return v.performLongClick();
-                }
-            });
-        }
+        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
         setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()

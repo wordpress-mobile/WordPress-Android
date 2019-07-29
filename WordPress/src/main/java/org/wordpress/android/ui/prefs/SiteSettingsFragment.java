@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -30,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnContextClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -82,6 +79,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -1590,14 +1588,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return true;
             }
         });
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            button.setOnContextClickListener(new OnContextClickListener() {
-                @Override
-                public boolean onContextClick(View v) {
-                    return v.performLongClick();
-                }
-            });
-        }
+        ViewUtilsKt.redirectContextClickToLongPressListener(button);
 
         return view;
     }

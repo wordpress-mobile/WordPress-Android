@@ -3,8 +3,6 @@ package org.wordpress.android.ui.pages
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -49,6 +47,7 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -162,9 +161,7 @@ class PagesFragment : Fragment() {
             Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            newPageButton.setOnContextClickListener { it.performLongClick() }
-        }
+        newPageButton.redirectContextClickToLongPressListener()
 
         pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
