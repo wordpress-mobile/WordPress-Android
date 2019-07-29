@@ -52,6 +52,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private double mLatitude = PostLocation.INVALID_LATITUDE;
     @Column private double mLongitude = PostLocation.INVALID_LONGITUDE;
 
+    @Column private long mAuthorId;
+    @Column private String mAuthorDisplayName;
+
     /**
      * This field stores a hashcode value of the post content when the user confirmed making the changes visible to
      * the users (Publish/Submit/Update/Schedule).
@@ -286,6 +289,22 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mLongitude = longitude;
     }
 
+    public long getAuthorId() {
+        return mAuthorId;
+    }
+
+    public void setAuthorId(long authorId) {
+        this.mAuthorId = authorId;
+    }
+
+    public String getAuthorDisplayName() {
+        return mAuthorDisplayName;
+    }
+
+    public void setAuthorDisplayName(String authorDisplayName) {
+        mAuthorDisplayName = authorDisplayName;
+    }
+
     public int getChangesConfirmedContentHashcode() {
         return mChangesConfirmedContentHashcode;
     }
@@ -386,6 +405,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         return getId() == otherPost.getId() && getLocalSiteId() == otherPost.getLocalSiteId()
                 && getRemoteSiteId() == otherPost.getRemoteSiteId() && getRemotePostId() == otherPost.getRemotePostId()
                 && getFeaturedImageId() == otherPost.getFeaturedImageId()
+                && getAuthorId() == otherPost.getAuthorId()
                 && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
                 && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
                 && isPage() == otherPost.isPage()
@@ -407,6 +427,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
+                && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
