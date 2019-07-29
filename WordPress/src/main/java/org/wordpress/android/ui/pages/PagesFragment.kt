@@ -3,6 +3,8 @@ package org.wordpress.android.ui.pages
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
@@ -159,6 +161,10 @@ class PagesFragment : Fragment() {
 
             Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
+        }
+
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            newPageButton.setOnContextClickListener { it.performLongClick() }
         }
 
         pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
