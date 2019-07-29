@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -1129,6 +1130,32 @@ public class WPMainActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
+        // "Reload" selected site from the db
+        // It would be better if the OnSiteChanged provided the list of changed sites.
+        if (getSelectedSite() == null && mSiteStore.hasSite()) {
+            setSelectedSite(mSiteStore.getSites().get(0));
+        }
+        if (getSelectedSite() == null) {
+            return;
+        }
+
+        SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
+        if (site != null) {
+            mSelectedSite = site;
+        }
+        if (getMySiteFragment() != null) {
+            getMySiteFragment().onSiteChanged(site);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteEditorsChanged(OnSiteEditorsChanged event) {
+        // When the site editor details are loaded from the remote backend, make sure to set a default if empty
+        if (event.isError()) {
+            return;
+        }
+
         // "Reload" selected site from the db
         // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
