@@ -208,6 +208,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                 responseMedia.setId(media.getId());
                                 responseMedia.setLocalSiteId(site.getId());
                                 responseMedia.setLocalPostId(media.getLocalPostId());
+                                responseMedia.setMarkedLocallyAsFeatured(media.getMarkedLocallyAsFeatured());
 
                                 notifyMediaUploaded(responseMedia, null);
                             }
@@ -319,6 +320,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                             responseMedia.setId(media.getId());
                             responseMedia.setLocalSiteId(site.getId());
                             responseMedia.setLocalPostId(media.getLocalPostId());
+                            responseMedia.setMarkedLocallyAsFeatured(media.getMarkedLocallyAsFeatured());
 
                             if (isFreshUpload) {
                                 notifyMediaUploaded(responseMedia, null);
