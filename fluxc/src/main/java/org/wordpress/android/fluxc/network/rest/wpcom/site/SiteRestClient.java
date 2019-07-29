@@ -183,6 +183,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onResponse(SiteWPComRestResponse response) {
                         if (response != null) {
                             SiteModel newSite = siteResponseToSiteModel(response);
+                            newSite.setId(site.getId());
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite));
                         } else {
                             AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
