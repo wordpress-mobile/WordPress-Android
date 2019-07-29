@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,8 @@ public class SiteUtils {
      * @param dispatcher FluxC dispatcher
      * @param siteStore  SiteStore
      */
-    public static void migrateAppWideMobileEditorPreferenceToRemote(final Dispatcher dispatcher,
+    public static void migrateAppWideMobileEditorPreferenceToRemote(final Context context,
+                                                                    final Dispatcher dispatcher,
                                                                     final SiteStore siteStore) {
         if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
             return;
@@ -43,8 +45,11 @@ public class SiteUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // be optimistic and remove the old app-wide preference before we start the calls
-                AppPrefs.removeAppWideEditorPreference();
+                // Be optimistic and remove the old app-wide preference before we start the calls
+                // Only do this when the network connection is available
+                if (NetworkUtils.isNetworkAvailable(context)) {
+                    AppPrefs.removeAppWideEditorPreference();
+                }
                 for (SiteModel currentSite : sites) {
                     if (oldAppWidePreferenceValue) {
                         enableBlockEditor(dispatcher, currentSite);

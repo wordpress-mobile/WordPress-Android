@@ -860,9 +860,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // making ANY modification to this stat please refer to: p4qSXL-35X-p2
             AnalyticsTracker.track(Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
-                // Let's migrate the old editor preference if available in AppPrefs to the remote backend
-                SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
-
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
                     NotificationsUpdateServiceStarter.startService(getContext());
@@ -881,6 +878,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 mUpdateSelectedSite.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
+
+            // Let's migrate the old editor preference if available in AppPrefs to the remote backend
+            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mContext, mDispatcher, mSiteStore);
 
             if (mFirstActivityResumed) {
                 deferredInit();
