@@ -146,7 +146,6 @@ class InsightsStoreTest {
                 mapper,
                 Unconfined
         )
-        whenever(timeProvider.currentDate).thenReturn(currentDate)
     }
 
     @Test

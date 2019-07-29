@@ -5,7 +5,6 @@ import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.DateTimeUtils
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.test.assertEquals
@@ -178,12 +177,8 @@ class SiteUtilsTest {
 
     @Test
     fun `returns correct timezone`() {
-        val calendar = Calendar.getInstance(Locale.UK)
-        calendar.set(2018, 10, 10, 0, 15)
+        val timeZone = SiteUtils.getNormalizedTimezone("+10")
 
-        calendar.timeZone = SiteUtils.getNormalizedTimezone("-5")
-
-        Assertions.assertThat(calendar.get(Calendar.DAY_OF_MONTH)).isEqualTo(9)
-        Assertions.assertThat(calendar.get(Calendar.HOUR_OF_DAY)).isEqualTo(23)
+        Assertions.assertThat(timeZone.displayName).isEqualTo("GMT+10:00")
     }
 }
