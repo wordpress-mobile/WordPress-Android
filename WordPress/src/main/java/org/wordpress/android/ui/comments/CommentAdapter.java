@@ -109,7 +109,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            
             if (VERSION.SDK_INT >= VERSION_CODES.M) {
                 itemView.setOnContextClickListener(new OnContextClickListener() {
                     @Override public boolean onContextClick(View v) {

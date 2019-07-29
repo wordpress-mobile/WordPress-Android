@@ -162,7 +162,6 @@ class PagesFragment : Fragment() {
             Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
-
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             newPageButton.setOnContextClickListener { it.performLongClick() }
         }

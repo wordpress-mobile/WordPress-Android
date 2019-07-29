@@ -334,7 +334,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     return true;
                 }
             });
-
             if (VERSION.SDK_INT >= VERSION_CODES.M) {
                 itemView.setOnContextClickListener(new OnContextClickListener() {
                     @Override
