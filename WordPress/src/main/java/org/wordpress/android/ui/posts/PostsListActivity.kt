@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.Menu
@@ -165,6 +167,9 @@ class PostsListActivity : AppCompatActivity(),
 
             Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
+        }
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            fab.setOnContextClickListener { it.performLongClick() }
         }
     }
 
