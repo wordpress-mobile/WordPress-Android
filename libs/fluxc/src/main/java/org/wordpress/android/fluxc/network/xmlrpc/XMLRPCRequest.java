@@ -30,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.List;
 
+
 // TODO: Would be great to use generics / return POJO or model direclty (see GSON code?)
 public class XMLRPCRequest extends BaseRequest<Object> {
     private static final String PROTOCOL_CHARSET = "utf-8";
