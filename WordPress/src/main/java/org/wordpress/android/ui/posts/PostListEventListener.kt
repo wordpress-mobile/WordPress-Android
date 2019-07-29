@@ -10,10 +10,11 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemovePost
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RestorePost
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
@@ -31,9 +32,6 @@ import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
-import org.wordpress.android.fluxc.generated.UploadActionBuilder
-import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -58,6 +56,25 @@ class PostListEventListener(
         dispatcher.register(this)
         EventBus.getDefault().register(this)
         lifecycle.addObserver(this)
+    }
+
+    private fun handleRemoteAutoSave(post: PostModel, isError: Boolean) {
+        if (isError || hasRemoteAutoSavePreviewError.invoke()) {
+            triggerPreviewStateUpdate(
+                    PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR,
+                    PostInfoType.PostNoInfo
+            )
+            triggerPostUploadAction.invoke(PostRemotePreviewSnackbarError(R.string.remote_preview_operation_error))
+        } else {
+            triggerPreviewStateUpdate(
+                    PostListRemotePreviewState.PREVIEWING,
+                    PostInfoType.PostInfo(post = post, hasError = isError)
+            )
+        }
+        uploadStatusChanged(post.id)
+        if (!isError) {
+            handlePostUploadedWithoutError.invoke(LocalId(post.id))
+        }
     }
 
     /**
@@ -116,13 +133,8 @@ class PostListEventListener(
                     if (event.isError) {
                         AppLog.d(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
                                 event.error.type + " - " + event.error.message)
-                        triggerPreviewStateUpdate(
-                                PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR,
-                                PostInfoType.PostNoInfo
-                        )
                     }
-                    val payload = RemotePostPayload(post, site)
-                    dispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload))
+                    handleRemoteAutoSave(post, event.isError)
                 }
             }
         }
@@ -151,20 +163,7 @@ class PostListEventListener(
             }
 
             if (isRemotePreviewingFromPostsList.invoke()) {
-                if (event.isError || hasRemoteAutoSavePreviewError.invoke()) {
-                    triggerPreviewStateUpdate(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
-                    triggerPostUploadAction.invoke(
-                            PostRemotePreviewSnackbarError(R.string.remote_preview_operation_error)
-                    )
-                } else {
-                    triggerPreviewStateUpdate(
-                            PostListRemotePreviewState.PREVIEWING,
-                            PostInfoType.PostInfo(
-                                    post = event.post,
-                                    hasError = event.isError
-                            )
-                    )
-                }
+                handleRemoteAutoSave(event.post, event.isError)
             }
         }
     }

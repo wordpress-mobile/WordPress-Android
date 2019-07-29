@@ -34,7 +34,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,12 +47,9 @@ import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -249,8 +245,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
-    private static final int PAGE_PREVIEW = 2;
-    private static final int PAGE_HISTORY = 3;
+    private static final int PAGE_HISTORY = 2;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_PUBLISH_DIALOG_TAG = "ASYNC_PROMO_PUBLISH_DIALOG_TAG";
@@ -311,8 +306,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
-    private EditPostPreviewFragment mEditPostPreviewFragment;
-
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
     private ProgressDialog mProgressDialog;
@@ -395,10 +388,10 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject QuickStartStore mQuickStartStore;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ImageManager mImageManager;
-    @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
+    @Inject FeaturedImageHelper mFeaturedImageHelper;
 
     private SiteModel mSite;
 
@@ -622,24 +615,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                     hidePhotoPicker();
-                } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    hidePhotoPicker();
-                    savePostAsync(new AfterSavePostListener() {
-                        @Override
-                        public void onPostSave() {
-                            if (mEditPostPreviewFragment != null) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     hidePhotoPicker();
@@ -1452,26 +1427,18 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
-                if (mPost.isPage()) {
-                    mViewPager.setCurrentItem(PAGE_PREVIEW);
-                } else {
-                    PreviewLogicOperationResult opResult =
-                            mRemotePreviewLogicHelper.runPostPreviewLogic(
-                            this,
-                            mSite,
-                            mPost,
-                            getEditPostActivityStrategyFunctions()
-                    );
-
-                    if (
-                            opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
-                            || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
-                            || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
-                    ) {
-                        return false;
-                    } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
-                        updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
-                    }
+                PreviewLogicOperationResult opResult = mRemotePreviewLogicHelper.runPostPreviewLogic(
+                        this,
+                        mSite,
+                        mPost,
+                        getEditPostActivityStrategyFunctions());
+                if (opResult == PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
+                    || opResult == PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
+                    || opResult == PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
+                ) {
+                    return false;
+                } else if (opResult == PreviewLogicOperationResult.OPENING_PREVIEW) {
+                    updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
                 }
             } else if (itemId == R.id.menu_post_settings) {
                 if (mEditPostSettingsFragment != null) {
@@ -2471,9 +2438,9 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 4;
+        private static final int NUM_PAGES_EDITOR = 3;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -2481,7 +2448,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         // Enable gutenberg upon opening a block based post
@@ -2500,12 +2467,11 @@ public class EditPostActivity extends AppCompatActivity implements
                     } else {
                         return new LegacyEditorFragment();
                     }
-                case 1:
+                case PAGE_SETTINGS:
                     return EditPostSettingsFragment.newInstance();
-                case 3:
-                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
+                case PAGE_HISTORY:
                 default:
-                    return EditPostPreviewFragment.newInstance(mPost, mSite);
+                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
             }
         }
 
@@ -2513,7 +2479,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
@@ -2540,11 +2506,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         reattachUploadingMediaForAztec();
                     }
                     break;
-                case 1:
+                case PAGE_SETTINGS:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
-                    break;
-                case 2:
-                    mEditPostPreviewFragment = (EditPostPreviewFragment) fragment;
                     break;
             }
             return fragment;
@@ -4164,14 +4127,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
             }
         } else if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
-            if (!event.isError()) {
-                mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-            } else {
+            if (event.isError()) {
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
-                updatePostLoadingAndDialogState(PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR, mPost);
             }
-            RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-            mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+            mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+            handleRemoteAutoSave(event.isError(), mPost);
         }
     }
 
@@ -4187,16 +4147,37 @@ public class EditPostActivity extends AppCompatActivity implements
                 || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
     }
 
-    private void updatePostOnSuccessfulUpload(@NotNull OnPostUploaded event, PostModel post) {
-        if (!event.isError()) {
-            mPost = post;
-            mIsNewPost = false;
-            invalidateOptionsMenu();
-        }
+    private void updatePostOnSuccessfulUpload(PostModel post) {
+        mPost = post;
+        mIsNewPost = false;
+        invalidateOptionsMenu();
     }
 
     private boolean isRemoteAutoSaveError() {
         return mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
+    }
+
+    private void handleRemoteAutoSave(boolean isError, PostModel post) {
+        // We are in the process of remote previewing a post from the editor
+        if (!isError && isUploadingPostForPreview()) {
+            // We were uploading post for preview and we got no error:
+            // update post status and preview it in the internal browser
+            updatePostOnSuccessfulUpload(post);
+            ActivityLauncher.previewPostOrPageForResult(
+                    EditPostActivity.this,
+                    mSite,
+                    post,
+                    mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
+                            ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
+                            : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                                                       );
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
+        } else if (isError || isRemoteAutoSaveError()) {
+            // We got an error from the uploading or from the remote auto save of a post: show snackbar error
+            updatePostLoadingAndDialogState(PostLoadingState.NONE);
+            UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
+                    getString(R.string.remote_preview_operation_error));
+        }
     }
 
     @SuppressWarnings("unused")
@@ -4209,28 +4190,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 View snackbarAttachView = findViewById(R.id.editor_activity);
                 UploadUtils.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
                         event.isError() ? event.error.message : null, getSite(), mDispatcher);
-                updatePostOnSuccessfulUpload(event, post);
-            } else {
-                // We are in the process of remote previewing a post from the editor
-                if (!event.isError() && isUploadingPostForPreview()) {
-                    // We were uploading post for preview and we got no error:
-                    // update post status and preview it in the internal browser
-                    updatePostOnSuccessfulUpload(event, post);
-                    ActivityLauncher.previewPostOrPageForResult(
-                            EditPostActivity.this,
-                            mSite,
-                            post,
-                            mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                                    ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
-                                    : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                            );
-                    updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mPost);
-                } else if (event.isError() || isRemoteAutoSaveError()) {
-                    // We got an error from the uploading or from the remote auto save of a post: show snackbar error
-                    updatePostLoadingAndDialogState(PostLoadingState.NONE);
-                    UploadUtils.showSnackbarError(findViewById(R.id.editor_activity),
-                            getString(R.string.remote_preview_operation_error));
+                if (!event.isError()) {
+                    updatePostOnSuccessfulUpload(post);
                 }
+            } else {
+                handleRemoteAutoSave(event.isError(), post);
             }
         }
     }

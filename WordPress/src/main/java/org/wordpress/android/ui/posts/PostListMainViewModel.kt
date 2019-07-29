@@ -440,39 +440,6 @@ class PostListMainViewModel @Inject constructor(
         updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
     }
 
-    private fun managePreviewStateTransitions(
-        newState: PostListRemotePreviewState,
-        prevState: PostListRemotePreviewState?,
-        postInfo: PostInfoType
-    ) = when (newState) {
-        PostListRemotePreviewState.PREVIEWING -> {
-            prevState?.let {
-                if (it == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW ||
-                        it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW) {
-                    (postInfo as? PostInfoType.PostInfo)?.let { info ->
-                        info.post.let { post ->
-                            postActionHandler.handleRemotePreview(
-                                    localPostId = post.id,
-                                    remotePreviewType = if (prevState ==
-                                            PostListRemotePreviewState.UPLOADING_FOR_PREVIEW) {
-                                        RemotePreviewType.REMOTE_PREVIEW
-                                    } else {
-                                        RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                                    }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-        PostListRemotePreviewState.NONE,
-        PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
-        PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
-        PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR -> {
-            // nothing to do
-        }
-    }
-
     private fun updatePreviewAndDialogState(newState: PostListRemotePreviewState, postInfo: PostInfoType) {
         // We need only transitions, so...
         if (_previewState.value == newState) return
@@ -487,7 +454,7 @@ class PostListMainViewModel @Inject constructor(
         _previewState.postValue(newState)
 
         // take care of exit actions on state transition
-        managePreviewStateTransitions(newState, prevState, postInfo)
+        managePreviewStateTransitions(newState, prevState, postInfo, postActionHandler::handleRemotePreview)
     }
 
     fun toggleViewLayout() {

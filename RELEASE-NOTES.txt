@@ -1,15 +1,15 @@
 13.0
 -----
- 
-12.9
-* Add Remote Preview support for Drafts, Published and Scheduled posts with local changes
+* Add Remote Preview support for posts and pages.
+* Post List: Trashed post must now be restored before edit or preview
 
+12.9
 -----
 * Block editor: Video block is now available in the Inserter
 * Block editor: Tapping on an empty editor area will create a new paragraph block
 * Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
 * Block editor: Adding a block from the Post Title now inserts the block at the top of the Post.
- 
+
 * Setting featured image on a post doesn't require network connection
 * Full screen comments view
 * Added Domain Registration functionality for customers with unclaimed domain credit

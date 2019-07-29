@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.pages
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -30,6 +31,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -42,11 +44,20 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.PostInfoType
+import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PostListRemotePreviewState
+import org.wordpress.android.ui.posts.ProgressDialogHelper
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
+import org.wordpress.android.ui.posts.getUploadStrategyFunctions
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -72,7 +83,11 @@ class PagesFragment : Fragment() {
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var quickStartStore: QuickStartStore
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     private var quickStartEvent: QuickStartEvent? = null
+    private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
 
@@ -249,6 +264,44 @@ class PagesFragment : Fragment() {
         viewModel.start(site)
     }
 
+    private fun showToast(toastMessageHolder: ToastMessageHolder) {
+        context?.let {
+            toastMessageHolder.show(it)
+        }
+    }
+
+    private fun previewPage(activity: FragmentActivity, page: PageModel) {
+        val post = postStore.getPostByLocalPostId(page.pageId)
+        val action = PreviewPost(
+                site = viewModel.site,
+                post = post,
+                triggerPreviewStateUpdate = viewModel::updatePreviewAndDialogState,
+                showToast = this::showToast,
+                messageMediaUploading = ToastMessageHolder(
+                        string.editor_toast_uploading_please_wait,
+                        SHORT
+                )
+        )
+        val helperFunctions = getUploadStrategyFunctions(activity, action)
+        val opResult = remotePreviewLogicHelper.runPostPreviewLogic(
+                activity = activity,
+                site = viewModel.site,
+                post = post,
+                helperFunctions = helperFunctions
+        )
+
+        // TODO: consider to remove this once the modifications related to
+        // https://github.com/wordpress-mobile/WordPress-Android/issues/10106 will be available.
+        // In current implementation only Trashed posts can trigger the below condition but
+        // once the above is implemented should not be possible to trigger below condition anymore.
+        if (opResult == RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW) {
+            action.triggerPreviewStateUpdate.invoke(
+                    PostListRemotePreviewState.PREVIEWING,
+                    PostInfoType.PostNoInfo
+            )
+        }
+    }
+
     private fun setupObservers(activity: FragmentActivity) {
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
@@ -280,7 +333,25 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPagePreview(this, page) }
+            page?.let {
+                previewPage(activity, page)
+            }
+        })
+
+        viewModel.browsePreview.observe(this, Observer { preview ->
+            preview?.let {
+                val post = postStore.getPostByLocalPostId(preview.pageId)
+                ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, post, preview.previewType)
+            }
+        })
+
+        viewModel.previewState.observe(this, Observer {
+            progressDialog = progressDialogHelper.updateProgressDialogState(
+                    activity,
+                    progressDialog,
+                    it.progressDialogUiState,
+                    uiHelpers
+            )
         })
 
         viewModel.setPageParent.observe(this, Observer { page ->

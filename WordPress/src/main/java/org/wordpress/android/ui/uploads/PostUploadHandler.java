@@ -20,6 +20,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -28,6 +30,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -73,6 +77,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
 
@@ -628,6 +633,20 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         finishUpload();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
+    public void onPostChanged(OnPostChanged event) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
+            PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+            sShouldRemoteAutoSavePosts.remove(postLocalId);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
+            mPostUploadNotifier.updateNotificationSuccessForPost(post, site, false);
+            finishUpload();
+        }
     }
 
     /**

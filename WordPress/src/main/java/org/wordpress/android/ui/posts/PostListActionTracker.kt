@@ -24,7 +24,8 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         PostListButtonType.BUTTON_PREVIEW -> "preview"
         PostListButtonType.BUTTON_STATS -> "stats"
         PostListButtonType.BUTTON_TRASH -> "trash"
-        PostListButtonType.BUTTON_DELETE -> "delete"
+        PostListButtonType.BUTTON_DELETE,
+        PostListButtonType.BUTTON_DELETE_PERMANENTLY -> "delete"
         PostListButtonType.BUTTON_PUBLISH -> "publish"
         PostListButtonType.BUTTON_SYNC -> "sync"
         PostListButtonType.BUTTON_MORE -> "more"
