@@ -240,42 +240,33 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     public void remoteAutoSavePost(final @NonNull PostModel post, final @NonNull SiteModel site) {
-        if (PostStatus.fromPost(post) != PostStatus.PUBLISHED && PostStatus.fromPost(post) != PostStatus.SCHEDULED) {
-            // We could use /rest/v1.2 for other post statuses as Calypso does, but we decided to use pushPost(..)
-            // instead as the RemoteAutoSave /rest/v1.2 doesn't create a new revision.
-            PostError postError = new PostError(PostErrorType.UNSUPPORTED_ACTION,
-                            "RemoteAutoSave is supported only for Published/Scheduled posts.");
-            RemoteAutoSavePostPayload payload = new RemoteAutoSavePostPayload(post.getId(), postError);
-            mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
-        } else {
-            String url =
-                    WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).autosave.getUrlV1_1();
+        String url =
+                WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).autosave.getUrlV1_1();
 
-            Map<String, Object> body = postModelToAutoSaveParams(post);
+        Map<String, Object> body = postModelToAutoSaveParams(post);
 
-            final WPComGsonRequest<PostRemoteAutoSaveModel> request = WPComGsonRequest.buildPostRequest(url, body,
-                    PostRemoteAutoSaveModel.class,
-                    new Listener<PostRemoteAutoSaveModel>() {
-                        @Override
-                        public void onResponse(PostRemoteAutoSaveModel response) {
-                            RemoteAutoSavePostPayload payload =
-                                    new RemoteAutoSavePostPayload(post.getId(), response, site);
-                            mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
-                        }
-                    },
-                    new WPComErrorListener() {
-                        @Override
-                        public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                            // Possible non-generic errors: 404 unknown_post (invalid post ID)
-                            PostError postError = new PostError(error.apiError, error.message);
-                            RemoteAutoSavePostPayload payload =
-                                    new RemoteAutoSavePostPayload(post.getId(), postError);
-                            mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
-                        }
+        final WPComGsonRequest<PostRemoteAutoSaveModel> request = WPComGsonRequest.buildPostRequest(url, body,
+                PostRemoteAutoSaveModel.class,
+                new Listener<PostRemoteAutoSaveModel>() {
+                    @Override
+                    public void onResponse(PostRemoteAutoSaveModel response) {
+                        RemoteAutoSavePostPayload payload =
+                                new RemoteAutoSavePostPayload(post.getId(), response, site);
+                        mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
-                                                                                                       );
-            add(request);
-        }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        PostError postError = new PostError(error.apiError, error.message);
+                        RemoteAutoSavePostPayload payload =
+                                new RemoteAutoSavePostPayload(post.getId(), postError);
+                        mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
+                    }
+                }
+                                                                                                   );
+        add(request);
     }
 
     public void deletePost(final @NonNull PostModel post, final @NonNull SiteModel site,
