@@ -13,6 +13,10 @@ const val DATE_FORMAT_DAY = "yyyy-MM-dd"
 
 class StatsUtils
 @Inject constructor(private val currentDateUtils: CurrentDateUtils) {
+    fun getFormattedDate(date: Date? = null): String {
+        return getFormattedDate(date, timeZone = null)
+    }
+
     fun getFormattedDate(date: Date? = null, timeZone: TimeZone? = null): String {
         val dateFormat = SimpleDateFormat(DATE_FORMAT_DAY, Locale.ROOT)
         timeZone?.let {
