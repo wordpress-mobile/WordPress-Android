@@ -122,8 +122,8 @@ public class AnalyticsUtils {
         if (siteLocalId != -1) {
             // Site previously selected, use it
             SiteModel selectedSite = siteStore.getSiteByLocalId(siteLocalId);
-            // If saved site exist, then add info
-            if (selectedSite != null) {
+            // If saved site exist, then add editor info
+            if (selectedSite != null && !TextUtils.isEmpty(selectedSite.getMobileEditor())) {
                 metadata.setGutenbergEnabled(
                         SiteUtils.isBlockEditorDefaultForNewPost(selectedSite));
             }
