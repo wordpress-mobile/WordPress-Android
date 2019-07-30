@@ -85,6 +85,7 @@ class PagesFragment : Fragment() {
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject lateinit var previewStateHelper: PreviewStateHelper
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
@@ -340,8 +341,7 @@ class PagesFragment : Fragment() {
 
         viewModel.browsePreview.observe(this, Observer { preview ->
             preview?.let {
-                val post = postStore.getPostByLocalPostId(preview.pageId)
-                ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, post, preview.previewType)
+                ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, preview.post, preview.previewType)
             }
         })
 

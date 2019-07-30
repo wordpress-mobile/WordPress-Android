@@ -39,7 +39,8 @@ sealed class PostListAction {
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
-    remotePreviewLogicHelper: RemotePreviewLogicHelper
+    remotePreviewLogicHelper: RemotePreviewLogicHelper,
+    previewStateHelper: PreviewStateHelper
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -52,11 +53,12 @@ fun handlePostListAction(
             if (action.post.isPage) {
                 ActivityLauncher.viewPostPreviewForResult(activity, action.site, action.post)
             } else {
+                val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
                 val opResult = remotePreviewLogicHelper.runPostPreviewLogic(
                         activity = activity,
                         site = action.site,
                         post = action.post,
-                        helperFunctions = getUploadStrategyFunctions(activity, action)
+                        helperFunctions = helperFunctions
                 )
 
                 // TODO: consider to remove this once the modifications related to

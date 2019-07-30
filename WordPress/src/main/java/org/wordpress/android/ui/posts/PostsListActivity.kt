@@ -56,6 +56,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject internal lateinit var previewStateHelper: PreviewStateHelper
     @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
 
     private lateinit var site: SiteModel
@@ -212,7 +213,12 @@ class PostsListActivity : AppCompatActivity(),
 
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
-                handlePostListAction(this@PostsListActivity, action, remotePreviewLogicHelper)
+                handlePostListAction(
+                        this@PostsListActivity,
+                        action,
+                        remotePreviewLogicHelper,
+                        previewStateHelper
+                )
             }
         })
         viewModel.updatePostsPager.observe(this, Observer { authorFilter ->

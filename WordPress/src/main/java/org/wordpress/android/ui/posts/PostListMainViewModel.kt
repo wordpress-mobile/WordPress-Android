@@ -71,6 +71,7 @@ class PostListMainViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
     private val postListEventListenerFactory: PostListEventListener.Factory,
+    private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -453,7 +454,12 @@ class PostListMainViewModel @Inject constructor(
         _previewState.postValue(newState)
 
         // take care of exit actions on state transition
-        managePreviewStateTransitions(newState, prevState, postInfo, postActionHandler::handleRemotePreview)
+        previewStateHelper.managePreviewStateTransitions(
+                newState,
+                prevState,
+                postInfo,
+                postActionHandler::handleRemotePreview
+        )
     }
 
     fun toggleViewLayout() {
