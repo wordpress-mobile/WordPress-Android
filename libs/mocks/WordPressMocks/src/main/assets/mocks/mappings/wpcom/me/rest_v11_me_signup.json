@@ -2,7 +2,7 @@
     "scenarioName": "auth",
     "requiredScenarioState": "signed-up",
     "request": {
-        "urlPath": "/rest/v1.1/me/",
+        "urlPattern": "/rest/v1.1/me(/)?($|\\?.*)",
         "method": "GET"
     },
     "response": {
