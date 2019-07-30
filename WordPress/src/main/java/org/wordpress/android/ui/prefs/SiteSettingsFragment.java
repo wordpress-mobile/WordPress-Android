@@ -83,6 +83,7 @@ import org.wordpress.android.util.ValidationUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -741,7 +742,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 SiteUtils.disableBlockEditor(mDispatcher, mSite);
             }
             Map<String, Object> properties = new HashMap<>();
-            properties.put("source", "via-site-settings");
+            properties.put("source", BlockEditorEnabledSource.VIA_SITE_SETTINGS.name());
             AnalyticsUtils.trackWithSiteDetails(
                     ((Boolean) newValue) ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED,
                     mSite, properties);

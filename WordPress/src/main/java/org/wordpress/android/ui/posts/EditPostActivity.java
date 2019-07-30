@@ -161,6 +161,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -1558,7 +1559,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!newSitePopupNeeded) {
                 // Don't track the activation of the block editor on new sites.
                 // The flip to GB happened at site creation time, and the flip is tracked there with proper details
-                properties.put("source", "on-block-post-open");
+                properties.put("source", BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.name());
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite, properties);
             }
             showGutenbergInformativeDialog();

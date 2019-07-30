@@ -70,6 +70,12 @@ public class AnalyticsUtils {
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
 
+    public enum BlockEditorEnabledSource {
+        VIA_SITE_SETTINGS,
+        ON_SITE_CREATION,
+        ON_BLOCK_POST_OPENING
+    }
+
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
                                                  AccountStore mAccountStore,
