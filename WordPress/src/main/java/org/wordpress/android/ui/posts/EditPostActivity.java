@@ -4055,12 +4055,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // this fixes issue with GB editor
         View editorFragmentView = mEditorFragment.getView();
         if (editorFragmentView != null) {
-            mEditorFragment.getView().requestFocus();
+            editorFragmentView.requestFocus();
         }
 
         // this fixes issue with Aztec editor
         if (mEditorFragment instanceof AztecEditorFragment) {
-            ((AztecEditorFragment) mEditorFragment).toggleContentAreaFocus();
+            ((AztecEditorFragment) mEditorFragment).requestContentAreaFocus();
         }
         return super.onMenuOpened(featureId, menu);
     }

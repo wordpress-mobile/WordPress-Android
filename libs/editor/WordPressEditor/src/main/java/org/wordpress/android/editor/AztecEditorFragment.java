@@ -736,8 +736,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    public void toggleContentAreaFocus() {
-        mContentAndSourceContainer.requestFocus();
+    public void requestContentAreaFocus() {
+        if (isAdded() && mContentAndSourceContainer != null) {
+            mContentAndSourceContainer.requestFocus();
+        }
     }
 
     private void toggleHtmlMode() {
