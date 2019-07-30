@@ -134,7 +134,6 @@ Language: th
     <string name="stats_enable_rest_api_in_jetpack">เพื่อดูสถิติของคุณ  ให้เปิดใช้งาน JSON API module ใน Jetpack</string>
     <string name="reader_short_comment_count_multi">%s ความคิดเห็น</string>
     <string name="reader_short_comment_count_one">1 ความคิดเห็น</string>
-    <string name="reader_label_submit_comment">ส่ง</string>
     <string name="reader_hint_comment_on_post">ตอบกลับไปที่เรื่อง….</string>
     <string name="reader_discover_visit_blog">เยี่ยมชม %s</string>
     <string name="reader_discover_attribution_blog">เริ่มต้นเขียนบน %s</string>
