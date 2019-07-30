@@ -280,10 +280,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         buttonTypes.add(BUTTON_EDIT)
         if (canShowPublishButton) {
             buttonTypes.add(
-                    if (!siteHasCapabilitiesToPublish) {
-                        BUTTON_SUBMIT
-                    } else if (canRetryUpload) {
+                    if (canRetryUpload) {
                         BUTTON_RETRY
+                    } else if (!siteHasCapabilitiesToPublish) {
+                        BUTTON_SUBMIT
                     } else if (postStatus == SCHEDULED && isLocallyChanged) {
                         BUTTON_SYNC
                     } else {
