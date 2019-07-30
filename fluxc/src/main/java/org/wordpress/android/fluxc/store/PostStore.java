@@ -712,6 +712,19 @@ public class PostStore extends Store {
                         !post.getLastModified().equals(item.lastModified)
                         || !post.getStatus().equals(item.status)
                         || isAutoSaveChanged;
+
+                /*
+                 * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
+                 * automatically updates the post content and clears autosave object instead of just updating the
+                 * autosave object. Since the app doesn't know the current status in the remote, it can't assume what
+                  * was updated. However, if we know the last modified date is equal to the date we have in local
+                  * autosave object we are sure that our invocation of /autosave updated the post directly.
+                 */
+                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())
+                    && item.autoSaveModified == null) {
+                    isPostChanged = false;
+                }
+
                 if (isPostChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
