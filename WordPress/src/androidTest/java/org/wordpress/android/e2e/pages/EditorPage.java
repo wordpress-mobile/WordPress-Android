@@ -74,8 +74,6 @@ public class EditorPage {
             // Accept alert for media access
             clickOn(onView(withText("LEAVE OFF")).inRoot(isDialog()));
         }
-
-        waitForElementToBeDisplayed(publishButton);
     }
 
     public void openSettings() {
