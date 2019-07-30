@@ -1555,12 +1555,12 @@ public class EditPostActivity extends AppCompatActivity implements
         if ((TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost)
             || newSitePopupNeeded) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
-            Map<String, Object> properties = new HashMap<>();
+
             if (!newSitePopupNeeded) {
                 // Don't track the activation of the block editor on new sites.
                 // The flip to GB happened at site creation time, and the flip is tracked there with proper details
-                properties.put("source", BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.name());
-                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite, properties);
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
+                        BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
             }
             showGutenbergInformativeDialog();
         }

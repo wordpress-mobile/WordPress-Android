@@ -73,7 +73,13 @@ public class AnalyticsUtils {
     public enum BlockEditorEnabledSource {
         VIA_SITE_SETTINGS,
         ON_SITE_CREATION,
-        ON_BLOCK_POST_OPENING
+        ON_BLOCK_POST_OPENING;
+
+        public Map<String, Object> asPropertyMap() {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("source", name().toLowerCase());
+            return properties;
+        }
     }
 
     public static void updateAnalyticsPreference(Context ctx,

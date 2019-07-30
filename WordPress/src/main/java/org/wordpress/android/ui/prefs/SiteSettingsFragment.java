@@ -741,11 +741,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             } else {
                 SiteUtils.disableBlockEditor(mDispatcher, mSite);
             }
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("source", BlockEditorEnabledSource.VIA_SITE_SETTINGS.name());
             AnalyticsUtils.trackWithSiteDetails(
                     ((Boolean) newValue) ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED,
-                    mSite, properties);
+                    mSite, BlockEditorEnabledSource.VIA_SITE_SETTINGS.asPropertyMap());
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else {

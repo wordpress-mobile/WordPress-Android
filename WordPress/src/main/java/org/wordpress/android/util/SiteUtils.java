@@ -19,9 +19,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSou
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
@@ -78,10 +76,8 @@ public class SiteUtils {
         SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
         if (newSiteModel != null) {
             enableBlockEditor(dispatcher, newSiteModel);
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("source", BlockEditorEnabledSource.ON_SITE_CREATION.name());
-
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, newSiteModel, properties);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, newSiteModel,
+                    BlockEditorEnabledSource.ON_SITE_CREATION.asPropertyMap());
             return true;
         }
         return false;
