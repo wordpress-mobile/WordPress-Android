@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 78;
+        return 79;
     }
 
     @Override
@@ -569,6 +569,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 77:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add AUTHOR_ID INTEGER;");
+                db.execSQL("alter table PostModel add AUTHOR_DISPLAY_NAME TEXT;");
+                oldVersion++;
+            case 78:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
@@ -857,7 +862,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "  TOTAL TEXT NOT NULL,\n"
                                + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
-                case 77:
+                case 78:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("CREATE TABLE WCVisitorStatsModel(\n"
                                + "  LOCAL_SITE_ID INTEGER,\n"
