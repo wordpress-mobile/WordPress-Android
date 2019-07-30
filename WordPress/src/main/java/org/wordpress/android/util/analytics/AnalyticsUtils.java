@@ -77,7 +77,7 @@ public class AnalyticsUtils {
 
         public Map<String, Object> asPropertyMap() {
             Map<String, Object> properties = new HashMap<>();
-            properties.put("source", name().toLowerCase());
+            properties.put("source", name().toLowerCase(Locale.ROOT));
             return properties;
         }
     }
