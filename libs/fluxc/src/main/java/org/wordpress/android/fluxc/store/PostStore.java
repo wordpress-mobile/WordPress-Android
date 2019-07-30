@@ -58,6 +58,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -371,7 +372,7 @@ public class PostStore extends Store {
         post.setLocalSiteId(site.getId());
         post.setIsLocalDraft(true);
         post.setIsPage(isPage);
-        post.setDateLocallyChanged((DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC())));
+        post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
         if (categoryIds != null && !categoryIds.isEmpty()) {
             post.setCategoryIdList(categoryIds);
         }
@@ -918,7 +919,7 @@ public class PostStore extends Store {
 
     private void updatePost(PostModel post, boolean changeLocalDate) {
         if (changeLocalDate) {
-            post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
+            post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
         }
         int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
