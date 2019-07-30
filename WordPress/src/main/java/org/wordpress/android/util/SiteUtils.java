@@ -88,6 +88,9 @@ public class SiteUtils {
     }
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+        if (site == null) {
+            return false;
+        }
         if (TextUtils.isEmpty(site.getMobileEditor())) {
             return AppPrefs.isGutenbergDefaultForNewPosts();
         } else {

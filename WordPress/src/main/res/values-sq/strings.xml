@@ -185,14 +185,10 @@ Language: sq_AL
     <string name="plans_loading_error_no_plans_subtitle">S’i ngarkojmë dot Planet tani. Ju lutemi, riprovoni më vonë.</string>
     <string name="plans_loading_error_no_plans_title">S’arrihet të ngarkohen Planet</string>
     <string name="plans_loading_error_network_title">S\'ka lidhje</string>
-    <string name="menu_switch_to_gutenberg_editor">Kaloni nën Përpunuesin Me Blloqe</string>
-    <string name="menu_switch_to_aztec_editor">Kalo nën Përpunuesin Klasik</string>
     <string name="stats_loading_block_error">Pati një problem në ngarkimin e të dhënave tuaja, rifreskoni faqen dhe riprovoni.</string>
     <string name="stats_loading_error">S’u ngarkuan të dhëna</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Përdorni Përpunuesin Me Blloqe</string>
-    <string name="dialog_gutenberg_informative_description_page">Kjo faqe qe krijuar së pari nën Përpunuesin Me Blloqe, ndaj e kemi aktivizuar në këtë Faqe.\n        Hidhuni te Klasiku kur të doni, duke prekur  ⋮  te shtylla e epërme.</string>
-    <string name="dialog_gutenberg_informative_description_post">Ky postim qe krijuar së pari nën Përpunuesin Me Blloqe, ndaj e kemi aktivizuar në këtë Faqe.\n        Hidhuni te Klasiku kur të doni, duke prekur  ⋮  te shtylla e epërme.</string>
     <string name="dialog_gutenberg_informative_title">Përpunuesi Pamor i Aktivizuar</string>
     <string name="exit">dalje</string>
     <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
@@ -280,7 +276,6 @@ Language: sq_AL
     <string name="dialog_confirm_load_remote_post_body_2">Vendor\nRuajtur në %s\n\nWeb\nRuajtur në %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Ky postim ka dy versione që janë në kundërshti. Përzgjidhni versionin që do të donit të hidhej tej.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Zgjidheni përplasjen e njëkohësimit</string>
-    <string name="local_changes_discarding_no_connection">Për kryerjen e këtij veprimi lypset një lidhje në internet. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
     <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
@@ -493,11 +488,6 @@ Language: sq_AL
     <string name="blavatar_desc">ikonë sajti</string>
     <string name="theme_image_desc">figurë teme</string>
     <string name="featured_image_desc">figurë e zgjedhur</string>
-    <string name="local_changes_discarding_error">Pati një gabim në hedhjen tej të ndryshimeve tuaja lokale. Për më tepër ndihmë lidhuni me ata të asistencës.</string>
-    <string name="local_changes_discarding">Po hidhen tej ndryshimet vendore</string>
-    <string name="local_changes_discarded">Ndryshimet vendore u hodhën tej</string>
-    <string name="menu_discard_changes">Hidhi Tej Ndryshimet Vendore</string>
-    <string name="button_discard_changes">Hidhi Tej Ndryshimet</string>
     <string name="button_discard">Hidhe Tej</string>
     <string name="reader_avatar_desc">foto profili</string>
     <string name="reader_blavatar_desc">ikonë sajti</string>
@@ -910,7 +900,6 @@ Language: sq_AL
     <string name="login_text_otp_another">Më mirë më dërgoni një kod tjetër.</string>
     <string name="enter_verification_code_sms">Dërguam një mesazh teksti te numri i telefonit që përfundon me %s. Ju lutemi, futni kodin e verifikimit nga SMS-ja.</string>
     <string name="error_generic_error">S’u krye dot veprimi</string>
-    <string name="error_media_recover_post">S’arrihet të ngarkohen mediat e këtij postimi</string>
     <string name="image_size">Përmasa</string>
     <string name="uploading_subtitle_media_only_one">ende 1 kartelë</string>
     <string name="uploading_subtitle_media_only">Ende %1$d nga %2$d kartela gjithsej</string>
@@ -1408,7 +1397,6 @@ Language: sq_AL
     <string name="start_over">Fillojani Nga e Para</string>
     <string name="me_btn_app_settings">Rregullime Aplikacioni</string>
     <string name="editor_remove_failed_uploads">Hiqi ngarkimet e dështuara</string>
-    <string name="editor_toast_failed_uploads">Disa ngarkime mediash dështuan. S’mund ta ruani apo botoni\n        postimin tuaj në këtë gjendje. Do të donit të hiqen krejt mediat e dështuara?</string>
     <string name="site_settings_advanced_header">Të mëtejshme</string>
     <string name="comments_empty_list_filtered_trashed">S’ka komente të shpënë në Hedhurina</string>
     <string name="comments_empty_list_filtered_pending">S’ka komente në pritje të shqyrtimit</string>
@@ -1642,7 +1630,6 @@ Language: sq_AL
     <string name="stats_enable_rest_api_in_jetpack">Që të shihni statistika tuaja, aktivizoni modulin API JSON te Jetpack-u.</string>
     <string name="reader_short_comment_count_multi">%s Komente</string>
     <string name="reader_short_comment_count_one">1 Koment</string>
-    <string name="reader_label_submit_comment">DËRGOJE</string>
     <string name="reader_hint_comment_on_post">Përgjigjjuni postimit…</string>
     <string name="reader_discover_visit_blog">Vizitoni %s</string>
     <string name="reader_discover_attribution_blog">Postuar fillimisht në %s</string>

@@ -167,8 +167,7 @@ class PostListItemUiStateHelperTest {
         )
 
         assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
-        // TODO We probably want to show RETRY button in this scenario
-        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
         assertThat(state.actions).hasSize(3)
     }
@@ -182,8 +181,7 @@ class PostListItemUiStateHelperTest {
         )
 
         assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
-        // TODO We probably want to show RETRY button in this scenario
-        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
         assertThat(state.actions).hasSize(3)
     }
