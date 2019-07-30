@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
@@ -77,7 +79,7 @@ public class SiteUtils {
             enableBlockEditor(dispatcher, newSiteModel);
             Map<String, Object> properties = new HashMap<>();
             properties.put("source", "on-site-creation");
-
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, newSiteModel, properties);
             return true;
         }
         return false;
