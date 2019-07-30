@@ -2,11 +2,13 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import org.apache.commons.text.WordUtils
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -16,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 private const val STATS_INPUT_FORMAT = "yyyy-MM-dd"
@@ -223,5 +226,32 @@ class StatsDateFormatter
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY))
         calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE))
         return calendar.time
+    }
+
+    fun printTimeZone(site: SiteModel): String? {
+        val siteTimeZone = SiteUtils.getNormalizedTimezone(site.timezone)
+        val currentTimeZone = localeManagerWrapper.getTimeZone()
+        val currentDate = Calendar.getInstance(localeManagerWrapper.getLocale())
+        val siteOffset = siteTimeZone.getOffset(currentDate.timeInMillis)
+        val currentTimeZoneOffset = currentTimeZone.getOffset(currentDate.timeInMillis)
+        return if (siteOffset != currentTimeZoneOffset) {
+            val hourOffset = MILLISECONDS.toHours(siteOffset.toLong())
+            val minuteOffset = MILLISECONDS.toMinutes(siteOffset.toLong())
+            val timeZoneResource = when {
+                minuteOffset > 0L -> string.stats_site_positive_utc
+                minuteOffset < 0L -> string.stats_site_negative_utc
+                else -> string.stats_site_neutral_utc
+            }
+            val minuteRemain = minuteOffset % 60
+            val utcTime = if (minuteRemain == 0L) {
+                hourOffset
+            } else {
+                "$hourOffset:$minuteRemain"
+            }
+            resourceProvider.getString(
+                    timeZoneResource,
+                    utcTime
+            )
+        } else null
     }
 }

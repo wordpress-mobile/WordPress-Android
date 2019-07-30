@@ -16,19 +16,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 class StatsDateSelectorTest : BaseUnitTest() {
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var siteProvider: StatsSiteProvider
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
-    @Mock lateinit var resourceProvider: ResourceProvider
     private val selectedDate = Date(0)
     private val selectedDateLabel = "Jan 1"
     private val statsSection = StatsSection.DAYS
@@ -51,37 +45,14 @@ class StatsDateSelectorTest : BaseUnitTest() {
                 selectedDateProvider,
                 statsDateFormatter,
                 siteProvider,
-                localeManagerWrapper,
-                resourceProvider,
                 statsSection
         )
         whenever(selectedDateProvider.getSelectedDate(statsSection)).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
         whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
         whenever(siteProvider.siteModel).thenReturn(site)
-        site.timezone = siteTimeZone
-        whenever(localeManagerWrapper.getTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
-        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.ROOT)
+        whenever(statsDateFormatter.printTimeZone(site)).thenReturn(siteTimeZone)
     }
-    /*
-     val siteTimeZone = SiteUtils.getNormalizedTimezone(siteProvider.siteModel.timezone)
-        val currentTimeZone = localeManagerWrapper.getTimeZone()
-        val currentDate = Calendar.getInstance(localeManagerWrapper.getLocale())
-        val siteOffset = siteTimeZone.getOffset(currentDate.timeInMillis)
-        val currentTimeZoneOffset = currentTimeZone.getOffset(currentDate.timeInMillis)
-        return if (siteOffset != currentTimeZoneOffset) {
-            val hourOffset = MILLISECONDS.toHours(siteOffset.toLong())
-            val timeZoneResource = when {
-                hourOffset > 0L -> string.stats_site_positive_utc
-                hourOffset < 0L -> string.stats_site_negative_utc
-                else -> string.stats_site_neutral_utc
-            }
-            resourceProvider.getString(
-                    timeZoneResource,
-                    hourOffset
-            )
-        } else null
-     */
 
     @Test
     fun `does not reemit hidden date selector`() {
@@ -113,6 +84,7 @@ class StatsDateSelectorTest : BaseUnitTest() {
         Assertions.assertThat(model?.enableSelectPrevious).isTrue()
         Assertions.assertThat(model?.enableSelectNext).isTrue()
         Assertions.assertThat(model?.date).isEqualTo(selectedDateLabel)
+        Assertions.assertThat(model?.timeZone).isEqualTo(siteTimeZone)
     }
 
     @Test
@@ -142,8 +114,6 @@ class StatsDateSelectorTest : BaseUnitTest() {
                 selectedDateProvider,
                 statsDateFormatter,
                 siteProvider,
-                localeManagerWrapper,
-                resourceProvider,
                 StatsSection.INSIGHTS
         )
         var model: DateSelectorUiModel? = null
