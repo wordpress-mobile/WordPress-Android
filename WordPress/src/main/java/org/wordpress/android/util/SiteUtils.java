@@ -16,7 +16,9 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
@@ -68,10 +70,14 @@ public class SiteUtils {
         }).start();
     }
 
-    public static boolean enableBlockEditor(Dispatcher dispatcher, SiteStore siteStore, int siteLocalSiteID) {
+    public static boolean enableBlockEditorOnSiteCreation(Dispatcher dispatcher, SiteStore siteStore,
+                                                          int siteLocalSiteID) {
         SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
         if (newSiteModel != null) {
-           enableBlockEditor(dispatcher, newSiteModel);
+            enableBlockEditor(dispatcher, newSiteModel);
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("source", "on-site-creation");
+
             return true;
         }
         return false;
