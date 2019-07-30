@@ -182,8 +182,13 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
                         if (response != null) {
-                            SiteModel site = siteResponseToSiteModel(response);
-                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                            SiteModel newSite = siteResponseToSiteModel(response);
+                            // local ID is not copied into the new model, let's make sure it is
+                            // otherwise the call that updates the DB can add a new row?
+                            if (site.getId() > 0) {
+                                newSite.setId(site.getId());
+                            }
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite));
                         } else {
                             AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
                             SiteModel payload = new SiteModel();
