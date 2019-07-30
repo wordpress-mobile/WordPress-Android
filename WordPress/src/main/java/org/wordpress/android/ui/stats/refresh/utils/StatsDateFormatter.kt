@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import org.apache.commons.text.WordUtils
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -20,6 +20,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
+import kotlin.math.abs
 
 private const val STATS_INPUT_FORMAT = "yyyy-MM-dd"
 private const val MONTH_FORMAT = "MMM, yyyy"
@@ -147,7 +148,7 @@ class StatsDateFormatter
         showSecondYear: Boolean
     ): String {
         return resourceProvider.getString(
-                string.stats_from_to_dates_in_week_label,
+                R.string.stats_from_to_dates_in_week_label,
                 if (showFirstYear) outputFormat.format(startCalendar.time) else outputFormatWithoutYear.format(
                         startCalendar.time
                 ),
@@ -238,15 +239,15 @@ class StatsDateFormatter
             val hourOffset = MILLISECONDS.toHours(siteOffset.toLong())
             val minuteOffset = MILLISECONDS.toMinutes(siteOffset.toLong())
             val timeZoneResource = when {
-                minuteOffset > 0L -> string.stats_site_positive_utc
-                minuteOffset < 0L -> string.stats_site_negative_utc
-                else -> string.stats_site_neutral_utc
+                minuteOffset > 0L -> R.string.stats_site_positive_utc
+                minuteOffset < 0L -> R.string.stats_site_negative_utc
+                else -> R.string.stats_site_neutral_utc
             }
             val minuteRemain = minuteOffset % 60
             val utcTime = if (minuteRemain == 0L) {
-                hourOffset
+                "${abs(hourOffset)}"
             } else {
-                "$hourOffset:$minuteRemain"
+                "${abs(hourOffset)}:${abs(minuteRemain)}"
             }
             resourceProvider.getString(
                     timeZoneResource,
