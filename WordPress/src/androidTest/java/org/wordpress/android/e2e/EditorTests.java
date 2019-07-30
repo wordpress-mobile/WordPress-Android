@@ -50,7 +50,7 @@ public class EditorTests extends BaseTest {
         mb.clickBlogPosts();
 
         new MySitesPage()
-                .startNewPost(E2E_WP_COM_USER_SITE_ADDRESS);
+                .startNewPost();
 
         EditorPage editorPage = new EditorPage();
         editorPage.enterTitle(title);
@@ -74,7 +74,7 @@ public class EditorTests extends BaseTest {
         mb.clickBlogPosts();
 
         new MySitesPage()
-                .startNewPost(E2E_WP_COM_USER_SITE_ADDRESS);
+                .startNewPost();
 
         EditorPage editorPage = new EditorPage();
         editorPage.enterTitle(title);
