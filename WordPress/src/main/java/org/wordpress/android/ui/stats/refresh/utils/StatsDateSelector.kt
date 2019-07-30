@@ -2,22 +2,31 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.perform
+import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Calendar
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 class StatsDateSelector
 constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val siteProvider: StatsSiteProvider,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val resourceProvider: ResourceProvider,
     private val statsSection: StatsSection
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
@@ -38,14 +47,36 @@ constructor(
         if (!shouldShowDateSelection && currentState?.isVisible != false) {
             emitValue(currentState, DateSelectorUiModel(false))
         } else {
+            val timeZone = buildDateSelectorTimeZone()
             val updatedState = DateSelectorUiModel(
                     shouldShowDateSelection,
                     updatedDate,
                     enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
-                    enableSelectNext = selectedDateProvider.hasNextDate(statsSection)
+                    enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
+                    timeZone = timeZone
             )
             emitValue(currentState, updatedState)
         }
+    }
+
+    private fun buildDateSelectorTimeZone(): String? {
+        val siteTimeZone = SiteUtils.getNormalizedTimezone(siteProvider.siteModel.timezone)
+        val currentTimeZone = localeManagerWrapper.getTimeZone()
+        val currentDate = Calendar.getInstance(localeManagerWrapper.getLocale())
+        val siteOffset = siteTimeZone.getOffset(currentDate.timeInMillis)
+        val currentTimeZoneOffset = currentTimeZone.getOffset(currentDate.timeInMillis)
+        return if (siteOffset != currentTimeZoneOffset) {
+            val hourOffset = MILLISECONDS.toHours(siteOffset.toLong())
+            val timeZoneResource = when {
+                hourOffset > 0L -> string.stats_site_positive_utc
+                hourOffset < 0L -> string.stats_site_negative_utc
+                else -> string.stats_site_neutral_utc
+            }
+            resourceProvider.getString(
+                    timeZoneResource,
+                    hourOffset
+            )
+        } else null
     }
 
     private fun emitValue(
@@ -91,10 +122,20 @@ constructor(
     class Factory
     @Inject constructor(
         private val selectedDateProvider: SelectedDateProvider,
+        private val siteProvider: StatsSiteProvider,
+        private val localeManagerWrapper: LocaleManagerWrapper,
+        private val resourceProvider: ResourceProvider,
         private val statsDateFormatter: StatsDateFormatter
     ) {
         fun build(statsSection: StatsSection): StatsDateSelector {
-            return StatsDateSelector(selectedDateProvider, statsDateFormatter, statsSection)
+            return StatsDateSelector(
+                    selectedDateProvider,
+                    statsDateFormatter,
+                    siteProvider,
+                    localeManagerWrapper,
+                    resourceProvider,
+                    statsSection
+            )
         }
     }
 }
