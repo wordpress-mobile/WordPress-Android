@@ -76,8 +76,8 @@ import org.wordpress.android.ui.notifications.services.NotificationsUpdateServic
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
-import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
@@ -92,6 +92,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
@@ -183,6 +184,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
             if (selectedSite != null) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
+                // Reload editor details from the remote backend
+                if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+                    // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(selectedSite));
+                }
             }
             return true;
         }
@@ -851,6 +857,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 // Rate limited Site information and options update
                 mUpdateSelectedSite.runIfNotLimited();
             }
+
+            // Let's migrate the old editor preference if available in AppPrefs to the remote backend
+            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mContext, mDispatcher, mSiteStore);
 
             if (mFirstActivityResumed) {
                 deferredInit();
