@@ -410,6 +410,15 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
+        // FIXME: Make sure to use the latest fresh info about the site we've in the DB
+        // set only the editor setting for now.
+        if (mSite != null) {
+            SiteModel refreshedSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            if (refreshedSite != null) {
+                mSite.setMobileEditor(refreshedSite.getMobileEditor());
+            }
+        }
+
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
@@ -517,7 +526,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
                             : RestartEditorOptions.valueOf(restartEditorOptionName);
 
-            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
+            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost, mSite)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
@@ -1258,8 +1267,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
             // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
             //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
-            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" App setting, don't offer the switch.
-            switchToGutenbergMenuItem.setVisible(hasBlocks || (AppPrefs.isGutenbergDefaultForNewPosts() && isEmpty));
+            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" in Site Setting,
+            //  don't offer the switch.
+            switchToGutenbergMenuItem.setVisible(
+                    hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(mSite) && isEmpty));
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1547,11 +1558,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.isGutenbergAutoEnabledForTheNewPosts()
-            && !mIsNewPost
-            && !AppPrefs.isGutenbergDefaultForNewPosts()) {
-            AppPrefs.setGutenbergDefaultForNewPosts(true);
-            AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);
+        if ((TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost)
+            || AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl())) {
+            SiteUtils.enableBlockEditor(mDispatcher, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite);
             showGutenbergInformativeDialog();
         }
     }
@@ -2277,7 +2287,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 case PAGE_CONTENT:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
-                        // Enable gutenberg upon opening a block based post
+                        // Enable gutenberg on the site & show the informative popup upon opening
+                        // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);

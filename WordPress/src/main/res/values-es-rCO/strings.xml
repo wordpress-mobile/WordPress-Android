@@ -468,7 +468,6 @@ Language: es_CO
     <string name="start_over">Comenzar de nuevo</string>
     <string name="me_btn_app_settings">Ajustes de la app</string>
     <string name="editor_remove_failed_uploads">Eliminar subidas fallidas</string>
-    <string name="editor_toast_failed_uploads">La subida de algunos archivos multimedia han fallado. No se puede guardar o publicar\n tu entrada tiene este estado. ¿Quieres eliminar todos los archivos multimedia fallidos?</string>
     <string name="site_settings_advanced_header">Avanzado</string>
     <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="alignment_center">Centrado</string>
@@ -689,7 +688,6 @@ Language: es_CO
     <string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
-    <string name="reader_label_submit_comment">ENVIAR</string>
     <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
     <string name="reader_discover_visit_blog">Visita %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado en %s</string>

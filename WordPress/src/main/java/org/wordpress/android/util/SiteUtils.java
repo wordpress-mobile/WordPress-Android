@@ -1,19 +1,100 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SiteUtils {
+    public static final String GB_EDITOR_NAME = "gutenberg";
+    public static final String AZTEC_EDITOR_NAME = "aztec";
+
+    /**
+     * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
+     * and store the value on the backend. selfHosted sites just store the value in the local DB in FluxC
+     *
+     * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
+     * -- 12.9 ON -> turn all sites ON in 13.0
+     * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
+     *
+     * @param dispatcher FluxC dispatcher
+     * @param siteStore  SiteStore
+     */
+    public static void migrateAppWideMobileEditorPreferenceToRemote(final Context context,
+                                                                    final Dispatcher dispatcher,
+                                                                    final SiteStore siteStore) {
+        if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+            return;
+        }
+        final boolean oldAppWidePreferenceValue = AppPrefs.isGutenbergDefaultForNewPosts();
+        final List<SiteModel> sites = siteStore.getSites();
+        final boolean setDelay = sites.size() > 5;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Be optimistic and remove the old app-wide preference before we start the calls
+                // Only do this when the network connection is available
+                if (NetworkUtils.isNetworkAvailable(context)) {
+                    AppPrefs.removeAppWideEditorPreference();
+                }
+                for (SiteModel currentSite : sites) {
+                    if (oldAppWidePreferenceValue) {
+                        enableBlockEditor(dispatcher, currentSite);
+                    } else {
+                        disableBlockEditor(dispatcher, currentSite);
+                    }
+                    if (setDelay) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                            // no-op
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public static boolean enableBlockEditor(Dispatcher dispatcher, SiteStore siteStore, int siteLocalSiteID) {
+        SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
+        if (newSiteModel != null) {
+           enableBlockEditor(dispatcher, newSiteModel);
+            return true;
+        }
+        return false;
+    }
+
+    public static void enableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                    new DesignateMobileEditorPayload(siteModel, SiteUtils.GB_EDITOR_NAME)));
+    }
+
+    public static void disableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
+        dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                new DesignateMobileEditorPayload(siteModel, SiteUtils.AZTEC_EDITOR_NAME)));
+    }
+
+    public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
+        if (TextUtils.isEmpty(site.getMobileEditor())) {
+            return AppPrefs.isGutenbergDefaultForNewPosts();
+        } else {
+            return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
+        }
+    }
+
     public static String getSiteNameOrHomeURL(SiteModel site) {
         String siteName = site.getName();
         if (siteName == null) {
