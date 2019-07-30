@@ -183,11 +183,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onResponse(SiteWPComRestResponse response) {
                         if (response != null) {
                             SiteModel newSite = siteResponseToSiteModel(response);
-                            // The REST API doesn't return info about the editor(s). Make sure to copy old values
-                            // otherwise the apps will receive an update site without editor prefs set.
-                            // The apps will dispatch the action to update editor(s) when necessary.
-                            newSite.setMobileEditor(site.getMobileEditor());
-                            newSite.setWebEditor(site.getWebEditor());
+                            // local ID is not copied into the new model, let's make sure it is
+                            // otherwise the call that updates the DB can add a new row?
+                            if (site.getId() > 0) {
+                                newSite.setId(site.getId());
+                            }
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite));
                         } else {
                             AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
