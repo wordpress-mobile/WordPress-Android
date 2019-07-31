@@ -61,6 +61,14 @@ class HistoryListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        (checkNotNull(activity).application as WordPress).component()?.inject(this)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

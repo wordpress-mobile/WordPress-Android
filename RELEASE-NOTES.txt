@@ -9,6 +9,7 @@
  
 12.9
 -----
+* Add Publish screen to Edit post settings - with notification for scheduled posts and option to add event to calendar
 * Block editor: Video block is now available in the Inserter
 * Block editor: Tapping on an empty editor area will create a new paragraph block
 * Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
