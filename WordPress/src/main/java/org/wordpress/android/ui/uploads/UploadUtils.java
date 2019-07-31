@@ -30,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -280,7 +281,7 @@ public class UploadUtils {
                                                       @Override
                                                       public void onClick(View view) {
                                                           Intent intent = UploadService.getRetryUploadServiceIntent(
-                                                                  activity, post, PostUtils.isFirstTimePublish(post));
+                                                                  activity, post, false);
                                                           activity.startService(intent);
                                                       }
                                                   });
@@ -409,5 +410,11 @@ public class UploadUtils {
         } else {
             return PostUploadAction.REMOTE_AUTO_SAVE;
         }
+    }
+
+    public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostModel post) {
+        return post.getAutoSaveModified() != null
+               && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
+                               .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));
     }
 }

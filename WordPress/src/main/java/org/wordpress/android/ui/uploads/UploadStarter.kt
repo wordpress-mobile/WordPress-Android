@@ -14,7 +14,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -26,7 +25,6 @@ import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
-import org.wordpress.android.util.DateTimeUtils.dateFromIso8601
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -66,7 +64,7 @@ open class UploadStarter @Inject constructor(
     /**
      * When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
      * The problem is that they can run in parallel and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return
-     * out-of-date result and a same post is added twice. This mutex serilizes
+     * out-of-date result and a same post is added twice.
      */
     private val mutex = Mutex()
 
@@ -150,11 +148,16 @@ open class UploadStarter @Inject constructor(
 
             val postsAndPages = posts.await() + pages.await()
 
-            // TODO Do we need to check whether the post is currently being editted?
             // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
             postsAndPages
                     .asSequence()
-                    .filterNot { changesAlreadyAutosaved(it) }
+                    .filterNot {
+                        if (UploadUtils.getPostUploadAction(it) == PostUploadAction.REMOTE_AUTO_SAVE) {
+                            UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it)
+                        } else {
+                            false
+                        }
+                    }
                     .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                     .filter { postUtilsWrapper.isPublishable(it) }
                     .filter {
@@ -166,18 +169,13 @@ open class UploadStarter @Inject constructor(
                         uploadServiceFacade.uploadPost(
                                 context = context,
                                 post = post,
-                                // TODO Should we track analytics in certain cases ?!?
+                                // TODO Should we track analytics in certain cases ?!? We don't know if it's
+                                //  firstTimePublish since we don't have the original status of the post
                                 trackAnalytics = false
                         )
                     }
         } finally {
             mutex.unlock()
         }
-    }
-
-    private fun changesAlreadyAutosaved(post: PostModel): Boolean {
-        return UploadUtils.getPostUploadAction(post) == PostUploadAction.REMOTE_AUTO_SAVE &&
-                post.autoSaveModified != null &&
-                dateFromIso8601(post.dateLocallyChanged) < dateFromIso8601(post.autoSaveModified)
     }
 }

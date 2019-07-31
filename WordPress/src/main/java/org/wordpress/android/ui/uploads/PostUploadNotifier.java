@@ -350,7 +350,6 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
-            // TODO this post won't have publishedConfirmedHashcode == post.contentHashcode
             Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post, isFirstTimePublish);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                                                                    PendingIntent.FLAG_CANCEL_CURRENT);
