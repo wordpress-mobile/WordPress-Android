@@ -66,6 +66,7 @@ class PagesViewModelTest {
                 actionPerfomer = actionPerformer,
                 networkUtils = networkUtils,
                 uploadStarter = uploadStarter,
+                previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
                 eventBusWrapper = mock()
