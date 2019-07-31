@@ -62,11 +62,6 @@ public class AppLog {
     public static final int HEADER_LINE_COUNT = 2;
     private static boolean mEnableRecording = false;
     private static List<AppLogListener> mListeners = new ArrayList<>(0);
-    private static final SimpleDateFormat DEFAULT_UTC_FORMAT = new SimpleDateFormat("MMM-dd kk:mm", Locale.US);
-
-    static {
-        DEFAULT_UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
 
     private AppLog() {
         throw new AssertionError();
@@ -241,7 +236,9 @@ public class AppLog {
         }
 
         private String formatLogDate() {
-            return DEFAULT_UTC_FORMAT.format(mDate);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd kk:mm", Locale.US);
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return sdf.format(mDate);
         }
 
         private String toHtml() {
