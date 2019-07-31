@@ -1,3 +1,5 @@
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+* Fixes a crash that could happen when viewing help from the login screen
+* Allow setting which editor to use on a per-site basis
+* Improves accessibility in stats
+* Makes it easier to log in by validating the URL to your site more quickly.
+* Some minor tweaks to the colour scheme
