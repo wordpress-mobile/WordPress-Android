@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
@@ -23,8 +24,9 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DateTimeUtils.dateFromIso8601
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -60,6 +62,13 @@ open class UploadStarter @Inject constructor(
 ) : CoroutineScope {
     private val job = Job()
     private val MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES = 10
+
+    /**
+     * When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
+     * The problem is that they can run in parallel and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return
+     * out-of-date result and a same post is added twice. This mutex serilizes
+     */
+    private val mutex = Mutex()
 
     override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
@@ -134,37 +143,41 @@ open class UploadStarter @Inject constructor(
      * This is meant to be used by [checkConnectionAndUpload] only.
      */
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        val posts = async { postStore.getPostsForSite(site) }
-        val pages = async { pageStore.getLocalDraftPages(site) }
+        try {
+            mutex.lock()
+            val posts = async { postStore.getPostsWithLocalChanges(site) }
+            val pages = async { pageStore.getPagesWithLocalChanges(site) }
 
-        val postsAndPages = posts.await() + pages.await()
+            val postsAndPages = posts.await() + pages.await()
 
-        // TODO Do we need to check whether the post is currently being editted?
-        // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
-        postsAndPages
-                .asSequence()
-                // TODO we'll remove this and fetch only locally changed posts from fluxC
-                .filter { it.isLocallyChanged || it.isLocalDraft }
-                .filterNot {changesAlreadyAutosaved(it)}
-                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
-                .filter { postUtilsWrapper.isPublishable(it) }
-                .filter {
-                    uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
-                }
-                .toList()
-                .forEach { post ->
-                    uploadServiceFacade.uploadPost(
-                            context = context,
-                            post = post,
-                            // TODO Should we track analytics in certain cases ?!?
-                            trackAnalytics = false
-                    )
-                }
+            // TODO Do we need to check whether the post is currently being editted?
+            // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
+            postsAndPages
+                    .asSequence()
+                    .filterNot { changesAlreadyAutosaved(it) }
+                    .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
+                    .filter { postUtilsWrapper.isPublishable(it) }
+                    .filter {
+                        uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
+                    }
+                    .toList()
+                    .forEach { post ->
+                        AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
+                        uploadServiceFacade.uploadPost(
+                                context = context,
+                                post = post,
+                                // TODO Should we track analytics in certain cases ?!?
+                                trackAnalytics = false
+                        )
+                    }
+        } finally {
+            mutex.unlock()
+        }
     }
 
     private fun changesAlreadyAutosaved(post: PostModel): Boolean {
         return UploadUtils.getPostUploadAction(post) == PostUploadAction.REMOTE_AUTO_SAVE &&
                 post.autoSaveModified != null &&
-                DateTimeUtils.dateFromIso8601(post.dateLocallyChanged) < DateTimeUtils.dateFromIso8601(post.autoSaveModified)
+                dateFromIso8601(post.dateLocallyChanged) < dateFromIso8601(post.autoSaveModified)
     }
 }

@@ -280,7 +280,9 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
                     break;
                 case REMOTE_AUTO_SAVE:
-                    AppLog.d(T.POSTS, "Invoking newRemoteAutoSavePostAction.");
+                    AppLog.d(T.POSTS,
+                            "Invoking newRemoteAutoSavePostAction. Post: " + mPost.getTitle() + " status: " + mPost
+                                    .getStatus());
                     mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
                     break;
             }
