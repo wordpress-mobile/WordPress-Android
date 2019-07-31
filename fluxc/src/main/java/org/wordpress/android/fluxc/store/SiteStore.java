@@ -1526,6 +1526,14 @@ public class SiteStore extends Store {
             event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
         } else {
             try {
+                // The REST API doesn't return info about the editor(s). Make sure to copy current values
+                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The apps will dispatch the action to update editor(s) when necessary.
+                SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
+                if (freshSiteFromDB != null) {
+                    siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
+                    siteModel.setWebEditor(freshSiteFromDB.getWebEditor());
+                }
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
                 event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
@@ -1680,20 +1688,21 @@ public class SiteStore extends Store {
     }
 
     private void designateMobileEditor(DesignateMobileEditorPayload payload) {
+        // wpcom sites sync the new value with the backend
         if (payload.site.isUsingWpComRestApi()) {
             mSiteRestClient.designateMobileEditor(payload.site, payload.editor);
-        } else {
-            // .ORG sites: Just update the editor pref on the DB and emit the change
-            SiteModel site = payload.site;
-            site.setMobileEditor(payload.editor);
-            OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
-            try {
-                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
-            } catch (Exception e) {
-                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
-            }
-            emitChange(event);
         }
+
+        // Update the editor pref on the DB, and emit the change immediately
+        SiteModel site = payload.site;
+        site.setMobileEditor(payload.editor);
+        OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
+        try {
+            event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
+        } catch (Exception e) {
+            event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+        }
+        emitChange(event);
     }
 
     private void updateSiteEditors(FetchedEditorsPayload payload) {
