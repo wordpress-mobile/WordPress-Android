@@ -20,9 +20,10 @@ class PreviewStateHelper @Inject constructor() {
             prevState?.let {
                 if (it == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW ||
                         it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW) {
-                    (postInfo as? PostInfoType.PostInfo)?.let { info ->
-                        handleRemotePreview(info.post.id, mapRemotePreviewStateToType(prevState))
-                    }
+                    handleRemotePreview(
+                            (postInfo as PostInfoType.PostInfo).post.id,
+                            mapRemotePreviewStateToType(prevState)
+                    )
                 }
             }
         }
