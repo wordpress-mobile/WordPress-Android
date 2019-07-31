@@ -22,7 +22,6 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
 import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
