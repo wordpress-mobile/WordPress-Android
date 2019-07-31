@@ -71,7 +71,6 @@
                 android:layout_below="@+id/login_request_magic_link"
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:gravity="center"
                 android:paddingEnd="@dimen/margin_medium_large"
                 android:paddingLeft="@dimen/margin_medium_large"

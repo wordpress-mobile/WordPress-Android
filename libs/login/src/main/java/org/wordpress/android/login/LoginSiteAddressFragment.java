@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -56,6 +55,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
+
+    private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -139,6 +140,23 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
+
+        mLoginSiteAddressValidator = new LoginSiteAddressValidator();
+
+        mLoginSiteAddressValidator.getIsValid().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(Boolean enabled) {
+                getPrimaryButton().setEnabled(enabled);
+            }
+        });
+        mLoginSiteAddressValidator.getErrorMessageResId().observe(this, new Observer<Integer>() {
+            @Override public void onChanged(Integer resId) {
+                if (resId != null) {
+                    showError(resId);
+                } else {
+                    mSiteAddressInput.setError(null);
+                }
+            }
+        });
     }
 
     @Override
@@ -148,24 +166,17 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
     }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mLoginSiteAddressValidator.dispose();
+    }
+
     protected void discover() {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        String cleanedSiteAddress = getCleanedSiteAddress();
-
-        if (TextUtils.isEmpty(cleanedSiteAddress)) {
-            showError(R.string.login_empty_site_url);
-            return;
-        }
-
-        if (!Patterns.WEB_URL.matcher(cleanedSiteAddress).matches()) {
-            showError(R.string.login_invalid_site_url);
-            return;
-        }
-
-        mRequestedSiteAddress = cleanedSiteAddress;
+        mRequestedSiteAddress = mLoginSiteAddressValidator.getCleanedSiteAddress();
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
 
@@ -182,17 +193,16 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         startProgress();
     }
 
-    private String getCleanedSiteAddress() {
-        return EditTextUtils.getText(mSiteAddressInput.getEditText()).trim().replaceAll("[\r\n]", "");
-    }
-
     @Override
     public void onEditorCommit() {
-        discover();
+        if (getPrimaryButton().isEnabled()) {
+            discover();
+        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        mLoginSiteAddressValidator.setAddress(EditTextUtils.getText(mSiteAddressInput.getEditText()));
     }
 
     @Override
@@ -359,7 +369,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 return;
             } else {
                 AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name()
-                        + " - " + event.error.toString());
+                                + " - " + event.error.toString());
                 handleDiscoveryError(event.error, event.failedEndpoint);
                 return;
             }
@@ -402,13 +412,24 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             // TODO: If we plan to keep this logic we should convert these labels to constants
             HashMap<String, String> properties = new HashMap<>();
             properties.put("url", event.info.url);
-            properties.put("urlAfterRedirects", event.info.urlAfterRedirects);
+            properties.put("url_after_redirects", event.info.urlAfterRedirects);
             properties.put("exists", Boolean.toString(event.info.exists));
-            properties.put("hasJetpack", Boolean.toString(event.info.hasJetpack));
-            properties.put("isJetpackActive", Boolean.toString(event.info.isJetpackActive));
-            properties.put("isJetpackConnected", Boolean.toString(event.info.isJetpackConnected));
-            properties.put("isWordPress", Boolean.toString(event.info.isWordPress));
-            properties.put("isWPCom", Boolean.toString(event.info.isWPCom));
+            properties.put("has_jetpack", Boolean.toString(event.info.hasJetpack));
+            properties.put("is_jetpack_active", Boolean.toString(event.info.isJetpackActive));
+            properties.put("is_jetpack_connected", Boolean.toString(event.info.isJetpackConnected));
+            properties.put("is_wordpress", Boolean.toString(event.info.isWordPress));
+            properties.put("is_wp_com", Boolean.toString(event.info.isWPCom));
+
+            // Determining if jetpack is actually installed takes additional logic. This final
+            // calculated event property will make querying this event more straight-forward:
+            boolean hasJetpack = false;
+            if (event.info.isWPCom && event.info.hasJetpack) {
+                // This is likely an atomic site.
+                hasJetpack = true;
+            } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
+                hasJetpack = true;
+            }
+            properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
 
             if (!event.info.exists) {
@@ -418,14 +439,10 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 // Not a WordPress site
                 showError(R.string.enter_wordpress_site);
             } else {
-                boolean hasJetpack = false;
-                if (event.info.isWPCom && event.info.hasJetpack) {
-                    // This is likely an atomic site.
-                    hasJetpack = true;
-                } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
-                    hasJetpack = true;
-                }
-                mLoginListener.gotConnectedSiteInfo(event.info.url, hasJetpack);
+                mLoginListener.gotConnectedSiteInfo(
+                        event.info.url,
+                        event.info.urlAfterRedirects,
+                        hasJetpack);
             }
         }
     }
