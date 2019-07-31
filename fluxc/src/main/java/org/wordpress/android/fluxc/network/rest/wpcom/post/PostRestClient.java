@@ -47,7 +47,6 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
-import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
@@ -252,7 +251,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onResponse(PostRemoteAutoSaveModel response) {
                         RemoteAutoSavePostPayload payload =
                                 new RemoteAutoSavePostPayload(post.getId(), response, site);
-                        mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
+                        mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 },
                 new WPComErrorListener() {
@@ -262,7 +261,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         PostError postError = new PostError(error.apiError, error.message);
                         RemoteAutoSavePostPayload payload =
                                 new RemoteAutoSavePostPayload(post.getId(), postError);
-                        mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavedPostAction(payload));
+                        mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 }
                                                                                                    );

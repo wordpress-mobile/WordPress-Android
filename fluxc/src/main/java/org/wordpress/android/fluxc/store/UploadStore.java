@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
@@ -108,6 +109,11 @@ public class UploadStore extends Store {
             case PUSHED_POST:
                 handlePostUploaded((RemotePostPayload) payload);
                 mDispatcher.dispatch(PostActionBuilder.newPushedPostAction((RemotePostPayload) payload));
+                break;
+            case REMOTE_AUTO_SAVED_POST:
+                handleRemoteAutoSavedPost((RemoteAutoSavePostPayload) payload);
+                mDispatcher
+                        .dispatch(PostActionBuilder.newRemoteAutoSavedPostAction((RemoteAutoSavePostPayload) payload));
                 break;
             case CANCEL_POST:
                 handleCancelPost((PostModel) payload);
@@ -363,22 +369,30 @@ public class UploadStore extends Store {
         }
     }
 
+    private void handleRemoteAutoSavedPost(@NonNull RemoteAutoSavePostPayload payload) {
+        handlePostUploadedOrAutoSaved(payload.localPostId, payload.error);
+    }
+
     private void handlePostUploaded(@NonNull RemotePostPayload payload) {
         if (payload.post == null) {
             return;
         }
 
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(payload.post.getId());
+        handlePostUploadedOrAutoSaved(payload.post.getId(), payload.error);
+    }
 
-        if (payload.isError()) {
+    private void handlePostUploadedOrAutoSaved(int localPostId, PostError error) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
+
+        if (error != null) {
             if (postUploadModel == null) {
-                postUploadModel = new PostUploadModel(payload.post.getId());
+                postUploadModel = new PostUploadModel(localPostId);
             }
             if (postUploadModel.getUploadState() != PostUploadModel.FAILED) {
                 postUploadModel.setUploadState(PostUploadModel.FAILED);
                 postUploadModel.incNumberOfUploadErrorsOrCancellations();
             }
-            postUploadModel.setPostError(payload.error);
+            postUploadModel.setPostError(error);
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
             return;
         }
@@ -388,7 +402,7 @@ public class UploadStore extends Store {
             UploadSqlUtils.deleteMediaUploadModelsWithLocalIds(postUploadModel.getAssociatedMediaIdSet());
 
             // Delete the PostUploadModel itself
-            UploadSqlUtils.deletePostUploadModelWithLocalId(payload.post.getId());
+            UploadSqlUtils.deletePostUploadModelWithLocalId(localPostId);
         }
     }
 
