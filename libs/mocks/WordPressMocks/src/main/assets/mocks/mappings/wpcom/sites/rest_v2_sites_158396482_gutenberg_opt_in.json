@@ -1,14 +1,20 @@
 {
     "request": {
         "urlPattern": "/wpcom/v2/sites/158396482/gutenberg(/)?($|\\?.*)",
-        "method": "GET"
+        "method": "POST",
+        "bodyPatterns": [
+            {
+              "equalToJson" : "{ \"editor\": \"gutenberg\" }",
+              "ignoreExtraElements" : true
+            }
+        ]
     },
     "response": {
         "status": 200,
         "jsonBody": {
-            "editor_mobile": "aztec",
+            "editor_mobile": "gutenberg",
             "editor_web": "gutenberg",
-            "opt_in": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/158396482/gutenberg?editor=gutenberg&platform=mobile"
+            "opt_out": "{{request.requestLine.baseUrl}}/wpcom/v2/sites/158396482/gutenberg?editor=classic&platform=mobile"
         },
         "headers": {
             "Content-Type": "application/json",
