@@ -21,7 +21,7 @@ class PreviewStateHelper @Inject constructor() {
                 if (it == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW ||
                         it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW) {
                     (postInfo as? PostInfoType.PostInfo)?.let { info ->
-                        handleRemotePreview(info.post.id, getRemotePreviewType(prevState))
+                        handleRemotePreview(info.post.id, mapRemotePreviewStateToType(prevState))
                     }
                 }
             }
@@ -78,11 +78,11 @@ class PreviewStateHelper @Inject constructor() {
         }
     }
 
-    private fun getRemotePreviewType(prevState: PostListRemotePreviewState): RemotePreviewType {
-        return if (prevState == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW) {
-            RemotePreviewType.REMOTE_PREVIEW
-        } else {
-            RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+    private fun mapRemotePreviewStateToType(prevState: PostListRemotePreviewState): RemotePreviewType {
+        return when (prevState) {
+            PostListRemotePreviewState.UPLOADING_FOR_PREVIEW -> RemotePreviewType.REMOTE_PREVIEW
+            PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW -> RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+            else -> throw IllegalArgumentException("Unsupported argument: $prevState")
         }
     }
 }
