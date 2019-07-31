@@ -82,9 +82,9 @@ class PreviewStateHelper @Inject constructor() {
     private fun mapRemotePreviewStateToType(prevState: PostListRemotePreviewState): RemotePreviewType {
         return when (prevState) {
             PostListRemotePreviewState.UPLOADING_FOR_PREVIEW -> RemotePreviewType.REMOTE_PREVIEW
-            PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW -> RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+            PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW ->
+                RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
             else -> throw IllegalArgumentException("Unsupported argument: $prevState")
         }
     }
 }
-
