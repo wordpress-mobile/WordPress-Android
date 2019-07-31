@@ -37,7 +37,8 @@ sealed class PostListAction {
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
-    remotePreviewLogicHelper: RemotePreviewLogicHelper
+    remotePreviewLogicHelper: RemotePreviewLogicHelper,
+    previewStateHelper: PreviewStateHelper
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -47,27 +48,13 @@ fun handlePostListAction(
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo)
         }
         is PostListAction.PreviewPost -> {
-            if (action.post.isPage) {
-                ActivityLauncher.viewPostPreviewForResult(activity, action.site, action.post)
-            } else {
-                val opResult = remotePreviewLogicHelper.runPostPreviewLogic(
-                        activity = activity,
-                        site = action.site,
-                        post = action.post,
-                        helperFunctions = getUploadStrategyFunctions(activity, action)
-                )
-
-                // TODO: consider to remove this once the modifications related to
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/10106 will be available.
-                // In current implementation only Trashed posts can trigger the below condition but
-                // once the above is implemented should not be possible to trigger below condition anymore.
-                if (opResult == RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW) {
-                    action.triggerPreviewStateUpdate.invoke(
-                            PostListRemotePreviewState.PREVIEWING,
-                            PostInfoType.PostNoInfo
-                    )
-                }
-            }
+            val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
+            remotePreviewLogicHelper.runPostPreviewLogic(
+                    activity = activity,
+                    site = action.site,
+                    post = action.post,
+                    helperFunctions = helperFunctions
+            )
         }
         is PostListAction.RemotePreviewPost -> {
             ActivityLauncher.previewPostOrPageForResult(activity, action.site, action.post, action.remotePreviewType)

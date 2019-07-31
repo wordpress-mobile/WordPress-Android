@@ -40,6 +40,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 mediaStore = mock(),
                 networkUtilsWrapper = mock(),
                 prefs = prefs,
+                previewStateHelper = mock(),
                 mainDispatcher = Dispatchers.Unconfined,
                 bgDispatcher = Dispatchers.Unconfined,
                 postListEventListenerFactory = mock(),

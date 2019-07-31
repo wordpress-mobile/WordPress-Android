@@ -41,8 +41,8 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
+import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
-import org.wordpress.android.ui.posts.managePreviewStateTransitions
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
@@ -89,6 +89,7 @@ class PagesViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val uploadStarter: UploadStarter,
     private val eventBusWrapper: EventBusWrapper,
+    private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -116,8 +117,8 @@ class PagesViewModel
     private val _editPage = SingleLiveEvent<PageModel?>()
     val editPage: LiveData<PageModel?> = _editPage
 
-    private val _previewPage = SingleLiveEvent<PageModel?>()
-    val previewPage: LiveData<PageModel?> = _previewPage
+    private val _previewPage = SingleLiveEvent<PostModel?>()
+    val previewPage: LiveData<PostModel?> = _previewPage
 
     private val _browsePreview = SingleLiveEvent<BrowsePreview?>()
     val browsePreview: LiveData<BrowsePreview?> = _browsePreview
@@ -164,7 +165,7 @@ class PagesViewModel
     private var currentPageType = PUBLISHED
 
     data class BrowsePreview(
-        val pageId: Int,
+        val post: PostModel,
         val previewType: RemotePreviewType
     )
 
@@ -313,7 +314,12 @@ class PagesViewModel
         _previewState.postValue(newState)
 
         // take care of exit actions on state transition
-        managePreviewStateTransitions(newState, prevState, postInfo, this::handleRemotePreview)
+        previewStateHelper.managePreviewStateTransitions(
+                newState,
+                prevState,
+                postInfo,
+                this::handleRemotePreview
+        )
     }
 
     private suspend fun groupedSearch(
@@ -386,8 +392,12 @@ class PagesViewModel
     }
 
     private fun previewPage(page: Page) {
-        trackMenuSelectionEvent(VIEW_PAGE)
-        _previewPage.postValue(pageMap[page.id])
+        launch(defaultDispatcher) {
+            trackMenuSelectionEvent(VIEW_PAGE)
+            val pageModel = pageMap[page.id]
+            val post = if (pageModel != null) postStore.getPostByLocalPostId(pageModel.pageId) else null
+            _previewPage.postValue(post)
+        }
     }
 
     private fun performIfNetworkAvailable(performAction: () -> Unit): Boolean {
@@ -649,7 +659,10 @@ class PagesViewModel
     }
 
     private fun handleRemotePreview(localPostId: Int, remotePreviewType: RemotePreviewType) {
-        _browsePreview.postValue(BrowsePreview(localPostId, remotePreviewType))
+        launch(defaultDispatcher) {
+            val post = postStore.getPostByLocalPostId(localPostId)
+            _browsePreview.postValue(BrowsePreview(post, remotePreviewType))
+        }
     }
 
     private fun handleRemoteAutoSave(post: PostModel, isError: Boolean) {
