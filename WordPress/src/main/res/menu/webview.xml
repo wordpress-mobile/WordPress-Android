@@ -6,6 +6,6 @@
         android:id="@+id/menu_refresh"
         android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/refresh"
-        app:iconTint="@color/grey_600"
+        app:iconTint="@color/gray_60"
         app:showAsAction="always"/>
 </menu>
