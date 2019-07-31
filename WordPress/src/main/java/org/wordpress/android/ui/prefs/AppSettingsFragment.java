@@ -50,10 +50,6 @@ public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final int LANGUAGE_CHANGED = 1000;
 
-    private static final int IDX_LEGACY_EDITOR = 0;
-    private static final int IDX_VISUAL_EDITOR = 1;
-    private static final int IDX_AZTEC_EDITOR = 2;
-
     private DetailListPreference mLanguagePreference;
 
     // This Device settings
@@ -61,7 +57,6 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mImageMaxSizePref;
     private DetailListPreference mImageQualityPref;
     private WPSwitchPreference mOptimizedVideo;
-    private WPSwitchPreference mGutenbergDefaultForNewPosts;
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
@@ -126,9 +121,6 @@ public class AppSettingsFragment extends PreferenceFragment
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
 
-        mGutenbergDefaultForNewPosts =
-                (WPSwitchPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_gutenberg_default_for_new_posts, this);
         mVideoWidthPref =
                 (DetailListPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
@@ -159,7 +151,6 @@ public class AppSettingsFragment extends PreferenceFragment
                                      String.valueOf(AppPrefs.getVideoOptimizeQuality()),
                                      getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
-        mGutenbergDefaultForNewPosts.setChecked(AppPrefs.isGutenbergDefaultForNewPosts());
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
         if (!BuildConfig.OFFER_GUTENBERG) {
@@ -300,10 +291,6 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                                          newValue.toString(),
                                          getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
-        } else if (preference == mGutenbergDefaultForNewPosts) {
-            AppPrefs.setGutenbergDefaultForNewPosts((Boolean) newValue);
-            // we need to refresh metadata as gutenberg_enabled is now part of the user data
-            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
         }
@@ -316,66 +303,6 @@ public class AppSettingsFragment extends PreferenceFragment
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void updateEditorSettings() {
-        if (!AppPrefs.isVisualEditorAvailable()) {
-            PreferenceScreen preferenceScreen =
-                    (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_account_settings_root));
-            PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
-                                                                                    .getString(
-                                                                                            R.string.pref_key_editor));
-            if (preferenceScreen != null && editor != null) {
-                preferenceScreen.removePreference(editor);
-            }
-        } else {
-            final DetailListPreference editorTypePreference =
-                    (DetailListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
-
-            editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(final Preference preference, final Object value) {
-                    if (value != null) {
-                        int index = Integer.parseInt(value.toString());
-                        CharSequence[] entries = editorTypePreference.getEntries();
-                        editorTypePreference.setSummary(entries[index]);
-                        // we need to set value manually for DetailListPreference
-                        editorTypePreference.setValue(value.toString());
-
-                        switch (index) {
-                            case IDX_VISUAL_EDITOR:
-                                AppPrefs.setAztecEditorEnabled(false);
-                                AppPrefs.setVisualEditorEnabled(true);
-                                break;
-                            case IDX_AZTEC_EDITOR:
-                                AppPrefs.setAztecEditorEnabled(true);
-                                AppPrefs.setVisualEditorEnabled(false);
-                                break;
-                            default:
-                                AppPrefs.setAztecEditorEnabled(false);
-                                AppPrefs.setVisualEditorEnabled(false);
-                                break;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            });
-
-            final int editorTypeSetting;
-            if (AppPrefs.isAztecEditorEnabled()) {
-                editorTypeSetting = IDX_AZTEC_EDITOR;
-            } else if (AppPrefs.isVisualEditorEnabled()) {
-                editorTypeSetting = IDX_VISUAL_EDITOR;
-            } else {
-                editorTypeSetting = IDX_LEGACY_EDITOR;
-            }
-
-            CharSequence[] entries = editorTypePreference.getEntries();
-            editorTypePreference.setSummary(entries[editorTypeSetting]);
-            editorTypePreference.setValueIndex(editorTypeSetting);
-        }
     }
 
     private void changeLanguage(String languageCode) {

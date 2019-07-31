@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-09 14:21:29+0000
+Translation-Revision-Date: 2019-07-20 17:53:00+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="description_expand">Expandir</string>
+    <string name="description_collapse">Recolher</string>
+    <string name="editor_retry_failed_uploads">Tentar enviar novamente</string>
+    <string name="editor_toast_failed_uploads">Não foi possível enviar alguns arquivos de mídia. Você não pode salvar ou publicar\nseu post nesse estado.</string>
+    <string name="my_site_verify_your_email_without_email">Verifique seu e-mail. As instruções foram enviadas para lá</string>
+    <string name="my_site_verify_your_email">Verifique seu e-mail. As instruções foram enviadas para %s</string>
+    <string name="error_media_recover_post_not_submitted">Não foi possível enviar a mídia. Post não enviado.</string>
+    <string name="error_media_recover_post_not_scheduled">Não foi possível enviar a mídia. Post não agendado.</string>
+    <string name="error_media_recover_post_not_published">Não foi possível enviar a mídia. Post não publicado.</string>
+    <string name="error_media_recover_post">Não foi possível enviar a mídia</string>
+    <string name="link_dialog_button_cancel">Cancelar</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Remover link</string>
+    <string name="link_dialog_title">Inserir link</string>
+    <string name="post_settings_retry_featured_image">Tentar enviar novamente</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Enviando mídia.\nClique para ver as opções.</string>
+    <string name="dialog_gutenberg_informative_description_page">Esta página usa o editor de blocos que é o editor padrão para novas páginas. Para ativar o editor clássico, acesse Eu > Configurações do aplicativo.</string>
+    <string name="dialog_gutenberg_informative_description_post">Este post usa o editor de blocos que é o editor padrão para novos posts. Para ativar o editor clássico, acesse Eu > Configurações do aplicativo.</string>
+    <string name="link_open_new_window">Abrir link em uma nova janela/aba</string>
     <string name="post_list_search_prompt">Pesquisar posts publicados</string>
     <string name="stats_widget_error_no_access_token">Para ver suas estatísticas, acesse sua conta do WordPress.com.</string>
     <string name="post_list_search_nothing_found">Nenhum post corresponde à sua pesquisa</string>
@@ -192,8 +212,6 @@ Language: pt_BR
     <string name="stats_loading_error">Dados não carregados</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editar novos posts e páginas com o editor de blocos.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
-    <string name="dialog_gutenberg_informative_description_page">Como essa página foi criada originalmente no editor de blocos, ativamos esse editor nessa página.\nMude para o editor clássico a qualquer momento clicando em ⋮ na barra superior.</string>
-    <string name="dialog_gutenberg_informative_description_post">Como esse post foi criado originalmente no editor de blocos, ativamos esse editor nesse post.\nMude para o editor clássico a qualquer momento clicando em ⋮ na barra superior.</string>
     <string name="dialog_gutenberg_informative_title">Editor de blocos ativado</string>
     <string name="exit">sair</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d concluído</string>
@@ -281,7 +299,6 @@ Language: pt_BR
     <string name="dialog_confirm_load_remote_post_body_2">Versão local\nSalva em %s\n\nVersão web\nSalva em %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Esse post tem duas versões que estão em conflito. Selecione a versão que você deseja descartar.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolver conflito de sincronização</string>
-    <string name="local_changes_discarding_no_connection">É necessário ter uma conexão para fazer isso. Verifique sua conexão de internet e tente novamente.</string>
     <string name="stats_no_data_for_period">Nenhum dado para esse período</string>
     <string name="preference_strip_image_location">Remover localização de mídia</string>
     <string name="stats_cannot_be_started">Não conseguimos abrir as estatísticas agora. Tente novamente mais tarde.</string>
@@ -494,11 +511,6 @@ Language: pt_BR
     <string name="blavatar_desc">ícone do site</string>
     <string name="theme_image_desc">imagem do tema</string>
     <string name="featured_image_desc">imagem destacada</string>
-    <string name="local_changes_discarding_error">Houve um erro ao remover as alterações salvas localmente. Entre em contato com o suporte para solicitar ajuda.</string>
-    <string name="local_changes_discarding">Removendo alterações salvas localmente</string>
-    <string name="local_changes_discarded">Alterações removidas</string>
-    <string name="menu_discard_changes">Remover alterações salvas localmente</string>
-    <string name="button_discard_changes">Remover alterações</string>
     <string name="button_discard">Remover</string>
     <string name="reader_avatar_desc">imagem do perfil</string>
     <string name="reader_blavatar_desc">ícone do site</string>
@@ -911,7 +923,6 @@ Language: pt_BR
     <string name="login_text_otp_another">Ao invés disso, enviar por mensagem de texto um outro código para mim.</string>
     <string name="enter_verification_code_sms">Enviamos uma mensagem de texto para o número de telefone com final %s. Digite o código de verificação do SMS.</string>
     <string name="error_generic_error">Não foi possível realizar a operação</string>
-    <string name="error_media_recover_post">Não foi possível enviar a mídia deste post</string>
     <string name="image_size">Tamanho</string>
     <string name="uploading_subtitle_media_only_one">1 arquivo restante</string>
     <string name="uploading_subtitle_media_only">%1$d de %2$d arquivos restantes</string>
@@ -1409,7 +1420,6 @@ Language: pt_BR
     <string name="start_over">Começar novamente</string>
     <string name="me_btn_app_settings">Configurações do aplicativo</string>
     <string name="editor_remove_failed_uploads">Remover envios com falha</string>
-    <string name="editor_toast_failed_uploads">Alguns envios de mídia falharam. Você não pode salvar ou publicar\nseu post nesse estado. Você deseja remover todas as mídias que falharam?</string>
     <string name="site_settings_advanced_header">Avançado</string>
     <string name="comments_empty_list_filtered_trashed">Nenhum comentário na lixeira</string>
     <string name="comments_empty_list_filtered_pending">Nenhum comentário pendente</string>
@@ -1643,7 +1653,6 @@ Language: pt_BR
     <string name="stats_enable_rest_api_in_jetpack">Para ver suas estatísticas, ative o modulo JSON API do Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s comentários</string>
     <string name="reader_short_comment_count_one">1 comentário</string>
-    <string name="reader_label_submit_comment">ENVIAR</string>
     <string name="reader_hint_comment_on_post">Responder ao post…</string>
     <string name="reader_discover_visit_blog">Acessar %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado no %s</string>

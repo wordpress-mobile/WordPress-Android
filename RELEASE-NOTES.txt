@@ -1,5 +1,7 @@
 13.0
 -----
+* Block editor: Auto-enabled upon first open of a block post, unless opted out in v12.9.
+* Block editor: You can now enable and disable the block editor on a per-site basis.
 * Improve accessibility in the Stats
 * Block editor: Adding a block from the post title now shows the add block here indicator.
 * Block editor: Deselect post title any time a block is added
@@ -7,6 +9,7 @@
  
 12.9
 -----
+* Add Publish screen to Edit post settings - with notification for scheduled posts and option to add event to calendar
 * Block editor: Video block is now available in the Inserter
 * Block editor: Tapping on an empty editor area will create a new paragraph block
 * Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.

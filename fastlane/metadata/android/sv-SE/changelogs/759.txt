@@ -1,0 +1,4 @@
+12.9:
+* Kunder som inte utnyttjat sin fulla domänkredit kan registrera domäner i appen.
+* Du kan expandera kommentarsredigeraren så att den upptar hela skärmen, för mer utrymmen när du redigerar.
+* Några förbättringar i blockredigeraren: Nu finns videoblock, och några problem som kunde leda till förlorat innehåll vid användning av block utan stöd har nu lösts.

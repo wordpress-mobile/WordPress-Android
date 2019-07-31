@@ -157,7 +157,6 @@ Language: hi_IN
     <string name="stats_enable_rest_api_in_jetpack">अपने आँकड़ों को देखने के लिए, जेटपैक में JSON API को सक्षम करें। </string>
     <string name="reader_short_comment_count_multi">%s टिप्पणियाँ</string>
     <string name="reader_short_comment_count_one">1 टिप्पणी</string>
-    <string name="reader_label_submit_comment">भेजें</string>
     <string name="reader_hint_comment_on_post">लेख का उत्तर दें…</string>
     <string name="reader_discover_visit_blog">यात्रा %s</string>
     <string name="reader_short_like_count_multi">%s पसंद</string>
