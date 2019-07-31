@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -71,7 +73,10 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(services)).thenReturn(listOf(mockedItem))
+        whenever(serviceMapper.map(
+                eq(services),
+                any()
+        )).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 
@@ -102,7 +107,10 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(services.take(5))).thenReturn(listOf(mockedItem))
+        whenever(serviceMapper.map(
+                eq(services.take(5)),
+                any()
+        )).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 

@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/theme_image_desc"
-                    tools:src="@drawable/bg_rectangle_neutral_100_themes_100dp"/>
+                    tools:src="@drawable/bg_rectangle_neutral_10_themes_100dp"/>
 
             </FrameLayout>
 
@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/active"
                         android:textAllCaps="true"
-                        android:textColor="@color/primary_50"
+                        android:textColor="@color/primary_5"
                         android:textSize="@dimen/text_sz_extra_small"
                         android:textStyle="bold"
                         android:visibility="gone"
@@ -102,7 +102,7 @@
                         android:contentDescription="@string/button_more"
                         android:padding="@dimen/theme_browser_more_button_padding"
                         android:src="@drawable/ic_ellipsis_white_24dp"
-                        android:tint="@color/neutral_200" />
+                        android:tint="@color/neutral_20" />
 
                 </LinearLayout>
 

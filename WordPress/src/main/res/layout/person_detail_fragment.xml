@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:text="@string/role"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/role"/>
 
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/neutral_400"
+            android:textColor="@color/neutral_40"
             android:textSize="@dimen/text_sz_medium"
             tools:text="@string/role"/>
 
@@ -119,6 +119,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/people_list_divider_height"
         android:layout_below="@id/person_role_container"
-        android:background="@color/neutral_100"/>
+        android:background="@color/neutral_10"/>
 
 </RelativeLayout>

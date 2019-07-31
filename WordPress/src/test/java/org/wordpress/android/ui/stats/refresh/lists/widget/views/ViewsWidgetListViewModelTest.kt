@@ -77,27 +77,30 @@ class ViewsWidgetListViewModelTest {
                         isNull(),
                         any(),
                         any(),
+                        any(),
                         any()
                 )
-        ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE))
+        ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[1]),
                         eq(dates[0]),
                         any(),
                         any(),
+                        any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEGATIVE))
+        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEGATIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[2]),
                         eq(dates[1]),
                         any(),
                         any(),
+                        any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL))
+        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL, change))
 
         viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 

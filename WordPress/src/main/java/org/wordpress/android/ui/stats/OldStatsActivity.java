@@ -255,7 +255,7 @@ public class OldStatsActivity extends AppCompatActivity
             });
 
             Toolbar spinnerToolbar = findViewById(R.id.toolbar_filter);
-            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.primary_400));
+            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.primary_40));
         }
 
         selectCurrentTimeframeInActionBar();

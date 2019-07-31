@@ -3,13 +3,16 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -19,7 +22,8 @@ import javax.inject.Inject
 class OverviewMapper
 @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
     private val units = listOf(
             R.string.stats_views,
@@ -29,28 +33,18 @@ class OverviewMapper
     )
 
     fun buildTitle(
-        selectedItem: PeriodData?,
+        selectedItem: PeriodData,
         previousItem: PeriodData?,
         selectedPosition: Int,
         isLast: Boolean,
-        startValue: Int = MILLION
+        startValue: Int = MILLION,
+        statsGranularity: StatsGranularity = DAYS
     ): ValueItem {
-        val value = selectedItem?.getValue(selectedPosition) ?: 0
+        val value = selectedItem.getValue(selectedPosition) ?: 0
         val previousValue = previousItem?.getValue(selectedPosition)
         val positive = value >= (previousValue ?: 0)
-        val change = previousValue?.let {
-            val difference = value - previousValue
-            val percentage = when (previousValue) {
-                value -> "0"
-                0L -> "∞"
-                else -> (difference * 100 / previousValue).toFormattedString()
-            }
-            if (positive) {
-                resourceProvider.getString(R.string.stats_traffic_increase, difference.toFormattedString(), percentage)
-            } else {
-                resourceProvider.getString(R.string.stats_traffic_change, difference.toFormattedString(), percentage)
-            }
-        }
+        val change = buildChange(previousValue, value, positive, isFormattedNumber = true)
+        val unformattedChange = buildChange(previousValue, value, positive, isFormattedNumber = false)
         val state = when {
             isLast -> State.NEUTRAL
             positive -> State.POSITIVE
@@ -61,8 +55,44 @@ class OverviewMapper
                 unit = units[selectedPosition],
                 isFirst = true,
                 change = change,
-                state = state
+                state = state,
+                contentDescription = resourceProvider.getString(
+                        R.string.stats_overview_content_description,
+                        value,
+                        resourceProvider.getString(units[selectedPosition]),
+                        statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                        unformattedChange ?: ""
+                )
         )
+    }
+
+    private fun buildChange(
+        previousValue: Long?,
+        value: Long,
+        positive: Boolean,
+        isFormattedNumber: Boolean
+    ): String? {
+        return previousValue?.let {
+            val difference = value - previousValue
+            val percentage = when (previousValue) {
+                value -> "0"
+                0L -> "∞"
+                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
+            }
+            val formattedDifference = mapLongToString(difference, isFormattedNumber)
+            if (positive) {
+                resourceProvider.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
+            } else {
+                resourceProvider.getString(R.string.stats_traffic_change, formattedDifference, percentage)
+            }
+        }
+    }
+
+    private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
+        return when (isFormattedNumber) {
+            true -> value.toFormattedString()
+            false -> value.toString()
+        }
     }
 
     private fun PeriodData.getValue(
@@ -82,13 +112,44 @@ class OverviewMapper
         onColumnSelected: (position: Int) -> Unit,
         selectedPosition: Int
     ): Columns {
+        val views = selectedItem?.views ?: 0
+        val visitors = selectedItem?.visitors ?: 0
+        val likes = selectedItem?.likes ?: 0
+        val comments = selectedItem?.comments ?: 0
         return Columns(
-                units,
                 listOf(
-                        selectedItem?.views?.toFormattedString() ?: "0",
-                        selectedItem?.visitors?.toFormattedString() ?: "0",
-                        selectedItem?.likes?.toFormattedString() ?: "0",
-                        selectedItem?.comments?.toFormattedString() ?: "0"
+                        Column(
+                                R.string.stats_views,
+                                views.toFormattedString(),
+                                contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_views,
+                                        views
+                                )
+                        ),
+                        Column(
+                                R.string.stats_visitors,
+                                visitors.toFormattedString(),
+                                contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_visitors,
+                                        visitors
+                                )
+                        ),
+                        Column(
+                                R.string.stats_likes,
+                                likes.toFormattedString(),
+                                contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_likes,
+                                        likes
+                                )
+                        ),
+                        Column(
+                                R.string.stats_comments,
+                                comments.toFormattedString(),
+                                contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_comments,
+                                        comments
+                                )
+                        )
                 ),
                 selectedPosition,
                 onColumnSelected
@@ -134,13 +195,15 @@ class OverviewMapper
         if (shouldShowVisitors) {
             result.add(ChartLegend(R.string.stats_visitors))
         }
-        result.add(BarChartItem(
-                chartItems,
-                overlappingEntries = overlappingItems,
-                selectedItem = selectedItemPeriod,
-                onBarSelected = onBarSelected,
-                onBarChartDrawn = onBarChartDrawn
-        ))
+        result.add(
+                BarChartItem(
+                        chartItems,
+                        overlappingEntries = overlappingItems,
+                        selectedItem = selectedItemPeriod,
+                        onBarSelected = onBarSelected,
+                        onBarChartDrawn = onBarChartDrawn
+                )
+        )
         return result
     }
 }

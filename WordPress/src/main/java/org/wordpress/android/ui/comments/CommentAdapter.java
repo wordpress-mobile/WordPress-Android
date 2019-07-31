@@ -136,7 +136,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mStatusColorUnapproved = ContextCompat.getColor(context, R.color.accent);
 
         mUnselectedColor = ContextCompat.getColor(context, android.R.color.white);
-        mSelectedColor = ContextCompat.getColor(context, R.color.gray_50);
+        mSelectedColor = ContextCompat.getColor(context, R.color.gray_5);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);

@@ -45,7 +45,7 @@ open class BlockListItemViewHolder(
     ) {
         when {
             item.icon != null -> {
-                this.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, R.color.neutral_700))
+                this.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this.context, R.color.neutral_70))
                 this.visibility = View.VISIBLE
                 imageManager.load(this, item.icon)
             }

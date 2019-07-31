@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-09 10:33:31+0000
+Translation-Revision-Date: 2019-07-17 16:46:34+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="description_expand">Развернуть</string>
+    <string name="description_collapse">Свернуть</string>
+    <string name="editor_retry_failed_uploads">Повторить загрузку</string>
+    <string name="editor_toast_failed_uploads">Некоторые загрузки медиафайлов неудачны.\n Вы не можете сохранить или опубликовать запись.</string>
+    <string name="my_site_verify_your_email_without_email">Проверьте ваш адрес электронной почты, на него были посланы инструкции</string>
+    <string name="my_site_verify_your_email">Проверьте ваш адрес электронной почты, инструкции отосланы на %s</string>
+    <string name="error_media_recover_post_not_submitted">Невозможно загрузить медиафайл. Запись не была отправлена.</string>
+    <string name="error_media_recover_post_not_scheduled">Невозможно загрузить медиафайл. Запись не была запланирована к публикации.</string>
+    <string name="error_media_recover_post_not_published">Невозможно загрузить медиафайл. Запись не была опубликована.</string>
+    <string name="error_media_recover_post">Невозможно загрузить медиафайл</string>
+    <string name="link_dialog_button_cancel">Отмена</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Удалить ссылку</string>
+    <string name="link_dialog_title">Вставить ссылку</string>
+    <string name="post_settings_retry_featured_image">Повторить загрузку</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Загрузка медиафайла.\n Нажмите для расширенных возможностей.</string>
+    <string name="dialog_gutenberg_informative_description_page">Эта страница использует редактор блоков, назначенный редактором по умолчанию. Для использования классического редактора перейдите в Мой профиль > Настройки приложения.</string>
+    <string name="dialog_gutenberg_informative_description_post">Эта запись использует редактор блоков, назначенный редактором по умолчанию. Для использования классического редактора перейдите в Мой профиль > Настройки приложения.</string>
+    <string name="link_open_new_window">Открыть ссылку в новом окне/вкладке</string>
     <string name="post_list_search_prompt">Искать опубликованные записи</string>
     <string name="stats_widget_error_no_access_token">Для просмотра статистики войдите в вашу учётную запись WordPress.com.</string>
     <string name="post_list_search_nothing_found">Нет записей по критериям поиска</string>
@@ -192,8 +212,6 @@ Language: ru
     <string name="stats_loading_error">Данные не загружены</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Редактировать новые записи и страницы в редакторе блоков</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Использовать редактор блоков</string>
-    <string name="dialog_gutenberg_informative_description_page">Эта страница была изначально создана в редакторе блоков, так что мы включили его для неё.\nВы можете переключиться на классический редактор в любое время нажав⋮на верхней панели. </string>
-    <string name="dialog_gutenberg_informative_description_post">Эта запись была изначально создана в редакторе блоков, так что мы включили его для неё.\nВы можете переключиться на классический редактор в любое время нажав⋮на верхней панели.</string>
     <string name="dialog_gutenberg_informative_title">Редактор блоков включен</string>
     <string name="exit">выход</string>
     <string name="quick_start_sites_type_subtitle">Готово %1$d из %2$d</string>
@@ -281,7 +299,6 @@ Language: ru
     <string name="dialog_confirm_load_remote_post_body_2">Локальная\nСохранена %s\n\nВеб\nСохранена %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Эта запись имеет две конфликтующие версии. Выберите версию, изменения в которой будут потеряны.\n \n\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Решить конфликт рассинхронизации</string>
-    <string name="local_changes_discarding_no_connection">Требуется подключение к интернету для этого действия. Пожалуйста, проверьте ваше подключение и попробуйте снова.</string>
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
@@ -494,11 +511,6 @@ Language: ru
     <string name="blavatar_desc">значок сайта</string>
     <string name="theme_image_desc">изображение темы</string>
     <string name="featured_image_desc">изображение записи</string>
-    <string name="local_changes_discarding_error">Возникла ошибка при отмене локальных изменений. Пожалуйста, обратитесь в поддержку за помощью.</string>
-    <string name="local_changes_discarding">Отмена локальных изменений</string>
-    <string name="local_changes_discarded">Локальные изменения отменены</string>
-    <string name="menu_discard_changes">Отменить локальные изменения</string>
-    <string name="button_discard_changes">Отменить изменения</string>
     <string name="button_discard">Отменить</string>
     <string name="reader_avatar_desc">изображение профиля</string>
     <string name="reader_blavatar_desc">значок сайта</string>
@@ -911,7 +923,6 @@ Language: ru
     <string name="login_text_otp_another">Пришлите мне другой код.</string>
     <string name="enter_verification_code_sms">Мы послали текстовое сообщение на телефонный номер оканчивающийся на %s. Пожалуйста введите проверочный код из SMS.</string>
     <string name="error_generic_error">Невозможно совершить действие</string>
-    <string name="error_media_recover_post">Невозможно загрузить медиафайлы этой записи</string>
     <string name="image_size">Размер</string>
     <string name="uploading_subtitle_media_only_one">остался 1 файл</string>
     <string name="uploading_subtitle_media_only">осталось %1$d из %2$d файлов</string>
@@ -1409,7 +1420,6 @@ Language: ru
     <string name="start_over">Начать сначала</string>
     <string name="me_btn_app_settings">Настройки приложения</string>
     <string name="editor_remove_failed_uploads">Удалить невыполненные загрузки</string>
-    <string name="editor_toast_failed_uploads">Не удалось загрузить медиафайлы. Вы не можете сохранять или публиковать\n записи на этом сайте. Удалить все незагруженные медиафайлы?</string>
     <string name="site_settings_advanced_header">Дополнительно</string>
     <string name="comments_empty_list_filtered_trashed">Нет комментариев в корзине</string>
     <string name="comments_empty_list_filtered_pending">Нет комментариев на утверждении</string>
@@ -1643,7 +1653,6 @@ Language: ru
     <string name="stats_enable_rest_api_in_jetpack">Чтобы просмотреть статистику, включите модуль JSON API в Jetpack.</string>
     <string name="reader_short_comment_count_multi">Комментариев: %s</string>
     <string name="reader_short_comment_count_one">Один комментарий</string>
-    <string name="reader_label_submit_comment">ОТПРАВИТЬ</string>
     <string name="reader_hint_comment_on_post">Ответить на запись…</string>
     <string name="reader_discover_visit_blog">Перейти на %s</string>
     <string name="reader_discover_attribution_blog">Изначально опубликовано на сайте %s</string>
