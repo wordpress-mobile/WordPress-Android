@@ -1156,6 +1156,9 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
+        // Need to update the user property about GB enabled on any of the sites
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
+
         // "Reload" selected site from the db
         // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
