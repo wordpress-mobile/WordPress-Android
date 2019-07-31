@@ -83,9 +83,7 @@ class PostActionHandler(
                             site = site,
                             post = post,
                             triggerPreviewStateUpdate = triggerPreviewStateUpdate,
-                            showSnackbar = showSnackbar,
                             showToast = showToast,
-                            messageNoNetwork = SnackbarMessageHolder(R.string.no_network_message),
                             messageMediaUploading = ToastMessageHolder(
                                     R.string.editor_toast_uploading_please_wait,
                                     ToastUtils.Duration.SHORT

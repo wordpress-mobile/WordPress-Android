@@ -28,8 +28,8 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -61,10 +61,12 @@ class PagesViewModelTest {
     fun setUp() {
         viewModel = PagesViewModel(
                 pageStore = pageStore,
+                postStore = mock(),
                 dispatcher = dispatcher,
                 actionPerfomer = actionPerformer,
                 networkUtils = networkUtils,
                 uploadStarter = uploadStarter,
+                previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
                 eventBusWrapper = mock()

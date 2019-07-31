@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.pages
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -32,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.store.PostStore
@@ -42,11 +44,18 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PreviewStateHelper
+import org.wordpress.android.ui.posts.ProgressDialogHelper
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -72,7 +81,12 @@ class PagesFragment : Fragment() {
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var quickStartStore: QuickStartStore
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
+    @Inject lateinit var previewStateHelper: PreviewStateHelper
+    @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     private var quickStartEvent: QuickStartEvent? = null
+    private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
 
@@ -249,6 +263,30 @@ class PagesFragment : Fragment() {
         viewModel.start(site)
     }
 
+    private fun showToast(toastMessageHolder: ToastMessageHolder) {
+        context?.let {
+            toastMessageHolder.show(it)
+        }
+    }
+
+    private fun previewPage(activity: FragmentActivity, post: PostModel) {
+        val action = PreviewPost(
+                site = viewModel.site,
+                post = post,
+                triggerPreviewStateUpdate = viewModel::updatePreviewAndDialogState,
+                showToast = this::showToast,
+                messageMediaUploading = ToastMessageHolder(R.string.editor_toast_uploading_please_wait, Duration.SHORT)
+        )
+
+        val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
+        remotePreviewLogicHelper.runPostPreviewLogic(
+                activity = activity,
+                site = viewModel.site,
+                post = post,
+                helperFunctions = helperFunctions
+        )
+    }
+
     private fun setupObservers(activity: FragmentActivity) {
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
@@ -279,8 +317,25 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.previewPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.viewPagePreview(this, page) }
+        viewModel.previewPage.observe(this, Observer { post ->
+            post?.let {
+                previewPage(activity, post)
+            }
+        })
+
+        viewModel.browsePreview.observe(this, Observer { preview ->
+            preview?.let {
+                ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, preview.post, preview.previewType)
+            }
+        })
+
+        viewModel.previewState.observe(this, Observer {
+            progressDialog = progressDialogHelper.updateProgressDialogState(
+                    activity,
+                    progressDialog,
+                    it.progressDialogUiState,
+                    uiHelpers
+            )
         })
 
         viewModel.setPageParent.observe(this, Observer { page ->

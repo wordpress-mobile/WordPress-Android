@@ -5,10 +5,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
@@ -18,9 +16,7 @@ sealed class PostListAction {
         val site: SiteModel,
         val post: PostModel,
         val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
-        val showSnackbar: (SnackbarMessageHolder) -> Unit,
         val showToast: (ToastMessageHolder) -> Unit,
-        val messageNoNetwork: SnackbarMessageHolder,
         val messageMediaUploading: ToastMessageHolder
     ) : PostListAction()
     class RemotePreviewPost(
@@ -40,54 +36,11 @@ sealed class PostListAction {
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
 
-private fun getPostsListStrategyFunctions(
-    activity: FragmentActivity,
-    action: PostListAction.PreviewPost
-) = object : RemotePreviewLogicHelper.RemotePreviewHelperFunctions {
-    override fun notifyUploadInProgress(post: PostModel): Boolean {
-        return if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-            action.showToast.invoke(action.messageMediaUploading)
-            true
-        } else {
-            false
-        }
-    }
-
-    override fun startUploading(isRemoteAutoSave: Boolean, post: PostModel) {
-        if (isRemoteAutoSave) {
-            action.triggerPreviewStateUpdate.invoke(
-                    PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
-                    PostInfoType.PostNoInfo
-            )
-            if (!UploadService.isPostUploadingOrQueued(post)) {
-                UploadService.uploadPost(activity, post, true)
-            } else {
-                AppLog.d(
-                        AppLog.T.POSTS,
-                        "Remote auto save for preview not possible: post already uploading or queued"
-                )
-            }
-        } else {
-            action.triggerPreviewStateUpdate.invoke(
-                    PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
-                    PostInfoType.PostNoInfo
-            )
-            if (!UploadService.isPostUploadingOrQueued(post)) {
-                UploadService.uploadPost(activity, post)
-            } else {
-                AppLog.d(
-                        AppLog.T.POSTS,
-                        "Upload for preview not possible: post already uploading or queued"
-                )
-            }
-        }
-    }
-}
-
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
-    remotePreviewLogicHelper: RemotePreviewLogicHelper
+    remotePreviewLogicHelper: RemotePreviewLogicHelper,
+    previewStateHelper: PreviewStateHelper
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -97,27 +50,13 @@ fun handlePostListAction(
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo)
         }
         is PostListAction.PreviewPost -> {
-            if (action.post.isPage) {
-                ActivityLauncher.viewPostPreviewForResult(activity, action.site, action.post)
-            } else {
-                val opResult = remotePreviewLogicHelper.runPostPreviewLogic(
-                        activity = activity,
-                        site = action.site,
-                        post = action.post,
-                        helperFunctions = getPostsListStrategyFunctions(activity, action)
-                )
-
-                // TODO: consider to remove this once the modifications related to
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/10106 will be available.
-                // In current implementation only Trashed posts can trigger the below condition but
-                // once the above is implemented should not be possible to trigger below condition anymore.
-                if (opResult == RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW) {
-                    action.triggerPreviewStateUpdate.invoke(
-                            PostListRemotePreviewState.PREVIEWING,
-                            PostInfoType.PostNoInfo
-                    )
-                }
-            }
+            val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)
+            remotePreviewLogicHelper.runPostPreviewLogic(
+                    activity = activity,
+                    site = action.site,
+                    post = action.post,
+                    helperFunctions = helperFunctions
+            )
         }
         is PostListAction.RemotePreviewPost -> {
             ActivityLauncher.previewPostOrPageForResult(activity, action.site, action.post, action.remotePreviewType)
