@@ -2094,11 +2094,8 @@ public class EditPostActivity extends AppCompatActivity implements
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             UploadService.setLegacyMode(!isModernEditor());
-            if (mIsFirstTimePublish) {
-                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost, mIsRemoteAutoSave);
-            } else {
-                UploadService.uploadPost(EditPostActivity.this, mPost, mIsRemoteAutoSave);
-            }
+            // TODO isRemoteAutosave flag temporarily removed
+            UploadService.uploadPost(EditPostActivity.this, mPost, mIsFirstTimePublish);
 
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
 
@@ -2232,6 +2229,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean hasFailedMediaUploads = mEditorFragment.hasFailedMediaUploads()
                                                 || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null;
                 if (!hasFailedMediaUploads) {
+                    AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + mPost.getTitle());
                     // the user explicitly confirmed an intention to upload the post
                     mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
                 }

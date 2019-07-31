@@ -28,6 +28,8 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -40,6 +42,10 @@ import java.util.List;
 
 public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
+
+    public enum PostUploadAction {
+        REMOTE_AUTO_SAVE, UPLOAD_AS_DRAFT, UPLOAD
+    }
 
     /**
      * Returns a post-type specific error message string.
@@ -235,12 +241,6 @@ public class UploadUtils {
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
-        if (!NetworkUtils.isNetworkAvailable(activity)) {
-            ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                                 ToastUtils.Duration.SHORT);
-            return;
-        }
-
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
             String message = activity.getString(
@@ -253,17 +253,14 @@ public class UploadUtils {
         boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
 
+        AppLog.d(T.POSTS, "User explicitly confirmed changes. Post title: " + post.getTitle());
         // the changes were explicitly confirmed by the user
         post.setChangesConfirmedContentHashcode(post.contentHashcode());
 
         // save the post in the DB so the UploadService will get the latest change
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-        if (isFirstTimePublish) {
-            UploadService.uploadPostAndTrackAnalytics(activity, post);
-        } else {
-            UploadService.uploadPost(activity, post);
-        }
+        UploadService.uploadPost(activity, post, isFirstTimePublish);
 
         PostUtils.trackSavePostAnalytics(post, site);
     }
@@ -282,9 +279,8 @@ public class UploadUtils {
                                                   new View.OnClickListener() {
                                                       @Override
                                                       public void onClick(View view) {
-                                                          Intent intent = UploadService.getUploadPostServiceIntent(
-                                                                  activity, post, PostUtils.isFirstTimePublish(post),
-                                                                  false, true);
+                                                          Intent intent = UploadService.getRetryUploadServiceIntent(
+                                                                  activity, post, PostUtils.isFirstTimePublish(post));
                                                           activity.startService(intent);
                                                       }
                                                   });
@@ -400,6 +396,18 @@ public class UploadUtils {
                             activity.startActivity(writePostIntent);
                         }
                     });
+        }
+    }
+
+    public static PostUploadAction getPostUploadAction(PostModel post) {
+        if (post.getChangesConfirmedContentHashcode() == post.contentHashcode()) {
+            // We are sure we can push the post as the user has explicitly confirmed the changes
+            return PostUploadAction.UPLOAD;
+        } else if (post.isLocalDraft()) {
+            // Local draft can always be uploaded as DRAFT as it doesn't exist on the server yet
+            return PostUploadAction.UPLOAD_AS_DRAFT;
+        } else {
+            return PostUploadAction.REMOTE_AUTO_SAVE;
         }
     }
 }

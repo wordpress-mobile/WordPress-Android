@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -64,7 +65,6 @@ import javax.inject.Inject;
 public class PostUploadHandler implements UploadHandler<PostModel> {
     private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
-    private static Set<Integer> sShouldRemoteAutoSavePosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
     private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
 
@@ -131,18 +131,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     void unregisterPostForAnalyticsTracking(@NonNull PostModel post) {
         synchronized (sFirstPublishPosts) {
             sFirstPublishPosts.remove(post.getId());
-        }
-    }
-
-    void registerPostForRemoteAutoSave(@NonNull PostModel post) {
-        synchronized (sShouldRemoteAutoSavePosts) {
-            sShouldRemoteAutoSavePosts.add(post.getId());
-        }
-    }
-
-    void unregisterPostForRemoteAutoSave(@NonNull PostModel post) {
-        synchronized (sShouldRemoteAutoSavePosts) {
-            sShouldRemoteAutoSavePosts.remove(post.getId());
         }
     }
 
@@ -278,12 +266,24 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
 
-            if (sShouldRemoteAutoSavePosts.contains(mPost.getId())) {
-                mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
-            } else {
-                mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+            switch (UploadUtils.getPostUploadAction(mPost)) {
+                case UPLOAD:
+                    AppLog.d(T.POSTS,
+                            "Invoking newPushPostAction. Post: " + mPost.getTitle() + " status: " + mPost.getStatus());
+                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+                    break;
+                case UPLOAD_AS_DRAFT:
+                    mPost.setStatus(PostStatus.DRAFT.toString());
+                    AppLog.d(T.POSTS,
+                            "Invoking newPushPostAction - local draft. Post: " + mPost.getTitle() + " status: " + mPost
+                                    .getStatus());
+                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+                    break;
+                case REMOTE_AUTO_SAVE:
+                    AppLog.d(T.POSTS, "Invoking newRemoteAutoSavePostAction.");
+                    mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
+                    break;
             }
-
             return true;
         }
 
@@ -602,11 +602,9 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
             sFirstPublishPosts.remove(event.post.getId());
-            sShouldRemoteAutoSavePosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
-            sShouldRemoteAutoSavePosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
                 if (sCurrentUploadingPostAnalyticsProperties != null) {
@@ -642,7 +640,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
             PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
             SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-            sShouldRemoteAutoSavePosts.remove(postLocalId);
+//            sShouldRemoteAutoSavePosts.remove(postLocalId);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
             mPostUploadNotifier.updateNotificationSuccessForPost(post, site, false);
             finishUpload();

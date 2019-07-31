@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -21,11 +22,9 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.posts.PostUtilsWrapper
-import org.wordpress.android.ui.uploads.UploadStarter.DummyEnum.AUTOUPLOAD
-import org.wordpress.android.ui.uploads.UploadStarter.DummyEnum.REMOTE_AUTO_SAVE
-import org.wordpress.android.ui.uploads.UploadStarter.DummyEnum.UPLOAD_AS_DRAFT
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
 import org.wordpress.android.util.CrashLoggingUtils
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -141,35 +140,31 @@ open class UploadStarter @Inject constructor(
         val postsAndPages = posts.await() + pages.await()
 
         // TODO Do we need to check whether the post is currently being editted?
+        // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
         postsAndPages
                 .asSequence()
                 // TODO we'll remove this and fetch only locally changed posts from fluxC
                 .filter { it.isLocallyChanged || it.isLocalDraft }
-                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it)}
+                .filterNot {changesAlreadyAutosaved(it)}
+                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
                 .filter { postUtilsWrapper.isPublishable(it) }
                 .filter {
                     uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
                 }
                 .toList()
                 .forEach { post ->
-                    val action: DummyEnum = when {
-                        post.contentHashcode() == post.changesConfirmedContentHashcode -> AUTOUPLOAD
-                        post.isLocalDraft -> UPLOAD_AS_DRAFT
-                        else -> REMOTE_AUTO_SAVE
-                    }
-                    AppLog.d(AppLog.T.POSTS, "Title: ${post.title}, LocalStatus: ${post.status}, Action:$action")
-                    // TODO somehow add indication whether the post should be auto-uploaded or remote-auto-saved
-//                    uploadServiceFacade.uploadPost(
-//                            context = context,
-//                            post = post,
-//                            trackAnalytics = false,
-//                            publish = false,
-//                            isRetry = true
-//                    )
+                    uploadServiceFacade.uploadPost(
+                            context = context,
+                            post = post,
+                            // TODO Should we track analytics in certain cases ?!?
+                            trackAnalytics = false
+                    )
                 }
     }
 
-    private enum class DummyEnum {
-        AUTOUPLOAD, UPLOAD_AS_DRAFT, REMOTE_AUTO_SAVE;
+    private fun changesAlreadyAutosaved(post: PostModel): Boolean {
+        return UploadUtils.getPostUploadAction(post) == PostUploadAction.REMOTE_AUTO_SAVE &&
+                post.autoSaveModified != null &&
+                DateTimeUtils.dateFromIso8601(post.dateLocallyChanged) < DateTimeUtils.dateFromIso8601(post.autoSaveModified)
     }
 }

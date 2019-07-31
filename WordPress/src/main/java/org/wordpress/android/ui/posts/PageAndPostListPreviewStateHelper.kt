@@ -50,7 +50,8 @@ fun getUploadStrategyFunctions(
                     PostInfoType.PostNoInfo
             )
             if (!UploadService.isPostUploadingOrQueued(post)) {
-                UploadService.uploadPost(activity, post, true)
+                // TODO temporarily removed
+                UploadService.uploadPost(activity, post, false)
             } else {
                 AppLog.d(
                         AppLog.T.POSTS,
@@ -63,7 +64,7 @@ fun getUploadStrategyFunctions(
                     PostInfoType.PostNoInfo
             )
             if (!UploadService.isPostUploadingOrQueued(post)) {
-                UploadService.uploadPost(activity, post)
+                UploadService.uploadPost(activity, post, false)
             } else {
                 AppLog.d(
                         AppLog.T.POSTS,
