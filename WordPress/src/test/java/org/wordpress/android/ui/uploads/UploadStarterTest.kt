@@ -27,6 +27,12 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -45,24 +51,48 @@ class UploadStarterTest {
 
     private val sites = listOf(SiteModel(), SiteModel())
     private val sitesAndDraftPosts: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(createDraftPostModel(), createDraftPostModel()),
+            sites[0] to listOf( createDraftPostModel(DRAFT),
+                    createDraftPostModel(PUBLISHED),
+                    createDraftPostModel(SCHEDULED),
+                    createDraftPostModel(SCHEDULED),
+                    createDraftPostModel(PENDING),
+                    createDraftPostModel(PRIVATE),
+                    createDraftPostModel(PUBLISHED),
+                    createDraftPostModel(UNKNOWN)
+            ),
             sites[1] to listOf(
-                    createDraftPostModel(),
-                    createDraftPostModel(),
-                    createDraftPostModel(),
-                    createDraftPostModel(),
-                    createDraftPostModel()
+                    createDraftPostModel(DRAFT),
+                    createDraftPostModel(DRAFT),
+                    createDraftPostModel(PUBLISHED),
+                    createDraftPostModel(SCHEDULED),
+                    createDraftPostModel(PENDING),
+                    createDraftPostModel(PRIVATE),
+                    createDraftPostModel(PRIVATE),
+                    createDraftPostModel(UNKNOWN)
             )
     )
     private val draftPosts = sitesAndDraftPosts.values.flatten()
 
     private val sitesAndDraftPages: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf(createDraftPostModel(), createDraftPostModel()),
+            sites[0] to listOf(
+                    createDraftPostModel(DRAFT),
+                    createDraftPostModel(DRAFT),
+                    createDraftPostModel(PUBLISHED),
+                    createDraftPostModel(SCHEDULED),
+                    createDraftPostModel(PENDING),
+                    createDraftPostModel(PENDING),
+                    createDraftPostModel(PRIVATE),
+                    createDraftPostModel(UNKNOWN)
+            ),
             sites[1] to listOf(
-                    createDraftPostModel(),
-                    createDraftPostModel(),
-                    createDraftPostModel(),
-                    createDraftPostModel()
+                    createDraftPostModel(DRAFT),
+                    createDraftPostModel(PUBLISHED),
+                    createDraftPostModel(PUBLISHED),
+                    createDraftPostModel(SCHEDULED),
+                    createDraftPostModel(PENDING),
+                    createDraftPostModel(PRIVATE),
+                    createDraftPostModel(PRIVATE),
+                    createDraftPostModel(UNKNOWN)
             )
     )
     private val draftPages = sitesAndDraftPages.values.flatten()
@@ -72,17 +102,17 @@ class UploadStarterTest {
     }
     private val postStore = mock<PostStore> {
         sites.forEach {
-            on { getLocalDraftPosts(eq(it)) } doReturn sitesAndDraftPosts.getValue(it)
+            on { getPostsWithLocalChanges(eq(it)) } doReturn sitesAndDraftPosts.getValue(it)
         }
     }
     private val pageStore = mock<PageStore> {
         sites.forEach {
-            onBlocking { getLocalDraftPages(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
+            onBlocking { getPagesWithLocalChanges(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
         }
     }
 
     @Test
-    fun `when the internet connection is restored and the app is in foreground, it uploads all local drafts`() {
+    fun `when the internet connection is restored and the app is in foreground, it uploads locally changed posts`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -104,14 +134,12 @@ class UploadStarterTest {
         verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
     @Test
-    fun `when the internet connection is restored and the app is in background it doesn't upload all local drafts`() {
+    fun `when the internet connection is restored and the app is in background it doesn't upload anything`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -129,14 +157,12 @@ class UploadStarterTest {
         verify(uploadServiceFacade, times(0)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
     @Test
-    fun `when the app is placed in the foreground, it uploads all local drafts`() {
+    fun `when the app is placed in the foreground, it uploads locally changed posts`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(AVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -153,14 +179,12 @@ class UploadStarterTest {
         verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
     @Test
-    fun `when uploading a single site, only the local drafts of that site is uploaded`() {
+    fun `when uploading a single site, only posts of that site are uploaded`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -178,14 +202,12 @@ class UploadStarterTest {
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
     @Test
-    fun `when uploading, it ignores local drafts that are not publishable`() {
+    fun `when uploading, it ignores locally chagned posts that are not publishable`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -210,14 +232,12 @@ class UploadStarterTest {
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
     @Test
-    fun `when uploading, it ignores local drafts that are already queued`() {
+    fun `when uploading, it ignores posts that are already queued`() {
         // Given
         val site: SiteModel = sites[1]
         val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndDraftPosts.getValue(site).let { posts ->
@@ -254,9 +274,7 @@ class UploadStarterTest {
         verify(uploadServiceFacade, times(expectedUploadPostsAndPages.size)).uploadPost(
                 context = any(),
                 post = argWhere { expectedUploadPostsAndPages.contains(it) },
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
         verify(
                 uploadServiceFacade,
@@ -266,7 +284,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading a single site, local drafts with too many errors or cancellations are not uploaded`() {
+    fun `when uploading a single site, posts with too many errors or cancellations are not uploaded`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -286,9 +304,7 @@ class UploadStarterTest {
         verify(uploadServiceFacade, never()).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
@@ -339,10 +355,10 @@ class UploadStarterTest {
             on { this.lifecycle } doReturn lifecycle
         }
 
-        fun createDraftPostModel() = PostModel().apply {
+        fun createDraftPostModel(postStatus: PostStatus) = PostModel().apply {
             id = Random.nextInt()
             title = UUID.randomUUID().toString()
-            status = PostStatus.DRAFT.toString()
+            status = postStatus.toString()
         }
     }
 }

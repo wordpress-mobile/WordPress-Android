@@ -41,10 +41,10 @@ class UploadStarterConcurrentTest {
     )
 
     private val postStore = mock<PostStore> {
-        on { getLocalDraftPosts(eq(site)) } doReturn draftPosts
+        on { getPostsWithLocalChanges(eq(site)) } doReturn draftPosts
     }
     private val pageStore = mock<PageStore> {
-        onBlocking { getLocalDraftPages(any()) } doReturn emptyList()
+        onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList()
     }
 
     @Test
@@ -63,9 +63,7 @@ class UploadStarterConcurrentTest {
         verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
