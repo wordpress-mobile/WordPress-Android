@@ -14,7 +14,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="@dimen/margin_medium"
-        android:textColor="@color/neutral_700"
+        android:textColor="@color/neutral_70"
         android:textSize="@dimen/text_sz_medium"/>
 
     <View
@@ -22,6 +22,6 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/margin_medium"
-        android:background="@color/neutral_100"/>
+        android:background="@color/neutral_10"/>
 
 </RelativeLayout>

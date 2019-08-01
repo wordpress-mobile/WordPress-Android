@@ -12,9 +12,16 @@ import javax.inject.Singleton;
 
 @Singleton
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
+    private AccountStore mAccountStore;
+    private SiteStore mSiteStore;
+    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore) {
+        this.mAccountStore = accountStore;
+        this.mSiteStore = siteStore;
+    }
+
     @Override
-    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcom) {
-        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcom);
+    public void trackAnalyticsSignIn(boolean isWpcom) {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, isWpcom);
     }
 
     @Override

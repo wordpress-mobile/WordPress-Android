@@ -101,7 +101,7 @@ class SiteCreationSiteInfoViewModel @Inject constructor(
         ) {
             SKIP(
                     text = R.string.new_site_creation_button_skip,
-                    textColor = R.color.neutral_800,
+                    textColor = R.color.neutral_80,
                     backgroundColor = android.R.color.white
             ),
             NEXT(

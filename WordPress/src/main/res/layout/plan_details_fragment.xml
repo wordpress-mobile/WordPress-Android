@@ -24,7 +24,7 @@
             android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
             android:importantForAccessibility="no"
-            tools:src="@drawable/bg_oval_neutral_300_plans_32dp"/>
+            tools:src="@drawable/bg_oval_neutral_30_plans_32dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/neutral_700"
+                android:textColor="@color/neutral_70"
                 android:textSize="@dimen/text_sz_extra_large"
                 tools:text="Personal Plan"/>
 
@@ -50,7 +50,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:gravity="center_horizontal"
-                android:textColor="@color/neutral_400"
+                android:textColor="@color/neutral_40"
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="italic"
                 tools:text="Best for beginners"/>

@@ -52,7 +52,7 @@
             android:layout_height="128dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_audio_white_24dp"
-            android:tint="@color/neutral_300"
+            android:tint="@color/neutral_30"
             android:contentDescription="@string/media_preview_audio_desc"/>
 
     </RelativeLayout>

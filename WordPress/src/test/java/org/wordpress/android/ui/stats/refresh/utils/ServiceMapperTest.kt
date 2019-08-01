@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -8,14 +9,21 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class ServiceMapperTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var serviceMapper: ServiceMapper
     @Before
     fun setUp() {
-        serviceMapper = ServiceMapper(resourceProvider)
+        serviceMapper = ServiceMapper(resourceProvider, contentDescriptionHelper)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn("title, views")
     }
 
     @Test
@@ -24,7 +32,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -44,7 +55,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -64,7 +78,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -84,7 +101,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -104,7 +124,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -124,7 +147,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -145,7 +171,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service))
+        val result = serviceMapper.map(
+                listOf(service),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(1)
         result[0].apply {
@@ -166,7 +195,10 @@ class ServiceMapperTest : BaseUnitTest() {
         val pixelSize = 10
         whenever(resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_small)).thenReturn(pixelSize)
 
-        val result = serviceMapper.map(listOf(service1, service2, service3))
+        val result = serviceMapper.map(
+                listOf(service1, service2, service3),
+                Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+        )
 
         assertThat(result).hasSize(3)
         assertThat(result[0].showDivider).isTrue()

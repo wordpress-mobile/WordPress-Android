@@ -106,7 +106,8 @@ sealed class BlockListItem(val type: Type) {
     data class ListItem(
         val text: String,
         val value: String,
-        val showDivider: Boolean = true
+        val showDivider: Boolean = true,
+        val contentDescription: String
     ) : BlockListItem(LIST_ITEM) {
         override val itemId: Int
             get() = text.hashCode()
@@ -123,7 +124,8 @@ sealed class BlockListItem(val type: Type) {
         val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
-        val navigationAction: NavigationAction? = null
+        val navigationAction: NavigationAction? = null,
+        val contentDescription: String
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
