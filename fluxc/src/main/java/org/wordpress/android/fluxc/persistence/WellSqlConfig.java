@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 76;
+        return 80;
     }
 
     @Override
@@ -555,9 +555,29 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 74:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
                 db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
                 oldVersion++;
             case 75:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 76:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE PostSchedulingReminder (_id INTEGER PRIMARY KEY AUTOINCREMENT,POST_ID INTEGER,"
+                        + "SCHEDULED_TIME TEXT NOT NULL)");
+                oldVersion++;
+            case 77:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add AUTHOR_ID INTEGER;");
+                db.execSQL("alter table PostModel add AUTHOR_DISPLAY_NAME TEXT;");
+                oldVersion++;
+            case 78:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 79:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
@@ -828,17 +848,42 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "CARRIER_LINK TEXT NOT NULL,"
                                + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
-                 case 67:
-                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
-                     db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
-                     break;
-                 case 69:
+                case 67:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD COUNTRY_CODE TEXT");
+                    break;
+                case 69:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderModel ADD DATE_MODIFIED TEXT");
                     db.execSQL("CREATE TABLE WCOrderSummaryModel (LOCAL_SITE_ID INTEGER,REMOTE_ORDER_ID INTEGER,"
                                + "DATE_CREATED TEXT NOT NULL,_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
                                + "UNIQUE (REMOTE_ORDER_ID, LOCAL_SITE_ID) ON CONFLICT REPLACE)");
+                    break;
+                case 75:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCRevenueStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  INTERVAL TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
+                               + "  TOTAL TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                    break;
+                case 78:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCVisitorStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  UNIT TEXT NOT NULL,\n"
+                               + "  DATE TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  QUANTITY TEXT NOT NULL,\n"
+                               + "  IS_CUSTOM_FIELD INTEGER,\n"
+                               + "  FIELDS TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
             }
         }

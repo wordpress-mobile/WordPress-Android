@@ -392,6 +392,11 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setPassword(from.getPassword());
         post.setIsPage(from.getType().equals("page"));
 
+        if (from.getAuthor() != null) {
+            post.setAuthorId(from.getAuthor().getId());
+            post.setAuthorDisplayName(from.getAuthor().getName());
+        }
+
         if (from.getPostThumbnail() != null) {
             post.setFeaturedImageId(from.getPostThumbnail().getId());
         }

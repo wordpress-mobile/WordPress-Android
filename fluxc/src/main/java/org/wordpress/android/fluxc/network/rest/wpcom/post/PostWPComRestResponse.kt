@@ -28,7 +28,8 @@ data class PostWPComRestResponse(
     @SerializedName("tags") val tags: Map<String, TermWPComRestResponse>? = null,
     @SerializedName("categories") val categories: Map<String, TermWPComRestResponse>? = null,
     @SerializedName("capabilities") val capabilities: Capabilities? = null,
-    @SerializedName("meta") val meta: PostMeta? = null
+    @SerializedName("meta") val meta: PostMeta? = null,
+    @SerializedName("author") val author: Author? = null
 ) {
     data class PostsResponse(
         @SerializedName("posts") val posts: List<PostWPComRestResponse>
@@ -62,4 +63,9 @@ data class PostWPComRestResponse(
     fun getPostAutoSave(): PostAutoSave? {
         return meta?.data?.autoSave
     }
+
+    data class Author(
+        @SerializedName("ID") val id: Long = 0,
+        @SerializedName("name") val name: String?
+    )
 }
