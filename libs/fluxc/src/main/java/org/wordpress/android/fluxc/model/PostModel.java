@@ -474,7 +474,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
                 && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
-                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
+                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl());
     }
 
     public int contentHashcode() {
@@ -504,9 +504,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mIsPage ? 1 : 0);
         result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
         result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
-        result = 31 * result + (mHasCapabilityPublishPost ? 1 : 0);
-        result = 31 * result + (mHasCapabilityEditPost ? 1 : 0);
-        result = 31 * result + (mHasCapabilityDeletePost ? 1 : 0);
         return result;
     }
 
