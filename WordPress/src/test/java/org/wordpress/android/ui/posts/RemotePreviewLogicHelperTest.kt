@@ -16,7 +16,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
@@ -61,8 +60,6 @@ class RemotePreviewLogicHelperTest {
 
         doReturn(true).whenever(postUtilsWrapper).isPublishable(post)
 
-        doReturn(PostStatus.DRAFT.toString()).whenever(post).status
-        doReturn("2018-06-23T15:45:16+00:00").whenever(post).dateCreated
         doReturn(true).whenever(post).isLocallyChanged
         doReturn("Test title for test purposes").whenever(post).title
         doReturn(999999).whenever(post).contentHashcode()
@@ -157,10 +154,9 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `cannot remote auto save empty published post for preview`() {
+    fun `cannot remote auto save empty post for preview`() {
         // Given
         doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
-        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -173,9 +169,8 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `remote auto save published post with local changes for preview`() {
+    fun `remote auto save post with local changes for preview`() {
         // Given
-        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -186,9 +181,8 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `launch remote preview with no uploading for published post without local changes`() {
+    fun `launch remote preview with no uploading for a post without local changes`() {
         // Given
-        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
         doReturn(false).whenever(post).isLocallyChanged
 
         // When
@@ -206,25 +200,8 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `cannot remote auto save empty scheduled post for preview`() {
+    fun `remote auto save a post with local changes for preview`() {
         // Given
-        doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
-        doReturn(PostStatus.SCHEDULED.toString()).whenever(post).status
-
-        // When
-        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
-
-        // Then
-        assertThat(result).isEqualTo(
-                RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
-        )
-        verify(helperFunctions, times(1)).notifyEmptyPost()
-    }
-
-    @Test
-    fun `remote auto save scheduled post with local changes for preview`() {
-        // Given
-        doReturn(PostStatus.SCHEDULED.toString()).whenever(post).status
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -232,25 +209,5 @@ class RemotePreviewLogicHelperTest {
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
         verify(helperFunctions, times(1)).startUploading(true, post)
-    }
-
-    @Test
-    fun `launch remote preview with no uploading for scheduled post without local changes`() {
-        // Given
-        doReturn(PostStatus.SCHEDULED.toString()).whenever(post).status
-        doReturn(false).whenever(post).isLocallyChanged
-
-        // When
-        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
-
-        // Then
-        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
-        verify(helperFunctions, never()).startUploading(any(), any())
-        verify(activityLauncherWrapper, times(1)).previewPostOrPageForResult(
-                activity,
-                site,
-                post,
-                RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
-        )
     }
 }
