@@ -57,7 +57,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     /**
      * This field stores a hashcode value of the post content when the user confirmed making the changes visible to
-     * the users (Publish/Submit/Update/Schedule).
+     * the users (Publish/Submit/Update/Schedule/Sync).
      * <p>
      * It is used to determine if the user actually confirmed the changes and if the post was edited since then.
      */
@@ -477,6 +477,15 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl());
     }
 
+    /**
+     * This method is used along with `mChangesConfirmedContentHashcode`. We store the contentHashcode of
+     * the post when the user explicitly confirms that the changes to the post can be published. Beware, that when
+     * you modify this method all users will need to re-confirm all the local changes. The changes wouldn't get
+     * published otherwise.
+     *
+     * This is a method generated using Android Studio. When you need to add a new field it's safer to use the
+     * generator again. (We can't use Objects.hash() since the current minSdkVersion is lower than 19.
+     */
     public int contentHashcode() {
         int result;
         long temp;
@@ -494,6 +503,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mTagNames != null ? mTagNames.hashCode() : 0);
         result = 31 * result + (mStatus != null ? mStatus.hashCode() : 0);
         result = 31 * result + (mPassword != null ? mPassword.hashCode() : 0);
+        result = 31 * result + (int) (mAuthorId ^ (mAuthorId >>> 32));
+        result = 31 * result + (mAuthorDisplayName != null ? mAuthorDisplayName.hashCode() : 0);
         result = 31 * result + (int) (mFeaturedImageId ^ (mFeaturedImageId >>> 32));
         result = 31 * result + (mPostFormat != null ? mPostFormat.hashCode() : 0);
         result = 31 * result + (mSlug != null ? mSlug.hashCode() : 0);
