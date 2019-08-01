@@ -21,8 +21,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.testing.OpenForTesting
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
 import org.wordpress.android.util.AppLog
@@ -62,7 +62,7 @@ class UploadStarter @Inject constructor(
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
-    private val MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES = 10
+    private val MAXIMUM_AUTO_UPLOAD_RETRIES = 10
 
     /**
      * When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
@@ -168,7 +168,7 @@ class UploadStarter @Inject constructor(
                     }
                     .filter {
                         // Do not auto-upload post which we already tried to upload certain number of times
-                        uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
+                        uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_UPLOAD_RETRIES
                     }
                     .filter {
                         // Do not remote-auto-save changes which were already remote-auto-saved
