@@ -704,14 +704,12 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
-                boolean isAutoSaveChanged = !ObjectsUtils.equals(post.getAutoSaveModified(), item.autoSaveModified);
-                // Check if the post's last modified date, status or meta.data.autosave have changed.
+                // Check if the post's last modified date or status have changed.
                 // We need to check status separately because when a scheduled post is published, its modified date
                 // will not be updated.
                 boolean isPostChanged =
                         !post.getLastModified().equals(item.lastModified)
-                        || !post.getStatus().equals(item.status)
-                        || isAutoSaveChanged;
+                        || !post.getStatus().equals(item.status);
 
                 /*
                  * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
@@ -735,7 +733,6 @@ public class PostStore extends Store {
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
-                        post.setRemoteAutoSaveModified(item.autoSaveModified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }
