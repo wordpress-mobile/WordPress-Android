@@ -82,6 +82,7 @@
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="auth_required">Log in again to continue.</string>
     <string name="checking_email">Checking email</string>
