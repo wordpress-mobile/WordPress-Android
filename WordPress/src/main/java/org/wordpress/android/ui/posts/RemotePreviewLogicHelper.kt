@@ -3,9 +3,13 @@ package org.wordpress.android.ui.posts
 import android.app.Activity
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
+import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD_AS_DRAFT
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,14 +71,15 @@ class RemotePreviewLogicHelper @Inject constructor(
 
             val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
-            if (shouldUpload(updatedPost)) {
+            val uploadAction = UploadUtils.getPostUploadAction(updatedPost)
+            if (shouldUpload(uploadAction)) {
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyDraft()
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
                 }
 
                 helperFunctions.startUploading(false, updatedPost)
-            } else if (shouldRemoteAutoSave(updatedPost)) {
+            } else if (shouldRemoteAutoSave(uploadAction)) {
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyPost()
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
@@ -93,14 +98,11 @@ class RemotePreviewLogicHelper @Inject constructor(
         return PreviewLogicOperationResult.GENERATING_PREVIEW
     }
 
-    private fun shouldUpload(post: PostModel): Boolean {
-        val status = PostStatus.fromPost(post)
-        return post.isLocalDraft ||
-                (status == PostStatus.DRAFT && post.isLocallyChanged)
+    private fun shouldUpload(post: PostModel, action: PostUploadAction): Boolean {
+        return (post.isLocallyChanged || post.isLocalDraft) && (action == UPLOAD_AS_DRAFT || action == UPLOAD)
     }
 
-    private fun shouldRemoteAutoSave(post: PostModel): Boolean {
-        val status = PostStatus.fromPost(post)
-        return (status == PostStatus.PUBLISHED || status == PostStatus.SCHEDULED) && post.isLocallyChanged
+    private fun shouldRemoteAutoSave(post: PostModel, action: PostUploadAction): Boolean {
+        return post.isLocallyChanged && action == REMOTE_AUTO_SAVE
     }
 }

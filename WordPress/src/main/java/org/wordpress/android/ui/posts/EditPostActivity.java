@@ -1710,16 +1710,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
-        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinishActivity, false);
-    }
-
     private void savePostOnlineAndFinishAsync(
             boolean isFirstTimePublish,
-            boolean doFinishActivity,
-            boolean isRemoteAutoSave
+            boolean doFinishActivity
     ) {
-        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity, isRemoteAutoSave)
+        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -2069,12 +2064,10 @@ public class EditPostActivity extends AppCompatActivity implements
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
         boolean mDoFinishActivity;
-        boolean mIsRemoteAutoSave;
 
-        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity, boolean isRemoteAutoSave) {
+        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity) {
             this.mIsFirstTimePublish = isFirstTimePublish;
             this.mDoFinishActivity = doFinishActivity;
-            this.mIsRemoteAutoSave = isRemoteAutoSave;
         }
 
         @Override
@@ -2099,7 +2092,6 @@ public class EditPostActivity extends AppCompatActivity implements
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             UploadService.setLegacyMode(!isModernEditor());
-            // TODO isRemoteAutosave flag temporarily removed
             UploadService.uploadPost(EditPostActivity.this, mPost, mIsFirstTimePublish);
 
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
@@ -2307,7 +2299,7 @@ public class EditPostActivity extends AppCompatActivity implements
         savePostAndOptionallyFinish(doFinish, false);
     }
 
-    private void savePostAndOptionallyFinish(final boolean doFinish, final boolean isRemoteAutoSave) {
+    private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
@@ -2327,7 +2319,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
                 // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = shouldSavePost() || isRemoteAutoSave;
+                boolean shouldSave = shouldSavePost() || forceSave;
 
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
@@ -2345,11 +2337,11 @@ public class EditPostActivity extends AppCompatActivity implements
                             && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                             && isNotRestarting) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish, isRemoteAutoSave);
+                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        if (isRemoteAutoSave) {
-                            savePostOnlineAndFinishAsync(false, false, isRemoteAutoSave);
+                        if (forceSave) {
+                            savePostOnlineAndFinishAsync(false, false);
                         } else {
                             savePostLocallyAndFinishAsync(doFinish);
                         }
