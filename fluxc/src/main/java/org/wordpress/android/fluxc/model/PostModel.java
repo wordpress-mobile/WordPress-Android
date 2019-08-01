@@ -57,7 +57,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     /**
      * This field stores a hashcode value of the post content when the user confirmed making the changes visible to
-     * the users (Publish/Submit/Update/Schedule).
+     * the users (Publish/Submit/Update/Schedule/Sync).
      * <p>
      * It is used to determine if the user actually confirmed the changes and if the post was edited since then.
      */
@@ -458,9 +458,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         result = 31 * result + (mIsPage ? 1 : 0);
         result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
         result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
-        result = 31 * result + (mHasCapabilityPublishPost ? 1 : 0);
-        result = 31 * result + (mHasCapabilityEditPost ? 1 : 0);
-        result = 31 * result + (mHasCapabilityDeletePost ? 1 : 0);
         return result;
     }
 
