@@ -1,5 +1,6 @@
 13.1
 -----
+* All changes to posts and pages will be automatically synced with the server.
  
 13.0
 -----
