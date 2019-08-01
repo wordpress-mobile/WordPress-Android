@@ -20,6 +20,7 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -175,7 +176,7 @@ class HelpActivity : AppCompatActivity() {
                 intent.putExtra(WordPress.SITE, selectedSite)
             }
 
-            val tagsList: ArrayList<String>? = if (AppPrefs.isGutenbergDefaultForNewPosts()) {
+            val tagsList: ArrayList<String>? = if (SiteUtils.isBlockEditorDefaultForNewPost(selectedSite)) {
                 // construct a mutable list to add the Gutenberg related extra tag
                 val list = ArrayList<String>()
 

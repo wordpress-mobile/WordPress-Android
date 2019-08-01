@@ -88,9 +88,8 @@ public class UploadUtils {
             case INVALID_RESPONSE:
             case GENERIC_ERROR:
             default:
-                // In case of a generic or uncaught error, return the message from the API response or the error type
-                return TextUtils.isEmpty(error.message) ? new UiStringText(error.type.toString())
-                        : new UiStringText(error.message);
+                AppLog.w(T.MAIN, "Error message: " + error.message + " ,Error Type: " + error.type);
+                return new UiStringRes(R.string.error_generic_error);
         }
     }
 

@@ -9,14 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
-import org.wordpress.android.ui.prefs.AppPrefs;
-
-import java.util.List;
 
 /**
  * Design guidelines for Calypso-styled Site Settings (and likely other screens)
@@ -76,14 +68,14 @@ public class WPPrefUtils {
      */
     public static void layoutAsDarkTitle(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, R.color.neutral_700);
+        setTextViewAttributes(view, size, R.color.neutral_70);
     }
 
     /**
      * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
      */
     public static void layoutAsSubhead(TextView view) {
-        int color = view.isEnabled() ? R.color.neutral_700 : R.color.neutral_200;
+        int color = view.isEnabled() ? R.color.neutral_70 : R.color.neutral_20;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, color);
     }
@@ -92,7 +84,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display smaller text.
      */
     public static void layoutAsBody1(TextView view) {
-        int color = view.isEnabled() ? R.color.neutral : R.color.neutral_200;
+        int color = view.isEnabled() ? R.color.neutral : R.color.neutral_20;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
         setTextViewAttributes(view, size, color);
     }
@@ -110,7 +102,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsCaption(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.neutral_400);
+        setTextViewAttributes(view, size, R.color.neutral_40);
     }
 
     /**
@@ -118,7 +110,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsFlatButton(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.primary_400);
+        setTextViewAttributes(view, size, R.color.primary_40);
     }
 
     /**
@@ -134,9 +126,9 @@ public class WPPrefUtils {
      */
     public static void layoutAsInput(EditText view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, R.color.neutral_700);
-        view.setHintTextColor(view.getResources().getColor(R.color.neutral_200));
-        view.setTextColor(view.getResources().getColor(R.color.neutral_700));
+        setTextViewAttributes(view, size, R.color.neutral_70);
+        view.setHintTextColor(view.getResources().getColor(R.color.neutral_20));
+        view.setTextColor(view.getResources().getColor(R.color.neutral_70));
         view.setSingleLine(true);
     }
 
@@ -145,7 +137,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerSelected(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_triple_extra_large);
-        setTextViewAttributes(view, size, R.color.primary_400);
+        setTextViewAttributes(view, size, R.color.primary_40);
     }
 
     /**
@@ -153,7 +145,7 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerPeek(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, R.color.neutral_700);
+        setTextViewAttributes(view, size, R.color.neutral_70);
     }
 
     /**
@@ -167,27 +159,5 @@ public class WPPrefUtils {
     public static void setTextViewAttributes(TextView textView, int size, int colorRes) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
         textView.setTextColor(textView.getResources().getColor(colorRes));
-    }
-
-    public static void setMobileEditorPreferenceToRemote(final Dispatcher dispatcher, final SiteStore siteStore) {
-        final List<SiteModel> sitesAccessedViaWPComRest = siteStore.getSitesAccessedViaWPComRest();
-        final boolean setDelay = sitesAccessedViaWPComRest.size() > 5;
-        final String editorSetting = AppPrefs.isGutenbergDefaultForNewPosts() ? "gutenberg" : "aztec";
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (SiteModel currentSite : sitesAccessedViaWPComRest) {
-                    dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                            new DesignateMobileEditorPayload(currentSite, editorSetting)));
-                    if (setDelay) {
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            // no-op
-                        }
-                    }
-                }
-            }
-        }).start();
     }
 }

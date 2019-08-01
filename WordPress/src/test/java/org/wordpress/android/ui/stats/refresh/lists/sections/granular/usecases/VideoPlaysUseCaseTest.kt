@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -48,8 +50,10 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: VideoPlaysUseCase
     private val videoPlay = VideoPlays("post1", "Video 1", "group2.jpg", 100)
+    private val contentDescription = "title, views"
     @Before
     fun setUp() {
         useCase = VideoPlaysUseCase(
@@ -59,6 +63,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 siteModelProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
@@ -69,6 +74,11 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -193,6 +203,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertLink(item: BlockListItem) {

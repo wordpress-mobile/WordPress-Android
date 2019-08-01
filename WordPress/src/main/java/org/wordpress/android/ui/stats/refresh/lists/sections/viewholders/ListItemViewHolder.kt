@@ -25,5 +25,6 @@ class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         } else {
             View.GONE
         }
+        itemView.contentDescription = item.contentDescription
     }
 }

@@ -25,9 +25,9 @@ class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         unit.setText(item.unit)
         val hasChange = item.change != null
         val color = when (item.state) {
-            POSITIVE -> R.color.success_500
-            NEGATIVE -> R.color.error_500
-            NEUTRAL -> R.color.gray_500
+            POSITIVE -> R.color.success_50
+            NEGATIVE -> R.color.error_50
+            NEUTRAL -> R.color.gray_50
         }
         change.setTextColor(ContextCompat.getColor(change.context, color))
         change.visibility = if (hasChange) View.VISIBLE else View.GONE
@@ -36,5 +36,6 @@ class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val topMargin = if (item.isFirst) container.resources.getDimensionPixelSize(R.dimen.margin_medium) else 0
         params.setMargins(0, topMargin, 0, 0)
         container.layoutParams = params
+        container.contentDescription = item.contentDescription
     }
 }

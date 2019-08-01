@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -9,31 +10,45 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class OverviewMapperTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var mapper: OverviewMapper
     private val views: Long = 10
     private val visitors: Long = 15
     private val likes: Long = 20
     private val comments: Long = 35
     private val selectedItem = PeriodData("2010-10-10", views, visitors, likes, 30, comments, 40)
+    private val likesTitle = "Likes"
+    private val printedDate = "10. 10. 2010"
     @Before
     fun setUp() {
-        mapper = OverviewMapper(statsDateFormatter, resourceProvider)
+        mapper = OverviewMapper(statsDateFormatter, resourceProvider, contentDescriptionHelper)
+        whenever(resourceProvider.getString(R.string.stats_likes)).thenReturn(likesTitle)
+        whenever(statsDateFormatter.printGranularDate(any<String>(), any())).thenReturn(printedDate)
     }
 
     @Test
     fun `builds title from item and position with empty previous item`() {
         val selectedPosition = 2
         val uiState = UiState(selectedPosition)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(likes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq("")
+        )).thenReturn("$likes")
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -57,6 +72,13 @@ class OverviewMapperTest : BaseUnitTest() {
         val positiveLabel = "+15 (300%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("15"), eq("300")))
                 .thenReturn(positiveLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(likes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq(positiveLabel)
+        )).thenReturn(positiveLabel)
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -80,6 +102,13 @@ class OverviewMapperTest : BaseUnitTest() {
         val positiveLabel = "+20 (∞%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
                 .thenReturn(positiveLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(likes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq(positiveLabel)
+        )).thenReturn(positiveLabel)
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -103,6 +132,13 @@ class OverviewMapperTest : BaseUnitTest() {
         val negativeLabel = "-10 (-33%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
                 .thenReturn(negativeLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(likes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq(negativeLabel)
+        )).thenReturn(negativeLabel)
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -126,6 +162,13 @@ class OverviewMapperTest : BaseUnitTest() {
         val negativeLabel = "-20 (-100%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-20"), eq("-100")))
                 .thenReturn(negativeLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(newLikes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq(negativeLabel)
+        )).thenReturn(negativeLabel)
 
         val title = mapper.buildTitle(
                 newItem,
@@ -149,6 +192,13 @@ class OverviewMapperTest : BaseUnitTest() {
         val positiveLabel = "+0 (0%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("0"), eq("0")))
                 .thenReturn(positiveLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(likes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq(positiveLabel)
+        )).thenReturn(positiveLabel)
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -161,6 +211,7 @@ class OverviewMapperTest : BaseUnitTest() {
         assertThat(title.unit).isEqualTo(R.string.stats_likes)
         assertThat(title.change).isEqualTo(positiveLabel)
         assertThat(title.state).isEqualTo(POSITIVE)
+        assertThat(title.contentDescription).isEqualTo(positiveLabel)
     }
 
     @Test
@@ -172,6 +223,13 @@ class OverviewMapperTest : BaseUnitTest() {
         val negativeLabel = "-10 (-33%)"
         whenever(resourceProvider.getString(eq(R.string.stats_traffic_change), eq("-10"), eq("-33")))
                 .thenReturn(negativeLabel)
+        whenever(resourceProvider.getString(
+                eq(R.string.stats_overview_content_description),
+                eq(likes),
+                eq(likesTitle),
+                eq(printedDate),
+                eq(negativeLabel)
+        )).thenReturn(negativeLabel)
 
         val title = mapper.buildTitle(
                 selectedItem,
@@ -193,23 +251,44 @@ class OverviewMapperTest : BaseUnitTest() {
 
         val onColumnSelected: (Int) -> Unit = {}
 
+        val viewsContentDescription = "views description"
+        whenever(contentDescriptionHelper.buildContentDescription(
+                eq(R.string.stats_views),
+                eq(views)
+        )).thenReturn(viewsContentDescription)
+
+        val visitorsContentDescription = "visitors description"
+        whenever(contentDescriptionHelper.buildContentDescription(
+                eq(R.string.stats_visitors),
+                eq(visitors)
+        )).thenReturn(visitorsContentDescription)
+
+        val likesContentDescription = "likes description"
+        whenever(contentDescriptionHelper.buildContentDescription(
+                eq(R.string.stats_likes),
+                eq(likes)
+        )).thenReturn(likesContentDescription)
+
+        val commentsContentDescription = "comments description"
+        whenever(contentDescriptionHelper.buildContentDescription(
+                eq(R.string.stats_comments),
+                eq(comments)
+        )).thenReturn(commentsContentDescription)
+
         val result = mapper.buildColumns(selectedItem, onColumnSelected, uiState.selectedPosition)
 
-        assertThat(result.headers).containsExactly(
-                R.string.stats_views,
-                R.string.stats_visitors,
-                R.string.stats_likes,
-                R.string.stats_comments
-        )
-
-        assertThat(result.values).containsExactly(
-                views.toString(),
-                visitors.toString(),
-                likes.toString(),
-                comments.toString()
-        )
+        result.columns[0].assertColumn(R.string.stats_views, views, viewsContentDescription)
+        result.columns[1].assertColumn(R.string.stats_visitors, visitors, visitorsContentDescription)
+        result.columns[2].assertColumn(R.string.stats_likes, likes, likesContentDescription)
+        result.columns[3].assertColumn(R.string.stats_comments, comments, commentsContentDescription)
 
         assertThat(result.selectedColumn).isEqualTo(selectedPosition)
         assertThat(result.onColumnSelected).isEqualTo(onColumnSelected)
+    }
+
+    private fun Column.assertColumn(title: Int, value: Long, contentDescription: String) {
+        assertThat(this.header).isEqualTo(title)
+        assertThat(this.value).isEqualTo(value.toString())
+        assertThat(this.contentDescription).isEqualTo(contentDescription)
     }
 }
