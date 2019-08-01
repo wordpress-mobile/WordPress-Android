@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 79;
+        return 80;
     }
 
     @Override
@@ -554,6 +554,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
                 oldVersion++;
             case 74:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
                 db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
                 oldVersion++;
@@ -575,6 +576,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 78:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 79:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
