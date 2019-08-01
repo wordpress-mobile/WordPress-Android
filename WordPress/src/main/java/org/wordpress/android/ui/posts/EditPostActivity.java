@@ -4051,4 +4051,22 @@ public class EditPostActivity extends AppCompatActivity implements
     public AztecImageLoader getAztecImageLoader() {
         return mAztecImageLoader;
     }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
+        // Editor fragments are messing with window focus, which causes keyboard events to get ignored
+
+        // this fixes issue with GB editor
+        View editorFragmentView = mEditorFragment.getView();
+        if (editorFragmentView != null) {
+            editorFragmentView.requestFocus();
+        }
+
+        // this fixes issue with Aztec editor
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment) mEditorFragment).requestContentAreaFocus();
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
 }
