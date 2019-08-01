@@ -55,6 +55,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private long mAuthorId;
     @Column private String mAuthorDisplayName;
 
+    /**
+     * This field stores a hashcode value of the post content when the user confirmed making the changes visible to
+     * the users (Publish/Submit/Update/Schedule/Sync).
+     * <p>
+     * It is used to determine if the user actually confirmed the changes and if the post was edited since then.
+     */
+    @Column private int mChangesConfirmedContentHashcode;
+
     // Page specific
     @Column private boolean mIsPage;
     @Column private long mParentId;
@@ -304,6 +312,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mAuthorDisplayName = authorDisplayName;
     }
 
+    public int getChangesConfirmedContentHashcode() {
+        return mChangesConfirmedContentHashcode;
+    }
+
+    public void setChangesConfirmedContentHashcode(int changesConfirmedContentHashcode) {
+        mChangesConfirmedContentHashcode = changesConfirmedContentHashcode;
+    }
+
     public boolean isPage() {
         return mIsPage;
     }
@@ -459,6 +475,47 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
                 && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+    }
+
+    /**
+     * This method is used along with `mChangesConfirmedContentHashcode`. We store the contentHashcode of
+     * the post when the user explicitly confirms that the changes to the post can be published. Beware, that when
+     * you modify this method all users will need to re-confirm all the local changes. The changes wouldn't get
+     * published otherwise.
+     *
+     * This is a method generated using Android Studio. When you need to add a new field it's safer to use the
+     * generator again. (We can't use Objects.hash() since the current minSdkVersion is lower than 19.
+     */
+    public int contentHashcode() {
+        int result;
+        long temp;
+        result = mId;
+        result = 31 * result + mLocalSiteId;
+        result = 31 * result + (int) (mRemoteSiteId ^ (mRemoteSiteId >>> 32));
+        result = 31 * result + (int) (mRemotePostId ^ (mRemotePostId >>> 32));
+        result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
+        result = 31 * result + (mContent != null ? mContent.hashCode() : 0);
+        result = 31 * result + (mDateCreated != null ? mDateCreated.hashCode() : 0);
+        result = 31 * result + (mCategoryIds != null ? mCategoryIds.hashCode() : 0);
+        result = 31 * result + (mCustomFields != null ? mCustomFields.hashCode() : 0);
+        result = 31 * result + (mLink != null ? mLink.hashCode() : 0);
+        result = 31 * result + (mExcerpt != null ? mExcerpt.hashCode() : 0);
+        result = 31 * result + (mTagNames != null ? mTagNames.hashCode() : 0);
+        result = 31 * result + (mStatus != null ? mStatus.hashCode() : 0);
+        result = 31 * result + (mPassword != null ? mPassword.hashCode() : 0);
+        result = 31 * result + (int) (mAuthorId ^ (mAuthorId >>> 32));
+        result = 31 * result + (mAuthorDisplayName != null ? mAuthorDisplayName.hashCode() : 0);
+        result = 31 * result + (int) (mFeaturedImageId ^ (mFeaturedImageId >>> 32));
+        result = 31 * result + (mPostFormat != null ? mPostFormat.hashCode() : 0);
+        result = 31 * result + (mSlug != null ? mSlug.hashCode() : 0);
+        temp = Double.doubleToLongBits(mLatitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(mLongitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (mIsPage ? 1 : 0);
+        result = 31 * result + (int) (mParentId ^ (mParentId >>> 32));
+        result = 31 * result + (mParentTitle != null ? mParentTitle.hashCode() : 0);
+        return result;
     }
 
     public @Nullable JSONArray getJSONCustomFields() {
