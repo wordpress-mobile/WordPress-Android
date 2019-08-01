@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 80;
+        return 81;
     }
 
     @Override
@@ -555,17 +555,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 74:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-
-
-
-
-                // TODO DO NOT MERGE!!!! `remote-autosave-branch` removed db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;"); which was already released
-
-
-
-
-
-
+                db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
                 db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
                 oldVersion++;
             case 75:
@@ -585,7 +575,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 78:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
             case 79:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
@@ -593,6 +583,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REMOTE_MODIFIED TEXT");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_PREVIEW_URL TEXT");
+                oldVersion++;
+            case 80:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
@@ -879,6 +873,20 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "  END_DATE TEXT NOT NULL,\n"
                                + "  DATA TEXT NOT NULL,\n"
                                + "  TOTAL TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                    break;
+                case 78:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCVisitorStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  UNIT TEXT NOT NULL,\n"
+                               + "  DATE TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  QUANTITY TEXT NOT NULL,\n"
+                               + "  IS_CUSTOM_FIELD INTEGER,\n"
+                               + "  FIELDS TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
                                + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
             }
