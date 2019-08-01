@@ -238,16 +238,9 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(status = POST_STATE_TRASHED)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
-        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
-        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
-        assertThat(state.actions).hasSize(3)
-
-        assertThat((state.actions[2] as MoreItem).actions[0].buttonType)
-                .isEqualTo(PostListButtonType.BUTTON_DELETE)
-        assertThat((state.actions[2] as MoreItem).actions[1].buttonType)
-                .isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
-        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
+        assertThat(state.actions).hasSize(2)
     }
 
     @Test
@@ -537,7 +530,7 @@ class PostListItemUiStateHelperTest {
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(MediaErrorType.GENERIC_ERROR)))
         )
         assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
-        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
         assertThat(state.actions).hasSize(3)
     }
