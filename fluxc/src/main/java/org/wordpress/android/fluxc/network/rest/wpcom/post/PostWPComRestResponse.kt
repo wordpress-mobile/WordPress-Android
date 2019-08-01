@@ -63,6 +63,7 @@ data class PostWPComRestResponse(
     fun getPostAutoSave(): PostAutoSave? {
         return meta?.data?.autoSave
     }
+
     data class Author(
         @SerializedName("ID") val id: Long = 0,
         @SerializedName("name") val name: String?
