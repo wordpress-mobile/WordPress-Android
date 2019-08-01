@@ -51,7 +51,8 @@ class UploadStarterTest {
 
     private val sites = listOf(SiteModel(), SiteModel())
     private val sitesAndDraftPosts: Map<SiteModel, List<PostModel>> = mapOf(
-            sites[0] to listOf( createDraftPostModel(DRAFT),
+            sites[0] to listOf(
+                    createDraftPostModel(DRAFT),
                     createDraftPostModel(PUBLISHED),
                     createDraftPostModel(SCHEDULED),
                     createDraftPostModel(SCHEDULED),

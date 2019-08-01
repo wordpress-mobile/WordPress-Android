@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
 import org.wordpress.android.util.AppLog
@@ -151,17 +152,26 @@ open class UploadStarter @Inject constructor(
             // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
             postsAndPages
                     .asSequence()
-                    .filterNot {
-                        if (UploadUtils.getPostUploadAction(it) == PostUploadAction.REMOTE_AUTO_SAVE) {
-                            UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it)
-                        } else {
-                            false
-                        }
-                    }
-                    .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
-                    .filter { postUtilsWrapper.isPublishable(it) }
                     .filter {
+                        // Do not auto-upload empty post
+                        postUtilsWrapper.isPublishable(it)
+                    }
+                    .filter {
+                        // Do not auto-upload post which is in conflict with remote
+                        !PostUtils.isPostInConflictWithRemote(it)
+                    }
+                    .filter {
+                        // Do not auto-upload post which is currently being uploaded
+                        !uploadServiceFacade.isPostUploadingOrQueued(it)
+                    }
+                    .filter {
+                        // Do not auto-upload post which we already tried to upload certain number of times
                         uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
+                    }
+                    .filter {
+                        // Do not remote-auto-save changes which were already remote-auto-saved
+                        UploadUtils.getPostUploadAction(it) != PostUploadAction.REMOTE_AUTO_SAVE ||
+                                !UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it)
                     }
                     .toList()
                     .forEach { post ->
