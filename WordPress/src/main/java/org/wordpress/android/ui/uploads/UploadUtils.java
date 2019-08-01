@@ -27,7 +27,6 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
-import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;

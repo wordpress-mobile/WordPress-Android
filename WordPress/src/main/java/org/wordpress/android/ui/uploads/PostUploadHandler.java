@@ -38,7 +38,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -651,7 +650,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
             PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
             SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-//            sShouldRemoteAutoSavePosts.remove(postLocalId);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
             mPostUploadNotifier.updateNotificationSuccessForPost(post, site, false);
             finishUpload();

@@ -326,6 +326,10 @@ public class UploadService extends Service {
     /**
      * Do not use this method unless the user explicitly confirmed changes - eg. clicked on publish button or
      * similar.
+     *
+     * The only valid use-case for this method I can think of right know is when we want to put the intent into a
+     * PendingIntent - eg. publish action on a notification. If you want to start the upload right away use
+     * UploadUtils.publishPost(..) instead.
      */
     public static Intent getPublishPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics) {
         Intent intent = new Intent(context, UploadService.class);
