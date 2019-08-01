@@ -579,14 +579,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 79:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
+                oldVersion++;
+            case 80:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REMOTE_MODIFIED TEXT");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_PREVIEW_URL TEXT");
-                oldVersion++;
-            case 80:
-                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
