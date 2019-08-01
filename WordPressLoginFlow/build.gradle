@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
     }
 }
 
@@ -21,8 +21,8 @@ android {
     buildToolsVersion "28.0.3"
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion 17
+        targetSdkVersion 28
         versionCode 2
         versionName "1.1"
 
@@ -35,9 +35,9 @@ dependencies {
         exclude group: "com.mcxiaoke.volley"
     }
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.media:media:1.0.0'
+    implementation 'androidx.media:media:1.0.1'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -51,7 +51,7 @@ dependencies {
             exclude group: "org.wordpress", module: "utils"
         }
     } else {
-        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:8cdbf03cf3d595ef904bab3c1dc207e39242c882") {
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:9f07b031646dd3e6021d4b8e0a35647c9109ff27") {
             exclude group: "com.android.support"
             exclude group: "org.wordpress", module: "utils"
         }
@@ -68,6 +68,12 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.22.1'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.27.0'
+    testImplementation 'androidx.arch.core:core-testing:2.0.1'
+    testImplementation 'org.robolectric:robolectric:3.6.1'
+    testImplementation 'org.assertj:assertj-core:3.11.1'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig

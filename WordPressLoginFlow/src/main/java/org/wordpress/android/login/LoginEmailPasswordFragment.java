@@ -253,7 +253,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @Override
     protected void onLoginFinished() {
-        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mAnalyticsListener.trackAnalyticsSignIn(true);
         mLoginListener.startPostLoginServices();
 
         if (mIsSocialLogin) {
