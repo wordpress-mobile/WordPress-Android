@@ -17,6 +17,7 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
@@ -32,6 +33,7 @@ class StatsStoreTest {
     @Mock lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
     @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
+    @Mock lateinit var statsSqlUtils: StatsSqlUtils
     private lateinit var store: StatsStore
 
     @ExperimentalCoroutinesApi
@@ -40,7 +42,8 @@ class StatsStoreTest {
         store = StatsStore(
                 Unconfined,
                 insightTypesSqlUtils,
-                preferenceUtilsWrapper
+                preferenceUtilsWrapper,
+                statsSqlUtils
         )
         whenever(preferenceUtilsWrapper.getFluxCPreferences()).thenReturn(sharedPreferences)
         whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
@@ -207,5 +210,21 @@ class StatsStoreTest {
         val insightsManagementNewsCardShowing = store.isInsightsManagementNewsCardShowing()
 
         assertThat(insightsManagementNewsCardShowing).isEqualTo(prefsValue)
+    }
+
+    @Test
+    fun `deletes all stats`() = test {
+        store.deleteAllData()
+
+        verify(statsSqlUtils).deleteAllStats()
+    }
+
+    @Test
+    fun `deletes all stats for a site`() = test {
+        val site = SiteModel()
+
+        store.deleteSiteData(site)
+
+        verify(statsSqlUtils).deleteSiteStats(site)
     }
 }
