@@ -72,14 +72,14 @@ class RemotePreviewLogicHelper @Inject constructor(
             val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
             val uploadAction = UploadUtils.getPostUploadAction(updatedPost)
-            if (shouldUpload(uploadAction)) {
+            if (shouldUpload(post, uploadAction)) {
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyDraft()
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
                 }
 
                 helperFunctions.startUploading(false, updatedPost)
-            } else if (shouldRemoteAutoSave(uploadAction)) {
+            } else if (shouldRemoteAutoSave(post, uploadAction)) {
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyPost()
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST

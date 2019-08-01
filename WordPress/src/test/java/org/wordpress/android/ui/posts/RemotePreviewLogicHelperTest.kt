@@ -65,6 +65,7 @@ class RemotePreviewLogicHelperTest {
         doReturn("2018-06-23T15:45:16+00:00").whenever(post).dateCreated
         doReturn(true).whenever(post).isLocallyChanged
         doReturn("Test title for test purposes").whenever(post).title
+        doReturn(999999).whenever(post).contentHashcode()
     }
 
     @Test
@@ -115,9 +116,10 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `cannot save empty draft for preview`() {
+    fun `cannot save empty local draft for preview`() {
         // Given
         doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
+        doReturn(true).whenever(post).isLocalDraft
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -128,9 +130,23 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `upload new draft for preview`() {
+    fun `cannot save empty draft for preview`() {
         // Given
-        // standard setup conditions are fine
+        doReturn(false).whenever(postUtilsWrapper).isPublishable(post)
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result)
+                .isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST)
+        verify(helperFunctions, times(1)).notifyEmptyPost()
+    }
+
+    @Test
+    fun `upload local draft for preview`() {
+        // Given
+        doReturn(true).whenever(post).isLocalDraft
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)

@@ -175,6 +175,8 @@ class UploadStarter @Inject constructor(
                         UploadUtils.getPostUploadAction(it) != PostUploadAction.REMOTE_AUTO_SAVE ||
                                 !UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it)
                     }
+                    // TODO add timer guard
+
                     .toList()
                     .forEach { post ->
                         AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
