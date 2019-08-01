@@ -89,6 +89,7 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -248,6 +249,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         super.onDestroy();
     }
 
+    // touching the file resulted in the MethodLength, it's suppressed until we get time to refactor this method
+    @SuppressWarnings("checkstyle:MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
@@ -292,6 +295,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.addTextChangedListener(new TextWatcher() {
@@ -360,6 +364,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
         setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()

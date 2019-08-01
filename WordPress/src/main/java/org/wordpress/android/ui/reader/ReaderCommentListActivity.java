@@ -66,6 +66,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -203,6 +204,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -279,6 +281,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
     }
 
     private final View.OnClickListener mSignInClickListener = new View.OnClickListener() {
