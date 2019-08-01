@@ -53,8 +53,6 @@
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/margin_medium_large"
         android:paddingEnd="@dimen/margin_medium_large"
-        android:paddingLeft="@dimen/margin_small_medium"
-        android:paddingRight="@dimen/margin_medium_large"
         android:paddingStart="@dimen/margin_small_medium"
         android:paddingTop="@dimen/margin_medium_large"
         tools:ignore="InconsistentLayout">
@@ -62,7 +60,6 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_magic_link_button"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/open_mail"
