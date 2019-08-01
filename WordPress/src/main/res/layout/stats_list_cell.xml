@@ -28,7 +28,7 @@
             android:visibility="gone"
             android:contentDescription="@string/open_external_link_desc"
             android:src="@drawable/ic_external_white_24dp"
-            android:tint="@color/primary_500" />
+            android:tint="@color/primary_50" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"
@@ -39,7 +39,7 @@
             android:importantForAccessibility="yes"
             android:contentDescription="@string/stats_list_cell_chevron_expand_desc"
             android:src="@drawable/ic_chevron_right_white_24dp"
-            android:tint="@color/primary_500" />
+            android:tint="@color/primary_50" />
 
         <ImageView
             android:id="@+id/stats_list_cell_image"
@@ -88,7 +88,7 @@
             android:paddingEnd="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:src="@drawable/ic_ellipsis_white_24dp"
-            android:tint="@color/primary_500" />
+            android:tint="@color/primary_50" />
 
         <LinearLayout
             android:id="@+id/stats_list_cell_total_container"

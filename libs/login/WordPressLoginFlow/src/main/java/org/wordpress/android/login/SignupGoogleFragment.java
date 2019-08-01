@@ -203,6 +203,7 @@ public class SignupGoogleFragment extends GoogleFragment {
             AppLog.d(T.MAIN,
                     "GOOGLE SIGNUP: onAuthenticationChanged - new wordpress account created");
             mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
+            mAnalyticsListener.trackAnalyticsSignIn(true);
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
             // Continue with login since existing account was selected.
         } else {

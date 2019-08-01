@@ -3,6 +3,8 @@ package org.wordpress.android.models;
 import org.wordpress.android.util.StringUtils;
 
 public class PublicizeService {
+    public static final String FACEBOOK_SERVICE_ID = "facebook";
+
     private String mId;
     private String mLabel;
     private String mDescription;

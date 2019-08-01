@@ -32,7 +32,6 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
@@ -42,6 +41,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -179,6 +179,10 @@ class PostsListActivity : AppCompatActivity(),
             Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
+        fab.redirectContextClickToLongPressListener()
+
+        postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
+        pager.adapter = postsPagerAdapter
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState) {
@@ -219,17 +223,6 @@ class PostsListActivity : AppCompatActivity(),
                         remotePreviewLogicHelper,
                         previewStateHelper
                 )
-            }
-        })
-        viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
-            authorFilter?.let {
-                val currentItem: Int = pager.currentItem
-                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
-                pager.adapter = postsPagerAdapter
-
-                pager.removeOnPageChangeListener(onPageChangeListener)
-                pager.currentItem = currentItem
-                pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
@@ -365,7 +358,7 @@ class PostsListActivity : AppCompatActivity(),
         var searchFragment = supportFragmentManager.findFragmentByTag(searchFragmentTag)
 
         if (searchFragment == null) {
-            searchFragment = PostListFragment.newInstance(site, EVERYONE, SEARCH)
+            searchFragment = PostListFragment.newInstance(site, SEARCH)
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.search_container, searchFragment, searchFragmentTag)

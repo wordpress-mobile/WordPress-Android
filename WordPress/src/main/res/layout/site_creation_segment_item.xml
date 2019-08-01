@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         tools:src="@drawable/ic_add_white_24dp"
-        tools:tint="@color/neutral_800"/>
+        tools:tint="@color/neutral_80"/>
 
     <TextView
         android:id="@+id/title"
@@ -33,7 +33,7 @@
         android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_800"
+        android:textColor="@color/neutral_80"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toTopOf="@+id/subtitle"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_500"
+        android:textColor="@color/neutral_50"
         android:textSize="@dimen/text_sz_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
-        android:background="@color/neutral_50"
+        android:background="@color/neutral_5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

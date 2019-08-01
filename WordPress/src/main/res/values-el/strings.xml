@@ -180,10 +180,6 @@ Language: el_GR
     <string name="blavatar_desc">Εικονίδιο ιστότοπου</string>
     <string name="theme_image_desc">εικόνα θέματος</string>
     <string name="featured_image_desc">προβεβλημένη εικόνα</string>
-    <string name="local_changes_discarding">Απόρριψη τοπικών αλλαγών</string>
-    <string name="local_changes_discarded">Οι τοπικές αλλαγές απορρίφθηκαν</string>
-    <string name="menu_discard_changes">Απόρριψη τοπικών αλλαγών</string>
-    <string name="button_discard_changes">Απόρριψη αλλαγών</string>
     <string name="button_discard">Απόρριψη</string>
     <string name="reader_avatar_desc">εικόνα προφίλ</string>
     <string name="reader_blavatar_desc">εικονίδιο ιστοτόπου</string>
@@ -779,7 +775,6 @@ Language: el_GR
     <string name="start_over">Ξεκινήστε από την Αρχή</string>
     <string name="me_btn_app_settings">Ρυθμίσεις Εφαρμογής</string>
     <string name="editor_remove_failed_uploads">Αφαίρεση αποτυχημένων μεταφορτώσεων</string>
-    <string name="editor_toast_failed_uploads">Μερικές μεταφορτώσεις πολυμέσων έχουν αποτύχει. Δεν μπορείτε να αποθηκεύσετε ή να δημοσιεύσετε\nτο άρθρο σας σε αυτή την κατάσταση. Θα θέλατε να αφαιρέσετε όλα τα προβληματικά πολυμέσα;</string>
     <string name="site_settings_advanced_header">Προχωρημένες</string>
     <string name="comments_empty_list_filtered_trashed">Δεν υπάρχουν Διαγραμμένα σχόλια</string>
     <string name="comments_empty_list_filtered_pending">Δεν υπάρχουν Εκκρεμή σχόλια</string>
@@ -1013,7 +1008,6 @@ Language: el_GR
     <string name="stats_enable_rest_api_in_jetpack">Για να δείτε τα στατιστικά σας, ενεργοποιήστε το πρόσθετο JSON API στο Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Σχόλια</string>
     <string name="reader_short_comment_count_one">1 Σχόλιο</string>
-    <string name="reader_label_submit_comment">ΑΠΟΣΤΟΛΗ</string>
     <string name="reader_hint_comment_on_post">Απάντηση στο άρθρο…</string>
     <string name="reader_discover_visit_blog">Επισκεφθείτε το %s</string>
     <string name="reader_discover_attribution_blog">Δημοσιεύτηκε αρχικά στο %s</string>

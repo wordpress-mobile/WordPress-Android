@@ -10,7 +10,7 @@
         style="@style/StatsTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_rectangle_red_500_radius_2dp"
+        android:background="@drawable/bg_rectangle_red_50_radius_2dp"
         android:paddingBottom="@dimen/margin_extra_small"
         android:paddingEnd="@dimen/margin_medium"
         android:paddingStart="@dimen/margin_medium"

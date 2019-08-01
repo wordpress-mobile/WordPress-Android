@@ -17,7 +17,7 @@
         android:id="@+id/divider_comment"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/neutral_100" />
+        android:background="@color/neutral_10" />
 
     <LinearLayout
         android:id="@+id/reply_box"
@@ -55,7 +55,7 @@
             android:minLines="2"
             android:paddingBottom="@dimen/margin_extra_small"
             android:paddingTop="@dimen/margin_extra_small"
-            android:textColorHint="@color/neutral_400"
+            android:textColorHint="@color/neutral_40"
             android:textSize="@dimen/text_sz_large" />
 
         <ImageView
@@ -67,7 +67,7 @@
             android:contentDescription="@string/send"
             android:enabled="false"
             android:padding="@dimen/margin_medium"
-            android:src="@drawable/ic_send_accent_neutral_300_24dp"
+            android:src="@drawable/ic_send_accent_neutral_30_24dp"
             android:layout_marginEnd="@dimen/content_margin"/>
     </LinearLayout>
 

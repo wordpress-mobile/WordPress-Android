@@ -779,7 +779,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
-
         if (mIsJetpackConnect) {
             ActivityLauncher.showSignupEpilogueForResult(this, name, email, photoUrl, username, false);
         } else {
@@ -831,7 +830,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // Not used in WordPress app
     }
 
-    @Override public void gotConnectedSiteInfo(String siteAddress, boolean hasJetpack) {
+    @Override public void gotConnectedSiteInfo(
+            @NonNull String siteAddress,
+            @Nullable String redirectUrl,
+            boolean hasJetpack) {
         // Not used in WordPress app
     }
 }

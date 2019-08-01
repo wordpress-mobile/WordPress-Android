@@ -65,8 +65,8 @@ public class ReaderCommentActions {
         newComment.pageNumber = pageNumber;
         newComment.setText(commentText);
 
-        Date dtPublished = DateTimeUtils.nowUTC();
-        newComment.setPublished(DateTimeUtils.iso8601FromDate(dtPublished));
+        Date dtPublished = new Date();
+        newComment.setPublished(DateTimeUtils.iso8601UTCFromDate(dtPublished));
         newComment.timestamp = dtPublished.getTime();
 
         ReaderUser currentUser = ReaderUserTable.getCurrentUser(wpComUserId);

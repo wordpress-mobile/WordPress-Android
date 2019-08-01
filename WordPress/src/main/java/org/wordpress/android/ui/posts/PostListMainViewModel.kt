@@ -91,8 +91,8 @@ class PostListMainViewModel @Inject constructor(
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
 
-    private val _updatePostsPager = SingleLiveEvent<AuthorFilterSelection>()
-    val updatePostsPager = _updatePostsPager
+    private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
+    val authorSelectionUpdated = _authorSelectionUpdated
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -230,7 +230,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
-        _updatePostsPager.value = authorFilterSelection
+        _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
                         isSearchExpanded.value != true,
@@ -256,13 +256,11 @@ class PostListMainViewModel @Inject constructor(
      * info already
      */
     fun getPostListViewModelConnector(
-        authorFilter: AuthorFilterSelection,
         postListType: PostListType
     ): PostListViewModelConnector {
         return PostListViewModelConnector(
                 site = site,
                 postListType = postListType,
-                authorFilter = authorFilter,
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
@@ -402,7 +400,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
-            _updatePostsPager.value = authorFilterSelection
+            _authorSelectionUpdated.value = authorFilterSelection
 
             AnalyticsUtils.trackWithSiteDetails(
                     POST_LIST_AUTHOR_FILTER_CHANGED,

@@ -293,14 +293,22 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 country_input, address_first_line_input, city_input, postal_code_input
         )
 
+        var fieldToFocusOn: TextInputEditText? = null
+
         requiredFields.forEach {
             if (TextUtils.isEmpty(it.text)) {
+                if (fieldToFocusOn == null) {
+                    fieldToFocusOn = it
+                }
                 showEmptyFieldError(it)
                 if (formIsCompleted) {
                     formIsCompleted = false
                 }
             }
         }
+
+        // focusing on first empty field
+        fieldToFocusOn?.requestFocus()
 
         return formIsCompleted
     }
@@ -423,7 +431,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            if (targetFragment == null) {
+                throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
+            }
+
+            viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
@@ -469,7 +481,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            if (targetFragment == null) {
+                throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
+            }
+
+            viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)

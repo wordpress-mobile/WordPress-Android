@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:minHeight="@dimen/min_touch_target_sz"
         android:minWidth="@dimen/min_touch_target_sz"
-        android:textColor="@color/accent_300"
+        android:textColor="@color/accent_30"
         android:visibility="gone"
         tools:text="Action"
         tools:visibility="visible"

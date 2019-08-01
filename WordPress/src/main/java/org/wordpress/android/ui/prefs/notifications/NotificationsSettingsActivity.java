@@ -26,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.ViewUtilsKt;
 
 // Simple wrapper activity for NotificationsSettingsFragment
 public class NotificationsSettingsActivity extends AppCompatActivity {
@@ -168,6 +169,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(mToolbarSwitch);
     }
 
     private void setToolbarTitleContentDescription() {

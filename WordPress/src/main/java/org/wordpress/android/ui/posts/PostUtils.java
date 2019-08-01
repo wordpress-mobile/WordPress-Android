@@ -19,11 +19,11 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -156,10 +156,8 @@ public class PostUtils {
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source",
-                                shouldShowGutenbergEditor(post.isLocalDraft(), post) ? "gutenberg"
-                                    : (AppPrefs.isAztecEditorEnabled() ? "aztec"
-                                        : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy"));
-
+                            shouldShowGutenbergEditor(post.isLocalDraft(), post, site)
+                                    ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                             PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
@@ -384,12 +382,12 @@ public class PostUtils {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 
-    public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post) {
+    public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post, SiteModel site) {
         // Default to Gutenberg
 
         if (isNewPost || TextUtils.isEmpty(post.getContent())) {
-            // for a new post, use Gutenberg if the "use for new posts" switch is set
-            return AppPrefs.isGutenbergDefaultForNewPosts();
+            // For a new post, use Gutenberg if the "use for new posts" switch is set
+            return SiteUtils.isBlockEditorDefaultForNewPost(site);
         } else {
             // for already existing (and non-empty) posts, open Gutenberg only if the post contains blocks
             return contentContainsGutenbergBlocks(post.getContent());
