@@ -44,7 +44,16 @@ public class SiteUtils {
         }
         final boolean oldAppWidePreferenceValue = AppPrefs.isGutenbergDefaultForNewPosts();
         final List<SiteModel> sites = siteStore.getSites();
-        final boolean setDelay = sites.size() > 5;
+
+        // Start the migration by using the current selected site in the first network call
+        int siteLocalId = AppPrefs.getSelectedSite();
+        final SiteModel currentSelectedSiteInApp = siteLocalId != -1 ? siteStore.getSiteByLocalId(siteLocalId) : null;
+        if (currentSelectedSiteInApp != null && sites.size() > 0
+            && sites.get(0).getId() != currentSelectedSiteInApp.getId()) {
+            // the first site in the list is not the current selected site
+            sites.add(0, currentSelectedSiteInApp);
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -53,18 +62,21 @@ public class SiteUtils {
                 if (NetworkUtils.isNetworkAvailable(context)) {
                     AppPrefs.removeAppWideEditorPreference();
                 }
-                for (SiteModel currentSite : sites) {
+                for (int i = 0; i < sites.size(); i++) {
+                    SiteModel currentSite = sites.get(i);
+                    // The current selected site was added at the beginning of the list, no need to upgrade it again
+                    if (currentSelectedSiteInApp != null && i > 0
+                        && currentSite.getId() == currentSelectedSiteInApp.getId()) continue;
+
                     if (oldAppWidePreferenceValue) {
                         enableBlockEditor(dispatcher, currentSite);
                     } else {
                         disableBlockEditor(dispatcher, currentSite);
                     }
-                    if (setDelay) {
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            // no-op
-                        }
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        // no-op
                     }
                 }
             }
