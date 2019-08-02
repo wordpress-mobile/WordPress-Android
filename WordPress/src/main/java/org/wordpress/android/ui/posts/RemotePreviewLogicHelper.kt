@@ -46,41 +46,54 @@ class RemotePreviewLogicHelper @Inject constructor(
         post: PostModel,
         helperFunctions: RemotePreviewHelperFunctions
     ): PreviewLogicOperationResult {
-        if (!site.isUsingWpComRestApi) {
-            activityLauncherWrapper.showActionableEmptyView(
-                    activity,
-                    WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                    post.title
-            )
-            return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
-        } else if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
             activityLauncherWrapper.showActionableEmptyView(
                     activity,
                     WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK,
                     post.title
             )
             return PreviewLogicOperationResult.NETWORK_NOT_AVAILABLE
-        } else {
-            if (helperFunctions.notifyUploadInProgress(post)) {
-                return PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
-            }
+        }
 
-            val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
+        // If a media upload is currently in progress, we can't upload / auto-save or preview until it's finished.
+        if (helperFunctions.notifyUploadInProgress(post)) {
+            return PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
+        }
 
-            if (shouldUpload(updatedPost)) {
+        // Update the post object (copy title/content from the editor to the post object) when it's needed
+        // (eg. during and editing session)
+        val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
+
+        when {
+            shouldUpload(updatedPost) -> {
+                // We can't upload an unpublishable post (empty), we'll let the user know we can't preview it.
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyDraft()
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
                 }
-
                 helperFunctions.startUploading(false, updatedPost)
-            } else if (shouldRemoteAutoSave(updatedPost)) {
+            }
+            shouldRemoteAutoSave(updatedPost) -> {
+                // We don't support remote auto-save for self hosted sites (accessed via XMLRPC),
+                // we make the preview unavailable in that case.
+                if (!site.isUsingWpComRestApi) {
+                    activityLauncherWrapper.showActionableEmptyView(
+                            activity,
+                            WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                            post.title
+                    )
+                    return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
+                }
+
+                // We can't remote auto-save an unpublishable post (empty), we'll let the user know we can't preview it.
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyPost()
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
                 }
                 helperFunctions.startUploading(true, updatedPost)
-            } else {
+            }
+            else -> {
+                // If we don't need upload or auto save the post (eg. post not modified), open the preview directly.
                 activityLauncherWrapper.previewPostOrPageForResult(
                         activity,
                         site,
