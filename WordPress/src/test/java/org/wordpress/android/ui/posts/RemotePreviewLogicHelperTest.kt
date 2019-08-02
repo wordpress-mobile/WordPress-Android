@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -68,9 +69,11 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `preview not available for self hosted sites not using WPComRestApi`() {
+    fun `preview not available for self hosted sites not using WPComRestApi on published post with modifications`() {
         // Given
         doReturn(false).whenever(site).isUsingWpComRestApi
+        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
+        doReturn(true).whenever(post).isLocallyChanged
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())
@@ -82,6 +85,20 @@ class RemotePreviewLogicHelperTest {
                 WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
                 post.title
         )
+    }
+
+    @Test
+    fun `preview available for self hosted sites not using WPComRestApi on drafts`() {
+        // Given
+        // next stub not used (made lenient) in case we update future logic.
+        lenient().doReturn(false).whenever(site).isUsingWpComRestApi
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
+        verify(helperFunctions, times(1)).startUploading(false, post)
     }
 
     @Test
