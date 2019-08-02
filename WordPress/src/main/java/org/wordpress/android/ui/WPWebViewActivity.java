@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -15,10 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.ProgressBar;
 
@@ -138,7 +141,16 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
+        setLightStatusBar();
         super.onCreate(savedInstanceState);
+    }
+
+    private void setLightStatusBar() {
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            Window window = getWindow();
+            window.setStatusBarColor(getColor(R.color.white));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 
     @Override
