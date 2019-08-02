@@ -105,7 +105,17 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
+
+        int siteLocalId = AppPrefs.getSelectedSite();
+        if (siteLocalId != -1) {
+            // Site previously selected, use it
+            SiteModel selectedSite = siteStore.getSiteByLocalId(siteLocalId);
+            // If saved site exist, then add info
+            if (selectedSite != null) {
+                metadata.setGutenbergEnabled(
+                        SiteUtils.isBlockEditorDefaultForNewPost(selectedSite));
+            }
+        }
 
         AnalyticsTracker.refreshMetadata(metadata);
     }
@@ -127,7 +137,8 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(1);
         metadata.setUsername(username);
         metadata.setEmail(email);
-        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
+        // GB is enabled for new users
+        metadata.setGutenbergEnabled(true);
         AnalyticsTracker.refreshMetadata(metadata);
     }
 

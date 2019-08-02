@@ -351,8 +351,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -530,6 +530,7 @@
     <string name="site_settings_general_header">General</string>
     <string name="site_settings_account_header">Account</string>
     <string name="site_settings_writing_header">Writing</string>
+    <string name="site_settings_editor">Editor</string>
     <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
@@ -785,7 +786,6 @@
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
-    <string name="preference_editor">Editor</string>
     <string name="preference_strip_image_location">Remove location from media</string>
 
     <!-- stats -->
@@ -1328,6 +1328,15 @@
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
+    <string name="post_settings_time_and_date">Time and Date</string>
+    <string name="post_settings_notification">Notification</string>
+    <string name="post_settings_add_to_calendar">Add to calendar</string>
+
+    <string name="post_notification_off">Off</string>
+    <string name="post_notification_one_hour_before">1 hour before</string>
+    <string name="post_notification_ten_minutes_before">10 minutes before</string>
+    <string name="post_notification_when_published">When published</string>
+    <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
 
     <!-- post date selection -->
     <string name="publish_date">Publish</string>
@@ -1339,6 +1348,15 @@
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>
 
+    <!-- post schedule notifications -->
+    <string name="notification_scheduled_post">Scheduled post</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Scheduled post: 1 hour reminder</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
+    <string name="notification_post_has_been_published">\"%s\" has been published</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
+    <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
 
     <!-- location -->
     <string name="post_settings_location">Location</string>

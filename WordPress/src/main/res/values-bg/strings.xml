@@ -430,7 +430,6 @@ Language: bg
     <string name="start_over">Започване отначало</string>
     <string name="me_btn_app_settings">Настройки на приложението</string>
     <string name="editor_remove_failed_uploads">Премахване на неуспешно качените файлове</string>
-    <string name="editor_toast_failed_uploads">Някои файлове не се качиха. Не можете да\n        запазите или публикувате в това състояние. Желаете ли да премахнете всички неуспешно качени файлове?</string>
     <string name="site_settings_advanced_header">Разширени</string>
     <string name="xmlrpc_missing_method_error">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
     <string name="post_format_status">Състояние</string>
@@ -651,7 +650,6 @@ Language: bg
     <string name="stats_enable_rest_api_in_jetpack">За да видите статистиката, то активирайте модула JSON API в Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s коментара</string>
     <string name="reader_short_comment_count_one">1 коментар</string>
-    <string name="reader_label_submit_comment">ИЗПРАЩАНЕ</string>
     <string name="reader_hint_comment_on_post">Отговор на публикацията…</string>
     <string name="reader_discover_visit_blog">Посещаване на %s</string>
     <string name="reader_discover_attribution_blog">Оригинална публикация на %s</string>

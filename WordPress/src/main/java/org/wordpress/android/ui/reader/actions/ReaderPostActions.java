@@ -42,6 +42,7 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -426,7 +427,7 @@ public class ReaderPostActions {
             ReaderTagList bookmarkTags = ReaderTagTable.getBookmarkTags();
 
             for (ReaderTag tag : bookmarkTags) {
-                post.setDateTagged(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+                post.setDateTagged(DateTimeUtils.iso8601UTCFromDate(new Date()));
                 ReaderPostTable.addOrUpdatePosts(tag, readerPosts);
             }
             ReaderPostTable.setBookmarkFlag(post.blogId, post.postId, true);

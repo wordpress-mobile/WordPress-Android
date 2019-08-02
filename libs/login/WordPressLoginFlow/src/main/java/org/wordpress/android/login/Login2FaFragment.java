@@ -500,7 +500,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     @Override
     protected void onLoginFinished() {
-        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mAnalyticsListener.trackAnalyticsSignIn(true);
 
         mLoginListener.startPostLoginServices();
 
