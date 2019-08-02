@@ -1168,6 +1168,11 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
+        if (getSelectedSite().getId() != event.site.getId()) {
+            // No need to refresh the UI, since the current selected site is another site
+            return;
+        }
+
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
             mSelectedSite = site;
