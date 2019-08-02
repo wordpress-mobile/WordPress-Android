@@ -952,7 +952,11 @@ public abstract class SiteSettingsInterface {
         if (fetchRemote) {
             fetchRemoteData();
             mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(mSite));
+            if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+                // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
+                // before fetching site editors from the remote
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(mSite));
+            }
         }
 
         return this;
