@@ -661,11 +661,11 @@ public class PluginDetailActivity extends AppCompatActivity implements OnDomainR
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(getResources().getColor(R.color.neutral_700));
+            textView.setTextColor(getResources().getColor(R.color.neutral_70));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
-            textView.setTextColor(getResources().getColor(R.color.neutral_200));
+            textView.setTextColor(getResources().getColor(R.color.neutral_20));
             textView.setText(R.string.plugin_empty_text);
         }
     }

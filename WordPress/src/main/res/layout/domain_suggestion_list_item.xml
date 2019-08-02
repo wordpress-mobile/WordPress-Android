@@ -10,7 +10,7 @@
 
     <RadioButton
         android:id="@+id/domain_selection_radio_button"
-        android:buttonTint="@color/neutral_100_primary_400_selector"
+        android:buttonTint="@color/neutral_10_primary_40_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_small_medium"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_medium_large"
-        android:textColor="@color/neutral_700"
+        android:textColor="@color/neutral_70"
         android:textSize="@dimen/text_sz_large"/>
 
 </LinearLayout>

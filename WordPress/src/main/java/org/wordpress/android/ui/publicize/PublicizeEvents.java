@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.publicize;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONObject;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 
@@ -17,12 +19,21 @@ public class PublicizeEvents {
     public static class ActionCompleted {
         private final boolean mSucceeded;
         private final ConnectAction mAction;
+        /**
+         * The reason for why {@link #mSucceeded} is false.
+         */
+        @Nullable private final Integer mReasonResId;
         private String mService;
 
         public ActionCompleted(boolean succeeded, ConnectAction action, String service) {
+            this(succeeded, action, service, null);
+        }
+
+        ActionCompleted(boolean succeeded, ConnectAction action, String service, @Nullable Integer reasonResId) {
             mSucceeded = succeeded;
             mAction = action;
             mService = service;
+            mReasonResId = reasonResId;
         }
 
         public ConnectAction getAction() {
@@ -35,6 +46,10 @@ public class PublicizeEvents {
 
         public String getService() {
             return mService;
+        }
+
+        @Nullable public Integer getReasonResId() {
+            return mReasonResId;
         }
     }
 

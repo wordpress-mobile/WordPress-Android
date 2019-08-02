@@ -20,6 +20,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -28,6 +30,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -39,6 +43,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -73,6 +78,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
 
@@ -298,16 +304,24 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
                 sCurrentUploadingPostAnalyticsProperties
                         .put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
-                sCurrentUploadingPostAnalyticsProperties.put("editor_source",
-                        // making sure to reuse the same logic for both showing Gutenberg and tracking.
-                        // Note that mIsNewPost is not available as a flag-logic per se outside of EditPostActivity,
-                        // but the check will pass anyway as long as Gutenberg is enabled and the PostModel contains
-                        // Gutenberg blocks. As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The
-                        // choice is loosely made knowing the other check ("contains blocks") is in place.
-                        PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost) ? "gutenberg"
-                                : (AppPrefs.isAztecEditorEnabled() ? "aztec"
-                                        : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy"));
-
+                // Add the editor source
+                int siteLocalId = mPost.getLocalSiteId();
+                if (siteLocalId != -1) {
+                    // Site found, use it
+                    SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+                    // If saved site exist, then add info
+                    if (selectedSite != null) {
+                        sCurrentUploadingPostAnalyticsProperties.put("editor_source",
+                                // making sure to reuse the same logic for both showing Gutenberg and tracking.
+                                // Note that mIsNewPost is not available as a flag-logic per se outside of
+                                // EditPostActivity, but the check will pass anyway as long as Gutenberg is enabled
+                                // and the PostModel contains Gutenberg blocks.
+                                // As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The choice is
+                                // loosely made knowing the other check ("contains blocks") is in place.
+                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost, selectedSite)
+                                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
+                    }
+                }
                 if (hasGallery()) {
                     sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
                 }
@@ -628,6 +642,20 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         finishUpload();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
+    public void onPostChanged(OnPostChanged event) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
+            PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+            sShouldRemoteAutoSavePosts.remove(postLocalId);
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
+            mPostUploadNotifier.updateNotificationSuccessForPost(post, site, false);
+            finishUpload();
+        }
     }
 
     /**

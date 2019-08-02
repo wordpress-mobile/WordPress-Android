@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-26 15:54:09+0000
+Translation-Revision-Date: 2019-07-26 16:13:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="description_expand">Uitklappen</string>
+    <string name="description_collapse">Inklappen</string>
+    <string name="editor_retry_failed_uploads">Upload opnieuw proberen</string>
+    <string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Het opslaan of publiceren\n van je bericht is niet mogelijk in deze staat.</string>
+    <string name="my_site_verify_your_email_without_email">Je e-mail verifiëren: er zijn instructies naar je e-mailadres verzonden.</string>
+    <string name="my_site_verify_your_email">Je e-mail verifiëren: er zijn instructies naar %s verzonden</string>
+    <string name="error_media_recover_post_not_submitted">Kan geen media uploaden. Bericht niet verzonden.</string>
+    <string name="error_media_recover_post_not_scheduled">Kan geen media uploaden. Bericht niet gepland.</string>
+    <string name="error_media_recover_post_not_published">Kan geen media uploaden. Bericht niet gepubliceerd.</string>
+    <string name="error_media_recover_post">Kan geen media uploaden.</string>
+    <string name="link_dialog_button_cancel">Annuleren</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Koppeling verwijderen</string>
+    <string name="link_dialog_title">Koppeling invoeren</string>
+    <string name="post_settings_retry_featured_image">Upload opnieuw proberen</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Media worden geüpload.\nTik voor opties.</string>
+    <string name="dialog_gutenberg_informative_description_page">Deze pagina gebruikt de blokeditor, die de standaardeditor is voor nieuwe pagina\'s. Je kunt de klassieke editor inschakelen via Mij > App-instellingen.</string>
+    <string name="dialog_gutenberg_informative_description_post">Dit bericht gebruikt de blokeditor, die de standaardeditor is voor nieuwe berichten. Je kunt de klassieke editor inschakelen via Mij > App-instellingen.</string>
+    <string name="link_open_new_window">Open koppeling in een nieuw venster/tab</string>
+    <string name="post_list_search_prompt">Zoeken in gepubliceerde berichten</string>
+    <string name="stats_widget_error_no_access_token">Log in op je WordPress.com-account om je statistieken te bekijken.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (niet beschikbaar)</string>
     <string name="domain_registration_privacy_protection_tos">Door dit domein te registreren, ga je akkoord met onze %1$salgemene voorwaarden%2$s</string>
     <string name="error_network_connection">Controleer je netwerkverbinding en probeer het nogmaals.</string>
@@ -17,9 +39,9 @@ Language: nl
     <string name="site_settings_password_updated">Wachtwoord bijgewerkt</string>
     <string name="site_settings_password_dialog_title">Wachtwoord bijwerken</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd …</string>
-    <string name="domain_registration_state_picker_dialog_title">Staat selecteren</string>
-    <string name="domain_registration_country_picker_dialog_title">Land selecteren</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd…</string>
+    <string name="domain_registration_state_picker_dialog_title">Selecteer provincie</string>
+    <string name="domain_registration_country_picker_dialog_title">Selecteer land</string>
     <string name="domain_registration_result_continue_button">doorgaan</string>
     <string name="domain_registration_result_description">je nieuwe domein &lt;b>%s&lt;/b> wordt ingesteld. Je site\n maakt salto\'s uit vreugde!</string>
     <string name="domain_registration_result_title">Gefeliciteerd</string>
@@ -64,6 +86,7 @@ Language: nl
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
     <string name="stats_view_follower_totals">Aantal volgers</string>
+    <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
     <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
     <string name="stats_menu_remove">Verwijderen uit inzichten</string>
@@ -152,14 +175,10 @@ Language: nl
     <string name="plans_loading_error_no_plans_subtitle">We kunnen abonnementen momenteel niet laden. Probeer het later opnieuw.</string>
     <string name="plans_loading_error_no_plans_title">Abonnementen kunnen niet worden geladen</string>
     <string name="plans_loading_error_network_title">Geen verbinding</string>
-    <string name="menu_switch_to_gutenberg_editor">Overschakelen op de blok-editor</string>
-    <string name="menu_switch_to_aztec_editor">Overschakelen op de klassieke editor</string>
     <string name="stats_loading_block_error">Er is een probleem opgetreden bij het laden van je gegevens. Vernieuw je pagina om het opnieuw te proberen.</string>
     <string name="stats_loading_error">Gegevens niet geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bewerk nieuwe berichten en pagina\'s met de blok-editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Blok-editor gebruiken</string>
-    <string name="dialog_gutenberg_informative_description_page">Deze pagina is oorspronkelijk in de blok-editor aangemaakt, dus hebben we deze ook ingeschakeld op deze pagina.\n Je kunt op elk moment overschakelen op de klassieke editor door op  ⋮  te tikken in de bovenbalk.</string>
-    <string name="dialog_gutenberg_informative_description_post">Dit bericht is oorspronkelijk in de blok-editor aangemaakt, dus hebben we deze ook ingeschakeld in dit bericht.\n Je kunt op elk moment overschakelen op de klassieke editor door op  ⋮  te tikken in de bovenbalk.</string>
     <string name="dialog_gutenberg_informative_title">Blok-editor ingeschakeld</string>
     <string name="exit">afsluiten</string>
     <string name="quick_start_sites_type_subtitle">%1$d van %2$d voltooid</string>
@@ -208,7 +227,11 @@ Language: nl
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
     <string name="notification_new_site_creation_failed">Er was een probleem</string>
     <string name="new_site_creation_button_skip">Overslaan</string>
-    <string name="local_changes_discarding_no_connection">Er is een verbinding vereist om deze actie uit te voeren. Controleer je verbinding en probeer het nogmaals.</string>
+    <string name="new_site_creation_tag_line_hint">Ondertitel</string>
+    <string name="new_site_creation_site_info_header_title">Basis informatie</string>
+    <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
+    <string name="site_creation_fetch_suggestions_error_no_connection">Geen verbinding</string>
+    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast – alle sites blijven zich ontwikkelen!</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
@@ -388,11 +411,6 @@ Language: nl
     <string name="blavatar_desc">favicon</string>
     <string name="theme_image_desc">thema-afbeelding</string>
     <string name="featured_image_desc">aanbevolen afbeelding</string>
-    <string name="local_changes_discarding_error">Er is een fout opgetreden bij het verwijderen van je lokale wijzigingen. Neem contact op met de ondersteuning voor meer hulp.</string>
-    <string name="local_changes_discarding">Lokale wijzigingen verwijderen</string>
-    <string name="local_changes_discarded">Lokale wijzigingen verwijderd</string>
-    <string name="menu_discard_changes">Lokale wijzigingen verwijderen</string>
-    <string name="button_discard_changes">Wijzigingen verwijderen</string>
     <string name="button_discard">Verwijderen</string>
     <string name="reader_avatar_desc">profielafbeelding</string>
     <string name="reader_blavatar_desc">favicon</string>
@@ -483,7 +501,6 @@ Language: nl
     <string name="plugin_install_site_ineligible_site_private">Voor deze plugin-functie moet de site openbaar zijn.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Voor deze plugin-functie moet je een Business abonnement hebben.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Voor deze plugin-functie moet je een aangepast domein hebben.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We voeren de laatste instellingen door, nog even geduld …</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Plugin wordt geïnstalleerd …</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installeren</string>
@@ -778,7 +795,6 @@ Language: nl
     <string name="login_text_otp_another">Stuur me via SMS een andere code.</string>
     <string name="enter_verification_code_sms">We hebben een sms gestuurd naar het telefoonnummer dat eindigt op %s. Voer de verificatiecode in de sms in.</string>
     <string name="error_generic_error">We kunnen de handeling niet uitvoeren</string>
-    <string name="error_media_recover_post">We kunnen de media van dit bericht niet uploaden</string>
     <string name="image_size">Grootte</string>
     <string name="uploading_subtitle_media_only_one">1 bestand resterend</string>
     <string name="uploading_subtitle_media_only">%1$d van %2$d bestanden resterend</string>
@@ -943,6 +959,8 @@ Language: nl
     <string name="editor_dropped_text_error">Fout opgetreden bij het verslepen van tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Afbeeldingen in HTML-modus slepen, is niet toegestaan</string>
     <string name="editor_content_hint">Deel hier je verhaal…</string>
+    <string name="post_list_trashed">Verwijderd</string>
+    <string name="post_list_scheduled">Gepland</string>
     <string name="post_status_post_private">Privé</string>
     <string name="post_status_draft">Concept</string>
     <string name="post_status_pending_review">Beoordeling in behandeling</string>
@@ -1075,6 +1093,7 @@ Language: nl
     <string name="editor_post_saved_locally_failed_media">Het bericht bevat mislukte media-uploads en is lokaal opgeslagen</string>
     <string name="sure_to_remove_account">Deze site uit de app verwijderen?</string>
     <string name="photo_picker_title">Kies een foto</string>
+    <string name="error_publish_no_network">Apparaat is offline. Bericht lokaal opgeslagen.</string>
     <string name="editor_post_saved_online">Het bericht is online opgeslagen</string>
     <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het aanpassen van de grootte en het comprimeren van afbeeldingen inschakelen</string>
@@ -1273,7 +1292,6 @@ Language: nl
     <string name="start_over">Begin opnieuw</string>
     <string name="me_btn_app_settings">App-instellingen</string>
     <string name="editor_remove_failed_uploads">Mislukte uploads verwijderen</string>
-    <string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Het opslaan of publiceren\n van je bericht is niet mogelijk in deze staat. Wil je alle mislukte uploads verwijderen?</string>
     <string name="site_settings_advanced_header">Geavanceerd</string>
     <string name="comments_empty_list_filtered_trashed">Geen verwijderde reacties</string>
     <string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
@@ -1504,7 +1522,6 @@ Language: nl
     <string name="stats_enable_rest_api_in_jetpack">Om je statistieken te bekijken moet je de JSON API module in Jetpack activeren.</string>
     <string name="reader_short_comment_count_multi">%s Reacties</string>
     <string name="reader_short_comment_count_one">1 Reactie</string>
-    <string name="reader_label_submit_comment">VERSTUUR</string>
     <string name="reader_hint_comment_on_post">Reageer op bericht…</string>
     <string name="reader_discover_visit_blog">%s bezoeken</string>
     <string name="reader_discover_attribution_blog">Oorspronkelijk geplaatst op %s</string>

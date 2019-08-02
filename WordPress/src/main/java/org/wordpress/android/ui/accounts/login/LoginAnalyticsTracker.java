@@ -12,9 +12,16 @@ import javax.inject.Singleton;
 
 @Singleton
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
+    private AccountStore mAccountStore;
+    private SiteStore mSiteStore;
+    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore) {
+        this.mAccountStore = accountStore;
+        this.mSiteStore = siteStore;
+    }
+
     @Override
-    public void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcom) {
-        AnalyticsUtils.trackAnalyticsSignIn(accountStore, siteStore, isWpcom);
+    public void trackAnalyticsSignIn(boolean isWpcom) {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, isWpcom);
     }
 
     @Override
@@ -235,5 +242,19 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackWpComBackgroundServiceUpdate(Map<String, ?> properties) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, properties);
+    }
+
+    @Override public void trackConnectedSiteInfoRequested(String url) {
+        // Not used in WordPress app
+    }
+
+    @Override
+    public void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType,
+                                             String errorDescription) {
+        // Not used in WordPress app
+    }
+
+    @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
+        // Not used in WordPress app
     }
 }

@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-19 22:05:44+0000
+Translation-Revision-Date: 2019-07-17 18:19:05+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="description_expand">Extinde</string>
+    <string name="description_collapse">Restrânge</string>
+    <string name="editor_retry_failed_uploads">Reîncearcă încărcarea</string>
+    <string name="editor_toast_failed_uploads">Încărcarea unor elemente media a eșuat. Nu poți salva sau publica\n        articolul în această situație.</string>
+    <string name="my_site_verify_your_email_without_email">Confirmă-ți adresa de email - instrucțiunile au fost trimise la adresa ta de email</string>
+    <string name="my_site_verify_your_email">Confirmă-ți adresa de email - instrucțiunile au fost trimise la %s</string>
+    <string name="error_media_recover_post_not_submitted">Nu am putut încărca elementele media. Articolul nu a fost trimis.</string>
+    <string name="error_media_recover_post_not_scheduled">Nu am putut încărca elementele media. Articolul nu a fost programat.</string>
+    <string name="error_media_recover_post_not_published">Nu am putut încărca elementele media. Articolul nu a fost publicat.</string>
+    <string name="error_media_recover_post">Nu am putut încărca elementele media</string>
+    <string name="link_dialog_button_cancel">Anulează</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Înlătură legătura</string>
+    <string name="link_dialog_title">Inserează legătura</string>
+    <string name="post_settings_retry_featured_image">Reîncearcă încărcarea</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Încarc elementele media.\nTe rog atinge pentru opțiuni.</string>
+    <string name="dialog_gutenberg_informative_description_page">Această pagină folosește editorul de blocuri, care este editorul implicit pentru pagini noi. Pentru a activa editorul clasic, mergi la Eu > Setări aplicație.</string>
+    <string name="dialog_gutenberg_informative_description_post">Acest articol folosește editorul de blocuri, care este editorul implicit pentru articole noi. Pentru a activa editorul clasic, mergi la Eu > Setări aplicație.</string>
+    <string name="link_open_new_window">Deschide legătura într-o fereastră/filă nouă</string>
+    <string name="post_list_search_prompt">Caută în articolele publicate</string>
+    <string name="stats_widget_error_no_access_token">Pentru a vizualiza statisticile, autentifică-te în contul WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Nu se potrivește niciun articol cu căutarea ta</string>
+    <string name="domains_suggestions_intro_description">Aici vei fi găsit pe internet.</string>
+    <string name="domains_suggestions_intro_title">Alege un nume de domeniu premium</string>
+    <string name="my_site_custom_domain_name">Toate planurile WordPress.com includ un nume de domeniu personalizat. Înregistrează-ți domeniul premium gratuit acum.</string>
+    <string name="stats_widget_minified_name">Dintr-o privire</string>
+    <string name="stats_widget_today_insights_name">Azi</string>
+    <string name="stats_widget_all_time_insights_name">Total general</string>
+    <string name="stats_widget_weekly_views_name">Vizualizări în această săptămână</string>
+    <string name="stats_widget_log_in_message">Te rog autentifică-te în aplicația WordPress pentru a adăuga o piesă.</string>
+    <string name="stats_widget_error_no_network">Nu este disponibilă nicio rețea</string>
+    <string name="stats_widget_error_no_data">Nu am putut încărca datele</string>
+    <string name="stats_widget_select_type">Tip</string>
+    <string name="stats_widget_select_color">Culoare</string>
+    <string name="stats_widget_select_your_site">Selectează-ți situl</string>
+    <string name="stats_widget_color_dark">Întunecat</string>
+    <string name="stats_widget_color_light">Luminos</string>
+    <string name="stats_widget_color">Culoare</string>
+    <string name="stats_widget_site_caption">Selectează-ți situl</string>
+    <string name="stats_widget_site">Sit</string>
+    <string name="stats_widget_all_time_title">Total general</string>
+    <string name="stats_widget_views_title">Vizualizări în această săptămână</string>
+    <string name="stats_widget_add">Adaugă o piesă</string>
+    <string name="dialog_confirm_update_yes">Actualizează acum</string>
+    <string name="dialog_confirm_update_message_page">Această pagină publicată va fi actualizată imediat.</string>
+    <string name="dialog_confirm_update_message_post">Acest articol publicat va fi actualizat imediat.</string>
+    <string name="dialog_confirm_update_title">Ești gata să actualizezi?</string>
+    <string name="plugin_fetching_error_after_at">Reîmprospătarea detaliilor modulului durează mai mult decât de obicei. Te rog verifică din nou mai târziu.</string>
+    <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest sit.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
     <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu %1$stermenii și condițiile%2$s.</string>
     <string name="error_network_connection">Verifică conexiunea rețelei și încearcă din nou.</string>
@@ -162,8 +212,6 @@ Language: ro
     <string name="stats_loading_error">Datele nu au fost încărcate</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editează articolele și paginile noi cu editorul de blocuri</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Folosește editorul de blocuri</string>
-    <string name="dialog_gutenberg_informative_description_page">Această pagină a fost creată inițial în Editorul de blocuri, așa că l-am activat și pe această pagină.\n        Comuți oricând înapoi la Editorul clasic atingând ⋮ în bara de sus.</string>
-    <string name="dialog_gutenberg_informative_description_post">Acest articol a fost creat inițial în Editorul de blocuri, așa că l-am activat și pe această pagină.\n        Comuți oricând înapoi la Editorul clasic atingând ⋮ în bara de sus.</string>
     <string name="dialog_gutenberg_informative_title">Editor de blocuri activat</string>
     <string name="exit">ieșire</string>
     <string name="quick_start_sites_type_subtitle">%1$d din %2$d finalizate</string>
@@ -251,7 +299,6 @@ Language: ro
     <string name="dialog_confirm_load_remote_post_body_2">Locală\nSalvată pe %s\n\nWeb\nSalvată pe %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Acest articol are două versiuni care sunt în conflict. Selectează versiunea pe care vrei s-o elimini.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Rezolvă conflictul de sincronizare</string>
-    <string name="local_changes_discarding_no_connection">Pentru a efectua această acțiune este necesară o conexiune. Te rog verifică-ți conexiunea și reîncearcă.</string>
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
     <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
@@ -464,11 +511,6 @@ Language: ro
     <string name="blavatar_desc">icon sit</string>
     <string name="theme_image_desc">imagine temă</string>
     <string name="featured_image_desc">imagine reprezentativă</string>
-    <string name="local_changes_discarding_error">A fost o eroare la renunțarea la modificările tale locale. Te rog contactează suportul pentru asistență suplimentară.</string>
-    <string name="local_changes_discarding">Renunț la modificările locale</string>
-    <string name="local_changes_discarded">Modificările locale au fost aruncate la gunoi</string>
-    <string name="menu_discard_changes">Renunță la modificările locale</string>
-    <string name="button_discard_changes">Renunță la modificări</string>
     <string name="button_discard">Renunță</string>
     <string name="reader_avatar_desc">poză de profil</string>
     <string name="reader_blavatar_desc">icon sit</string>
@@ -559,7 +601,6 @@ Language: ro
     <string name="plugin_install_site_ineligible_site_private">Funcționalitatea modulului necesită ca situl să fie public.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funcționalitatea modulului necesită un plan Business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funcționalitatea modulului necesită un domeniu personalizat.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Facem inițializarea finală - este aproape gata…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalez modulul…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalează</string>
@@ -882,7 +923,6 @@ Language: ro
     <string name="login_text_otp_another">Trimite-mi în schimb un mesaj text cu un alt cod.</string>
     <string name="enter_verification_code_sms">Am trimis un mesaj text către numărul de telefon care se termină cu %s. Te rog introdu codul de verificare în SMS.</string>
     <string name="error_generic_error">Nu am putut efectua operația</string>
-    <string name="error_media_recover_post">Nu pot încărca acest articol din media</string>
     <string name="image_size">Dimensiune</string>
     <string name="uploading_subtitle_media_only_one">1 fișier rămas</string>
     <string name="uploading_subtitle_media_only">%1$d din %2$d fișiere rămase</string>
@@ -1380,7 +1420,6 @@ Language: ro
     <string name="start_over">Reîncepe</string>
     <string name="me_btn_app_settings">Setări aplicație</string>
     <string name="editor_remove_failed_uploads">Înlătură încărcările eșuate</string>
-    <string name="editor_toast_failed_uploads">Unele încărcări de media au eșuat. Poți salva sau publica\narticolul tău pe sit. Vrei să înlături toate fișierele media eșuate?</string>
     <string name="site_settings_advanced_header">Avansat</string>
     <string name="comments_empty_list_filtered_trashed">Niciun comentariu la gunoi</string>
     <string name="comments_empty_list_filtered_pending">Niciun comentariu în așteptare</string>
@@ -1614,7 +1653,6 @@ Language: ro
     <string name="stats_enable_rest_api_in_jetpack">Pentru a vedea statisticile tale, validează extensia JSON API din Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s comentarii</string>
     <string name="reader_short_comment_count_one">1 comentariu</string>
-    <string name="reader_label_submit_comment">TRIMITE</string>
     <string name="reader_hint_comment_on_post">Răspunde la articol…</string>
     <string name="reader_discover_visit_blog">Vizitează %s</string>
     <string name="reader_discover_attribution_blog">Inițial publicat pe %s</string>

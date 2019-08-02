@@ -1,12 +1,9 @@
 package org.wordpress.android.login;
 
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
-
 import java.util.Map;
 
 public interface LoginAnalyticsListener {
-    void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
+    void trackAnalyticsSignIn(boolean isWpcomLogin);
     void trackCreatedAccount(String username, String email);
     void trackEmailFormViewed();
     void trackInsertedInvalidUrl();
@@ -51,4 +48,7 @@ public interface LoginAnalyticsListener {
     void trackUrlHelpScreenViewed();
     void trackUsernamePasswordFormViewed();
     void trackWpComBackgroundServiceUpdate(Map<String, ?> properties);
+    void trackConnectedSiteInfoRequested(String url);
+    void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType, String errorDescription);
+    void trackConnectedSiteInfoSucceeded(Map<String, ?> properties);
 }

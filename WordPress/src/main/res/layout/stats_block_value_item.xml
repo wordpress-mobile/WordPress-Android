@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textColor="@color/success_500"
+        android:textColor="@color/success_50"
         android:textSize="16sp"
         android:visibility="gone"/>
 </LinearLayout>

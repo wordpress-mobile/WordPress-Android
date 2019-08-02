@@ -38,7 +38,6 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
-import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
@@ -72,6 +71,7 @@ class PostListMainViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
     private val postListEventListenerFactory: PostListEventListener.Factory,
+    private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -91,8 +91,8 @@ class PostListMainViewModel @Inject constructor(
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
 
-    private val _updatePostsPager = SingleLiveEvent<AuthorFilterSelection>()
-    val updatePostsPager = _updatePostsPager
+    private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
+    val authorSelectionUpdated = _authorSelectionUpdated
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -230,7 +230,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
-        _updatePostsPager.value = authorFilterSelection
+        _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
                         isSearchExpanded.value != true,
@@ -256,13 +256,11 @@ class PostListMainViewModel @Inject constructor(
      * info already
      */
     fun getPostListViewModelConnector(
-        authorFilter: AuthorFilterSelection,
         postListType: PostListType
     ): PostListViewModelConnector {
         return PostListViewModelConnector(
                 site = site,
                 postListType = postListType,
-                authorFilter = authorFilter,
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
@@ -402,7 +400,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
-            _updatePostsPager.value = authorFilterSelection
+            _authorSelectionUpdated.value = authorFilterSelection
 
             AnalyticsUtils.trackWithSiteDetails(
                     POST_LIST_AUTHOR_FILTER_CHANGED,
@@ -440,39 +438,6 @@ class PostListMainViewModel @Inject constructor(
         updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
     }
 
-    private fun managePreviewStateTransitions(
-        newState: PostListRemotePreviewState,
-        prevState: PostListRemotePreviewState?,
-        postInfo: PostInfoType
-    ) = when (newState) {
-        PostListRemotePreviewState.PREVIEWING -> {
-            prevState?.let {
-                if (it == PostListRemotePreviewState.UPLOADING_FOR_PREVIEW ||
-                        it == PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW) {
-                    (postInfo as? PostInfoType.PostInfo)?.let { info ->
-                        info.post.let { post ->
-                            postActionHandler.handleRemotePreview(
-                                    localPostId = post.id,
-                                    remotePreviewType = if (prevState ==
-                                            PostListRemotePreviewState.UPLOADING_FOR_PREVIEW) {
-                                        RemotePreviewType.REMOTE_PREVIEW
-                                    } else {
-                                        RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                                    }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-        PostListRemotePreviewState.NONE,
-        PostListRemotePreviewState.UPLOADING_FOR_PREVIEW,
-        PostListRemotePreviewState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
-        PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR -> {
-            // nothing to do
-        }
-    }
-
     private fun updatePreviewAndDialogState(newState: PostListRemotePreviewState, postInfo: PostInfoType) {
         // We need only transitions, so...
         if (_previewState.value == newState) return
@@ -487,7 +452,12 @@ class PostListMainViewModel @Inject constructor(
         _previewState.postValue(newState)
 
         // take care of exit actions on state transition
-        managePreviewStateTransitions(newState, prevState, postInfo)
+        previewStateHelper.managePreviewStateTransitions(
+                newState,
+                prevState,
+                postInfo,
+                postActionHandler::handleRemotePreview
+        )
     }
 
     fun toggleViewLayout() {

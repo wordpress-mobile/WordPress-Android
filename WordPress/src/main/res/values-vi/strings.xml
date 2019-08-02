@@ -137,7 +137,6 @@ Language: vi_VN
     <string name="start_over">Bắt Đầu Lại</string>
     <string name="me_btn_app_settings">Thiết đặt ứng dụng</string>
     <string name="editor_remove_failed_uploads">Loại bỏ các tải lên bị lỗi</string>
-    <string name="editor_toast_failed_uploads">Một số media tải lên bị lỗi. Bạn không thể lưu hoặc xuất bản\n        bài viết của bạn trong tình trạng này. Bạn có muốn loại bỏ tất cả media bị lỗi không?</string>
     <string name="site_settings_advanced_header">Nâng cao</string>
     <string name="comments_empty_list_filtered_trashed">Không có bình luận trong thùng rác</string>
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
@@ -363,7 +362,6 @@ Language: vi_VN
     <string name="stats_enable_rest_api_in_jetpack">Để xem số liệu thống kê của bạn, cho phép các module API JSON trong Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Bình luận</string>
     <string name="reader_short_comment_count_one">1 Bình luận</string>
-    <string name="reader_label_submit_comment">Gửi</string>
     <string name="reader_hint_comment_on_post">Trả lời cho bài …</string>
     <string name="reader_discover_visit_blog">Thăm %s</string>
     <string name="reader_discover_attribution_blog">Bài gốc được đăng lúc %s</string>

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/site_settings_list_editor_no_items_text"
-        android:textColor="@color/neutral_200"
+        android:textColor="@color/neutral_20"
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large"
         android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/neutral_400" />
+        android:textColor="@color/neutral_40" />
 
     <View
         android:background="@color/divider"

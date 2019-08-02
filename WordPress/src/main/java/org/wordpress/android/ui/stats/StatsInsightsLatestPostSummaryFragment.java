@@ -230,13 +230,13 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             // Likes and Comments shouldn't link anywhere because they don't have summaries
             // so their color should be Gray Darken 30 or #3d596d
             if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
-                value.setTextColor(getResources().getColor(R.color.primary_500));
+                value.setTextColor(getResources().getColor(R.color.primary_50));
             } else {
-                value.setTextColor(getResources().getColor(R.color.neutral_600));
+                value.setTextColor(getResources().getColor(R.color.neutral_60));
             }
         }
         icon = currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
-        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.neutral_700);
+        ColorUtils.INSTANCE.setImageResourceWithTint(icon, getTabIcon(itemType), R.color.neutral_70);
 
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS) {
             currentTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);

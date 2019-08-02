@@ -50,6 +50,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,6 +134,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {

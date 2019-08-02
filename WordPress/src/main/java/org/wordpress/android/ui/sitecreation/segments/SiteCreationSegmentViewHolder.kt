@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +41,7 @@ sealed class SiteCreationSegmentViewHolder(internal val parent: ViewGroup, @Layo
                     icon,
                     ICON,
                     uiState.iconUrl,
+                    ScaleType.CENTER,
                     null,
                     object : RequestListener<Drawable> {
                         override fun onLoadFailed(e: Exception?) {
