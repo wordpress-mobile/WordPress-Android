@@ -94,7 +94,7 @@ sealed class PageItem(open val type: Type) {
             labels = emptyList(),
             indent = 0,
             imageUrl = imageUrl,
-            actions = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY),
+            actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),
             actionsEnabled = actionsEnabled
     )
 
