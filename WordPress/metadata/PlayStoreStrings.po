@@ -26,6 +26,7 @@ msgid ""
 "* Customers with unclaimed domain credits can register domains in the app.\n"
 "* You can expand the Comment Editor to Full Screen for more space while editing.\n"
 "* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.\n"
+"* The block editor is now the default for new posts after you open a block-based post for the first time.\n"
 msgstr ""
 
 msgctxt "release_note_128"
