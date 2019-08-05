@@ -437,4 +437,9 @@
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
 
+    <!-- web preview  -->
+    <dimen name="web_preview_navbar_height">72dp</dimen>
+    <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
+    <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
+
 </resources>
