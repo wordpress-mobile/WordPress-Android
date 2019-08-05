@@ -1742,7 +1742,7 @@ public class SiteStore extends Store {
                 wpcomPostRequestRequired = true;
             }
             try {
-                rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
+                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
             } catch (Exception e) {
                 event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
             }
