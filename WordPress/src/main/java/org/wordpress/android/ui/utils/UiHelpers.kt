@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.utils
 
+import org.wordpress.android.R
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Point
 import android.view.View
 import android.view.WindowManager.LayoutParams
 import android.widget.ImageView
@@ -60,22 +60,8 @@ class UiHelpers @Inject constructor() {
     companion object {
         fun adjustDialogSize(dialog: Dialog) {
             val window = dialog.window
-            val point = Point()
-
-            val display = window!!.windowManager.defaultDisplay
-            display.getSize(point)
-
-            val displayWidth = point.x
-            val displayHeight = point.y
-
-            val width: Int
-            if (displayWidth > displayHeight) {
-                width = (displayHeight * 0.4).toInt()
-            } else {
-                width = (displayWidth * 0.8).toInt()
-            }
-
-            window!!.setLayout(width, LayoutParams.WRAP_CONTENT)
+            val defaultDialogWidth: Int = window.context.resources.getDimension(R.dimen.alert_dialog_max_width).toInt()
+            window!!.setLayout(defaultDialogWidth, LayoutParams.WRAP_CONTENT)
         }
     }
 }
