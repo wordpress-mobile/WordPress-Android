@@ -1,6 +1,6 @@
 13.1
 -----
-* Added ability to switch between Desktop adn Mobile versions of the content for Site and Page preview.
+* Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
 * Improvement to the functionality and design of Web Preview.
 
 13.0
