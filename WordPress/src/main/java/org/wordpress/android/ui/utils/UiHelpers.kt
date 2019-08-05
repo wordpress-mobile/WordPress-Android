@@ -59,7 +59,6 @@ class UiHelpers @Inject constructor() {
 
     companion object {
         fun adjustDialogSize(dialog: Dialog) {
-
             val window = dialog.window
             val point = Point()
 
