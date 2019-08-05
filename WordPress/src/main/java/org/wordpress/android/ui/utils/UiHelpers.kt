@@ -72,7 +72,7 @@ class UiHelpers @Inject constructor() {
             if (displayWidth > displayHeight) {
                 width = (displayHeight * 0.4).toInt()
             } else {
-                width = (displayWidth * 0.4).toInt()
+                width = (displayWidth * 0.8).toInt()
             }
 
             window!!.setLayout(width, LayoutParams.WRAP_CONTENT)
