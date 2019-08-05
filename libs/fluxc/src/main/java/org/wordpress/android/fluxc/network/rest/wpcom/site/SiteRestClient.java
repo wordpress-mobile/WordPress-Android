@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
@@ -326,6 +327,36 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
                                 payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
                                 mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    public void designateMobileEditorForAllSites(final String mobileEditorName) {
+        Map<String, Object> params = new HashMap<>();
+        String url = WPCOMV2.me.gutenberg.getUrl();
+        params.put("editor", mobileEditorName);
+        params.put("platform", "mobile");
+        // FIXME: check the response type
+        final WPComGsonRequest<SitesEditorMigrationResponse> request = WPComGsonRequest
+                .buildPostRequest(url, params, SitesEditorMigrationResponse.class,
+                        new Listener<SitesEditorMigrationResponse>() {
+                            @Override
+                            public void onResponse(SitesEditorMigrationResponse response) {
+                                DesignateMobileEditorForAllSitesResponsePayload payload =
+                                        new DesignateMobileEditorForAllSitesResponsePayload();
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                DesignateMobileEditorForAllSitesResponsePayload payload =
+                                        new DesignateMobileEditorForAllSitesResponsePayload();
+                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
                             }
                         });
         add(request);
