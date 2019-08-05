@@ -524,7 +524,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
-            properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
+            // Only add the editor information if it was set before.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/10300#discussion_r309145514
+            if (metadata.isGutenbergEnabledVariableSet()) {
+                properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
+            }
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);

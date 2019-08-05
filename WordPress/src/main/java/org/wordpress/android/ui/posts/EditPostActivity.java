@@ -161,6 +161,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -1550,10 +1551,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if ((TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost)
-            || AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl())) {
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl());
+
+        if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
+                    BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
+            showPopup = true;
+        }
+
+        if (showPopup) {
             showGutenbergInformativeDialog();
         }
     }

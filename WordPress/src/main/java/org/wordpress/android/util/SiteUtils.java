@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -13,6 +14,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
@@ -68,10 +71,13 @@ public class SiteUtils {
         }).start();
     }
 
-    public static boolean enableBlockEditor(Dispatcher dispatcher, SiteStore siteStore, int siteLocalSiteID) {
+    public static boolean enableBlockEditorOnSiteCreation(Dispatcher dispatcher, SiteStore siteStore,
+                                                          int siteLocalSiteID) {
         SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
         if (newSiteModel != null) {
-           enableBlockEditor(dispatcher, newSiteModel);
+            enableBlockEditor(dispatcher, newSiteModel);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, newSiteModel,
+                    BlockEditorEnabledSource.ON_SITE_CREATION.asPropertyMap());
             return true;
         }
         return false;

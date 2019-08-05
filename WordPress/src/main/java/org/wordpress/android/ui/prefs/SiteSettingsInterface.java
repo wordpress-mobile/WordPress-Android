@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
@@ -31,6 +32,7 @@ import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -171,6 +173,7 @@ public abstract class SiteSettingsInterface {
 
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
 
     protected SiteSettingsInterface(Context host, SiteModel site, SiteSettingsListener listener) {
         ((WordPress) host.getApplicationContext()).component().inject(this);
@@ -1136,6 +1139,9 @@ public abstract class SiteSettingsInterface {
         if (event.isError()) {
             return;
         }
+
+        // Need to update the user property about GB enabled on any of the sites
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
         notifyUpdatedOnUiThread();
     }

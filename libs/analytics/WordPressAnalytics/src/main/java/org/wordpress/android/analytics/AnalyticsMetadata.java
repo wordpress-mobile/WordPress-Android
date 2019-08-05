@@ -9,6 +9,7 @@ public class AnalyticsMetadata {
     private String mUsername = "";
     private String mEmail = "";
     private boolean mIsGutenbergEnabled;
+    private boolean mIsGutenbergEnabledVariableSet;
 
     public AnalyticsMetadata() {
     }
@@ -73,7 +74,12 @@ public class AnalyticsMetadata {
         return mIsGutenbergEnabled;
     }
 
+    public boolean isGutenbergEnabledVariableSet() {
+        return mIsGutenbergEnabledVariableSet;
+    }
+
     public void setGutenbergEnabled(boolean gutenbergEnabled) {
         this.mIsGutenbergEnabled = gutenbergEnabled;
+        this.mIsGutenbergEnabledVariableSet = true;
     }
 }
