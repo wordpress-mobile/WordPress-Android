@@ -1551,17 +1551,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        boolean newSitePopupNeeded = AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl());
-        if ((TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost)
-            || newSitePopupNeeded) {
-            SiteUtils.enableBlockEditor(mDispatcher, mSite);
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl());
 
-            if (!newSitePopupNeeded) {
-                // Don't track the activation of the block editor on new sites.
-                // The flip to GB happened at site creation time, and the flip is tracked there with proper details
-                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
-                        BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
-            }
+        if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
+            SiteUtils.enableBlockEditor(mDispatcher, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
+                    BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
+            showPopup = true;
+        }
+
+        if (showPopup) {
             showGutenbergInformativeDialog();
         }
     }
