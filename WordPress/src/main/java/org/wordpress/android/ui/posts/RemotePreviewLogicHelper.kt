@@ -64,7 +64,7 @@ class RemotePreviewLogicHelper @Inject constructor(
         // (eg. during and editing session)
         val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
-        when {
+        return when {
             shouldUpload(updatedPost) -> {
                 // We can't upload an unpublishable post (empty), we'll let the user know we can't preview it.
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
@@ -72,6 +72,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                     return PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
                 }
                 helperFunctions.startUploading(false, updatedPost)
+                PreviewLogicOperationResult.GENERATING_PREVIEW
             }
             shouldRemoteAutoSave(updatedPost) -> {
                 // We don't support remote auto-save for self hosted sites (accessed via XMLRPC),
@@ -91,6 +92,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
                 }
                 helperFunctions.startUploading(true, updatedPost)
+                PreviewLogicOperationResult.GENERATING_PREVIEW
             }
             else -> {
                 // If we don't need upload or auto save the post (eg. post not modified), open the preview directly.
@@ -100,10 +102,9 @@ class RemotePreviewLogicHelper @Inject constructor(
                         updatedPost,
                         RemotePreviewType.REMOTE_PREVIEW
                 )
-                return PreviewLogicOperationResult.OPENING_PREVIEW
+                PreviewLogicOperationResult.OPENING_PREVIEW
             }
         }
-        return PreviewLogicOperationResult.GENERATING_PREVIEW
     }
 
     private fun shouldUpload(post: PostModel): Boolean {
