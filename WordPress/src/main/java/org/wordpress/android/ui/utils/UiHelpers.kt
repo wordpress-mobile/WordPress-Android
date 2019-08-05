@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.utils
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Point
 import android.view.View
+import android.view.WindowManager.LayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -51,6 +54,29 @@ class UiHelpers @Inject constructor() {
         updateVisibility(imageView, resId != null)
         resId?.let {
             imageView.setImageResource(resId)
+        }
+    }
+
+    companion object {
+        fun adjustDialogSize(dialog: Dialog) {
+
+            val window = dialog.window
+            val point = Point()
+
+            val display = window!!.windowManager.defaultDisplay
+            display.getSize(point)
+
+            val displayWidth = point.x
+            val displayHeight = point.y
+
+            val width: Int
+            if (displayWidth > displayHeight) {
+                width = (displayHeight * 0.4).toInt()
+            } else {
+                width = (displayWidth * 0.4).toInt()
+            }
+
+            window!!.setLayout(width, LayoutParams.WRAP_CONTENT)
         }
     }
 }
