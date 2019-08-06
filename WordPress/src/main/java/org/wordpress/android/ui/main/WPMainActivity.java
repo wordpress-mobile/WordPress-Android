@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnAllSitesMobileEditorChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
@@ -1156,6 +1157,19 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
+       refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAllSitesMobileEditorChanged(OnAllSitesMobileEditorChanged event) {
+        if (event.isError()) {
+            return;
+        }
+        refreshCurrentSelectedSiteAfterEditorChanges(true, -1);
+    }
+
+    private void refreshCurrentSelectedSiteAfterEditorChanges(boolean alwaysRefreshUI, int localSiteID) {
         // Need to update the user property about GB enabled on any of the sites
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
@@ -1168,9 +1182,13 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-        if (getSelectedSite().getId() != event.site.getId()) {
-            // No need to refresh the UI, since the current selected site is another site
-            return;
+        // When alwaysRefreshUI is `true` we need to refresh the UI regardless of the current site
+        if (!alwaysRefreshUI) {
+            // we need to refresh the UI only when the site IDs matches
+            if (getSelectedSite().getId() != localSiteID) {
+                // No need to refresh the UI, since the current selected site is another site
+                return;
+            }
         }
 
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
