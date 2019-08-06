@@ -10,6 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELE
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
@@ -21,7 +22,12 @@ import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.DO_NOTHING
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD_AS_DRAFT
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -60,6 +66,8 @@ const val STATE_INFO_COLOR = R.color.warning_dark
  */
 class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
     fun createPostListItemUiState(
+        uploadStarter: UploadStarter,
+        site: SiteModel,
         post: PostModel,
         uploadStatus: PostListItemUploadStatus,
         unhandledConflicts: Boolean,
@@ -71,7 +79,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus, postStatus, post.isLocallyChanged || post.isLocalDraft)
+        val uploadUiState = createUploadUiState(uploadStarter, site, uploadStatus, post)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -217,20 +225,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         // we want to show either single error/progress label or 0-n info labels.
         if (labels.isEmpty()) {
             if (isLocalDraft) {
-                // TODO temporary log for testing - remove before this branch is merged into develop
-                AppLog.e(
-                        POSTS,
-                        "Developer error: This state shouldn't happen. All locally changed post should " +
-                                "be in UploadWaitingForConnection state."
-                )
+                labels.add(UiStringRes(R.string.local_draft))
             }
             if (isLocallyChanged) {
-                // TODO temporary log for testing - remove before this branch is merged into develop
-                AppLog.e(
-                        POSTS,
-                        "Developer error: This state shouldn't happen. All locally changed post should " +
-                                "be in UploadWaitingForConnection state."
-                )
+                labels.add(UiStringRes(R.string.local_changes))
             }
             if (postStatus == PRIVATE) {
                 labels.add(UiStringRes(R.string.post_status_post_private))
@@ -399,11 +397,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     }
 
     private fun createUploadUiState(
+        uploadStarter: UploadStarter,
+        siteModel: SiteModel,
         uploadStatus: PostListItemUploadStatus,
-        postStatus: PostStatus,
-        postNotSynced: Boolean
+        post: PostModel
     ): PostUploadUiState {
+        val postStatus = PostStatus.fromPost(post)
         return when {
+            !post.isLocalDraft && !post.isLocallyChanged -> NothingToUpload
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
             uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
@@ -411,8 +412,19 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued
-            postNotSynced -> UploadWaitingForConnection(postStatus)
+            isPendingAutoUpload(uploadStarter, siteModel, post)  -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
+        }
+    }
+
+    private fun isPendingAutoUpload(
+        uploadStarter: UploadStarter,
+        siteModel: SiteModel,
+        post: PostModel
+    ): Boolean {
+        return when (uploadStarter.getAutoUploadAction(post, siteModel)) {
+            UPLOAD_AS_DRAFT, UPLOAD -> true
+            REMOTE_AUTO_SAVE, DO_NOTHING -> false
         }
     }
 }

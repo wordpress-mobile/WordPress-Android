@@ -45,7 +45,7 @@ public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
 
     public enum PostUploadAction {
-        REMOTE_AUTO_SAVE, UPLOAD_AS_DRAFT, UPLOAD
+        REMOTE_AUTO_SAVE, UPLOAD_AS_DRAFT, UPLOAD, DO_NOTHING
     }
 
     /**

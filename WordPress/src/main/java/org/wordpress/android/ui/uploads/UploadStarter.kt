@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -24,6 +25,8 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.testing.OpenForTesting
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.DO_NOTHING
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
@@ -42,7 +45,7 @@ private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
  * Automatically uploads local drafts.
  *
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
- * addition to this, call sites can also request an immediate execution by calling [upload].
+ * addition to this, call sites can also request an immediate execution by calling [checkConnectionAndUpload].
  *
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
@@ -126,10 +129,10 @@ class UploadStarter @Inject constructor(
     }
 
     /**
-     * If there is an internet connection, uploads all local drafts belonging to [sites].
+     * If there is an internet connection, uploads all posts with local changes belonging to [sites].
      *
-     * This coroutine will suspend until all the [upload] operations have completed. If one of them fails, all query
-     * and queuing attempts ([upload]) will be canceled. The exception will be thrown by this method.
+     * This coroutine will suspend until all the [checkConnectionAndUpload] operations have completed. If one of them fails, all query
+     * and queuing attempts ([checkConnectionAndUpload]) will be canceled. The exception will be thrown by this method.
      */
     private suspend fun checkConnectionAndUpload(sites: List<SiteModel>) = coroutineScope {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -158,30 +161,7 @@ class UploadStarter @Inject constructor(
             postsAndPages
                     .asSequence()
                     .filter {
-                        // Do not auto-upload empty post
-                        postUtilsWrapper.isPublishable(it)
-                    }
-                    .filter {
-                        // Do not auto-upload post which is in conflict with remote
-                        !postUtilsWrapper.isPostInConflictWithRemote(it)
-                    }
-                    .filter {
-                        // Do not auto-upload post which is currently being uploaded
-                        !uploadServiceFacade.isPostUploadingOrQueued(it)
-                    }
-                    .filter {
-                        // Do not auto-upload post which we already tried to upload certain number of times
-                        uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_UPLOAD_RETRIES
-                    }
-                    .filter {
-                        // Don't remoteAutoSave changes which were already remoteAutoSaved or when on a self-hosted site
-                        UploadUtils.getPostUploadAction(it) != PostUploadAction.REMOTE_AUTO_SAVE ||
-                                (!UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it) && site.isUsingWpComRestApi)
-                    }
-                    .filter {
-                        val twoDaysAgoTimestamp = Date().time - TWO_DAYS_IN_MILLIS
-                        // Don't auto-upload/save changes which are older than 2 days
-                        DateTimeUtils.timestampFromIso8601Millis(it.dateLocallyChanged) >= twoDaysAgoTimestamp
+                        getAutoUploadAction(it, site) != DO_NOTHING
                     }
                     .toList()
                     .forEach { post ->
@@ -197,5 +177,42 @@ class UploadStarter @Inject constructor(
         } finally {
             mutex.unlock()
         }
+    }
+
+    public fun getAutoUploadAction(post: PostModel, site: SiteModel): PostUploadAction {
+        val twoDaysAgoTimestamp = Date().time - TWO_DAYS_IN_MILLIS
+        // Don't auto-upload/save changes which are older than 2 days
+        if (DateTimeUtils.timestampFromIso8601Millis(post.dateLocallyChanged) < twoDaysAgoTimestamp) {
+            return DO_NOTHING
+        }
+
+        // Do not auto-upload empty post
+        if (!postUtilsWrapper.isPublishable(post)) {
+            return DO_NOTHING
+        }
+
+        // Do not auto-upload post which is in conflict with remote
+        if (postUtilsWrapper.isPostInConflictWithRemote(post)) {
+            return DO_NOTHING
+        }
+
+        // Do not auto-upload post which we already tried to upload certain number of times
+        if (uploadStore.getNumberOfPostUploadErrorsOrCancellations(post) >= MAXIMUM_AUTO_UPLOAD_RETRIES) {
+            return DO_NOTHING
+        }
+
+        // Do not auto-upload post which is currently being uploaded
+        if (uploadServiceFacade.isPostUploadingOrQueued(post)) {
+            return DO_NOTHING
+        }
+
+        val action = UploadUtils.getPostUploadAction(post)
+        // Don't remoteAutoSave changes which were already remoteAutoSaved or when on a self-hosted site
+        if (action == REMOTE_AUTO_SAVE &&
+                (UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post) || !site.isUsingWpComRestApi)) {
+            return DO_NOTHING
+        }
+
+        return action
     }
 }
