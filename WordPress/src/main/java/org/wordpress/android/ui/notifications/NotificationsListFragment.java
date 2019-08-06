@@ -355,8 +355,9 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
         }
     }
 
-    @Override public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem notificationSettings = menu.findItem(R.id.notification_settings);
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem notificationSettings = menu.findItem(R.id.notifications_settings);
         notificationSettings.setVisible(mAccountStore.hasAccessToken());
 
         super.onPrepareOptionsMenu(menu);
@@ -370,7 +371,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.notification_settings) {
+        if (item.getItemId() == R.id.notifications_settings) {
             ActivityLauncher.viewNotificationsSettings(getActivity());
             return true;
         }
