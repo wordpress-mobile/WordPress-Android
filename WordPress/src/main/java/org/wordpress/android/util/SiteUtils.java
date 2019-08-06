@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -28,7 +29,7 @@ public class SiteUtils {
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
      * and store the value on the backend. selfHosted sites just store the value in the local DB in FluxC
-     *
+     * <p>
      * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
      * -- 12.9 ON -> turn all sites ON in 13.0
      * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
@@ -43,44 +44,18 @@ public class SiteUtils {
             return;
         }
         final boolean oldAppWidePreferenceValue = AppPrefs.isGutenbergDefaultForNewPosts();
-        final List<SiteModel> sites = siteStore.getSites();
 
-        // Start the migration by using the current selected site in the first network call
-        int siteLocalId = AppPrefs.getSelectedSite();
-        final SiteModel currentSelectedSiteInApp = siteLocalId != -1 ? siteStore.getSiteByLocalId(siteLocalId) : null;
-        if (currentSelectedSiteInApp != null && sites.size() > 0
-            && sites.get(0).getId() != currentSelectedSiteInApp.getId()) {
-            // the first site in the list is not the current selected site
-            sites.add(0, currentSelectedSiteInApp);
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            AppPrefs.removeAppWideEditorPreference();
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Be optimistic and remove the old app-wide preference before we start the calls
-                // Only do this when the network connection is available
-                if (NetworkUtils.isNetworkAvailable(context)) {
-                    AppPrefs.removeAppWideEditorPreference();
-                }
-                for (int i = 0; i < sites.size(); i++) {
-                    SiteModel currentSite = sites.get(i);
-                    // The current selected site was added at the beginning of the list, no need to upgrade it again
-                    if (currentSelectedSiteInApp != null && i > 0
-                        && currentSite.getId() == currentSelectedSiteInApp.getId()) continue;
-
-                    if (oldAppWidePreferenceValue) {
-                        enableBlockEditor(dispatcher, currentSite);
-                    } else {
-                        disableBlockEditor(dispatcher, currentSite);
-                    }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        // no-op
-                    }
-                }
-            }
-        }).start();
+        if (oldAppWidePreferenceValue) {
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
+        } else {
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
+        }
     }
 
     public static boolean enableBlockEditorOnSiteCreation(Dispatcher dispatcher, SiteStore siteStore,
