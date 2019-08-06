@@ -1785,17 +1785,20 @@ public class SiteStore extends Store {
             // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
             for (Map.Entry<String, String> entry : payload.editors.entrySet()) {
                 SiteModel currentModel = getSiteBySiteId(Long.parseLong(entry.getKey()));
-                if (currentModel != null) {
-                    if (currentModel.getMobileEditor() == null
-                        || !currentModel.getMobileEditor().equals(entry.getValue())) {
-                        // the current editor is either null or != from the value on the server
-                        // we need to update it
-                        currentModel.setMobileEditor(entry.getValue());
-                        try {
-                            event.rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel);
-                        } catch (Exception e) {
-                            // nope
-                        }
+
+                if (currentModel == null) {
+                    // this should never happen normally
+                    continue;
+                }
+
+                if (currentModel.getMobileEditor() == null
+                    || !currentModel.getMobileEditor().equals(entry.getValue())) {
+                    // the current editor is either null or != from the value on the server. Update it
+                    currentModel.setMobileEditor(entry.getValue());
+                    try {
+                        event.rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel);
+                    } catch (Exception e) {
+                        event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
                     }
                 }
             }
