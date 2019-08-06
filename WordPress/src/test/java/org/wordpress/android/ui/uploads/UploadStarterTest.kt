@@ -214,7 +214,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading, it ignores locally chagned posts that are not publishable`() {
+    fun `when uploading, it ignores locally changed posts that are not publishable`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -315,6 +315,155 @@ class UploadStarterTest {
                 post = any(),
                 trackAnalytics = any()
         )
+    }
+
+    @Test
+    fun `Do not invoke remote-auto-save on self-hosted sites`() = test {
+        // Given
+        val siteModel = createSiteModel(isWpCom = false)
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        // When
+        createUploadStarter().queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `Invoke remote-auto-save on wp-com sites`() = test {
+        // Given
+        val siteModel = createSiteModel(isWpCom = true)
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        // When
+        createUploadStarter().queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, times(1)).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `Do not invoke remote auto save on posts older than 2 days`() = test {
+        // Given
+        val siteModel = createSiteModel()
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        val twoDaysInSeconds = 60 * 60 * 24 * 2
+        val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
+        postModel.dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo)
+
+        // When
+        createUploadStarter().queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `Invoke remote auto save on a post changed 1,99days ago`() = test {
+        // Given
+        val siteModel = createSiteModel()
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        val twoDaysInSeconds = 60 * 60 * 24 * 2
+        val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
+        postModel.dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(twoDaysAgo + 99)
+
+        // When
+        createUploadStarter().queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, times(1)).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `Do not auto-upload a post which is in conflict with remote`() = test {
+        // Given
+        val siteModel = createSiteModel()
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        val postUtilsWrapper = createMockedPostUtilsWrapper()
+        whenever(postUtilsWrapper.isPostInConflictWithRemote(any())).thenReturn(true)
+
+        // When
+        createUploadStarter(postUtilsWrapper = postUtilsWrapper).queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `Do not auto-upload a post which is being uploaded or pending upload`() = test {
+        // Given
+        val siteModel = createSiteModel()
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        whenever(uploadServiceFacade.isPostUploadingOrQueued(any())).thenReturn(true)
+
+        // When
+        createUploadStarter().queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    @Test
+    fun `Do not remote-auto-save a post which has already been remote-auto=saved`() = test {
+        // Given
+        val siteModel = createSiteModel()
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+
+        // Set autosaveModified to a newer date than dateLocallyChanged to indicate the changes were remotely-auto-saved
+        postModel.autoSaveModified = DateTimeUtils.iso8601FromTimestamp(
+                DateTimeUtils.timestampFromIso8601(postModel.dateLocallyChanged) + 99
+        )
+
+        // When
+        createUploadStarter().queueUploadFromSite(siteModel)
+
+        // Then
+        verify(uploadServiceFacade, never()).uploadPost(
+                context = any(),
+                post = any(),
+                trackAnalytics = any()
+        )
+    }
+
+    private fun defaultSetup(siteModel: SiteModel, postModel: PostModel) = test {
+        whenever(postStore.getPostsWithLocalChanges(any())).thenReturn(listOf(postModel))
+        whenever(pageStore.getPagesWithLocalChanges(siteModel)).thenReturn(listOf())
     }
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
