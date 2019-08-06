@@ -2118,7 +2118,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost)) {
+            boolean changesConfirmedStateChanged = mPostSnapshotWhenEditorOpened.getChangesConfirmedContentHashcode()
+                                                   != mPost.getChangesConfirmedContentHashcode();
+            if (PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost) || changesConfirmedStateChanged) {
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
