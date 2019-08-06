@@ -6,8 +6,10 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.SiteUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_CONTENT_TYPE = "content_type";
     private static final String KEY_EDITOR = "editor";
     private static final String KEY_HAS_UNSUPPORTED_BLOCKS = "has_unsupported_blocks";
+    private static final String KEY_UNSUPPORTED_BLOCKS = "unsupported_blocks";
     private static final String KEY_POST_TYPE = "post_type";
     private static final String KEY_OUTCOME = "outcome";
     private static final String KEY_SESSION_ID = "session_id";
@@ -70,16 +73,18 @@ public class PostEditorAnalyticsSession implements Serializable {
         if (isNewPost) {
             mContentType = "new";
         } else if (PostUtils.contentContainsGutenbergBlocks(postContent)) {
-            mContentType = "gutenberg";
+            mContentType = SiteUtils.GB_EDITOR_NAME;
         } else {
             mContentType = "classic";
         }
     }
 
-    public void start(boolean hasUnsupportedBlocks) {
+    public void start(ArrayList<Object> unsupportedBlocksList) {
         if (!mStarted) {
-            mHasUnsupportedBlocks = hasUnsupportedBlocks;
+            mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             Map<String, Object> properties = getCommonProperties();
+            properties.put(KEY_UNSUPPORTED_BLOCKS,
+                    unsupportedBlocksList != null ? unsupportedBlocksList : new ArrayList<>());
             AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
         } else {

@@ -29,11 +29,13 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -47,6 +49,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.properties.Delegates
 
 typealias PagedPostList = PagedList<PostListItemType>
 
@@ -63,6 +66,7 @@ class PostListViewModel @Inject constructor(
     private val listItemUiStateHelper: PostListItemUiStateHelper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val uploadStarter: UploadStarter,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -72,6 +76,9 @@ class PostListViewModel @Inject constructor(
     }
     private var isStarted: Boolean = false
     private lateinit var connector: PostListViewModelConnector
+
+    private var photonWidth by Delegates.notNull<Int>()
+    private var photonHeight by Delegates.notNull<Int>()
 
     private var scrollToLocalPostId: LocalPostId? = null
 
@@ -109,23 +116,37 @@ class PostListViewModel @Inject constructor(
     private var searchQuery: String? = null
     private var searchJob: Job? = null
     private var searchProgressJob: Job? = null
+    private lateinit var authorFilterSelection: AuthorFilterSelection
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
-    fun start(postListViewModelConnector: PostListViewModelConnector) {
+    fun start(
+        postListViewModelConnector: PostListViewModelConnector,
+        value: AuthorFilterSelection,
+        photonWidth: Int,
+        photonHeight: Int
+    ) {
         if (isStarted) {
             return
         }
+        this.photonHeight = photonHeight
+        this.photonWidth = photonWidth
         connector = postListViewModelConnector
-
-        if (connector.postListType != SEARCH) {
-            initList(dataSource, lifecycle)
-        }
 
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
-        fetchFirstPage()
+
+        if (connector.postListType == SEARCH) {
+            this.authorFilterSelection = EVERYONE
+        } else {
+            this.authorFilterSelection = value
+            /*
+             * We don't want to initialize the list with empty search query in search mode as it'd send an unnecessary
+             * request to fetch ids of all posts on the site.
+             */
+            initList(dataSource, lifecycle)
+        }
     }
 
     private fun initList(dataSource: PostListItemDataSource, lifecycle: Lifecycle) {
@@ -169,6 +190,7 @@ class PostListViewModel @Inject constructor(
         }
 
         this.pagedListWrapper = pagedListWrapper
+        fetchFirstPage()
     }
 
     private fun clearLiveDataSources() {
@@ -185,7 +207,7 @@ class PostListViewModel @Inject constructor(
 
     private fun initListDescriptor(searchQuery: String?): PostListDescriptor {
         return if (connector.site.isUsingWpComRestApi) {
-            val author: AuthorFilter = when (connector.authorFilter) {
+            val author: AuthorFilter = when (authorFilterSelection) {
                 ME -> SpecificAuthor(accountStore.account.userId)
                 EVERYONE -> Everyone
             }
@@ -258,7 +280,6 @@ class PostListViewModel @Inject constructor(
                 searchJob = null
                 if (isActive) {
                     initList(dataSource, lifecycle)
-                    fetchFirstPage()
                 }
             }
         }
@@ -337,10 +358,8 @@ class PostListViewModel @Inject constructor(
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
                     capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,
-                    featuredImageUrl = connector.getFeaturedImageUrl(
-                            post.featuredImageId,
-                            post.content
-                    ),
+                    featuredImageUrl =
+                    convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
                     formattedDate = PostUtils.getFormattedDate(post),
                     performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
                     onAction = { postModel, buttonType, statEvent ->
@@ -356,5 +375,22 @@ class PostListViewModel @Inject constructor(
         if (connectionAvailableAfterRefreshError) {
             fetchFirstPage()
         }
+    }
+
+    private fun convertToPhotonUrlIfPossible(featuredImageUrl: String?): String? =
+            readerUtilsWrapper.getResizedImageUrl(
+                    featuredImageUrl,
+                    photonWidth,
+                    photonHeight,
+                    !SiteUtils.isPhotonCapable(connector.site)
+            )
+
+    fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {
+        if (connector.postListType != SEARCH && this.authorFilterSelection != authorFilterSelection) {
+            this.authorFilterSelection = authorFilterSelection
+            initList(dataSource, lifecycle)
+            return true
+        }
+        return false
     }
 }

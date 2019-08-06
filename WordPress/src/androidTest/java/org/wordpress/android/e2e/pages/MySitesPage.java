@@ -54,8 +54,8 @@ public class MySitesPage {
         clickOn(android.R.id.button1);
     }
 
-    public void startNewPost(String siteAddress) {
-        clickOn(R.id.fab_button);
+    public void startNewPost() {
+        clickOn("fab_button");
     }
 
     public void clickCreatePage() {

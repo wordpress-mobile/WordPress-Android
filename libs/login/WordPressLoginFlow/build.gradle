@@ -68,6 +68,12 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.22.1'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.27.0'
+    testImplementation 'androidx.arch.core:core-testing:2.0.1'
+    testImplementation 'org.robolectric:robolectric:3.6.1'
+    testImplementation 'org.assertj:assertj-core:3.11.1'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig

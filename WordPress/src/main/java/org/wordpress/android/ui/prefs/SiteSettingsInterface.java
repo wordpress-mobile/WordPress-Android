@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
@@ -948,6 +949,7 @@ public abstract class SiteSettingsInterface {
         if (fetchRemote) {
             fetchRemoteData();
             mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(mSite));
         }
 
         return this;
@@ -1124,6 +1126,17 @@ public abstract class SiteSettingsInterface {
         if (event.isError()) {
             return;
         }
+        notifyUpdatedOnUiThread();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteEditorsChanged(OnSiteEditorsChanged event) {
+        // When the site editor details are loaded from the remote backend, make sure to set a default if empty
+        if (event.isError()) {
+            return;
+        }
+
         notifyUpdatedOnUiThread();
     }
 }

@@ -39,7 +39,7 @@
     <string name="login_continue">Continue</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
-    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
@@ -50,8 +50,7 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
-    <string name="login_empty_site_url">Please enter a site address</string>
-    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
+    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
