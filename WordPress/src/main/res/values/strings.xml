@@ -2505,6 +2505,7 @@
     <string name="navigate_back_desc">Go back</string>
     <string name="share_desc">Share</string>
     <string name="preview_type_desc">Select preview type</string>
+    <string name="close_dialog_button_desc">Close Dialog</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
