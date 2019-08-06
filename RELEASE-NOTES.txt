@@ -2,6 +2,7 @@
 -----
 * Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
 * Improvement to the functionality and design of Web Preview.
+* Moved Notification settings to Notification List.
 
 13.0
 -----
