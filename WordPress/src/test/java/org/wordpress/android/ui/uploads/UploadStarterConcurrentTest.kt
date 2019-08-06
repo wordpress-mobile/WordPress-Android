@@ -19,7 +19,9 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.Date
 
 /**
  * Tests for structured concurrency in [UploadStarter].
@@ -31,7 +33,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class UploadStarterConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
-    private val site = SiteModel()
+    private val site = createSiteModel()
     private val draftPosts = listOf(
             createDraftPostModel(),
             createDraftPostModel(),
@@ -92,10 +94,16 @@ class UploadStarterConcurrentTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
+            on { isPostInConflictWithRemote(any()) } doReturn false
         }
 
         fun createDraftPostModel() = PostModel().apply {
             status = PostStatus.DRAFT.toString()
+            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
+        }
+
+        fun createSiteModel() {
+            SiteModel().apply { setIsWPCom(true) }
         }
     }
 }
