@@ -27,13 +27,17 @@ import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
+
+private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
 
 /**
  * Automatically uploads local drafts.
@@ -175,8 +179,10 @@ class UploadStarter @Inject constructor(
                         UploadUtils.getPostUploadAction(it) != PostUploadAction.REMOTE_AUTO_SAVE ||
                                 (!UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it) && site.isUsingWpComRestApi)
                     }
-                    // TODO add timer guard
-
+                    .filter {
+                        // Don't auto-upload/save changes which are older than 2 days
+                        DateTimeUtils.timestampFromIso8601Millis(it.dateLocallyChanged) < Date().time - TWO_DAYS_IN_MILLIS
+                    }
                     .toList()
                     .forEach { post ->
                         AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
