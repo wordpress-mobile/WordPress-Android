@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -143,7 +144,9 @@ public class SiteStore extends Store {
     }
 
     public static class DesignateMobileEditorForAllSitesResponsePayload extends Payload<SiteEditorsError> {
-        public DesignateMobileEditorForAllSitesResponsePayload() {
+        public Map<String, String> editors;
+        public DesignateMobileEditorForAllSitesResponsePayload(Map<String, String> editors) {
+            this.editors = editors;
         }
     }
 
@@ -1778,10 +1781,26 @@ public class SiteStore extends Store {
         OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
         if (payload.isError()) {
             event.error = payload.error;
-            emitChange(event);
         } else {
-           // Do nothing here, we're already stored all the info to the local DB and emitted the event
+            // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
+            for (Map.Entry<String, String> entry : payload.editors.entrySet()) {
+                SiteModel currentModel = getSiteBySiteId(Long.parseLong(entry.getKey()));
+                if (currentModel != null) {
+                    if (currentModel.getMobileEditor() == null
+                        || !currentModel.getMobileEditor().equals(entry.getValue())) {
+                        // the current editor is either null or != from the value on the server
+                        // we need to update it
+                        currentModel.setMobileEditor(entry.getValue());
+                        try {
+                            event.rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel);
+                        } catch (Exception e) {
+                            // nope
+                        }
+                    }
+                }
+            }
         }
+        emitChange(event);
     }
 
     private void fetchUserRoles(SiteModel site) {

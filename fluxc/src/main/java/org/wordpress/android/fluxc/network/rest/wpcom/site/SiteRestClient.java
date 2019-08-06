@@ -337,14 +337,13 @@ public class SiteRestClient extends BaseWPComRestClient {
         String url = WPCOMV2.me.gutenberg.getUrl();
         params.put("editor", mobileEditorName);
         params.put("platform", "mobile");
-        // FIXME: check the response type
-        final WPComGsonRequest<SitesEditorMigrationResponse> request = WPComGsonRequest
-                .buildPostRequest(url, params, SitesEditorMigrationResponse.class,
-                        new Listener<SitesEditorMigrationResponse>() {
+        add(WPComGsonRequest
+                .buildPostRequest(url, params, Map.class,
+                        new Listener<Map<String, String>>() {
                             @Override
-                            public void onResponse(SitesEditorMigrationResponse response) {
+                            public void onResponse(Map<String, String> response) {
                                 DesignateMobileEditorForAllSitesResponsePayload payload =
-                                        new DesignateMobileEditorForAllSitesResponsePayload();
+                                        new DesignateMobileEditorForAllSitesResponsePayload(response);
                                 mDispatcher.dispatch(
                                         SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
                             }
@@ -353,13 +352,14 @@ public class SiteRestClient extends BaseWPComRestClient {
                             @Override
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                                 DesignateMobileEditorForAllSitesResponsePayload payload =
-                                        new DesignateMobileEditorForAllSitesResponsePayload();
+                                        new DesignateMobileEditorForAllSitesResponsePayload(null);
                                 payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
                                 mDispatcher.dispatch(
                                         SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
                             }
-                        });
-        add(request);
+                        })
+           );
+
     }
 
     public void fetchPostFormats(@NonNull final SiteModel site) {
