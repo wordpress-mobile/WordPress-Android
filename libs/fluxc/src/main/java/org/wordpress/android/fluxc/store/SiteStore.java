@@ -1787,7 +1787,10 @@ public class SiteStore extends Store {
                 SiteModel currentModel = getSiteBySiteId(Long.parseLong(entry.getKey()));
 
                 if (currentModel == null) {
-                    // this should never happen normally
+                    // this could happen when a site was added to the current account with another app, or on the web
+                    AppLog.e(T.API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
+                                    + "the following siteID " + entry.getKey() + " but there is no site with that "
+                                    + "remote ID in SiteStore.");
                     continue;
                 }
 
