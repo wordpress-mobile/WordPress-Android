@@ -1,3 +1,6 @@
+13.1
+-----
+ 
 13.0
 -----
 * Block editor: Auto-enabled upon first open of a block post, unless opted out in v12.9.
