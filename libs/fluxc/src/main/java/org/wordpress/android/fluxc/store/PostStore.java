@@ -9,7 +9,6 @@ import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +20,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
@@ -974,7 +974,12 @@ public class PostStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.remoteAutoSavePost(payload.post, payload.site);
         } else {
-            throw new NotImplementedException("RemoteAutoSave is not supported in XML-RPC api.");
+            PostError postError = new PostError(
+                    PostErrorType.UNSUPPORTED_ACTION,
+                    "Remote-auto-save not support on self-hosted sites."
+            );
+            RemoteAutoSavePostPayload response = new RemoteAutoSavePostPayload(payload.post.getId(), postError);
+            mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(response));
         }
     }
 
