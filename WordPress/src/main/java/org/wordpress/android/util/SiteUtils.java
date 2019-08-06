@@ -34,12 +34,9 @@ public class SiteUtils {
      * -- 12.9 ON -> turn all sites ON in 13.0
      * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
      *
-     * @param dispatcher FluxC dispatcher
-     * @param siteStore  SiteStore
      */
     public static void migrateAppWideMobileEditorPreferenceToRemote(final Context context,
-                                                                    final Dispatcher dispatcher,
-                                                                    final SiteStore siteStore) {
+                                                                    final Dispatcher dispatcher) {
         if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
             return;
         }
