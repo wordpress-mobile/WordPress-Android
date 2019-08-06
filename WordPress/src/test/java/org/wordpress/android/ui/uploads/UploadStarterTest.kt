@@ -18,6 +18,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
@@ -37,11 +38,14 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.test
 import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
+import java.util.Date
 import java.util.UUID
 import kotlin.random.Random
 
@@ -49,7 +53,9 @@ import kotlin.random.Random
 class UploadStarterTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
-    private val sites = listOf(SiteModel(), SiteModel())
+    private val uploadServiceFacade = createMockedUploadServiceFacade()
+
+    private val sites = listOf(createSiteModel(), createSiteModel())
     private val sitesAndDraftPosts: Map<SiteModel, List<PostModel>> = mapOf(
             sites[0] to listOf(
                     createDraftPostModel(DRAFT),
@@ -311,8 +317,8 @@ class UploadStarterTest {
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createUploadStarter(
-        connectionStatus: LiveData<ConnectionStatus>,
-        uploadServiceFacade: UploadServiceFacade,
+        connectionStatus: LiveData<ConnectionStatus> = createConnectionStatusLiveData(null),
+        uploadServiceFacade: UploadServiceFacade = this.uploadServiceFacade,
         postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
         uploadStore: UploadStore = createMockedUploadStore(0)
     ) = UploadStarter(
@@ -342,6 +348,7 @@ class UploadStarterTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
+            on {isPostInConflictWithRemote(any())} doReturn false
         }
 
         fun createMockedUploadStore(numberOfPostErrors: Int) = mock<UploadStore> {
@@ -356,10 +363,15 @@ class UploadStarterTest {
             on { this.lifecycle } doReturn lifecycle
         }
 
-        fun createDraftPostModel(postStatus: PostStatus) = PostModel().apply {
+        fun createDraftPostModel(postStatus: PostStatus = DRAFT) = PostModel().apply {
             id = Random.nextInt()
             title = UUID.randomUUID().toString()
             status = postStatus.toString()
+            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
+        }
+
+        fun createSiteModel(isWpCom: Boolean = true) = SiteModel().apply {
+            setIsWPCom(isWpCom)
         }
     }
 }

@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.testing.OpenForTesting
-import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
 import org.wordpress.android.util.AppLog
@@ -164,7 +163,7 @@ class UploadStarter @Inject constructor(
                     }
                     .filter {
                         // Do not auto-upload post which is in conflict with remote
-                        !PostUtils.isPostInConflictWithRemote(it)
+                        !postUtilsWrapper.isPostInConflictWithRemote(it)
                     }
                     .filter {
                         // Do not auto-upload post which is currently being uploaded
@@ -180,8 +179,9 @@ class UploadStarter @Inject constructor(
                                 (!UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it) && site.isUsingWpComRestApi)
                     }
                     .filter {
+                        val twoDaysAgoTimestamp = Date().time - TWO_DAYS_IN_MILLIS
                         // Don't auto-upload/save changes which are older than 2 days
-                        DateTimeUtils.timestampFromIso8601Millis(it.dateLocallyChanged) < Date().time - TWO_DAYS_IN_MILLIS
+                        DateTimeUtils.timestampFromIso8601Millis(it.dateLocallyChanged) >= twoDaysAgoTimestamp
                     }
                     .toList()
                     .forEach { post ->
