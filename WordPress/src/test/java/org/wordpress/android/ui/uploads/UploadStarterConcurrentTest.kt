@@ -102,8 +102,6 @@ class UploadStarterConcurrentTest {
             dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
         }
 
-        fun createSiteModel() {
-            SiteModel().apply { setIsWPCom(true) }
-        }
+        fun createSiteModel(): SiteModel = SiteModel().apply { setIsWPCom(true) }
     }
 }
