@@ -1,6 +1,8 @@
 13.1
 -----
- 
+* Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
+* Improvement to the functionality and design of Web Preview.
+
 13.0
 -----
 * Add Remote Preview support for posts and pages.
@@ -12,7 +14,7 @@
 * Block editor: Adding a block from the post title now shows the add block here indicator.
 * Block editor: Deselect post title any time a block is added
 * Block editor: Fix loss of center alignment in image captions
- 
+
 12.9
 -----
 * Add Publish screen to Edit post settings - with notification for scheduled posts and option to add event to calendar
