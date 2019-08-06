@@ -1153,8 +1153,10 @@ public abstract class SiteSettingsInterface {
         if (event.isError()) {
             return;
         }
-        // We can remove the global app setting now, since we're sure the migration ended with success.
-        AppPrefs.removeAppWideEditorPreference();
+        if (event.isNetworkResponse) {
+            // We can remove the global app setting now, since we're sure the migration ended with success.
+            AppPrefs.removeAppWideEditorPreference();
+        }
         updateAnalyticsAndUI();
     }
 
