@@ -354,10 +354,8 @@ class PostListViewModel @Inject constructor(
 
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
-                    uploadStarter = uploadStarter,
-                    site = connector.site,
                     post = post,
-                    uploadStatus = connector.getUploadStatus(post),
+                    uploadStatus = connector.getUploadStatus(post, uploadStarter, connector.site),
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
                     capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
                     statsSupported = isStatsSupported,

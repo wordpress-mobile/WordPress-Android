@@ -66,8 +66,6 @@ const val STATE_INFO_COLOR = R.color.warning_dark
  */
 class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) {
     fun createPostListItemUiState(
-        uploadStarter: UploadStarter,
-        site: SiteModel,
         post: PostModel,
         uploadStatus: PostListItemUploadStatus,
         unhandledConflicts: Boolean,
@@ -79,7 +77,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStarter, site, uploadStatus, post)
+        val uploadUiState = createUploadUiState(uploadStatus, post)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -397,8 +395,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     }
 
     private fun createUploadUiState(
-        uploadStarter: UploadStarter,
-        siteModel: SiteModel,
         uploadStatus: PostListItemUploadStatus,
         post: PostModel
     ): PostUploadUiState {
@@ -412,19 +408,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued
-            isPendingAutoUpload(uploadStarter, siteModel, post)  -> UploadWaitingForConnection(postStatus)
+            uploadStatus.isEligibleForAutoUpload  -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
-        }
-    }
-
-    private fun isPendingAutoUpload(
-        uploadStarter: UploadStarter,
-        siteModel: SiteModel,
-        post: PostModel
-    ): Boolean {
-        return when (uploadStarter.getAutoUploadAction(post, siteModel)) {
-            UPLOAD_AS_DRAFT, UPLOAD -> true
-            REMOTE_AUTO_SAVE, DO_NOTHING -> false
         }
     }
 }

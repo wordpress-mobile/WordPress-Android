@@ -10,5 +10,6 @@ data class PostListItemUploadStatus(
     val isQueued: Boolean,
     val isUploadFailed: Boolean,
     val hasInProgressMediaUpload: Boolean,
-    val hasPendingMediaUpload: Boolean
+    val hasPendingMediaUpload: Boolean,
+    val isEligibleForAutoUpload: Boolean
 )
