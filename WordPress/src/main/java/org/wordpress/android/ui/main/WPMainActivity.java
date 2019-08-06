@@ -1166,6 +1166,8 @@ public class WPMainActivity extends AppCompatActivity implements
         if (event.isError()) {
             return;
         }
+        // We can remove the global app setting now, since we're sure the migration ended with success.
+        AppPrefs.removeAppWideEditorPreference();
         refreshCurrentSelectedSiteAfterEditorChanges(true, -1);
     }
 

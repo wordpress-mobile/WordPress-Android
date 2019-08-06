@@ -42,10 +42,6 @@ public class SiteUtils {
         }
         final boolean oldAppWidePreferenceValue = AppPrefs.isGutenbergDefaultForNewPosts();
 
-        if (NetworkUtils.isNetworkAvailable(context)) {
-            AppPrefs.removeAppWideEditorPreference();
-        }
-
         if (oldAppWidePreferenceValue) {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
