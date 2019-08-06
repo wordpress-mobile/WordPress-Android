@@ -359,7 +359,6 @@ public class SiteRestClient extends BaseWPComRestClient {
                             }
                         })
            );
-
     }
 
     public void fetchPostFormats(@NonNull final SiteModel site) {
