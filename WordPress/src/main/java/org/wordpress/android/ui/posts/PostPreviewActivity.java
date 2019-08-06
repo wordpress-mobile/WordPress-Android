@@ -33,9 +33,9 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -247,7 +247,7 @@ public class PostPreviewActivity extends AppCompatActivity {
     }
 
     private void publishPost() {
-        if (!isFinishing() && NetworkUtils.checkConnection(this)) {
+        if (!isFinishing()) {
             if (!mPost.isLocalDraft()) {
                 Map<String, Object> properties = new HashMap<>();
                 properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
@@ -255,17 +255,7 @@ public class PostPreviewActivity extends AppCompatActivity {
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite, properties);
             }
 
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
-                // Remote draft being published
-                mPost.setStatus(PostStatus.PUBLISHED.toString());
-                UploadService.uploadPostAndTrackAnalytics(this, mPost);
-            } else if (mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
-                // Local draft being published
-                UploadService.uploadPostAndTrackAnalytics(this, mPost);
-            } else {
-                // Not a first-time publish
-                UploadService.uploadPost(this, mPost);
-            }
+            UploadUtils.publishPost(this, mPost, mSite, mDispatcher);
         }
     }
 

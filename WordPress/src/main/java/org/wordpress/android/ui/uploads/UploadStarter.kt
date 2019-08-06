@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -20,15 +21,22 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.testing.OpenForTesting
 import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
+
+private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
 
 /**
  * Automatically uploads local drafts.
@@ -39,7 +47,8 @@ import kotlin.coroutines.CoroutineContext
  * The method [activateAutoUploading] must be called once, preferably during app creation, for the auto-uploads to work.
  */
 @Singleton
-open class UploadStarter @Inject constructor(
+@OpenForTesting
+class UploadStarter @Inject constructor(
     /**
      * The Application context
      */
@@ -56,7 +65,14 @@ open class UploadStarter @Inject constructor(
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
-    private val MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES = 10
+    private val MAXIMUM_AUTO_UPLOAD_RETRIES = 10
+
+    /**
+     * When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
+     * The problem is that they can run in parallel and `uploadServiceFacade.isPostUploadingOrQueued(it)` might return
+     * out-of-date result and a same post is added twice.
+     */
+    private val mutex = Mutex()
 
     override val coroutineContext: CoroutineContext get() = job + bgDispatcher
 
@@ -89,7 +105,7 @@ open class UploadStarter @Inject constructor(
         processLifecycleOwner.lifecycle.addObserver(processLifecycleObserver)
     }
 
-    open fun queueUploadFromAllSites() = launch {
+    fun queueUploadFromAllSites() = launch {
         val sites = siteStore.sites
         try {
             checkConnectionAndUpload(sites = sites)
@@ -101,7 +117,7 @@ open class UploadStarter @Inject constructor(
     /**
      * Upload all local drafts from the given [site].
      */
-    open fun queueUploadFromSite(site: SiteModel) = launch {
+    fun queueUploadFromSite(site: SiteModel) = launch {
         try {
             checkConnectionAndUpload(sites = listOf(site))
         } catch (e: Exception) {
@@ -131,25 +147,55 @@ open class UploadStarter @Inject constructor(
      * This is meant to be used by [checkConnectionAndUpload] only.
      */
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        val posts = async { postStore.getLocalDraftPosts(site) }
-        val pages = async { pageStore.getLocalDraftPages(site) }
+        try {
+            mutex.lock()
+            val posts = async { postStore.getPostsWithLocalChanges(site) }
+            val pages = async { pageStore.getPagesWithLocalChanges(site) }
 
-        val postsAndPages = posts.await() + pages.await()
+            val postsAndPages = posts.await() + pages.await()
 
-        postsAndPages
-                .filterNot { uploadServiceFacade.isPostUploadingOrQueued(it) }
-                .filter { postUtilsWrapper.isPublishable(it) }
-                .filter {
-                    uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_INITIATED_UPLOAD_RETRIES
-                }
-                .forEach { localDraft ->
-                    uploadServiceFacade.uploadPost(
-                            context = context,
-                            post = localDraft,
-                            trackAnalytics = false,
-                            publish = false,
-                            isRetry = true
-                    )
-                }
+            // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
+            postsAndPages
+                    .asSequence()
+                    .filter {
+                        // Do not auto-upload empty post
+                        postUtilsWrapper.isPublishable(it)
+                    }
+                    .filter {
+                        // Do not auto-upload post which is in conflict with remote
+                        !postUtilsWrapper.isPostInConflictWithRemote(it)
+                    }
+                    .filter {
+                        // Do not auto-upload post which is currently being uploaded
+                        !uploadServiceFacade.isPostUploadingOrQueued(it)
+                    }
+                    .filter {
+                        // Do not auto-upload post which we already tried to upload certain number of times
+                        uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_UPLOAD_RETRIES
+                    }
+                    .filter {
+                        // Don't remoteAutoSave changes which were already remoteAutoSaved or when on a self-hosted site
+                        UploadUtils.getPostUploadAction(it) != PostUploadAction.REMOTE_AUTO_SAVE ||
+                                (!UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it) && site.isUsingWpComRestApi)
+                    }
+                    .filter {
+                        val twoDaysAgoTimestamp = Date().time - TWO_DAYS_IN_MILLIS
+                        // Don't auto-upload/save changes which are older than 2 days
+                        DateTimeUtils.timestampFromIso8601Millis(it.dateLocallyChanged) >= twoDaysAgoTimestamp
+                    }
+                    .toList()
+                    .forEach { post ->
+                        AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
+                        uploadServiceFacade.uploadPost(
+                                context = context,
+                                post = post,
+                                // TODO Should we track analytics in certain cases ?!? We don't know if it's
+                                //  firstTimePublish since we don't have the original status of the post
+                                trackAnalytics = false
+                        )
+                    }
+        } finally {
+            mutex.unlock()
+        }
     }
 }

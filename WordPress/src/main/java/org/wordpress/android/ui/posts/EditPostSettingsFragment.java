@@ -1,17 +1,18 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,7 +26,11 @@ import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -51,7 +56,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
-import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
@@ -59,22 +64,22 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GeocoderUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
 import java.lang.reflect.Field;
@@ -101,6 +106,8 @@ public class EditPostSettingsFragment extends Fragment {
 
     private static final int CHOOSE_FEATURED_IMAGE_MENU_ID = 100;
     private static final int REMOVE_FEATURED_IMAGE_MENU_ID = 101;
+    private static final int REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID = 102;
+    private static final int RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID = 103;
 
     private SiteSettingsInterface mSiteSettings;
 
@@ -118,7 +125,10 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
     private ImageView mFeaturedImageView;
+    private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
+    private ViewGroup mFeaturedImageRetryOverlay;
+    private ViewGroup mFeaturedImageProgressOverlay;
 
     private PostLocation mPostLocation;
 
@@ -128,10 +138,15 @@ public class EditPostSettingsFragment extends Fragment {
     private ArrayList<String> mPostFormatNames;
 
     @Inject SiteStore mSiteStore;
-    @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject UiHelpers mUiHelpers;
+    @Inject PostSettingsUtils mPostSettingsUtils;
+
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private EditPostPublishSettingsViewModel mPublishedViewModel;
 
 
     interface EditPostActivityHook {
@@ -156,6 +171,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
+        mPublishedViewModel =
+                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishSettingsViewModel.class);
     }
 
     @Override
@@ -244,17 +261,31 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
+        mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
         mFeaturedImageButton = rootView.findViewById(R.id.post_add_featured_image_button);
-        CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
+        mFeaturedImageRetryOverlay = rootView.findViewById(R.id.post_featured_image_retry_overlay);
+        mFeaturedImageProgressOverlay = rootView.findViewById(R.id.post_featured_image_progress_overlay);
+
+        final CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            registerForContextMenu(mFeaturedImageView);
-            mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
+            OnClickListener showContextMenuListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     view.showContextMenu();
                 }
-            });
+            };
+
+            mFeaturedImageView.setOnClickListener(showContextMenuListener);
+            mLocalFeaturedImageView.setOnClickListener(showContextMenuListener);
+            mFeaturedImageRetryOverlay.setOnClickListener(showContextMenuListener);
+            mFeaturedImageProgressOverlay.setOnClickListener(showContextMenuListener);
+
+            registerForContextMenu(mFeaturedImageView);
+            registerForContextMenu(mLocalFeaturedImageView);
+            registerForContextMenu(mFeaturedImageRetryOverlay);
+            registerForContextMenu(mFeaturedImageProgressOverlay);
+
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -333,7 +364,10 @@ public class EditPostSettingsFragment extends Fragment {
         publishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPostDateSelectionDialog();
+                FragmentActivity activity = getActivity();
+                if (activity instanceof EditPostSettingsCallback) {
+                    ((EditPostSettingsCallback) activity).onEditPostPublishedSettingsClick();
+                }
             }
         });
 
@@ -346,26 +380,58 @@ public class EditPostSettingsFragment extends Fragment {
             mFormatContainer.setVisibility(View.GONE);
         }
 
+        mPublishedViewModel.getOnUiModel().observe(this, new Observer<PublishUiModel>() {
+            @Override public void onChanged(PublishUiModel uiModel) {
+                updatePublishDateTextView(uiModel.getPublishDateLabel());
+            }
+        });
+        mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {
+            @Override public void onChanged(PostStatus postStatus) {
+                updatePostStatus(postStatus.toString());
+            }
+        });
+
         return rootView;
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
-        menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        if (mFeaturedImageRetryOverlay.getVisibility() == View.VISIBLE) {
+            menu.add(0, RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
+                    getString(R.string.post_settings_retry_featured_image));
+            menu.add(0, REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
+                    getString(R.string.post_settings_remove_featured_image));
+        } else {
+            menu.add(0, CHOOSE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_choose_featured_image));
+            menu.add(0, REMOVE_FEATURED_IMAGE_MENU_ID, 0, getString(R.string.post_settings_remove_featured_image));
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
+                mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
                 launchFeaturedMediaPicker();
                 return true;
+            case REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID:
             case REMOVE_FEATURED_IMAGE_MENU_ID:
+                mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
                 clearFeaturedImage();
+                return true;
+            case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
+                retryFeaturedImageUpload();
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void retryFeaturedImageUpload() {
+        MediaModel mediaModel =
+                mFeaturedImageHelper.retryFeaturedImageUpload(getContext(), getSite(), getPost());
+        if (mediaModel == null) {
+            clearFeaturedImage();
         }
     }
 
@@ -389,11 +455,10 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
+        mPublishedViewModel.start(postModel);
         updateCategoriesTextView();
         initLocation();
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImageView();
-        }
+        updateFeaturedImageView();
     }
 
     @Override
@@ -506,21 +571,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    /*
-     * called by the activity when the user taps OK on a PostDatePickerDialogFragment
-     */
-    public void onPostDatePickerDialogPositiveButtonClicked(
-            @NonNull PostDatePickerDialogFragment dialog,
-            @NonNull Calendar calender) {
-        updatePublishDate(calender);
-        // if this was the date picker and the user didn't choose to publish immediately, show the
-        // time picker dialog fragment so they can choose a publish time
-        if (dialog.getDialogType() == PickerDialogType.DATE_PICKER
-                && !dialog.isPublishNow()) {
-            showPostTimeSelectionDialog();
-        }
-    }
-
     private void showStatusDialog() {
         if (!isAdded()) {
             return;
@@ -570,30 +620,6 @@ public class EditPostSettingsFragment extends Fragment {
                     }
                 });
         dialog.show(getFragmentManager(), null);
-    }
-
-    private void showPostDateSelectionDialog() {
-        if (!isAdded()) {
-            return;
-        }
-
-        Calendar calendar = getCurrentPublishDateAsCalendar();
-        PostDatePickerDialogFragment fragment =
-                PostDatePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragment.show(fm, PostDatePickerDialogFragment.TAG_DATE);
-    }
-
-    private void showPostTimeSelectionDialog() {
-        if (!isAdded()) {
-            return;
-        }
-
-        Calendar calendar = getCurrentPublishDateAsCalendar();
-        PostDatePickerDialogFragment fragment =
-                PostDatePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragment.show(fm, PostDatePickerDialogFragment.TAG_TIME);
     }
 
     // Helpers
@@ -670,6 +696,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatusRelatedViews() {
         updateStatusTextView();
         updatePublishDateTextView();
+        mPublishedViewModel.onPostStatusChanged(getPost());
     }
 
     private void updateStatusTextView() {
@@ -710,71 +737,19 @@ public class EditPostSettingsFragment extends Fragment {
         mPostFormatTextView.setText(postFormat);
     }
 
-    private void updatePublishDate(Calendar calendar) {
-        getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
-        PostStatus initialPostStatus = PostStatus.fromPost(getPost());
-        boolean isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(getPost());
-        PostStatus finalPostStatus = initialPostStatus;
-        if (initialPostStatus == PostStatus.DRAFT && isPublishDateInTheFuture) {
-            // Posts that are scheduled have a `future` date for REST but their status should be set to `published` as
-            // there is no `future` entry in XML-RPC (see PostStatus in FluxC for more info)
-            finalPostStatus = PostStatus.PUBLISHED;
-        } else if (initialPostStatus == PostStatus.PUBLISHED && getPost().isLocalDraft()) {
-            // if user was changing dates for a local draft (not saved yet), only way to have it set to PUBLISH
-            // is by running into the if case above. So, if they're updating the date again by calling
-            // `updatePublishDate()`, get it back to DRAFT.
-            finalPostStatus = PostStatus.DRAFT;
-        } else if (initialPostStatus == PostStatus.SCHEDULED && !isPublishDateInTheFuture) {
-            // if this is a SCHEDULED post and the user is trying to Back-date it now, let's update it to DRAFT.
-            // The other option was to make it published immediately but, let the user actively do that rather than
-            // having the app be smart about it - we don't want to accidentally publish a post.
-            finalPostStatus = PostStatus.DRAFT;
-            // show toast only once, when time is shown
-            ToastUtils.showToast(getActivity(),
-                    getString(R.string.editor_post_converted_back_to_draft), Duration.SHORT, Gravity.TOP);
-        }
-        updatePostStatus(finalPostStatus.toString());
-        updatePublishDateTextView();
-        updateSaveButton();
-    }
-
     private void updatePublishDateTextView() {
         if (!isAdded()) {
             return;
         }
         PostModel postModel = getPost();
-        String labelToUse;
-        String dateCreated = postModel.getDateCreated();
-        if (!TextUtils.isEmpty(dateCreated)) {
-            String formattedDate = DateUtils.formatDateTime(getActivity(),
-                    DateTimeUtils.timestampFromIso8601Millis(dateCreated),
-                    getDateTimeFlags());
-
-            PostStatus status = PostStatus.fromPost(postModel);
-            if (status == PostStatus.SCHEDULED) {
-                labelToUse = getString(R.string.scheduled_for, formattedDate);
-            } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
-                labelToUse = getString(R.string.published_on, formattedDate);
-            } else if (postModel.isLocalDraft()) {
-                if (PostUtils.isPublishDateInThePast(postModel)) {
-                    labelToUse = getString(R.string.backdated_for, formattedDate);
-                } else if (PostUtils.shouldPublishImmediately(postModel)) {
-                    labelToUse = getString(R.string.immediately);
-                } else {
-                    labelToUse = getString(R.string.publish_on, formattedDate);
-                }
-            } else if (PostUtils.isPublishDateInTheFuture(postModel)) {
-                labelToUse = getString(R.string.schedule_for, formattedDate);
-            } else {
-                labelToUse = getString(R.string.publish_on, formattedDate);
-            }
-        } else if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(postModel)) {
-            labelToUse = getString(R.string.immediately);
-        } else {
-            // TODO: What should the label be if there is no specific date and this is not a DRAFT?
-            labelToUse = "";
+        if (postModel != null && getActivity() != null) {
+            String labelToUse = mPostSettingsUtils.getPublishDateLabel(postModel);
+            mPublishDateTextView.setText(labelToUse);
         }
-        mPublishDateTextView.setText(labelToUse);
+    }
+
+    private void updatePublishDateTextView(String label) {
+        mPublishDateTextView.setText(label);
     }
 
     private void updateCategoriesTextView() {
@@ -890,38 +865,47 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateFeaturedImageView() {
-        if (!isAdded()) {
+        Context context = getContext();
+        PostModel post = getPost();
+        SiteModel site = getSite();
+        if (!isAdded() || post == null || site == null || context == null) {
             return;
         }
-        PostModel postModel = getPost();
-        if (!postModel.hasFeaturedImage()) {
-            mFeaturedImageView.setVisibility(View.GONE);
-            mFeaturedImageButton.setVisibility(View.VISIBLE);
-            return;
+        final FeaturedImageData currentFeaturedImageState =
+                mFeaturedImageHelper.createCurrentFeaturedImageState(context, site, post);
+
+        FeaturedImageState uiState = currentFeaturedImageState.getUiState();
+        updateFeaturedImageViews(currentFeaturedImageState.getUiState());
+        if (currentFeaturedImageState.getMediaUri() != null) {
+            if (uiState == FeaturedImageState.REMOTE_IMAGE_LOADING) {
+                /*
+                 *  Fetch the remote image, but keep showing the local image (when present) until "onResourceReady"
+                 *  is invoked.  We use this hack to prevent showing an empty view when the local image is replaced
+                 *  with a remote image.
+                 */
+                mImageManager.loadWithResultListener(mFeaturedImageView, ImageType.IMAGE,
+                        currentFeaturedImageState.getMediaUri(), ScaleType.FIT_CENTER,
+                        null, new RequestListener<Drawable>() {
+                            @Override public void onLoadFailed(@org.jetbrains.annotations.Nullable Exception e) {
+                            }
+
+                            @Override public void onResourceReady(Drawable resource) {
+                                if (currentFeaturedImageState.getUiState() == FeaturedImageState.REMOTE_IMAGE_LOADING) {
+                                    updateFeaturedImageViews(FeaturedImageState.REMOTE_IMAGE_SET);
+                                }
+                            }
+                        });
+            } else {
+                mImageManager.load(mLocalFeaturedImageView, ImageType.IMAGE, currentFeaturedImageState.getMediaUri(),
+                        ScaleType.FIT_CENTER);
+            }
         }
-
-        SiteModel siteModel = getSite();
-        MediaModel media = mMediaStore.getSiteMediaWithId(siteModel, postModel.getFeaturedImageId());
-        if (media == null) {
-            return;
-        }
-
-        mFeaturedImageView.setVisibility(View.VISIBLE);
-        mFeaturedImageButton.setVisibility(View.GONE);
-
-        // Get max width for photon thumbnail
-        int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-        int height = DisplayUtils.getDisplayPixelHeight(getActivity());
-
-        String mediaUri = StringUtils.notNullStr(media.getThumbnailUrl());
-        String photonUrl = ReaderUtils.getResizedImageUrl(
-                mediaUri, width, height, !SiteUtils.isPhotonCapable(siteModel));
-        mImageManager.load(mFeaturedImageView, ImageType.PHOTO, photonUrl, ScaleType.FIT_CENTER);
     }
 
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
-            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite());
+            ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
+                    getPost().getId());
         }
     }
 
@@ -936,15 +920,6 @@ public class EditPostSettingsFragment extends Fragment {
             calendar.setTime(DateTimeUtils.dateFromIso8601(dateCreated));
         }
         return calendar;
-    }
-
-    private int getDateTimeFlags() {
-        int flags = 0;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-        return flags;
     }
 
     // FluxC events
@@ -1111,5 +1086,27 @@ public class EditPostSettingsFragment extends Fragment {
             // no op, icons won't show
         }
         popupMenu.show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.media.getMarkedLocallyAsFeatured()) {
+            refreshViews();
+        }
+    }
+
+    private void updateFeaturedImageViews(FeaturedImageState state) {
+        mUiHelpers.updateVisibility(mFeaturedImageView, state.getImageViewVisible());
+        mUiHelpers.updateVisibility(mLocalFeaturedImageView, state.getLocalImageViewVisible());
+        mUiHelpers.updateVisibility(mFeaturedImageButton, state.getButtonVisible());
+        mUiHelpers.updateVisibility(mFeaturedImageRetryOverlay, state.getRetryOverlayVisible());
+        mUiHelpers.updateVisibility(mFeaturedImageProgressOverlay, state.getProgressOverlayVisible());
+        if (!state.getLocalImageViewVisible()) {
+            mImageManager.cancelRequestAndClearImageView(mLocalFeaturedImageView);
+        }
+    }
+
+    interface EditPostSettingsCallback {
+        void onEditPostPublishedSettingsClick();
     }
 }

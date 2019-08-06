@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -29,6 +28,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
+import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked;
 import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
@@ -40,6 +40,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -54,6 +55,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
     private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
+
+    private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -87,6 +90,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         // important for accessibility - talkback
         getActivity().setTitle(R.string.site_address_login_title);
         mSiteAddressInput = rootView.findViewById(R.id.login_site_address_row);
+        if (BuildConfig.DEBUG) {
+            mSiteAddressInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_WEBSITE_URL);
+        }
         mSiteAddressInput.addTextChangedListener(this);
         mSiteAddressInput.setOnEditorCommitListener(this);
     }
@@ -134,6 +140,23 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
+
+        mLoginSiteAddressValidator = new LoginSiteAddressValidator();
+
+        mLoginSiteAddressValidator.getIsValid().observe(this, new Observer<Boolean>() {
+            @Override public void onChanged(Boolean enabled) {
+                getPrimaryButton().setEnabled(enabled);
+            }
+        });
+        mLoginSiteAddressValidator.getErrorMessageResId().observe(this, new Observer<Integer>() {
+            @Override public void onChanged(Integer resId) {
+                if (resId != null) {
+                    showError(resId);
+                } else {
+                    mSiteAddressInput.setError(null);
+                }
+            }
+        });
     }
 
     @Override
@@ -143,42 +166,43 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
     }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        mLoginSiteAddressValidator.dispose();
+    }
+
     protected void discover() {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        String cleanedSiteAddress = getCleanedSiteAddress();
-
-        if (TextUtils.isEmpty(cleanedSiteAddress)) {
-            showError(R.string.login_empty_site_url);
-            return;
-        }
-
-        if (!Patterns.WEB_URL.matcher(cleanedSiteAddress).matches()) {
-            showError(R.string.login_invalid_site_url);
-            return;
-        }
-
-        mRequestedSiteAddress = cleanedSiteAddress;
+        mRequestedSiteAddress = mLoginSiteAddressValidator.getCleanedSiteAddress();
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
-        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
+
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            // TODO: This is temporary code to test out sign in flow milestone 1 effectiveness. If we move
+            // forward with this flow, we will need to just call the XMLRPC discovery code and handle all the
+            // edge cases such as HTTP auth and self-signed SSL.
+            mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
+        } else {
+            mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
+        }
 
         startProgress();
     }
 
-    private String getCleanedSiteAddress() {
-        return EditTextUtils.getText(mSiteAddressInput.getEditText()).trim().replaceAll("[\r\n]", "");
-    }
-
     @Override
     public void onEditorCommit() {
-        discover();
+        if (getPrimaryButton().isEnabled()) {
+            discover();
+        }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        mLoginSiteAddressValidator.setAddress(EditTextUtils.getText(mSiteAddressInput.getEditText()));
     }
 
     @Override
@@ -345,7 +369,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 return;
             } else {
                 AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name()
-                        + " - " + event.error.toString());
+                                + " - " + event.error.toString());
                 handleDiscoveryError(event.error, event.failedEndpoint);
                 return;
             }
@@ -353,5 +377,69 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
         mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFetchedConnectSiteInfo(OnConnectSiteInfoChecked event) {
+        if (mRequestedSiteAddress == null) {
+            // bail if user canceled
+            return;
+        }
+
+        if (!isAdded()) {
+            return;
+        }
+
+        // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
+        final String requestedSiteAddress = mRequestedSiteAddress;
+
+        if (isInProgress()) {
+            endProgress();
+        }
+
+        if (event.isError()) {
+            mAnalyticsListener.trackConnectedSiteInfoFailed(
+                    requestedSiteAddress,
+                    event.getClass().getSimpleName(),
+                    event.error.type.name(),
+                    event.error.message);
+
+            AppLog.e(T.API, "onFetchedConnectSiteInfo has error: " + event.error.message);
+
+            showError(R.string.invalid_site_url_message);
+        } else {
+            // TODO: If we plan to keep this logic we should convert these labels to constants
+            HashMap<String, String> properties = new HashMap<>();
+            properties.put("url", event.info.url);
+            properties.put("urlAfterRedirects", event.info.urlAfterRedirects);
+            properties.put("exists", Boolean.toString(event.info.exists));
+            properties.put("hasJetpack", Boolean.toString(event.info.hasJetpack));
+            properties.put("isJetpackActive", Boolean.toString(event.info.isJetpackActive));
+            properties.put("isJetpackConnected", Boolean.toString(event.info.isJetpackConnected));
+            properties.put("isWordPress", Boolean.toString(event.info.isWordPress));
+            properties.put("isWPCom", Boolean.toString(event.info.isWPCom));
+            mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
+
+            if (!event.info.exists) {
+                // Site does not exist
+                showError(R.string.invalid_site_url_message);
+            } else if (!event.info.isWordPress) {
+                // Not a WordPress site
+                showError(R.string.enter_wordpress_site);
+            } else {
+                boolean hasJetpack = false;
+                if (event.info.isWPCom && event.info.hasJetpack) {
+                    // This is likely an atomic site.
+                    hasJetpack = true;
+                } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
+                    hasJetpack = true;
+                }
+                mLoginListener.gotConnectedSiteInfo(
+                        event.info.url,
+                        event.info.urlAfterRedirects,
+                        hasJetpack);
+            }
+        }
     }
 }

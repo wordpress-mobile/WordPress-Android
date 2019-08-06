@@ -15,10 +15,13 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.Date
 
 /**
  * Tests for structured concurrency in [UploadStarter].
@@ -30,20 +33,20 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class UploadStarterConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
-    private val site = SiteModel()
-    private val posts = listOf(
-            PostModel(),
-            PostModel(),
-            PostModel(),
-            PostModel(),
-            PostModel()
+    private val site = createSiteModel()
+    private val draftPosts = listOf(
+            createDraftPostModel(),
+            createDraftPostModel(),
+            createDraftPostModel(),
+            createDraftPostModel(),
+            createDraftPostModel()
     )
 
     private val postStore = mock<PostStore> {
-        on { getLocalDraftPosts(eq(site)) } doReturn posts
+        on { getPostsWithLocalChanges(eq(site)) } doReturn draftPosts
     }
     private val pageStore = mock<PageStore> {
-        onBlocking { getLocalDraftPages(any()) } doReturn emptyList()
+        onBlocking { getPagesWithLocalChanges(any()) } doReturn emptyList()
     }
 
     @Test
@@ -59,12 +62,10 @@ class UploadStarterConcurrentTest {
         }
 
         // Then
-        verify(uploadServiceFacade, times(posts.size)).uploadPost(
+        verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
                 context = any(),
                 post = any(),
-                trackAnalytics = any(),
-                publish = any(),
-                isRetry = eq(true)
+                trackAnalytics = any()
         )
     }
 
@@ -93,6 +94,14 @@ class UploadStarterConcurrentTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
+            on { isPostInConflictWithRemote(any()) } doReturn false
         }
+
+        fun createDraftPostModel() = PostModel().apply {
+            status = PostStatus.DRAFT.toString()
+            dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
+        }
+
+        fun createSiteModel(): SiteModel = SiteModel().apply { setIsWPCom(true) }
     }
 }

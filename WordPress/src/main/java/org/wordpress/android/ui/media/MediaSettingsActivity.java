@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -85,6 +86,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -322,6 +324,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                     return true;
                 }
             });
+            ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
         }
     }
 
@@ -379,7 +382,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_large);
             @DrawableRes int imageRes = WPMediaUtils.getPlaceholder(mMedia.getUrl());
             ColorUtils.INSTANCE.setImageResourceWithTint(mImageView,
-                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.neutral_300);
+                    imageRes != 0 ? imageRes : R.drawable.ic_pages_white_24dp, R.color.neutral_30);
             mImageView.setPadding(padding, padding * 2, padding, padding);
             mImageView.setImageResource(imageRes);
         } else {
@@ -761,7 +764,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         if (SiteUtils.isPhotonCapable(mSite)) {
             imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
-        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, null,
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NotNull Drawable resource) {

@@ -81,7 +81,7 @@ class PostUploadNotifier {
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
                 context.getString(R.string.notification_channel_transient_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
-                            .setColor(context.getResources().getColor(R.color.primary_500))
+                            .setColor(context.getResources().getColor(R.color.primary_50))
                             .setOnlyAlertOnce(true);
     }
 
@@ -320,7 +320,7 @@ class PostUploadNotifier {
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_500));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
 
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationMessage);
@@ -350,8 +350,7 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
-                                                                            isFirstTimePublish, true, false);
+            Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post, isFirstTimePublish);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                                                                    PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(R.drawable.ic_posts_white_24dp, mContext.getString(R.string.button_publish),
@@ -391,7 +390,7 @@ class PostUploadNotifier {
                                                                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_white_24dp);
-        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_500));
+        notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
 
         String notificationTitle = buildSuccessMessageForMedia(mediaList.size());
         String notificationMessage =
@@ -495,9 +494,8 @@ class PostUploadNotifier {
 
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
-                                                                            PostUtils.isFirstTimePublish(post), false,
-                                                                            true);
+            Intent publishIntent = UploadService.getRetryUploadServiceIntent(mContext, post,
+                                                                            PostUtils.isFirstTimePublish(post));
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                                                                          PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),

@@ -36,18 +36,23 @@ import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploa
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
 const val ERROR_COLOR = R.color.error
-const val PROGRESS_INFO_COLOR = R.color.neutral_500
+const val PROGRESS_INFO_COLOR = R.color.neutral_50
 const val STATE_INFO_COLOR = R.color.warning_dark
 
 /**
@@ -102,7 +107,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         )
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
-            onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+            when (postStatus) {
+                TRASHED -> {}
+                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
+                        post,
+                        BUTTON_EDIT,
+                        POST_LIST_ITEM_SELECTED
+                )
+            }
         }
         val itemUiData = PostListItemUiStateData(
                 remotePostId = remotePostId,
@@ -121,7 +133,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 showOverlay = shouldShowOverlay(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
-                )
+                ),
+                disableRippleEffect = postStatus == PostStatus.TRASHED
         )
 
         return PostListItemUiState(
@@ -175,7 +188,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is PostUploadUiState.UploadFailed -> {
-                getErrorLabel(uploadUiState.error)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState.error, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.post_uploading_draft))
@@ -229,9 +242,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return labels
     }
 
-    private fun getErrorLabel(uploadError: UploadError): UiString? {
+    private fun getErrorLabel(uploadError: UploadError, postStatus: PostStatus): UiString? {
         return when {
-            uploadError.mediaError != null -> UiStringRes(R.string.error_media_recover_post)
+            uploadError.mediaError != null -> when (postStatus) {
+                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
+                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
+            }
             uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
                     false,
                     uploadError.postError
@@ -285,22 +303,26 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload) &&
-                (isLocallyChanged || isLocalDraft || postStatus == DRAFT)
+                (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
+                        (siteHasCapabilitiesToPublish && postStatus == PENDING))
+
         val canShowStats = statsSupported &&
                 postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
-        val canShowViewButton = !canRetryUpload
+        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
-        buttonTypes.add(BUTTON_EDIT)
+        if (postStatus != TRASHED) {
+            buttonTypes.add(BUTTON_EDIT)
+        }
         if (canShowPublishButton) {
             buttonTypes.add(
-                    if (!siteHasCapabilitiesToPublish) {
-                        BUTTON_SUBMIT
-                    } else if (canRetryUpload) {
+                    if (canRetryUpload) {
                         BUTTON_RETRY
+                    } else if (!siteHasCapabilitiesToPublish) {
+                        BUTTON_SUBMIT
                     } else if (postStatus == SCHEDULED && isLocallyChanged) {
                         BUTTON_SYNC
                     } else {
@@ -320,16 +342,16 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
 
         when {
-            isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
+            isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
             postStatus == TRASHED -> {
-                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
-                buttonTypes.add(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
             }
-            postStatus != TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
+            postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
         }
 
         if (canShowStats) {
-            buttonTypes.add(PostListButtonType.BUTTON_STATS)
+            buttonTypes.add(BUTTON_STATS)
         }
 
         return buttonTypes

@@ -54,6 +54,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -216,6 +217,21 @@ public class SitePickerActivity extends AppCompatActivity
                         data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
                         setResult(resultCode, data);
                         finish();
+                    }
+                }
+                break;
+        }
+
+        // Enable the block editor on sites created on mobile
+        switch (requestCode) {
+            case RequestCodes.CREATE_SITE:
+                if (data != null) {
+                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    SiteUtils.enableBlockEditor(mDispatcher, mSiteStore, newSiteLocalID);
+                    // Mark the site to show the GB popup at first editor run
+                    SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
+                    if (newSiteModel != null) {
+                        AppPrefs.setShowGutenbergInfoPopup(newSiteModel.getUrl(), true);
                     }
                 }
                 break;

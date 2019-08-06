@@ -39,6 +39,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -70,6 +71,7 @@ class PostListMainViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
     private val postListEventListenerFactory: PostListEventListener.Factory,
+    private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -89,8 +91,8 @@ class PostListMainViewModel @Inject constructor(
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
 
-    private val _updatePostsPager = SingleLiveEvent<AuthorFilterSelection>()
-    val updatePostsPager = _updatePostsPager
+    private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
+    val authorSelectionUpdated = _authorSelectionUpdated
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -100,6 +102,9 @@ class PostListMainViewModel @Inject constructor(
 
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
+
+    private val _previewState = SingleLiveEvent<PostListRemotePreviewState>()
+    val previewState = _previewState as LiveData<PostListRemotePreviewState>
 
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
@@ -163,7 +168,8 @@ class PostListMainViewModel @Inject constructor(
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
+                showToast = { _toastMessage.postValue(it) },
+                triggerPreviewStateUpdate = this::updatePreviewAndDialogState
         )
     }
 
@@ -184,7 +190,7 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState) {
         this.site = site
 
         if (isSearchExpanded.value == true) {
@@ -217,11 +223,14 @@ class PostListMainViewModel @Inject constructor(
                 invalidateFeaturedMedia = {
                     featuredImageTracker.invalidateFeaturedMedia(it)
                     invalidateAllLists()
-                }
+                },
+                triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
+                isRemotePreviewingFromPostsList = this::isRemotePreviewingFromPostsList,
+                hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
         )
 
         _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
-        _updatePostsPager.value = authorFilterSelection
+        _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
                         isSearchExpanded.value != true,
@@ -229,6 +238,8 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
+        _previewState.value = _previewState.value ?: initPreviewState
+
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
         uploadStarter.queueUploadFromSite(site)
@@ -245,13 +256,11 @@ class PostListMainViewModel @Inject constructor(
      * info already
      */
     fun getPostListViewModelConnector(
-        authorFilter: AuthorFilterSelection,
         postListType: PostListType
     ): PostListViewModelConnector {
         return PostListViewModelConnector(
                 site = site,
                 postListType = postListType,
-                authorFilter = authorFilter,
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
@@ -391,7 +400,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
-            _updatePostsPager.value = authorFilterSelection
+            _authorSelectionUpdated.value = authorFilterSelection
 
             AnalyticsUtils.trackWithSiteDetails(
                     POST_LIST_AUTHOR_FILTER_CHANGED,
@@ -411,6 +420,12 @@ class PostListMainViewModel @Inject constructor(
         dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
     }
 
+    private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
+            _previewState.value != PostListRemotePreviewState.NONE
+
+    private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
+            _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
+
     private fun checkNetworkConnection(): Boolean =
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 true
@@ -418,6 +433,32 @@ class PostListMainViewModel @Inject constructor(
                 _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
                 false
             }
+
+    fun handleRemotePreviewClosing() {
+        updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
+    }
+
+    private fun updatePreviewAndDialogState(newState: PostListRemotePreviewState, postInfo: PostInfoType) {
+        // We need only transitions, so...
+        if (_previewState.value == newState) return
+
+        AppLog.d(
+                AppLog.T.POSTS,
+                "Posts list preview state machine: transition from ${_previewState.value} to $newState"
+        )
+
+        // update the state
+        val prevState = _previewState.value
+        _previewState.postValue(newState)
+
+        // take care of exit actions on state transition
+        previewStateHelper.managePreviewStateTransitions(
+                newState,
+                prevState,
+                postInfo,
+                postActionHandler::handleRemotePreview
+        )
+    }
 
     fun toggleViewLayout() {
         val currentLayoutType = viewLayoutType.value ?: PostListViewLayoutType.defaultValue

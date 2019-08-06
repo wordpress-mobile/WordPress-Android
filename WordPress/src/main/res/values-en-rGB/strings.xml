@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-19 10:06:04+0000
+Translation-Revision-Date: 2019-07-18 10:21:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="description_expand">Expand</string>
+    <string name="description_collapse">Collapse</string>
+    <string name="editor_retry_failed_uploads">Retry uploading</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state.</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="link_dialog_button_cancel">Cancel</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Remove Link</string>
+    <string name="link_dialog_title">Insert link</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
+    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
+    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="stats_widget_error_no_access_token">To view your stats, log in to your WordPress.com account.</string>
+    <string name="post_list_search_nothing_found">No posts matching your search</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="stats_widget_minified_name">At a glance</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_error_no_network">No network available</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_select_color">Colour</string>
+    <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_color_dark">Dark</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color">Colour</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_views_title">Views This Week</string>
+    <string name="stats_widget_add">Add widget</string>
+    <string name="dialog_confirm_update_yes">Update now</string>
+    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
+    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
+    <string name="dialog_confirm_update_title">Ready to Update?</string>
+    <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
     <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our %1$sterms and conditions%2$s</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
@@ -156,14 +206,12 @@ Language: en_GB
     <string name="plans_loading_error_no_plans_subtitle">We cannot load Plans at the moment. Please try again later.</string>
     <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
     <string name="plans_loading_error_network_title">No connection</string>
-    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
-    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
+    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
     <string name="stats_loading_error">Data not loaded</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.\n        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.\n        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
@@ -251,7 +299,6 @@ Language: en_GB
     <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
-    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
@@ -464,11 +511,6 @@ Language: en_GB
     <string name="blavatar_desc">site icon</string>
     <string name="theme_image_desc">theme image</string>
     <string name="featured_image_desc">featured image</string>
-    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
-    <string name="local_changes_discarding">Discarding local changes</string>
-    <string name="local_changes_discarded">Local changes discarded</string>
-    <string name="menu_discard_changes">Discard Local Changes</string>
-    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_discard">Discard</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_blavatar_desc">site icon</string>
@@ -559,7 +601,6 @@ Language: en_GB
     <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installing plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
@@ -882,7 +923,6 @@ Language: en_GB
     <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
     <string name="image_size">Size</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
@@ -1380,7 +1420,6 @@ Language: en_GB
     <string name="start_over">Start Over</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state. Would you like to remove all failed media?</string>
     <string name="site_settings_advanced_header">Advanced</string>
     <string name="comments_empty_list_filtered_trashed">No binned comments</string>
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
@@ -1614,7 +1653,6 @@ Language: en_GB
     <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Comments</string>
     <string name="reader_short_comment_count_one">1 Comment</string>
-    <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_discover_visit_blog">Visit %s</string>
     <string name="reader_discover_attribution_blog">Originally posted on %s</string>

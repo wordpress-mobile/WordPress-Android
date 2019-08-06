@@ -246,7 +246,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mQuotaText.setText(getString(R.string.media_space_used, quota));
         mQuotaText.setTextColor(
-                getResources().getColor(mSite.getSpacePercentUsed() > 90 ? R.color.error_500 : R.color.neutral));
+                getResources().getColor(mSite.getSpacePercentUsed() > 90 ? R.color.error_50 : R.color.neutral));
     }
 
     private void showQuota(boolean show) {
@@ -286,7 +286,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void setupTabs() {
         if (shouldShowTabs()) {
-            int normalColor = ContextCompat.getColor(this, R.color.primary_300);
+            int normalColor = ContextCompat.getColor(this, R.color.primary_30);
             int selectedColor = ContextCompat.getColor(this, android.R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 

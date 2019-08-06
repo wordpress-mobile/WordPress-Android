@@ -76,14 +76,10 @@ Language: es_CL
     <string name="plans_loading_error_no_plans_subtitle">No podemos cargar planes en este momento. Por favor inténtalo de nuevo más tarde.</string>
     <string name="plans_loading_error_no_plans_title">No se pueden cargar planes</string>
     <string name="plans_loading_error_network_title">Sin conexión</string>
-    <string name="menu_switch_to_gutenberg_editor">Cambiar al Editor de Bloques</string>
-    <string name="menu_switch_to_aztec_editor">Cambiar a Editor Clásico</string>
     <string name="stats_loading_block_error">Se ha producido un problema al cargar los datos, actualiza la página para volver a intentarlo.</string>
     <string name="stats_loading_error">Datos no cargados</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita nuevas publicaciones y páginas con el editor de bloques</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Utiliza el Editor de Bloques</string>
-    <string name="dialog_gutenberg_informative_description_page">Esta página se creó originalmente en el editor de bloques, por lo que también la hemos habilitado en esta página.\n        Vuelve al Clásico en cualquier momento tocando  ⋮  en la barra superior.</string>
-    <string name="dialog_gutenberg_informative_description_post">Esta entrada se creó originalmente en el editor de bloques, por lo que también la hemos habilitado en esta Entrada.\n        Vuelve al Clásico en cualquier momento tocando  ⋮  en la barra superior.</string>
     <string name="dialog_gutenberg_informative_title">Editor de Bloques Habilitado</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completado</string>
@@ -171,7 +167,6 @@ Language: es_CL
     <string name="dialog_confirm_load_remote_post_body_2">Local\nGuardado en %s\n\nWeb\nGuardado en %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Este post tiene dos versiones que están en conflicto. Selecciona la versión que quieras descartar.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolver conflicto de sincronización</string>
-    <string name="local_changes_discarding_no_connection">Se requiere una conexión para realizar esta acción. Por favor, comprueba tu conexión e inténtalo de nuevo.</string>
     <string name="stats_no_data_for_period">No hay datos para este período</string>
     <string name="preference_strip_image_location">Quita la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor inténtalo de nuevo más tarde</string>
@@ -379,11 +374,6 @@ Language: es_CL
     <string name="blavatar_desc">ícono del sitio</string>
     <string name="theme_image_desc">imagen del tema</string>
     <string name="featured_image_desc">imagen destacada</string>
-    <string name="local_changes_discarding_error">Hubo un error al descartar los cambios locales. Por favor comunícate con soporte para más asistencia.</string>
-    <string name="local_changes_discarding">Descartar cambios locales</string>
-    <string name="local_changes_discarded">Cambios locales descartados</string>
-    <string name="menu_discard_changes">Descartar Cambios Locales</string>
-    <string name="button_discard_changes">Descartar Cambios</string>
     <string name="button_discard">Descartar</string>
     <string name="reader_avatar_desc">imagen de perfil</string>
     <string name="reader_blavatar_desc">icono del sitio</string>
@@ -474,7 +464,6 @@ Language: es_CL
     <string name="plugin_install_site_ineligible_site_private">La característica del plugin requiere que el sitio sea público.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">La característica del plugin requiere un plan de negocios.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">La característica del plugin requiere un dominio personalizado.</string>
-    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Estamos haciendo la configuración final — casi está listo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalando plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>
@@ -797,7 +786,6 @@ Language: es_CL
     <string name="login_text_otp_another">Envíame otro código.</string>
     <string name="enter_verification_code_sms">Enviaremos un mensaje de texto al número de teléfono que termina en %s. Por favor ingresa el código de verificación indicado en el SMS.</string>
     <string name="error_generic_error">No se pudo realizar la operación</string>
-    <string name="error_media_recover_post">No se puede subir los medios de este post</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">1 archivo restante</string>
     <string name="uploading_subtitle_media_only">Faltan %1$d de %2$d archivos</string>
@@ -1292,7 +1280,6 @@ Language: es_CL
     <string name="start_over">Comenzar de Nuevo</string>
     <string name="me_btn_app_settings">Configuración de la Aplicación</string>
     <string name="editor_remove_failed_uploads">Eliminar subidas fallidas</string>
-    <string name="editor_toast_failed_uploads">Algunas subidas de medios han fallado. No puedes guardar o\n        publicar tu entrada en este estado. ¿Deseas eliminar todos los medios fallidos?</string>
     <string name="site_settings_advanced_header">Avanzado</string>
     <string name="comments_empty_list_filtered_trashed">No hay comentarios en la basura</string>
     <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
@@ -1526,7 +1513,6 @@ Language: es_CL
     <string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
-    <string name="reader_label_submit_comment">ENVIAR</string>
     <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
     <string name="reader_discover_visit_blog">Visita %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado en %s</string>

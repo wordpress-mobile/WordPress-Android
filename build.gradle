@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.automattic.android:fetchstyle:1.1'
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     }
 }
 
@@ -48,7 +49,7 @@ allprojects {
 
     configurations.all {
         resolutionStrategy {
-            force 'org.webkit:android-jsc:r224109'
+            force 'org.webkit:android-jsc:r241213'
         }
     }
 
@@ -105,5 +106,5 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    fluxCVersion = 'a34f6bd836a7ce77acd13ecaf2b078af710ccc87'
+    fluxCVersion = '75e307843a381fbdb82d09a54ccd5192a327b977'
 }

@@ -12,22 +12,25 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 
 private const val FORMATTER_DATE = "January 1st, 1:35pm"
 
 private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
+private val POST_STATE_SCHEDULED = PostStatus.SCHEDULED.toString()
 private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
 private val POST_STATE_PENDING = PostStatus.PENDING.toString()
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
+private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class PostListItemUiStateHelperTest {
@@ -62,6 +65,248 @@ class PostListItemUiStateHelperTest {
                 )
         )
         assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
+    }
+
+    @Test
+    fun `verify draft actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify local draft actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT, isLocalDraft = true)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_PREVIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify draft actions without publishing rights`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT),
+                capabilitiesToPublish = false
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify local draft actions without publishing rights`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT, isLocalDraft = true),
+                capabilitiesToPublish = false
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_PREVIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify draft actions on failed upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify local draft actions on failed upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT, isLocalDraft = true),
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify draft actions on failed upload without publishing rights`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT),
+                capabilitiesToPublish = false,
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify local draft actions on failed upload without publishing rights`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_DRAFT, isLocalDraft = true),
+                capabilitiesToPublish = false,
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify published post actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify published post with changes actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_PREVIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify published post with failed upload actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify trashed post actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_TRASHED)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
+        assertThat(state.actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify scheduled post actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_SCHEDULED)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify scheduled post with changes actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_SCHEDULED, isLocallyChanged = true)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SYNC)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_PREVIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
+    fun `verify scheduled post with failed upload actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_SCHEDULED, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR)))
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.actions).hasSize(3)
+    }
+
+    @Test
+    fun `verify post pending review with publishing rights actions`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PENDING)
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+    }
+
+    @Test
+    fun `verify post pending review without publishing rights`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PENDING),
+                capabilitiesToPublish = false
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
     }
 
     @Test
@@ -165,12 +410,12 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `error uploading post label shown when the post upload fails`() {
+    fun `generic error message shown when upload fails from unknown reason`() {
         val errorMsg = "testing error message"
         val state = createPostListItemUiState(
                 uploadStatus = createUploadStatus(uploadError = UploadError(PostError(GENERIC_ERROR, errorMsg)))
         )
-        assertThat(state.data.statuses).contains(UiStringText(errorMsg))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_generic_error))
     }
 
     @Test
@@ -179,8 +424,34 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.error_media_recover_post))
-        assertThat(state.data.statuses).hasSize(1)
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_published))
+    }
+
+    @Test
+    fun `media upload error shown with specific message for pending post`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted))
+    }
+
+    @Test
+    fun `media upload error shown with specific message for scheduled post`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled))
+    }
+
+    @Test
+    fun `base media upload error shown for draft`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post))
     }
 
     @Test
@@ -244,6 +515,26 @@ class PostListItemUiStateHelperTest {
         assertThat(state.data.showOverlay).isTrue()
     }
 
+    @Test
+    fun `show only delete and move to draft buttons on trashed posts`() {
+        val state = createPostListItemUiState(post = createPostModel(POST_STATE_TRASHED))
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE_PERMANENTLY)
+        assertThat(state.actions).hasSize(2)
+    }
+
+    @Test
+    fun `show delete button on local draft with a media upload error`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocalDraft = true, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(MediaErrorType.GENERIC_ERROR)))
+        )
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(state.actions).hasSize(3)
+    }
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
@@ -260,8 +551,8 @@ class PostListItemUiStateHelperTest {
         post: PostModel = PostModel(),
         uploadStatus: PostListItemUploadStatus = createUploadStatus(),
         unhandledConflicts: Boolean = false,
-        capabilitiesToPublish: Boolean = false,
-        statsSupported: Boolean = false,
+        capabilitiesToPublish: Boolean = true,
+        statsSupported: Boolean = true,
         featuredImageUrl: String? = null,
         formattedDate: String = FORMATTER_DATE,
         performingCriticalAction: Boolean = false,

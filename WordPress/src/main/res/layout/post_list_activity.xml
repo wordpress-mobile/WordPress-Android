@@ -50,7 +50,7 @@
                 android:layout_width="@dimen/posts_list_tab_layout_fading_edge_width"
                 android:layout_height="match_parent"
                 android:layout_alignEnd="@+id/post_list_author_selection"
-                android:background="@drawable/bg_rectangle_gradient_primary_500_transparent"/>
+                android:background="@drawable/bg_rectangle_gradient_primary_50_transparent"/>
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/post_list_author_selection"

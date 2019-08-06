@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.Context
 import android.text.format.DateFormat
+import android.text.format.DateUtils
+import org.wordpress.android.util.DateTimeUtils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -32,5 +34,22 @@ class DateUtils @Inject constructor(private val context: Context) {
         c.set(Calendar.HOUR_OF_DAY, hour)
         c.set(Calendar.MINUTE, 0)
         return formatter.format(c.time)
+    }
+
+    fun formatDateTime(dateIso8601: String): String {
+        return DateUtils.formatDateTime(
+                context,
+                DateTimeUtils.timestampFromIso8601Millis(dateIso8601),
+                getDateTimeFlags()
+        )
+    }
+
+    private fun getDateTimeFlags(): Int {
+        var flags = 0
+        flags = flags or DateUtils.FORMAT_SHOW_DATE
+        flags = flags or DateUtils.FORMAT_ABBREV_MONTH
+        flags = flags or DateUtils.FORMAT_SHOW_YEAR
+        flags = flags or DateUtils.FORMAT_SHOW_TIME
+        return flags
     }
 }

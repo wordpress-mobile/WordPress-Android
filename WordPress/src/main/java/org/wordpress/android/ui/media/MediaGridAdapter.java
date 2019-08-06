@@ -34,6 +34,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -191,7 +192,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mFileTypeView.setText(fileExtension.toUpperCase(Locale.ROOT));
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             ColorUtils.INSTANCE.setImageResourceWithTint(holder.mFileTypeImageView, placeholderResId,
-                    R.color.neutral_300);
+                    R.color.neutral_30);
             mImageManager.cancelRequestAndClearImageView(holder.mImageView);
         }
         holder.mImageView.setContentDescription(mContext.getString(R.string.media_grid_item_image_desc,
@@ -331,6 +332,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     return true;
                 }
             });
+            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
 
             mSelectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override

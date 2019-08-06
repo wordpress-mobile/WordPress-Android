@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-27 11:54:10+0000
+Translation-Revision-Date: 2019-07-26 16:11:16+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="description_expand">擴大</string>
+    <string name="description_collapse">折疊</string>
+    <string name="editor_retry_failed_uploads">重新嘗試上傳</string>
+    <string name="editor_toast_failed_uploads">部分媒體上傳失敗。在此狀態中，你無法儲存或發表\n自己的文章。</string>
+    <string name="my_site_verify_your_email_without_email">驗證你的電子郵件地址 - 已將說明傳送至你的電子郵件地址</string>
+    <string name="my_site_verify_your_email">驗證你的電子郵件地址 - 已將說明傳送至 %s</string>
+    <string name="error_media_recover_post_not_submitted">無法上傳媒體。文章未提交。</string>
+    <string name="error_media_recover_post_not_scheduled">無法上傳媒體。文章未排程。</string>
+    <string name="error_media_recover_post_not_published">無法上傳媒體。文章未發表。</string>
+    <string name="error_media_recover_post">無法上傳媒體</string>
+    <string name="link_dialog_button_cancel">取消</string>
+    <string name="link_dialog_button_ok">確定</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">移除連結</string>
+    <string name="link_dialog_title">插入連結</string>
+    <string name="post_settings_retry_featured_image">重新嘗試上傳</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">正在上傳媒體。\n請點選以顯示選項。</string>
+    <string name="dialog_gutenberg_informative_description_page">此網頁使用了區塊編輯器，該編輯器是新網頁的預設編輯器。若要啟用傳統編輯器，請前往「我」>「應用程式設定」。</string>
+    <string name="dialog_gutenberg_informative_description_post">此文章使用了區塊編輯器，該編輯器是新文章的預設編輯器。若要啟用傳統編輯器，請前往「我」>「應用程式設定」。</string>
+    <string name="link_open_new_window">在新視窗或分頁開啟鏈結</string>
+    <string name="post_list_search_prompt">搜尋已發表的文章</string>
+    <string name="stats_widget_error_no_access_token">若要檢視統計資料，請登入 WordPress.com 帳號。</string>
+    <string name="post_list_search_nothing_found">沒有文章符合你的搜尋條件</string>
+    <string name="domains_suggestions_intro_description">這是人們在網際網路上找到你的地方。</string>
+    <string name="domains_suggestions_intro_title">選擇進階網域名稱</string>
+    <string name="my_site_custom_domain_name">所有 WordPress.com 方案都包含一個自訂網域名稱。立即註冊你的免費進階網域。</string>
+    <string name="stats_widget_minified_name">總覽</string>
+    <string name="stats_widget_today_insights_name">今天</string>
+    <string name="stats_widget_all_time_insights_name">有史以來</string>
+    <string name="stats_widget_weekly_views_name">本週瀏覽次數</string>
+    <string name="stats_widget_log_in_message">若要新增小工具，請登入 WordPress 應用程式。</string>
+    <string name="stats_widget_error_no_network">沒有可用網路</string>
+    <string name="stats_widget_error_no_data">無法載入資料</string>
+    <string name="stats_widget_select_type">類型</string>
+    <string name="stats_widget_select_color">顏色</string>
+    <string name="stats_widget_select_your_site">選擇你的網站</string>
+    <string name="stats_widget_color_dark">深色系</string>
+    <string name="stats_widget_color_light">淡色系</string>
+    <string name="stats_widget_color">顏色</string>
+    <string name="stats_widget_site_caption">選擇你的網站</string>
+    <string name="stats_widget_site">網站</string>
+    <string name="stats_widget_all_time_title">有史以來</string>
+    <string name="stats_widget_views_title">本週瀏覽次數</string>
+    <string name="stats_widget_add">新增小工具</string>
+    <string name="dialog_confirm_update_yes">立即更新</string>
+    <string name="dialog_confirm_update_message_page">此發佈頁面將立即更新。</string>
+    <string name="dialog_confirm_update_message_post">此發佈文章將立即更新。</string>
+    <string name="dialog_confirm_update_title">準備好要更新了嗎？</string>
+    <string name="plugin_fetching_error_after_at">重新整理外掛程式詳細資訊所需的時間比平時更長。請稍後再查看一次。</string>
+    <string name="plugin_install_site_ineligible_default_error">如果你剛註冊網域名稱，請等到我們完成設定後再試一次。\n\n如果不是剛註冊網域名稱，那麼看來是系統發生錯誤，且該網站可能無法使用外掛程式功能。</string>
     <string name="domain_contact_information_state_not_available_hint">州 (無法使用)</string>
     <string name="domain_registration_privacy_protection_tos">註冊此網域，即表示你同意我們的%1$s條款與條件%2$s</string>
     <string name="error_network_connection">請檢查你的網路連線並再試一次。</string>
@@ -152,14 +202,10 @@ Language: zh_TW
     <string name="plans_loading_error_no_plans_subtitle">目前無法載入「方案」，請稍後再試一次。</string>
     <string name="plans_loading_error_no_plans_title">無法載入「方案」</string>
     <string name="plans_loading_error_network_title">沒有網路連線</string>
-    <string name="menu_switch_to_gutenberg_editor">切換至區塊編輯器</string>
-    <string name="menu_switch_to_aztec_editor">切換至傳統編輯器</string>
     <string name="stats_loading_block_error">載入資料時發生問題，請重新整理網頁並重試。</string>
     <string name="stats_loading_error">未載入資料</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用區塊編輯器編輯新文章和網頁</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
-    <string name="dialog_gutenberg_informative_description_page">此網頁原本就是使用區塊編輯器建立，因此我們也在此網頁了啟用區塊編輯器。\n點選頂端列的  ⋮  ，即可切換回傳統編輯器。</string>
-    <string name="dialog_gutenberg_informative_description_post">此文章原本就是使用區塊編輯器建立，因此我們也在此文章啟用了區塊編輯器。\n點選頂端列的  ⋮  ，即可切換回傳統編輯器。</string>
     <string name="dialog_gutenberg_informative_title">已啟用區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
@@ -247,7 +293,6 @@ Language: zh_TW
     <string name="dialog_confirm_load_remote_post_body_2">本機\n已儲存於 %s\n\n網頁\n已儲存於 %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">此文章的兩個版本有所衝突。選取你要捨棄的版本。\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">解決同步衝突</string>
-    <string name="local_changes_discarding_no_connection">需要網路連線才能執行此動作。請檢查你的連線並再試一次。</string>
     <string name="stats_no_data_for_period">此期間沒有資料</string>
     <string name="preference_strip_image_location">從媒體移除位置資訊</string>
     <string name="stats_cannot_be_started">目前我們無法開啟統計資料。請稍後再試一次</string>
@@ -443,11 +488,6 @@ Language: zh_TW
     <string name="blavatar_desc">網站圖示</string>
     <string name="theme_image_desc">主題圖片</string>
     <string name="featured_image_desc">特色圖片</string>
-    <string name="local_changes_discarding_error">捨棄本機變更時發生錯誤。請聯絡支援團隊，尋求進一步協助。</string>
-    <string name="local_changes_discarding">正在捨棄本機變更</string>
-    <string name="local_changes_discarded">已捨棄本機變更</string>
-    <string name="menu_discard_changes">捨棄本機變更</string>
-    <string name="button_discard_changes">捨棄變更</string>
     <string name="button_discard">捨棄</string>
     <string name="reader_avatar_desc">個人檔案圖像</string>
     <string name="reader_blavatar_desc">網站圖示</string>
@@ -538,7 +578,6 @@ Language: zh_TW
     <string name="plugin_install_site_ineligible_site_private">外掛功能需要該網站為公開網站。</string>
     <string name="plugin_install_site_ineligible_no_business_plan">外掛功能需要有商務版方案。</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">外掛功能需要有自訂網域。</string>
-    <string name="plugin_install_site_ineligible_default_error">外掛功能不適用於此網站。</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">我們正在進行最後的設定，作業即將完成……</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">正在安裝外掛程式……</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安裝</string>
@@ -859,7 +898,6 @@ Language: zh_TW
     <string name="login_text_otp_another">請使用簡訊傳送另一個驗證碼給我。</string>
     <string name="enter_verification_code_sms">我們已將簡訊傳送至結尾為 %s 的電話號碼。請輸入簡訊中的驗證碼。</string>
     <string name="error_generic_error">無法執行這項操作</string>
-    <string name="error_media_recover_post">無法上傳此文章的媒體</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">剩下 1 個檔案</string>
     <string name="uploading_subtitle_media_only">剩下 %1$d 個檔案 (共 %2$d 個)</string>
@@ -1348,7 +1386,6 @@ Language: zh_TW
     <string name="start_over">重新開始</string>
     <string name="me_btn_app_settings">應用程式設定</string>
     <string name="editor_remove_failed_uploads">移除失敗的上傳項目</string>
-    <string name="editor_toast_failed_uploads">部分媒體上傳失敗。在此狀態中，你無法儲存或發表\n自己的文章。是否要移除所有失敗的媒體？</string>
     <string name="site_settings_advanced_header">進階</string>
     <string name="comments_empty_list_filtered_pending">無待審核的迴響</string>
     <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
@@ -1572,7 +1609,6 @@ Language: zh_TW
     <string name="stats_enable_rest_api_in_jetpack">若要查看統計資料，請啟用 Jetpack 的 JSON API 模組。</string>
     <string name="reader_short_comment_count_multi">%s評論</string>
     <string name="reader_short_comment_count_one">1評論</string>
-    <string name="reader_label_submit_comment">發送</string>
     <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">造訪 %s</string>
     <string name="reader_discover_attribution_blog">原始發表位置：%s</string>

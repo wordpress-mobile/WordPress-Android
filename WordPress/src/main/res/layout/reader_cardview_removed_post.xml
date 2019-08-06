@@ -39,7 +39,7 @@
             android:layout_alignParentEnd="true"
             android:drawablePadding="@dimen/margin_small"
             android:text="@string/undo"
-            android:textColor="@color/primary_400"
+            android:textColor="@color/primary_40"
             android:textSize="@dimen/text_sz_large"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

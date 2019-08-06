@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -159,7 +160,7 @@ public class NoteBlock {
             // Request image, and animate it when loaded
             mImageManager
                     .loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
-                            StringUtils.notNullStr(getNoteMediaItem().getUrl()), null,
+                            StringUtils.notNullStr(getNoteMediaItem().getUrl()), ScaleType.CENTER, null,
                             new ImageManager.RequestListener<Drawable>() {
                                 @Override
                                 public void onLoadFailed(@Nullable Exception e) {

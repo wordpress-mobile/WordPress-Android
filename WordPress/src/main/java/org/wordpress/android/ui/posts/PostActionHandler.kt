@@ -25,11 +25,14 @@ import org.wordpress.android.ui.posts.PostListAction.ViewStats
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
@@ -57,7 +60,8 @@ class PostActionHandler(
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
-    private val showToast: (ToastMessageHolder) -> Unit
+    private val showToast: (ToastMessageHolder) -> Unit,
+    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -74,7 +78,18 @@ class PostActionHandler(
                 postListDialogHelper.showPublishConfirmationDialog(post)
             }
             BUTTON_VIEW -> triggerPostListAction.invoke(ViewPost(site, post))
-            BUTTON_PREVIEW -> triggerPostListAction.invoke(PreviewPost(site, post))
+            BUTTON_PREVIEW -> triggerPostListAction.invoke(
+                    PreviewPost(
+                            site = site,
+                            post = post,
+                            triggerPreviewStateUpdate = triggerPreviewStateUpdate,
+                            showToast = showToast,
+                            messageMediaUploading = ToastMessageHolder(
+                                    R.string.editor_toast_uploading_please_wait,
+                                    ToastUtils.Duration.SHORT
+                            )
+                    )
+            )
             BUTTON_STATS -> triggerPostListAction.invoke(ViewStats(site, post))
             BUTTON_TRASH -> {
                 if (post.isLocallyChanged) {
@@ -83,7 +98,7 @@ class PostActionHandler(
                     trashPost(post)
                 }
             }
-            BUTTON_DELETE -> {
+            BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
             BUTTON_MORE -> {
@@ -103,6 +118,13 @@ class PostActionHandler(
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
             triggerPostUploadAction(EditPostResult(site, post, data) { publishPost(localPostId) })
+        }
+    }
+
+    fun handleRemotePreview(localPostId: Int, remotePreviewType: RemotePreviewType) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            triggerPostListAction.invoke(PostListAction.RemotePreviewPost(site, post, remotePreviewType))
         }
     }
 

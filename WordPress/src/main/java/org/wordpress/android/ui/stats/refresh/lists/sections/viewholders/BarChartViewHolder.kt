@@ -79,11 +79,11 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         data = BarData(dataSets)
         val greyColor = ContextCompat.getColor(
                 context,
-                R.color.neutral_300
+                R.color.neutral_30
         )
         val lightGreyColor = ContextCompat.getColor(
                 context,
-                R.color.neutral_50
+                R.color.neutral_5
         )
         axisLeft.apply {
             valueFormatter = LargeValueFormatter()
@@ -184,7 +184,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.primary_50
+                        R.color.primary_5
                 ), ContextCompat.getColor(
                 context,
                 android.R.color.transparent
@@ -199,14 +199,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
-        dataSet.color = ContextCompat.getColor(context, R.color.blue_400)
+        dataSet.color = ContextCompat.getColor(context, R.color.blue_40)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.blue_400
+                        R.color.blue_40
                 ), ContextCompat.getColor(
                 context,
-                R.color.blue_400
+                R.color.blue_40
         )
         )
         dataSet.formLineWidth = 0f
@@ -214,7 +214,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                R.color.accent_400
+                R.color.accent_40
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -222,14 +222,14 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Overlapping data")
-        dataSet.color = ContextCompat.getColor(context, R.color.primary_700)
+        dataSet.color = ContextCompat.getColor(context, R.color.primary_70)
         dataSet.setGradientColor(
                 ContextCompat.getColor(
                         context,
-                        R.color.primary_700
+                        R.color.primary_70
                 ), ContextCompat.getColor(
                 context,
-                R.color.primary_700
+                R.color.primary_70
         )
         )
         dataSet.formLineWidth = 0f
@@ -237,7 +237,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                R.color.accent_700
+                R.color.accent_70
         )
         dataSet.highLightAlpha = 255
         return dataSet
@@ -263,7 +263,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(
                 context,
-                R.color.accent_400
+                R.color.accent_40
         )
         dataSet.setDrawValues(false)
         dataSet.highLightAlpha = 51

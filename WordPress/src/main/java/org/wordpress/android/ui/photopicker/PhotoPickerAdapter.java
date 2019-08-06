@@ -25,6 +25,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.ViewUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -367,6 +368,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                     return true;
                 }
             });
+            ViewUtilsKt.redirectContextClickToLongPressListener(mImgThumbnail);
 
             mVideoOverlay.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -72,7 +72,7 @@ jobs:
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk
-          test-targets: package org.wordpress.android.e2e
+          test-targets: notPackage org.wordpress.android.ui.screenshots
           device: model=Nexus5X,version=26,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m

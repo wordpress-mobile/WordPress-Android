@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -42,6 +43,7 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<SearchTermsModel>(
         SEARCH_TERMS,
@@ -95,13 +97,19 @@ constructor(
         if (domainModel.searchTerms.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label))
+            val header = Header(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label)
+            items.add(header)
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
                 ListItemWithIcon(
                         text = searchTerm.text,
                         value = searchTerm.views.toFormattedString(),
-                        showDivider = index < domainModel.searchTerms.size - 1
+                        showDivider = index < domainModel.searchTerms.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                header,
+                                searchTerm.text,
+                                searchTerm.views
+                        )
                 )
             }
             if (hasEncryptedCount) {
@@ -110,7 +118,12 @@ constructor(
                         ListItemWithIcon(
                                 textResource = R.string.stats_search_terms_unknown_search_terms,
                                 value = domainModel.unknownSearchCount.toFormattedString(),
-                                showDivider = false
+                                showDivider = false,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        header,
+                                        R.string.stats_search_terms_unknown_search_terms,
+                                        domainModel.unknownSearchCount
+                                )
                         )
                 )
             } else {
@@ -145,7 +158,8 @@ constructor(
         private val store: SearchTermsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 SearchTermsUseCase(
@@ -155,6 +169,7 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

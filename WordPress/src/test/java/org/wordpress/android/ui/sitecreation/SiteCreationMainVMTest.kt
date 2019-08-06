@@ -107,6 +107,10 @@ class SiteCreationMainVMTest {
 
     @Test
     fun siteCreationStateUpdatedWithSelectedSegment() {
+        whenever(wizardManager.showNextStep()).then {
+            wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
+            Unit
+        }
         viewModel.onSegmentSelected(SEGMENT_ID)
         assertThat(currentWizardState(viewModel).segmentId).isEqualTo(SEGMENT_ID)
     }
@@ -217,7 +221,9 @@ class SiteCreationMainVMTest {
 
     @Test
     fun siteCreationStateRestored() {
-        val expectedState = SiteCreationState()
+        /* we need to model a real use case of data only existing for steps the user has visited (Segment only in
+        this case). Otherwise, subsequent steps' state will be cleared and make the test fail. (issue #10189)*/
+        val expectedState = SiteCreationState(SEGMENT_ID)
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
                 .thenReturn(expectedState)
 
@@ -225,9 +231,9 @@ class SiteCreationMainVMTest {
         val newViewModel = SiteCreationMainVM(tracker, wizardManager)
         newViewModel.start(savedInstanceState)
 
-        /* we need simulate navigation to the next step as wizardManager.showNextStep() isn't invoked
-        when the VM is restored from a savedInstanceState. */
-        wizardManagerNavigatorLiveData.value = siteCreationStep
+        /* we need to simulate navigation to the next step (Vertical selection, see comment above) as
+        wizardManager.showNextStep() isn't invoked when the VM is restored from a savedInstanceState. */
+        wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
 
         newViewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         assertThat(currentWizardState(newViewModel)).isSameAs(expectedState)
@@ -247,6 +253,15 @@ class SiteCreationMainVMTest {
         newViewModel.start(savedInstanceState)
 
         verify(wizardManager).setCurrentStepIndex(index)
+    }
+
+    @Test
+    fun oldSiteCreationDataClearedWhenReturningToPreviousStep() {
+        // See issue #10189 - unintended data retained if user goes backwards in wizard
+        viewModel.onVerticalsScreenFinished(VERTICAL_ID)
+        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(VERTICAL_ID)
+        wizardManagerNavigatorLiveData.value = SiteCreationStep.VERTICALS
+        assertThat(currentWizardState(viewModel).verticalId).isEqualTo(null)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =

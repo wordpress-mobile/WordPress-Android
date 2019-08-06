@@ -56,7 +56,9 @@ import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
@@ -129,11 +131,15 @@ public class ActivityLauncher {
 
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
-                                                @Nullable SiteModel site) {
+                                                @Nullable SiteModel site,
+                                                @Nullable Integer localPostId) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
+        }
+        if (localPostId != null) {
+            intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
         }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
@@ -573,28 +579,77 @@ public class ActivityLauncher {
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
     public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
+        browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);
+    }
+
+    public static void previewPostOrPageForResult(
+            Activity activity,
+            SiteModel site,
+            PostModel post,
+            RemotePreviewType remotePreviewType
+    ) {
+        browsePostOrPageEx(activity, site, post, remotePreviewType);
+    }
+
+    private static void browsePostOrPageEx(
+            Context context,
+            SiteModel site,
+            PostModel post,
+            RemotePreviewType remotePreviewType) {
         if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
             return;
         }
 
-        // always add the preview parameter to avoid bumping stats when viewing posts
-        String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+        if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                        && TextUtils.isEmpty(post.getAutoSavePreviewUrl())) {
+            return;
+        }
+
+        String url = PostUtils.getPreviewUrlForPost(remotePreviewType, post);
+
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
+        boolean startPreviewForResult = remotePreviewType != RemotePreviewType.NOT_A_REMOTE_PREVIEW;
+
         if (site.isWPCom()) {
-            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(
+                    context,
+                    url,
+                    shareableUrl,
+                    shareSubject,
+                    startPreviewForResult);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity
-                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
+                    .openJetpackBlogPostPreview(
+                            context,
+                            url,
+                            shareableUrl,
+                            shareSubject,
+                            site.getFrameNonce(),
+                            startPreviewForResult);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
             // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            WPWebViewActivity
-                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true);
+            WPWebViewActivity.openUrlByUsingBlogCredentials(
+                    context,
+                    site,
+                    post,
+                    url,
+                    new String[]{post.getLink()},
+                    true,
+                    startPreviewForResult);
         }
+    }
+
+    public static void showActionableEmptyView(
+            Context context,
+            WPWebViewUsageCategory actionableState,
+            String postTitle
+    ) {
+        WPWebViewActivity.openActionableEmptyViewDirectly(context, actionableState, postTitle);
     }
 
     public static void viewMyProfile(Context context) {
