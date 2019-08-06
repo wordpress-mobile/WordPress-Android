@@ -589,6 +589,7 @@ public class SiteStore extends Store {
 
     public static class OnAllSitesMobileEditorChanged extends OnChanged<SiteEditorsError> {
         public int rowsAffected;
+        public boolean isNetworkResponse; // True when all sites are self-hosted or wpcom backend response
 
         public OnAllSitesMobileEditorChanged() {
         }
@@ -1753,6 +1754,9 @@ public class SiteStore extends Store {
 
         if (wpcomPostRequestRequired) {
             mSiteRestClient.designateMobileEditorForAllSites(payload.editor);
+            event.isNetworkResponse = false;
+        } else {
+            event.isNetworkResponse = true;
         }
 
         event.rowsAffected = rowsAffected;
@@ -1806,6 +1810,7 @@ public class SiteStore extends Store {
                 }
             }
         }
+        event.isNetworkResponse = true;
         emitChange(event);
     }
 
