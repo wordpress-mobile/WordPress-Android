@@ -171,9 +171,9 @@ class UploadStarter @Inject constructor(
                         uploadStore.getNumberOfPostUploadErrorsOrCancellations(it) < MAXIMUM_AUTO_UPLOAD_RETRIES
                     }
                     .filter {
-                        // Do not remote-auto-save changes which were already remote-auto-saved
+                        // Don't remoteAutoSave changes which were already remoteAutoSaved or when on a self-hosted site
                         UploadUtils.getPostUploadAction(it) != PostUploadAction.REMOTE_AUTO_SAVE ||
-                                !UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it)
+                                (!UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(it) && site.isUsingWpComRestApi)
                     }
                     // TODO add timer guard
 
