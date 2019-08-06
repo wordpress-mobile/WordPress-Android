@@ -300,8 +300,10 @@ class UploadStarterTest {
 
         // This UploadStore.getNumberOfPostUploadErrorsOrCancellations mocked method will always return that
         // any post was cancelled 1000 times. The auto upload should not be started.
-        val starter = createUploadStarter(connectionStatus, uploadServiceFacade,
-                uploadStore = createMockedUploadStore(1000))
+        val starter = createUploadStarter(
+                connectionStatus, uploadServiceFacade,
+                uploadStore = createMockedUploadStore(1000)
+        )
 
         // When
         starter.queueUploadFromSite(site)
@@ -348,7 +350,7 @@ class UploadStarterTest {
 
         fun createMockedPostUtilsWrapper() = mock<PostUtilsWrapper> {
             on { isPublishable(any()) } doReturn true
-            on {isPostInConflictWithRemote(any())} doReturn false
+            on { isPostInConflictWithRemote(any()) } doReturn false
         }
 
         fun createMockedUploadStore(numberOfPostErrors: Int) = mock<UploadStore> {
