@@ -1,3 +1,8 @@
+XX.X
+----
+* Add Remote Preview support for posts and pages.
+* Post List: Trashed post must now be restored before edit or preview.
+
 13.1
 -----
 * Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
@@ -5,9 +10,6 @@
 
 13.0
 -----
-* Add Remote Preview support for posts and pages.
-* Post List: Trashed post must now be restored before edit or preview
-
 * Block editor: Auto-enabled upon first open of a block post, unless opted out in v12.9.
 * Block editor: You can now enable and disable the block editor on a per-site basis.
 * Improve accessibility in the Stats
@@ -22,7 +24,6 @@
 * Block editor: Tapping on an empty editor area will create a new paragraph block
 * Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
 * Block editor: Adding a block from the Post Title now inserts the block at the top of the Post.
-
 * Setting featured image on a post doesn't require network connection
 * Full screen comments view
 * Added Domain Registration functionality for customers with unclaimed domain credit
