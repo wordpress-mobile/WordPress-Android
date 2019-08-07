@@ -713,7 +713,11 @@ public class PostStore extends Store {
                 /*
                  * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
                  * automatically updates the post content and clears autosave object instead of just updating the
-                 * autosave object. Since the app doesn't know the current status in the remote, it can't assume what
+                 * autosave object. This results in a false-positive conflict as the PostModel.lastModified date field
+                 * gets updated and on the next post list fetch the app thinks the post has been changed both in remote
+                 * and locally.
+                 *
+                 * Since the app doesn't know the current status in the remote, it can't assume what
                   * was updated. However, if we know the last modified date is equal to the date we have in local
                   * autosave object we are sure that our invocation of /autosave updated the post directly.
                  */
