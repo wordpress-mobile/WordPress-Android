@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnAllSitesMobileEditorChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.models.CategoryModel;
@@ -952,7 +953,11 @@ public abstract class SiteSettingsInterface {
         if (fetchRemote) {
             fetchRemoteData();
             mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(mSite));
+            if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+                // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
+                // before fetching site editors from the remote
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(mSite));
+            }
         }
 
         return this;
@@ -1139,7 +1144,23 @@ public abstract class SiteSettingsInterface {
         if (event.isError()) {
             return;
         }
+        updateAnalyticsAndUI();
+    }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAllSitesMobileEditorChanged(OnAllSitesMobileEditorChanged event) {
+        if (event.isError()) {
+            return;
+        }
+        if (event.isNetworkResponse) {
+            // We can remove the global app setting now, since we're sure the migration ended with success.
+            AppPrefs.removeAppWideEditorPreference();
+        }
+        updateAnalyticsAndUI();
+    }
+
+    private void updateAnalyticsAndUI() {
         // Need to update the user property about GB enabled on any of the sites
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
