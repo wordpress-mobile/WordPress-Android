@@ -17,7 +17,6 @@ import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
 import android.graphics.Point
 
-
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
             when (uiDimen) {
