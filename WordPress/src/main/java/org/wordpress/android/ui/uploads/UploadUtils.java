@@ -405,7 +405,7 @@ public class UploadUtils {
             case DRAFT:
                 return R.string.error_publish_no_network;
             case PRIVATE:
-                return R.string.post_waiting_for_connection_publish;
+                return R.string.post_waiting_for_connection_private;
             case PENDING:
                 return R.string.post_waiting_for_connection_pending;
             case SCHEDULED:
