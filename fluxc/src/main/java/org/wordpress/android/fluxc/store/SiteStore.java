@@ -1608,6 +1608,14 @@ public class SiteStore extends Store {
         UpdateSitesResult result = new UpdateSitesResult();
         for (SiteModel site : sites.getSites()) {
             try {
+                // The REST API doesn't return info about the editor(s). Make sure to copy current values
+                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The apps will dispatch the action to update editor(s) when necessary.
+                SiteModel siteFromDB = getSiteBySiteId(site.getSiteId());
+                if (siteFromDB != null) {
+                    site.setMobileEditor(siteFromDB.getMobileEditor());
+                    site.setWebEditor(siteFromDB.getWebEditor());
+                }
                 result.rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
             } catch (DuplicateSiteException caughtException) {
                 result.duplicateSiteFound = true;
