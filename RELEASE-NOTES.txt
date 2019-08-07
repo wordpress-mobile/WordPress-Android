@@ -9,6 +9,7 @@
 * Block editor: Adding a block from the post title now shows the add block here indicator.
 * Block editor: Deselect post title any time a block is added
 * Block editor: Fix loss of center alignment in image captions
+* Block editor: Fix missing content on long posts in html mode
  
 12.9
 -----
