@@ -1,13 +1,21 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Intent
+import android.util.Log
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
+import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
+import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
@@ -27,10 +35,12 @@ import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -102,9 +112,37 @@ class PostActionHandler(
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
+            BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> {
+                cancelPendingAutoUpload(post)
+            }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
         }
+    }
+
+    private fun cancelPendingAutoUpload(post: PostModel) {
+        post.changesConfirmedContentHashcode = 0
+        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
+
+        val snackBarHolder = SnackbarMessageHolder(
+                messageRes = when (PostStatus.fromPost(post)) {
+                    UNKNOWN,
+                    PUBLISHED,
+                    PRIVATE -> R.string.post_waiting_for_connection_publish_cancel
+                    PENDING -> R.string.post_waiting_for_connection_pending_cancel
+                    SCHEDULED -> R.string.post_waiting_for_connection_scheduled_cancel
+                    DRAFT,
+                    TRASHED -> {
+                        AppLog.e(
+                                AppLog.T.POSTS,
+                                "This code should be unreachable. Canceling pending auto-upload on Trashed and " +
+                                        "Draft posts isn't supported."
+                        )
+                        0
+                    }
+                }
+        )
+        showSnackbar.invoke(snackBarHolder)
     }
 
     fun newPost() {

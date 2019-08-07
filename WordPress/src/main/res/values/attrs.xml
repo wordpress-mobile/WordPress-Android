@@ -96,6 +96,7 @@
             <enum name="retry" value="11" />
             <enum name="moveToDraft" value="12" />
             <enum name="deletePermanently" value="13"/>
+            <enum name="cancelPendingAutoUpload" value="14"/>
         </attr>
     </declare-styleable>
 
