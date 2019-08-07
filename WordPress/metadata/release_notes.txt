@@ -1,5 +1,3 @@
-* Fixes a crash that could happen when viewing help from the login screen
-* Allow setting which editor to use on a per-site basis
-* Improves accessibility in stats
-* Makes it easier to log in by validating the URL to your site more quickly.
-* Some minor tweaks to the colour scheme
+* Block editor improvements: the editor is auto-enabled when you open a block post (unless you opted out in v12.9), or you can enable it on a per-site basis.
+* Accessibility improvements: screen readers can now read more of the stats screen.
+* General usability improvements: logging in is speedier, colors are more consistent across screens, and bug fixes put an end to some crashes.
