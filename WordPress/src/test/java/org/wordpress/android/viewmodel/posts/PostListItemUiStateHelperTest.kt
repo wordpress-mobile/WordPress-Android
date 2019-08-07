@@ -377,8 +377,6 @@ class PostListItemUiStateHelperTest {
         assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
     }
 
-
-
     @Test
     fun `label has progress color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))

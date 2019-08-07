@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Intent
-import android.util.Log
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
