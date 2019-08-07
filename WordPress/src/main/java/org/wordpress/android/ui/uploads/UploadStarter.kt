@@ -131,8 +131,8 @@ class UploadStarter @Inject constructor(
     /**
      * If there is an internet connection, uploads all posts with local changes belonging to [sites].
      *
-     * This coroutine will suspend until all the [checkConnectionAndUpload] operations have completed. If one of them fails, all query
-     * and queuing attempts ([checkConnectionAndUpload]) will be canceled. The exception will be thrown by this method.
+     * This coroutine will suspend until all the [upload] operations have completed. If one of them fails, all query
+     * and queuing attempts ([upload]) will be canceled. The exception will be thrown by this method.
      */
     private suspend fun checkConnectionAndUpload(sites: List<SiteModel>) = coroutineScope {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
