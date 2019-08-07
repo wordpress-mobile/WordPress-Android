@@ -337,6 +337,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         String url = WPCOMV2.me.gutenberg.getUrl();
         params.put("editor", mobileEditorName);
         params.put("platform", "mobile");
+        params.put("set_only_if_empty", "true");
+
         add(WPComGsonRequest
                 .buildPostRequest(url, params, Map.class,
                         new Listener<Map<String, String>>() {
