@@ -398,20 +398,24 @@ public class UploadUtils {
 
     @StringRes
     private static int getDeviceOfflinePostNotUploadedMessage(PostModel post) {
-        switch (PostStatus.fromPost(post)) {
-            case PUBLISHED:
-            case UNKNOWN:
-                return R.string.post_waiting_for_connection_publish;
-            case DRAFT:
-                return R.string.error_publish_no_network;
-            case PRIVATE:
-                return R.string.post_waiting_for_connection_private;
-            case PENDING:
-                return R.string.post_waiting_for_connection_pending;
-            case SCHEDULED:
-                return R.string.post_waiting_for_connection_scheduled;
-            case TRASHED:
-                throw new IllegalArgumentException("Trashing posts should be handled in a different code path.");
+        if (getPostUploadAction(post) != PostUploadAction.UPLOAD) {
+            return R.string.error_publish_no_network;
+        } else {
+            switch (PostStatus.fromPost(post)) {
+                case PUBLISHED:
+                case UNKNOWN:
+                    return R.string.post_waiting_for_connection_publish;
+                case DRAFT:
+                    return R.string.error_publish_no_network;
+                case PRIVATE:
+                    return R.string.post_waiting_for_connection_private;
+                case PENDING:
+                    return R.string.post_waiting_for_connection_pending;
+                case SCHEDULED:
+                    return R.string.post_waiting_for_connection_scheduled;
+                case TRASHED:
+                    throw new IllegalArgumentException("Trashing posts should be handled in a different code path.");
+            }
         }
         throw new RuntimeException("This code should be unreachable. Missing case in switch statement.");
     }
