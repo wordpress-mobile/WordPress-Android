@@ -74,9 +74,10 @@ class PostActionHandler(
             BUTTON_MOVE_TO_DRAFT -> {
                 moveTrashedPostToDraft(post)
             }
-            BUTTON_SUBMIT, BUTTON_SYNC, BUTTON_PUBLISH -> {
+            BUTTON_SYNC, BUTTON_PUBLISH -> {
                 postListDialogHelper.showPublishConfirmationDialog(post)
             }
+            BUTTON_SUBMIT -> publishPost(post.id)
             BUTTON_VIEW -> triggerPostListAction.invoke(ViewPost(site, post))
             BUTTON_PREVIEW -> triggerPostListAction.invoke(
                     PreviewPost(

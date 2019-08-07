@@ -55,7 +55,6 @@ import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
@@ -496,24 +495,6 @@ public class ActivityLauncher {
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
         openUrlExternal(context, site.getAdminUrl());
-    }
-
-    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post) {
-        if (post == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
-        intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
-    }
-
-    public static void viewPagePreview(@NonNull Fragment fragment, @NonNull PageModel page) {
-        Intent intent = new Intent(fragment.getContext(), PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
-        intent.putExtra(WordPress.SITE, page.getSite());
-        fragment.startActivity(intent);
     }
 
     public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {

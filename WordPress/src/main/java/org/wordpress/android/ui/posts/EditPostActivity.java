@@ -2223,14 +2223,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
-                boolean hasFailedMediaUploads = mEditorFragment.hasFailedMediaUploads()
-                                                || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null;
-                if (!hasFailedMediaUploads) {
-                    AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + mPost.getTitle());
-                    // the user explicitly confirmed an intention to upload the post
-                    mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
-                }
-
                 boolean postUpdateSuccessful = updatePostObject();
                 if (!postUpdateSuccessful) {
                     // just return, since the only case updatePostObject() can fail is when the editor
@@ -2240,6 +2232,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
+
+                boolean hasFailedMediaUploads = mEditorFragment.hasFailedMediaUploads()
+                                                || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null;
+
+                if (!hasFailedMediaUploads) {
+                    AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + mPost.getTitle());
+                    // the user explicitly confirmed an intention to upload the post
+                    mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
+                }
 
                 // if post was modified or has unsaved local changes and is publishable, save it
                 saveResult(isPublishable, false, false);
