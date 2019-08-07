@@ -67,10 +67,9 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `preview not available for self hosted sites not using WPComRestApi on published post with modifications`() {
+    fun `preview not available for self hosted sites not using WPComRestApi on a post with modifications`() {
         // Given
         doReturn(false).whenever(site).isUsingWpComRestApi
-        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
         doReturn(true).whenever(post).isLocallyChanged
 
         // When
@@ -86,7 +85,7 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `preview available for self hosted sites not using WPComRestApi on drafts`() {
+    fun `preview not available for self hosted sites not using WPComRestApi`() {
         // Given
         // next stub not used (made lenient) in case we update future logic.
         lenient().doReturn(false).whenever(site).isUsingWpComRestApi
@@ -95,8 +94,12 @@ class RemotePreviewLogicHelperTest {
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
 
         // Then
-        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
-        verify(helperFunctions, times(1)).startUploading(false, post)
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
+        verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
+                activity,
+                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                post.title
+        )
     }
 
     @Test
@@ -232,7 +235,6 @@ class RemotePreviewLogicHelperTest {
     fun `preview not available for Jetpack sites on published post with modification`() {
         // Given
         doReturn(true).whenever(site).isJetpackConnected
-        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
         doReturn(true).whenever(post).isLocallyChanged
 
         // When
@@ -247,8 +249,12 @@ class RemotePreviewLogicHelperTest {
         )
     }
 
+    /**
+     * Preview for Jetpack sites is temporarily disabled due to a server side bug.
+     * https://github.com/Automattic/wp-calypso/issues/20265
+     */
     @Test
-    fun `preview available for Jetpack sites on draft with modification`() {
+    fun `preview not available for Jetpack sites on a post with modification`() {
         // Given
         // next stub not used (made lenient) in case we update future logic.
         lenient().doReturn(true).whenever(site).isJetpackConnected
@@ -258,16 +264,19 @@ class RemotePreviewLogicHelperTest {
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
 
         // Then
-        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
-        verify(helperFunctions, times(1)).startUploading(false, post)
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
+        verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
+                activity,
+                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                post.title
+        )
     }
 
     @Test
-    fun `preview available for Jetpack sites on published post without modification`() {
+    fun `preview available for Jetpack sites on a post post without modification`() {
         // Given
         // next stub not used (made lenient) in case we update future logic
         lenient().doReturn(true).whenever(site).isJetpackConnected
-        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
         doReturn(false).whenever(post).isLocallyChanged
 
         // When
@@ -279,7 +288,7 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `preview available for Jetpack sites on draft without modification`() {
+    fun `preview available for Jetpack sites on a post without modification`() {
         // Given
         lenient().doReturn(true).whenever(site).isJetpackConnected
         doReturn(false).whenever(post).isLocallyChanged
