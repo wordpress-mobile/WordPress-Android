@@ -198,14 +198,15 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
             uploadUiState is UploadWaitingForConnection -> {
-                when (uploadUiState.postStatus){
+                when (uploadUiState.postStatus) {
                     UNKNOWN, PUBLISHED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_publish))
                     PRIVATE -> labels.add(UiStringRes(R.string.post_waiting_for_connection_private))
                     PENDING -> labels.add(UiStringRes(R.string.post_waiting_for_connection_pending))
                     SCHEDULED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_scheduled))
                     TRASHED -> AppLog.e(
                             POSTS,
-                            "Developer error: This state shouldn't happen. Trashed post is in UploadWaitingForConnection state."
+                            "Developer error: This state shouldn't happen. Trashed post is in " +
+                                    "UploadWaitingForConnection state."
                     )
                     DRAFT -> labels.add(UiStringRes(R.string.local_changes))
                 }
@@ -383,7 +384,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
         data class UploadFailed(val error: UploadError) : PostUploadUiState()
-        data class UploadWaitingForConnection(val postStatus: PostStatus): PostUploadUiState()
+        data class UploadWaitingForConnection(val postStatus: PostStatus) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
     }
@@ -401,7 +402,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued
-            uploadStatus.isEligibleForAutoUpload  -> UploadWaitingForConnection(postStatus)
+            uploadStatus.isEligibleForAutoUpload -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
         }
     }
