@@ -10,7 +10,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ITEM_SELE
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
@@ -22,12 +21,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.DO_NOTHING
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD_AS_DRAFT
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -217,7 +211,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
-
         }
 
         // we want to show either single error/progress label or 0-n info labels.

@@ -577,7 +577,8 @@ class PostListItemUiStateHelperTest {
         isQueued: Boolean = false,
         isUploadFailed: Boolean = false,
         hasInProgressMediaUpload: Boolean = false,
-        hasPendingMediaUpload: Boolean = false
+        hasPendingMediaUpload: Boolean = false,
+        isEligibleForAutoUpload: Boolean = false
     ): PostListItemUploadStatus =
             PostListItemUploadStatus(
                     uploadError = uploadError,
@@ -587,8 +588,9 @@ class PostListItemUiStateHelperTest {
                     isQueued = isQueued,
                     isUploadFailed = isUploadFailed,
                     hasInProgressMediaUpload = hasInProgressMediaUpload,
-                    hasPendingMediaUpload = hasPendingMediaUpload
-            )
+                    hasPendingMediaUpload = hasPendingMediaUpload,
+                    isEligibleForAutoUpload = isEligibleForAutoUpload
+                    )
 
     private fun createGenericError(): UploadError = UploadError(PostError(GENERIC_ERROR))
 }
