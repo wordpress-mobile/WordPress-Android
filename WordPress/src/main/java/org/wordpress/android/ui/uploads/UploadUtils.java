@@ -249,19 +249,16 @@ public class UploadUtils {
             return;
         }
 
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
-        post.setStatus(PostStatus.PUBLISHED.toString());
 
-        AppLog.d(T.POSTS, "User explicitly confirmed changes. Post title: " + post.getTitle());
-        // the changes were explicitly confirmed by the user
-        post.setChangesConfirmedContentHashcode(post.contentHashcode());
+        PostUtils.preparePostForPublish(post);
 
         // save the post in the DB so the UploadService will get the latest change
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-        UploadService.uploadPost(activity, post, isFirstTimePublish);
-
+        if (NetworkUtils.isNetworkAvailable(activity)) {
+            UploadService.uploadPost(activity, post, isFirstTimePublish);
+        }
         PostUtils.trackSavePostAnalytics(post, site);
     }
 

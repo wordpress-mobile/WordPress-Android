@@ -272,7 +272,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
-        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
+        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
+                uploadUiState is UploadWaitingForConnection
 
         return when {
             isError -> ERROR_COLOR
@@ -400,7 +401,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): PostUploadUiState {
         val postStatus = PostStatus.fromPost(post)
         return when {
-            !post.isLocalDraft && !post.isLocallyChanged -> NothingToUpload
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
             uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
