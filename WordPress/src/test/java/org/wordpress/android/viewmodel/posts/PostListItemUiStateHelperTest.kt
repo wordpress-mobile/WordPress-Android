@@ -535,6 +535,61 @@ class PostListItemUiStateHelperTest {
         assertThat(state.actions).hasSize(3)
     }
 
+    @Test
+    fun `pending publish post label shown when post eligible for auto-upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PUBLISH),
+                uploadStatus = createUploadStatus(isEligibleForAutoUpload = true)
+        )
+
+        assertThat((state.data.statuses[0] as UiStringRes).stringRes)
+                .isEqualTo(R.string.post_waiting_for_connection_publish)
+    }
+
+    @Test
+    fun `pending schedule label shown when post eligible for auto-upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
+                uploadStatus = createUploadStatus(isEligibleForAutoUpload = true)
+        )
+
+        assertThat((state.data.statuses[0] as UiStringRes).stringRes)
+                .isEqualTo(R.string.post_waiting_for_connection_scheduled)
+    }
+
+    @Test
+    fun `pending publish private post label shown when post eligible for auto-upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
+                uploadStatus = createUploadStatus(isEligibleForAutoUpload = true)
+        )
+
+        assertThat((state.data.statuses[0] as UiStringRes).stringRes)
+                .isEqualTo(R.string.post_waiting_for_connection_private)
+    }
+
+    @Test
+    fun `pending submit post label shown when post eligible for auto-upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
+                uploadStatus = createUploadStatus(isEligibleForAutoUpload = true)
+        )
+
+        assertThat((state.data.statuses[0] as UiStringRes).stringRes)
+                .isEqualTo(R.string.post_waiting_for_connection_pending)
+    }
+
+    @Test
+    fun `local changes post label shown when draft eligible for auto-upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(isEligibleForAutoUpload = true)
+        )
+
+        assertThat((state.data.statuses[0] as UiStringRes).stringRes)
+                .isEqualTo(R.string.local_changes)
+    }
+
     private fun createPostModel(
         status: String = POST_STATE_PUBLISH,
         isLocalDraft: Boolean = false,
