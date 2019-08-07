@@ -85,8 +85,6 @@ import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
-import org.wordpress.android.ui.posts.PostPreviewActivity;
-import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -338,10 +336,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(EditPostSettingsFragment object);
 
     void inject(PostSettingsTagsActivity object);
-
-    void inject(PostPreviewActivity object);
-
-    void inject(PostPreviewFragment object);
 
     void inject(PostsListActivity object);
 

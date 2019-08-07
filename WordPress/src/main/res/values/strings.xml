@@ -354,7 +354,7 @@
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
     <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
-    
+
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -442,11 +442,7 @@
     <!-- context menu -->
     <string name="remove_account">Remove site</string>
 
-    <!-- page actions -->
-    <string name="preview_page">Preview page</string>
-
     <!-- post actions -->
-    <string name="preview_post">Preview post</string>
     <string name="post_trashed">Post sent to trash</string>
     <string name="post_trashing">Post is being trashed</string>
     <string name="post_restored">Post restored</string>
@@ -1522,12 +1518,7 @@
     <string name="error_preview_empty_post">Can\'t preview an empty post</string>
     <string name="error_preview_empty_page">Can\'t preview an empty page</string>
     <string name="error_preview_empty_draft">Can\'t preview an empty draft</string>
-
-    <!-- message on post preview explaining what local changes, local drafts and drafts are -->
-    <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
-    <string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
-    <string name="draft_explainer">This post is a draft which hasn\'t been published</string>
-
+    
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 

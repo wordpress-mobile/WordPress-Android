@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -66,9 +67,11 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `preview not available for self hosted sites not using WPComRestApi`() {
+    fun `preview not available for self hosted sites not using WPComRestApi on published post with modifications`() {
         // Given
         doReturn(false).whenever(site).isUsingWpComRestApi
+        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
+        doReturn(true).whenever(post).isLocallyChanged
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())
@@ -80,6 +83,20 @@ class RemotePreviewLogicHelperTest {
                 WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
                 post.title
         )
+    }
+
+    @Test
+    fun `preview available for self hosted sites not using WPComRestApi on drafts`() {
+        // Given
+        // next stub not used (made lenient) in case we update future logic.
+        lenient().doReturn(false).whenever(site).isUsingWpComRestApi
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
+        verify(helperFunctions, times(1)).startUploading(false, post)
     }
 
     @Test
@@ -209,5 +226,69 @@ class RemotePreviewLogicHelperTest {
         // Then
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
         verify(helperFunctions, times(1)).startUploading(true, post)
+    }
+
+    @Test
+    fun `preview not available for Jetpack sites on published post with modification`() {
+        // Given
+        doReturn(true).whenever(site).isJetpackConnected
+        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
+        doReturn(true).whenever(post).isLocallyChanged
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
+        verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
+                activity,
+                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
+                post.title
+        )
+    }
+
+    @Test
+    fun `preview available for Jetpack sites on draft with modification`() {
+        // Given
+        // next stub not used (made lenient) in case we update future logic.
+        lenient().doReturn(true).whenever(site).isJetpackConnected
+        doReturn(true).whenever(post).isLocallyChanged
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.GENERATING_PREVIEW)
+        verify(helperFunctions, times(1)).startUploading(false, post)
+    }
+
+    @Test
+    fun `preview available for Jetpack sites on published post without modification`() {
+        // Given
+        // next stub not used (made lenient) in case we update future logic
+        lenient().doReturn(true).whenever(site).isJetpackConnected
+        doReturn(PostStatus.PUBLISHED.toString()).whenever(post).status
+        doReturn(false).whenever(post).isLocallyChanged
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
+        verify(helperFunctions, never()).startUploading(false, post)
+    }
+
+    @Test
+    fun `preview available for Jetpack sites on draft without modification`() {
+        // Given
+        lenient().doReturn(true).whenever(site).isJetpackConnected
+        doReturn(false).whenever(post).isLocallyChanged
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
+        verify(helperFunctions, never()).startUploading(false, post)
     }
 }
