@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -112,6 +113,14 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DesignateMobileEditorForAllSitesPayload extends Payload<SiteEditorsError> {
+        public String editor;
+
+        public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName) {
+            this.editor = editorName;
+        }
+    }
+
     public static class DesignateMobileEditorPayload extends Payload<SiteEditorsError> {
         public SiteModel site;
         public String editor;
@@ -131,6 +140,13 @@ public class SiteStore extends Store {
             this.site = site;
             this.mobileEditor = mobileEditor;
             this.webEditor = webEditor;
+        }
+    }
+
+    public static class DesignateMobileEditorForAllSitesResponsePayload extends Payload<SiteEditorsError> {
+        public Map<String, String> editors;
+        public DesignateMobileEditorForAllSitesResponsePayload(Map<String, String> editors) {
+            this.editors = editors;
         }
     }
 
@@ -568,6 +584,14 @@ public class SiteStore extends Store {
 
         public OnSiteEditorsChanged(SiteModel site) {
             this.site = site;
+        }
+    }
+
+    public static class OnAllSitesMobileEditorChanged extends OnChanged<SiteEditorsError> {
+        public int rowsAffected;
+        public boolean isNetworkResponse; // True when all sites are self-hosted or wpcom backend response
+
+        public OnAllSitesMobileEditorChanged() {
         }
     }
 
@@ -1396,8 +1420,15 @@ public class SiteStore extends Store {
             case DESIGNATE_MOBILE_EDITOR:
                 designateMobileEditor((DesignateMobileEditorPayload) action.getPayload());
                 break;
+            case DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES:
+                designateMobileEditorForAllSites((DesignateMobileEditorForAllSitesPayload) action.getPayload());
+                break;
             case FETCHED_SITE_EDITORS:
                 updateSiteEditors((FetchedEditorsPayload) action.getPayload());
+                break;
+            case DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES:
+                handleDesignatedMobileEditorForAllSites(
+                        (DesignateMobileEditorForAllSitesResponsePayload) action.getPayload());
                 break;
             case FETCH_USER_ROLES:
                 fetchUserRoles((SiteModel) action.getPayload());
@@ -1705,6 +1736,33 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
+    private void designateMobileEditorForAllSites(DesignateMobileEditorForAllSitesPayload payload) {
+        int rowsAffected = 0;
+        OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
+        boolean wpcomPostRequestRequired = false;
+        for (SiteModel site : getSites()) {
+            site.setMobileEditor(payload.editor);
+            if (!wpcomPostRequestRequired && site.isUsingWpComRestApi()) {
+                wpcomPostRequestRequired = true;
+            }
+            try {
+                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (Exception e) {
+                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+            }
+        }
+
+        if (wpcomPostRequestRequired) {
+            mSiteRestClient.designateMobileEditorForAllSites(payload.editor);
+            event.isNetworkResponse = false;
+        } else {
+            event.isNetworkResponse = true;
+        }
+
+        event.rowsAffected = rowsAffected;
+        emitChange(event);
+    }
+
     private void updateSiteEditors(FetchedEditorsPayload payload) {
         SiteModel site = payload.site;
         OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
@@ -1720,6 +1778,39 @@ public class SiteStore extends Store {
             }
         }
 
+        emitChange(event);
+    }
+
+    private void handleDesignatedMobileEditorForAllSites(DesignateMobileEditorForAllSitesResponsePayload payload) {
+        OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
+            for (Map.Entry<String, String> entry : payload.editors.entrySet()) {
+                SiteModel currentModel = getSiteBySiteId(Long.parseLong(entry.getKey()));
+
+                if (currentModel == null) {
+                    // this could happen when a site was added to the current account with another app, or on the web
+                    AppLog.e(T.API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
+                                    + "the following siteID " + entry.getKey() + " but there is no site with that "
+                                    + "remote ID in SiteStore.");
+                    continue;
+                }
+
+                if (currentModel.getMobileEditor() == null
+                    || !currentModel.getMobileEditor().equals(entry.getValue())) {
+                    // the current editor is either null or != from the value on the server. Update it
+                    currentModel.setMobileEditor(entry.getValue());
+                    try {
+                        event.rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel);
+                    } catch (Exception e) {
+                        event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                    }
+                }
+            }
+        }
+        event.isNetworkResponse = true;
         emitChange(event);
     }
 
