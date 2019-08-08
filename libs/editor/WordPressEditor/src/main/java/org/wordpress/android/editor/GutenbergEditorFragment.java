@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.Spanned;
-import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
