@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityId
@@ -58,6 +59,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
     @Inject internal lateinit var previewStateHelper: PreviewStateHelper
     @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject internal lateinit var dispatcher: Dispatcher
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -256,6 +258,7 @@ class PostsListActivity : AppCompatActivity(),
                 handleUploadAction(
                         uploadAction,
                         this@PostsListActivity,
+                        dispatcher,
                         findViewById(R.id.coordinator)
                 )
             }

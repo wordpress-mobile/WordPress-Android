@@ -45,11 +45,12 @@ sealed class PostUploadAction {
     class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
 }
 
-fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAttachView: View) {
+fun handleUploadAction(action: PostUploadAction, activity: Activity, dispatcher: Dispatcher, snackbarAttachView: View) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
             UploadUtils.handleEditPostResultSnackbars(
                     activity,
+                    dispatcher,
                     snackbarAttachView,
                     action.data,
                     action.post,

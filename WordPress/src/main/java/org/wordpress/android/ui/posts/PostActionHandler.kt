@@ -7,14 +7,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
-import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
-import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
@@ -34,7 +27,7 @@ import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -120,34 +113,8 @@ class PostActionHandler(
     }
 
     private fun cancelPendingAutoUpload(post: PostModel) {
-        /**
-         * `changesConfirmedContentHashcode` field holds a hashcode of the post content at the time when user pressed
-         * updated/publish/sync/submit/.. buttons. Clearing the hashcode will prevent the PostUploadHandler to
-         * auto-upload the changes - it'll only remote-auto-save them -> which is exactly what the cancel action is
-         * supposed to do.
-         */
-        post.changesConfirmedContentHashcode = 0
-        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
-
-        val snackBarHolder = SnackbarMessageHolder(
-                messageRes = when (PostStatus.fromPost(post)) {
-                    UNKNOWN,
-                    PUBLISHED,
-                    PRIVATE -> R.string.post_waiting_for_connection_publish_cancel
-                    PENDING -> R.string.post_waiting_for_connection_pending_cancel
-                    SCHEDULED -> R.string.post_waiting_for_connection_scheduled_cancel
-                    DRAFT,
-                    TRASHED -> {
-                        AppLog.e(
-                                AppLog.T.POSTS,
-                                "This code should be unreachable. Canceling pending auto-upload on Trashed and " +
-                                        "Draft posts isn't supported."
-                        )
-                        0
-                    }
-                }
-        )
-        showSnackbar.invoke(snackBarHolder)
+        val msgRes = UploadUtils.cancelPendingAutoUpload(post, dispatcher)
+        showSnackbar.invoke(SnackbarMessageHolder(msgRes))
     }
 
     fun newPost() {
