@@ -901,7 +901,8 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "REVIEWER_AVATARS_JSON TEXT NOT NULL,"
                                + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
-                               + "UNIQUE (REMOTE_PRODUCT_REVIEW_ID, LOCAL_SITE_ID) ON CONFLICT REPLACE)");
+                               + "UNIQUE (REMOTE_PRODUCT_REVIEW_ID, REMOTE_PRODUCT_ID, LOCAL_SITE_ID) "
+                               + "ON CONFLICT REPLACE)");
                     break;
             }
         }
