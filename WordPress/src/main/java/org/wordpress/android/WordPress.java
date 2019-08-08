@@ -880,7 +880,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             sDeleteExpiredStats.runIfNotLimited();
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
-            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mContext, mDispatcher, mSiteStore);
+            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mContext, mDispatcher);
 
             if (mFirstActivityResumed) {
                 deferredInit();
