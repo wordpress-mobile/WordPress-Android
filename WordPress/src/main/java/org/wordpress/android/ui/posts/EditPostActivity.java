@@ -2332,10 +2332,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
-                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
-                            && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
+                    if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
                             && isNotRestarting) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
