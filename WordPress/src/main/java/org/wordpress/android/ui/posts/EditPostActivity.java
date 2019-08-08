@@ -921,7 +921,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private PrimaryAction getPrimaryAction() {
-        if (!userCanPublishPosts()) {
+        if (!UploadUtils.userCanPublish(mSite)) {
             // User doesn't have publishing permissions
             switch (PostStatus.fromPost(mPost)) {
                 case SCHEDULED:
@@ -971,7 +971,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private SecondaryAction getSecondaryAction() {
-        if (!userCanPublishPosts()) {
+        if (!UploadUtils.userCanPublish(mSite)) {
             // User doesn't have publishing permissions
             switch (PostStatus.fromPost(mPost)) {
                 case SCHEDULED:
@@ -2049,18 +2049,6 @@ public class EditPostActivity extends AppCompatActivity implements
         return mIsNewPost;
     }
 
-    /*
-     * returns true if the user has permission to publish the post - assumed to be true for
-     * dot.org sites because we can't retrieve their capabilities
-     */
-    private boolean userCanPublishPosts() {
-        if (SiteUtils.isAccessedViaWPComRest(mSite)) {
-            return mSite.getHasCapabilityPublishPosts();
-        } else {
-            return true;
-        }
-    }
-
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
         boolean mDoFinishActivity;
@@ -2073,7 +2061,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected Void doInBackground(Void... params) {
             // mark as pending if the user doesn't have publishing rights
-            if (!userCanPublishPosts()) {
+            if (!UploadUtils.userCanPublish(mSite)) {
                 switch (PostStatus.fromPost(mPost)) {
                     case UNKNOWN:
                     case PUBLISHED:
@@ -2217,7 +2205,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     // particular case: if user is submitting for review (that is,
                     // can't publish posts directly to this site), update the status
-                    if (!userCanPublishPosts()) {
+                    if (!UploadUtils.userCanPublish(mSite)) {
                         mPost.setStatus(PostStatus.PENDING.toString());
                     }
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
@@ -2332,11 +2320,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
-                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
-                            && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                            && isNotRestarting) {
+                    /*
+                     * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
+                     * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
+                     * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
+                      * user didn't confirm the changes in this code path.
+                     */
+                    boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mPost.isLocalDraft();
+                    if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
+                            && isNotRestarting && isWpComOrIsLocalDraft) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {

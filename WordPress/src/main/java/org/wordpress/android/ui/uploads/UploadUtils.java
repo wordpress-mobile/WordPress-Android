@@ -256,7 +256,7 @@ public class UploadUtils {
 
         boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
 
-        PostUtils.preparePostForPublish(post);
+        PostUtils.preparePostForPublish(post, site);
 
         // save the post in the DB so the UploadService will get the latest change
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
@@ -267,12 +267,20 @@ public class UploadUtils {
         PostUtils.trackSavePostAnalytics(post, site);
     }
 
+    /*
+     * returns true if the user has permission to publish the post - assumed to be true for
+     * dot.org sites because we can't retrieve their capabilities
+     */
+    public static boolean userCanPublish(SiteModel site) {
+        return !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
+    }
+
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
                                                      boolean isError,
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
-        boolean userCanPublish = !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
+        boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
