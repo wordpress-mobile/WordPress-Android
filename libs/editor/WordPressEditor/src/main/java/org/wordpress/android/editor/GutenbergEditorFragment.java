@@ -121,7 +121,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public Bundle getTranslations() {
         Bundle translations = new Bundle();
         Locale defaultLocale = new Locale("en");
-        Resources currentResources = getActivity().getApplicationContext().getResources();
+        Resources currentResources = getActivity().getResources();
         Configuration currentConfiguration = currentResources.getConfiguration();
         // if the current locale of the app is english stop here and return an empty map
         if (currentConfiguration.locale.equals(defaultLocale)) {
