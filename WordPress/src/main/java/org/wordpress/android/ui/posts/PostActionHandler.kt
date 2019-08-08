@@ -120,6 +120,12 @@ class PostActionHandler(
     }
 
     private fun cancelPendingAutoUpload(post: PostModel) {
+        /**
+         * `changesConfirmedContentHashcode` field holds a hashcode of the post content at the time when user pressed
+         * updated/publish/sync/submit/.. buttons. Clearing the hashcode will prevent the PostUploadHandler to
+         * auto-upload the changes - it'll only remote-auto-save them -> which is exactly what the cancel action is
+         * supposed to do.
+         */
         post.changesConfirmedContentHashcode = 0
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
 
