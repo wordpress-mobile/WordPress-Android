@@ -2333,10 +2333,16 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 if (shouldSave) {
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
+                    /*
+                     * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
+                     * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
+                     * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
+                      * user didn't confirm the changes in this code path.
+                     */
+                    boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mPost.isLocalDraft();
                     if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                            && isNotRestarting && mSite.isUsingWpComRestApi()) {
+                            && isNotRestarting && isWpComOrIsLocalDraft) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        // this method will invoke remote-auto-save which isn't supported on self-hosted sites
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
