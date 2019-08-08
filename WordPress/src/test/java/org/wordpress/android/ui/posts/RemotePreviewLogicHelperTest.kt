@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
+import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -43,6 +44,8 @@ class RemotePreviewLogicHelperTest {
     @Mock
     private lateinit var postUtilsWrapper: PostUtilsWrapper
 
+    private var uploadActionUseCase = UploadActionUseCase(mock(), mock(), mock())
+
     private lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
 
     @Before
@@ -50,7 +53,8 @@ class RemotePreviewLogicHelperTest {
         remotePreviewLogicHelper = RemotePreviewLogicHelper(
                 networkUtilsWrapper,
                 activityLauncherWrapper,
-                postUtilsWrapper
+                postUtilsWrapper,
+                uploadActionUseCase
         )
 
         doReturn(true).whenever(site).isUsingWpComRestApi

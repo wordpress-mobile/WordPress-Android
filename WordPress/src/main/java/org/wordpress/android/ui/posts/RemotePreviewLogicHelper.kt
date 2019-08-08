@@ -5,11 +5,11 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
-import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD_AS_DRAFT
+import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.REMOTE_AUTO_SAVE
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD_AS_DRAFT
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +18,8 @@ import javax.inject.Singleton
 class RemotePreviewLogicHelper @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLauncherWrapper: ActivityLauncherWrapper,
-    private val postUtilsWrapper: PostUtilsWrapper
+    private val postUtilsWrapper: PostUtilsWrapper,
+    private val uploadActionUseCase: UploadActionUseCase
 ) {
     enum class RemotePreviewType {
         NOT_A_REMOTE_PREVIEW,
@@ -68,7 +69,7 @@ class RemotePreviewLogicHelper @Inject constructor(
         // (eg. during and editing session)
         val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
-        val uploadAction = UploadUtils.getPostUploadAction(updatedPost)
+        val uploadAction = uploadActionUseCase.getUploadAction(updatedPost)
 
         return when {
             shouldUpload(updatedPost, uploadAction) -> {
@@ -124,11 +125,11 @@ class RemotePreviewLogicHelper @Inject constructor(
         }
     }
 
-    private fun shouldUpload(post: PostModel, action: PostUploadAction): Boolean {
+    private fun shouldUpload(post: PostModel, action: UploadAction): Boolean {
         return (post.isLocallyChanged || post.isLocalDraft) && (action == UPLOAD_AS_DRAFT || action == UPLOAD)
     }
 
-    private fun shouldRemoteAutoSave(post: PostModel, action: PostUploadAction): Boolean {
+    private fun shouldRemoteAutoSave(post: PostModel, action: UploadAction): Boolean {
         return post.isLocallyChanged && action == REMOTE_AUTO_SAVE
     }
 }

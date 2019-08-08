@@ -37,6 +37,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
+import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
@@ -58,6 +59,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
     @Inject internal lateinit var previewStateHelper: PreviewStateHelper
     @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -256,7 +258,8 @@ class PostsListActivity : AppCompatActivity(),
                 handleUploadAction(
                         uploadAction,
                         this@PostsListActivity,
-                        findViewById(R.id.coordinator)
+                        findViewById(R.id.coordinator),
+                        uploadActionUseCase
                 )
             }
         })
