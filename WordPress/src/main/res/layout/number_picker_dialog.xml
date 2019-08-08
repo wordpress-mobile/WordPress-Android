@@ -54,8 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:duplicateParentState="true"
-            android:theme="@style/NumberPickerTheme"
-            android:paddingTop="36dp"/>
+            android:theme="@style/NumberPickerTheme"/>
 
         <View
             android:layout_width="match_parent"
