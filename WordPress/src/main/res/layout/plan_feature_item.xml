@@ -8,6 +8,7 @@
     android:layout_centerInParent="true"
     android:layout_marginBottom="@dimen/margin_large"
     android:layout_marginTop="@dimen/margin_large"
+    android:focusable="true"
     android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
@@ -17,7 +18,7 @@
         android:gravity="start"
         android:textAlignment="viewStart"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/neutral_700"
+        android:textColor="@color/neutral_70"
         tools:text="Feature Name">
     </org.wordpress.android.widgets.WPTextView>
 
@@ -26,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-        android:textColor="@color/neutral_400"
+        android:textColor="@color/neutral_40"
         tools:text="Feature Description">
     </org.wordpress.android.widgets.WPTextView>
 

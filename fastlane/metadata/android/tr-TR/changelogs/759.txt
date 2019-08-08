@@ -1,0 +1,4 @@
+12.9:
+* Sahipsiz alan adı kredisi olan müşteriler, alan adlarını uygulamaya kaydedebilir.
+* Düzenleme sırasında daha fazla yer açmak için yorum düzenleyiciyi tam ekrana genişletebilirsiniz.
+* Blok düzenleyicinin birkaç geliştirmesi var: Video blokları var ve desteklenmeyen blokları kullanırken içerik kaybına neden olan bazı sorunlar çözüldü.

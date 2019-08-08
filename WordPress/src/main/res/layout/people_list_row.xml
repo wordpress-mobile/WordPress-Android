@@ -43,7 +43,7 @@
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:textSize="@dimen/text_sz_large"
             tools:text="display_name"/>
 

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-10 00:54:05+0000
+Translation-Revision-Date: 2019-07-26 16:07:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="description_expand">Erweitern</string>
+    <string name="description_collapse">Einklappen</string>
+    <string name="editor_retry_failed_uploads">Hochladen erneut starten</string>
+    <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. Das Speichern oder Veröffentlichen\n deines Beitrags ist in diesem Status nicht möglich.</string>
+    <string name="my_site_verify_your_email_without_email">Prüfe deinen Posteingang – eine Anleitung wurde an deine E-Mail-Adresse gesendet</string>
+    <string name="my_site_verify_your_email">Prüfe deinen Posteingang – eine Anleitung wurde an %s gesendet</string>
+    <string name="error_media_recover_post_not_submitted">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht übermittelt.</string>
+    <string name="error_media_recover_post_not_scheduled">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht geplant.</string>
+    <string name="error_media_recover_post_not_published">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht veröffentlicht.</string>
+    <string name="error_media_recover_post">Medien konnten nicht hochgeladen werden</string>
+    <string name="link_dialog_button_cancel">Abbrechen</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Link entfernen</string>
+    <string name="link_dialog_title">Link einfügen</string>
+    <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen hier tippen.</string>
+    <string name="dialog_gutenberg_informative_description_page">Für diese Seite wird der Block-Editor verwendet. Dies ist der Standard-Editor für neue Seiten. Um den klassischen Editor zu aktivieren, gehe zu „Ich“ > „App-Einstellungen“.</string>
+    <string name="dialog_gutenberg_informative_description_post">Für diesen Beitrag wird der Block-Editor verwendet. Dies ist der Standard-Editor für neue Beiträge. Um den klassischen Editor zu aktivieren, gehe zu „Ich“ > „App-Einstellungen“.</string>
+    <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
     <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
     <string name="post_list_search_nothing_found">Es gibt keine Beiträge, die deiner Suche entsprechen</string>
@@ -192,8 +212,6 @@ Language: de
     <string name="stats_loading_error">Daten nicht geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bearbeite neue Beiträge und Seiten mit dem Block-Editor.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Block-Editor benutzen</string>
-    <string name="dialog_gutenberg_informative_description_page">Diese Seite wurde ursprünglich im Block-Editor erstellt, daher haben wir sie auch auf dieser Seite aktiviert.\n        Wechsle jederzeit wieder zu Classic, indem du auf ⋮ in der oberen Leiste klickst.</string>
-    <string name="dialog_gutenberg_informative_description_post">Dieser Beitrag wurde ursprünglich im Block Editor erstellt, also haben wir ihn auch für diesen Beitrag aktiviert.\n        Wechsle jederzeit wieder zu Classic, indem du auf --- in der oberen Leiste tippst.</string>
     <string name="dialog_gutenberg_informative_title">Block-Editor aktiviert</string>
     <string name="exit">beenden</string>
     <string name="quick_start_sites_type_subtitle">%1$d von %2$d komplett</string>
@@ -281,7 +299,6 @@ Language: de
     <string name="dialog_confirm_load_remote_post_body_2">Lokal\nGespeichert unter %s\n\nWeb\nGespeichert unter %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Dieser Beitrag hat zwei Versionen, die im Konflikt stehen. Wähle die Version aus, die du verwerfen möchtest.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Lösen des Synchronisierungskonflikts.</string>
-    <string name="local_changes_discarding_no_connection">Für diese Aktion ist eine Verbindung erforderlich. Bitte überprüfe deine Verbindung und versuche es erneut.</string>
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
     <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
     <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte später erneut versuchen</string>
@@ -494,11 +511,6 @@ Language: de
     <string name="blavatar_desc">Website-Icon</string>
     <string name="theme_image_desc">Theme-Bild</string>
     <string name="featured_image_desc">Beitragsbild</string>
-    <string name="local_changes_discarding_error">Beim Verwerfen der lokalen Änderungen ist ein Fehler aufgetreten. Bitte wende dich für Unterstützung an den Support.</string>
-    <string name="local_changes_discarding">Lokale Änderungen werden verworfen</string>
-    <string name="local_changes_discarded">Lokale Änderungen verworfen</string>
-    <string name="menu_discard_changes">Lokale Änderungen verwerfen</string>
-    <string name="button_discard_changes">Änderungen verwerfen</string>
     <string name="button_discard">Verwerfen</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="reader_blavatar_desc">Website-Icon</string>
@@ -911,7 +923,6 @@ Language: de
     <string name="login_text_otp_another">Sende mir stattdessen einen anderen Code per SMS.</string>
     <string name="enter_verification_code_sms">Wir haben eine Textnachricht an die Telefonnummer mit den Endziffern %s gesendet. Gib bitte den Verifizierungscode aus der SMS ein.</string>
     <string name="error_generic_error">Der Vorgang konnte nicht ausgeführt werden.</string>
-    <string name="error_media_recover_post">Die Medien dieses Beitrags konnten nicht hochgeladen werden.</string>
     <string name="image_size">Größe</string>
     <string name="uploading_subtitle_media_only_one">1 Datei verbleibend</string>
     <string name="uploading_subtitle_media_only">%1$d von %2$d Dateien verbleibend</string>
@@ -1409,7 +1420,6 @@ Language: de
     <string name="start_over">Neu beginnen</string>
     <string name="me_btn_app_settings">App Einstellungen</string>
     <string name="editor_remove_failed_uploads">Fehlgeschlagene Uploads entfernen</string>
-    <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. In diesem Zustand ist das Speichern oder Veröffentlichen deiner Beiträge nicht möglich. Willst du alle fehlgeschlagenen Medien-Uploads löschen?</string>
     <string name="site_settings_advanced_header">Erweitert</string>
     <string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>
     <string name="comments_empty_list_filtered_pending">Keine ausstehenden Kommentare</string>
@@ -1643,7 +1653,6 @@ Language: de
     <string name="stats_enable_rest_api_in_jetpack">Um deine Statistik anzusehen, aktiviere das JSON API-Modul in Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Kommentare</string>
     <string name="reader_short_comment_count_one">1 Kommentar</string>
-    <string name="reader_label_submit_comment">SENDEN</string>
     <string name="reader_hint_comment_on_post">Antwort auf Beitrag…</string>
     <string name="reader_discover_visit_blog">%s besuchen</string>
     <string name="reader_discover_attribution_blog">Ursprünglich veröffentlicht auf %s</string>

@@ -1,0 +1,4 @@
+12.9:
+* Customers with unclaimed domain credits can register domains in the app.
+* You can expand the Comment Editor to Full Screen for more space while editing.
+* The Block editor has a few improvements:Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.

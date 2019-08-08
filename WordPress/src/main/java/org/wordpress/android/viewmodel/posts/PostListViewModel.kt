@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostListType.SEARCH
@@ -115,12 +116,14 @@ class PostListViewModel @Inject constructor(
     private var searchQuery: String? = null
     private var searchJob: Job? = null
     private var searchProgressJob: Job? = null
+    private lateinit var authorFilterSelection: AuthorFilterSelection
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
     fun start(
         postListViewModelConnector: PostListViewModelConnector,
+        value: AuthorFilterSelection,
         photonWidth: Int,
         photonHeight: Int
     ) {
@@ -131,13 +134,19 @@ class PostListViewModel @Inject constructor(
         this.photonWidth = photonWidth
         connector = postListViewModelConnector
 
-        if (connector.postListType != SEARCH) {
-            initList(dataSource, lifecycle)
-        }
-
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
-        fetchFirstPage()
+
+        if (connector.postListType == SEARCH) {
+            this.authorFilterSelection = EVERYONE
+        } else {
+            this.authorFilterSelection = value
+            /*
+             * We don't want to initialize the list with empty search query in search mode as it'd send an unnecessary
+             * request to fetch ids of all posts on the site.
+             */
+            initList(dataSource, lifecycle)
+        }
     }
 
     private fun initList(dataSource: PostListItemDataSource, lifecycle: Lifecycle) {
@@ -181,6 +190,7 @@ class PostListViewModel @Inject constructor(
         }
 
         this.pagedListWrapper = pagedListWrapper
+        fetchFirstPage()
     }
 
     private fun clearLiveDataSources() {
@@ -197,7 +207,7 @@ class PostListViewModel @Inject constructor(
 
     private fun initListDescriptor(searchQuery: String?): PostListDescriptor {
         return if (connector.site.isUsingWpComRestApi) {
-            val author: AuthorFilter = when (connector.authorFilter) {
+            val author: AuthorFilter = when (authorFilterSelection) {
                 ME -> SpecificAuthor(accountStore.account.userId)
                 EVERYONE -> Everyone
             }
@@ -270,7 +280,6 @@ class PostListViewModel @Inject constructor(
                 searchJob = null
                 if (isActive) {
                     initList(dataSource, lifecycle)
-                    fetchFirstPage()
                 }
             }
         }
@@ -375,4 +384,13 @@ class PostListViewModel @Inject constructor(
                     photonHeight,
                     !SiteUtils.isPhotonCapable(connector.site)
             )
+
+    fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {
+        if (connector.postListType != SEARCH && this.authorFilterSelection != authorFilterSelection) {
+            this.authorFilterSelection = authorFilterSelection
+            initList(dataSource, lifecycle)
+            return true
+        }
+        return false
+    }
 }

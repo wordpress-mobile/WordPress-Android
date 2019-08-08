@@ -192,11 +192,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 if (currentValue == 0) {
                     mValue.setTextColor(getResources().getColor(R.color.neutral));
                 } else {
-                    mValue.setTextColor(getResources().getColor(R.color.primary_500));
+                    mValue.setTextColor(getResources().getColor(R.color.primary_50));
                 }
             }
 
-            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.neutral_700);
+            ColorUtils.INSTANCE.setImageResourceWithTint(mIcon, getTabIcon(), R.color.neutral_70);
 
             if (mIsLastItem) {
                 if (mIsChecked) {
@@ -457,7 +457,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mainSeriesOnScreen.getStyle().highlightColor =
                 getResources().getColor(R.color.accent);
         mainSeriesOnScreen.getStyle().outerhighlightColor =
-                getResources().getColor(R.color.accent_100);
+                getResources().getColor(R.color.accent_10);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
         mGraphView.addSeries(mainSeriesOnScreen);
 
@@ -466,7 +466,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
             secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
             secondarySeries.getStyle().color = getResources().getColor(R.color.primary_dark);
-            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.accent_600);
+            secondarySeries.getStyle().highlightColor = getResources().getColor(R.color.accent_60);
             mGraphView.addSeries(secondarySeries);
         }
 
@@ -490,7 +490,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.getGraphViewStyle().setTextSize(
                 getResources().getDimensionPixelOffset(R.dimen.stats_legent_text_size));
-        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_600));
+        mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.neutral_60));
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
                 mainSeriesItems, selectedStatsType));
