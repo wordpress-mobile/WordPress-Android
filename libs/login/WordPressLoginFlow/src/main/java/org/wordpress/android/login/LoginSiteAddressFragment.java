@@ -412,13 +412,24 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             // TODO: If we plan to keep this logic we should convert these labels to constants
             HashMap<String, String> properties = new HashMap<>();
             properties.put("url", event.info.url);
-            properties.put("urlAfterRedirects", event.info.urlAfterRedirects);
+            properties.put("url_after_redirects", event.info.urlAfterRedirects);
             properties.put("exists", Boolean.toString(event.info.exists));
-            properties.put("hasJetpack", Boolean.toString(event.info.hasJetpack));
-            properties.put("isJetpackActive", Boolean.toString(event.info.isJetpackActive));
-            properties.put("isJetpackConnected", Boolean.toString(event.info.isJetpackConnected));
-            properties.put("isWordPress", Boolean.toString(event.info.isWordPress));
-            properties.put("isWPCom", Boolean.toString(event.info.isWPCom));
+            properties.put("has_jetpack", Boolean.toString(event.info.hasJetpack));
+            properties.put("is_jetpack_active", Boolean.toString(event.info.isJetpackActive));
+            properties.put("is_jetpack_connected", Boolean.toString(event.info.isJetpackConnected));
+            properties.put("is_wordpress", Boolean.toString(event.info.isWordPress));
+            properties.put("is_wp_com", Boolean.toString(event.info.isWPCom));
+
+            // Determining if jetpack is actually installed takes additional logic. This final
+            // calculated event property will make querying this event more straight-forward:
+            boolean hasJetpack = false;
+            if (event.info.isWPCom && event.info.hasJetpack) {
+                // This is likely an atomic site.
+                hasJetpack = true;
+            } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
+                hasJetpack = true;
+            }
+            properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
 
             if (!event.info.exists) {
@@ -428,13 +439,6 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 // Not a WordPress site
                 showError(R.string.enter_wordpress_site);
             } else {
-                boolean hasJetpack = false;
-                if (event.info.isWPCom && event.info.hasJetpack) {
-                    // This is likely an atomic site.
-                    hasJetpack = true;
-                } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
-                    hasJetpack = true;
-                }
                 mLoginListener.gotConnectedSiteInfo(
                         event.info.url,
                         event.info.urlAfterRedirects,

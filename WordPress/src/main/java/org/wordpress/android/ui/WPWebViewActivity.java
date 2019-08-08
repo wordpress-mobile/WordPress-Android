@@ -249,8 +249,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
 
         String originalUrl = extras.getString(URL_TO_LOAD);
-        Uri uri = Uri.parse(originalUrl);
-        actionBar.setSubtitle(uri.getHost());
+        if (originalUrl != null) {
+            Uri uri = Uri.parse(originalUrl);
+            actionBar.setSubtitle(uri.getHost());
+        }
     }
 
     private void initRetryButton() {
