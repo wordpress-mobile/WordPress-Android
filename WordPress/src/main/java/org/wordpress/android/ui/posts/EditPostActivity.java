@@ -2334,8 +2334,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (shouldSave) {
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
                     if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                            && isNotRestarting) {
+                            && isNotRestarting && mSite.isUsingWpComRestApi()) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                        // this method will invoke remote-auto-save which isn't supported on self-hosted sites
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
