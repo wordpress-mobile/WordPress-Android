@@ -74,13 +74,12 @@ class UploadStarterConcurrentTest {
             postStore = postStore,
             pageStore = pageStore,
             siteStore = mock(),
-            uploadStore = mock(),
             bgDispatcher = Dispatchers.Default,
             ioDispatcher = Dispatchers.IO,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
-            postUtilsWrapper = createMockedPostUtilsWrapper(),
             connectionStatus = mock(),
-            uploadServiceFacade = uploadServiceFacade
+            uploadServiceFacade = uploadServiceFacade,
+            uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade)
     )
 
     private companion object Fixtures {
