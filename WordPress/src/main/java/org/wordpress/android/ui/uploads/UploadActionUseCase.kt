@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.uploads
 
+import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.UploadStore
@@ -11,12 +12,11 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD_
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val MAXIMUM_AUTO_UPLOAD_RETRIES = 10
 private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
 
-@Singleton
+@Reusable
 class UploadActionUseCase @Inject constructor(
     private val uploadStore: UploadStore,
     private val postUtilsWrapper: PostUtilsWrapper,
