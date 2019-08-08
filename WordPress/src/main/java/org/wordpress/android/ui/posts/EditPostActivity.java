@@ -2319,7 +2319,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
-                // if post was modified or has unpublished local changes, save it
+                // if post was modified during this editing session, save it
                 boolean shouldSave = shouldSavePost() || forceSave;
 
                 // if post is publishable or not new, sync it
@@ -2369,16 +2369,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean shouldSavePost() {
-        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                   || PostStatus.fromPost(mPost) == PostStatus.PENDING)
-                                                      && isPublishable && hasLocalChanges;
 
-        // if post was modified or has unpublished local changes, save it
-        return (mPostSnapshotWhenEditorOpened != null && hasChanges)
-                             || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
+        // if post was modified during this editing session, save it
+        return (mPostSnapshotWhenEditorOpened != null && hasChanges) || (isPublishable && isNewPost());
     }
 
 
