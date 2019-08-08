@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -499,14 +500,18 @@ public class PostUtils {
         return previewUrl;
     }
 
-    public static void preparePostForPublish(PostModel post) {
+    public static void preparePostForPublish(PostModel post, SiteModel site) {
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
 
         // We need to update the post status and mark the post as locally changed. If we didn't mark it as locally
         // changed the UploadStarter wouldn't upload the post if the only change the user did was clicking on Publish
         // button.
-        post.setStatus(PostStatus.PUBLISHED.toString());
+        if (UploadUtils.userCanPublish(site)) {
+            post.setStatus(PostStatus.PUBLISHED.toString());
+        } else {
+            post.setStatus(PostStatus.PENDING.toString());
+        }
         if (!post.isLocalDraft()) {
             post.setIsLocallyChanged(true);
         }

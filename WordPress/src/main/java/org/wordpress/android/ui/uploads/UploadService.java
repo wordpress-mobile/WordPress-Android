@@ -242,8 +242,9 @@ public class UploadService extends Service {
             // if the user tapped on the PUBLISH quick action, make this Post publishable and track
             // analytics before starting the upload process.
             if (intent.getBooleanExtra(KEY_CHANGE_STATUS_TO_PUBLISH, false)) {
-                makePostPublishable(post);
-                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
+                SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+                makePostPublishable(post, site);
+                PostUtils.trackSavePostAnalytics(post, site);
             }
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
@@ -296,8 +297,8 @@ public class UploadService extends Service {
      * Do not use this method unless the user explicitly confirmed changes - eg. clicked on publish button or
      * similar.
      */
-    private void makePostPublishable(@NonNull PostModel post) {
-        PostUtils.preparePostForPublish(post);
+    private void makePostPublishable(@NonNull PostModel post, SiteModel site) {
+        PostUtils.preparePostForPublish(post, site);
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 
