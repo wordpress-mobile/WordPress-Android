@@ -176,7 +176,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 translations.putStringArrayList(
                         defaultResourceString,
                         new ArrayList<>(Arrays.asList(currentResourceString))
-                                               );
+                );
             }
         }
         return translations;
