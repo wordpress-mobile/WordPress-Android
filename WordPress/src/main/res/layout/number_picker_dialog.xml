@@ -49,12 +49,13 @@
             android:layout_height="1dp"
             android:background="@color/neutral_0" />
 
-        <org.wordpress.android.ui.WPNumberPicker
+        <NumberPicker
             android:id="@+id/number_picker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:duplicateParentState="true"
-            android:paddingTop="36dp" />
+            android:theme="@style/NumberPickerTheme"
+            android:paddingTop="36dp"/>
 
         <View
             android:layout_width="match_parent"
