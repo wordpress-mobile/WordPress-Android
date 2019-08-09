@@ -13,6 +13,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
+import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 
 /**
@@ -66,6 +67,7 @@ class GiphyMediaViewHolder(
                 onLongClickListener(mediaViewModel)
                 true
             }
+            redirectContextClickToLongPressListener()
         }
     }
 

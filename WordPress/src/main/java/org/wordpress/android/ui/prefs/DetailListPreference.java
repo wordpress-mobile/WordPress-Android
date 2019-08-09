@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.utils.UiHelpers;
 
 import java.util.Locale;
 
@@ -149,6 +150,8 @@ public class DetailListPreference extends ListPreference
             //noinspection deprecation
             negative.setTextColor(res.getColor(R.color.primary_40));
         }
+
+        UiHelpers.Companion.adjustDialogSize(mDialog);
     }
 
     @Override

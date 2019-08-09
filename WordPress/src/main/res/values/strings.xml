@@ -353,7 +353,7 @@
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
     <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
-    
+
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -1328,6 +1328,15 @@
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
+    <string name="post_settings_time_and_date">Time and Date</string>
+    <string name="post_settings_notification">Notification</string>
+    <string name="post_settings_add_to_calendar">Add to calendar</string>
+
+    <string name="post_notification_off">Off</string>
+    <string name="post_notification_one_hour_before">1 hour before</string>
+    <string name="post_notification_ten_minutes_before">10 minutes before</string>
+    <string name="post_notification_when_published">When published</string>
+    <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
 
     <!-- post date selection -->
     <string name="publish_date">Publish</string>
@@ -1339,6 +1348,15 @@
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>
 
+    <!-- post schedule notifications -->
+    <string name="notification_scheduled_post">Scheduled post</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Scheduled post: 1 hour reminder</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
+    <string name="notification_post_has_been_published">\"%s\" has been published</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
+    <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
 
     <!-- location -->
     <string name="post_settings_location">Location</string>
@@ -2449,7 +2467,7 @@
     <string name="reader_photo_view_desc">photo</string>
     <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
-    <string name="open_external_link_desc">open external link</string>
+    <string name="open_external_link_desc">Open external link</string>
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
@@ -2483,6 +2501,11 @@
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
+    <string name="navigate_forward_desc">Go forward</string>
+    <string name="navigate_back_desc">Go back</string>
+    <string name="share_desc">Share</string>
+    <string name="preview_type_desc">Select preview type</string>
+    <string name="close_dialog_button_desc">Close Dialog</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
@@ -2602,6 +2625,10 @@
     <string name="post_list_search_prompt">Search published posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
 
+
+    <!-- Web Preview -->
+    <string name="web_preview_default">Default</string>
+    <string name="web_preview_desktop">Desktop</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
