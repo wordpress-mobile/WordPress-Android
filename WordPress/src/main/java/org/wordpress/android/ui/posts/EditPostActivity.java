@@ -2221,14 +2221,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
-                boolean hasFailedMediaUploads = mEditorFragment.hasFailedMediaUploads()
-                                                || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null;
-
-                if (!hasFailedMediaUploads) {
-                    AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + mPost.getTitle());
-                    // the user explicitly confirmed an intention to upload the post
-                    mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
-                }
+                AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + mPost.getTitle());
+                // the user explicitly confirmed an intention to upload the post
+                mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
 
                 // if post was modified or has unsaved local changes and is publishable, save it
                 saveResult(isPublishable, false, false);
@@ -2238,7 +2233,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        if (hasFailedMediaUploads) {
+                        if (mEditorFragment.hasFailedMediaUploads()
+                            || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null) {
                             EditPostActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

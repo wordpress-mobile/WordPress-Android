@@ -821,10 +821,19 @@ public class UploadService extends Service {
             }
 
             if (processWithAztec) {
+                boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
+
                 // do the same within the Post content itself
                 String postContentWithRestartedUploads =
                         AztecEditorFragment.restartFailedMediaToUploading(this, post.getContent());
                 post.setContent(postContentWithRestartedUploads);
+                if (changesConfirmed) {
+                    /*
+                     * We are updating media upload status, but we don't make any undesired changes to the post. We
+                     * need to make sure to retain the confirmation state.
+                     */
+                    post.setChangesConfirmedContentHashcode(post.contentHashcode());
+                }
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
             }
 
