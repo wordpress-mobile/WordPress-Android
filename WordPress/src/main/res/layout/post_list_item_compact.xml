@@ -104,8 +104,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_medium"
-            android:ellipsize="end"
-            android:maxLines="1"
             android:textAlignment="textStart"
             android:textColor="@color/warning_50"
             app:layout_constraintBottom_toBottomOf="@+id/date"

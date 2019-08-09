@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -243,8 +242,9 @@ public class UploadService extends Service {
             // if the user tapped on the PUBLISH quick action, make this Post publishable and track
             // analytics before starting the upload process.
             if (intent.getBooleanExtra(KEY_CHANGE_STATUS_TO_PUBLISH, false)) {
-                makePostPublishable(post);
-                PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
+                SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+                makePostPublishable(post, site);
+                PostUtils.trackSavePostAnalytics(post, site);
             }
 
             if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
@@ -297,11 +297,8 @@ public class UploadService extends Service {
      * Do not use this method unless the user explicitly confirmed changes - eg. clicked on publish button or
      * similar.
      */
-    private void makePostPublishable(@NonNull PostModel post) {
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
-        post.setStatus(PostStatus.PUBLISHED.toString());
-        AppLog.d(T.POSTS, "Changes explicitly confirmed by the user. Post Title: " + post.getTitle());
-        post.setChangesConfirmedContentHashcode(post.contentHashcode());
+    private void makePostPublishable(@NonNull PostModel post, SiteModel site) {
+        PostUtils.preparePostForPublish(post, site);
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 

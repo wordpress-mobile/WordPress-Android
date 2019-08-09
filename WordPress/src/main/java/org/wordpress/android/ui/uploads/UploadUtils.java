@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
@@ -42,10 +44,6 @@ import java.util.List;
 
 public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
-
-    public enum PostUploadAction {
-        REMOTE_AUTO_SAVE, UPLOAD_AS_DRAFT, UPLOAD
-    }
 
     /**
      * Returns a post-type specific error message string.
@@ -116,6 +114,7 @@ public class UploadUtils {
                                                      @NonNull Intent data,
                                                      @NonNull final PostModel post,
                                                      @NonNull final SiteModel site,
+                                                     @NonNull final UploadAction uploadAction,
                                                      View.OnClickListener publishPostListener) {
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
@@ -128,7 +127,7 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, R.string.error_publish_no_network);
+            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction));
             return;
         }
 
@@ -248,20 +247,25 @@ public class UploadUtils {
             return;
         }
 
-        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         boolean isFirstTimePublish = PostUtils.isFirstTimePublish(post);
-        post.setStatus(PostStatus.PUBLISHED.toString());
 
-        AppLog.d(T.POSTS, "User explicitly confirmed changes. Post title: " + post.getTitle());
-        // the changes were explicitly confirmed by the user
-        post.setChangesConfirmedContentHashcode(post.contentHashcode());
+        PostUtils.preparePostForPublish(post, site);
 
         // save the post in the DB so the UploadService will get the latest change
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
-        UploadService.uploadPost(activity, post, isFirstTimePublish);
-
+        if (NetworkUtils.isNetworkAvailable(activity)) {
+            UploadService.uploadPost(activity, post, isFirstTimePublish);
+        }
         PostUtils.trackSavePostAnalytics(post, site);
+    }
+
+    /*
+     * returns true if the user has permission to publish the post - assumed to be true for
+     * dot.org sites because we can't retrieve their capabilities
+     */
+    public static boolean userCanPublish(SiteModel site) {
+        return !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
     }
 
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
@@ -269,7 +273,7 @@ public class UploadUtils {
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
-        boolean userCanPublish = !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
+        boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
@@ -398,16 +402,29 @@ public class UploadUtils {
         }
     }
 
-    public static PostUploadAction getPostUploadAction(PostModel post) {
-        if (post.getChangesConfirmedContentHashcode() == post.contentHashcode()) {
-            // We are sure we can push the post as the user has explicitly confirmed the changes
-            return PostUploadAction.UPLOAD;
-        } else if (post.isLocalDraft()) {
-            // Local draft can always be uploaded as DRAFT as it doesn't exist on the server yet
-            return PostUploadAction.UPLOAD_AS_DRAFT;
+    @StringRes
+    private static int getDeviceOfflinePostNotUploadedMessage(@NonNull final PostModel post,
+                                                              @NonNull final UploadAction uploadAction) {
+        if (uploadAction != UploadAction.UPLOAD) {
+            return R.string.error_publish_no_network;
         } else {
-            return PostUploadAction.REMOTE_AUTO_SAVE;
+            switch (PostStatus.fromPost(post)) {
+                case PUBLISHED:
+                case UNKNOWN:
+                    return R.string.post_waiting_for_connection_publish;
+                case DRAFT:
+                    return R.string.error_publish_no_network;
+                case PRIVATE:
+                    return R.string.post_waiting_for_connection_private;
+                case PENDING:
+                    return R.string.post_waiting_for_connection_pending;
+                case SCHEDULED:
+                    return R.string.post_waiting_for_connection_scheduled;
+                case TRASHED:
+                    throw new IllegalArgumentException("Trashing posts should be handled in a different code path.");
+            }
         }
+        throw new RuntimeException("This code should be unreachable. Missing case in switch statement.");
     }
 
     public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostModel post) {

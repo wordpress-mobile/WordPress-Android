@@ -39,8 +39,9 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
@@ -66,6 +67,7 @@ class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
+    uploadActionUseCase: UploadActionUseCase,
     uploadStore: UploadStore,
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -130,7 +132,10 @@ class PostListMainViewModel @Inject constructor(
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
 
-    private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
+    private val uploadStatusTracker = PostListUploadStatusTracker(
+            uploadStore = uploadStore,
+            uploadActionUseCase = uploadActionUseCase
+    )
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
     private val postFetcher by lazy {

@@ -32,6 +32,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.NothingToUpload
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.widgets.PostListButtonType
@@ -47,7 +48,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
-import java.lang.Math.max
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
@@ -71,7 +71,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus, postStatus)
+        val uploadUiState = createUploadUiState(uploadStatus, post)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -197,6 +197,20 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             }
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
+            uploadUiState is UploadWaitingForConnection -> {
+                when (uploadUiState.postStatus) {
+                    UNKNOWN, PUBLISHED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_publish))
+                    PRIVATE -> labels.add(UiStringRes(R.string.post_waiting_for_connection_private))
+                    PENDING -> labels.add(UiStringRes(R.string.post_waiting_for_connection_pending))
+                    SCHEDULED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_scheduled))
+                    TRASHED -> AppLog.e(
+                            POSTS,
+                            "Developer error: This state shouldn't happen. Trashed post is in " +
+                                    "UploadWaitingForConnection state."
+                    )
+                    DRAFT -> labels.add(UiStringRes(R.string.local_changes))
+                }
+            }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
         }
 
@@ -252,7 +266,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
-        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
+        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
+                uploadUiState is UploadWaitingForConnection
 
         return when {
             isError -> ERROR_COLOR
@@ -344,7 +359,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
                     .map(createSinglePostListItem)
             val itemsUnderMore = buttonTypes.subList(
-                    max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
+                    kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
                     buttonTypes.size
             )
                     .map(createSinglePostListItem)
@@ -369,14 +384,16 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
         data class UploadFailed(val error: UploadError) : PostUploadUiState()
+        data class UploadWaitingForConnection(val postStatus: PostStatus) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
     }
 
     private fun createUploadUiState(
         uploadStatus: PostListItemUploadStatus,
-        postStatus: PostStatus
+        post: PostModel
     ): PostUploadUiState {
+        val postStatus = PostStatus.fromPost(post)
         return when {
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
             uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
@@ -385,6 +402,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued
+            uploadStatus.isEligibleForAutoUpload -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
         }
     }

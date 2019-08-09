@@ -37,6 +37,7 @@ import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.trackPostListAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -67,6 +68,7 @@ class PostListViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val uploadStarter: UploadStarter,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val uploadUtilsWrapper: UploadUtilsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
@@ -355,9 +357,9 @@ class PostListViewModel @Inject constructor(
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
                     post = post,
-                    uploadStatus = connector.getUploadStatus(post),
+                    uploadStatus = connector.getUploadStatus(post, connector.site),
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
-                    capabilitiesToPublish = connector.site.hasCapabilityPublishPosts,
+                    capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
                     statsSupported = isStatsSupported,
                     featuredImageUrl =
                     convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),

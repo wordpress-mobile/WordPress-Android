@@ -44,7 +44,8 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 mainDispatcher = Dispatchers.Unconfined,
                 bgDispatcher = Dispatchers.Unconfined,
                 postListEventListenerFactory = mock(),
-                uploadStarter = uploadStarter
+                uploadStarter = uploadStarter,
+                uploadActionUseCase = mock()
         )
     }
 

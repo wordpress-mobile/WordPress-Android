@@ -46,9 +46,6 @@ class PostListDialogHelper(
             // We can only handle one publish dialog at once
             return
         }
-        if (!checkNetworkConnection.invoke()) {
-            return
-        }
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_PUBLISH_POST_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_publish_title),

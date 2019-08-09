@@ -9,7 +9,7 @@ class PostListViewModelConnector(
     val site: SiteModel,
     val postListType: PostListType,
     val postActionHandler: PostActionHandler,
-    val getUploadStatus: (PostModel) -> PostListItemUploadStatus,
+    val getUploadStatus: (PostModel, SiteModel) -> PostListItemUploadStatus,
     val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
     val postFetcher: PostFetcher,
     private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long) -> String?

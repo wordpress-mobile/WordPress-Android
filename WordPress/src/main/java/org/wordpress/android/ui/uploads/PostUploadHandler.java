@@ -80,6 +80,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
+    @Inject UploadActionUseCase mUploadActionUseCase;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -266,7 +267,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
 
-            switch (UploadUtils.getPostUploadAction(mPost)) {
+            switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:
                     AppLog.d(T.POSTS,
                             "Invoking newPushPostAction. Post: " + mPost.getTitle() + " status: " + mPost.getStatus());
@@ -285,6 +286,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                                     .getStatus());
                     mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
                     break;
+                case DO_NOTHING:
+                    throw new RuntimeException("UploadService started but getPostUploadAction() returned DO_NOTHING.");
             }
             return true;
         }

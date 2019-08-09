@@ -922,7 +922,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private PrimaryAction getPrimaryAction() {
-        if (!userCanPublishPosts()) {
+        if (!UploadUtils.userCanPublish(mSite)) {
             // User doesn't have publishing permissions
             switch (PostStatus.fromPost(mPost)) {
                 case SCHEDULED:
@@ -972,7 +972,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private SecondaryAction getSecondaryAction() {
-        if (!userCanPublishPosts()) {
+        if (!UploadUtils.userCanPublish(mSite)) {
             // User doesn't have publishing permissions
             switch (PostStatus.fromPost(mPost)) {
                 case SCHEDULED:
@@ -2056,18 +2056,6 @@ public class EditPostActivity extends AppCompatActivity implements
         return mIsNewPost;
     }
 
-    /*
-     * returns true if the user has permission to publish the post - assumed to be true for
-     * dot.org sites because we can't retrieve their capabilities
-     */
-    private boolean userCanPublishPosts() {
-        if (SiteUtils.isAccessedViaWPComRest(mSite)) {
-            return mSite.getHasCapabilityPublishPosts();
-        } else {
-            return true;
-        }
-    }
-
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
         boolean mDoFinishActivity;
@@ -2080,7 +2068,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected Void doInBackground(Void... params) {
             // mark as pending if the user doesn't have publishing rights
-            if (!userCanPublishPosts()) {
+            if (!UploadUtils.userCanPublish(mSite)) {
                 switch (PostStatus.fromPost(mPost)) {
                     case UNKNOWN:
                     case PUBLISHED:
@@ -2224,7 +2212,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     // particular case: if user is submitting for review (that is,
                     // can't publish posts directly to this site), update the status
-                    if (!userCanPublishPosts()) {
+                    if (!UploadUtils.userCanPublish(mSite)) {
                         mPost.setStatus(PostStatus.PENDING.toString());
                     }
                     mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);

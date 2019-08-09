@@ -101,6 +101,9 @@ class PostListEventListener(
                     )
                 } else {
                     handlePostUpdatedWithoutError.invoke()
+                    invalidateUploadStatus.invoke(
+                            listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId)
+                    )
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {

@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 
@@ -45,7 +46,12 @@ sealed class PostUploadAction {
     class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
 }
 
-fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAttachView: View) {
+fun handleUploadAction(
+    action: PostUploadAction,
+    activity: Activity,
+    snackbarAttachView: View,
+    uploadActionUseCase: UploadActionUseCase
+) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
             UploadUtils.handleEditPostResultSnackbars(
@@ -53,7 +59,8 @@ fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAtt
                     snackbarAttachView,
                     action.data,
                     action.post,
-                    action.site
+                    action.site,
+                    uploadActionUseCase.getUploadAction(action.post)
             ) {
                 action.publishAction()
             }
