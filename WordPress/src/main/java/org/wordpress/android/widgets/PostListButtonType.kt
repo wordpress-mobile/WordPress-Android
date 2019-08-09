@@ -29,7 +29,8 @@ enum class PostListButtonType constructor(
             R.string.button_delete_permanently,
             R.drawable.ic_trash_white_24dp,
             R.color.neutral_50
-    );
+    ),
+    BUTTON_CANCEL_PENDING_AUTO_UPLOAD(14, R.string.cancel, R.drawable.ic_undo_white_24dp, R.color.warning_dark);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }

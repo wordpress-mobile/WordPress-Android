@@ -110,6 +110,7 @@ public class UploadUtils {
     }
 
     public static void handleEditPostResultSnackbars(@NonNull final Activity activity,
+                                                     @NonNull final Dispatcher dispatcher,
                                                      @NonNull View snackbarAttachView,
                                                      @NonNull Intent data,
                                                      @NonNull final PostModel post,
@@ -127,7 +128,12 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction));
+            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
+                    R.string.cancel,
+                    v -> {
+                        int msgRes = cancelPendingAutoUpload(post, dispatcher);
+                        showSnackbar(snackbarAttachView, msgRes);
+                    });
             return;
         }
 
@@ -431,5 +437,38 @@ public class UploadUtils {
         return post.getAutoSaveModified() != null
                && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
                                .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));
+    }
+
+    public static int cancelPendingAutoUpload(PostModel post, Dispatcher dispatcher) {
+        /*
+         * `changesConfirmedContentHashcode` field holds a hashcode of the post content at the time when user pressed
+         * updated/publish/sync/submit/.. buttons. Clearing the hashcode will prevent the PostUploadHandler to
+         * auto-upload the changes - it'll only remote-auto-save them -> which is exactly what the cancel action is
+         * supposed to do.
+         */
+        post.setChangesConfirmedContentHashcode(0);
+        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+
+        int messageRes = 0;
+        switch (PostStatus.fromPost(post)) {
+            case UNKNOWN:
+            case PUBLISHED:
+            case PRIVATE:
+                messageRes = R.string.post_waiting_for_connection_publish_cancel;
+                break;
+            case PENDING:
+                messageRes = R.string.post_waiting_for_connection_pending_cancel;
+                break;
+            case SCHEDULED:
+                messageRes = R.string.post_waiting_for_connection_scheduled_cancel;
+                break;
+            case DRAFT:
+            case TRASHED:
+                AppLog.e(T.POSTS,
+                        "This code should be unreachable. Canceling pending auto-upload on Trashed and Draft posts "
+                        + "isn't supported.");
+                break;
+        }
+        return messageRes;
     }
 }

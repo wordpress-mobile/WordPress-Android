@@ -49,6 +49,7 @@ sealed class PostUploadAction {
 fun handleUploadAction(
     action: PostUploadAction,
     activity: Activity,
+    dispatcher: Dispatcher,
     snackbarAttachView: View,
     uploadActionUseCase: UploadActionUseCase
 ) {
@@ -56,6 +57,7 @@ fun handleUploadAction(
         is PostUploadAction.EditPostResult -> {
             UploadUtils.handleEditPostResultSnackbars(
                     activity,
+                    dispatcher,
                     snackbarAttachView,
                     action.data,
                     action.post,

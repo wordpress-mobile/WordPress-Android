@@ -36,6 +36,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploa
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -293,7 +294,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         statsSupported: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
-        val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload) &&
+        val canCancelPendingAutoUpload = uploadUiState is UploadWaitingForConnection && postStatus != DRAFT
+        val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
 
@@ -320,6 +322,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         BUTTON_PUBLISH
                     }
             )
+        }
+
+        if (canCancelPendingAutoUpload) {
+            buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         }
 
         if (canShowViewButton) {

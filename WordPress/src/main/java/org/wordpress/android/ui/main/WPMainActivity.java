@@ -755,6 +755,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (site != null && post != null) {
                     UploadUtils.handleEditPostResultSnackbars(
                             this,
+                            mDispatcher,
                             findViewById(R.id.coordinator),
                             data,
                             post,

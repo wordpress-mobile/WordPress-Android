@@ -27,10 +27,12 @@ import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -102,9 +104,17 @@ class PostActionHandler(
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
+            BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> {
+                cancelPendingAutoUpload(post)
+            }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
         }
+    }
+
+    private fun cancelPendingAutoUpload(post: PostModel) {
+        val msgRes = UploadUtils.cancelPendingAutoUpload(post, dispatcher)
+        showSnackbar.invoke(SnackbarMessageHolder(msgRes))
     }
 
     fun newPost() {
