@@ -4,6 +4,7 @@ import android.app.Activity
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -62,7 +63,12 @@ class PlansListAdapter(
         private val subtitle: TextView = itemView.findViewById(R.id.plan_subtitle)
 
         fun bind(planOffersModel: PlanOffersModel) {
-            itemView.setOnClickListener { itemClickListener(planOffersModel) }
+            itemView.setOnClickListener {
+                itemView.performAccessibilityAction(
+                        AccessibilityNodeInfo.ACTION_CLEAR_ACCESSIBILITY_FOCUS, null
+                )
+                itemClickListener(planOffersModel)
+            }
             title.text = planOffersModel.name
             subtitle.text = planOffersModel.tagline
 

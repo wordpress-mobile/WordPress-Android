@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/margin_medium"
-        android:textColor="@color/blue_500"
+        android:textColor="@color/blue_50"
         android:textSize="@dimen/text_sz_medium"
         tools:text="Cancel"/>
 
@@ -29,7 +29,7 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/margin_medium"
-        android:textColor="@color/blue_500"
+        android:textColor="@color/blue_50"
         android:textSize="@dimen/text_sz_medium"
         tools:text="OK"/>
 

@@ -68,6 +68,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
@@ -174,6 +175,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(headerAvatarLayout);
         mHeaderAvatarAdd = rootView.findViewById(R.id.signup_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
         mHeaderAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);

@@ -96,7 +96,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtTitle.setOnClickListener(mClickListener);
             txtSubtitle.setOnClickListener(mClickListener);
         } else {
-            int color = getContext().getResources().getColor(R.color.neutral_700);
+            int color = getContext().getResources().getColor(R.color.neutral_70);
             txtTitle.setTextColor(color);
             txtSubtitle.setTextColor(color);
         }

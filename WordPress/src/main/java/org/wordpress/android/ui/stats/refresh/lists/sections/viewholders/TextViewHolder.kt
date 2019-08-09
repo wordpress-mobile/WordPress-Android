@@ -50,7 +50,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             override fun updateDrawState(ds: TextPaint?) {
                 ds?.color = ContextCompat.getColor(
                         context,
-                        R.color.primary_500
+                        R.color.primary_50
                 )
                 ds?.typeface = Typeface.create(
                         Typeface.DEFAULT_BOLD,

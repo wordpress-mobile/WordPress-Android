@@ -8,6 +8,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stats_block_list"
+        android:contentDescription="@string/stats_loading_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </com.facebook.shimmer.ShimmerFrameLayout>

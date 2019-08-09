@@ -35,7 +35,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.4)
     emoji_regex (1.0.1)
-    excon (0.64.0)
+    excon (0.65.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     faraday-cookie_jar (0.0.6)
@@ -44,7 +44,7 @@ GEM
     faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
     fastimage (2.1.5)
-    fastlane (2.126.0)
+    fastlane (2.127.2)
       CFPropertyList (>= 2.3, < 4.0.0)
       addressable (>= 2.3, < 3.0.0)
       babosa (>= 1.0.2, < 2.0.0)
@@ -64,7 +64,7 @@ GEM
       highline (>= 1.7.2, < 2.0.0)
       json (< 3.0.0)
       jwt (~> 2.1.0)
-      mini_magick (~> 4.5.1)
+      mini_magick (>= 4.9.4, < 5.0.0)
       multi_xml (~> 0.5)
       multipart-post (~> 2.0.0)
       plist (>= 3.1.0, < 4.0.0)
@@ -120,7 +120,7 @@ GEM
     mime-types (3.2.2)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.0331)
-    mini_magick (4.5.1)
+    mini_magick (4.9.5)
     mini_portile2 (2.4.0)
     multi_json (1.13.1)
     multi_xml (0.6.0)
@@ -149,6 +149,7 @@ GEM
       declarative-option (< 0.2.0)
       uber (< 0.2.0)
     retriable (3.1.2)
+    rmagick (3.2.0)
     rouge (2.0.7)
     rubyzip (1.2.3)
     sawyer (0.8.2)
@@ -192,7 +193,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  fastlane (= 2.126)!
+  fastlane (= 2.127.2)!
   fastlane-plugin-wpmreleasetoolkit!
   nokogiri!
   rmagick (~> 3.2.0)
