@@ -6,13 +6,17 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
@@ -25,53 +29,35 @@ public class SiteUtils {
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
      * and store the value on the backend. selfHosted sites just store the value in the local DB in FluxC
-     *
+     * <p>
      * Strategy: Check if there is the old app-wide preference still available (v12.9 and before used it).
      * -- 12.9 ON -> turn all sites ON in 13.0
      * -- 12.9 OPTED OUT (were auto-opted in but turned it OFF) -> turn all sites OFF in 13.0
      *
-     * @param dispatcher FluxC dispatcher
-     * @param siteStore  SiteStore
      */
     public static void migrateAppWideMobileEditorPreferenceToRemote(final Context context,
-                                                                    final Dispatcher dispatcher,
-                                                                    final SiteStore siteStore) {
+                                                                    final Dispatcher dispatcher) {
         if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
             return;
         }
         final boolean oldAppWidePreferenceValue = AppPrefs.isGutenbergDefaultForNewPosts();
-        final List<SiteModel> sites = siteStore.getSites();
-        final boolean setDelay = sites.size() > 5;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Be optimistic and remove the old app-wide preference before we start the calls
-                // Only do this when the network connection is available
-                if (NetworkUtils.isNetworkAvailable(context)) {
-                    AppPrefs.removeAppWideEditorPreference();
-                }
-                for (SiteModel currentSite : sites) {
-                    if (oldAppWidePreferenceValue) {
-                        enableBlockEditor(dispatcher, currentSite);
-                    } else {
-                        disableBlockEditor(dispatcher, currentSite);
-                    }
-                    if (setDelay) {
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            // no-op
-                        }
-                    }
-                }
-            }
-        }).start();
+
+        if (oldAppWidePreferenceValue) {
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
+        } else {
+            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                    new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
+        }
     }
 
-    public static boolean enableBlockEditor(Dispatcher dispatcher, SiteStore siteStore, int siteLocalSiteID) {
+    public static boolean enableBlockEditorOnSiteCreation(Dispatcher dispatcher, SiteStore siteStore,
+                                                          int siteLocalSiteID) {
         SiteModel newSiteModel = siteStore.getSiteByLocalId(siteLocalSiteID);
         if (newSiteModel != null) {
-           enableBlockEditor(dispatcher, newSiteModel);
+            enableBlockEditor(dispatcher, newSiteModel);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, newSiteModel,
+                    BlockEditorEnabledSource.ON_SITE_CREATION.asPropertyMap());
             return true;
         }
         return false;
