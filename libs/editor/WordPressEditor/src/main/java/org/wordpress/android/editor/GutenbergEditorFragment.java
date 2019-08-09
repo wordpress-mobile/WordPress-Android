@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.Spanned;
-import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -121,19 +120,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public Bundle getTranslations() {
         Bundle translations = new Bundle();
         Locale defaultLocale = new Locale("en");
-        Resources currentResources = getActivity().getApplicationContext().getResources();
-        Configuration currentConfiguration = currentResources.getConfiguration();
+        Resources currentResources = getActivity().getResources();
+        Context localizedContextCurrent = getActivity()
+                .createConfigurationContext(currentResources.getConfiguration());
         // if the current locale of the app is english stop here and return an empty map
+        Configuration currentConfiguration = localizedContextCurrent.getResources().getConfiguration();
         if (currentConfiguration.locale.equals(defaultLocale)) {
             return translations;
         }
 
         // Let's create a Resources object for the default locale (english) to get the original values for our strings
-        DisplayMetrics metrics = new DisplayMetrics();
         Configuration defaultLocaleConfiguration = new Configuration(currentConfiguration);
         defaultLocaleConfiguration.setLocale(defaultLocale);
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Resources defaultResources = new Resources(getActivity().getAssets(), metrics, defaultLocaleConfiguration);
+        Context localizedContextDefault = getActivity()
+                .createConfigurationContext(defaultLocaleConfiguration);
+        Resources defaultResources = localizedContextDefault.getResources();
 
         // Strings are only being translated in the WordPress package
         // thus we need to get a reference of the R class for this package

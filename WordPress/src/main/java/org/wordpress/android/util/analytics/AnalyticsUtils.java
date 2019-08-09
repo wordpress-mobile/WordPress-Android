@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -70,6 +69,18 @@ public class AnalyticsUtils {
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
 
+    public enum BlockEditorEnabledSource {
+        VIA_SITE_SETTINGS,
+        ON_SITE_CREATION,
+        ON_BLOCK_POST_OPENING;
+
+        public Map<String, Object> asPropertyMap() {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("source", name().toLowerCase(Locale.ROOT));
+            return properties;
+        }
+    }
+
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
                                                  AccountStore mAccountStore,
@@ -105,15 +116,10 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-
-        int siteLocalId = AppPrefs.getSelectedSite();
-        if (siteLocalId != -1) {
-            // Site previously selected, use it
-            SiteModel selectedSite = siteStore.getSiteByLocalId(siteLocalId);
-            // If saved site exist, then add info
-            if (selectedSite != null) {
-                metadata.setGutenbergEnabled(
-                        SiteUtils.isBlockEditorDefaultForNewPost(selectedSite));
+        for (SiteModel currentSite : siteStore.getSites()) {
+            if (SiteUtils.GB_EDITOR_NAME.equals(currentSite.getMobileEditor())) {
+                metadata.setGutenbergEnabled(true);
+                break;
             }
         }
 
