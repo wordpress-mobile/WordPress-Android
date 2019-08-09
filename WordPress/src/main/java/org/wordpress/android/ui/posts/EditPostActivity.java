@@ -3933,18 +3933,18 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (currentStat != null) {
             Map<String, String> properties = new HashMap<>();
-            String editorname = null;
+            String editorName = null;
             if (mEditorFragment instanceof GutenbergEditorFragment) {
-                editorname = "gutenberg";
+                editorName = "gutenberg";
             } else if (mEditorFragment instanceof AztecEditorFragment) {
-                editorname = "aztec";
+                editorName = "aztec";
             }
-            if (editorname == null) {
+            if (editorName == null) {
                 throw new IllegalArgumentException("Unexpected Editor Fragment - got "
                                                    + mEditorFragment.getClass().getName()
                                                    + " but expected GutenbergEditorFragment or AztecEditorFragment");
             }
-            properties.put("editor", mEditorFragment instanceof GutenbergEditorFragment ? "gutenberg" : "aztec");
+            properties.put("editor", editorName);
             AnalyticsTracker.track(currentStat, properties);
         }
     }
