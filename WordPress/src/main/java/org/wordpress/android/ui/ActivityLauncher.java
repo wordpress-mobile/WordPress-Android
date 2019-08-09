@@ -476,14 +476,16 @@ public class ActivityLauncher {
             String siteUrl = site.getUrl();
             if (site.isWPCom()) {
                 // Show wp.com sites authenticated
-                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl);
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl, true);
             } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
                 // Show self-hosted sites as authenticated since we should have the username & password
-                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false);
+                WPWebViewActivity
+                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true,
+                                false);
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl);
+                WPWebViewActivity.openURL(context, siteUrl, true);
             }
         }
     }
@@ -598,6 +600,7 @@ public class ActivityLauncher {
                     url,
                     shareableUrl,
                     shareSubject,
+                    true,
                     startPreviewForResult);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity
@@ -607,6 +610,7 @@ public class ActivityLauncher {
                             shareableUrl,
                             shareSubject,
                             site.getFrameNonce(),
+                            true,
                             startPreviewForResult);
         } else {
             // Add the original post URL to the list of allowed URLs.
@@ -620,6 +624,7 @@ public class ActivityLauncher {
                     post,
                     url,
                     new String[]{post.getLink()},
+                    true,
                     true,
                     startPreviewForResult);
         }
