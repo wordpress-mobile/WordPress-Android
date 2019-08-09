@@ -477,13 +477,12 @@ class UploadStarterTest {
             postStore = postStore,
             pageStore = pageStore,
             siteStore = siteStore,
-            uploadStore = uploadStore,
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
-            postUtilsWrapper = postUtilsWrapper,
             connectionStatus = connectionStatus,
-            uploadServiceFacade = uploadServiceFacade
+            uploadServiceFacade = uploadServiceFacade,
+            uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade)
     )
 
     private companion object Fixtures {

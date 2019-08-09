@@ -14,32 +14,23 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.testing.OpenForTesting
-import org.wordpress.android.ui.posts.PostUtilsWrapper
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.DO_NOTHING
-import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.DO_NOTHING
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
-import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
-
-private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
 
 /**
  * Automatically uploads local drafts.
@@ -59,16 +50,14 @@ class UploadStarter @Inject constructor(
     private val postStore: PostStore,
     private val pageStore: PageStore,
     private val siteStore: SiteStore,
-    private val uploadStore: UploadStore,
+    private val uploadActionUseCase: UploadActionUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val postUtilsWrapper: PostUtilsWrapper,
     private val connectionStatus: LiveData<ConnectionStatus>
 ) : CoroutineScope {
     private val job = Job()
-    private val MAXIMUM_AUTO_UPLOAD_RETRIES = 10
 
     /**
      * When the app comes to foreground both `queueUploadFromAllSites` and `queueUploadFromSite` are invoked.
@@ -161,7 +150,7 @@ class UploadStarter @Inject constructor(
             postsAndPages
                     .asSequence()
                     .filter {
-                        getAutoUploadAction(it, site) != DO_NOTHING
+                        uploadActionUseCase.getAutoUploadAction(it, site) != DO_NOTHING
                     }
                     .toList()
                     .forEach { post ->
@@ -177,42 +166,5 @@ class UploadStarter @Inject constructor(
         } finally {
             mutex.unlock()
         }
-    }
-
-    public fun getAutoUploadAction(post: PostModel, site: SiteModel): PostUploadAction {
-        val twoDaysAgoTimestamp = Date().time - TWO_DAYS_IN_MILLIS
-        // Don't auto-upload/save changes which are older than 2 days
-        if (DateTimeUtils.timestampFromIso8601Millis(post.dateLocallyChanged) < twoDaysAgoTimestamp) {
-            return DO_NOTHING
-        }
-
-        // Do not auto-upload empty post
-        if (!postUtilsWrapper.isPublishable(post)) {
-            return DO_NOTHING
-        }
-
-        // Do not auto-upload post which is in conflict with remote
-        if (postUtilsWrapper.isPostInConflictWithRemote(post)) {
-            return DO_NOTHING
-        }
-
-        // Do not auto-upload post which we already tried to upload certain number of times
-        if (uploadStore.getNumberOfPostUploadErrorsOrCancellations(post) >= MAXIMUM_AUTO_UPLOAD_RETRIES) {
-            return DO_NOTHING
-        }
-
-        // Do not auto-upload post which is currently being uploaded
-        if (uploadServiceFacade.isPostUploadingOrQueued(post)) {
-            return DO_NOTHING
-        }
-
-        val action = UploadUtils.getPostUploadAction(post)
-        // Don't remoteAutoSave changes which were already remoteAutoSaved or when on a self-hosted site
-        if (action == REMOTE_AUTO_SAVE &&
-                (UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post) || !site.isUsingWpComRestApi)) {
-            return DO_NOTHING
-        }
-
-        return action
     }
 }

@@ -26,6 +26,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction;
 import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
@@ -43,10 +44,6 @@ import java.util.List;
 
 public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
-
-    public enum PostUploadAction {
-        REMOTE_AUTO_SAVE, UPLOAD_AS_DRAFT, UPLOAD, DO_NOTHING
-    }
 
     /**
      * Returns a post-type specific error message string.
@@ -118,6 +115,7 @@ public class UploadUtils {
                                                      @NonNull Intent data,
                                                      @NonNull final PostModel post,
                                                      @NonNull final SiteModel site,
+                                                     @NonNull final UploadAction uploadAction,
                                                      View.OnClickListener publishPostListener) {
         boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
@@ -130,7 +128,8 @@ public class UploadUtils {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
             // And tell the user about it
-            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post), R.string.cancel,
+            showSnackbar(snackbarAttachView, getDeviceOfflinePostNotUploadedMessage(post, uploadAction),
+                    R.string.cancel,
                     v -> {
                         int msgRes = cancelPendingAutoUpload(post, dispatcher);
                         showSnackbar(snackbarAttachView, msgRes);
@@ -410,8 +409,9 @@ public class UploadUtils {
     }
 
     @StringRes
-    private static int getDeviceOfflinePostNotUploadedMessage(PostModel post) {
-        if (getPostUploadAction(post) != PostUploadAction.UPLOAD) {
+    private static int getDeviceOfflinePostNotUploadedMessage(@NonNull final PostModel post,
+                                                              @NonNull final UploadAction uploadAction) {
+        if (uploadAction != UploadAction.UPLOAD) {
             return R.string.error_publish_no_network;
         } else {
             switch (PostStatus.fromPost(post)) {
@@ -431,18 +431,6 @@ public class UploadUtils {
             }
         }
         throw new RuntimeException("This code should be unreachable. Missing case in switch statement.");
-    }
-
-    public static PostUploadAction getPostUploadAction(PostModel post) {
-        if (post.getChangesConfirmedContentHashcode() == post.contentHashcode()) {
-            // We are sure we can push the post as the user has explicitly confirmed the changes
-            return PostUploadAction.UPLOAD;
-        } else if (post.isLocalDraft()) {
-            // Local draft can always be uploaded as DRAFT as it doesn't exist on the server yet
-            return PostUploadAction.UPLOAD_AS_DRAFT;
-        } else {
-            return PostUploadAction.REMOTE_AUTO_SAVE;
-        }
     }
 
     public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostModel post) {

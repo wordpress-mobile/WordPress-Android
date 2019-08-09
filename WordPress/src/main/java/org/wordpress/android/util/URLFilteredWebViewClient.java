@@ -1,10 +1,12 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.webkit.WebView;
 import android.widget.Toast;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -17,7 +19,9 @@ import java.util.Set;
  */
 public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
-    private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+
+    private static final String WP_LOGIN_URL_SUFFIX = "wp-login.php";
+    private static final String REMOTE_LOGIN_URL_SUFFIX = "remote-login.php";
 
     public URLFilteredWebViewClient(String url, ErrorManagedWebViewClientListener listener) {
         super(listener);
@@ -35,7 +39,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
     }
 
 
-    protected boolean isAllURLsAllowed() {
+    private boolean isAllURLsAllowed() {
         return mAllowedURLs.size() == 0;
     }
 
@@ -50,16 +54,33 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
         if (isAllURLsAllowed() || mAllowedURLs.contains(url)
             // If a url is allowed without the trailing `/`, it should be allowed with it as well
             || mAllowedURLs.contains(StringUtils.removeTrailingSlash(url))) {
-            view.loadUrl(url);
+            boolean isComingFromLoginUrl =
+                    view.getUrl().endsWith(WP_LOGIN_URL_SUFFIX) || view.getUrl().endsWith(REMOTE_LOGIN_URL_SUFFIX);
+
+            boolean isRemoteLoginUrl = url.endsWith(REMOTE_LOGIN_URL_SUFFIX);
+            boolean isLoginUrl = url.endsWith(WP_LOGIN_URL_SUFFIX);
+
+            Uri currentUri = Uri.parse((view.getUrl()));
+            Uri incomingUri = Uri.parse(url);
+
+            boolean newUrlIsOnTheSameHost =
+                    currentUri.getHost() != null && currentUri.getHost().equals(incomingUri.getHost());
+
+            boolean openInExternalBrowser =
+                    !isRemoteLoginUrl && !isLoginUrl && !isComingFromLoginUrl && !newUrlIsOnTheSameHost;
+
+            if (openInExternalBrowser) {
+                ReaderActivityLauncher.openUrl(view.getContext(), url, ReaderActivityLauncher.OpenUrlType.EXTERNAL);
+                return true;
+            }
+
+            return false;
         } else {
             // show "links are disabled" message.
             Context ctx = WordPress.getContext();
-            Toast.makeText(ctx, ctx.getText(mLinksDisabledMessageResId), Toast.LENGTH_SHORT).show();
+            int linksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+            Toast.makeText(ctx, ctx.getText(linksDisabledMessageResId), Toast.LENGTH_SHORT).show();
         }
         return true;
-    }
-
-    public void setLinksDisabledMessageResId(int resId) {
-        mLinksDisabledMessageResId = resId;
     }
 }

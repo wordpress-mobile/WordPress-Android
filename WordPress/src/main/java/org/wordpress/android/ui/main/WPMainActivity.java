@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnAllSitesMobileEditorChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
@@ -87,6 +88,7 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -169,6 +171,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject ShortcutUtils mShortcutUtils;
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject UploadActionUseCase mUploadActionUseCase;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -757,6 +760,7 @@ public class WPMainActivity extends AppCompatActivity implements
                             data,
                             post,
                             site,
+                            mUploadActionUseCase.getUploadAction(post),
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -776,7 +780,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 // Enable the block editor on sites created on mobile
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                    SiteUtils.enableBlockEditor(mDispatcher, mSiteStore, newSiteLocalID);
+                    SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                     // Mark the site to show the GB popup at first editor run
                     SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
                     if (newSiteModel != null) {
@@ -1158,6 +1162,26 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
+       refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAllSitesMobileEditorChanged(OnAllSitesMobileEditorChanged event) {
+        if (event.isError()) {
+            return;
+        }
+        if (event.isNetworkResponse) {
+            // We can remove the global app setting now, since we're sure the migration ended with success.
+            AppPrefs.removeAppWideEditorPreference();
+        }
+        refreshCurrentSelectedSiteAfterEditorChanges(true, -1);
+    }
+
+    private void refreshCurrentSelectedSiteAfterEditorChanges(boolean alwaysRefreshUI, int localSiteID) {
+        // Need to update the user property about GB enabled on any of the sites
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
+
         // "Reload" selected site from the db
         // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
@@ -1165,6 +1189,15 @@ public class WPMainActivity extends AppCompatActivity implements
         }
         if (getSelectedSite() == null) {
             return;
+        }
+
+        // When alwaysRefreshUI is `true` we need to refresh the UI regardless of the current site
+        if (!alwaysRefreshUI) {
+            // we need to refresh the UI only when the site IDs matches
+            if (getSelectedSite().getId() != localSiteID) {
+                // No need to refresh the UI, since the current selected site is another site
+                return;
+            }
         }
 
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());

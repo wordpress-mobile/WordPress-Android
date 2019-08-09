@@ -43,6 +43,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setActionBarTitleToThemeName();
+        toggleNavbarVisibility(false);
     }
 
     public static String getSiteLoginUrl(SiteModel site) {
