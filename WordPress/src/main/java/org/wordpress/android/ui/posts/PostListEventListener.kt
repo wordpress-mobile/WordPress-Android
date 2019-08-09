@@ -128,13 +128,15 @@ class PostListEventListener(
                 )
             }
             is CauseOfOnPostChanged.RemoteAutoSavePost -> {
+                val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
                 if (isRemotePreviewingFromPostsList.invoke()) {
-                    val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
                     if (event.isError) {
                         AppLog.d(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
                                 event.error.type + " - " + event.error.message)
                     }
                     handleRemoteAutoSave(post, event.isError)
+                } else {
+                    uploadStatusChanged(post.id)
                 }
             }
         }

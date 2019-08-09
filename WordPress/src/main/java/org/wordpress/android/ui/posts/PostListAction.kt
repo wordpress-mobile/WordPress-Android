@@ -26,9 +26,7 @@ sealed class PostListAction {
     ) : PostListAction()
     class RetryUpload(
         val post: PostModel,
-        val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post),
-        val publish: Boolean = false,
-        val retry: Boolean = true
+        val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post)
     ) : PostListAction()
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -63,12 +61,10 @@ fun handlePostListAction(
         }
         is PostListAction.RetryUpload -> {
             // restart the UploadService with retry parameters
-            val intent = UploadService.getUploadPostServiceIntent(
+            val intent = UploadService.getRetryUploadServiceIntent(
                     activity,
                     action.post,
-                    action.trackAnalytics,
-                    action.publish,
-                    action.retry
+                    action.trackAnalytics
             )
             activity.startService(intent)
         }

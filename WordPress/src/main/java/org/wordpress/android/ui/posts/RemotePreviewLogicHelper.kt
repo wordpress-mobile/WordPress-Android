@@ -3,9 +3,13 @@ package org.wordpress.android.ui.posts
 import android.app.Activity
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
+import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.REMOTE_AUTO_SAVE
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD
+import org.wordpress.android.ui.uploads.UploadUtils.PostUploadAction.UPLOAD_AS_DRAFT
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -64,8 +68,10 @@ class RemotePreviewLogicHelper @Inject constructor(
         // (eg. during and editing session)
         val updatedPost = helperFunctions.updatePostIfNeeded() ?: post
 
+        val uploadAction = UploadUtils.getPostUploadAction(updatedPost)
+
         return when {
-            shouldUpload(updatedPost) -> {
+            shouldUpload(updatedPost, uploadAction) -> {
                 // We can't upload an unpublishable post (empty), we'll let the user know we can't preview it.
                 if (!postUtilsWrapper.isPublishable(updatedPost)) {
                     helperFunctions.notifyEmptyDraft()
@@ -74,7 +80,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                 helperFunctions.startUploading(false, updatedPost)
                 PreviewLogicOperationResult.GENERATING_PREVIEW
             }
-            shouldRemoteAutoSave(updatedPost) -> {
+            shouldRemoteAutoSave(updatedPost, uploadAction) -> {
                 // We don't support remote auto-save for self hosted sites (accessed via XMLRPC),
                 // we make the preview unavailable in that case.
                 if (!site.isUsingWpComRestApi) {
@@ -118,14 +124,11 @@ class RemotePreviewLogicHelper @Inject constructor(
         }
     }
 
-    private fun shouldUpload(post: PostModel): Boolean {
-        val status = PostStatus.fromPost(post)
-        return post.isLocalDraft ||
-                (status == PostStatus.DRAFT && post.isLocallyChanged)
+    private fun shouldUpload(post: PostModel, action: PostUploadAction): Boolean {
+        return (post.isLocallyChanged || post.isLocalDraft) && (action == UPLOAD_AS_DRAFT || action == UPLOAD)
     }
 
-    private fun shouldRemoteAutoSave(post: PostModel): Boolean {
-        val status = PostStatus.fromPost(post)
-        return (status == PostStatus.PUBLISHED || status == PostStatus.SCHEDULED) && post.isLocallyChanged
+    private fun shouldRemoteAutoSave(post: PostModel, action: PostUploadAction): Boolean {
+        return post.isLocallyChanged && action == REMOTE_AUTO_SAVE
     }
 }

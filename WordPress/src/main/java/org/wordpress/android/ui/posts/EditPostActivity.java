@@ -1717,16 +1717,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
-        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinishActivity, false);
-    }
-
     private void savePostOnlineAndFinishAsync(
             boolean isFirstTimePublish,
-            boolean doFinishActivity,
-            boolean isRemoteAutoSave
+            boolean doFinishActivity
     ) {
-        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity, isRemoteAutoSave)
+        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -2076,12 +2071,10 @@ public class EditPostActivity extends AppCompatActivity implements
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
         boolean mDoFinishActivity;
-        boolean mIsRemoteAutoSave;
 
-        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity, boolean isRemoteAutoSave) {
+        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity) {
             this.mIsFirstTimePublish = isFirstTimePublish;
             this.mDoFinishActivity = doFinishActivity;
-            this.mIsRemoteAutoSave = isRemoteAutoSave;
         }
 
         @Override
@@ -2106,11 +2099,7 @@ public class EditPostActivity extends AppCompatActivity implements
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             UploadService.setLegacyMode(!isModernEditor());
-            if (mIsFirstTimePublish) {
-                UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost, mIsRemoteAutoSave);
-            } else {
-                UploadService.uploadPost(EditPostActivity.this, mPost, mIsRemoteAutoSave);
-            }
+            UploadService.uploadPost(EditPostActivity.this, mPost, mIsFirstTimePublish);
 
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
 
@@ -2251,6 +2240,15 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
+                boolean hasFailedMediaUploads = mEditorFragment.hasFailedMediaUploads()
+                                                || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null;
+
+                if (!hasFailedMediaUploads) {
+                    AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + mPost.getTitle());
+                    // the user explicitly confirmed an intention to upload the post
+                    mPost.setChangesConfirmedContentHashcode(mPost.contentHashcode());
+                }
+
                 // if post was modified or has unsaved local changes and is publishable, save it
                 saveResult(isPublishable, false, false);
 
@@ -2259,8 +2257,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         // Show an Alert Dialog asking the user if they want to remove all failed media before upload
-                        if (mEditorFragment.hasFailedMediaUploads()
-                            || mFeaturedImageHelper.getFailedFeaturedImageUpload(mPost) != null) {
+                        if (hasFailedMediaUploads) {
                             EditPostActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -2310,7 +2307,7 @@ public class EditPostActivity extends AppCompatActivity implements
         savePostAndOptionallyFinish(doFinish, false);
     }
 
-    private void savePostAndOptionallyFinish(final boolean doFinish, final boolean isRemoteAutoSave) {
+    private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
@@ -2329,8 +2326,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
-                // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = shouldSavePost() || isRemoteAutoSave;
+                // if post was modified during this editing session, save it
+                boolean shouldSave = shouldSavePost() || forceSave;
 
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
@@ -2342,17 +2339,22 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    PostStatus status = PostStatus.fromPost(mPost);
                     boolean isNotRestarting = mRestartEditorOption == RestartEditorOptions.NO_RESTART;
-                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
-                            && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
-                            && isNotRestarting) {
+                    /*
+                     * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
+                     * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
+                     * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
+                      * user didn't confirm the changes in this code path.
+                     */
+                    boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mPost.isLocalDraft();
+                    if (isPublishable && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())
+                            && isNotRestarting && isWpComOrIsLocalDraft) {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish, isRemoteAutoSave);
+                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                        if (isRemoteAutoSave) {
-                            savePostOnlineAndFinishAsync(false, false, isRemoteAutoSave);
+                        if (forceSave) {
+                            savePostOnlineAndFinishAsync(false, false);
                         } else {
                             savePostLocallyAndFinishAsync(doFinish);
                         }
@@ -2374,16 +2376,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean shouldSavePost() {
-        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                   || PostStatus.fromPost(mPost) == PostStatus.PENDING)
-                                                      && isPublishable && hasLocalChanges;
 
-        // if post was modified or has unpublished local changes, save it
-        return (mPostSnapshotWhenEditorOpened != null && hasChanges)
-                             || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
+        // if post was modified during this editing session, save it
+        return (mPostSnapshotWhenEditorOpened != null && hasChanges) || (isPublishable && isNewPost());
     }
 
 

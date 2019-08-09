@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -27,7 +29,9 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
@@ -36,6 +40,7 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -52,13 +57,12 @@ import java.util.Set;
 import javax.inject.Inject;
 
 public class UploadService extends Service {
-    private static final String KEY_SHOULD_PUBLISH = "shouldPublish";
+    private static final String KEY_CHANGE_STATUS_TO_PUBLISH = "shouldPublish";
     private static final String KEY_SHOULD_RETRY = "shouldRetry";
     private static final String KEY_MEDIA_LIST = "mediaList";
     private static final String KEY_UPLOAD_MEDIA_FROM_EDITOR = "mediaFromEditor";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
-    private static final String KEY_IS_REMOTE_AUTO_SAVE = "isRemoteAutoSave";
 
     private static @Nullable UploadService sInstance;
 
@@ -115,7 +119,7 @@ public class UploadService extends Service {
         }
 
         // Update posts with any completed AND failed uploads in our post->media map
-        doFinalProcessingOfPosts(null);
+        doFinalProcessingOfPosts(null, null);
 
         for (PostModel pendingPost : mUploadStore.getPendingPosts()) {
             cancelQueuedPostUpload(pendingPost);
@@ -232,18 +236,13 @@ public class UploadService extends Service {
                 mPostUploadHandler.registerPostForAnalyticsTracking(post);
             }
 
-            boolean isRemoteAutoSave = intent.getBooleanExtra(KEY_IS_REMOTE_AUTO_SAVE, false);
-            if (isRemoteAutoSave) {
-                mPostUploadHandler.registerPostForRemoteAutoSave(post);
-            }
-
             // cancel any outstanding "end" notification for this Post before we start processing it again
             // i.e. dismiss success or error notification for the post.
             mPostUploadNotifier.cancelFinalNotification(this, post);
 
             // if the user tapped on the PUBLISH quick action, make this Post publishable and track
             // analytics before starting the upload process.
-            if (intent.getBooleanExtra(KEY_SHOULD_PUBLISH, false)) {
+            if (intent.getBooleanExtra(KEY_CHANGE_STATUS_TO_PUBLISH, false)) {
                 makePostPublishable(post);
                 PostUtils.trackSavePostAnalytics(post, mSiteStore.getSiteByLocalId(post.getLocalSiteId()));
             }
@@ -294,9 +293,15 @@ public class UploadService extends Service {
         PostUploadNotifier.cancelFinalNotificationForMedia(context, site);
     }
 
+    /**
+     * Do not use this method unless the user explicitly confirmed changes - eg. clicked on publish button or
+     * similar.
+     */
     private void makePostPublishable(@NonNull PostModel post) {
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         post.setStatus(PostStatus.PUBLISHED.toString());
+        AppLog.d(T.POSTS, "Changes explicitly confirmed by the user. Post Title: " + post.getTitle());
+        post.setChangesConfirmedContentHashcode(post.contentHashcode());
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 
@@ -312,20 +317,27 @@ public class UploadService extends Service {
                 .isPendingPost(post));
     }
 
-
-    public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
-                                                    boolean publish, boolean isRetry) {
-        return getUploadPostServiceIntent(context, post, trackAnalytics, publish, isRetry, false);
-    }
-
-    public static Intent getUploadPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics,
-                                                    boolean publish, boolean isRetry, boolean isRemoteAutoSave) {
+    public static Intent getRetryUploadServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
-        intent.putExtra(KEY_SHOULD_PUBLISH, publish);
-        intent.putExtra(KEY_SHOULD_RETRY, isRetry);
-        intent.putExtra(KEY_IS_REMOTE_AUTO_SAVE, isRemoteAutoSave);
+        intent.putExtra(KEY_SHOULD_RETRY, true);
+        return intent;
+    }
+
+    /**
+     * Do not use this method unless the user explicitly confirmed changes - eg. clicked on publish button or
+     * similar.
+     *
+     * The only valid use-case for this method I can think of right know is when we want to put the intent into a
+     * PendingIntent - eg. publish action on a notification. If you want to start the upload right away use
+     * UploadUtils.publishPost(..) instead.
+     */
+    public static Intent getPublishPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics) {
+        Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
+        intent.putExtra(KEY_CHANGE_STATUS_TO_PUBLISH, true);
         return intent;
     }
 
@@ -339,33 +351,12 @@ public class UploadService extends Service {
 
     /**
      * Adds a post to the queue.
+     * @param isFirstTimePublish true when its status changes from local draft or remote draft to published.
      */
-    public static void uploadPost(Context context, @NonNull PostModel post) {
-        uploadPost(context, post, false);
-    }
-
-    public static void uploadPost(Context context, @NonNull PostModel post, boolean isRemoteAutoSave) {
+    public static void uploadPost(Context context, @NonNull PostModel post, boolean isFirstTimePublish) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
-        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
-        intent.putExtra(KEY_IS_REMOTE_AUTO_SAVE, isRemoteAutoSave);
-        context.startService(intent);
-    }
-
-    /**
-     * Adds a post to the queue and tracks post analytics.
-     * To be used only the first time a post is uploaded, i.e. when its status changes from local draft or remote draft
-     * to published.
-     */
-    public static void uploadPostAndTrackAnalytics(Context context, @NonNull PostModel post) {
-        uploadPostAndTrackAnalytics(context, post, false);
-    }
-
-    public static void uploadPostAndTrackAnalytics(Context context, @NonNull PostModel post, boolean isRemoteAutoSave) {
-        Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
-        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, true);
-        intent.putExtra(KEY_IS_REMOTE_AUTO_SAVE, isRemoteAutoSave);
+        intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, isFirstTimePublish);
         context.startService(intent);
     }
 
@@ -595,15 +586,24 @@ public class UploadService extends Service {
 
     private static synchronized PostModel updatePostWithNewFeaturedImg(PostModel post, Long remoteMediaId) {
         if (post != null && remoteMediaId != null) {
+            boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             post.setFeaturedImageId(remoteMediaId);
             post.setIsLocallyChanged(true);
             post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            if (changesConfirmed) {
+                /*
+                 * We are replacing local featured image with a remote version. We need to make sure
+                 * to retain the confirmation state.
+                 */
+                post.setChangesConfirmedContentHashcode(post.contentHashcode());
+            }
         }
         return post;
     }
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
+            boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             // actually replace the media ID with the media uri
             PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
                                                                              FluxCUtils.mediaFileFromMediaModel(media));
@@ -616,6 +616,13 @@ public class UploadService extends Service {
                 post.setIsLocallyChanged(true);
             }
             post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            if (changesConfirmed) {
+                /*
+                 * We are replacing image local path with a url. We need to make sure to retain the confirmation
+                 * state.
+                 */
+                post.setChangesConfirmedContentHashcode(post.contentHashcode());
+            }
         }
         return post;
     }
@@ -623,6 +630,7 @@ public class UploadService extends Service {
     private static synchronized PostModel updatePostWithFailedMedia(PostModel post, MediaModel media,
                                                                     MediaUploadReadyListener processor) {
         if (media != null && post != null && processor != null) {
+            boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             // actually mark the media failed within the Post
             PostModel modifiedPost = processor.markMediaUploadFailedInPost(post, String.valueOf(media.getId()),
                                                                            FluxCUtils.mediaFileFromMediaModel(media));
@@ -635,16 +643,23 @@ public class UploadService extends Service {
                 post.setIsLocallyChanged(true);
             }
             post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            if (changesConfirmed) {
+                /*
+                 * We are updating media upload status, but we don't make any undesired changes to the post. We need to
+                 * make sure to retain the confirmation state.
+                 */
+                post.setChangesConfirmedContentHashcode(post.contentHashcode());
+            }
         }
         return post;
     }
 
     private synchronized void stopServiceIfUploadsComplete() {
-        stopServiceIfUploadsComplete(null);
+        stopServiceIfUploadsComplete(null, null);
     }
 
 
-    private synchronized void stopServiceIfUploadsComplete(OnPostUploaded event) {
+    private synchronized void stopServiceIfUploadsComplete(Boolean isError, PostModel post) {
         if (mPostUploadHandler != null && mPostUploadHandler.hasInProgressUploads()) {
             return;
         }
@@ -655,7 +670,7 @@ public class UploadService extends Service {
             verifyMediaOnlyUploadsAndNotify();
         }
 
-        if (doFinalProcessingOfPosts(event)) {
+        if (doFinalProcessingOfPosts(isError, post)) {
             // when more Posts have been re-enqueued, don't stop the service just yet.
             return;
         }
@@ -738,7 +753,6 @@ public class UploadService extends Service {
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
-        mPostUploadHandler.unregisterPostForRemoteAutoSave(postToCancel);
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel));
 
         return true;
@@ -948,7 +962,7 @@ public class UploadService extends Service {
      * (*)`Registered` posts are posts that had media in them and are waiting to be uploaded once
      * their corresponding associated media is uploaded first.
     */
-    private boolean doFinalProcessingOfPosts(OnPostUploaded event) {
+    private boolean doFinalProcessingOfPosts(Boolean isError, PostModel post) {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
@@ -977,12 +991,11 @@ public class UploadService extends Service {
                         }
 
                         mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
-                        mPostUploadHandler.unregisterPostForRemoteAutoSave(postModel);
                         EventBus.getDefault().post(
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {
                         // Do not re-enqueue a post that has already failed
-                        if (event != null && event.isError() && mUploadStore.isFailedPost(event.post)) {
+                        if (isError != null && isError && mUploadStore.isFailedPost(post)) {
                             continue;
                         }
                         // TODO Should do some extra validation here
@@ -1054,7 +1067,26 @@ public class UploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
-        stopServiceIfUploadsComplete(event);
+        stopServiceIfUploadsComplete(event.isError(), event.post);
+    }
+
+    /**
+     * Has lower priority than the PostUploadHandler, which ensures that the handler has already received and
+     * processed this OnPostChanged event. This means we can safely rely on its internal state being up to date.
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
+    public void onPostChanged(OnPostChanged event) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            if (event.isError() && event.error.type == PostErrorType.UNSUPPORTED_ACTION) {
+                CrashLoggingUtils
+                        .log("RemoteAutoSavePost failed with UNSUPPORTED_ACTION error. This shouldn't happen. We "
+                             + "have tried to invoke remoteAutoSave on an unsupported site (eg. self-hosted).");
+            }
+
+            PostModel post =
+                    mPostStore.getPostByLocalPostId(((RemoteAutoSavePost) event.causeOfChange).getLocalPostId());
+            stopServiceIfUploadsComplete(event.isError(), post);
+        }
     }
 
     public static class UploadErrorEvent {
