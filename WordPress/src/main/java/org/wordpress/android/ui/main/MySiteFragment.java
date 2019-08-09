@@ -385,8 +385,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.site_info_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                completeQuickStarTask(QuickStartTask.VIEW_SITE);
-                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
+                viewSite();
             }
         });
 
@@ -400,8 +399,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completeQuickStarTask(QuickStartTask.VIEW_SITE);
-                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
+                viewSite();
             }
         });
 
@@ -416,37 +414,21 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.quick_action_stats_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showStats();
+                viewStats();
             }
         });
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showStats();
+                viewStats();
             }
         });
 
         mBlavatarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
-                SiteModel site = getSelectedSite();
-                if (site != null) {
-                    boolean hasIcon = site.getIconUrl() != null;
-                    if (site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
-                        if (hasIcon) {
-                            showChangeSiteIconDialog();
-                        } else {
-                            showAddSiteIconDialog();
-                        }
-                        completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
-                    } else {
-                        showEditingSiteIconRequiresPermissionDialog(
-                                hasIcon ? getString(R.string.my_site_icon_dialog_change_requires_permission_message)
-                                        : getString(R.string.my_site_icon_dialog_add_requires_permission_message));
-                    }
-                }
+                updateBlavatar();
             }
         });
 
@@ -461,44 +443,42 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.quick_action_posts_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
+                viewPosts();
             }
         });
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
+                viewPosts();
             }
         });
 
         rootView.findViewById(R.id.quick_action_media_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogMedia(getActivity(), getSelectedSite());
+                viewMedia();
             }
         });
 
         rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogMedia(getActivity(), getSelectedSite());
+                viewMedia();
             }
         });
 
         rootView.findViewById(R.id.quick_action_pages_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestNextStepOfActiveQuickStartTask();
-                ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
+                viewPages();
             }
         });
 
         mPageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestNextStepOfActiveQuickStartTask();
-                ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
+                viewPages();
             }
         });
 
@@ -595,7 +575,40 @@ public class MySiteFragment extends Fragment implements
         });
     }
 
-    private void showStats() {
+    private void viewMedia() {
+        ActivityLauncher.viewCurrentBlogMedia(getActivity(), getSelectedSite());
+    }
+
+    private void updateBlavatar() {
+        AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            boolean hasIcon = site.getIconUrl() != null;
+            if (site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
+                if (hasIcon) {
+                    showChangeSiteIconDialog();
+                } else {
+                    showAddSiteIconDialog();
+                }
+                completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
+            } else {
+                showEditingSiteIconRequiresPermissionDialog(
+                        hasIcon ? getString(R.string.my_site_icon_dialog_change_requires_permission_message)
+                                : getString(R.string.my_site_icon_dialog_add_requires_permission_message));
+            }
+        }
+    }
+
+    private void viewPosts() {
+        ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
+    }
+
+    private void viewPages() {
+        requestNextStepOfActiveQuickStartTask();
+        ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
+    }
+
+    private void viewStats() {
         SiteModel selectedSite = getSelectedSite();
         if (selectedSite != null) {
             completeQuickStarTask(QuickStartTask.CHECK_STATS);
@@ -609,6 +622,11 @@ public class MySiteFragment extends Fragment implements
                 ActivityLauncher.viewConnectJetpackForStats(getActivity(), selectedSite);
             }
         }
+    }
+
+    private void viewSite() {
+        completeQuickStarTask(QuickStartTask.VIEW_SITE);
+        ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
     }
 
     @Override
@@ -1015,7 +1033,7 @@ public class MySiteFragment extends Fragment implements
         }
 
         // Do not show pages menu item to Collaborators.
-        int pageVisibility = site.isSelfHostedAdmin() || site.getHasCapabilityEditPages() ? View.VISIBLE : View.GONE;
+        int pageVisibility = View.GONE;
         mPageView.setVisibility(pageVisibility);
         mQuickActionPageButtonContainer.setVisibility(pageVisibility);
 
