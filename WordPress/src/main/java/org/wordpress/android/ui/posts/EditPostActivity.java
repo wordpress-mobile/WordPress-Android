@@ -3841,7 +3841,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onTrackableEvent(TrackableEvent event) {
+    public void onTrackableEvent(TrackableEvent event) throws IllegalArgumentException {
         AnalyticsTracker.Stat currentStat = null;
         switch (event) {
             case BOLD_BUTTON_TAPPED:
@@ -3933,7 +3933,17 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (currentStat != null) {
             Map<String, String> properties = new HashMap<>();
-            // Not the cleanest way to track GB, but easier without changing to many methods calls
+            String editorname = null;
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                editorname = "gutenberg";
+            } else if (mEditorFragment instanceof AztecEditorFragment) {
+                editorname = "aztec";
+            }
+            if (editorname == null) {
+                throw new IllegalArgumentException("Unexpected Editor Fragment - got "
+                                                   + mEditorFragment.getClass().getName()
+                                                   + " but expected GutenbergEditorFragment or AztecEditorFragment");
+            }
             properties.put("editor", mEditorFragment instanceof GutenbergEditorFragment ? "gutenberg" : "aztec");
             AnalyticsTracker.track(currentStat, properties);
         }
