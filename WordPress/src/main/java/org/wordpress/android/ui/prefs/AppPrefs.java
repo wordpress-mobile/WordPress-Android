@@ -899,14 +899,6 @@ public class AppPrefs {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
 
-    public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
-    }
-
-    public static boolean isGutenbergInformativeDialogDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
-    }
-
     @NonNull public static AuthorFilterSelection getAuthorFilterSelection() {
         long id = getLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
         return AuthorFilterSelection.fromId(id);
