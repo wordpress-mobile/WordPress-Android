@@ -665,7 +665,7 @@ public class AppPrefs {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
 
-    public static boolean shouldShowGutenbergInfoPopup(String siteURL) {
+    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
         if (TextUtils.isEmpty(siteURL)) {
             return false;
         }
@@ -683,14 +683,14 @@ public class AppPrefs {
             if (urls.contains(siteURL)) {
                 flag = true;
                 // remove the flag from Prefs
-                setShowGutenbergInfoPopup(siteURL, false);
+                setShowGutenbergInfoPopupForTheNewPosts(siteURL, false);
             }
         }
 
         return flag;
     }
 
-    public static void setShowGutenbergInfoPopup(String siteURL, boolean show) {
+    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
         if (TextUtils.isEmpty(siteURL)) {
             return;
         }
