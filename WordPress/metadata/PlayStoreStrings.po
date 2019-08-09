@@ -11,12 +11,22 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_130"
+msgid ""
+"13.0:\n"
+"* Block editor improvements: the editor is auto-enabled when you open a block post (unless you opted out in v12.9), or you can enable it on a per-site basis.\n"
+"* Accessibility improvements: screen readers can now read more of the stats screen.\n"
+"* General usability improvements: logging in is speedier, colors are more consistent across screens, and bug fixes put an end to some crashes.\n"
+msgstr ""
+
+#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "release_note_129"
 msgid ""
 "12.9:\n"
 "* Customers with unclaimed domain credits can register domains in the app.\n"
 "* You can expand the Comment Editor to Full Screen for more space while editing.\n"
 "* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.\n"
+"* The block editor is now the default for new posts after you open a block-based post for the first time.\n"
 msgstr ""
 
 msgctxt "release_note_128"

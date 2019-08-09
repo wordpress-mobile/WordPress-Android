@@ -165,6 +165,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -1702,10 +1703,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if ((TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost)
-            || AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl())) {
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl());
+
+        if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
+                    BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
+            showPopup = true;
+        }
+
+        if (showPopup) {
             showGutenbergInformativeDialog();
         }
     }
@@ -2307,7 +2314,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
-                // if post was modified or has unpublished local changes, save it
+                // if post was modified during this editing session, save it
                 boolean shouldSave = shouldSavePost() || forceSave;
 
                 // if post is publishable or not new, sync it
@@ -2357,16 +2364,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean shouldSavePost() {
-        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mPostSnapshotWhenEditorOpened, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                   || PostStatus.fromPost(mPost) == PostStatus.PENDING)
-                                                      && isPublishable && hasLocalChanges;
 
-        // if post was modified or has unpublished local changes, save it
-        return (mPostSnapshotWhenEditorOpened != null && hasChanges)
-                             || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
+        // if post was modified during this editing session, save it
+        return (mPostSnapshotWhenEditorOpened != null && hasChanges) || (isPublishable && isNewPost());
     }
 
 

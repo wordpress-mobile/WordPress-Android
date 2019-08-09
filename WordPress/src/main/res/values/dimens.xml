@@ -41,6 +41,7 @@
 
     <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
+    <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 
@@ -435,5 +436,10 @@
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
+
+    <!-- web preview  -->
+    <dimen name="web_preview_navbar_height">72dp</dimen>
+    <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
+    <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
 
 </resources>
