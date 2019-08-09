@@ -21,6 +21,7 @@ repositories {
     google()
     jcenter()
     maven { url "https://jitpack.io" }
+    maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 }
 
 // import the `submoduleGitHash()` function
@@ -38,7 +39,7 @@ android {
         versionName "1.3"
         minSdkVersion 21
         targetSdkVersion 26
-        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", rootProject.ext.buildGutenbergFromSource.toString()
+        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", (rootProject.ext.has("buildGutenbergFromSource") ? rootProject.ext.buildGutenbergFromSource : false).toString()
     }
     buildTypes {
         release {
@@ -70,7 +71,7 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    if (rootProject.ext.buildGutenbergFromSource) {
+    if (rootProject.ext.has("buildGutenbergFromSource") && rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {
             exclude group: 'com.squareup.okhttp3'
             exclude group: 'com.google.code.findbugs'

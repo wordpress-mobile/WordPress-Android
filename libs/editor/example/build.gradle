@@ -9,9 +9,11 @@ buildscript {
 }
 
 repositories {
+    google()
     jcenter()
+    maven { url "https://jitpack.io" }
+    maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 }
-
 apply plugin: 'com.android.application'
 
 android {
@@ -20,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.editorexample"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"

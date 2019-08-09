@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.Spanned;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -605,9 +604,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            return "";
+            throw new EditorFragmentNotAddedException();
         }
         return getGutenbergContainerFragment().getTitle(new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
@@ -627,7 +626,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getContent(CharSequence originalContent) {
+    public CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException {
+        if (!isAdded()) {
+            throw new EditorFragmentNotAddedException();
+        }
         return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
@@ -689,11 +691,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void removeMedia(String mediaId) {
-    }
-
-    @Override
-    public Spanned getSpannedContent() {
-        return null;
     }
 
     @Override

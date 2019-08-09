@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -63,8 +62,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
     private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
-
-    private static boolean sUseLegacyMode;
 
     private PostUploadNotifier mPostUploadNotifier;
     private UploadPostTask mCurrentTask = null;
@@ -127,10 +124,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         synchronized (sFirstPublishPosts) {
             sFirstPublishPosts.remove(post.getId());
         }
-    }
-
-    static void setLegacyMode(boolean enabled) {
-        sUseLegacyMode = enabled;
     }
 
     static boolean isPostUploadingOrQueued(PostModel post) {
@@ -245,11 +238,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             if (mPost.getCategoryIdList().size() > 0) {
                 mHasCategory = true;
-            }
-
-            // Support for legacy editor - images are identified as featured as they're being uploaded with the post
-            if (sUseLegacyMode && mFeaturedImageID != -1) {
-                mPost.setFeaturedImageId(mFeaturedImageID);
             }
 
             // Track analytics only if the post is newly published
@@ -617,56 +605,5 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         finishUpload();
-    }
-
-    /**
-     * Has priority 8 on OnMediaUploaded events, which is the second-highest (after the MediaUploadHandler).
-     */
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
-    public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media == null) {
-            AppLog.w(T.POSTS, "PostUploadHandler > Received media event for null media, ignoring");
-            return;
-        }
-
-        if (sUseLegacyMode) {
-            handleMediaUploadCompletedLegacy(event);
-        }
-    }
-
-    private void handleMediaUploadCompletedLegacy(OnMediaUploaded event) {
-        // Event for unknown media, ignoring
-        if (sCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
-            AppLog.i(T.POSTS, "PostUploadHandler > Media event not recognized: " + event.media.getId() + ", ignoring");
-            return;
-        }
-
-        if (event.isError()) {
-            AppLog.w(T.POSTS, "PostUploadHandler > Media upload failed. " + event.error.type + ": "
-                              + event.error.message);
-            SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
-            Context context = WordPress.getContext();
-            String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
-            String notificationMessage =
-                    UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage, 0);
-            sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
-            finishUpload();
-            return;
-        }
-
-        if (event.canceled) {
-            // Not implemented
-            return;
-        }
-
-        if (event.completed) {
-            AppLog.i(T.POSTS, "PostUploadHandler > Media upload completed for post. Media id: " + event.media.getId()
-                              + ", post id: " + sCurrentUploadingPost.getId());
-            mMediaLatchMap.get(event.media.getId()).countDown();
-            mMediaLatchMap.remove(event.media.getId());
-        }
     }
 }
