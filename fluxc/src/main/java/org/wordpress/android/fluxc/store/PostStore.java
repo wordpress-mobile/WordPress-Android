@@ -9,7 +9,6 @@ import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +20,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
@@ -51,7 +51,6 @@ import org.wordpress.android.fluxc.store.ListStore.ListError;
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
-import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -704,14 +703,29 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
-                boolean isAutoSaveChanged = !ObjectsUtils.equals(post.getAutoSaveModified(), item.autoSaveModified);
-                // Check if the post's last modified date, status or meta.data.autosave have changed.
+                // Check if the post's last modified date or status have changed.
                 // We need to check status separately because when a scheduled post is published, its modified date
                 // will not be updated.
                 boolean isPostChanged =
                         !post.getLastModified().equals(item.lastModified)
-                        || !post.getStatus().equals(item.status)
-                        || isAutoSaveChanged;
+                        || !post.getStatus().equals(item.status);
+
+                /*
+                 * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
+                 * automatically updates the post content and clears autosave object instead of just updating the
+                 * autosave object. This results in a false-positive conflict as the PostModel.lastModified date field
+                 * gets updated and on the next post list fetch the app thinks the post has been changed both in remote
+                 * and locally.
+                 *
+                 * Since the app doesn't know the current status in the remote, it can't assume what
+                  * was updated. However, if we know the last modified date is equal to the date we have in local
+                  * autosave object we are sure that our invocation of /autosave updated the post directly.
+                 */
+                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())
+                    && item.autoSaveModified == null) {
+                    isPostChanged = false;
+                }
+
                 if (isPostChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
@@ -722,7 +736,6 @@ public class PostStore extends Store {
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
-                        post.setRemoteAutoSaveModified(item.autoSaveModified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }
@@ -965,7 +978,12 @@ public class PostStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.remoteAutoSavePost(payload.post, payload.site);
         } else {
-            throw new NotImplementedException("RemoteAutoSave is not supported in XML-RPC api.");
+            PostError postError = new PostError(
+                    PostErrorType.UNSUPPORTED_ACTION,
+                    "Remote-auto-save not support on self-hosted sites."
+            );
+            RemoteAutoSavePostPayload response = new RemoteAutoSavePostPayload(payload.post.getId(), postError);
+            mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(response));
         }
     }
 

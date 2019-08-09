@@ -471,10 +471,10 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
-                && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
-                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl())
                 && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
-                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
+                && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
+                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl());
     }
 
     /**
