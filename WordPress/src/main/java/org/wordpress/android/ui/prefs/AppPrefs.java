@@ -627,6 +627,10 @@ public class AppPrefs {
         return true;
     }
 
+    /**
+     * @deprecated  As of release 13.0, replaced by SiteSettings mobile editor value
+     */
+    @Deprecated
     public static boolean isGutenbergDefaultForNewPosts() {
         return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
     }

@@ -27,6 +27,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -300,6 +301,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return false;
                 }
             });
+            ViewUtilsKt.redirectContextClickToLongPressListener(holder.itemView);
         }
 
         if (mIsSingleItemSelectionEnabled) {

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/data_types"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:paddingEnd="@dimen/margin_extra_medium_large"
+    android:paddingStart="@dimen/margin_extra_medium_large"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:scrollbars="vertical">
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/off"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_extra_extra_large"
+        android:checked="true"
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/post_notification_off"/>
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/one_hour_before"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_extra_extra_large"
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/post_notification_one_hour_before"/>
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/ten_minutes_before"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_extra_extra_large"
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/post_notification_ten_minutes_before"/>
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/when_published"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_extra_extra_large"
+        android:paddingEnd="@dimen/stats_widget_color_selector_padding"
+        android:paddingStart="@dimen/stats_widget_color_selector_padding"
+        android:text="@string/post_notification_when_published"/>
+</RadioGroup>

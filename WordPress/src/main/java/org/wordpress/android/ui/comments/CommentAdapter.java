@@ -27,6 +27,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -106,6 +107,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
         }
 
         @Override

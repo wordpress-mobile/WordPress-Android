@@ -780,6 +780,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".ui.quickstart.QuickStartReminderReceiver" />
+        <receiver android:name=".ui.posts.PublishNotificationReceiver" />
 
 
         <!-- Google Cloud Messaging receiver and services -->

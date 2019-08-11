@@ -24,6 +24,7 @@ import androidx.core.widget.CompoundButtonCompat;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.EditTextUtils;
 
 /**
@@ -179,6 +180,12 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             return EditTextUtils.getText(mEditCustomFormat);
         }
         return mValues[id];
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UiHelpers.Companion.adjustDialogSize(getDialog());
     }
 
     @Override
