@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-02 09:08:46+0000
+Translation-Revision-Date: 2019-08-05 12:26:15+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -806,7 +806,6 @@ Language: cs_CZ
     <string name="login_email_client_not_found">Nepodařilo se najít emailovou aplikaci</string>
     <string name="login_empty_2fa">Vložte ověřovací kód</string>
     <string name="login_empty_username">Vložte uživatelské jméno</string>
-    <string name="login_empty_site_url">Vložte adresu webu</string>
     <string name="login_log_in_for_deeplink">Pro přístup k příspěvku se přihlaste na WordPress.com.</string>
     <string name="login_error_while_adding_site">Chyba při vytváření webu. Kód chyby: %s</string>
     <string name="login_checking_site_address">Kontrola adresy webu</string>
@@ -1240,7 +1239,6 @@ Language: cs_CZ
     <string name="editor_page_title_placeholder">Název stránky</string>
     <string name="editor_post_title_placeholder">Název příspěvku</string>
     <string name="email_address">Emailová adresa</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Smazat trvale tyto komentáře?</string>
     <string name="dlg_sure_to_delete_comment">Smazat trvale tento komentář?</string>
     <string name="mnu_comment_delete_permanently">Smazat</string>
@@ -1801,6 +1799,7 @@ Language: cs_CZ
     <string name="pages">Stránky</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
+    <string name="ok">OK</string>
     <string name="blogusername">Jmémo blogera</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Nahrávám…</string>
