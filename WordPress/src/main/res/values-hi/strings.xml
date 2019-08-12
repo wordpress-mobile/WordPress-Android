@@ -120,7 +120,6 @@ Language: hi_IN
     <string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
     <string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
     <string name="email_address">ईमेल पता</string>
-    <string name="preference_editor">संपादक</string>
     <string name="comment_status_all">सभी</string>
     <string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
     <string name="about_the_app">ऐप्प के बारे में</string>
@@ -404,6 +403,7 @@ Language: hi_IN
     <string name="caption">शीर्षक (वैकल्पिक)</string>
     <string name="featured_in_post">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="blogusername">ब्लॉग उपयोगकर्ता नाम</string>
+    <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
     <string name="uploading">अपलोड किया जा रहा</string>
     <string name="version">संस्करण</string>

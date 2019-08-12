@@ -226,7 +226,6 @@ Language: cy_GB
     <string name="editor_post_title_placeholder">Teitl Cofnod</string>
     <string name="email_address">Cyfeiriad e-bost</string>
     <string name="dlg_sure_to_delete_comments">Dileu\'r sylwadau hyn yn barhaol?</string>
-    <string name="preference_editor">Golygydd</string>
     <string name="dlg_sure_to_delete_comment">Dileu\'r sylwadau hyn yn barhaol?</string>
     <string name="mnu_comment_delete_permanently">Dileu</string>
     <string name="comment_deleted_permanently">Wedi dileu\'r sylw</string>
@@ -749,6 +748,7 @@ Language: cy_GB
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
     <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="blogusername">blogusername</string>
+    <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Llwytho…</string>
     <string name="version">Fersiwn</string>

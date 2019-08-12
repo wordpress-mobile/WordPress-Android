@@ -341,6 +341,7 @@ Language: az
     <string name="caption">Başlıq(istəyə bağlı)</string>
     <string name="width">genişlik</string>
     <string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
+    <string name="ok">OK</string>
     <string name="blogusername">bloqistifadəçiadı</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versiya</string>

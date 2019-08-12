@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-19 16:42:51+0000
+Translation-Revision-Date: 2019-08-04 17:55:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Potrzebujesz pomocy w znalezieniu adresu email za pomocą połączyłe(a)ś się?</string>
+    <string name="enter_wordpress_site">Witryna znajdująca się pod tym adresem nie jest witryną WordPressową. Abyśmy mogli ją podłączyć, witryna musi mieć zainstalowanego WordPressa.</string>
+    <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
+    <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie powinno być ustanowione ponieważ to konto nie ma dostępu do żadnych stron. Facebook wspiera udostępnianie połączeń do Facebook Pages, ale nie do Profili Facebooka.</string>
+    <string name="stats_post_views_label">Wyświetleń</string>
+    <string name="stats_post_label">Wpis</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Wykresy aktywności publikowania wpisów.</string>
+    <string name="stats_item_collapsed">Element zwinięto</string>
+    <string name="stats_item_expanded">Element rozwinięto</string>
+    <string name="stats_collapse_content_description">Zwiń</string>
+    <string name="stats_expand_content_description">Rozwiń</string>
+    <string name="stats_graph_updated">Wykres uaktualniony.</string>
+    <string name="stats_overview_content_description">%1$s %2$s dla okresu: %3$s, zmiana względem poprzedniego okresu - %4$s</string>
+    <string name="stats_bar_chart_content_description">Wykresy wyświetleń witryny.</string>
+    <string name="stats_loading_card">Wczytywanie wybranych danych</string>
+    <string name="site_settings_editor">Edytor</string>
+    <string name="dialog_gutenberg_informative_description_page">Aktualnie korzystasz z edytora blokowego do tworzenia nowych stron. Czy chcesz przejść na edytor klasyczny? Przejdź do Ustawień Witryny.</string>
+    <string name="dialog_gutenberg_informative_description_post">Aktualnie korzystasz z edytora blokowego do tworzenia nowych wpisów. Czy chcesz przejść na edytor klasyczny? Przejdź do Ustawień Witryny.</string>
     <string name="description_expand">Rozwiń</string>
     <string name="description_collapse">Zwiń</string>
     <string name="editor_retry_failed_uploads">Prześlij ponownie</string>
@@ -23,8 +43,6 @@ Language: pl
     <string name="link_dialog_title">Wstaw odnośnik</string>
     <string name="post_settings_retry_featured_image">Prześlij ponownie</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Przesyłanie pliku mediów.\nStuknij aby dostać się do opcji.</string>
-    <string name="dialog_gutenberg_informative_description_page">Ta strona używa edytora blokowego, który jest domyślnym edytorem dla nowych stron. W celu włączenia klasycznego edytora, przejdź do sekcji Ja > Ustawienia aplikacji.</string>
-    <string name="dialog_gutenberg_informative_description_post">Ten wpis wykorzystuje edytor blokowy, który jest domyślnym edytorem dla nowych wpisów. W celu włączenia edytora klasycznego, przejdź do sekcji Ja > Ustawienia aplikacji.</string>
     <string name="link_open_new_window">Otwórz odnośnik w nowym oknie/zakładce</string>
     <string name="post_list_search_prompt">Przeszukaj opublikowane wpisy</string>
     <string name="stats_widget_error_no_access_token">Aby przejrzeć statystyki witryny, zaloguj się do konta WordPress.com.</string>
@@ -110,7 +128,7 @@ Language: pl
     <string name="backdated_for">Datowany wstecznie dla: %s</string>
     <string name="stats_insights_management_drag_and_drop_hint">Obiekt pokazany powyżej pojawi się w zakładce Trendy. Przesuń i upuść aby spersonalizować.</string>
     <string name="stats_insights_add_insights_header">Dodaj Trendy</string>
-    <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Dodawaj i organizuj poniżej swoje trendy. </string>
+    <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Na tej karcie możesz dodawać i organizować najistotniejsze dla siebie trendy.</string>
     <string name="stats_insights_social">Społecznościowe</string>
     <string name="stats_insights_annual_site_stats">Roczne statystyki witryny</string>
     <string name="stats_view_follower_totals">Suma obserwujących</string>
@@ -137,7 +155,6 @@ Language: pl
     <string name="posts_scheduled_empty">Nie masz żadnych zaplanowanych wpisów</string>
     <string name="posts_published_empty">Nie opublikowałeś jeszcze żadnych wpisów</string>
     <string name="notification_wpcom_username_needed">Zaloguj się za pomocą swojej nazwy użytkownika i hasła.</string>
-    <string name="login_invalid_site_url">Wprowadzony adres witryny jest nieprawidłowy. Wprowadź ponownie.</string>
     <string name="error_user_username_instead_of_email">Zaloguj się przy pomocy użytkonika WordPress.com zamiast swojego adresu email.</string>
     <string name="stats_insights_average_words">Średnio słów/wpis</string>
     <string name="stats_insights_total_words">Suma słów</string>
@@ -1041,7 +1058,6 @@ Language: pl
     <string name="login_email_client_not_found">Nie można rozpoznać twojej aplikacji do email</string>
     <string name="login_empty_2fa">Wprowadź kod weryfkacyjny</string>
     <string name="login_empty_username">Proszę wprowadzić nazwę użytkownika</string>
-    <string name="login_empty_site_url">Proszę wprowadzić adres witryny</string>
     <string name="login_log_in_for_deeplink">Zaloguj się do WordPress.com aby uzyskać dostęp do wpisu.</string>
     <string name="login_error_while_adding_site">Błąd podczas dodawania witryny. Kod błędu: %s</string>
     <string name="login_checking_site_address">Sprawdzanie adresu witryny</string>
@@ -1050,7 +1066,7 @@ Language: pl
     <string name="login_site_address_help_title">Jaki jest adres mojej witryny?</string>
     <string name="login_site_address_help">Potrzebujesz pomocy w odnalezieniu adresu witryny?</string>
     <string name="login_site_address">Adres witryny</string>
-    <string name="enter_site_address">Wprowadź adres swojej witryny Wordpress, którą chciałbyś połączyć.</string>
+    <string name="enter_site_address">Wprowadź adres witryny WordPress, którą chciałbyś połączyć.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Jesteś już zalogowany na WordPress.com</string>
     <string name="login_continue">Kontynuuj</string>
@@ -1476,7 +1492,6 @@ Language: pl
     <string name="editor_page_title_placeholder">Tytuł strony</string>
     <string name="editor_post_title_placeholder">Tytuł wpisu</string>
     <string name="email_address">Adres e-mail</string>
-    <string name="preference_editor">Edytor</string>
     <string name="dlg_sure_to_delete_comments">Trwale usunąć te komentarze ?</string>
     <string name="dlg_sure_to_delete_comment">Trwale usunąć ten komentarz ?</string>
     <string name="mnu_comment_delete_permanently">Usuń</string>
@@ -2037,6 +2052,7 @@ Language: pl
     <string name="pages">Strony</string>
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="featured_in_post">Załącz obraz w treści wpisu</string>
+    <string name="ok">OK</string>
     <string name="blogusername">nazwa użytkownika blogu</string>
     <string name="link_enter_url">Adres URL</string>
     <string name="uploading">Przesyłanie…</string>

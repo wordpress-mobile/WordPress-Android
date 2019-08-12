@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-26 16:13:19+0000
+Translation-Revision-Date: 2019-08-07 00:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Heb je hulp nodig bij het vinden van de e-mail waarmee je hebt ingelogd?</string>
+    <string name="enter_wordpress_site">De website op dit adres is geen WordPress-site. Om er verbinding mee te kunnen maken, moet WordPress geïnstalleerd zijn.</string>
+    <string name="login_invalid_site_url">Voer een compleet websiteadres in, zoals example.com.</string>
+    <string name="enter_email_for_site">Log in met WordPress.com om verbinding te maken met %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Er kon geen Facebook-koppeling tot stand worden gebracht, omdat dit account geen toegang heeft tot pagina\'s. Facebook ondersteunt deelkoppelingen via Facebook-pagina\'s, maar niet via Facebook-profielen.</string>
+    <string name="stats_post_views_label">Weergaven</string>
+    <string name="stats_post_label">Bericht</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Grafiek van berichtactiviteiten.</string>
+    <string name="stats_item_collapsed">Item ingeklapt</string>
+    <string name="stats_item_expanded">Item uitgevouwen</string>
+    <string name="stats_collapse_content_description">Inklappen</string>
+    <string name="stats_expand_content_description">Uitklappen</string>
+    <string name="stats_graph_updated">Grafiek bijgewerkt.</string>
+    <string name="stats_overview_content_description">%1$s %2$s voor periode: %3$s, wijziging ten opzichte van vorige periode - %4$s</string>
+    <string name="stats_bar_chart_content_description">Grafiek van siteweergaven</string>
+    <string name="stats_loading_card">Geselecteerde kaartgegevens aan het laden</string>
+    <string name="site_settings_editor">Editor</string>
+    <string name="dialog_gutenberg_informative_description_page">Momenteel gebruik je de blokeditor om nieuwe pagina’s aan te maken. Wil je standaard de klassieke editor gebruiken? Ga naar site-instellingen</string>
+    <string name="dialog_gutenberg_informative_description_post">Momenteel gebruik je de blokeditor om nieuwe berichten aan te maken. Wil je standaard de klassieke editor gebruiken? Ga naar site-instellingen</string>
     <string name="description_expand">Uitklappen</string>
     <string name="description_collapse">Inklappen</string>
     <string name="editor_retry_failed_uploads">Upload opnieuw proberen</string>
@@ -23,8 +43,6 @@ Language: nl
     <string name="link_dialog_title">Koppeling invoeren</string>
     <string name="post_settings_retry_featured_image">Upload opnieuw proberen</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Media worden geüpload.\nTik voor opties.</string>
-    <string name="dialog_gutenberg_informative_description_page">Deze pagina gebruikt de blokeditor, die de standaardeditor is voor nieuwe pagina\'s. Je kunt de klassieke editor inschakelen via Mij > App-instellingen.</string>
-    <string name="dialog_gutenberg_informative_description_post">Dit bericht gebruikt de blokeditor, die de standaardeditor is voor nieuwe berichten. Je kunt de klassieke editor inschakelen via Mij > App-instellingen.</string>
     <string name="link_open_new_window">Open koppeling in een nieuw venster/tab</string>
     <string name="post_list_search_prompt">Zoeken in gepubliceerde berichten</string>
     <string name="stats_widget_error_no_access_token">Log in op je WordPress.com-account om je statistieken te bekijken.</string>
@@ -107,7 +125,6 @@ Language: nl
     <string name="posts_scheduled_empty">Je hebt geen geplande berichten</string>
     <string name="posts_published_empty">Je hebt nog geen berichten gepubliceerd</string>
     <string name="notification_wpcom_username_needed">Log in met je gebruikersnaam en wachtwoord.</string>
-    <string name="login_invalid_site_url">Het site-adres dat je hebt ingevuld, is ongeldig. Voer het opnieuw in.</string>
     <string name="error_user_username_instead_of_email">Log in met je WordPress.com-gebruikersnaam in plaats van met je e-mailadres.</string>
     <string name="stats_insights_average_words">Gemiddeld aantal woorden per bericht</string>
     <string name="stats_insights_total_words">Totaalaantal woorden</string>
@@ -231,7 +248,7 @@ Language: nl
     <string name="new_site_creation_site_info_header_title">Basis informatie</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">Geen verbinding</string>
-    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast – alle sites blijven zich ontwikkelen!</string>
+    <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast -- alle sites blijven zich ontwikkelen!</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
@@ -913,7 +930,6 @@ Language: nl
     <string name="login_email_client_not_found">Detectie van mailclient-app mislukt</string>
     <string name="login_empty_2fa">Voer een verificatiecode in</string>
     <string name="login_empty_username">Voer een gebruikersnaam in</string>
-    <string name="login_empty_site_url">Voer een site-adres in</string>
     <string name="login_log_in_for_deeplink">Log in op WordPress.com om dit bericht te bekijken.</string>
     <string name="login_error_while_adding_site">Fout bij het toevoegen van site. Foutcode: %s</string>
     <string name="login_checking_site_address">Controleren van site-adres</string>
@@ -922,7 +938,6 @@ Language: nl
     <string name="login_site_address_help_title">Wat is mijn site-adres?</string>
     <string name="login_site_address_help">Hulp nodig bij het vinden van je site-adres?</string>
     <string name="login_site_address">Site-adres</string>
-    <string name="enter_site_address">Voer het adres van je WordPress-site in als je deze wilt koppelen.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue">Doorgaan</string>
@@ -1348,7 +1363,6 @@ Language: nl
     <string name="editor_page_title_placeholder">Paginatitel</string>
     <string name="editor_post_title_placeholder">Berichttitel</string>
     <string name="email_address">E-mailadres</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Deze reacties permanent verwijderen?</string>
     <string name="dlg_sure_to_delete_comment">Deze reactie permanent verwijderen?</string>
     <string name="mnu_comment_delete_permanently">Verwijderen</string>
@@ -1897,6 +1911,7 @@ Language: nl
     <string name="pages">Pagina\'s</string>
     <string name="no_network_title">Geen netwerk beschikbaar</string>
     <string name="featured_in_post">Plaats afbeelding in bericht</string>
+    <string name="ok">Ok</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Uploaden …</string>

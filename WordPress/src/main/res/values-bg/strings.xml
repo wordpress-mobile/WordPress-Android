@@ -127,7 +127,6 @@ Language: bg
     <string name="login_empty_2fa">Моля въведете потвърждаващия код</string>
     <string name="login_email_client_not_found">Не можахме да засечем вашия имейл клиент</string>
     <string name="login_empty_username">Въведете име</string>
-    <string name="login_empty_site_url">Въведете адрес на сайта </string>
     <string name="login_checking_site_address">Проверяване на адреса на сайта</string>
     <string name="login_site_address_more_help">Имате нужда от помощ?</string>
     <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
@@ -482,7 +481,6 @@ Language: bg
     <string name="editor_page_title_placeholder">Заглавие на страницата</string>
     <string name="editor_post_title_placeholder">Заглавие на публикация</string>
     <string name="email_address">Имейл адрес</string>
-    <string name="preference_editor">Редактор</string>
     <string name="dlg_sure_to_delete_comments">Изтриване на коментарите завинаги?</string>
     <string name="dlg_sure_to_delete_comment">Изтриване на коментара завинаги?</string>
     <string name="mnu_comment_delete_permanently">Изтриване</string>
@@ -1013,6 +1011,7 @@ Language: bg
     <string name="anonymous">Анонимен</string>
     <string name="featured_in_post">Използване на снимката в съдържанието на публикацията</string>
     <string name="blogusername">потребителско име</string>
+    <string name="ok">ОК</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Качва се…</string>
     <string name="version">Версия</string>

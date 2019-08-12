@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-27 00:54:12+0000
+Translation-Revision-Date: 2019-08-09 01:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">연결한 이메일을 찾는 데 도움이 필요하신가요?</string>
+    <string name="enter_wordpress_site">이 주소의 웹사이트는 워드프레스 사이트가 아닙니다. 워드프레스에서 연결하려면 사이트에 워드프레스가 설치되어 있어야 합니다.</string>
+    <string name="login_invalid_site_url">example.com과 같은 완전한 웹사이트 주소를 입력하세요.</string>
+    <string name="enter_email_for_site">%1$s에 연결하려면 워드프레스닷컴에 로그인하세요.</string>
+    <string name="sharing_facebook_account_must_have_pages">이 계정은 페이지에 액세스할 수 없으므로 페이스북에 연결하지 못했습니다. 페이스북 페이지에 대해서는 공유 연결이 지원되지만, 페이스북 프로필에 대해서는 지원되지 않습니다.</string>
+    <string name="stats_post_views_label">조회수</string>
+    <string name="stats_post_label">글</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">게시 활동 그래프.</string>
+    <string name="stats_item_collapsed">항목 축소됨</string>
+    <string name="stats_item_expanded">항목 확장됨</string>
+    <string name="stats_collapse_content_description">축소</string>
+    <string name="stats_expand_content_description">확장</string>
+    <string name="stats_graph_updated">그래프가 업데이트되었습니다.</string>
+    <string name="stats_overview_content_description">%1$s%2$s 다음 기간 동안: %3$s , 이전 기간에서 변경 - %4$s</string>
+    <string name="stats_bar_chart_content_description">사이트 보기 그래프.</string>
+    <string name="stats_loading_card">선택한 카드 데이터 로드 중</string>
+    <string name="site_settings_editor">편집기</string>
+    <string name="dialog_gutenberg_informative_description_page">현재 블록 편집기를 사용하여 새 페이지를 만들고 있습니다. 구 버전 편집기를 기본으로 사용하려면 사이트 설정으로 이동하세요.</string>
+    <string name="dialog_gutenberg_informative_description_post">현재 블록 편집기를 사용하여 새 글을 작성하고 있습니다. 구 버전 편집기를 기본으로 사용하려면 사이트 설정으로 이동하세요.</string>
     <string name="description_expand">확장</string>
     <string name="description_collapse">Collapse</string>
     <string name="editor_retry_failed_uploads">Retry uploading</string>
@@ -23,8 +43,6 @@ Language: ko_KR
     <string name="link_dialog_title">링크 삽입</string>
     <string name="post_settings_retry_featured_image">Retry uploading</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\n옵션을 보려면 누르세요.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page uses the block editor, which is the default editor for new pages. To enable the classic editor, go to Me > App Settings.</string>
-    <string name="dialog_gutenberg_informative_description_post">This post uses the block editor, which is the default editor for new posts. To enable the classic editor, go to Me > App Settings.</string>
     <string name="link_open_new_window">Open link in a new window/tab</string>
     <string name="post_list_search_prompt">공개된 글 검색</string>
     <string name="stats_widget_error_no_access_token">통계를 보려면 워드프레스닷컴 계정으로 로그인하세요.</string>
@@ -137,7 +155,6 @@ Language: ko_KR
     <string name="posts_scheduled_empty">예약한 글이 없습니다.</string>
     <string name="posts_published_empty">아직 글을 발행하지 않았습니다.</string>
     <string name="notification_wpcom_username_needed">사용자 이름과 비밀번호를 사용하여 로그인하세요.</string>
-    <string name="login_invalid_site_url">입력하신 사이트 주소가 유효하지 않습니다. 다시 입력하세요.</string>
     <string name="error_user_username_instead_of_email">이메일 주소가 아닌 워드프레스닷컴 사용자 이름을 사용하여 로그인하세요.</string>
     <string name="stats_insights_average_words">평균 단어 수/글 수</string>
     <string name="stats_insights_total_words">총 단어 수</string>
@@ -1039,7 +1056,6 @@ Language: ko_KR
     <string name="login_email_client_not_found">이메일 클라이언트 앱을 감지할 수 없습니다.</string>
     <string name="login_empty_2fa">확인 코드를 입력하세요.</string>
     <string name="login_empty_username">사용자명을 입력하세요.</string>
-    <string name="login_empty_site_url">사이트 주소를 입력해주세요.</string>
     <string name="login_log_in_for_deeplink">글에 액세스하려면 워드프레스닷컴에 로그인하세요.</string>
     <string name="login_error_while_adding_site">사이트를 추가하는 동안 오류가 발생했습니다. 에러 코드: %s</string>
     <string name="login_checking_site_address">사이트 주소 확인 중</string>
@@ -1048,7 +1064,6 @@ Language: ko_KR
     <string name="login_site_address_help_title">내 사이트 주소는 무엇인가요?</string>
     <string name="login_site_address_help">사이트 주소를 찾는 데 도움이 필요하세요?</string>
     <string name="login_site_address">사이트 주소</string>
-    <string name="enter_site_address">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
     <string name="login_continue">계속</string>
@@ -1474,7 +1489,6 @@ Language: ko_KR
     <string name="editor_page_title_placeholder">페이지 제목</string>
     <string name="editor_post_title_placeholder">글 제목</string>
     <string name="email_address">이메일 주소</string>
-    <string name="preference_editor">편집자</string>
     <string name="dlg_sure_to_delete_comments">이 댓글을 영구 삭제하시겠습니까?</string>
     <string name="dlg_sure_to_delete_comment">이 댓글을 영구 삭제하시겠습니까?</string>
     <string name="mnu_comment_delete_permanently">삭제</string>
@@ -2035,6 +2049,7 @@ Language: ko_KR
     <string name="pages">페이지</string>
     <string name="no_network_title">사용 가능한 네트워크가 없습니다</string>
     <string name="featured_in_post">게시물 본문에 이미지를 포함</string>
+    <string name="ok">확인</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">업로드 중…</string>

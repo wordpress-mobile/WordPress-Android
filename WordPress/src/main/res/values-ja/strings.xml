@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-27 00:54:10+0000
+Translation-Revision-Date: 2019-08-10 00:54:47+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">関連付けられているメールアドレスをお忘れですか ?</string>
+    <string name="enter_wordpress_site">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトに WordPress がインストールされている必要があります。</string>
+    <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
+    <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
+    <string name="sharing_facebook_account_must_have_pages">このアカウントはページへのアクセス権を持っていないため、Facebook との連携を確立できませんでした。Facebook は、Facebook ページへの共有接続をサポートしていますが、Facebook プロフィールへの共有接続はサポートしていません。</string>
+    <string name="stats_post_views_label">表示回数</string>
+    <string name="stats_post_label">投稿</string>
+    <string name="stats_list_item_description">%1$s:%2$s、%3$s:%4$s</string>
+    <string name="stats_posting_activity_graph">投稿アクティビティのグラフです。</string>
+    <string name="stats_item_collapsed">項目を非表示にしました</string>
+    <string name="stats_item_expanded">項目を展開しました</string>
+    <string name="stats_collapse_content_description">折りたたむ</string>
+    <string name="stats_expand_content_description">拡大</string>
+    <string name="stats_graph_updated">グラフが更新されました。</string>
+    <string name="stats_overview_content_description">次の期間の %1$s %2$s :%3$s、前の期間からの変更 - %4$s</string>
+    <string name="stats_bar_chart_content_description">サイト表示回数のグラフです。</string>
+    <string name="stats_loading_card">選択したカードデータの読み込み</string>
+    <string name="site_settings_editor">エディター</string>
+    <string name="dialog_gutenberg_informative_description_page">現在、ブロックエディターで新規ページを作成しています。デフォルトで旧エディターを使用しますか ?サイト設定に移動します。</string>
+    <string name="dialog_gutenberg_informative_description_post">現在、ブロックエディターで新規投稿を作成しています。デフォルトで旧エディターを使用しますか ?サイト設定に移動します。</string>
     <string name="description_expand">拡大</string>
     <string name="description_collapse">折りたたむ</string>
     <string name="editor_retry_failed_uploads">アップロード再試行</string>
@@ -23,8 +43,6 @@ Language: ja_JP
     <string name="link_dialog_title">リンクを挿入</string>
     <string name="post_settings_retry_featured_image">アップロード再試行</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">メディアをアップロードしています。\nタップすると、オプションが表示されます。</string>
-    <string name="dialog_gutenberg_informative_description_page">このページは、新規ページのデフォルトのエディターであるブロックエディターを使用しています。旧エディターを有効にするには、「Me > アプリ設定」に移動してください。</string>
-    <string name="dialog_gutenberg_informative_description_post">この投稿は、新規投稿のデフォルトのエディターであるブロックエディターを使用しています。旧エディターを有効にするには、「Me > アプリ設定」に移動してください。</string>
     <string name="link_open_new_window">リンクを新しいウィンドウまたはタブで開く</string>
     <string name="post_list_search_prompt">公開済みの投稿を検索</string>
     <string name="stats_widget_error_no_access_token">統計情報を表示するには、WordPress.com アカウントにログインしてください。</string>
@@ -137,7 +155,6 @@ Language: ja_JP
     <string name="posts_scheduled_empty">予約済み投稿はありません</string>
     <string name="posts_published_empty">公開した投稿はまだありません</string>
     <string name="notification_wpcom_username_needed">ユーザー名とパスワードでログインしてください。</string>
-    <string name="login_invalid_site_url">入力されたサイトアドレスが無効です。もう一度入力してください。</string>
     <string name="error_user_username_instead_of_email">メールアドレスではなく WordPress.com ユーザー名を使用してログインしてください。</string>
     <string name="stats_insights_average_words">1投稿あたりの平均単語数</string>
     <string name="stats_insights_total_words">総単語数</string>
@@ -1039,7 +1056,6 @@ Language: ja_JP
     <string name="login_email_client_not_found">メールクライアントアプリを検出できません</string>
     <string name="login_empty_2fa">認証コードを入力してください</string>
     <string name="login_empty_username">ユーザー名を入力してください</string>
-    <string name="login_empty_site_url">サイトアドレスを入力してください</string>
     <string name="login_log_in_for_deeplink">WordPress.com にログインして投稿にアクセスしてください。</string>
     <string name="login_error_while_adding_site">サイトを追加する際にエラーが発生しました。エラーコード: %s</string>
     <string name="login_checking_site_address">サイトアドレスの確認</string>
@@ -1048,7 +1064,6 @@ Language: ja_JP
     <string name="login_site_address_help_title">自分のサイトアドレス:</string>
     <string name="login_site_address_help">自分のサイトアドレスを忘れましたか ?</string>
     <string name="login_site_address">サイトアドレス</string>
-    <string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
     <string name="login_continue">次へ</string>
@@ -1474,7 +1489,6 @@ Language: ja_JP
     <string name="editor_page_title_placeholder">ページタイトル</string>
     <string name="editor_post_title_placeholder">投稿タイトル</string>
     <string name="email_address">メールアドレス</string>
-    <string name="preference_editor">編集者</string>
     <string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
     <string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>
     <string name="mnu_comment_delete_permanently">削除</string>
@@ -2035,6 +2049,7 @@ Language: ja_JP
     <string name="pages">ページ</string>
     <string name="no_network_title">利用可能なネットワークがありません</string>
     <string name="featured_in_post">投稿本文中に画像を含める</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">アップロード中…</string>

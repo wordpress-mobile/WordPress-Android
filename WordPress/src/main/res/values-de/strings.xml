@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-26 16:07:17+0000
+Translation-Revision-Date: 2019-08-03 18:50:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Brauchst du Hilfe beim Finden der E-Mail, mit der du dich angemeldet hast?</string>
+    <string name="enter_wordpress_site">Die Website unter dieser Adresse ist keine WordPress-Site. Damit wir uns damit verbinden können, muss auf der Website WordPress installiert sein.</string>
+    <string name="login_invalid_site_url">Bitte gib eine vollständige Website-Adresse ein, wie z.&amp;nbsp;B. example.com.</string>
+    <string name="enter_email_for_site">Meld dich mit WordPress.com an, um dich mit %1$s zu verbinden.</string>
+    <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung konnte nicht hergestellt werden, da dieses Konto keinen Zugriff auf Seiten hat. Facebook unterstützt die Freigabe von Verbindungen zu Facebook-Seiten, nicht aber zu Facebook-Profilen.</string>
+    <string name="stats_post_views_label">Aufrufe</string>
+    <string name="stats_post_label">Beitrag</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Grafik der Beitrags-Aktivität.</string>
+    <string name="stats_item_collapsed">Element ist zusammengeklappt</string>
+    <string name="stats_item_expanded">Element ist aufgeklappt</string>
+    <string name="stats_collapse_content_description">Zuklappen</string>
+    <string name="stats_expand_content_description">Aufklappen</string>
+    <string name="stats_graph_updated">Diagramm aktualisiert.</string>
+    <string name="stats_overview_content_description">%1$s %2$s für die Periode: %3$s, Veränderung gegenüber der Vorperiode - %4$s</string>
+    <string name="stats_bar_chart_content_description">Grafik der Website-Aufrufe.</string>
+    <string name="stats_loading_card">Laden der ausgewählten Kartendaten</string>
+    <string name="site_settings_editor">Editor</string>
+    <string name="dialog_gutenberg_informative_description_page">Du verwendest derzeit den Block-Editor, um neue Seiten zu erstellen. Möchtest du standardmäßig den klassischen Editor verwenden? Ruf die Website-Einstellungen auf.</string>
+    <string name="dialog_gutenberg_informative_description_post">Du verwendest derzeit den Block-Editor, um neue Beiträge zu erstellen. Möchtest du standardmäßig den klassischen Editor verwenden? Ruf die Website-Einstellungen auf.</string>
     <string name="description_expand">Erweitern</string>
     <string name="description_collapse">Einklappen</string>
     <string name="editor_retry_failed_uploads">Hochladen erneut starten</string>
@@ -23,8 +43,6 @@ Language: de
     <string name="link_dialog_title">Link einfügen</string>
     <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen hier tippen.</string>
-    <string name="dialog_gutenberg_informative_description_page">Für diese Seite wird der Block-Editor verwendet. Dies ist der Standard-Editor für neue Seiten. Um den klassischen Editor zu aktivieren, gehe zu „Ich“ > „App-Einstellungen“.</string>
-    <string name="dialog_gutenberg_informative_description_post">Für diesen Beitrag wird der Block-Editor verwendet. Dies ist der Standard-Editor für neue Beiträge. Um den klassischen Editor zu aktivieren, gehe zu „Ich“ > „App-Einstellungen“.</string>
     <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
     <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
@@ -137,7 +155,6 @@ Language: de
     <string name="posts_scheduled_empty">Du hast keine geplanten Beiträge</string>
     <string name="posts_published_empty">Du hast noch keine Beiträge veröffentlicht</string>
     <string name="notification_wpcom_username_needed">Bitte mit deinem Benutzernamen und Passwort anmelden.</string>
-    <string name="login_invalid_site_url">Die eingegebene Website-Adresse ist ungültig. Bitte erneut eingeben.</string>
     <string name="error_user_username_instead_of_email">Bitte mit deinem WordPress.com-Benutzernamen anstelle deiner E-Mail-Adresse anmelden.</string>
     <string name="stats_insights_average_words">Durchschn. Wörter/Beitrag</string>
     <string name="stats_insights_total_words">Wörter insgesamt</string>
@@ -1041,7 +1058,6 @@ Language: de
     <string name="login_email_client_not_found">E-Mail-Client-App wird nicht erkannt.</string>
     <string name="login_empty_2fa">Bitte gib einen Verifizierungscode ein.</string>
     <string name="login_empty_username">Bitte gib einen Benutzernamen ein.</string>
-    <string name="login_empty_site_url">Bitte gib eine Website-Adresse ein.</string>
     <string name="login_log_in_for_deeplink">Melde dich bei WordPress.com an, um auf diesen Beitrag zuzugreifen.</string>
     <string name="login_error_while_adding_site">Fehler beim Hinzufügen der Website. Fehlercode: %s</string>
     <string name="login_checking_site_address">Website-Adresse wird überprüft</string>
@@ -1476,7 +1492,6 @@ Language: de
     <string name="editor_page_title_placeholder">Seitentitel</string>
     <string name="editor_post_title_placeholder">Beitragstitel</string>
     <string name="email_address">E-Mail-Adresse</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Möchtest du diese Kommentare dauerhaft löschen?</string>
     <string name="dlg_sure_to_delete_comment">Möchtest du diesen Kommentar dauerhaft löschen?</string>
     <string name="mnu_comment_delete_permanently">Löschen</string>
@@ -2037,6 +2052,7 @@ Language: de
     <string name="pages">Seiten</string>
     <string name="no_network_title">Kein Netzwerk verfügbar</string>
     <string name="featured_in_post">Bild im Beitragsinhalt verwenden</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Lädt hoch…</string>
