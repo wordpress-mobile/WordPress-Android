@@ -1286,8 +1286,6 @@
     <string name="editor_uploading_post">Your post is uploading</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
-    <string name="visual_editor_enabled">Visual Editor enabled</string>
-    <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 

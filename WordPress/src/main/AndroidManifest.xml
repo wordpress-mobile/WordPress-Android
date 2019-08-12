@@ -577,19 +577,6 @@
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
 
-        <activity android:name=".ui.VisualEditorOptionsReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="editor"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
-
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

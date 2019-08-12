@@ -140,12 +140,6 @@ public class AppPrefs {
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
 
-        // visual editor available
-        VISUAL_EDITOR_AVAILABLE,
-
-        // visual editor enabled
-        VISUAL_EDITOR_ENABLED,
-
         // aztec editor enabled
         AZTEC_EDITOR_ENABLED,
 
@@ -482,29 +476,6 @@ public class AppPrefs {
 
     public static void setAztecEditorToolbarExpanded(boolean isExpanded) {
         setBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
-    }
-
-    // Visual Editor
-    public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
-        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
-        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
-    }
-
-    public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
-        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
-        if (visualEditorAvailable) {
-            AnalyticsTracker.track(Stat.EDITOR_HYBRID_ENABLED);
-        }
-    }
-
-    public static boolean isVisualEditorAvailable() {
-        // hardcode the Visual editor availability to "false". Aztec and Gutenberg are the only ones supported now.
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
-    }
-
-    public static boolean isVisualEditorEnabled() {
-        // hardcode the Visual editor enable to "false". Aztec and Gutenberg are the only ones supported now.
-        return false;
     }
 
     public static boolean isAsyncPromoRequired() {
