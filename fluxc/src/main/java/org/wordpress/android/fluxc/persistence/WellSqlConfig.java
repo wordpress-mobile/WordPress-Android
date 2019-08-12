@@ -579,7 +579,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 79:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE TEXT;");
+                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE INTEGER;");
                 oldVersion++;
             case 80:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
