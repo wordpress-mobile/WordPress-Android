@@ -193,11 +193,6 @@
 
         <!-- Posts activities -->
         <activity
-            android:name=".editor.legacy.EditLinkActivity"
-            android:label="@string/create_a_link"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"
-            android:windowSoftInputMode="stateVisible" />
-        <activity
             android:name=".ui.posts.EditPostActivity"
             android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">

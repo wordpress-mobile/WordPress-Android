@@ -32,7 +32,6 @@ apply from: 'https://gist.githubusercontent.com/hypest/f526fe0775dedce0ce0133f14
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.3'
 
     defaultConfig {
         versionCode 13
