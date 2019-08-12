@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-20 10:43:13+0000
+Translation-Revision-Date: 2019-08-07 00:54:15+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Bağlanırken kullandığınız e-postayı bulmak için yardıma mı ihtiyacınız var?</string>
+    <string name="enter_wordpress_site">Bu adresteki web sitesi bir WordPress sitesi değil. Siteyle bağlantı kurabilmemiz için sitede WordPress yüklü olmalıdır.</string>
+    <string name="login_invalid_site_url">Lütfen example.com gibi eksiksiz bir web sitesi adresi girin.</string>
+    <string name="enter_email_for_site">%1$s ile bağlanmak için WordPress.com hesabınıza giriş yapın</string>
+    <string name="sharing_facebook_account_must_have_pages">Hesabın herhangi bir sayfaya erişimi olmadığı için Facebook bağlantısı gerçekleştirilemedi. Facebook, Facebook Sayfalarına yapılan paylaşım bağlantılarını destekler fakat Facebook Profillerine yapılan bağlantıları desteklemez.</string>
+    <string name="stats_post_views_label">Görüntülemeler</string>
+    <string name="stats_post_label">Gönder</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Gönderi paylaşma etkinliğinin grafiği.</string>
+    <string name="stats_item_collapsed">Öğe daraltıldı</string>
+    <string name="stats_item_expanded">Öğe genişletildi</string>
+    <string name="stats_collapse_content_description">Gizle</string>
+    <string name="stats_expand_content_description">Genişletmek</string>
+    <string name="stats_graph_updated">Grafik güncellendi.</string>
+    <string name="stats_overview_content_description">Şu dönem için %1$s %2$s: %3$s, önceki dönemden değişiklik - %4$s</string>
+    <string name="stats_bar_chart_content_description">Site görüntülemelerinin grafiği.</string>
+    <string name="stats_loading_card">Seçilen kart verileri yükleniyor</string>
+    <string name="site_settings_editor">Düzenleyici</string>
+    <string name="dialog_gutenberg_informative_description_page">Şu anda yeni sayfalar oluşturmak için blok düzenleyiciyi kullanıyorsunuz. Varsayılan olarak klasik düzenleyiciyi kullanmak ister misiniz? Site Ayarları’na gidin.</string>
+    <string name="dialog_gutenberg_informative_description_post">Şu anda yeni gönderiler oluşturmak için blok düzenleyiciyi kullanıyorsunuz. Varsayılan olarak klasik düzenleyiciyi kullanmak ister misiniz? Site Ayarları’na gidin.</string>
     <string name="description_expand">Genişlet</string>
     <string name="description_collapse">Daralt</string>
     <string name="editor_retry_failed_uploads">Yüklemeyi yeniden dene</string>
@@ -23,8 +43,6 @@ Language: tr
     <string name="link_dialog_title">Bağlantı ekle</string>
     <string name="post_settings_retry_featured_image">Yüklemeyi yeniden dene</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Ortam yükleniyor.\nLütfen seçenekler için dokunun.</string>
-    <string name="dialog_gutenberg_informative_description_page">Bu sayfa, yeni sayfalar için varsayılan düzenleyici olan blok düzenleyiciyi kullanır. Klasik düzenleyiciyi etkinleştirmek için Ben > Uygulama Ayarları\'na gidin.</string>
-    <string name="dialog_gutenberg_informative_description_post">Bu yazı, yeni yazılar için varsayılan düzenleyici olan blok düzenleyiciyi kullanır. Klasik düzenleyiciyi etkinleştirmek için Ben > Uygulama Ayarları\'na gidin.</string>
     <string name="link_open_new_window">Bağlantıyı yeni pencerede/sekmede aç</string>
     <string name="post_list_search_prompt">Yayımlanmış yazıları ara</string>
     <string name="stats_widget_error_no_access_token">İstatistiklerinizi görüntülemek için WordPress.com hesabında oturum açın.</string>
@@ -137,7 +155,6 @@ Language: tr
     <string name="posts_scheduled_empty">Takvime eklenmiş yazınız yok</string>
     <string name="posts_published_empty">Henüz hiçbir gönderi yayımlamadınız</string>
     <string name="notification_wpcom_username_needed">Lütfen kullanıcı adı ve parola ile oturum açın.</string>
-    <string name="login_invalid_site_url">Girdiğiniz site adresi geçersiz. Lütfen tekrar girin.</string>
     <string name="error_user_username_instead_of_email">Lütfen e-posta adresiniz yerine WordPress.com kullanıcı adınızı kullanarak oturum açın.</string>
     <string name="stats_insights_average_words">Ort kelime/yazı</string>
     <string name="stats_insights_total_words">Toplam kelime</string>
@@ -1041,7 +1058,6 @@ Language: tr
     <string name="login_email_client_not_found">E-posta istemcisi uygulamanızı tespit edemiyoruz</string>
     <string name="login_empty_2fa">Lütfen bir doğrulama kodu girin</string>
     <string name="login_empty_username">Lütfen bir kullanıcı adı girin</string>
-    <string name="login_empty_site_url">Lütfen bir site adresi girin</string>
     <string name="login_log_in_for_deeplink">Bu yazıya erişmek için WordPress.com hesabınıza giriş yapın.</string>
     <string name="login_error_while_adding_site">Site eklenirken hata oluştu. Hata kodu: %s</string>
     <string name="login_checking_site_address">Site adresi kontrol ediliyor</string>
@@ -1476,7 +1492,6 @@ Language: tr
     <string name="editor_page_title_placeholder">Sayfa başlığı</string>
     <string name="editor_post_title_placeholder">Yazı başlığı</string>
     <string name="email_address">E-posta adresi</string>
-    <string name="preference_editor">Düzenleyici</string>
     <string name="dlg_sure_to_delete_comments">Bu yorumlar kalıcı olarak silinsin mi?</string>
     <string name="dlg_sure_to_delete_comment">Bu yorum kalıcı olarak silinsin mi?</string>
     <string name="mnu_comment_delete_permanently">Sil</string>
@@ -2037,6 +2052,7 @@ Language: tr
     <string name="pages">Sayfalar</string>
     <string name="no_network_title">Kullanılabilir ağ yok</string>
     <string name="featured_in_post">Görseli yazı içeriğine ekle</string>
+    <string name="ok">Tamam</string>
     <string name="blogusername">blogkullanıcıadı</string>
     <string name="link_enter_url">Adres</string>
     <string name="uploading">Yükleniyor…</string>

@@ -1,4 +1,0 @@
-12.9:
-* Usuários com crédito de domínios disponíveis podem registrar domínios no aplicativo.
-* Você pode expandir o editor de comentários para tela cheia para ter mais espaço ao editar.
-* Algumas melhorias no editor de blocos: blocos de vídeo estão disponíveis e corrigimos alguns erros com perda de conteúdo ao usar blocos não suportados.
