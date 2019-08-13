@@ -529,6 +529,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                               getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
+    @Override
+    public void onUndo() {
+    }
+
+    @Override
+    public void onRedo() {
+    }
+
     private ActionBar getActionBar() {
         if (!isAdded()) {
             return null;
