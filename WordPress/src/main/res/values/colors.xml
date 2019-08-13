@@ -146,6 +146,7 @@
     <color name="celadon_80">#003b30</color>
     <color name="celadon_90">#002721</color>
     <color name="celadon_100">#001c17</color>
+    <color name="gray">#646970</color>
     <color name="gray_0">#f6f7f7</color>
     <color name="gray_5">#dcdcde</color>
     <color name="gray_10">#c3c4c7</color>
