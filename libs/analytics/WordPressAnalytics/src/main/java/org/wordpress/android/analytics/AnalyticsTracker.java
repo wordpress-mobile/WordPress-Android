@@ -192,6 +192,9 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_READ_MORE,
         EDITOR_TAPPED_STRIKETHROUGH,
         EDITOR_TAPPED_UNDERLINE,
+        EDITOR_TAPPED_ALIGN_LEFT,
+        EDITOR_TAPPED_ALIGN_CENTER,
+        EDITOR_TAPPED_ALIGN_RIGHT,
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only

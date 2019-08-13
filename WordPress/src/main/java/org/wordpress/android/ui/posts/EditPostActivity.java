@@ -3881,6 +3881,15 @@ public class EditPostActivity extends AppCompatActivity implements
             case HORIZONTAL_RULE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HORIZONTAL_RULE);
                 break;
+            case FORMAT_ALIGN_LEFT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_LEFT);
+                break;
+            case FORMAT_ALIGN_CENTER_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_CENTER);
+                break;
+            case FORMAT_ALIGN_RIGHT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_RIGHT);
+                break;
             case HTML_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
                 hidePhotoPicker();
@@ -3927,6 +3936,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case UNDERLINE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
+                break;
+            default:
+                AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
                 break;
         }
     }

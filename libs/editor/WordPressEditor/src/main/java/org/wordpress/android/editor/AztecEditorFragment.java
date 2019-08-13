@@ -674,9 +674,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_ORDERED_BUTTON_TAPPED);
         } else if (format.equals(AztecTextFormat.FORMAT_UNORDERED_LIST)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_UNORDERED_BUTTON_TAPPED);
-        } else if (format.equals(AztecTextFormat.FORMAT_BOLD)) {
+        } else if (format.equals(AztecTextFormat.FORMAT_BOLD)
+                   || format.equals(AztecTextFormat.FORMAT_STRONG)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
-        } else if (format.equals(AztecTextFormat.FORMAT_ITALIC)) {
+        } else if (format.equals(AztecTextFormat.FORMAT_ITALIC)
+                   || format.equals(AztecTextFormat.FORMAT_EMPHASIS)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
         } else if (format.equals(AztecTextFormat.FORMAT_STRIKETHROUGH)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
@@ -690,6 +692,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.READ_MORE_BUTTON_TAPPED);
         } else if (format.equals(CommentsTextFormat.FORMAT_PAGE)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.NEXT_PAGE_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HORIZONTAL_RULE)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HORIZONTAL_RULE_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ALIGN_LEFT)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.FORMAT_ALIGN_LEFT_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ALIGN_CENTER)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.FORMAT_ALIGN_CENTER_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ALIGN_RIGHT)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.FORMAT_ALIGN_RIGHT_BUTTON_TAPPED);
+        } else {
+            AppLog.w(T.EDITOR, "ToolbarFormatButtonClick not tracked in Analytics: " + format.toString());
         }
     }
 
