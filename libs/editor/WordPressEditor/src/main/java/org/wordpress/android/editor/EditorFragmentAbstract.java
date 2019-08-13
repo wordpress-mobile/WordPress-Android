@@ -242,6 +242,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         PREFORMAT_BUTTON_TAPPED,
         READ_MORE_BUTTON_TAPPED,
         STRIKETHROUGH_BUTTON_TAPPED,
-        UNDERLINE_BUTTON_TAPPED
+        UNDERLINE_BUTTON_TAPPED,
+        REDO_TAPPED,
+        UNDO_TAPPED
     }
 }

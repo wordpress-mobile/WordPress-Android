@@ -511,7 +511,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             return;
         }
-
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNDO_TAPPED);
     }
 
     @Override
@@ -519,7 +519,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             return;
         }
-
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.REDO_TAPPED);
     }
 
     private ActionBar getActionBar() {

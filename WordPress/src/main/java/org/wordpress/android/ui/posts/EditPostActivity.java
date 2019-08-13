@@ -3937,6 +3937,12 @@ public class EditPostActivity extends AppCompatActivity implements
             case UNDERLINE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
                 break;
+            case REDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_REDO);
+                break;
+            case UNDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDO);
+                break;
             default:
                 AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
                 break;
