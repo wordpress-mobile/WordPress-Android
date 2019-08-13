@@ -1,6 +1,7 @@
 13.2
 -----
 * Fix issue where establishing LinkedIn connection would always fail
+* Display author of each post on Blog Posts screen
 
 13.1
 -----
