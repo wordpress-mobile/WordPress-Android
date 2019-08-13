@@ -1,21 +1,17 @@
 buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
 
     ext {
         aztecVersion = 'v1.3.29'
     }
 
-    repositories {
-        google()
-        jcenter()
-    }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.2'
     }
 }
-
-apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'signing'
 
 repositories {
     google()
@@ -23,6 +19,11 @@ repositories {
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 }
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
 
 // import the `submoduleGitHash()` function
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/3b91756fca76e4c2a9b573313e186c47842e1f7d/submoduleGitHash.gradle'
@@ -40,6 +41,10 @@ android {
         targetSdkVersion 26
         buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", (rootProject.ext.has("buildGutenbergFromSource") ? rootProject.ext.buildGutenbergFromSource : false).toString()
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -55,6 +60,9 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
+    configurations {
+        all*.exclude group: 'com.mcxiaoke.volley'
+    }
 }
 
 dependencies {
@@ -64,15 +72,24 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'org.wordpress:utils:1.22'
+    implementation ('com.android.volley:volley:1.1.1') {
+        exclude group: "com.mcxiaoke.volley"
+    }
 
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion")
+    implementation ('org.wordpress:utils:1.22') {
+        exclude group: "com.mcxiaoke.volley"
+    }
+
+    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
+        exclude group: "com.mcxiaoke.volley"
+    }
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
     if (rootProject.ext.has("buildGutenbergFromSource") && rootProject.ext.buildGutenbergFromSource) {
         implementation (project(':react-native-gutenberg-bridge')) {
             exclude group: 'com.squareup.okhttp3'
+            exclude group: "com.mcxiaoke.volley"
             exclude group: 'com.google.code.findbugs'
         }
     } else {
@@ -80,6 +97,7 @@ dependencies {
             // Inheriting RN's okhttp version can interfere with FluxC SSL handling
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/9032 and https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/919
             exclude group: 'com.squareup.okhttp3'
+            exclude group: "com.mcxiaoke.volley"
             exclude group: 'com.google.code.findbugs'
         }
     }

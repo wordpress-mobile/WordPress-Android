@@ -1,12 +1,15 @@
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.2'
     }
 }
+
+apply plugin: 'com.android.application'
 
 repositories {
     google()
@@ -14,15 +17,14 @@ repositories {
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 }
-apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    
+    compileSdkVersion 28
+
     defaultConfig {
         applicationId "org.wordpress.editorexample"
         minSdkVersion 21
-        targetSdkVersion 24
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -32,10 +34,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
-    implementation project(":WordPressEditor");
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation project(":WordPressEditor")
+    implementation ('org.wordpress:utils:1.22') {
+        exclude group: "com.mcxiaoke.volley"
+    }
 
     // Test libraries
     testImplementation 'junit:junit:4.11'
