@@ -318,11 +318,6 @@ public class EditorExampleActivity extends FragmentActivity implements EditorFra
     }
 
     @Override
-    public void onSettingsClicked() {
-
-    }
-
-    @Override
     public void onAddMediaClicked() {
 
     }
@@ -379,11 +374,6 @@ public class EditorExampleActivity extends FragmentActivity implements EditorFra
 
     @Override
     public void onUndoMediaCheck(String undoedContent) {
-
-    }
-
-    @Override
-    public void onFeaturedImageChanged(long mediaId) {
 
     }
 

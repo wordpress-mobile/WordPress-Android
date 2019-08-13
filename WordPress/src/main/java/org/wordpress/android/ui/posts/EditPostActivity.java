@@ -3267,11 +3267,6 @@ public class EditPostActivity extends AppCompatActivity implements
      */
 
     @Override
-    public void onSettingsClicked() {
-        mViewPager.setCurrentItem(PAGE_SETTINGS);
-    }
-
-    @Override
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
@@ -3518,12 +3513,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }
-    }
-
-    @Override
-    public void onFeaturedImageChanged(long mediaId) {
-        mPost.setFeaturedImageId(mediaId);
-        mEditPostSettingsFragment.updateFeaturedImage(mediaId);
     }
 
     @Override

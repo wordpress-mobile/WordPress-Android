@@ -63,7 +63,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected static final String ATTR_ALIGN = "align";
     protected static final String ATTR_ALT = "alt";
     protected static final String ATTR_CAPTION = "caption";
-    protected static final String ATTR_CONTENT = "content";
     protected static final String ATTR_DIMEN_HEIGHT = "height";
     protected static final String ATTR_DIMEN_WIDTH = "width";
     protected static final String ATTR_ID = "id";
@@ -76,7 +75,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected static final String ATTR_URL_LINK = "linkUrl";
     protected static final String EXTRA_ENABLED_AZTEC = "isAztecEnabled";
     protected static final String EXTRA_FEATURED = "isFeatured";
-    protected static final String EXTRA_HEADER = "headerMap";
     protected static final String EXTRA_IMAGE_FEATURED = "featuredImageSupported";
     protected static final String EXTRA_IMAGE_META = "imageMeta";
     protected static final String EXTRA_MAX_WIDTH = "maxWidth";
@@ -172,7 +170,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public interface EditorFragmentListener {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
-        void onSettingsClicked();
         void onAddMediaClicked();
         void onAddMediaImageClicked();
         void onAddMediaVideoClicked();
@@ -185,7 +182,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaUploadCancelClicked(String mediaId);
         void onMediaDeleted(String mediaId);
         void onUndoMediaCheck(String undoedContent);
-        void onFeaturedImageChanged(long mediaId);
         void onVideoPressInfoRequested(String videoId);
         String onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
