@@ -60,9 +60,6 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
-    configurations {
-        all*.exclude group: 'com.mcxiaoke.volley'
-    }
 }
 
 dependencies {
@@ -72,16 +69,11 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation ('com.android.volley:volley:1.1.1') {
-        exclude group: "com.mcxiaoke.volley"
-    }
-
-    implementation ('org.wordpress:utils:1.22') {
-        exclude group: "com.mcxiaoke.volley"
-    }
+    implementation 'com.mcxiaoke.volley:library:1.0.18'
+    implementation 'org.wordpress:utils:1.22'
 
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
-        exclude group: "com.mcxiaoke.volley"
+        exclude group: "com.android.volley"
     }
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")

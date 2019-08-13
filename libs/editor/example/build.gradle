@@ -42,11 +42,9 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.android.volley:volley:1.1.1'
     implementation project(":WordPressEditor")
-    implementation ('org.wordpress:utils:1.22') {
-        exclude group: "com.mcxiaoke.volley"
-    }
+    implementation ('org.wordpress:utils:1.22')
+    implementation 'com.mcxiaoke.volley:library:1.0.18'
 
     // Test libraries
     testImplementation 'junit:junit:4.11'
