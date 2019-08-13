@@ -3,6 +3,7 @@
 * Fix issue where establishing LinkedIn connection would always fail
 * Display author of each post on Blog Posts screen
 
+ 
 13.1
 -----
 * Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
