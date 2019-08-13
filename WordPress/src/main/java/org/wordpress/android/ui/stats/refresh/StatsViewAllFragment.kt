@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
@@ -52,6 +51,8 @@ class StatsViewAllFragment : DaggerFragment() {
 
     companion object {
         const val SELECTED_TAB_KEY = "selected_tab_key"
+        const val ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE"
+        const val ARGS_TIMEFRAME = "ARGS_TIMEFRAME"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -65,16 +66,16 @@ class StatsViewAllFragment : DaggerFragment() {
 
         val intent = activity?.intent
         if (intent != null) {
-            if (intent.hasExtra(StatsAbstractFragment.ARGS_VIEW_TYPE)) {
+            if (intent.hasExtra(ARGS_VIEW_TYPE)) {
                 outState.putSerializable(
-                        StatsAbstractFragment.ARGS_VIEW_TYPE,
-                        intent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE)
+                        ARGS_VIEW_TYPE,
+                        intent.getSerializableExtra(ARGS_VIEW_TYPE)
                 )
             }
-            if (intent.hasExtra(StatsAbstractFragment.ARGS_TIMEFRAME)) {
+            if (intent.hasExtra(ARGS_TIMEFRAME)) {
                 outState.putSerializable(
-                        StatsAbstractFragment.ARGS_TIMEFRAME,
-                        intent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME)
+                        ARGS_TIMEFRAME,
+                        intent.getSerializableExtra(ARGS_TIMEFRAME)
                 )
             }
             outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
@@ -123,16 +124,16 @@ class StatsViewAllFragment : DaggerFragment() {
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val type = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
+            nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
         } else {
-            savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE) as StatsViewType
+            savedInstanceState.getSerializable(ARGS_VIEW_TYPE) as StatsViewType
         }
 
         val granularity = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
+            nonNullIntent.getSerializableExtra(ARGS_TIMEFRAME) as StatsGranularity?
         } else {
-            savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME) as StatsGranularity?
+            savedInstanceState.getSerializable(ARGS_TIMEFRAME) as StatsGranularity?
         }
 
         val nonNullIntent = checkNotNull(activity.intent)

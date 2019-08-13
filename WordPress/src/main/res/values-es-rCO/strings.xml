@@ -97,7 +97,6 @@ Language: es_CO
     <string name="login_email_client_not_found">No se pudo detectar una aplicación cliente de correo electrónico</string>
     <string name="login_empty_2fa">Por favor, introduce un código de verificación</string>
     <string name="login_empty_username">Por favor, introduce un nombre de usuario</string>
-    <string name="login_empty_site_url">Por favor, introduce una dirección del sitio</string>
     <string name="login_log_in_for_deeplink">Accede a WordPress.com para acceder a la entrada.</string>
     <string name="login_error_while_adding_site">Error al añadir el sitio. Código de error: %s</string>
     <string name="login_checking_site_address">Comprobando dirección del sitio</string>
@@ -106,7 +105,6 @@ Language: es_CO
     <string name="login_site_address_help_title">¿Cuál es la dirección de mi sitio?</string>
     <string name="login_site_address_help">¿Necesitas ayuda para encontrar la dirección de tu sitio?</string>
     <string name="login_site_address">Dirección del sitio</string>
-    <string name="enter_site_address">Introduce la dirección de tu sitio WordPress con el que te gustaría conectar.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Ya estás conectado a WordPress.com</string>
     <string name="login_continue">Seguir</string>
@@ -520,7 +518,6 @@ Language: es_CO
     <string name="editor_page_title_placeholder">Título página</string>
     <string name="editor_post_title_placeholder">Título entrada</string>
     <string name="email_address">Correo electrónico</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -1050,6 +1047,7 @@ Language: es_CO
     <string name="pages">Páginas</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
+    <string name="ok">OK</string>
     <string name="blogusername">Usuario del blog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>

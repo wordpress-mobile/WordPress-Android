@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-26 16:14:23+0000
+Translation-Revision-Date: 2019-08-07 01:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">נדרשת לך עזרה במציאת האימייל שבעזרתו התחברת?</string>
+    <string name="enter_wordpress_site">האתר בכתובת זו אינו אתר של WordPress. כדי שנוכל להתחבר לאתר, השירות של WordPress חייב להיות מותקן באתר.</string>
+    <string name="login_invalid_site_url">יש להזין את כתובת האתר המלאה, לדוגמה example.com.</string>
+    <string name="enter_email_for_site">עליך להתחבר אל WordPress.com כדי להתחבר אל %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">החשבון לא קושר לפייסבוק כיוון שלא הוגדרה גישה מחשבון זה לדפי פייסבוק. פלטפורמת פייסבוק תומכת בשיתוף אוטומטי של חשבונות שמקושרים לדפים בפייסבוק בלבד, לא לפרופילים בפייסבוק.</string>
+    <string name="stats_post_views_label">צפיות</string>
+    <string name="stats_post_label">פוסט</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">גרף של פעילות הפרסום.</string>
+    <string name="stats_item_collapsed">הפריט צומצם</string>
+    <string name="stats_item_expanded">הפריט הורחב</string>
+    <string name="stats_collapse_content_description">לצמצם</string>
+    <string name="stats_expand_content_description">להרחיב</string>
+    <string name="stats_graph_updated">הגרף עודכן.</string>
+    <string name="stats_overview_content_description">%1$s %2$s לתקופה: %3$s, שינוי מהתקופה הקודמת - %4$s</string>
+    <string name="stats_bar_chart_content_description">גרף של הצפיות באתר.</string>
+    <string name="stats_loading_card">טוען את נתוני הכרטיס שנבחרו</string>
+    <string name="site_settings_editor">עורך</string>
+    <string name="dialog_gutenberg_informative_description_page">עמודים חדשים נוצרים אצלך כעת באמצעות עורך הבלוקים. האם ברצונך להשתמש בעורך הקלאסי כברירת מחדל? מעבר להגדרות האתר.</string>
+    <string name="dialog_gutenberg_informative_description_post">פוסטים חדשים נוצרים אצלך כעת באמצעות עורך הבלוקים. האם ברצונך להשתמש בעורך הקלאסי כברירת מחדל? מעבר להגדרות האתר.</string>
     <string name="description_expand">להרחיב</string>
     <string name="description_collapse">למזער</string>
     <string name="editor_retry_failed_uploads">לנסות שוב את ההעלאה</string>
@@ -23,8 +43,6 @@ Language: he_IL
     <string name="link_dialog_title">להוסיף קישור</string>
     <string name="post_settings_retry_featured_image">לנסות שוב את ההעלאה</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">מעלה קובצי מדיה.\nיש להקיש לאפשרויות.</string>
-    <string name="dialog_gutenberg_informative_description_page">העמוד הזה משתמש בעורך הבלוגים, שהוא העורך שמוגדר כברירת מחדל בעמודים חדשים. כדי להפעיל את העורך הקלאסי, יש לעבור אל אזור \'אני\' > \'הגדרות אפליקציה\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">הפוסט הזה משתמש בעורך הבלוגים, שהוא העורך שמוגדר כברירת מחדל בפוסטים חדשים. כדי להפעיל את העורך הקלאסי, יש לעבור אל אזור \'אני\' > \'הגדרות אפליקציה\'.</string>
     <string name="link_open_new_window">הקישור יפתח בלשונית חדשה</string>
     <string name="post_list_search_prompt">חיפוש פוסטים שפורסמו</string>
     <string name="stats_widget_error_no_access_token">להצגת הנתונים הסטטיסטיים שלך, יש להתחבר לחשבון WordPress.com.</string>
@@ -134,7 +152,6 @@ Language: he_IL
     <string name="posts_scheduled_empty">אין לך אף פוסט מתוזמן לפרסום</string>
     <string name="posts_published_empty">עדיין לא פרסמת אף פוסט</string>
     <string name="notification_wpcom_username_needed">עליך להיכנס באמצעות שם המשתמש והסיסמה שלך.</string>
-    <string name="login_invalid_site_url">כתובת האתר שהזנת לא תקפה. יש להזין את הכתובת שוב.</string>
     <string name="error_user_username_instead_of_email">יש להיכנס באמצעות שם המשתמש ב-WordPress.com במקום כתובת המייל.</string>
     <string name="stats_insights_average_words">ממוצע מילים לפוסט</string>
     <string name="stats_insights_total_words">סה\"כ מילים</string>
@@ -1022,7 +1039,6 @@ Language: he_IL
     <string name="login_email_client_not_found">לא ניתן לאתר את האפליקציה של שירות האימייל שלך</string>
     <string name="login_empty_2fa">יש להזין קוד אימות</string>
     <string name="login_empty_username">נא להכניס שם משתמש</string>
-    <string name="login_empty_site_url">נא להזין כתובת אתר</string>
     <string name="login_log_in_for_deeplink">יש להתחבר ל-WordPress.com כדי לקבל גישה לפוסט זה.</string>
     <string name="login_error_while_adding_site">שגיאה אירעה במהלך הוספת האתר. קוד שגיאה: %s</string>
     <string name="login_checking_site_address">בודק את כתובת האתר</string>
@@ -1031,7 +1047,6 @@ Language: he_IL
     <string name="login_site_address_help_title">מה כתובת האתר שלי?</string>
     <string name="login_site_address_help">רוצה עזרה במציאת כתובת האתר שלך?</string>
     <string name="login_site_address">כתובת אתר</string>
-    <string name="enter_site_address">יש להזין את הכתובת של האתר שלך ב-WordPress אליו ברצונך להתחבר.</string>
     <string name="login_username_at">‎@‎%s‎</string>
     <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue">המשך</string>
@@ -1454,7 +1469,6 @@ Language: he_IL
     <string name="editor_page_title_placeholder">כותרת עמוד</string>
     <string name="editor_post_title_placeholder">כותרת הפוסט</string>
     <string name="email_address">כתובת אימייל</string>
-    <string name="preference_editor">עורך</string>
     <string name="dlg_sure_to_delete_comments">האם למחוק תגובות אלה לצמיתות?</string>
     <string name="dlg_sure_to_delete_comment">האם למחוק תגובה זו לצמיתות?</string>
     <string name="mnu_comment_delete_permanently">מחיקה</string>
@@ -2012,6 +2026,7 @@ Language: he_IL
     <string name="pages">עמודים</string>
     <string name="no_network_title">הרשת אינה זמינה</string>
     <string name="featured_in_post">הוספת תמונה לתוכן</string>
+    <string name="ok">אוקיי</string>
     <string name="blogusername">שם משתמש</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">מעלה…</string>

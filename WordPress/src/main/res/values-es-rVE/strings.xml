@@ -202,7 +202,6 @@ Language: es_VE
     <string name="editor_page_title_placeholder">Título página</string>
     <string name="editor_post_title_placeholder">Título entrada</string>
     <string name="email_address">Correo electrónico</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -726,6 +725,7 @@ Language: es_VE
     <string name="posts">Entradas</string>
     <string name="anonymous">Anónimo</string>
     <string name="blogusername">Usuario del blog</string>
+    <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>
     <string name="version">Versión</string>

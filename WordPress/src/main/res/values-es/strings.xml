@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-17 16:37:49+0000
+Translation-Revision-Date: 2019-08-01 22:45:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">¿Necesitas ayuda para encontrar el correo electrónico con el que te conectaste?</string>
+    <string name="enter_wordpress_site">La web en esa dirección no es un sitio WordPress. Para conectarnos a él, el sitio debe tener instalado WordPress.</string>
+    <string name="login_invalid_site_url">Por favor, introduce una dirección completa de una web, como example.com.</string>
+    <string name="enter_email_for_site">Accede con WordPress.com para conectar con %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">No se puede hacer la conexión de Facebook porque esta cuenta no tiene acceso a ninguna página. Facebook es compatible para compartir conexiones con las páginas de Facebook, pero no con los perfiles de Facebook.</string>
+    <string name="stats_post_views_label">Visitas</string>
+    <string name="stats_post_label">Entrada</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Gráfico de actividad de entradas.</string>
+    <string name="stats_item_collapsed">Elemento contraído</string>
+    <string name="stats_item_expanded">Elemento expandido</string>
+    <string name="stats_collapse_content_description">Contraer</string>
+    <string name="stats_expand_content_description">Expandir</string>
+    <string name="stats_graph_updated">Gráfico actualizado.</string>
+    <string name="stats_overview_content_description">%1$s %2$s del período: %3$s, cambio desde el período anterior - %4$s</string>
+    <string name="stats_bar_chart_content_description">Gráfico de visitas del sitio.</string>
+    <string name="stats_loading_card">Cargando los datos de la tarjeta seleccionada</string>
+    <string name="site_settings_editor">Editor</string>
+    <string name="dialog_gutenberg_informative_description_page">Actualmente estás usando el editor de bloques para crear nuevas páginas. ¿Quieres usar el editor clásico por defecto? Dirígete a los ajustes del sitio.</string>
+    <string name="dialog_gutenberg_informative_description_post">Actualmente estás usando el editor de bloques para crear nuevas entradas. ¿Quieres usar el editor clásico por defecto? Dirígete a los ajustes del sitio.</string>
     <string name="description_expand">Expandir</string>
     <string name="description_collapse">Cerrar</string>
     <string name="editor_retry_failed_uploads">Reintentar la subida</string>
@@ -23,8 +43,6 @@ Language: es
     <string name="link_dialog_title">Insertar enlace</string>
     <string name="post_settings_retry_featured_image">Reintentar la subida</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Subiendo medios.\nPor favor, toca para ver las opciones.</string>
-    <string name="dialog_gutenberg_informative_description_page">Esta página utiliza el editor de bloques, que es el editor por defecto para las nuevas páginas. Para activar el editor clásico ve a «Yo > Ajustes de la aplicación».</string>
-    <string name="dialog_gutenberg_informative_description_post">Esta entrada utiliza el editor de bloques, que es el editor por defecto para las nuevas entradas. Para activar el editor clásico ve a «Yo > Ajustes de la aplicación».</string>
     <string name="link_open_new_window">Abrir enlace en una nueva ventana/pestaña</string>
     <string name="post_list_search_prompt">Buscar entradas publicadas</string>
     <string name="stats_widget_error_no_access_token">Para ver tus estadísticas accede a la cuenta de WordPress.com.</string>
@@ -137,7 +155,6 @@ Language: es
     <string name="posts_scheduled_empty">No tienes ninguna entrada programada</string>
     <string name="posts_published_empty">Aún no has publicado ninguna entrada</string>
     <string name="notification_wpcom_username_needed">Por favor, accede con tu nombre de usuario y contraseña.</string>
-    <string name="login_invalid_site_url">La dirección del sitio que has introducido no es válida. Por favor, vuelve a introducirla.</string>
     <string name="error_user_username_instead_of_email">Por favor, accede usando tu nombre de usuario de WordPress.com en vez de tu dirección de correo electrónico.</string>
     <string name="stats_insights_average_words">Promedio de palabras/entrada</string>
     <string name="stats_insights_total_words">Total de palabras</string>
@@ -486,7 +503,7 @@ Language: es
     <string name="site_settings_tags_empty_button">Crea una etiqueta</string>
     <string name="media_empty_search_list">No hay medios que coincidan con tu búsqueda</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">¿Salir de WordPress?</string>
-    <string name="sign_out_wpcom_confirm_with_changes">Tienes cambios en entradas que no se han subido a tu sitio. Salir ahora borrará esos cambios de tu dispositivo. ¿Quieres salir de todos modos\"</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Tienes cambios en entradas que no se han subido a tu sitio. Salir ahora borrará esos cambios de tu dispositivo. ¿Quieres salir de todos modos?</string>
     <string name="people_empty_list_filtered_viewers">No hay lectores aún</string>
     <string name="people_empty_list_filtered_email_followers">No hay seguidores por correo electrónico aún</string>
     <string name="people_empty_list_filtered_followers">No hay seguidores aún</string>
@@ -833,7 +850,7 @@ Language: es
     <string name="my_site_create_new_site">Crea un nuevo sitio para tu negocio, revista o blog personal; o conecta con una instalación de WordPress existente.</string>
     <string name="notifications_jetpack_connection_setup_info">Para obtener avisos útiles en tu dispositivo desde tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
     <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio simplemente cargando las imágenes visibles en la pantalla. Las nuevas imágenes se cargarán justo antes de que navegues para verlas. Esto evita que los navegadores tengan que descargar las imágenes de una página todas a la vez, incluso las que no se ven.</string>
-    <string name="site_settings_lazy_load_images">\"Carga perezosa\" de imágenes</string>
+    <string name="site_settings_lazy_load_images">«Carga diferida» de imágenes</string>
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimizará tus imágenes y las servirá desde la ubicación del servidor más cercana a tus visitantes. Usar nuestra red global de entregad de contenidos impulsará la velocidad de carga de tu sitio.</string>
     <string name="site_settings_serve_images_from_our_servers">Sirve imágenes desde nuestros servidores</string>
     <string name="site_settings_speed_up_your_site">Acelera tu sitio</string>
@@ -953,7 +970,7 @@ Language: es
     <string name="jetpack_disconnect_success_toast">Sitio desconectado</string>
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">¿Estás seguro de querer desconectar Jetpack del sitio?</string>
-    <string name="jetpack_disconnect_pref_title">\"Desconecta de WordPress.com\"</string>
+    <string name="jetpack_disconnect_pref_title">«Desconecta de WordPress.com»</string>
     <string name="site_settings_jetpack_whitelist_description">Puedes poner en lista blanca una dirección IP o series de direcciones, evitando que las bloquee Jetpack. Se aceptan IPv4 y IPv6. Para especificar un rango introduce  un valor inferior y un valor superior separados por guiones. Ejemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Requiere la identificación en dos pasos</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar cuentas usando el correo electrónico</string>
@@ -1015,7 +1032,7 @@ Language: es
     <string name="reader_excerpt_link">Vista %s para saber más</string>
     <string name="error_unknown_page">No se pudo encontrar la página en el servidor</string>
     <string name="error_publish_empty_page">No se puede publicar una página vacía</string>
-    <string name="upload_failed_param">La subida de \"%s\" falló</string>
+    <string name="upload_failed_param">La subida de «%s» ha fallado</string>
     <string name="cannot_retry_deleted_media_item">Los medios se han borrados. ¿Los borramos de esta entrada?</string>
     <string name="error_please_choose_browser">Error al abrir el navegador web por defecto. Por favor, elige otra aplicación:</string>
     <string name="cant_open_url">No fue posible abrir el enlace</string>
@@ -1033,7 +1050,7 @@ Language: es
     <string name="post_scheduled">Entrada programada</string>
     <string name="button_retry">Reintentar</string>
     <string name="post_queued">Entrada a la espera</string>
-    <string name="uploading_post">Subiendo \"%s\"</string>
+    <string name="uploading_post">Subiendo «%s»</string>
     <string name="connection_to_server_lost">Se ha perdido la conexión al servidor</string>
     <string name="login_epilogue_mysites_other">Mis sitios</string>
     <string name="login_epilogue_mysites_one">Mi sitio</string>
@@ -1041,7 +1058,6 @@ Language: es
     <string name="login_email_client_not_found">No se pudo detectar una aplicación cliente de correo electrónico</string>
     <string name="login_empty_2fa">Por favor, introduce un código de verificación</string>
     <string name="login_empty_username">Por favor, introduce un nombre de usuario</string>
-    <string name="login_empty_site_url">Por favor, introduce una dirección del sitio</string>
     <string name="login_log_in_for_deeplink">Accede a WordPress.com para acceder a la entrada.</string>
     <string name="login_error_while_adding_site">Error al añadir el sitio. Código de error: %s</string>
     <string name="login_checking_site_address">Comprobando dirección del sitio</string>
@@ -1050,7 +1066,7 @@ Language: es
     <string name="login_site_address_help_title">¿Cuál es la dirección de mi sitio?</string>
     <string name="login_site_address_help">¿Necesitas ayuda para encontrar la dirección de tu sitio?</string>
     <string name="login_site_address">Dirección del sitio</string>
-    <string name="enter_site_address">Introduce la dirección de tu sitio WordPress con el que te gustaría conectar.</string>
+    <string name="enter_site_address">Introduce la dirección del sitio WordPress con el que te gustaría conectar.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Ya estás conectado a WordPress.com</string>
     <string name="login_continue">Seguir</string>
@@ -1067,7 +1083,7 @@ Language: es
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
     <string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha - tienes WordPress en tu bolsillo.</string>
-    <string name="login_promo_text_notifications">Tus avisos viajan contigo - ve los comentarios y \"me gusta\" a medida que ocurran.</string>
+    <string name="login_promo_text_notifications">Tus avisos viajan contigo - ve los comentarios y «me gusta» a medida que ocurran.</string>
     <string name="login_promo_text_anytime">Revisa tus sitios favoritos y únete a la conversación en cualquier sitio, en cualquier momento.</string>
     <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio - en tiempo real. </string>
     <string name="login_promo_text_onthego">Publica desde el parque. Bloguea desde el autobús. Comenta desde el café. WordPress está donde tú vas.</string>
@@ -1152,8 +1168,8 @@ Language: es
     <string name="likes">Me gusta</string>
     <string name="sharing_comment_likes_description">Permite que tú y tus lectores den me gusta a todos los comentarios</string>
     <string name="buttons">Botones</string>
-    <string name="sharing_edit_more_buttons">Editar los botones \"Más\"</string>
-    <string name="sharing_more_description">Un botón \"Más\" contiene un desplegable que muestra botones de compartir</string>
+    <string name="sharing_edit_more_buttons">Editar los botones «Más»</string>
+    <string name="sharing_more_description">Un botón «Más» contiene un desplegable que muestra botones de compartir</string>
     <string name="sharing_sharing_buttons_description">Elige qué botones se mostrarán debajo de tus entradas</string>
     <string name="twitter_username">Usuario de Twitter</string>
     <string name="sharing_comment_likes">Me gusta a comentarios</string>
@@ -1258,11 +1274,11 @@ Language: es
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
     <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
     <string name="visual_editor_disabled">El editor visual se ha desactivado</string>
-    <string name="pending_draft_one_generic">No dejes el trabajo a medias; \"%1$s\" está pendiente de publicarse.</string>
-    <string name="pending_draft_one_month">No dejes el trabajo a medias; \"%1$s\" está pendiente de publicarse.</string>
-    <string name="pending_draft_one_week_2">\"%1$s\" se ha guardado como borrador. Acuérdate de publicarla.</string>
-    <string name="pending_draft_one_week_1">El borrador \"%1$s\" te está esperando; no te olvides de publicarlo.</string>
-    <string name="pending_draft_one_day_2">¿Sabías que \"%1$s\" aún es un borrador? No esperes más y publícala.</string>
+    <string name="pending_draft_one_generic">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
+    <string name="pending_draft_one_month">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
+    <string name="pending_draft_one_week_2">«%1$s» se ha guardado como borrador. ¡Acuérdate de publicarla!</string>
+    <string name="pending_draft_one_week_1">El borrador «%1$s» te está esperando - ¡asegúrate de publicarlo!</string>
+    <string name="pending_draft_one_day_2">¿Sabías que «%1$s» está aún en borrador? ¡Publícala!</string>
     <string name="pending_draft_one_day_1">Ayer guardaste \'%1$s\' como borrador. ¡No olvides publicarla!</string>
     <string name="reader_photo_by">Foto de %s</string>
     <string name="reader_label_visit">Visitar</string>
@@ -1446,8 +1462,8 @@ Language: es
     <string name="username_mentions">Menciones del nombre de usuario</string>
     <string name="site_achievements">Logros del sitio</string>
     <string name="site_follows">Seguidores del sitio</string>
-    <string name="likes_on_my_posts">\"Me gusta\" en mis entradas</string>
-    <string name="likes_on_my_comments">\"Me gusta\" en mis comentarios</string>
+    <string name="likes_on_my_posts">«Me gusta» en mis entradas</string>
+    <string name="likes_on_my_comments">«Me gusta» en mis comentarios</string>
     <string name="comments_on_my_site">Comentarios en mi sitio</string>
     <string name="site_settings_list_editor_summary_other">%d elementos</string>
     <string name="site_settings_list_editor_summary_one">1 elemento</string>
@@ -1476,7 +1492,6 @@ Language: es
     <string name="editor_page_title_placeholder">Título página</string>
     <string name="editor_post_title_placeholder">Título entrada</string>
     <string name="email_address">Correo electrónico</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -1519,16 +1534,16 @@ Language: es
     <string name="site_settings_paging_dialog_description">Rompe los hilos de comentarios en múltiples páginas</string>
     <string name="site_settings_paging_dialog_header">Comentarios por página</string>
     <string name="site_settings_close_after_dialog_title">Cerrar los comentarios</string>
-    <string name="site_settings_blacklist_description">Cuando un comentario contenga alguna de estas palabras en su contenido, nombre, URL, correo electrónico o IP, será marcado como spam. Puedes introducir palabras parciales, así \"press\" coincidirá con \"WordPress.\"</string>
-    <string name="site_settings_hold_for_moderation_description">Cuando un comentario contenga alguna de las estas palabras en su contenido, nombre, URL, correo electrónico o IP, será puesto en la cola para moderar. Puedes introducir palabras parciales, así \"press\" coincidirá como \"Wordpress\"</string>
+    <string name="site_settings_blacklist_description">Cuando un comentario contenga alguna de estas palabras en su contenido, nombre, URL, correo electrónico o IP, será marcado como spam. Puedes introducir palabras parciales, así «press» coincidirá con «WordPress».</string>
+    <string name="site_settings_hold_for_moderation_description">Cuando un comentario contenga alguna de las estas palabras en su contenido, nombre, URL, correo electrónico o IP, será puesto en la cola para moderar. Puedes introducir palabras parciales, así «press» coincidirá con «Wordpress».</string>
     <string name="site_settings_list_editor_input_hint">Introduce una palabra o frase</string>
     <string name="site_settings_list_editor_no_items_text">Sin elementos</string>
     <string name="site_settings_learn_more_caption">Puedes sobreescribir esta configuración para entradas individuales</string>
-    <string name="site_settings_rp_preview3_site">en \"Mejora\"</string>
+    <string name="site_settings_rp_preview3_site">en «Actualización»</string>
     <string name="site_settings_rp_preview3_title">Novedades: VideoPress para bodas</string>
-    <string name="site_settings_rp_preview2_site">en \"Aplicaciones\"</string>
+    <string name="site_settings_rp_preview2_site">en «Aplicaciones»</string>
     <string name="site_settings_rp_preview2_title">La aplicación WordPress para Android consigue un gran lavado de cara</string>
-    <string name="site_settings_rp_preview1_site">en \"Móvil\"</string>
+    <string name="site_settings_rp_preview1_site">en «Móvil»</string>
     <string name="site_settings_rp_preview1_title">Gran actualización disponible ahora para iPhone/iPad</string>
     <string name="site_settings_rp_show_images_title">Mostrar imágenes</string>
     <string name="site_settings_rp_show_header_title">Mostrar cabecera</string>
@@ -1632,7 +1647,7 @@ Language: es
     <string name="post_published">Entrada publicada</string>
     <string name="theme_no_search_result_found">Lo sentimos, no se han encontrados temas.</string>
     <string name="reader_label_gap_marker">Cargar más entradas</string>
-    <string name="notifications_no_search_results">Ningún sitio coincide con \"%s\"</string>
+    <string name="notifications_no_search_results">Ningún sitio coincide con «%s»</string>
     <string name="search_sites">Buscar sitios</string>
     <string name="notifications_empty_view_reader">Ir al Lector</string>
     <string name="notifications_empty_action_followers_likes">Recibe avisos: comenta en entradas que has leído</string>
@@ -1705,7 +1720,7 @@ Language: es
     <string name="me_disconnect_from_wordpress_com">Salir de WordPress.com</string>
     <string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
     <string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
-    <string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
+    <string name="site_picker_cant_hide_current_site">«%s» no se ha ocultado porque es el sitio actual</string>
     <string name="me_btn_support">Ayuda y soporte</string>
     <string name="account_settings">Configuración de la cuenta</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
@@ -2037,6 +2052,7 @@ Language: es
     <string name="pages">Páginas</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
+    <string name="ok">OK</string>
     <string name="blogusername">Usuario del blog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>

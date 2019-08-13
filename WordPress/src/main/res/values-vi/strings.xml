@@ -190,7 +190,6 @@ Language: vi_VN
     <string name="editor_page_title_placeholder">Tiêu đề Trang</string>
     <string name="editor_post_title_placeholder">Tiêu đề Bài viết</string>
     <string name="email_address">Địa chỉ email</string>
-    <string name="preference_editor">Trình biên tập</string>
     <string name="dlg_sure_to_delete_comments">Xóa vĩnh viễn những bình luận này?</string>
     <string name="dlg_sure_to_delete_comment">Xóa vĩnh viễn bình luận này?</string>
     <string name="mnu_comment_delete_permanently">Xóa</string>
@@ -726,6 +725,7 @@ Language: vi_VN
     <string name="pages">Trang</string>
     <string name="no_network_title">Không có mạng</string>
     <string name="featured_in_post">Bao gồm ảnh trong nội dung bài viết</string>
+    <string name="ok">Đồng ý</string>
     <string name="blogusername">tên người dùng blog</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Đang tải lên…</string>
