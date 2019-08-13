@@ -781,7 +781,6 @@ Language: sk
     <string name="login_email_client_not_found">Nemožno zistiť vašu aplikáciu e-mailového klienta</string>
     <string name="login_empty_2fa">Prosím, zadajte overovací kód</string>
     <string name="login_empty_username">Prosím, zadajte používateľské meno</string>
-    <string name="login_empty_site_url">Prosím, zadajte adresu webovej stránky</string>
     <string name="login_log_in_for_deeplink">Prihláste sa do WordPress.com a prejdite k článku.</string>
     <string name="login_error_while_adding_site">Chyba pri pridávaní webovej stránky. Kód chyby: %s.</string>
     <string name="login_checking_site_address">Kontrolovanie adresy webovej stránky.</string>
@@ -790,7 +789,6 @@ Language: sk
     <string name="login_site_address_help_title">Aká je adresa mojej webovej stránky?</string>
     <string name="login_site_address_help">Potrebujete pomoc pri hľadaní adresy vašej webovej stránky?</string>
     <string name="login_site_address">Adresa webovej stránky</string>
-    <string name="enter_site_address">Vpíšte adresu vašej webovej stránky WordPress, na ktorú sa chcete pripojiť.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Už ste prihlásený vo WordPress.com</string>
     <string name="login_continue">Pokračovať</string>
@@ -1216,7 +1214,6 @@ Language: sk
     <string name="editor_page_title_placeholder">Nadpis stránky</string>
     <string name="editor_post_title_placeholder">Nadpis článku</string>
     <string name="email_address">Emailová adresa</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
     <string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
     <string name="mnu_comment_delete_permanently">Zmazať</string>
@@ -1774,6 +1771,7 @@ Language: sk
     <string name="pages">Podstránky</string>
     <string name="no_network_title">Sieť nedostupná</string>
     <string name="featured_in_post">Vložiť obrázok do príspevku</string>
+    <string name="ok">OK</string>
     <string name="blogusername">Používateľské meno</string>
     <string name="link_enter_url">URL adresa</string>
     <string name="uploading">Nahrávanie…</string>
