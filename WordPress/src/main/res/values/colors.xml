@@ -120,6 +120,7 @@
     <color name="warning_light">@color/yellow_5</color>
 
     <!-- STUDIO 2.0.0 -->
+    <color name="blue">#2271b1</color>
     <color name="blue_0">#eff3f7</color>
     <color name="blue_5">#c6def6</color>
     <color name="blue_10">#9ac6f0</color>
