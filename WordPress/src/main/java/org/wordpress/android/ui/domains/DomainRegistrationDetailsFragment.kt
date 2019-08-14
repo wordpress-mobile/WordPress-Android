@@ -263,12 +263,12 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         if (!TextUtils.isEmpty(domainContactInformation.phone)) {
             country_code_input.setText(
-                    DomainPhoneNumberUtils.getCountryCodePrefixFromFullPhoneNumber(
+                    DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(
                             domainContactInformation.phone!!
                     )
             )
             phone_number_input.setText(
-                    DomainPhoneNumberUtils.getPhoneNumberWithoutCountryCode(
+                    DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(
                             domainContactInformation.phone!!
                     )
             )

@@ -170,9 +170,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
                 // if customer does not have a phone number we will try to prefill a country code
                 if (TextUtils.isEmpty(event.contactModel?.phone)) {
-                    val countryCodePrefix = DomainPhoneNumberUtils.getCountryCodePrefix(countryCode!!)
+                    val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode!!)
                     _domainContactDetails.value = _domainContactDetails.value?.copy(
-                            phone = DomainPhoneNumberUtils.formatCountryCodeAndPhoneNumber(
+                            phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
                                     countryCodePrefix,
                                     null
                             )
@@ -354,20 +354,20 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                             isStateInputEnabled = false
                     )
 
-            val phoneCountryCode = DomainPhoneNumberUtils.getCountryCodePrefix(country.code)
+            val phoneCountryCode = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
 
             val currentPhoneNumber = _domainContactDetails.value?.phone
             var newPhoneNumber: String? = null
 
             if (phoneCountryCode != null) {
                 newPhoneNumber = if (TextUtils.isEmpty(currentPhoneNumber)) {
-                    DomainPhoneNumberUtils.formatCountryCodeAndPhoneNumber(phoneCountryCode, "")
+                    DomainPhoneNumberUtils.formatPhoneNumberandPrefix(phoneCountryCode, "")
                 } else {
-                    val phoneNumberWithoutCountryCode = DomainPhoneNumberUtils.getPhoneNumberWithoutCountryCode(
+                    val phoneNumberWithoutCountryCode = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(
                             currentPhoneNumber!!
                     )
 
-                    DomainPhoneNumberUtils.formatCountryCodeAndPhoneNumber(
+                    DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
                             phoneCountryCode,
                             phoneNumberWithoutCountryCode
                     )

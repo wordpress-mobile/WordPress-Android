@@ -7,7 +7,7 @@ class DomainPhoneNumberUtils {
         private const val PHONE_NUMBER_PREFIX = "+"
         private const val PHONE_NUMBER_CONNECTING_CHARACTER = "."
 
-        private val countryCodeToPhoneCodePrefixMap = mapOf(
+        private val countryCodeToPhoneNumberPrefixMap = mapOf(
                 "AC" to 247,
                 "AD" to 376,
                 "AE" to 971,
@@ -256,14 +256,14 @@ class DomainPhoneNumberUtils {
                 "ZW" to 263
         )
 
-        fun getCountryCodePrefix(countryCode: String): String? {
-            if (countryCodeToPhoneCodePrefixMap.containsKey(countryCode)) {
-                return countryCodeToPhoneCodePrefixMap[countryCode].toString()
+        fun getPhoneNumberPrefix(countryCode: String): String? {
+            if (countryCodeToPhoneNumberPrefixMap.containsKey(countryCode)) {
+                return countryCodeToPhoneNumberPrefixMap[countryCode].toString()
             }
             return null
         }
 
-        fun getCountryCodePrefixFromFullPhoneNumber(phoneNumber: String): String? {
+        fun getPhoneNumberPrefixFromFullPhoneNumber(phoneNumber: String): String? {
             val phoneParts = phoneNumber.split(PHONE_NUMBER_CONNECTING_CHARACTER)
             if (phoneParts.size == 2) {
                 var countryCode = phoneParts[0]
@@ -276,25 +276,24 @@ class DomainPhoneNumberUtils {
             return null
         }
 
-        fun getPhoneNumberWithoutCountryCode(phoneNumber: String): String? {
+        fun getPhoneNumberWithoutPrefix(phoneNumber: String): String? {
             val phoneParts = phoneNumber.split(PHONE_NUMBER_CONNECTING_CHARACTER)
             if (phoneParts.size == 2) {
-                val phoneNumberWithoutCountryCode = phoneParts[1]
-                if (!TextUtils.isEmpty(phoneNumberWithoutCountryCode)) {
-                    return phoneNumberWithoutCountryCode
+                val phoneNumberWithoutPrefix = phoneParts[1]
+                if (!TextUtils.isEmpty(phoneNumberWithoutPrefix)) {
+                    return phoneNumberWithoutPrefix
                 }
             }
             return null
         }
 
-        fun formatCountryCodeAndPhoneNumber(countryCodePrefix: String?, phoneNumber: String?): String? {
-            if (TextUtils.isEmpty(countryCodePrefix) && TextUtils.isEmpty(phoneNumber)) {
+        fun formatPhoneNumberandPrefix(phoneNumberPrefix: String?, phoneNumber: String?): String? {
+            if (TextUtils.isEmpty(phoneNumberPrefix) && TextUtils.isEmpty(phoneNumber)) {
                 return null
             }
 
-            return PHONE_NUMBER_PREFIX + StringUtils.notNullStr(countryCodePrefix) + PHONE_NUMBER_CONNECTING_CHARACTER + StringUtils.notNullStr(
-                    phoneNumber
-            )
+            return PHONE_NUMBER_PREFIX + StringUtils.notNullStr(phoneNumberPrefix) +
+                    PHONE_NUMBER_CONNECTING_CHARACTER + StringUtils.notNullStr(phoneNumber)
         }
     }
 }

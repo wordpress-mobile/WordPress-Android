@@ -403,6 +403,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
         assertThat(viewModel.domainContactDetails.value?.state).isNull()
+        // phone number preffix was correctly switched to AU one
         assertThat(viewModel.domainContactDetails.value?.phone).isEqualTo("+61.3124567890")
 
         assertThat(uiStateResults.size).isEqualTo(2)
