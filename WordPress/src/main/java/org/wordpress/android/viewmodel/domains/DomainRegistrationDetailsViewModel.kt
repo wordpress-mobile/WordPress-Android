@@ -355,16 +355,14 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                     )
 
             val phoneCountryCode = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
-
-            val currentPhoneNumber = _domainContactDetails.value?.phone
-            var newPhoneNumber: String? = null
+            val newPhoneNumber: String?
 
             if (phoneCountryCode != null) {
-                newPhoneNumber = if (TextUtils.isEmpty(currentPhoneNumber)) {
+                newPhoneNumber = if (TextUtils.isEmpty(_domainContactDetails.value?.phone)) {
                     DomainPhoneNumberUtils.formatPhoneNumberandPrefix(phoneCountryCode, "")
                 } else {
                     val phoneNumberWithoutCountryCode = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(
-                            currentPhoneNumber!!
+                            _domainContactDetails.value?.phone!!
                     )
 
                     DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
@@ -372,6 +370,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                             phoneNumberWithoutCountryCode
                     )
                 }
+            } else {
+                // should not happen unless we'll get some new countries
+                newPhoneNumber = _domainContactDetails.value?.phone
             }
 
             _domainContactDetails.value = _domainContactDetails.value?.copy(
