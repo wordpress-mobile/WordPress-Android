@@ -41,7 +41,7 @@ sealed class PostListItemViewHolder(
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
     private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
-    private val dateTextView: WPTextView = itemView.findViewById(R.id.date)
+    private val dateAndAuthorTextView: WPTextView = itemView.findViewById(R.id.date_and_author)
     private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
@@ -117,7 +117,7 @@ sealed class PostListItemViewHolder(
 
     protected fun setBasicValues(data: PostListItemUiStateData) {
         uiHelpers.setTextOrHide(titleTextView, data.title)
-        uiHelpers.setTextOrHide(dateTextView, data.date)
+        uiHelpers.setTextOrHide(dateAndAuthorTextView, data.dateAndAuthor)
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
         showFeaturedImage(data.imageUrl)
