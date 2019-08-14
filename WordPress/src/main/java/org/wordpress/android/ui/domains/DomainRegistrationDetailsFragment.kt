@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.POSTAL_CODE
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.STATE
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.util.DomainPhoneNumberUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
@@ -50,9 +51,6 @@ import javax.inject.Inject
 
 class DomainRegistrationDetailsFragment : Fragment() {
     companion object {
-        private const val PHONE_NUMBER_PREFIX = "+"
-        private const val PHONE_NUMBER_CONNECTING_CHARACTER = "."
-
         private const val EXTRA_DOMAIN_PRODUCT_DETAILS = "EXTRA_DOMAIN_PRODUCT_DETAILS"
         const val TAG = "DOMAIN_REGISTRATION_DETAILS"
 
@@ -264,18 +262,16 @@ class DomainRegistrationDetailsFragment : Fragment() {
         email_input.setText(domainContactInformation.email)
 
         if (!TextUtils.isEmpty(domainContactInformation.phone)) {
-            val phoneParts = domainContactInformation.phone!!.split(PHONE_NUMBER_CONNECTING_CHARACTER)
-            if (phoneParts.size == 2) {
-                var countryCode = phoneParts[0]
-                if (countryCode.startsWith(PHONE_NUMBER_PREFIX)) {
-                    countryCode = countryCode.drop(1)
-                }
-
-                val phoneNumber = phoneParts[1]
-
-                country_code_input.setText(countryCode)
-                phone_number_input.setText(phoneNumber)
-            }
+            country_code_input.setText(
+                    DomainPhoneNumberUtils.getCountryCodePrefixFromFullPhoneNumber(
+                            domainContactInformation.phone!!
+                    )
+            )
+            phone_number_input.setText(
+                    DomainPhoneNumberUtils.getPhoneNumberWithoutCountryCode(
+                            domainContactInformation.phone!!
+                    )
+            )
         }
 
         address_first_line_input.setText(domainContactInformation.addressLine1)
