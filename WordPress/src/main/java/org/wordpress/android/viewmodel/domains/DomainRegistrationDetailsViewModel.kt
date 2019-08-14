@@ -36,6 +36,7 @@ import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.DomainPhoneNumberUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -155,7 +156,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             _domainContactDetails.value = event.contactModel
             _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
 
-            if (event.contactModel != null && !TextUtils.isEmpty(event.contactModel?.countryCode)) {
+            val countryCode = event.contactModel?.countryCode
+
+            if (event.contactModel != null && !TextUtils.isEmpty(countryCode)) {
                 _uiState.value =
                         uiState.value?.copy(
                                 selectedCountry = supportedCountries?.firstOrNull {
@@ -164,6 +167,18 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                                 isStateProgressIndicatorVisible = true,
                                 isDomainRegistrationButtonEnabled = false
                         )
+
+                // if customer does not have a phone number we will try to prefill a country code
+                if (TextUtils.isEmpty(event.contactModel?.phone)) {
+                    val countryCodePrefix = DomainPhoneNumberUtils.getCountryCodePrefix(countryCode!!)
+                    _domainContactDetails.value = _domainContactDetails.value?.copy(
+                            phone = DomainPhoneNumberUtils.formatCountryCodeAndPhoneNumber(
+                                    countryCodePrefix,
+                                    null
+                            )
+                    )
+                }
+
                 dispatcher.dispatch(
                         SiteActionBuilder.newFetchDomainSupportedStatesAction(event.contactModel?.countryCode)
                 )
@@ -339,7 +354,31 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                             isStateInputEnabled = false
                     )
 
-            _domainContactDetails.value = _domainContactDetails.value?.copy(countryCode = country.code, state = null)
+            val phoneCountryCode = DomainPhoneNumberUtils.getCountryCodePrefix(country.code)
+
+            val currentPhoneNumber = _domainContactDetails.value?.phone
+            var newPhoneNumber: String? = null
+
+            if (phoneCountryCode != null) {
+                newPhoneNumber = if (TextUtils.isEmpty(currentPhoneNumber)) {
+                    DomainPhoneNumberUtils.formatCountryCodeAndPhoneNumber(phoneCountryCode, "")
+                } else {
+                    val phoneNumberWithoutCountryCode = DomainPhoneNumberUtils.getPhoneNumberWithoutCountryCode(
+                            currentPhoneNumber!!
+                    )
+
+                    DomainPhoneNumberUtils.formatCountryCodeAndPhoneNumber(
+                            phoneCountryCode,
+                            phoneNumberWithoutCountryCode
+                    )
+                }
+            }
+
+            _domainContactDetails.value = _domainContactDetails.value?.copy(
+                    countryCode = country.code,
+                    state = null,
+                    phone = newPhoneNumber
+            )
             dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(country.code))
         }
     }

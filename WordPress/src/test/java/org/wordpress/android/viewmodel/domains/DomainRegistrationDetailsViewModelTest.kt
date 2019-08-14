@@ -103,7 +103,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             "CA",
             "US",
             "email@wordpress.org",
-            "3124567890",
+            "+1.3124567890",
             ""
     )
 
@@ -249,6 +249,36 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun phoneNumberPrefixIsPrefilledDuringPreload() = test {
+        setupFetchDomainContactInformationDispatcher(false, domainContactModel.copy(phone = null))
+        viewModel.start(site, domainProductDetails)
+
+        var domainContactModelWithPrefilledPhonePrefix: DomainContactModel? = null
+
+        viewModel.domainContactDetails.observeForever {
+            domainContactModelWithPrefilledPhonePrefix = it
+        }
+
+        assertThat(domainContactModelWithPrefilledPhonePrefix).isNotNull()
+        assertThat(domainContactModelWithPrefilledPhonePrefix?.phone).isEqualTo("+1.")
+    }
+
+    @Test
+    fun phoneNumberPrefixIsNotPrefiledWhenCountryCodeIsMissingDuringPreload() = test {
+        setupFetchDomainContactInformationDispatcher(false, domainContactModel.copy(phone = null, countryCode = null))
+        viewModel.start(site, domainProductDetails)
+
+        var domainContactModelWithPrefilledPhonePrefix: DomainContactModel? = null
+
+        viewModel.domainContactDetails.observeForever {
+            domainContactModelWithPrefilledPhonePrefix = it
+        }
+
+        assertThat(domainContactModelWithPrefilledPhonePrefix).isNotNull()
+        assertThat(domainContactModelWithPrefilledPhonePrefix?.phone).isNull()
+    }
+
+    @Test
     fun errorFetchingCountriesDuringPreload() = test {
         setupFetchSupportedCountriesDispatcher(true)
 
@@ -373,6 +403,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
         assertThat(viewModel.domainContactDetails.value?.state).isNull()
+        assertThat(viewModel.domainContactDetails.value?.phone).isEqualTo("+61.3124567890")
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -605,11 +636,14 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun setupFetchDomainContactInformationDispatcher(isError: Boolean) {
+    private fun setupFetchDomainContactInformationDispatcher(
+        isError: Boolean,
+        returnModel: DomainContactModel = domainContactModel
+    ) {
         val event = if (isError) {
             OnDomainContactFetched(null, domainContactInformationFetchError)
         } else {
-            OnDomainContactFetched(domainContactModel, null)
+            OnDomainContactFetched(returnModel, null)
         }
         whenever(dispatcher.dispatch(argWhere<Action<Void>> { it.type == AccountAction.FETCH_DOMAIN_CONTACT })).then {
             viewModel.onDomainContactFetched(event)
