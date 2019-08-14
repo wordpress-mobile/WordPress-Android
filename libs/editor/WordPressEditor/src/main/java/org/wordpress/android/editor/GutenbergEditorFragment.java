@@ -531,10 +531,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onUndo() {
+        // Analytics tracking is not available in GB mobile
     }
 
     @Override
     public void onRedo() {
+        // Analytics tracking is not available in GB mobile
     }
 
     private ActionBar getActionBar() {
