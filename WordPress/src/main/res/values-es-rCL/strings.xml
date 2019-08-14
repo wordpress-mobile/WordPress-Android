@@ -7,7 +7,6 @@ Language: es_CL
 -->
 <resources>
     <string name="notification_wpcom_username_needed">Por favor, inicia sesión con tu nombre de usuario y contraseña.</string>
-    <string name="login_invalid_site_url">La dirección del sitio que ingresaste no es válida. Por favor, vuelve a ingresarla.</string>
     <string name="error_user_username_instead_of_email">Por favor, inicia sesión con tu nombre de usuario WordPress.com, en lugar de tu dirección de correo electrónico.</string>
     <string name="stats_insights_average_words">Promedio palabras/entrada</string>
     <string name="stats_insights_total_words">Total de palabras</string>
@@ -904,7 +903,6 @@ Language: es_CL
     <string name="login_email_client_not_found">No pude detectar tu aplicación de cliente de correo</string>
     <string name="login_empty_2fa">Introduce un código de verificación</string>
     <string name="login_empty_username">Por favor escribe el nombre de usuario</string>
-    <string name="login_empty_site_url">Escribe una dirección de sitio</string>
     <string name="login_log_in_for_deeplink">Inicia sesión en WordPress.com para acceder a la entrada.</string>
     <string name="login_error_while_adding_site">Error al agregar el sitio. Código de error: %s</string>
     <string name="login_checking_site_address">Comprobando la dirección del sitio</string>
@@ -913,7 +911,6 @@ Language: es_CL
     <string name="login_site_address_help_title">¿Cuál es la dirección de mi sitio?</string>
     <string name="login_site_address_help">¿Necesita ayuda para encontrar la dirección del sitio?</string>
     <string name="login_site_address">Dirección del sitio</string>
-    <string name="enter_site_address">Ingresa la dirección de tu sitio de WordPress al que te gustaría conectar.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Ya has iniciado sesión en WordPress.com</string>
     <string name="login_continue">Continuar</string>
@@ -1336,7 +1333,6 @@ Language: es_CL
     <string name="editor_page_title_placeholder">Título de la Página</string>
     <string name="editor_post_title_placeholder">Título de la Entrada</string>
     <string name="email_address">Dirección de correo</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar permanentemente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar permanentemente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -1897,6 +1893,7 @@ Language: es_CL
     <string name="pages">Páginas</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>

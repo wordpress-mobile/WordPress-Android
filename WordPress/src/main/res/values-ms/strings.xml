@@ -131,7 +131,6 @@ Language: ms
     <string name="login_email_client_not_found">Tidak dapat mengesan aplikasi klien emel anda</string>
     <string name="login_empty_2fa">Sila masukkan kod pengesahan</string>
     <string name="login_empty_username">Sila masukkan nama pengguna</string>
-    <string name="login_empty_site_url">Sila masukkan alamat laman</string>
     <string name="login_log_in_for_deeplink">Log masuk ke WordPress.com untuk mencapai kiriman.</string>
     <string name="login_error_while_adding_site">Ralat semasa menambah laman. Kod ralat: %s</string>
     <string name="login_checking_site_address">Memeriksa alamat laman</string>
@@ -139,7 +138,6 @@ Language: ms
     <string name="login_site_address_help_content">Alamat laman anda muncul dalam palang pada atas skrin apabila anda melawat laman anda dalam Chrome.</string>
     <string name="login_site_address_help_title">Apa alamat laman saya?</string>
     <string name="login_site_address_help">Perlu bantuan mencari alamat laman anda?</string>
-    <string name="enter_site_address">Masukkan alamat laman WordPress anda yang anda ingin sambungkan.</string>
     <string name="login_site_address">Alamat laman</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
@@ -555,7 +553,6 @@ Language: ms
     <string name="editor_page_title_placeholder">Tajuk Halaman</string>
     <string name="editor_post_title_placeholder">Tajuk Kiriman</string>
     <string name="email_address">Alamat emel</string>
-    <string name="preference_editor">Penyunting</string>
     <string name="dlg_sure_to_delete_comments">Hapuskan ulasan ini secara kekal?</string>
     <string name="dlg_sure_to_delete_comment">Hapuskan ulasan ini secara kekal?</string>
     <string name="mnu_comment_delete_permanently">Hapus</string>
@@ -1087,6 +1084,7 @@ Language: ms
     <string name="posts">Kiriman</string>
     <string name="anonymous">Tak bernama</string>
     <string name="blogusername">namapenggunablog</string>
+    <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Memuat naik…</string>
     <string name="version">Versi</string>

@@ -87,6 +87,7 @@ Language: uz
     <string name="posts">Postlar</string>
     <string name="caption">Titr (ixtiyoriy)</string>
     <string name="blogusername">blogusername</string>
+    <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Yuklanmoqda</string>
     <string name="version">Versiya</string>

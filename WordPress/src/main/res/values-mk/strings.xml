@@ -259,6 +259,7 @@ Language: mk
     <string name="pages">Страници</string>
     <string name="no_network_title">Не е достапна мрежа</string>
     <string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
+    <string name="ok">Добро</string>
     <string name="blogusername">блогкорисник</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови за користење</string>

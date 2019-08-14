@@ -127,6 +127,7 @@ Language: hu
     <string name="caption">Felirat (nem kötelező)</string>
     <string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
     <string name="posts">Bejegyzés</string>
+    <string name="ok">OK</string>
     <string name="blogusername">honlap-felhasználó</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Feltöltés…</string>

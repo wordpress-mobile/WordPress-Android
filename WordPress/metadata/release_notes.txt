@@ -1,5 +1,2 @@
-* Fixes a crash that could happen when viewing help from the login screen
-* Allow setting which editor to use on a per-site basis
-* Improves accessibility in stats
-* Makes it easier to log in by validating the URL to your site more quickly.
-* Some minor tweaks to the colour scheme
+* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.
+* We fixed a bug affecting some users who couldn’t connect their social media services.
