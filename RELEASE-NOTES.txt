@@ -1,8 +1,15 @@
+13.2
+-----
+* Fix issue where establishing LinkedIn connection would always fail
+* Display author of each post on Blog Posts screen
+
+ 
 13.1
 -----
 * Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
 * Improvement to the functionality and design of Web Preview.
 * Moved Notifications settings to Notifications List.
+* Fixed an issue with social media service connections
 
 13.0
 -----

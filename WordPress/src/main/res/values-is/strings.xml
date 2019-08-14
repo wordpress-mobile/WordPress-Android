@@ -259,7 +259,6 @@ Language: is
     <string name="editor_page_title_placeholder">Titill síðu</string>
     <string name="editor_post_title_placeholder">Titill</string>
     <string name="email_address">Netfang</string>
-    <string name="preference_editor">Ritstjóri</string>
     <string name="dlg_sure_to_delete_comments">Eyða þessum athugasemdum endanlega?</string>
     <string name="dlg_sure_to_delete_comment">Eyða þessari athugasemd endanlega?</string>
     <string name="mnu_comment_delete_permanently">Eyða</string>
@@ -783,6 +782,7 @@ Language: is
     <string name="caption">Myndatexti (valkvæmt)</string>
     <string name="no_network_title">Ekkert net tiltækt</string>
     <string name="featured_in_post">Hafa mynd með í efni færslu</string>
+    <string name="ok">Í lagi</string>
     <string name="blogusername">bloggnotandanafn</string>
     <string name="link_enter_url">Slóð</string>
     <string name="uploading">Hleð upp…</string>

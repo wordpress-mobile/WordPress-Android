@@ -50,7 +50,6 @@ Language: gl_ES
     <string name="posts_scheduled_empty">Non tes ningunha entrada programada</string>
     <string name="posts_published_empty">Aínda non publicaches ningunha entrada</string>
     <string name="notification_wpcom_username_needed">Por favor, accede co teu nome de usuario e contrasinal.</string>
-    <string name="login_invalid_site_url">A dirección do sitio que introduciches non é válida. Por favor, volve a introducila.</string>
     <string name="error_user_username_instead_of_email">Por favor, accede usando o teu nome de usuario de WordPress.com en vez da túa dirección de correo electrónico.</string>
     <string name="stats_insights_average_words">Promedio de palabras/entrada</string>
     <string name="stats_insights_total_words">Total de palabras</string>
@@ -366,7 +365,6 @@ Language: gl_ES
     <string name="editor_page_title_placeholder">Título da páxina</string>
     <string name="editor_post_title_placeholder">Título do artigo</string>
     <string name="email_address">Correo electrónico</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Eliminar definitivamente estes comentarios?</string>
     <string name="dlg_sure_to_delete_comment">Eliminar definitivamente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -926,6 +924,7 @@ Language: gl_ES
     <string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
     <string name="blogusername">usuario</string>
+    <string name="ok">Vale</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Cargando…</string>
     <string name="version">Versión</string>

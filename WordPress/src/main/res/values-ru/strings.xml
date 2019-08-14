@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-17 16:46:34+0000
+Translation-Revision-Date: 2019-08-01 02:03:44+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Не можете вспомнить адрес эл. почты, указанный при регистрации?</string>
+    <string name="enter_wordpress_site">Сайт по этому адресу не является сайтом на WordPress. Мы не можем подключиться к нему.</string>
+    <string name="login_invalid_site_url">Введите полный адрес вебсайта, например example.com.</string>
+    <string name="enter_email_for_site">Войдите на WordPress.com, чтобы подключиться к %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook неудачно, потому что учетная запись не имеет доступа к каким-либо страницам. Facebook поддерживает возможность поделиться на страницы, но не в профили.</string>
+    <string name="stats_post_views_label">Просмотры</string>
+    <string name="stats_post_label">Запись</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">График активности публикаций.</string>
+    <string name="stats_item_collapsed">Элемент свернут</string>
+    <string name="stats_item_expanded">Элемент развернут</string>
+    <string name="stats_collapse_content_description">Свернуть</string>
+    <string name="stats_expand_content_description">Развернуть</string>
+    <string name="stats_graph_updated">График обновлен.</string>
+    <string name="stats_overview_content_description">%1$s %2$s за период: %3$s, изменений по сравнению с предыдущим периодом - %4$s</string>
+    <string name="stats_bar_chart_content_description">График просмотров сайта.</string>
+    <string name="stats_loading_card">Загрузка данных выбранной карты</string>
+    <string name="site_settings_editor">Редактор</string>
+    <string name="dialog_gutenberg_informative_description_page">Сейчас вы используете редактор блоков для новых страниц. Хотите использовать классический редактор по умолчанию? Перейдите в настройки сайта.</string>
+    <string name="dialog_gutenberg_informative_description_post">Сейчас вы используете редактор блоков для новых записей. Хотите использовать классический редактор по умолчанию? Перейдите в настройки сайта.</string>
     <string name="description_expand">Развернуть</string>
     <string name="description_collapse">Свернуть</string>
     <string name="editor_retry_failed_uploads">Повторить загрузку</string>
@@ -23,8 +43,6 @@ Language: ru
     <string name="link_dialog_title">Вставить ссылку</string>
     <string name="post_settings_retry_featured_image">Повторить загрузку</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Загрузка медиафайла.\n Нажмите для расширенных возможностей.</string>
-    <string name="dialog_gutenberg_informative_description_page">Эта страница использует редактор блоков, назначенный редактором по умолчанию. Для использования классического редактора перейдите в Мой профиль > Настройки приложения.</string>
-    <string name="dialog_gutenberg_informative_description_post">Эта запись использует редактор блоков, назначенный редактором по умолчанию. Для использования классического редактора перейдите в Мой профиль > Настройки приложения.</string>
     <string name="link_open_new_window">Открыть ссылку в новом окне/вкладке</string>
     <string name="post_list_search_prompt">Искать опубликованные записи</string>
     <string name="stats_widget_error_no_access_token">Для просмотра статистики войдите в вашу учётную запись WordPress.com.</string>
@@ -137,7 +155,6 @@ Language: ru
     <string name="posts_scheduled_empty">У вас нет запланированных записей</string>
     <string name="posts_published_empty">У вас нет опубликрованных записей</string>
     <string name="notification_wpcom_username_needed">Пожалуйста, войдите указав имя пользователя и пароль.</string>
-    <string name="login_invalid_site_url">Вы ввели неверный адрес сайта, пожалуйста, введите ещё раз.</string>
     <string name="error_user_username_instead_of_email">Пожалуйста, войдите с именем пользователя на WordPress.com вместо email адреса.</string>
     <string name="stats_insights_average_words">В среднем слов на запись</string>
     <string name="stats_insights_total_words">Всего слов</string>
@@ -1041,7 +1058,6 @@ Language: ru
     <string name="login_email_client_not_found">Не удалось определить ваш почтовый клиент</string>
     <string name="login_empty_2fa">Введите проверочный код.</string>
     <string name="login_empty_username">Введите имя пользователя</string>
-    <string name="login_empty_site_url">Введите адрес сайта.</string>
     <string name="login_log_in_for_deeplink">Чтобы получить доступ к записи, войдите на WordPress.com.</string>
     <string name="login_error_while_adding_site">При добавлении сайта произошла ошибка. Код ошибки: %s</string>
     <string name="login_checking_site_address">Проверка адреса сайта</string>
@@ -1476,7 +1492,6 @@ Language: ru
     <string name="editor_page_title_placeholder">Заголовок страницы</string>
     <string name="editor_post_title_placeholder">Заголовок записи</string>
     <string name="email_address">Адрес электронной почты</string>
-    <string name="preference_editor">Редактор</string>
     <string name="dlg_sure_to_delete_comments">Удалить эти комментарии без возможности восстановления?</string>
     <string name="dlg_sure_to_delete_comment">Удалить этот комментарий без возможности восстановления?</string>
     <string name="mnu_comment_delete_permanently">Удалить</string>
@@ -2037,6 +2052,7 @@ Language: ru
     <string name="pages">Страницы</string>
     <string name="no_network_title">Сеть недоступна</string>
     <string name="featured_in_post">Включить изображение в текст записи</string>
+    <string name="ok">OK</string>
     <string name="blogusername">имя пользователя</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Загрузка</string>

@@ -1,43 +1,43 @@
-WordPress for Android puts the power of web publishing in your pocket. It’s a website creator and so much more!
+WordPress pour Android vous donne accès à la puissance de la publication sur le Web. Il s’agit d’un créateur de sites Web et plus encore !
 
-CREATE
-- Give your big ideas a home on the web. WordPress for Android is a website builder and a blog maker. Use it to create your website.
-- Pick the right look and feel from a wide selection of WordPress themes, then customize with photos, colors, and fonts so it’s uniquely you.
-- Built-in Quick Start tips guide you through the setup basics to set your new website up for success. (We’re not just a website creator -- we’re your partner and cheering squad!)
+CRÉER
+- Permet d’héberger vos idées sur le Web. WordPress pour Android est un créateur de sites Web et de blogs. Utilisez-le pour créer votre site Web.
+- Sélectionnez l’apparence qui vous convient parmi les nombreux thèmes WordPress disponibles, puis personnalisez-le avec des photos, des couleurs et des polices pour qu’il vous ressemble et soit unique.
+- Des conseils de démarrage rapide sont intégrés pour vous guider tout au long de la configuration de base de votre nouveau site Web et garantir son succès. (Nous ne vous aidons pas seulement à créer votre site Web. Nous sommes votre partenaire et assurons l’animation !)
 
 STATS
-- Check your website’s stats in real time to keep track of the activity on your site.
-- Track which posts and pages get the most traffic over time by exploring daily, weekly, monthly, and yearly insights.
-- Use the traffic map to see which countries your visitors come from.
+- Consultez les statistiques de votre site Web en temps réel pour suivre l’activité sur votre site.
+- Suivez les articles et pages attirant le plus de trafic au fil du temps grâce aux tendances quotidiennes, hebdomadaires, mensuelles et annuelles.
+- Utilisez la carte de trafic pour voir de quels pays sont originaires vos visiteurs.
 
 NOTIFICATIONS
-- Get notifications about comments, likes, and new followers so you can see people reacting to your website as it happens.
-- Reply to new comments as they show up to keep the conversation flowing and acknowledge your readers.
+- Recevez des notifications sur les commentaires, les mentions J’aime et les nouveaux abonnés afin de connaître la réaction des visiteurs sur votre site Web en temps réel.
+- Répondez aux nouveaux commentaires dès leur publication. Les discussions restent fluides et vos lecteurs vous seront reconnaissants.
 
-PUBLISH
-- Create updates, stories, photo essays announcements -- anything! -- with the editor.
-- Bring your posts and pages to life with photos and video from your camera and albums, or find the perfect image with the in-app collection of free-to-use pro photography.
-- Save ideas as drafts and come back to them when your muse returns, or schedule new posts for the future so your site is always fresh and engaging.
-- Add tags and categories to help new readers discover your posts, and watch your audience grow.
+PUBLIER
+- Créez des mises à jour, des histoires, des essais photos et des annonces... Tout ce que vous voulez ! -- grâce à l’éditeur.
+- Donnez vie à vos articles et pages avec des photos et des vidéos personnelles ou recherchez l’image parfaite dans la collection intégrée de photos professionnelles gratuites.
+- Enregistrez vos idées sous forme de brouillons afin de les réutiliser lorsque l’inspiration vous revient ou programmez de nouveaux articles afin que votre site soit toujours agréable et intéressant à consulter.
+- Ajoutez des étiquettes et des catégories pour permettre aux nouveaux lecteurs de découvrir vos articles et regardez votre public grossir.
 
-READER
-- WordPress is more than a blog maker — use it to connect with a community of writers in the WordPress Reader. Explore thousands of topics by tag, discover new authors and organizations, and follow the ones who pique your interest.
-- Hang on to the posts that fascinate you with the Save for later feature.
+LECTEUR
+- WordPress est plus qu’un outil de création de blog. Utilisez-le pour communiquer avec une communauté de rédacteurs dans le Lecteur de WordPress. Découvrez des milliers de rubriques par étiquette, de nouveaux auteurs et de nouvelles entreprises, et abonnez-vous aux sites qui vous intéressent.
+- Conservez les articles qui vous passionnent avec la fonctionnalité Enregistrer pour plus tard.
 
-SHARE
-- Set up automated sharing to tell your followers on social media when you publish a new post. Automatically cross-post to Facebook, Twitter, and more.
-- Add social sharing buttons to your posts so your visitors can share them with their network, and let your fans become your ambassadors.
+PARTAGER
+- Configurez le partage automatique pour prévenir vos abonnés sur les réseaux sociaux de la publication d’un nouvel article. Publication croisée automatiquement sur Facebook, Twitter, et plus encore.
+- Ajoutez des boutons de partage sur les réseaux sociaux à vos articles pour permettre à vos visiteurs de les partager avec leur réseau et faire de vos fans des ambassadeurs.
 
-Why WordPress?
+Pourquoi WordPress ?
 
-There are a lot of blogging services, website builders, and social networks out there. Why create your website with WordPress?
+Il existe de nombreux services de blogging, créateurs de sites Web et réseaux sociaux. Pourquoi créer votre site Web avec WordPress ?
 
-WordPress powers over a third of the web. It’s used by hobby blogs, businesses of all sizes, online stores, even the biggest news sites on the internet. Odds are that many of your favorite websites are running on WordPress.
+WordPress propulse plus du tiers du Web. Son utilisation couvre les blogs de loisirs, les entreprises de toutes tailles, les boutiques en ligne et même les plus grands sites d’informations sur Internet. Il est probable que la plupart de vos sites Web préférés fonctionnent sous WordPress.
 
-With WordPress, you own your own content. Other social networks treat you as a commodity, and assume ownership of the content you post. But with WordPress anything you publish is yours, and you can take it with you wherever you’d like.
+Avec WordPress, vous restez propriétaire de votre contenu. D’autres réseaux sociaux vous considèrent comme une marchandise et s’approprient le contenu que vous publiez. Avec WordPress, tout ce que vous publiez vous appartient et vous pouvez le récupérer quand vous le voulez.
 
-WordPress is an open source website creator, meaning anyone can see how it's made, and even contribute. Other services and social networks are proprietary, closed systems; you can never be sure exactly how they work or what they are doing -- and they can disappear!
+WordPress est un outil de création de sites Web open source. Cela signifie que tout le monde peut voir comment il est conçu et même contribuer à sa conception. D’autres services et réseaux sociaux sont propriétaires. Ce sont des systèmes fermés. Vous ne saurez jamais vraiment comme il fonctionne et ce qu’ils font. En outre, ils peuvent disparaître !
 
-Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.
+Que vous ayez besoin d’un outil de création de sites Web pour créer votre site Web ou d’un simple outil de création de blogs, WordPress est là pour vous. Il propose de magnifiques designs et de puissantes fonctionnalités tout en vous offrant la liberté de créer tout ce que vous voulez.
 
-WordPress for Android supports self-hosted sites running WordPress 4.0 and later, and all sites at WordPress.com. Just like WordPress, WordPress for Android is open source. Consultez https://apps.wordpress.com/contribute/ pour en savoir plus. Besoin d’aide avec l’application ? Send us a tweet at @WPAndroid, or visit our forums at https://android.forums.wordpress.org/forum/troubleshooting.
+WordPress pour Android prend en charge les sites auto-hébergés fonctionnant sous WordPress 4.0 et versions ultérieures, et tous les sites sur WordPress.com. Comme WordPress, WordPress pour Android est open source. Consultez https://apps.wordpress.com/contribute/ pour en savoir plus. Besoin d’aide avec l’application ? Envoyez-nous un tweet à @WPAndroid ou visitez nos forums sur https://android.forums.wordpress.org/forum/troubleshooting.

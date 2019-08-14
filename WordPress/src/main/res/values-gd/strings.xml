@@ -363,6 +363,7 @@ Language: gd_GB
     <string name="posts">Puist</string>
     <string name="anonymous">Gun urra</string>
     <string name="blogusername">ainm cleachdaiche a\' bhloga</string>
+    <string name="ok">Ceart ma-thà</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">’Ga luchdadh suas…</string>
     <string name="version">Tionndadh</string>

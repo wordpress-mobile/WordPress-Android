@@ -84,6 +84,7 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -743,7 +744,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
             AnalyticsUtils.trackWithSiteDetails(
                     ((Boolean) newValue) ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED,
-                    mSite);
+                    mSite, BlockEditorEnabledSource.VIA_SITE_SETTINGS.asPropertyMap());
             // we need to refresh metadata as gutenberg_enabled is now part of the user data
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else {
