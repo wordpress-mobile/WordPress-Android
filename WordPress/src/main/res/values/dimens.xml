@@ -9,7 +9,6 @@
 
     <dimen name="tab_height">48dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
 
@@ -41,6 +40,7 @@
 
     <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
+    <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 
@@ -204,26 +204,11 @@
     <dimen name="dlp_title_padding_bottom">16dp</dimen>
 
     <!-- stats -->
-    <dimen name="stats_button_corner_radius">2dp</dimen>
-    <dimen name="stats_barchart_height">128dp</dimen>
-    <dimen name="stats_barchart_legend_item">12dp</dimen>
-    <dimen name="stats_legent_text_size">9sp</dimen>
-    <dimen name="stats_label_min_text_size">6sp</dimen>
     <dimen name="stats_activity_box_size">12dp</dimen>
     <dimen name="stats_activity_box_end_margin">4dp</dimen>
     <dimen name="stats_map_legend_width">60dp</dimen>
 
     <!-- stats widget-->
-    <dimen name="stats_widget_icon_size">18dp</dimen>
-    <dimen name="stats_widget_text_sz">14sp</dimen>
-    <dimen name="stats_widget_text_sz_small">10sp</dimen>
-    <dimen name="stats_widget_min_height">62dp</dimen>
-    <dimen name="stats_widget_main_container_min_size">38dp</dimen>
-    <dimen name="stats_widget_main_container_size">48dp</dimen>
-    <dimen name="stats_widget_four_cells">250dp</dimen>
-    <dimen name="stats_widget_five_cells">320dp</dimen>
-    <dimen name="stats_widget_image_layout_size">12dp</dimen>
-    <dimen name="stats_widget_image_layout_margin">3dp</dimen>
     <dimen name="stats_widget_content_height">108dp</dimen>
 
     <!-- stats refreshed widget-->
@@ -436,5 +421,10 @@
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
+
+    <!-- web preview  -->
+    <dimen name="web_preview_navbar_height">72dp</dimen>
+    <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
+    <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
 
 </resources>

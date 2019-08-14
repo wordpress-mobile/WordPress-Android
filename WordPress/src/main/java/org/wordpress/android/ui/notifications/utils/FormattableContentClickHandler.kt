@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications.utils
 
-import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
@@ -25,11 +24,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.stats.OldStatsActivity
-import org.wordpress.android.ui.stats.StatsAbstractFragment
-import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.StatsViewAllActivity
-import org.wordpress.android.ui.stats.StatsViewType
+import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.ToastUtils
@@ -108,18 +103,7 @@ class FormattableContentClickHandler
         rangeType: FormattableRangeType
     ) {
         if (rangeType == FOLLOW) {
-            val intent = Intent(activity, StatsViewAllActivity::class.java)
-            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS)
-            intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY)
-            intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "")
-            intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true)
-            intent.putExtra(OldStatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.id)
-
-            intent.putExtra(
-                    StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE,
-                    activity.getString(R.string.stats_view_followers)
-            )
-            activity.startActivity(intent)
+            ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, 0, site.id)
         } else {
             ActivityLauncher.viewBlogStats(activity, site)
         }

@@ -86,6 +86,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putInt(PublicizeConstants.ARG_CONNECTION_ID, mConnectionId);
+        outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
         mWebView.saveState(outState);
     }
 

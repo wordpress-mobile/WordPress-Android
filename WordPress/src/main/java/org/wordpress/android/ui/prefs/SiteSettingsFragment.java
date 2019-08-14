@@ -80,6 +80,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -1606,6 +1607,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(button);
 
         return view;
     }

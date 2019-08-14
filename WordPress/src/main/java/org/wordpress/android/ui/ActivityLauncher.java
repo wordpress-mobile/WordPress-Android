@@ -68,9 +68,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
-import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
-import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
@@ -475,14 +473,15 @@ public class ActivityLauncher {
             String siteUrl = site.getUrl();
             if (site.isWPCom()) {
                 // Show wp.com sites authenticated
-                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl);
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl, true);
             } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
                 // Show self-hosted sites as authenticated since we should have the username & password
-                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false);
+                WPWebViewActivity
+                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true);
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl);
+                WPWebViewActivity.openURL(context, siteUrl, true);
             }
         }
     }
@@ -586,10 +585,10 @@ public class ActivityLauncher {
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
         if (site.isWPCom()) {
-            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject, true);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity
-                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
+                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce(), true);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
@@ -597,7 +596,7 @@ public class ActivityLauncher {
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
             WPWebViewActivity
-                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true);
+                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true, true);
         }
     }
 
@@ -698,20 +697,6 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
-    }
-
-    public static void viewStatsSinglePostDetails(Context context, StatsPostModel post) {
-        if (post == null) {
-            return;
-        }
-
-        Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, post.getBlogID());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_ID, post.getItemID());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_TYPE, post.getPostType());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, post.getTitle());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, post.getUrl());
-        context.startActivity(statsPostViewIntent);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

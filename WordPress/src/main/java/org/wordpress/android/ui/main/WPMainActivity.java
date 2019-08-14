@@ -982,6 +982,7 @@ public class WPMainActivity extends AppCompatActivity implements
         if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
             mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
             mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
+            mLoginAnalyticsListener.trackAnalyticsSignIn(true);
             AppPrefs.removeShouldTrackMagicLinkSignup();
         }
     }

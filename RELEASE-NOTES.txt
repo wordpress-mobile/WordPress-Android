@@ -1,6 +1,12 @@
-13.1
+13.2
 -----
  
+13.1
+-----
+* Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
+* Improvement to the functionality and design of Web Preview.
+* Fixed an issue with social media service connections
+
 13.0
 -----
 * Block editor: Auto-enabled upon first open of a block post, unless opted out in v12.9.
@@ -9,14 +15,14 @@
 * Block editor: Adding a block from the post title now shows the add block here indicator.
 * Block editor: Deselect post title any time a block is added
 * Block editor: Fix loss of center alignment in image captions
- 
+
 12.9
 -----
+* Add Publish screen to Edit post settings - with notification for scheduled posts and option to add event to calendar
 * Block editor: Video block is now available in the Inserter
 * Block editor: Tapping on an empty editor area will create a new paragraph block
 * Block editor: Fix content loss issue when loading unsupported blocks containing inner blocks.
 * Block editor: Adding a block from the Post Title now inserts the block at the top of the Post.
- 
 * Setting featured image on a post doesn't require network connection
 * Full screen comments view
 * Added Domain Registration functionality for customers with unclaimed domain credit

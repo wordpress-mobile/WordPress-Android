@@ -81,6 +81,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         mSource = (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY);
         // We need to get the site before calling super since it'll create the web client
         super.onCreate(savedInstanceState);
+        toggleNavbarVisibility(false);
     }
 
     @Override
