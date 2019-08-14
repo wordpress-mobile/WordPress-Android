@@ -33,15 +33,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/margin_extra_extra_large"
+                    android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                     app:cardBackgroundColor="@android:color/white"
                     app:cardCornerRadius="@dimen/default_cardview_radius"
                     app:cardElevation="@dimen/card_elevation">
 
                     <ProgressBar
                         android:id="@+id/my_site_icon_progress"
-                        android:layout_width="@dimen/blavatar_sz"
-                        android:layout_height="@dimen/blavatar_sz"
+                        android:layout_width="@dimen/my_site_blavatar_sz"
+                        android:layout_height="@dimen/my_site_blavatar_sz"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/margin_large"
                         android:gravity="center_vertical"
@@ -50,8 +50,8 @@
 
                     <ImageView
                         android:id="@+id/my_site_blavatar"
-                        android:layout_width="@dimen/blavatar_sz"
-                        android:layout_height="@dimen/blavatar_sz"
+                        android:layout_width="@dimen/my_site_blavatar_sz"
+                        android:layout_height="@dimen/my_site_blavatar_sz"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center"
                         android:layout_margin="8dp"
@@ -67,7 +67,7 @@
                     android:id="@+id/site_info_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_medium"
                     android:orientation="vertical">
 
                     <org.wordpress.android.widgets.WPTextView
@@ -76,12 +76,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:ellipsize="end"
-                        android:fontFamily="sans-serif-light"
+                        android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
                         android:maxLines="1"
                         android:textColor="@color/neutral_70"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/text_sz_extra_large"
                         tools:text="Example"/>
 
                     <org.wordpress.android.widgets.WPTextView
@@ -89,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/margin_medium"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"
@@ -101,26 +100,25 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/switch_site"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="36dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
-                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:ellipsize="end"
-                    android:fontFamily="sans-serif-light"
+                    android:fontFamily="sans-serif-medium"
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:text="@string/my_site_btn_switch_site"
                     android:textAllCaps="true"
-                    android:textColor="@color/color_primary"
-                    android:textSize="@dimen/text_sz_large"
-                    android:textStyle="bold"
-                    />
+                    android:textColor="@color/blue_50"
+                    android:textSize="@dimen/text_sz_medium"/>
 
                 <LinearLayout
                     android:id="@+id/quick_action_buttons_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginBottom="@dimen/margin_my_site_quick_actions_bottom"
                     android:orientation="horizontal"
                     android:weightSum="100">
 

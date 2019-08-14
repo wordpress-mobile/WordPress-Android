@@ -1033,7 +1033,7 @@ public class MySiteFragment extends Fragment implements
         }
 
         // Do not show pages menu item to Collaborators.
-        int pageVisibility = View.GONE;
+       int pageVisibility = site.isSelfHostedAdmin() || site.getHasCapabilityEditPages() ? View.VISIBLE : View.GONE;
         mPageView.setVisibility(pageVisibility);
         mQuickActionPageButtonContainer.setVisibility(pageVisibility);
 
