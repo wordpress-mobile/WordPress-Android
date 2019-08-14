@@ -28,40 +28,50 @@
                 tools:ignore="UselessParent">
 
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/blavatar_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                     app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="@dimen/default_cardview_radius"
-                    app:cardElevation="@dimen/card_elevation">
+                    app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/gray_5"
+                    app:strokeWidth="@dimen/my_site_blavatar_container_border_width">
 
-                    <ProgressBar
-                        android:id="@+id/my_site_icon_progress"
+                    <androidx.cardview.widget.CardView
                         android:layout_width="@dimen/my_site_blavatar_sz"
                         android:layout_height="@dimen/my_site_blavatar_sz"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/margin_large"
-                        android:gravity="center_vertical"
-                        android:indeterminate="true"
-                        android:visibility="gone"/>
+                        android:layout_margin="@dimen/margin_small"
+                        app:cardCornerRadius="@dimen/my_site_blavatar_corner_radius"
+                        app:cardElevation="0dp">
 
-                    <ImageView
-                        android:id="@+id/my_site_blavatar"
-                        android:layout_width="@dimen/my_site_blavatar_sz"
-                        android:layout_height="@dimen/my_site_blavatar_sz"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:layout_margin="8dp"
-                        android:contentDescription="@string/my_site_icon_content_description"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:gravity="center_vertical"
-                        tools:ignore="UnusedAttribute"
-                        tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp"/>
+                        <ProgressBar
+                            android:id="@+id/my_site_icon_progress"
+                            android:layout_width="@dimen/my_site_blavatar_sz"
+                            android:layout_height="@dimen/my_site_blavatar_sz"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/margin_large"
+                            android:gravity="center_vertical"
+                            android:indeterminate="true"
+                            android:visibility="gone"/>
 
-                </androidx.cardview.widget.CardView>
+                        <ImageView
+                            android:id="@+id/my_site_blavatar"
+                            android:layout_width="@dimen/my_site_blavatar_sz"
+                            android:layout_height="@dimen/my_site_blavatar_sz"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+
+                            android:contentDescription="@string/my_site_icon_content_description"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:gravity="center_vertical"
+                            tools:ignore="UnusedAttribute"
+                            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp"/>
+                    </androidx.cardview.widget.CardView>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:id="@+id/site_info_container"
