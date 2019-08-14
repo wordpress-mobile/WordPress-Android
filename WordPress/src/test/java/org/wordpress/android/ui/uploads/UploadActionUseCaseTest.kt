@@ -18,19 +18,50 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 
-private val POST_STATE_PUBLISH = PostStatus.PUBLISHED.toString()
-private val POST_STATE_SCHEDULED = PostStatus.SCHEDULED.toString()
-private val POST_STATE_PRIVATE = PostStatus.PRIVATE.toString()
-private val POST_STATE_PENDING = PostStatus.PENDING.toString()
 private val POST_STATE_DRAFT = PostStatus.DRAFT.toString()
-private val POST_STATE_TRASHED = PostStatus.TRASHED.toString()
 
 @RunWith(MockitoJUnitRunner::class)
 class UploadActionUseCaseTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     @Test
-    fun `auto upload action is DO NOTHING when the post is older than 2 days`() {
+    fun `uploadAction is UPLOAD when changes confirmed`() {
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = true)
+        // Act
+        val action = uploadActionUseCase.getUploadAction(post)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
+
+    @Test
+    fun `uploadAction is UPLOAD_AS_DRAFT when changes not confirmed and is local draft`() {
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = false, isLocalDraft = true)
+        // Act
+        val action = uploadActionUseCase.getUploadAction(post)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD_AS_DRAFT)
+    }
+
+    @Test
+    fun `uploadAction is REMOTE_AUTO_SAVE when changes not confirmed and isn't local draft`() {
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = false, isLocalDraft = false)
+        // Act
+        val action = uploadActionUseCase.getUploadAction(post)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `autoUploadAction is DO NOTHING when the post is older than 2 days`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase()
 
@@ -47,7 +78,7 @@ class UploadActionUseCaseTest {
     }
 
     @Test
-    fun `auto upload action is REMOTE_AUTO_SAVE when the post is younger than 2 days and changes are NOT confirmed`() {
+    fun `autoUploadAction is REMOTE_AUTO_SAVE when the post is younger than 2 days and changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase()
 
@@ -67,7 +98,7 @@ class UploadActionUseCaseTest {
     }
 
     @Test
-    fun `auto upload action is UPLOAD when the post is younger than 2 days and changes are confirmed`() {
+    fun `autoUploadAction is UPLOAD when the post is younger than 2 days and changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase()
 
@@ -87,7 +118,7 @@ class UploadActionUseCaseTest {
     }
 
     @Test
-    fun `auto upload action is DO NOTHING when the post is NOT publishable`() {
+    fun `autoUploadAction is DO NOTHING when the post is NOT publishable`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
                 postUtilsWrapper = createdMockedPostUtilsWrapper(
@@ -105,7 +136,7 @@ class UploadActionUseCaseTest {
     }
 
     @Test
-    fun `auto upload action is REMOTE AUTO SAVE when the post is publishable and the changes are NOT confirmed`() {
+    fun `autoUploadAction is REMOTE AUTO SAVE when the post is publishable and the changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
                 postUtilsWrapper = createdMockedPostUtilsWrapper(
@@ -123,7 +154,7 @@ class UploadActionUseCaseTest {
     }
 
     @Test
-    fun `auto upload action is UPLOAD when the post is publishable and the changes are confirmed`() {
+    fun `autoUploadAction is UPLOAD when the post is publishable and the changes are confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase(
                 postUtilsWrapper = createdMockedPostUtilsWrapper(
@@ -140,7 +171,288 @@ class UploadActionUseCaseTest {
         assertThat(action).isEqualTo(UploadAction.UPLOAD)
     }
 
-    // add similar methods for the remaining conditions
+    @Test
+    fun `autoUploadAction is DO NOTHING when the post is in conflict`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                postUtilsWrapper = createdMockedPostUtilsWrapper(
+                        isInConflict = true
+                )
+        )
+
+        val post = createPostModel()
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
+    @Test
+    fun `autoUploadAction is REMOTE AUTO SAVE when the post is not in conflict and the changes are NOT confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                postUtilsWrapper = createdMockedPostUtilsWrapper(
+                        isInConflict = false
+                )
+        )
+
+        val post = createPostModel(changesConfirmed = false)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `autoUploadAction is UPLOAD when the post is not in conflict and the changes are confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                postUtilsWrapper = createdMockedPostUtilsWrapper(
+                        isInConflict = false
+                )
+        )
+
+        val post = createPostModel(changesConfirmed = true)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
+
+    @Test
+    fun `autoUploadAction is DO NOTHING when upload failed MAXIMUM_AUTO_UPLOAD_RETRIES and NOT confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES)
+        )
+
+        val post = createPostModel(changesConfirmed = false)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
+    @Test
+    fun `autoUploadAction is DO_NOTHING when upload failed MAXIMUM_AUTO_UPLOAD_RETRIES+1 and changes confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES)
+        )
+
+        val post = createPostModel(changesConfirmed = true)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
+    @Test
+    fun `autoUploadAction is REMOTE AUTO SAVE when failed MAXIMUM_AUTO_UPLOAD_RETRIES - 1 and changes NOT confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES - 1)
+        )
+
+        val post = createPostModel(changesConfirmed = false)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `autoUploadAction is REMOTE AUTO SAVE when upload hasn't failed and the changes are NOT confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadStore = createdMockedUploadStore(0)
+        )
+
+        val post = createPostModel(changesConfirmed = false)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `autoUploadAction is UPLOAD when upload hasn't failed and the changes are confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadStore = createdMockedUploadStore(0)
+        )
+
+        val post = createPostModel(changesConfirmed = true)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
+
+    @Test
+    fun `autoUploadAction is UPLOAD when upload failed MAXIMUM_AUTO_UPLOAD_RETRIES - 1 and changes are confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadStore = createdMockedUploadStore(MAXIMUM_AUTO_UPLOAD_RETRIES - 1)
+        )
+
+        val post = createPostModel(changesConfirmed = true)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
+
+    @Test
+    fun `autoUploadAction is DO NOTHING when the post is uploading or queued`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = true)
+        )
+
+        val post = createPostModel()
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
+    @Test
+    fun `autoUploadAction is REMOTE AUTO SAVE when not uploading or queued and the changes are NOT confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = false)
+        )
+
+        val post = createPostModel(changesConfirmed = false)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `autoUploadAction is UPLOAD when the post is not uploading or queued and the changes are confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                uploadServiceFacade = createdMockedUploadServiceFacade(isPostUploadingOrQueued = false)
+        )
+
+        val post = createPostModel(changesConfirmed = true)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
+
+    @Test
+    fun `autoUploadAction is DO NOTHING when the site is NOT wpcom and the changes are NOT confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = false)
+        val siteModel: SiteModel = createSiteModel(isWpCom = false)
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
+    @Test
+    fun `autoUploadAction is UPLOAD when the site is NOT wpcom and the changes are confirmed`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = true)
+        val siteModel: SiteModel = createSiteModel(isWpCom = false)
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
+
+    @Test
+    fun `autoUploadAction is DO_NOTHING when changes were already remote-auto-saved and are not confirmed`() {
+        // Arrange
+
+        val timestampNow = Date().time / 1000
+        val dateNow = DateTimeUtils.iso8601FromTimestamp(timestampNow)
+        val datePast = DateTimeUtils.iso8601FromTimestamp(timestampNow - 9999)
+
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = false, autoSaveModified = dateNow, dateLocallyChanged = datePast)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
+    @Test
+    fun `autoUploadAction is REMOTE_AUTO_SAVE when changes were NOT remote-auto-saved and are not confirmed`() {
+        // Arrange
+
+        val timestampNow = Date().time / 1000
+        val dateNow = DateTimeUtils.iso8601FromTimestamp(timestampNow)
+        val datePast = DateTimeUtils.iso8601FromTimestamp(timestampNow - 9999)
+
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = false, autoSaveModified = datePast, dateLocallyChanged = dateNow)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `autoUploadAction is UPLOAD when changes were already remote-auto-saved but are confirmed now`() {
+        // Arrange
+
+        val timestampNow = Date().time / 1000
+        val dateNow = DateTimeUtils.iso8601FromTimestamp(timestampNow)
+        val datePast = DateTimeUtils.iso8601FromTimestamp(timestampNow - 9999)
+
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(changesConfirmed = true, autoSaveModified = dateNow, dateLocallyChanged = datePast)
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.UPLOAD)
+    }
 
     private companion object Fixtures {
         private fun createUploadActionUseCase(
@@ -176,12 +488,14 @@ class UploadActionUseCaseTest {
             isLocalDraft: Boolean = false,
             isLocallyChanged: Boolean = true,
             dateLocallyChanged: String = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000),
-            changesConfirmed: Boolean = false
+            changesConfirmed: Boolean = false,
+            autoSaveModified: String? = null
         ): PostModel = PostModel().apply {
             this.status = status
             this.setIsLocalDraft(isLocalDraft)
             this.setIsLocallyChanged(isLocallyChanged)
             this.dateLocallyChanged = dateLocallyChanged
+            this.autoSaveModified = autoSaveModified
             if (changesConfirmed) {
                 this.changesConfirmedContentHashcode = this.contentHashcode()
             }
