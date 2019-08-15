@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-28 00:54:10+0000
+Translation-Revision-Date: 2019-08-08 00:54:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Perlu bantuan untuk menemukan email yang terhubung dengan Anda?</string>
+    <string name="enter_wordpress_site">Situs web di alamat ini bukan situs WordPress. Agar kami dapat terhubung ke situs tersebut, situs harus menggunakan WordPress.</string>
+    <string name="login_invalid_site_url">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
+    <string name="enter_email_for_site">Login dengan WordPress.com untuk terhubung ke %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Sambungan Facebook tidak dapat dilakukan karena akun ini tidak memiliki akses ke halaman apa pun. Facebook mendukung sambungan berbagi ke Halaman Facebook, tetapi tidak ke Profil Facebook.</string>
+    <string name="stats_post_views_label">Tampilan</string>
+    <string name="stats_post_label">Pos</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Grafik aktivitas pengiriman pos.</string>
+    <string name="stats_item_collapsed">Item diciutkan</string>
+    <string name="stats_item_expanded">Item dibentangkan</string>
+    <string name="stats_collapse_content_description">Ciutkan</string>
+    <string name="stats_expand_content_description">Bentangkan</string>
+    <string name="stats_graph_updated">Grafik diperbarui.</string>
+    <string name="stats_overview_content_description">%1$s %2$s untuk periode: %3$s, diubah dari periode sebelumnya - %4$s</string>
+    <string name="stats_bar_chart_content_description">Grafik penayangan situs.</string>
+    <string name="stats_loading_card">Memuat data kartu yang dipilih</string>
+    <string name="site_settings_editor">Penyunting</string>
+    <string name="dialog_gutenberg_informative_description_page">Saat ini Anda menggunakan penyunting blok untuk membuat halaman baru. Ingin menggunakan penyunting klasik sebagai pengaturan asal? Buka Pengaturan Situs.</string>
+    <string name="dialog_gutenberg_informative_description_post">Saat ini Anda menggunakan penyunting blok untuk membuat pos baru. Ingin menggunakan penyunting klasik sebagai pengaturan asal? Buka Pengaturan Situs.</string>
     <string name="description_expand">Bentangkan</string>
     <string name="description_collapse">Ciutkan</string>
     <string name="editor_retry_failed_uploads">Coba mengunggah ulang</string>
@@ -23,8 +43,6 @@ Language: id
     <string name="link_dialog_title">Sisipkan tautan</string>
     <string name="post_settings_retry_featured_image">Coba mengunggah ulang</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Mengunggah media.\nKetuk untuk melihat pilihan.</string>
-    <string name="dialog_gutenberg_informative_description_page">Halaman ini menggunakan penyunting blok, yang merupakan penyunting asal untuk halaman baru. Untuk mengaktifkan penyunting klasik, buka Saya > Pengaturan Aplikasi.</string>
-    <string name="dialog_gutenberg_informative_description_post">Pos ini menggunakan penyunting blok, yang merupakan penyunting asal untuk pos baru. Untuk mengaktifkan penyunting klasik, buka Saya > Pengaturan Aplikasi.</string>
     <string name="link_open_new_window">Buka tautan di jendela/tab baru</string>
     <string name="post_list_search_prompt">Cari di pos yang telah dipublikasikan</string>
     <string name="stats_widget_error_no_access_token">Untuk melihat statistik Anda, login ke akun WordPress.com.</string>
@@ -134,7 +152,6 @@ Language: id
     <string name="posts_scheduled_empty">Anda belum memiliki pos terjadwal</string>
     <string name="posts_published_empty">Anda belum memublikasikan pos sama sekali</string>
     <string name="notification_wpcom_username_needed">Silakan login dengan nama pengguna dan kata sandi Anda.</string>
-    <string name="login_invalid_site_url">Alamat situs yang Anda masukkan tidak valid. Harap masukkan lagi.</string>
     <string name="error_user_username_instead_of_email">Silakan login menggunakan nama pengguna WordPress.com sebagai ganti alamat email Anda.</string>
     <string name="stats_insights_average_words">Rata-rata kata/pos</string>
     <string name="stats_insights_total_words">Total kata</string>
@@ -997,7 +1014,6 @@ Language: id
     <string name="login_email_client_not_found">Tidak dapat mendeteksi aplikasi klien email Anda</string>
     <string name="login_empty_2fa">Masukkan kode verifikasi</string>
     <string name="login_empty_username">Masukkan nama pengguna</string>
-    <string name="login_empty_site_url">Masukkan alamat situs</string>
     <string name="login_log_in_for_deeplink">Login ke WordPress.com untuk mengakses pos.</string>
     <string name="login_error_while_adding_site">Error saat menambahkan situs. Kode error: %s</string>
     <string name="login_checking_site_address">Memeriksa alamat situs</string>
@@ -1006,7 +1022,6 @@ Language: id
     <string name="login_site_address_help_title">Apa alamat situs saya?</string>
     <string name="login_site_address_help">Perlu bantuan untuk menemukan alamat situs Anda?</string>
     <string name="login_site_address">Alamat situs</string>
-    <string name="enter_site_address">Masukkan alamat situs WordPress yang ingin Anda hubungkan.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
     <string name="login_continue">Lanjutkan</string>
@@ -1420,7 +1435,6 @@ Language: id
     <string name="editor_page_title_placeholder">Judul Halaman</string>
     <string name="editor_post_title_placeholder">Judul Kiriman</string>
     <string name="email_address">Alamat email</string>
-    <string name="preference_editor">Penyunting</string>
     <string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
     <string name="dlg_sure_to_delete_comment">Hapus komentar ini secara permanen?</string>
     <string name="mnu_comment_delete_permanently">Hapus</string>
@@ -1974,6 +1988,7 @@ Language: id
     <string name="pages">Halaman</string>
     <string name="no_network_title">Tidak ada jaringan</string>
     <string name="featured_in_post">Sertakan gambar dalam konten tulisan</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Mengunggah…</string>

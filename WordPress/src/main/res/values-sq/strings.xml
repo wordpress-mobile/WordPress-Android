@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-09 10:36:43+0000
+Translation-Revision-Date: 2019-08-08 10:11:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Ju duhet ndihmë për të gjetur email-in me të cilin e lidhët?</string>
+    <string name="enter_wordpress_site">Sajti te kjo adresë s’është sajt WordPress. Që të lidhemi me të, sajti duhet të ketë të instaluar WordPress-in.</string>
+    <string name="login_invalid_site_url">Ju lutemi, jepni një adresë të plotë sajti, bie fjala, example.com.</string>
+    <string name="enter_email_for_site">Që të lidheni me %1$s, bëni hyrjen te llogaria juaj WordPress.com.</string>
+    <string name="sharing_facebook_account_must_have_pages">S’u bë dot lidhja me Facebook-un, ngaqë kjo llogari nuk ka hyrje në ndonjë faqe. Facebook-u mbulon ndarje lidhjesh me Faqe Facebook, por jo me Profile Facebook.</string>
+    <string name="stats_post_views_label">Pamje</string>
+    <string name="stats_post_label">Postim</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Grafik veprimtarie postimi</string>
+    <string name="stats_item_collapsed">Objekti u tkurr</string>
+    <string name="stats_item_expanded">Objekti u zgjerua</string>
+    <string name="stats_collapse_content_description">Tkurre</string>
+    <string name="stats_expand_content_description">Zgjeroje</string>
+    <string name="stats_graph_updated">Grafiku u përditësua.</string>
+    <string name="stats_overview_content_description">%1$s %2$s për periudhën: %3$s, ndryshim nga periudha e mëparshme - %4$s</string>
+    <string name="stats_bar_chart_content_description">Grafik parjesh të sajtit</string>
+    <string name="stats_loading_card">Po ngarkohen të dhënat e kartës së përzgjedhur</string>
+    <string name="site_settings_editor">Përpunues</string>
+    <string name="dialog_gutenberg_informative_description_page">Për krijim faqesh të reja, po përdorni përpunuesin me blloqe. Doni të përdoret përpunuesi klasik, si parazgjedhje? Kaloni te Rregullime Sajti.</string>
+    <string name="dialog_gutenberg_informative_description_post">Për krijim postimesh të reja, po përdorni përpunuesin me blloqe. Doni të përdoret përpunuesi klasik, si parazgjedhje? Kaloni te Rregullime Sajti.</string>
+    <string name="description_expand">Zgjeroje</string>
+    <string name="description_collapse">Tkurre</string>
+    <string name="editor_retry_failed_uploads">Riprovoni ngarkimin</string>
+    <string name="editor_toast_failed_uploads">Disa ngarkime mediash dështuan. S’mund ta ruani apo botoni\n        postimin tuaj në këtë gjendje.</string>
+    <string name="my_site_verify_your_email_without_email">Kontrolloni adresën tuaj email - udhëzimet u dërguan te email-i juaj</string>
+    <string name="my_site_verify_your_email">Verifikoni adresën tuaj email - udhëzimet u dërguan te %s</string>
+    <string name="error_media_recover_post_not_submitted">S’u ngarkua dot media. Postimi s’u parashtrua dot.</string>
+    <string name="error_media_recover_post_not_scheduled">S’u ngarkua dot media. Postimi s’u vu dot në plan për botim.</string>
+    <string name="error_media_recover_post_not_published">S’u ngarkua dot media. Postimi s’u botua.</string>
+    <string name="error_media_recover_post">S’u ngarkua dot media</string>
+    <string name="link_dialog_button_cancel">Anuloje</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Hiqe Lidhjen</string>
+    <string name="link_dialog_title">Futni lidhje</string>
+    <string name="post_settings_retry_featured_image">Riprovoni ngarkimin</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Po ngarkohet media.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="link_open_new_window">Hape lidhjen në dritare/skedë të re</string>
     <string name="post_list_search_prompt">Kërkoni te postimet e botuara</string>
     <string name="stats_widget_error_no_access_token">Që të shihni statistikat tuaja, bëni hyrjen te llogaria WordPress.com.</string>
     <string name="post_list_search_nothing_found">Kërkimi juaj s’ka përputhje me ndonjë postim</string>
@@ -116,7 +154,6 @@ Language: sq_AL
     <string name="posts_scheduled_empty">S’keni postime të planifikuara për botim</string>
     <string name="posts_published_empty">S’keni botuar ende ndonjë postim</string>
     <string name="notification_wpcom_username_needed">Ju lutemi, bëni hyrjen me emrin tuaj të përdoruesit dhe fjalëkalimin.</string>
-    <string name="login_invalid_site_url">Adresa e sajtit që dhatë është e pavlefshme. Ju lutemi, rijepeni.</string>
     <string name="error_user_username_instead_of_email">Ju lutemi, hyni duke përdorur emrin tuaj të përdoruesit WordPress.com, në vend se adresën tuaj email.</string>
     <string name="stats_insights_average_words">Mesatare fjalësh/postim</string>
     <string name="stats_insights_total_words">Fjalë gjithsej</string>
@@ -185,6 +222,8 @@ Language: sq_AL
     <string name="plans_loading_error_no_plans_subtitle">S’i ngarkojmë dot Planet tani. Ju lutemi, riprovoni më vonë.</string>
     <string name="plans_loading_error_no_plans_title">S’arrihet të ngarkohen Planet</string>
     <string name="plans_loading_error_network_title">S\'ka lidhje</string>
+    <string name="menu_switch_to_gutenberg_editor">Kaloni nën përpunuesin me blloqe</string>
+    <string name="menu_switch_to_aztec_editor">Kaloni nën përpunuesin klasik</string>
     <string name="stats_loading_block_error">Pati një problem në ngarkimin e të dhënave tuaja, rifreskoni faqen dhe riprovoni.</string>
     <string name="stats_loading_error">S’u ngarkuan të dhëna</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
@@ -1018,7 +1057,6 @@ Language: sq_AL
     <string name="login_email_client_not_found">S’zbulohet dot aplikacioni juaj për email</string>
     <string name="login_empty_2fa">Ju lutem, jepni një kod verifikimi</string>
     <string name="login_empty_username">Ju lutemi, jepni emër përdoruesi</string>
-    <string name="login_empty_site_url">Ju lutemi, jepni një adresë sajti</string>
     <string name="login_log_in_for_deeplink">Që të lexoni këtë postim, bëni hyrjen te WordPress.com.</string>
     <string name="login_error_while_adding_site">Gabim gjatë shtimit të sajtit. Kod gabimi: %s</string>
     <string name="login_checking_site_address">Po kontrollohet adresa e sajtit</string>
@@ -1027,7 +1065,7 @@ Language: sq_AL
     <string name="login_site_address_help_title">Cila është adresa e sajtit tim?</string>
     <string name="login_site_address_help">Ju duhet ndihmë për gjetjen e adresës së sajtit tuaj?</string>
     <string name="login_site_address">Adresë sajti</string>
-    <string name="enter_site_address">Jepni adresën e sajtit tuaj WordPress te i cili do të donit të lidheshit.</string>
+    <string name="enter_site_address">Jepni adresën e sajtit WordPress te i cili do të donit të lidheshit.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Jeni tashmë i futur te WordPress.com</string>
     <string name="login_continue">Vazhdo</string>
@@ -1453,7 +1491,6 @@ Language: sq_AL
     <string name="editor_page_title_placeholder">Titull Faqeje</string>
     <string name="editor_post_title_placeholder">Titull Postimi</string>
     <string name="email_address">Adresë email</string>
-    <string name="preference_editor">Përpunues</string>
     <string name="dlg_sure_to_delete_comments">Të fshihen përgjithmonë këto komente?</string>
     <string name="dlg_sure_to_delete_comment">Të fshihet përgjithmonë ky koment?</string>
     <string name="mnu_comment_delete_permanently">Fshije</string>
@@ -2014,6 +2051,7 @@ Language: sq_AL
     <string name="pages">Faqe</string>
     <string name="no_network_title">S’ka rrjet gati</string>
     <string name="featured_in_post">Përfshi figura në lëndë postimi</string>
+    <string name="ok">OK</string>
     <string name="blogusername">emërpërdoruesiblogu</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Po ngarkohet…</string>

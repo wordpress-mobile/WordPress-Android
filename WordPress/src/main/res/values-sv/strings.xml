@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-17 16:37:45+0000
+Translation-Revision-Date: 2019-07-31 22:14:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Behöver du hjälp att hitta e-postadressen du använde för att ansluta dig?</string>
+    <string name="enter_wordpress_site">Webbplatsen på den angivna adressen använder inte WordPress. För att vi ska kunna ansluta till webbplatsen måste WordPress vara installerat.</string>
+    <string name="login_invalid_site_url">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
+    <string name="enter_email_for_site">Logga in med WordPress.com för ansluta till %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Det gick inte att koppla till Facebook eftersom detta konto inte verkar ha åtkomst till någon sida. Facebook stöder delningskopplingar till Facebook-sidor, men inte till Facebook-profiler.</string>
+    <string name="stats_post_views_label">Visningar</string>
+    <string name="stats_post_label">Inlägg</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Diagram över publiceringar.</string>
+    <string name="stats_item_collapsed">Objektet minimerat</string>
+    <string name="stats_item_expanded">Objektet expanderat</string>
+    <string name="stats_collapse_content_description">Minimera</string>
+    <string name="stats_expand_content_description">Expandera</string>
+    <string name="stats_graph_updated">Diagrammet har uppdaterats.</string>
+    <string name="stats_overview_content_description">%1$s %2$s för perioden: %3$s, ändring mot föregående period – %4$s</string>
+    <string name="stats_bar_chart_content_description">Diagram över webbplatsvisningar.</string>
+    <string name="stats_loading_card">Laddar in vald kortinformation</string>
+    <string name="site_settings_editor">Redigerare</string>
+    <string name="dialog_gutenberg_informative_description_page">För närvarande använder du blockredigeraren för att skapa nya sidor. Gå till inställningarna för webbplatsen om du vill använda den klassiska redigeraren som standardval.</string>
+    <string name="dialog_gutenberg_informative_description_post">För närvarande använder du blockredigeraren för att skapa nya inlägg. Gå till inställningarna för webbplatsen om du vill använda den klassiska redigeraren som standardval.</string>
     <string name="description_expand">Expandera</string>
     <string name="description_collapse">Minimera</string>
     <string name="editor_retry_failed_uploads">Försök ladda upp igen</string>
@@ -23,8 +43,6 @@ Language: sv_SE
     <string name="link_dialog_title">Infoga länk</string>
     <string name="post_settings_retry_featured_image">Försök ladda upp en gång till</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Ladda upp mediafiler.\nTryck för fler alternativ.</string>
-    <string name="dialog_gutenberg_informative_description_page">Denna sida använder blockredigeraren, som är standardredigerare för nya sidor. Aktivera den klassiska redigeraren via Jag > Appinställningar.</string>
-    <string name="dialog_gutenberg_informative_description_post">Detta inlägg använder blockredigeraren, som är standardredigerare för nya inlägg. Aktivera den klassiska redigeraren via Jag > Appinställningar.</string>
     <string name="link_open_new_window">Öppna länken i nytt fönster/ny flik</string>
     <string name="post_list_search_prompt">Sök publicerade inlägg</string>
     <string name="stats_widget_error_no_access_token">Logga in till ditt konto hos WordPress.com för att se din statistik.</string>
@@ -137,7 +155,6 @@ Language: sv_SE
     <string name="posts_scheduled_empty">Du har inte några schemalagda inlägg</string>
     <string name="posts_published_empty">Du har inte publicerat några inlägg ännu</string>
     <string name="notification_wpcom_username_needed">Logga in med ditt användarnamn och lösenord.</string>
-    <string name="login_invalid_site_url">Du har angivit en ogiltig webbplatsadress. Försök igen.</string>
     <string name="error_user_username_instead_of_email">Logga in med ditt användarnamn för WordPress.com och inte med din e-postadress.</string>
     <string name="stats_insights_average_words">Ord per inlägg i snitt</string>
     <string name="stats_insights_total_words">Totalt antal ord</string>
@@ -1041,7 +1058,6 @@ Language: sv_SE
     <string name="login_email_client_not_found">Lyckas inte hitta ditt e-postprogram</string>
     <string name="login_empty_2fa">Skriv in en verifieringskod</string>
     <string name="login_empty_username">Skriv in ett användarnamn</string>
-    <string name="login_empty_site_url">Skriv in en webbplatadress</string>
     <string name="login_log_in_for_deeplink">Logga in till ditt konto på WordPress.com för att nå inlägget.</string>
     <string name="login_error_while_adding_site">Ett fel inträffade när webbplatsen skulle läggas till. Felkod: %s</string>
     <string name="login_checking_site_address">Webbplatsadressen kontrolleras</string>
@@ -1476,7 +1492,6 @@ Language: sv_SE
     <string name="editor_page_title_placeholder">Sidans rubrik</string>
     <string name="editor_post_title_placeholder">Inläggets rubrik</string>
     <string name="email_address">E-postadress</string>
-    <string name="preference_editor">Redigerare</string>
     <string name="dlg_sure_to_delete_comments">Radera dessa kommentarer premanent?</string>
     <string name="dlg_sure_to_delete_comment">Radera denna kommentar premanent?</string>
     <string name="mnu_comment_delete_permanently">Ta bort</string>
@@ -2037,6 +2052,7 @@ Language: sv_SE
     <string name="pages">Sidor</string>
     <string name="no_network_title">Inget nätverk tillgängligt</string>
     <string name="featured_in_post">Inkludera bild i inlägget</string>
+    <string name="ok">OK</string>
     <string name="blogusername">användarnamn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Laddar upp…</string>

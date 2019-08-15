@@ -11,7 +11,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 
 class StatsViewAllActivity : AppCompatActivity() {
@@ -69,12 +68,12 @@ class StatsViewAllActivity : AppCompatActivity() {
             localSiteId: Int
         ) {
             val intent = Intent(context, StatsViewAllActivity::class.java)
-            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType)
+            intent.putExtra(StatsViewAllFragment.ARGS_VIEW_TYPE, statsType)
             selectedTab?.let {
                 intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab)
             }
             granularity?.let {
-                intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity)
+                intent.putExtra(StatsViewAllFragment.ARGS_TIMEFRAME, granularity)
             }
             intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             AnalyticsTracker.track(Stat.STATS_VIEW_ALL_ACCESSED)
