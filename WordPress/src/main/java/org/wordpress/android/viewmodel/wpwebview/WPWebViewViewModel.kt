@@ -113,11 +113,6 @@ class WPWebViewViewModel
      */
     fun onReceivedError() {
         if (uiState.value is WebPreviewContentUiState) {
-            CrashLoggingUtils.log(
-                    IllegalStateException(
-                            "WPWebViewViewModel.onReceivedError() called with uiState WebPreviewContentUiState"
-                    )
-            )
             return
         }
         if (uiState.value !is WebPreviewFullscreenErrorUiState) {
