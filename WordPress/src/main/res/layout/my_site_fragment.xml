@@ -88,7 +88,10 @@
                         android:ellipsize="end"
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
-                        android:maxLines="1"
+                        android:maxLines="2"
+                        android:paddingEnd="@dimen/margin_large"
+                        android:paddingStart="@dimen/margin_large"
+                        android:textAlignment="center"
                         android:textColor="@color/neutral_70"
                         android:textSize="@dimen/text_sz_extra_large"
                         tools:text="Example"/>
