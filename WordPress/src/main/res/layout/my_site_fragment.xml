@@ -27,7 +27,6 @@
                 android:orientation="vertical"
                 tools:ignore="UselessParent">
 
-
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/blavatar_container"
                     android:layout_width="wrap_content"
@@ -63,7 +62,6 @@
                             android:layout_height="@dimen/my_site_blavatar_sz"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center"
-
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
@@ -190,141 +188,134 @@
                             android:text="@string/media"/>
                     </LinearLayout>
 
-
                 </LinearLayout>
 
                 <!--Quick Start-->
-                <androidx.cardview.widget.CardView
+                <RelativeLayout
                     android:id="@+id/quick_start"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/content_margin"
-                    android:layout_marginStart="@dimen/content_margin"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="@dimen/default_cardview_radius"
-                    app:cardElevation="@dimen/card_elevation">
+                    android:background="@color/white"
+                    android:paddingEnd="@dimen/content_margin"
+                    android:paddingStart="@dimen/content_margin">
 
                     <RelativeLayout
+                        android:id="@+id/quick_start_toolbar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:minHeight="?attr/listPreferredItemHeightSmall"
+                        android:paddingEnd="@dimen/margin_large"
+                        android:paddingStart="@dimen/margin_large">
 
-                        <RelativeLayout
-                            android:id="@+id/quick_start_toolbar"
-                            android:layout_width="match_parent"
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/quick_start_title"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minHeight="?attr/listPreferredItemHeightSmall"
-                            android:paddingEnd="@dimen/margin_large"
-                            android:paddingStart="@dimen/margin_large">
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@+id/quick_start_more"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-light"
+                            android:maxLines="1"
+                            android:text="@string/quick_start_sites"
+                            android:textAlignment="viewStart"
+                            android:textColor="@color/neutral_70"
+                            android:textSize="@dimen/text_sz_large"
+                            android:textStyle="bold">
+                        </org.wordpress.android.widgets.WPTextView>
 
-                            <org.wordpress.android.widgets.WPTextView
-                                android:id="@+id/quick_start_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
-                                android:layout_toStartOf="@+id/quick_start_more"
-                                android:ellipsize="end"
-                                android:fontFamily="sans-serif-light"
-                                android:maxLines="1"
-                                android:text="@string/quick_start_sites"
-                                android:textAlignment="viewStart"
-                                android:textColor="@color/neutral_70"
-                                android:textSize="@dimen/text_sz_large"
-                                android:textStyle="bold">
-                            </org.wordpress.android.widgets.WPTextView>
-
-                            <ImageView
-                                android:id="@+id/quick_start_more"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:clickable="true"
-                                android:contentDescription="@string/content_description_more"
-                                android:focusable="true"
-                                android:src="@drawable/ic_more_vert_white_24dp"
-                                android:tint="@color/neutral_50">
-                            </ImageView>
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/quick_start_customize"
-                            style="@style/QuickStartTypeRow"
-                            android:layout_below="@+id/quick_start_toolbar">
-
-                            <ImageView
-                                android:id="@+id/quick_start_customize_icon"
-                                style="@style/QuickStartTypeIcon"
-                                android:background="@drawable/bg_oval_primary_40_customize_white_40dp_selector"
-                                android:importantForAccessibility="no">
-                            </ImageView>
-
-                            <TextView
-                                android:id="@+id/quick_start_customize_title"
-                                style="@style/QuickStartTypeTitle"
-                                android:layout_toEndOf="@+id/quick_start_customize_icon"
-                                android:text="@string/quick_start_sites_type_customize">
-                            </TextView>
-
-                            <TextView
-                                android:id="@+id/quick_start_customize_subtitle"
-                                style="@style/QuickStartTypeSubtitle"
-                                android:layout_below="@+id/quick_start_customize_title"
-                                android:layout_toEndOf="@+id/quick_start_customize_icon"
-                                tools:text="1 of 6 complete">
-                            </TextView>
-
-                        </RelativeLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/list_divider_height"
-                            android:layout_below="@+id/quick_start_customize"
-                            android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
-                            android:background="@color/neutral_0">
-                        </View>
-
-                        <RelativeLayout
-                            android:id="@+id/quick_start_grow"
-                            style="@style/QuickStartTypeRow"
-                            android:layout_below="@+id/quick_start_customize">
-
-                            <ImageView
-                                android:id="@+id/quick_start_grow_icon"
-                                style="@style/QuickStartTypeIcon"
-                                android:background="@drawable/bg_oval_pink_50_multiple_users_white_40dp_selector"
-                                android:importantForAccessibility="no">
-                            </ImageView>
-
-                            <TextView
-                                android:id="@+id/quick_start_grow_title"
-                                style="@style/QuickStartTypeTitle"
-                                android:layout_toEndOf="@+id/quick_start_grow_icon"
-                                android:text="@string/quick_start_sites_type_grow">
-                            </TextView>
-
-                            <TextView
-                                android:id="@+id/quick_start_grow_subtitle"
-                                style="@style/QuickStartTypeSubtitle"
-                                android:layout_below="@+id/quick_start_grow_title"
-                                android:layout_toEndOf="@+id/quick_start_grow_icon"
-                                tools:text="0 of 5 complete">
-                            </TextView>
-
-                        </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/quick_start_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:contentDescription="@string/content_description_more"
+                            android:focusable="true"
+                            android:src="@drawable/ic_more_vert_white_24dp"
+                            android:tint="@color/neutral_50">
+                        </ImageView>
 
                     </RelativeLayout>
 
-                </androidx.cardview.widget.CardView>
+                    <RelativeLayout
+                        android:id="@+id/quick_start_customize"
+                        style="@style/QuickStartTypeRow"
+                        android:layout_below="@+id/quick_start_toolbar">
+
+                        <ImageView
+                            android:id="@+id/quick_start_customize_icon"
+                            style="@style/QuickStartTypeIcon"
+                            android:background="@drawable/bg_oval_primary_40_customize_white_40dp_selector"
+                            android:importantForAccessibility="no">
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/quick_start_customize_title"
+                            style="@style/QuickStartTypeTitle"
+                            android:layout_toEndOf="@+id/quick_start_customize_icon"
+                            android:text="@string/quick_start_sites_type_customize">
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/quick_start_customize_subtitle"
+                            style="@style/QuickStartTypeSubtitle"
+                            android:layout_below="@+id/quick_start_customize_title"
+                            android:layout_toEndOf="@+id/quick_start_customize_icon"
+                            tools:text="1 of 6 complete">
+                        </TextView>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/list_divider_height"
+                        android:layout_below="@+id/quick_start_customize"
+                        android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
+                        android:background="@color/neutral_0">
+                    </View>
+
+                    <RelativeLayout
+                        android:id="@+id/quick_start_grow"
+                        style="@style/QuickStartTypeRow"
+                        android:layout_below="@+id/quick_start_customize">
+
+                        <ImageView
+                            android:id="@+id/quick_start_grow_icon"
+                            style="@style/QuickStartTypeIcon"
+                            android:background="@drawable/bg_oval_pink_50_multiple_users_white_40dp_selector"
+                            android:importantForAccessibility="no">
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/quick_start_grow_title"
+                            style="@style/QuickStartTypeTitle"
+                            android:layout_toEndOf="@+id/quick_start_grow_icon"
+                            android:text="@string/quick_start_sites_type_grow">
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/quick_start_grow_subtitle"
+                            style="@style/QuickStartTypeSubtitle"
+                            android:layout_below="@+id/quick_start_grow_title"
+                            android:layout_toEndOf="@+id/quick_start_grow_icon"
+                            tools:text="0 of 5 complete">
+                        </TextView>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <!--Register Domain-->
                 <LinearLayout
                     android:id="@+id/my_site_register_domain_cta"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:background="@color/white"
                     android:orientation="vertical"
                     android:visibility="gone">
 
