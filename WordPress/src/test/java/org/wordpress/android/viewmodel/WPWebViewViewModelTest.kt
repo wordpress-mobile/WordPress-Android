@@ -78,7 +78,7 @@ class WPWebViewViewModelTest {
     }
 
     @Test
-    fun `initially navigation is not enabled, preview mode is set to default and disabled`() {
+    fun `initially navigation is not enabled and preview mode is set to default and disabled`() {
         viewModel.start()
         assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
