@@ -46,7 +46,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             it?.applyIfNotHandled {
                 GlobalScope.launch {
                     val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    imm?.showSoftInput(reply, InputMethodManager.SHOW_FORCED)
+                    imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
                 }
             }
         })
