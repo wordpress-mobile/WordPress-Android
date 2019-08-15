@@ -24,6 +24,7 @@ import androidx.core.widget.CompoundButtonCompat;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.EditTextUtils;
 
 /**
@@ -126,7 +127,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         for (int i = 0; i < mEntries.length; i++) {
             RadioButton radio = new RadioButton(getActivity());
             CompoundButtonCompat.setButtonTintList(radio,
-                    getResources().getColorStateList(R.color.primary_400_gray_200_gray_400_selector));
+                    getResources().getColorStateList(R.color.primary_40_gray_20_gray_40_selector));
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);
@@ -179,6 +180,12 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             return EditTextUtils.getText(mEditCustomFormat);
         }
         return mValues[id];
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UiHelpers.Companion.adjustDialogSize(getDialog());
     }
 
     @Override

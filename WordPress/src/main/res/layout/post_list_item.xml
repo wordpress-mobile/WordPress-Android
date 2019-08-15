@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="2"
-            android:textColor="@color/neutral_800"
+            android:textColor="@color/neutral_80"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
             android:importantForAccessibility="no"
             android:lineSpacingMultiplier="1.1"
             android:maxLines="3"
-            android:textColor="@color/neutral_700"
+            android:textColor="@color/neutral_70"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
             tools:text="text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt "/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/date"
+            android:id="@+id/date_and_author"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
@@ -75,7 +75,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/neutral_500"
+            android:textColor="@color/neutral_50"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -141,7 +141,7 @@
             app:layout_constraintBottom_toTopOf="@+id/layout_buttons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/date"
+            app:layout_constraintTop_toBottomOf="@+id/date_and_author"
             app:layout_goneMarginBottom="@dimen/margin_extra_large"
             tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes "/>
 

@@ -175,7 +175,6 @@ Language: cy_GB
     <string name="me_btn_app_settings">Gosodiadau Apiau</string>
     <string name="start_over">Cychwyn Eto</string>
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
-    <string name="editor_toast_failed_uploads">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd cadw na chyhoeddi\n       eich cofnod yn y cyflwr hwn. Hoffech chi dynnu pob cyfrwng sydd wedi methu?</string>
     <string name="site_settings_advanced_header">Uwch</string>
     <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
@@ -227,7 +226,6 @@ Language: cy_GB
     <string name="editor_post_title_placeholder">Teitl Cofnod</string>
     <string name="email_address">Cyfeiriad e-bost</string>
     <string name="dlg_sure_to_delete_comments">Dileu\'r sylwadau hyn yn barhaol?</string>
-    <string name="preference_editor">Golygydd</string>
     <string name="dlg_sure_to_delete_comment">Dileu\'r sylwadau hyn yn barhaol?</string>
     <string name="mnu_comment_delete_permanently">Dileu</string>
     <string name="comment_deleted_permanently">Wedi dileu\'r sylw</string>
@@ -393,7 +391,6 @@ Language: cy_GB
     <string name="stats_enable_rest_api_in_jetpack">I weld eich ystadegau, galluogwch y modiwl JSON API yn Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Sylw</string>
     <string name="reader_short_comment_count_one">1 Sylw</string>
-    <string name="reader_label_submit_comment">ANFON</string>
     <string name="reader_hint_comment_on_post">Ateb cofnod…</string>
     <string name="reader_discover_visit_blog">Mynd i %s</string>
     <string name="reader_discover_attribution_blog">Cofnodwyd yn wreiddiol ar %s</string>
@@ -751,6 +748,7 @@ Language: cy_GB
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
     <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="blogusername">blogusername</string>
+    <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Llwytho…</string>
     <string name="version">Fersiwn</string>

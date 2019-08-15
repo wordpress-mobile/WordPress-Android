@@ -74,7 +74,6 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails;
-import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -86,7 +85,6 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.QuickStartUtils;
-import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -213,10 +211,6 @@ public class MySiteFragment extends Fragment implements
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
-
-        if (ServiceUtils.isServiceRunning(requireActivity(), StatsService.class)) {
-            requireActivity().stopService(new Intent(getActivity(), StatsService.class));
-        }
 
         SiteModel site = getSelectedSite();
         if (site != null) {
@@ -608,12 +602,12 @@ public class MySiteFragment extends Fragment implements
                     countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted));
 
             if (countGrowUncompleted > 0) {
-                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_500_multiple_users_white_40dp);
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(true);
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_neutral_300_multiple_users_white_40dp);
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp);
                 mQuickStartGrowTitle.setEnabled(false);
                 mQuickStartGrowTitle.setPaintFlags(
                         mQuickStartGrowTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

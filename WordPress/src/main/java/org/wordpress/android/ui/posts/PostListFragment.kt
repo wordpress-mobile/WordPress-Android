@@ -105,25 +105,34 @@ class PostListFragment : Fragment() {
                     }
                 }
 
-                recyclerView?.scrollToPosition(0)
-                postListAdapter.updateItemLayoutType(layoutType)
+                if (postListAdapter.updateItemLayoutType(layoutType)) {
+                    recyclerView?.scrollToPosition(0)
+                }
+            }
+        })
+
+        mainViewModel.authorSelectionUpdated.observe(this, Observer {
+            if (it != null) {
+                if (viewModel.updateAuthorFilterIfNotSearch(it)) {
+                    recyclerView?.scrollToPosition(0)
+                }
             }
         })
 
         actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
 
-        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
-                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(authorFilter, postListType)
+        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(postListType)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get<PostListViewModel>(PostListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListViewModel::class.java)
 
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
-        viewModel.start(
-                postListViewModelConnector, photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
-        )
+
+        // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
+        viewModel.start(postListViewModelConnector,
+                mainViewModel.authorSelectionUpdated.value!!,
+                photonWidth = displayWidth - contentSpacing * 2,
+                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height))
 
         initObservers()
     }
@@ -248,13 +257,11 @@ class PostListFragment : Fragment() {
         @JvmStatic
         fun newInstance(
             site: SiteModel,
-            authorFilter: AuthorFilterSelection,
             postListType: PostListType
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
-            bundle.putSerializable(EXTRA_POST_LIST_AUTHOR_FILTER, authorFilter)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             fragment.arguments = bundle
             return fragment

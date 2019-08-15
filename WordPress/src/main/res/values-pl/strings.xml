@@ -1,15 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-20 12:49:44+0000
+Translation-Revision-Date: 2019-08-04 17:55:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Potrzebujesz pomocy w znalezieniu adresu email za pomocą połączyłe(a)ś się?</string>
+    <string name="enter_wordpress_site">Witryna znajdująca się pod tym adresem nie jest witryną WordPressową. Abyśmy mogli ją podłączyć, witryna musi mieć zainstalowanego WordPressa.</string>
+    <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
+    <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie powinno być ustanowione ponieważ to konto nie ma dostępu do żadnych stron. Facebook wspiera udostępnianie połączeń do Facebook Pages, ale nie do Profili Facebooka.</string>
+    <string name="stats_post_views_label">Wyświetleń</string>
+    <string name="stats_post_label">Wpis</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Wykresy aktywności publikowania wpisów.</string>
+    <string name="stats_item_collapsed">Element zwinięto</string>
+    <string name="stats_item_expanded">Element rozwinięto</string>
+    <string name="stats_collapse_content_description">Zwiń</string>
+    <string name="stats_expand_content_description">Rozwiń</string>
+    <string name="stats_graph_updated">Wykres uaktualniony.</string>
+    <string name="stats_overview_content_description">%1$s %2$s dla okresu: %3$s, zmiana względem poprzedniego okresu - %4$s</string>
+    <string name="stats_bar_chart_content_description">Wykresy wyświetleń witryny.</string>
+    <string name="stats_loading_card">Wczytywanie wybranych danych</string>
+    <string name="site_settings_editor">Edytor</string>
+    <string name="dialog_gutenberg_informative_description_page">Aktualnie korzystasz z edytora blokowego do tworzenia nowych stron. Czy chcesz przejść na edytor klasyczny? Przejdź do Ustawień Witryny.</string>
+    <string name="dialog_gutenberg_informative_description_post">Aktualnie korzystasz z edytora blokowego do tworzenia nowych wpisów. Czy chcesz przejść na edytor klasyczny? Przejdź do Ustawień Witryny.</string>
+    <string name="description_expand">Rozwiń</string>
+    <string name="description_collapse">Zwiń</string>
+    <string name="editor_retry_failed_uploads">Prześlij ponownie</string>
+    <string name="editor_toast_failed_uploads">Nie udało się przesłać niektórych plików mediów.  Nie możesz zapisać lub opublikować\nswoich wpisów w tej sytuacji.  </string>
+    <string name="my_site_verify_your_email_without_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na twój e-mail</string>
+    <string name="my_site_verify_your_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na adres %s</string>
+    <string name="error_media_recover_post_not_submitted">Nie można było przesłać plików mediów.  Wpis nie został przesłany. </string>
+    <string name="error_media_recover_post_not_scheduled">Nie można było przesłać plików mediów.  Wpis nie został zaplanowany. </string>
+    <string name="error_media_recover_post_not_published">Nie można było przesłać plików mediów.  Wpis nie został opublikowany. </string>
+    <string name="error_media_recover_post">Nie udało się załadować plików mediów.</string>
+    <string name="link_dialog_button_cancel">Anuluj</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Usuń odnośnik</string>
+    <string name="link_dialog_title">Wstaw odnośnik</string>
+    <string name="post_settings_retry_featured_image">Prześlij ponownie</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Przesyłanie pliku mediów.\nStuknij aby dostać się do opcji.</string>
+    <string name="link_open_new_window">Otwórz odnośnik w nowym oknie/zakładce</string>
+    <string name="post_list_search_prompt">Przeszukaj opublikowane wpisy</string>
+    <string name="stats_widget_error_no_access_token">Aby przejrzeć statystyki witryny, zaloguj się do konta WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Brak wpisów pasujących do twoich kryteriów wyszukiwania</string>
+    <string name="domains_suggestions_intro_description">To tu ludzie odnajdą ciebie w internecie.</string>
+    <string name="domains_suggestions_intro_title">Wybierz domenę premium</string>
+    <string name="my_site_custom_domain_name">Wszystkie plany WordPress.com zawierają własną nazwę domeny. Zarejestruj własną darmową domenę premium w tym momencie.</string>
+    <string name="stats_widget_minified_name">W skrócie</string>
+    <string name="stats_widget_today_insights_name">Dziś</string>
+    <string name="stats_widget_all_time_insights_name">Od początku</string>
+    <string name="stats_widget_weekly_views_name">Wyświetleń w tym tygodniu</string>
+    <string name="stats_widget_log_in_message">Proszę zalogować się do aplikacji WordPress aby dodać widget.</string>
+    <string name="stats_widget_error_no_network">Brak dostępnej sieci</string>
+    <string name="stats_widget_error_no_data">Nie udało się załadować danych</string>
+    <string name="stats_widget_select_type">Typ</string>
+    <string name="stats_widget_select_color">Kolor</string>
+    <string name="stats_widget_select_your_site">Wybierz swoją witrynę</string>
+    <string name="stats_widget_color_dark">Ciemny</string>
+    <string name="stats_widget_color_light">Jasny</string>
+    <string name="stats_widget_color">Kolor</string>
+    <string name="stats_widget_site_caption">Wybierz swoją witrynę</string>
+    <string name="stats_widget_site">Witryna</string>
+    <string name="stats_widget_all_time_title">Od początku</string>
+    <string name="stats_widget_views_title">Wyświetlenia w tym tygodniu</string>
+    <string name="stats_widget_add">Dodaj widget</string>
+    <string name="dialog_confirm_update_yes">Aktualizuj teraz</string>
+    <string name="dialog_confirm_update_message_page">Ta opublikowana strona zostanie teraz zaktualizowana.</string>
+    <string name="dialog_confirm_update_message_post">Ten opublikowany wpis zostanie teraz zaktualizowany.</string>
+    <string name="dialog_confirm_update_title">Aktualizować?</string>
+    <string name="plugin_fetching_error_after_at">Odświeżenie szczegółów wtyczki trwa dłużej niż zwykle. Proszę spróbować później.</string>
+    <string name="plugin_install_site_ineligible_default_error">Jeśli właśnie zarejestrowałe(a)ś nazwę domeny, poczekaj aż ukończymy konfigurację i wówczas spróbuj ponownie.\n\nJeśli nie zarejestrowałe(a)ś domeny, wygląda na to że coś poszło nie tak i funkcjonalność wtyczki może być w tym momencie niedostępna dla tej witryny.</string>
     <string name="domain_contact_information_state_not_available_hint">Stan (niedostępne)</string>
     <string name="domain_registration_privacy_protection_tos">Rejestrując tą domenę akceptujesz nasze %1$s warunki użytkowania%2$s</string>
     <string name="error_network_connection">Sprawdź swoje połączenie i spróbuj ponownie</string>
     <string name="error_browser_no_network">Nie można było w tym momencie wczytać tej strony</string>
+    <string name="error_disabled_apis">Nie można było pobrać ustawień: niektóre API nie są dostępne dla kombinacji tego ID OAuth i tego konta.</string>
+    <string name="jetpack_connection_terms_and_conditions">Używając Jetpacka akceptujesz nasze %1$swarunki użytkowania%2$s</string>
     <string name="site_settings_disconnected_toast">Brak połączenia. Edycja jest wyłączona. </string>
     <string name="site_settings_update_password_message">Aby ponownie połączyć aplikację do witryny z własnym hostingiem, wprowadź nowe hasło witryny. </string>
     <string name="site_settings_password_updated">Hasło zaktualizowane</string>
@@ -31,7 +101,11 @@ Language: pl
     <string name="domain_contact_information_country_code_hint">Kod kraju</string>
     <string name="domain_contact_information_phone_number_hint">Telefon</string>
     <string name="domain_contact_information_organization_hint">Organizacja (opcjonalnie)</string>
+    <string name="domain_contact_information_description">Dla twojej wygody, wypełniliśmy wstępnie twoje dane kontaktowe\nWordpress.com. Przejrzyj je aby upewnić się, że wpisane są prawidłowe informacje dla tej domeny.</string>
     <string name="domain_contact_information_title">Informacje kontaktowe domeny</string>
+    <string name="domain_privacy_option_off_title">Zarejestruj publicznie</string>
+    <string name="domain_privacy_option_on_title">Zarejestruj prywatnie z Ochroną Prywatności</string>
+    <string name="domain_registration_privacy_protection_description">Właściciele domen muszą udostępnić dane kontaktowe w publicznej bazie danych wszystkich domen.\nZ funkcjonalnością Ochrony Prywatności, publikujemy nasze dane zamiast twoich i prywatnie przekazujemy wszelką komunikację skierowaną do ciebie.</string>
     <string name="domain_registration_privacy_protection_title">Zabezpieczenie prywatności</string>
     <string name="domain_registration_contact_form_input_error">Wprowadź prawidłowy %s</string>
     <string name="domains_suggestions_choose_domain">Wybierz domenę</string>
@@ -39,6 +113,7 @@ Language: pl
     <string name="stats_management_edit">Edycja</string>
     <string name="stats_management_dismiss_insights_news_card">Odrzuć</string>
     <string name="stats_management_try_it_now">Wypróbuj</string>
+    <string name="stats_management_news_card_message">Wybierz statystyki, które chcesz widzieć i skup się na danych na których najbardziej tobie zależy. Stuknij %1$s na dole strony Trendów aby spersonalizować statystyki.</string>
     <string name="stats_manage_your_stats">Zarządzaj statystykami</string>
     <string name="history_fetching_revisions">Pobieranie wersji…</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
@@ -53,7 +128,7 @@ Language: pl
     <string name="backdated_for">Datowany wstecznie dla: %s</string>
     <string name="stats_insights_management_drag_and_drop_hint">Obiekt pokazany powyżej pojawi się w zakładce Trendy. Przesuń i upuść aby spersonalizować.</string>
     <string name="stats_insights_add_insights_header">Dodaj Trendy</string>
-    <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Dodawaj i organizuj poniżej swoje trendy. </string>
+    <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Na tej karcie możesz dodawać i organizować najistotniejsze dla siebie trendy.</string>
     <string name="stats_insights_social">Społecznościowe</string>
     <string name="stats_insights_annual_site_stats">Roczne statystyki witryny</string>
     <string name="stats_view_follower_totals">Suma obserwujących</string>
@@ -80,7 +155,6 @@ Language: pl
     <string name="posts_scheduled_empty">Nie masz żadnych zaplanowanych wpisów</string>
     <string name="posts_published_empty">Nie opublikowałeś jeszcze żadnych wpisów</string>
     <string name="notification_wpcom_username_needed">Zaloguj się za pomocą swojej nazwy użytkownika i hasła.</string>
-    <string name="login_invalid_site_url">Wprowadzony adres witryny jest nieprawidłowy. Wprowadź ponownie.</string>
     <string name="error_user_username_instead_of_email">Zaloguj się przy pomocy użytkonika WordPress.com zamiast swojego adresu email.</string>
     <string name="stats_insights_average_words">Średnio słów/wpis</string>
     <string name="stats_insights_total_words">Suma słów</string>
@@ -155,8 +229,6 @@ Language: pl
     <string name="stats_loading_error">Dane nie wczytane</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edytuj nowe wpisy i strony przy pomocy edytora blokowego</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Użyj edytora blokowego</string>
-    <string name="dialog_gutenberg_informative_description_page">Ta strona została utworzona przy pomocy edytora blokowego, więc uaktywniliśmy go również na tej stronie.\nWróć z powrotem do edytora klasycznego w dowolnym momencie - stuknij na przycisk ⋮ na górnej belce.</string>
-    <string name="dialog_gutenberg_informative_description_post">Ten wpis został utworzony przy pomocy edytora blokowego, więc uaktywniliśmy go również dla tego wpisu. Wróć z powrotem do edytora klasycznego w dowolnym momencie - stuknij na przycisk ⋮ na górnej belce.</string>
     <string name="dialog_gutenberg_informative_title">Włączono edytor blokowy</string>
     <string name="exit">wyjdź</string>
     <string name="quick_start_sites_type_subtitle">Wykonano %1$d z %2$d</string>
@@ -244,7 +316,6 @@ Language: pl
     <string name="dialog_confirm_load_remote_post_body_2">Lokalna\nZapisano %s\n\nW internecie\nZapisano %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Ten wpis ma dwie konfliktujące ze sobą wersje. Wybierz wersję którą chciał(a)byś odrzucić.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Rozwiąż problem synchronizacji</string>
-    <string name="local_changes_discarding_no_connection">Wymagane jest połączenie aby wykonać tą akcję. Proszę sprawdź swoje połączenie i spróbuj ponownie. </string>
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
@@ -457,11 +528,6 @@ Language: pl
     <string name="blavatar_desc">ikona witryny</string>
     <string name="theme_image_desc">obrazek motywu</string>
     <string name="featured_image_desc">obrazek wyróżniający</string>
-    <string name="local_changes_discarding_error">Błąd podczas odrzucania lokalnych zmian. Proszę skontaktować się ze wsparciem aby uzyskać pomoc. </string>
-    <string name="local_changes_discarding">Odrzucanie zmian lokalnych</string>
-    <string name="local_changes_discarded">Lokalne zmiany odrzucone</string>
-    <string name="menu_discard_changes">Odrzuć lokalne zmiany</string>
-    <string name="button_discard_changes">Odrzuć zmiany</string>
     <string name="button_discard">Odrzuć</string>
     <string name="reader_avatar_desc">zdjęcie profilowe</string>
     <string name="reader_blavatar_desc">ikona witryny</string>
@@ -874,7 +940,6 @@ Language: pl
     <string name="login_text_otp_another">Prześlij mi kolejny kod</string>
     <string name="enter_verification_code_sms">Przesłaliśmy wiadomość tekstową na numer telefonu kończący się na %s. Proszę wprowadzić kod weryfikacyjny z SMSa. </string>
     <string name="error_generic_error">Nie można było przeprowadzić operacji</string>
-    <string name="error_media_recover_post">Nie można przesłać mediów tego wpisu</string>
     <string name="image_size">Rozmiar</string>
     <string name="uploading_subtitle_media_only_one">Pozostał 1 plik</string>
     <string name="uploading_subtitle_media_only">Pozostało %1$d z %2$d plików</string>
@@ -993,7 +1058,6 @@ Language: pl
     <string name="login_email_client_not_found">Nie można rozpoznać twojej aplikacji do email</string>
     <string name="login_empty_2fa">Wprowadź kod weryfkacyjny</string>
     <string name="login_empty_username">Proszę wprowadzić nazwę użytkownika</string>
-    <string name="login_empty_site_url">Proszę wprowadzić adres witryny</string>
     <string name="login_log_in_for_deeplink">Zaloguj się do WordPress.com aby uzyskać dostęp do wpisu.</string>
     <string name="login_error_while_adding_site">Błąd podczas dodawania witryny. Kod błędu: %s</string>
     <string name="login_checking_site_address">Sprawdzanie adresu witryny</string>
@@ -1002,7 +1066,7 @@ Language: pl
     <string name="login_site_address_help_title">Jaki jest adres mojej witryny?</string>
     <string name="login_site_address_help">Potrzebujesz pomocy w odnalezieniu adresu witryny?</string>
     <string name="login_site_address">Adres witryny</string>
-    <string name="enter_site_address">Wprowadź adres swojej witryny Wordpress, którą chciałbyś połączyć.</string>
+    <string name="enter_site_address">Wprowadź adres witryny WordPress, którą chciałbyś połączyć.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Jesteś już zalogowany na WordPress.com</string>
     <string name="login_continue">Kontynuuj</string>
@@ -1372,7 +1436,6 @@ Language: pl
     <string name="start_over">Zacznij od nowa</string>
     <string name="me_btn_app_settings">Ustawienia aplikacji</string>
     <string name="editor_remove_failed_uploads">Usuń nieudane próby przesyłania</string>
-    <string name="editor_toast_failed_uploads">Nie udało się przesłać niektórych mediów. Nie możesz zapisać i opublikować\nwpisu w tym momencie. Czy chcesz usunąć wszystkie błędnie przesłane media?</string>
     <string name="site_settings_advanced_header">Zaawansowane</string>
     <string name="comments_empty_list_filtered_trashed">Brak komentarzy w koszu</string>
     <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących</string>
@@ -1429,7 +1492,6 @@ Language: pl
     <string name="editor_page_title_placeholder">Tytuł strony</string>
     <string name="editor_post_title_placeholder">Tytuł wpisu</string>
     <string name="email_address">Adres e-mail</string>
-    <string name="preference_editor">Edytor</string>
     <string name="dlg_sure_to_delete_comments">Trwale usunąć te komentarze ?</string>
     <string name="dlg_sure_to_delete_comment">Trwale usunąć ten komentarz ?</string>
     <string name="mnu_comment_delete_permanently">Usuń</string>
@@ -1606,7 +1668,6 @@ Language: pl
     <string name="stats_enable_rest_api_in_jetpack">Aby podejrzeć statystyki, uaktywnij moduł API JSON w Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Komentarzy</string>
     <string name="reader_short_comment_count_one">1 Komentarz</string>
-    <string name="reader_label_submit_comment">WYŚLIJ</string>
     <string name="reader_hint_comment_on_post">Dodaj komentarz do wpisu…</string>
     <string name="reader_discover_visit_blog">Przejdź do %s</string>
     <string name="reader_discover_attribution_blog">Oryginalnie opublikowano %s</string>
@@ -1991,6 +2052,7 @@ Language: pl
     <string name="pages">Strony</string>
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="featured_in_post">Załącz obraz w treści wpisu</string>
+    <string name="ok">OK</string>
     <string name="blogusername">nazwa użytkownika blogu</string>
     <string name="link_enter_url">Adres URL</string>
     <string name="uploading">Przesyłanie…</string>

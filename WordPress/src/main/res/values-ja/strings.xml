@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-11 00:54:10+0000
+Translation-Revision-Date: 2019-08-10 00:54:47+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">関連付けられているメールアドレスをお忘れですか ?</string>
+    <string name="enter_wordpress_site">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトに WordPress がインストールされている必要があります。</string>
+    <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
+    <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
+    <string name="sharing_facebook_account_must_have_pages">このアカウントはページへのアクセス権を持っていないため、Facebook との連携を確立できませんでした。Facebook は、Facebook ページへの共有接続をサポートしていますが、Facebook プロフィールへの共有接続はサポートしていません。</string>
+    <string name="stats_post_views_label">表示回数</string>
+    <string name="stats_post_label">投稿</string>
+    <string name="stats_list_item_description">%1$s:%2$s、%3$s:%4$s</string>
+    <string name="stats_posting_activity_graph">投稿アクティビティのグラフです。</string>
+    <string name="stats_item_collapsed">項目を非表示にしました</string>
+    <string name="stats_item_expanded">項目を展開しました</string>
+    <string name="stats_collapse_content_description">折りたたむ</string>
+    <string name="stats_expand_content_description">拡大</string>
+    <string name="stats_graph_updated">グラフが更新されました。</string>
+    <string name="stats_overview_content_description">次の期間の %1$s %2$s :%3$s、前の期間からの変更 - %4$s</string>
+    <string name="stats_bar_chart_content_description">サイト表示回数のグラフです。</string>
+    <string name="stats_loading_card">選択したカードデータの読み込み</string>
+    <string name="site_settings_editor">エディター</string>
+    <string name="dialog_gutenberg_informative_description_page">現在、ブロックエディターで新規ページを作成しています。デフォルトで旧エディターを使用しますか ?サイト設定に移動します。</string>
+    <string name="dialog_gutenberg_informative_description_post">現在、ブロックエディターで新規投稿を作成しています。デフォルトで旧エディターを使用しますか ?サイト設定に移動します。</string>
+    <string name="description_expand">拡大</string>
+    <string name="description_collapse">折りたたむ</string>
+    <string name="editor_retry_failed_uploads">アップロード再試行</string>
+    <string name="editor_toast_failed_uploads">一部のメディアのアップロードに失敗しました。この状態の投稿は\n保存や公開ができません。</string>
+    <string name="my_site_verify_your_email_without_email">メールアドレスを検証してください。ご登録のメールアドレスに指示が送信されました</string>
+    <string name="my_site_verify_your_email">メールアドレスを検証してください。指示が %s に送信されました</string>
+    <string name="error_media_recover_post_not_submitted">メディアをアップロードできませんでした。投稿は送信されませんでした。</string>
+    <string name="error_media_recover_post_not_scheduled">メディアをアップロードできませんでした。投稿のスケジュールは予約されていません。</string>
+    <string name="error_media_recover_post_not_published">メディアをアップロードできませんでした。投稿は公開されていません。</string>
+    <string name="error_media_recover_post">メディアをアップロードできませんでした</string>
+    <string name="link_dialog_button_cancel">キャンセル</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">リンクを削除</string>
+    <string name="link_dialog_title">リンクを挿入</string>
+    <string name="post_settings_retry_featured_image">アップロード再試行</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">メディアをアップロードしています。\nタップすると、オプションが表示されます。</string>
+    <string name="link_open_new_window">リンクを新しいウィンドウまたはタブで開く</string>
+    <string name="post_list_search_prompt">公開済みの投稿を検索</string>
     <string name="stats_widget_error_no_access_token">統計情報を表示するには、WordPress.com アカウントにログインしてください。</string>
     <string name="post_list_search_nothing_found">検索に一致する投稿はありません</string>
     <string name="domains_suggestions_intro_description">これを使って、他の人があなたのサイトをインターネット上で見つけます。</string>
@@ -116,7 +155,6 @@ Language: ja_JP
     <string name="posts_scheduled_empty">予約済み投稿はありません</string>
     <string name="posts_published_empty">公開した投稿はまだありません</string>
     <string name="notification_wpcom_username_needed">ユーザー名とパスワードでログインしてください。</string>
-    <string name="login_invalid_site_url">入力されたサイトアドレスが無効です。もう一度入力してください。</string>
     <string name="error_user_username_instead_of_email">メールアドレスではなく WordPress.com ユーザー名を使用してログインしてください。</string>
     <string name="stats_insights_average_words">1投稿あたりの平均単語数</string>
     <string name="stats_insights_total_words">総単語数</string>
@@ -185,14 +223,10 @@ Language: ja_JP
     <string name="plans_loading_error_no_plans_subtitle">現在、一時的にプランの読み込みができません。後ほど、もう一度お試しください。</string>
     <string name="plans_loading_error_no_plans_title">プランの読み込みができません</string>
     <string name="plans_loading_error_network_title">接続がありません</string>
-    <string name="menu_switch_to_gutenberg_editor">ブロックエディターに切り替える</string>
-    <string name="menu_switch_to_aztec_editor">旧エディターに切り替える</string>
     <string name="stats_loading_block_error">データの読み込み中に問題が発生しました。ページを更新してもう一度お試しください。</string>
     <string name="stats_loading_error">データは読み込まれていません</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">ブロックエディターで新しい投稿やページを編集</string>
     <string name="site_settings_gutenberg_default_for_new_posts">ブロックエディターを使用</string>
-    <string name="dialog_gutenberg_informative_description_page">このページはもともとブロックエディターで作成されたため、このページでも有効になっています。\nトップバーの「⋮」をタップすると、いつでも元の状態に戻ることができます。</string>
-    <string name="dialog_gutenberg_informative_description_post">この投稿はもともとブロックエディターで作成されたため、この投稿でも有効になっています。\nトップバーの「⋮」をタップすると、いつでも元の状態に戻ることができます。</string>
     <string name="dialog_gutenberg_informative_title">ブロックエディター有効</string>
     <string name="exit">終了</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
@@ -280,7 +314,6 @@ Language: ja_JP
     <string name="dialog_confirm_load_remote_post_body_2">ローカル\n%s に保存しました\n\nWeb\n%s に保存しました\n</string>
     <string name="dialog_confirm_load_remote_post_body">この投稿には競合する2つのバージョンがあります。破棄するバージョンを選択してください。\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">同期の競合を解決</string>
-    <string name="local_changes_discarding_no_connection">この操作を行うには接続が必要です。接続を確認して、もう一度お試しください。</string>
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
@@ -493,11 +526,6 @@ Language: ja_JP
     <string name="blavatar_desc">サイトアイコン</string>
     <string name="theme_image_desc">テーマ画像</string>
     <string name="featured_image_desc">アイキャッチ画像</string>
-    <string name="local_changes_discarding_error">ローカルでの変更を廃棄中にエラーが発生しました。サポートにご連絡ください。</string>
-    <string name="local_changes_discarding">ローカルでの変更を廃棄しています</string>
-    <string name="local_changes_discarded">ローカルでの変更を廃棄しました</string>
-    <string name="menu_discard_changes">ローカルでの変更を廃棄</string>
-    <string name="button_discard_changes">変更を廃棄</string>
     <string name="button_discard">削除</string>
     <string name="reader_avatar_desc">プロフィール写真</string>
     <string name="reader_blavatar_desc">サイトアイコン</string>
@@ -910,7 +938,6 @@ Language: ja_JP
     <string name="login_text_otp_another">代わりに別のコードを送信する。</string>
     <string name="enter_verification_code_sms">末尾が%sで終わる電話番号にテキストメッセージを送信しました。SMS の認証コードを入力してください。</string>
     <string name="error_generic_error">操作を実行できませんでした</string>
-    <string name="error_media_recover_post">この投稿のメディアをアップロードできませんでした</string>
     <string name="image_size">サイズ</string>
     <string name="uploading_subtitle_media_only_one">残り1ファイルです</string>
     <string name="uploading_subtitle_media_only">残り%1$d/%2$dファイルです</string>
@@ -1029,7 +1056,6 @@ Language: ja_JP
     <string name="login_email_client_not_found">メールクライアントアプリを検出できません</string>
     <string name="login_empty_2fa">認証コードを入力してください</string>
     <string name="login_empty_username">ユーザー名を入力してください</string>
-    <string name="login_empty_site_url">サイトアドレスを入力してください</string>
     <string name="login_log_in_for_deeplink">WordPress.com にログインして投稿にアクセスしてください。</string>
     <string name="login_error_while_adding_site">サイトを追加する際にエラーが発生しました。エラーコード: %s</string>
     <string name="login_checking_site_address">サイトアドレスの確認</string>
@@ -1038,7 +1064,6 @@ Language: ja_JP
     <string name="login_site_address_help_title">自分のサイトアドレス:</string>
     <string name="login_site_address_help">自分のサイトアドレスを忘れましたか ?</string>
     <string name="login_site_address">サイトアドレス</string>
-    <string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
     <string name="login_continue">次へ</string>
@@ -1408,7 +1433,6 @@ Language: ja_JP
     <string name="start_over">最初からやり直す</string>
     <string name="me_btn_app_settings">アプリ設定</string>
     <string name="editor_remove_failed_uploads">アップロードに失敗したメディアを削除</string>
-    <string name="editor_toast_failed_uploads">一部のメディアのアップロードに失敗しました。この状態の投稿は\n保存や公開ができません。失敗したメディアをすべて削除しますか ?</string>
     <string name="site_settings_advanced_header">高度な設定</string>
     <string name="comments_empty_list_filtered_trashed">ゴミ箱内にコメントはありません</string>
     <string name="comments_empty_list_filtered_pending">保留中のコメントはありません</string>
@@ -1465,7 +1489,6 @@ Language: ja_JP
     <string name="editor_page_title_placeholder">ページタイトル</string>
     <string name="editor_post_title_placeholder">投稿タイトル</string>
     <string name="email_address">メールアドレス</string>
-    <string name="preference_editor">編集者</string>
     <string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
     <string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>
     <string name="mnu_comment_delete_permanently">削除</string>
@@ -1642,7 +1665,6 @@ Language: ja_JP
     <string name="stats_enable_rest_api_in_jetpack">統計情報を表示するには、Jetpack の JSON API モジュールを有効化してください。</string>
     <string name="reader_short_comment_count_multi">%s件のコメント</string>
     <string name="reader_short_comment_count_one">1件のコメント</string>
-    <string name="reader_label_submit_comment">送信</string>
     <string name="reader_hint_comment_on_post">投稿に返信…</string>
     <string name="reader_discover_visit_blog">%s を表示</string>
     <string name="reader_discover_attribution_blog">%s から引用</string>
@@ -2027,6 +2049,7 @@ Language: ja_JP
     <string name="pages">ページ</string>
     <string name="no_network_title">利用可能なネットワークがありません</string>
     <string name="featured_in_post">投稿本文中に画像を含める</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">アップロード中…</string>

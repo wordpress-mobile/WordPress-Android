@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-02 09:08:46+0000
+Translation-Revision-Date: 2019-08-05 12:26:15+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -278,11 +278,6 @@ Language: cs_CZ
     <string name="blavatar_desc">ikona stránky</string>
     <string name="theme_image_desc">obrázek šablony</string>
     <string name="featured_image_desc">náhledový obrázek</string>
-    <string name="local_changes_discarding_error">Při zahazování změn došlo k chybě. Kontaktujte zákaznickou podporu.</string>
-    <string name="local_changes_discarding">Zahazuji lokální změny</string>
-    <string name="local_changes_discarded">Zahazování lokálních změn dokončeno</string>
-    <string name="menu_discard_changes">Zahodit lokální změny</string>
-    <string name="button_discard_changes">Zahodit změny</string>
     <string name="button_discard">Zahodit</string>
     <string name="reader_avatar_desc">profilový obrázek</string>
     <string name="reader_blavatar_desc">ikona stránky</string>
@@ -695,7 +690,6 @@ Language: cs_CZ
     <string name="login_text_otp_another">Pošlete mi nový kód.</string>
     <string name="enter_verification_code_sms">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
     <string name="error_generic_error">Akci se nepodařilo vykonat</string>
-    <string name="error_media_recover_post">Nepodařilo se nahrát média tohoto příspěvku</string>
     <string name="image_size">Velikost</string>
     <string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
     <string name="uploading_subtitle_media_only">Zbývá %1$d z %2$d souborů</string>
@@ -812,7 +806,6 @@ Language: cs_CZ
     <string name="login_email_client_not_found">Nepodařilo se najít emailovou aplikaci</string>
     <string name="login_empty_2fa">Vložte ověřovací kód</string>
     <string name="login_empty_username">Vložte uživatelské jméno</string>
-    <string name="login_empty_site_url">Vložte adresu webu</string>
     <string name="login_log_in_for_deeplink">Pro přístup k příspěvku se přihlaste na WordPress.com.</string>
     <string name="login_error_while_adding_site">Chyba při vytváření webu. Kód chyby: %s</string>
     <string name="login_checking_site_address">Kontrola adresy webu</string>
@@ -1190,7 +1183,6 @@ Language: cs_CZ
     <string name="start_over">Začít znovu</string>
     <string name="me_btn_app_settings">Nastavení aplikace</string>
     <string name="editor_remove_failed_uploads">Odstranit</string>
-    <string name="editor_toast_failed_uploads">Nahrávání některých souborů selhalo. V tomto stavu nemůžete\n    publikovat příspěvek. Chcete odstranit neúspěšně přenesené soubory?</string>
     <string name="site_settings_advanced_header">Pokročilé</string>
     <string name="comments_empty_list_filtered_trashed">Žádné komentáře v koši</string>
     <string name="comments_empty_list_filtered_pending">Žádné komentáře nečekají na schválení</string>
@@ -1247,7 +1239,6 @@ Language: cs_CZ
     <string name="editor_page_title_placeholder">Název stránky</string>
     <string name="editor_post_title_placeholder">Název příspěvku</string>
     <string name="email_address">Emailová adresa</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Smazat trvale tyto komentáře?</string>
     <string name="dlg_sure_to_delete_comment">Smazat trvale tento komentář?</string>
     <string name="mnu_comment_delete_permanently">Smazat</string>
@@ -1424,7 +1415,6 @@ Language: cs_CZ
     <string name="stats_enable_rest_api_in_jetpack">Povolte modul JSON API v Jetpacku, k náhledu vašich statistik.</string>
     <string name="reader_short_comment_count_multi">%s komentářů</string>
     <string name="reader_short_comment_count_one">1 komentář</string>
-    <string name="reader_label_submit_comment">Publikovat</string>
     <string name="reader_hint_comment_on_post">Odpovědět na příspěvek…</string>
     <string name="reader_discover_visit_blog">Navštivte %s</string>
     <string name="reader_discover_attribution_blog">Původně publikováno %s</string>
@@ -1809,6 +1799,7 @@ Language: cs_CZ
     <string name="pages">Stránky</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
+    <string name="ok">OK</string>
     <string name="blogusername">Jmémo blogera</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Nahrávám…</string>

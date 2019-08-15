@@ -171,14 +171,14 @@ public class ShareIntentReceiverFragment extends Fragment {
                                 if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
                                     mBottomButtonsShadow.setVisibility(View.VISIBLE);
                                     mBottomButtonsContainer.setBackgroundResource(android.R.color.white);
-                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.primary_500));
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.primary_50));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
                                                                        R.style.WordPress_Button_Grey,
                                                                        R.attr.colorButtonNormal);
                                 } else {
                                     mBottomButtonsShadow.setVisibility(View.GONE);
                                     mBottomButtonsContainer.setBackground(null);
-                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.neutral_700));
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.neutral_70));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
                                                                        R.style.WordPress_Button,
                                                                        R.attr.colorButtonNormal);

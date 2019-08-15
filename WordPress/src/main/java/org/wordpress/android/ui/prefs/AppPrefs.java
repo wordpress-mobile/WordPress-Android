@@ -18,13 +18,14 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
@@ -321,26 +322,6 @@ public class AppPrefs {
 
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
-    public static StatsTimeframe getStatsTimeframe() {
-        int idx = getInt(DeletablePrefKey.STATS_ITEM_INDEX);
-        StatsTimeframe[] timeframeValues = StatsTimeframe.values();
-        if (timeframeValues.length < idx) {
-            return timeframeValues[0];
-        } else {
-            return timeframeValues[idx];
-        }
-    }
-
-    public static void setStatsTimeframe(StatsTimeframe timeframe) {
-        if (timeframe != null) {
-            setInt(DeletablePrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
-        } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.STATS_ITEM_INDEX.name())
-                   .apply();
-        }
     }
 
     public static CommentStatusCriteria getCommentsStatusFilter() {
@@ -646,21 +627,75 @@ public class AppPrefs {
         return true;
     }
 
-    public static boolean isGutenbergAutoEnabledForTheNewPosts() {
-        return getBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, true);
-    }
-
-    public static void setGutenbergAutoEnabledForTheNewPosts(boolean enable) {
-        setBoolean(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, enable);
-    }
-
+    /**
+     * @deprecated  As of release 13.0, replaced by SiteSettings mobile editor value
+     */
+    @Deprecated
     public static boolean isGutenbergDefaultForNewPosts() {
         return getBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, false);
     }
 
-    public static void setGutenbergDefaultForNewPosts(boolean defaultForNewPosts) {
-        AnalyticsTracker.track(defaultForNewPosts ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED);
-        setBoolean(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS, defaultForNewPosts);
+    public static boolean isDefaultAppWideEditorPreferenceSet() {
+        // Check if the default editor pref was previously set
+        return !"".equals(getString(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS));
+    }
+
+    public static void removeAppWideEditorPreference() {
+        remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
+    }
+
+    public static boolean shouldShowGutenbergInfoPopup(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return false;
+        }
+
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+        } catch (ClassCastException exp) {
+            // no operation - This should not happen.
+            return false;
+        }
+        // Check if the current site address is available in the set.
+        boolean flag = false;
+        if (urls != null) {
+            if (urls.contains(siteURL)) {
+                flag = true;
+                // remove the flag from Prefs
+                setShowGutenbergInfoPopup(siteURL, false);
+            }
+        }
+
+        return flag;
+    }
+
+    public static void setShowGutenbergInfoPopup(String siteURL, boolean show) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+        } catch (ClassCastException exp) {
+            // nope - this should never happens
+            return;
+        }
+
+        Set<String> newUrls = new HashSet<>();
+        // re-add the old urls here
+        if (urls != null) {
+            newUrls.addAll(urls);
+        }
+
+        // 1. First remove & 2. add if necessary
+        newUrls.remove(siteURL);
+        if (show) {
+            newUrls.add(siteURL);
+        }
+
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
+        editor.apply();
     }
 
     public static void setVideoOptimizeWidth(int width) {

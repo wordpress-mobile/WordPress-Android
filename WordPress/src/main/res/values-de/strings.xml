@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-10 00:54:05+0000
+Translation-Revision-Date: 2019-08-03 18:50:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Brauchst du Hilfe beim Finden der E-Mail, mit der du dich angemeldet hast?</string>
+    <string name="enter_wordpress_site">Die Website unter dieser Adresse ist keine WordPress-Site. Damit wir uns damit verbinden können, muss auf der Website WordPress installiert sein.</string>
+    <string name="login_invalid_site_url">Bitte gib eine vollständige Website-Adresse ein, wie z.&amp;nbsp;B. example.com.</string>
+    <string name="enter_email_for_site">Meld dich mit WordPress.com an, um dich mit %1$s zu verbinden.</string>
+    <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung konnte nicht hergestellt werden, da dieses Konto keinen Zugriff auf Seiten hat. Facebook unterstützt die Freigabe von Verbindungen zu Facebook-Seiten, nicht aber zu Facebook-Profilen.</string>
+    <string name="stats_post_views_label">Aufrufe</string>
+    <string name="stats_post_label">Beitrag</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Grafik der Beitrags-Aktivität.</string>
+    <string name="stats_item_collapsed">Element ist zusammengeklappt</string>
+    <string name="stats_item_expanded">Element ist aufgeklappt</string>
+    <string name="stats_collapse_content_description">Zuklappen</string>
+    <string name="stats_expand_content_description">Aufklappen</string>
+    <string name="stats_graph_updated">Diagramm aktualisiert.</string>
+    <string name="stats_overview_content_description">%1$s %2$s für die Periode: %3$s, Veränderung gegenüber der Vorperiode - %4$s</string>
+    <string name="stats_bar_chart_content_description">Grafik der Website-Aufrufe.</string>
+    <string name="stats_loading_card">Laden der ausgewählten Kartendaten</string>
+    <string name="site_settings_editor">Editor</string>
+    <string name="dialog_gutenberg_informative_description_page">Du verwendest derzeit den Block-Editor, um neue Seiten zu erstellen. Möchtest du standardmäßig den klassischen Editor verwenden? Ruf die Website-Einstellungen auf.</string>
+    <string name="dialog_gutenberg_informative_description_post">Du verwendest derzeit den Block-Editor, um neue Beiträge zu erstellen. Möchtest du standardmäßig den klassischen Editor verwenden? Ruf die Website-Einstellungen auf.</string>
+    <string name="description_expand">Erweitern</string>
+    <string name="description_collapse">Einklappen</string>
+    <string name="editor_retry_failed_uploads">Hochladen erneut starten</string>
+    <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. Das Speichern oder Veröffentlichen\n deines Beitrags ist in diesem Status nicht möglich.</string>
+    <string name="my_site_verify_your_email_without_email">Prüfe deinen Posteingang – eine Anleitung wurde an deine E-Mail-Adresse gesendet</string>
+    <string name="my_site_verify_your_email">Prüfe deinen Posteingang – eine Anleitung wurde an %s gesendet</string>
+    <string name="error_media_recover_post_not_submitted">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht übermittelt.</string>
+    <string name="error_media_recover_post_not_scheduled">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht geplant.</string>
+    <string name="error_media_recover_post_not_published">Medien konnten nicht hochgeladen werden. Beitrag wurde nicht veröffentlicht.</string>
+    <string name="error_media_recover_post">Medien konnten nicht hochgeladen werden</string>
+    <string name="link_dialog_button_cancel">Abbrechen</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Link entfernen</string>
+    <string name="link_dialog_title">Link einfügen</string>
+    <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen hier tippen.</string>
+    <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
     <string name="post_list_search_prompt">Veröffentlichte Beiträge suchen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
     <string name="post_list_search_nothing_found">Es gibt keine Beiträge, die deiner Suche entsprechen</string>
@@ -117,7 +155,6 @@ Language: de
     <string name="posts_scheduled_empty">Du hast keine geplanten Beiträge</string>
     <string name="posts_published_empty">Du hast noch keine Beiträge veröffentlicht</string>
     <string name="notification_wpcom_username_needed">Bitte mit deinem Benutzernamen und Passwort anmelden.</string>
-    <string name="login_invalid_site_url">Die eingegebene Website-Adresse ist ungültig. Bitte erneut eingeben.</string>
     <string name="error_user_username_instead_of_email">Bitte mit deinem WordPress.com-Benutzernamen anstelle deiner E-Mail-Adresse anmelden.</string>
     <string name="stats_insights_average_words">Durchschn. Wörter/Beitrag</string>
     <string name="stats_insights_total_words">Wörter insgesamt</string>
@@ -192,8 +229,6 @@ Language: de
     <string name="stats_loading_error">Daten nicht geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bearbeite neue Beiträge und Seiten mit dem Block-Editor.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Block-Editor benutzen</string>
-    <string name="dialog_gutenberg_informative_description_page">Diese Seite wurde ursprünglich im Block-Editor erstellt, daher haben wir sie auch auf dieser Seite aktiviert.\n        Wechsle jederzeit wieder zu Classic, indem du auf ⋮ in der oberen Leiste klickst.</string>
-    <string name="dialog_gutenberg_informative_description_post">Dieser Beitrag wurde ursprünglich im Block Editor erstellt, also haben wir ihn auch für diesen Beitrag aktiviert.\n        Wechsle jederzeit wieder zu Classic, indem du auf --- in der oberen Leiste tippst.</string>
     <string name="dialog_gutenberg_informative_title">Block-Editor aktiviert</string>
     <string name="exit">beenden</string>
     <string name="quick_start_sites_type_subtitle">%1$d von %2$d komplett</string>
@@ -281,7 +316,6 @@ Language: de
     <string name="dialog_confirm_load_remote_post_body_2">Lokal\nGespeichert unter %s\n\nWeb\nGespeichert unter %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Dieser Beitrag hat zwei Versionen, die im Konflikt stehen. Wähle die Version aus, die du verwerfen möchtest.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Lösen des Synchronisierungskonflikts.</string>
-    <string name="local_changes_discarding_no_connection">Für diese Aktion ist eine Verbindung erforderlich. Bitte überprüfe deine Verbindung und versuche es erneut.</string>
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
     <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
     <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte später erneut versuchen</string>
@@ -494,11 +528,6 @@ Language: de
     <string name="blavatar_desc">Website-Icon</string>
     <string name="theme_image_desc">Theme-Bild</string>
     <string name="featured_image_desc">Beitragsbild</string>
-    <string name="local_changes_discarding_error">Beim Verwerfen der lokalen Änderungen ist ein Fehler aufgetreten. Bitte wende dich für Unterstützung an den Support.</string>
-    <string name="local_changes_discarding">Lokale Änderungen werden verworfen</string>
-    <string name="local_changes_discarded">Lokale Änderungen verworfen</string>
-    <string name="menu_discard_changes">Lokale Änderungen verwerfen</string>
-    <string name="button_discard_changes">Änderungen verwerfen</string>
     <string name="button_discard">Verwerfen</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="reader_blavatar_desc">Website-Icon</string>
@@ -911,7 +940,6 @@ Language: de
     <string name="login_text_otp_another">Sende mir stattdessen einen anderen Code per SMS.</string>
     <string name="enter_verification_code_sms">Wir haben eine Textnachricht an die Telefonnummer mit den Endziffern %s gesendet. Gib bitte den Verifizierungscode aus der SMS ein.</string>
     <string name="error_generic_error">Der Vorgang konnte nicht ausgeführt werden.</string>
-    <string name="error_media_recover_post">Die Medien dieses Beitrags konnten nicht hochgeladen werden.</string>
     <string name="image_size">Größe</string>
     <string name="uploading_subtitle_media_only_one">1 Datei verbleibend</string>
     <string name="uploading_subtitle_media_only">%1$d von %2$d Dateien verbleibend</string>
@@ -1030,7 +1058,6 @@ Language: de
     <string name="login_email_client_not_found">E-Mail-Client-App wird nicht erkannt.</string>
     <string name="login_empty_2fa">Bitte gib einen Verifizierungscode ein.</string>
     <string name="login_empty_username">Bitte gib einen Benutzernamen ein.</string>
-    <string name="login_empty_site_url">Bitte gib eine Website-Adresse ein.</string>
     <string name="login_log_in_for_deeplink">Melde dich bei WordPress.com an, um auf diesen Beitrag zuzugreifen.</string>
     <string name="login_error_while_adding_site">Fehler beim Hinzufügen der Website. Fehlercode: %s</string>
     <string name="login_checking_site_address">Website-Adresse wird überprüft</string>
@@ -1409,7 +1436,6 @@ Language: de
     <string name="start_over">Neu beginnen</string>
     <string name="me_btn_app_settings">App Einstellungen</string>
     <string name="editor_remove_failed_uploads">Fehlgeschlagene Uploads entfernen</string>
-    <string name="editor_toast_failed_uploads">Einige Medien-Uploads sind fehlgeschlagen. In diesem Zustand ist das Speichern oder Veröffentlichen deiner Beiträge nicht möglich. Willst du alle fehlgeschlagenen Medien-Uploads löschen?</string>
     <string name="site_settings_advanced_header">Erweitert</string>
     <string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>
     <string name="comments_empty_list_filtered_pending">Keine ausstehenden Kommentare</string>
@@ -1466,7 +1492,6 @@ Language: de
     <string name="editor_page_title_placeholder">Seitentitel</string>
     <string name="editor_post_title_placeholder">Beitragstitel</string>
     <string name="email_address">E-Mail-Adresse</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Möchtest du diese Kommentare dauerhaft löschen?</string>
     <string name="dlg_sure_to_delete_comment">Möchtest du diesen Kommentar dauerhaft löschen?</string>
     <string name="mnu_comment_delete_permanently">Löschen</string>
@@ -1643,7 +1668,6 @@ Language: de
     <string name="stats_enable_rest_api_in_jetpack">Um deine Statistik anzusehen, aktiviere das JSON API-Modul in Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Kommentare</string>
     <string name="reader_short_comment_count_one">1 Kommentar</string>
-    <string name="reader_label_submit_comment">SENDEN</string>
     <string name="reader_hint_comment_on_post">Antwort auf Beitrag…</string>
     <string name="reader_discover_visit_blog">%s besuchen</string>
     <string name="reader_discover_attribution_blog">Ursprünglich veröffentlicht auf %s</string>
@@ -2028,6 +2052,7 @@ Language: de
     <string name="pages">Seiten</string>
     <string name="no_network_title">Kein Netzwerk verfügbar</string>
     <string name="featured_in_post">Bild im Beitragsinhalt verwenden</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Lädt hoch…</string>

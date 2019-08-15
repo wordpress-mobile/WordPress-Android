@@ -58,7 +58,7 @@
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_publish"
                 android:textAllCaps="true"
-                android:textColor="@color/accent_300"
+                android:textColor="@color/accent_30"
                 android:textSize="@dimen/text_sz_small"
                 android:paddingEnd="@dimen/margin_large"
                 android:paddingStart="@dimen/margin_large"/>
