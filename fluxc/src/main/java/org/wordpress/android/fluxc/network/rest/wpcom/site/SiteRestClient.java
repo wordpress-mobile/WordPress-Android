@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
@@ -183,11 +184,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onResponse(SiteWPComRestResponse response) {
                         if (response != null) {
                             SiteModel newSite = siteResponseToSiteModel(response);
-                            // The REST API doesn't return info about the editor(s). Make sure to copy old values
-                            // otherwise the apps will receive an update site without editor prefs set.
-                            // The apps will dispatch the action to update editor(s) when necessary.
-                            newSite.setMobileEditor(site.getMobileEditor());
-                            newSite.setWebEditor(site.getWebEditor());
+                            // local ID is not copied into the new model, let's make sure it is
+                            // otherwise the call that updates the DB can add a new row?
+                            if (site.getId() > 0) {
+                                newSite.setId(site.getId());
+                            }
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite));
                         } else {
                             AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
@@ -329,6 +330,37 @@ public class SiteRestClient extends BaseWPComRestClient {
                             }
                         });
         add(request);
+    }
+
+    public void designateMobileEditorForAllSites(final String mobileEditorName) {
+        Map<String, Object> params = new HashMap<>();
+        String url = WPCOMV2.me.gutenberg.getUrl();
+        params.put("editor", mobileEditorName);
+        params.put("platform", "mobile");
+        params.put("set_only_if_empty", "true");
+
+        add(WPComGsonRequest
+                .buildPostRequest(url, params, Map.class,
+                        new Listener<Map<String, String>>() {
+                            @Override
+                            public void onResponse(Map<String, String> response) {
+                                DesignateMobileEditorForAllSitesResponsePayload payload =
+                                        new DesignateMobileEditorForAllSitesResponsePayload(response);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                DesignateMobileEditorForAllSitesResponsePayload payload =
+                                        new DesignateMobileEditorForAllSitesResponsePayload(null);
+                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
+                            }
+                        })
+           );
     }
 
     public void fetchPostFormats(@NonNull final SiteModel site) {

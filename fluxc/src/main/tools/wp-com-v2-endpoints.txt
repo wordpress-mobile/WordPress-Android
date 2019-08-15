@@ -17,3 +17,5 @@
 /verticals/prompt
 
 /plans/mobile
+
+/me/gutenberg/
