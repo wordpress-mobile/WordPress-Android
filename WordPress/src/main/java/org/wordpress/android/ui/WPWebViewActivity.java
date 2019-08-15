@@ -388,6 +388,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 mWebView.getSettings().setLoadWithOverviewMode(previewMode == PreviewMode.DESKTOP);
                 mWebView.getSettings().setUseWideViewPort(previewMode != PreviewMode.DESKTOP);
                 mWebView.setInitialScale(100);
+                mWebView.reload();
             }
         });
         mViewModel.start();
