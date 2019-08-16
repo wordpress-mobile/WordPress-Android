@@ -13,6 +13,8 @@ import java.io.Serializable;
 
 @Table
 public class TermModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -1484257248446576276L;
+
     @PrimaryKey
     @Column private int mId;
     @Column private int mLocalSiteId;
