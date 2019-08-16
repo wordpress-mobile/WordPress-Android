@@ -366,7 +366,7 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     android {
         signingConfigs {
             release {
-                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
+                storeFile = rootProject.file(project.storeFile)
                 storePassword = project.storePassword
                 keyAlias = project.keyAlias
                 keyPassword = project.keyPassword
