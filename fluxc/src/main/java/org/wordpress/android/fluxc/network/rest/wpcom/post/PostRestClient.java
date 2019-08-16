@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsRespons
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponsePart;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.RevisionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
-import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
@@ -48,6 +47,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
+import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
 
@@ -418,6 +418,9 @@ public class PostRestClient extends BaseWPComRestClient {
             post.setAutoSaveModified(autoSave.getModified());
             post.setRemoteAutoSaveModified(autoSave.getModified());
             post.setAutoSavePreviewUrl(autoSave.getPreviewUrl());
+            post.setAutoSaveTitle(autoSave.getTitle());
+            post.setAutoSaveContent(autoSave.getContent());
+            post.setAutoSaveExcerpt(autoSave.getExcerpt());
         }
 
         if (from.getCapabilities() != null) {
