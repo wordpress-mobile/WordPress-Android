@@ -20,6 +20,8 @@ import java.net.URISyntaxException;
 @Table
 @RawConstraints({"UNIQUE (FEED_ID, URL)"})
 public class SubscriptionModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -3258001887519449586L;
+
     @PrimaryKey
     @Column private int mId;
     @Column private String mSubscriptionId;

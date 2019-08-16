@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.model.post;
 import java.io.Serializable;
 
 public class PostLocation implements Serializable {
+    private static final long serialVersionUID = 5179202103526031964L;
+
     public static final double INVALID_LATITUDE = 9999;
     public static final double INVALID_LONGITUDE = 9999;
     static final double MIN_LATITUDE = -90;

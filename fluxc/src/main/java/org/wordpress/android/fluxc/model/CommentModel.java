@@ -12,6 +12,8 @@ import java.io.Serializable;
 
 @Table
 public class CommentModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = 3454722213760369852L;
+
     // Ids
     @PrimaryKey
     @Column private int mId;

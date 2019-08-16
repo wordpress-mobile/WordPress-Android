@@ -11,6 +11,8 @@ import java.io.Serializable;
 @Table
 @RawConstraints({"UNIQUE (SLUG)"})
 public class WPOrgPluginModel implements Identifiable, Serializable {
+    private static final long serialVersionUID = 207979865991034152L;
+
     @PrimaryKey @Column private int mId;
     @Column private String mAuthorAsHtml;
     @Column private String mAuthorName;
