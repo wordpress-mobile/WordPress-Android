@@ -53,6 +53,23 @@ jobs:
             fi 
       - android/save-gradle-cache
       - android/save-lint-results
+  Installable Build:
+    executor: 
+      name: android/default
+      api-version: "28"
+    steps:
+      - checkout
+      - bundle-install/bundle-install
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - android/restore-gradle-cache
+      - run:
+          name: Build APK
+          command: ./gradlew --stacktrace assembleVanillaRelease
+      - store_artifacts:
+          path: WordPress/build/outputs/apk/vanilla/release/WordPress-vanilla-release.apk
+          destination: WordPress.apk
   connected-tests:
     executor:
       name: android/default
@@ -97,6 +114,7 @@ workflows:
       - strings-check
       - test
       - lint
+      - Installable Build
   nightly:
     triggers:
       - schedule:
