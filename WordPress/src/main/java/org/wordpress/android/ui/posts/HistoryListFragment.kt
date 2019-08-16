@@ -56,11 +56,6 @@ class HistoryListFragment : Fragment() {
         viewModel.onItemClicked(item)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, viewModel.site)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
