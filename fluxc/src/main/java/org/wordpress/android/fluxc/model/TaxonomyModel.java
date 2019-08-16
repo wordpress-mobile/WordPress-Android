@@ -13,6 +13,8 @@ import java.io.Serializable;
 
 @Table
 public class TaxonomyModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = 8855881690971305398L;
+
     @PrimaryKey
     @Column private int mId;
     @Column private int mLocalSiteId;

@@ -11,6 +11,8 @@ import java.io.Serializable;
 
 @Table
 public class ThemeModel implements Identifiable, Serializable {
+    private static final long serialVersionUID = 5966516212440517166L;
+
     @PrimaryKey @Column private int mId;
 
     @Column private int mLocalSiteId;
