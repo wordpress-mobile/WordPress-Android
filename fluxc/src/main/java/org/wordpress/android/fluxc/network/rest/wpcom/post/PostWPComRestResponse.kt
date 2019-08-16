@@ -55,7 +55,10 @@ data class PostWPComRestResponse(
             data class PostAutoSave(
                 @SerializedName("ID") var revisionId: Long = 0,
                 @SerializedName("modified") var modified: String? = null,
-                @SerializedName("preview_URL") var previewUrl: String? = null
+                @SerializedName("preview_URL") var previewUrl: String? = null,
+                @SerializedName("title") var title: String? = null,
+                @SerializedName("content") var content: String? = null,
+                @SerializedName("excerpt") var excerpt: String? = null
             )
         }
     }
