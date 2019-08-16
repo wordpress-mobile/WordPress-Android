@@ -99,8 +99,8 @@ public class WPSupportUtils {
     }
 
     /**
-     * Uses UIAutomator to click on an element using either the resource ID or text in the cases of flakiness in Espresso click
-     * performing a long click
+     * Uses UIAutomator to click on an element using either the resource ID or text in the cases of flakiness in
+     * Espresso click performing a long click
      * @param locator - String resource ID(preceded with 'id/') or text
      */
     public static void clickOn(String locator) {
