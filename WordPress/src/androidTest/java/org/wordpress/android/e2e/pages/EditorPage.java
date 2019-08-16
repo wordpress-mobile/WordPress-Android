@@ -53,10 +53,10 @@ public class EditorPage {
     // Image needs a little time to be uploaded after entering the image
     public void enterImage() {
         // Click on add media button
-        String addMediaButtonId = "media_button_container";
+        String addMediaButtonId = "id/media_button_container";
         clickOn(addMediaButtonId);
 
-        String mediaBarButtonId = "media_bar_button_library";
+        String mediaBarButtonId = "id/media_bar_button_library";
         clickOn(mediaBarButtonId);
 
         if (isElementDisplayed(allowMediaAccessButton)) {
@@ -83,7 +83,7 @@ public class EditorPage {
 
     public void openSettings() {
         openActionBarOverflowOrOptionsMenu(getApplicationContext());
-        clickOn(onView(withText("Post settings")));
+        clickOn("Post settings");
     }
 
     public void addACategory(String category) {

@@ -94,17 +94,25 @@ public class WPSupportUtils {
         idleFor(500);   // allow for transitions
     }
 
+    private static boolean isResourceId(String text) {
+        return text.startsWith("id");
+    }
+
     /**
-     * Uses UIAutomator to click on an element using the resource ID in the cases of flakiness in Espresso click
+     * Uses UIAutomator to click on an element using either the resource ID or text in the cases of flakiness in Espresso click
      * performing a long click
-     * @param resourceID - String resource ID
+     * @param locator - String resource ID(preceded with 'id/') or text
      */
-    public static void clickOn(String resourceID) {
+    public static void clickOn(String locator) {
         try {
-            UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
-                    "org.wordpress.android:id/" + resourceID)).click();
+            if (isResourceId(locator)) {
+                UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
+                        "org.wordpress.android:" + locator)).click();
+            } else {
+                UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().text(locator)).click();
+            }
         } catch (UiObjectNotFoundException e) {
-            System.out.println("Could not find button with Resource ID:" + resourceID + " to click");
+            System.out.println("Could not find button with Resource ID:" + locator + " to click");
         }
     }
 
