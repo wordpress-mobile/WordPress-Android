@@ -1093,6 +1093,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setNewEmail(from.new_user_email);
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
+        account.setUsernameCanBeChanged(from.user_login_can_be_changed);
         account.setTracksOptOut(from.tracks_opt_out);
         account.setWebAddress(from.user_URL);
         account.setPrimarySiteId(from.primary_site_ID);
@@ -1128,6 +1129,9 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (from.containsKey("user_URL")) accountModel.setWebAddress((String) from.get("user_URL"));
         if (from.containsKey("primary_site_ID")) {
             accountModel.setPrimarySiteId(((Double) from.get("primary_site_ID")).longValue());
+        }
+        if (from.containsKey("user_login_can_be_changed")) {
+            accountModel.setUsernameCanBeChanged((Boolean) from.get("user_login_can_be_changed"));
         }
         return !old.equals(accountModel);
     }
