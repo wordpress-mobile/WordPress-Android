@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import java.util.Collections
@@ -35,6 +36,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 val DEFAULT_INSIGHTS = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
+val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
 
 @Singleton
@@ -129,8 +131,12 @@ class StatsStore
         insightTypeSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
     }
 
-    suspend fun getTimeStatsTypes(): List<TimeStatsType> = withContext(coroutineContext) {
-        return@withContext TimeStatsType.values().toList()
+    suspend fun getTimeStatsTypes(site: SiteModel): List<TimeStatsType> = withContext(coroutineContext) {
+        return@withContext if (site.isJetpackConnected) {
+            TimeStatsType.values().toList().filter { !STATS_UNAVAILABLE_WITH_JETPACK.contains(it) }
+        } else {
+            TimeStatsType.values().toList()
+        }
     }
 
     suspend fun getPostDetailTypes(): List<PostDetailType> = withContext(coroutineContext) {
