@@ -126,12 +126,14 @@ public class PostRestClient extends BaseWPComRestClient {
                         List<PostListItem> postListItems = new ArrayList<>(response.getPosts().size());
                         for (PostWPComRestResponse postResponse : response.getPosts()) {
                             String autoSaveModified = null;
+                            long autoSaveRevisionId = 0;
                             if (postResponse.getPostAutoSave() != null) {
+                                autoSaveRevisionId = postResponse.getPostAutoSave().getRevisionId();
                                 autoSaveModified = postResponse.getPostAutoSave().getModified();
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
-                                            postResponse.getStatus(), autoSaveModified));
+                                            postResponse.getStatus(), autoSaveModified, autoSaveRevisionId));
                         }
                         boolean canLoadMore = postListItems.size() == pageSize;
                         FetchPostListResponsePayload responsePayload =
