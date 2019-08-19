@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -28,7 +27,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -48,11 +46,13 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import dagger.android.support.DaggerFragment;
+
 /**
  * Created so that the base suggestions functionality can become shareable as similar functionality is being used in the
  * the Account settings & sign-up flow to change the username.
  */
-public abstract class BaseUsernameChangerFullScreenDialogFragment extends Fragment implements
+public abstract class BaseUsernameChangerFullScreenDialogFragment extends DaggerFragment implements
         FullScreenDialogContent, OnUsernameSelectedListener {
     private ProgressBar mProgressBar;
 
@@ -113,12 +113,6 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Fragme
         bundle.putString(EXTRA_DISPLAY_NAME, displayName);
         bundle.putString(EXTRA_USERNAME, username);
         return bundle;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Nullable
