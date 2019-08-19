@@ -790,14 +790,6 @@
 
     <!-- stats -->
     <string name="stats">Stats</string>
-    <string name="stats_for">Stats for %s</string>
-    <string name="stats_other_recent_stats_label">Other Recent Stats</string>
-    <string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
-    <string name="stats_view_all">View all</string>
-    <string name="stats_view">View</string>
-    <string name="stats_pagination_label">Page %1$s of %2$s</string>
-    <string name="stats_no_activity_this_period">No activity this period</string>
-    <string name="stats_default_number_zero" translatable="false">0</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="stats_jetpack_connection_setup">Install Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -909,28 +901,6 @@
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
-    <!-- stats: errors -->
-    <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
-    <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
-    <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
-
-    <!-- stats: Widget labels -->
-    <string name="stats_widget_name">WordPress Today\'s Stats</string>
-    <string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
-    <string name="stats_widget_loading_data">Loading data…</string>
-    <string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
-    <string name="stats_widget_error_no_account">Please login into WordPress</string>
-    <string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
-    <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
-    <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
-    <string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
-
-    <!-- stats: Widget Promote Dialog -->
-    <string name="stats_widget_promo_title">Home Screen Stats Widget</string>
-    <string name="stats_widget_promo_desc">Add the widget to your home screen to access your Stats in one click.</string>
-    <string name="stats_widget_promo_ok_btn_label">OK, got it</string>
-
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
@@ -940,13 +910,11 @@
     <string name="stats_timeframe_years">Years</string>
 
     <string name="stats_views">Views</string>
-    <string name="stats_views_with_date_param">Views: %s</string>
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_comments" translatable="false">@string/comments</string>
 
     <!-- stats: labels for the views -->
-    <string name="stats_view_visitors_and_views">Visitors and Views</string>
     <string name="stats_view_countries">Countries</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_clicks">Clicks</string>
@@ -960,70 +928,7 @@
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_follower_totals">Followers Totals</string>
 
-    <!-- stats: label for the entries -->
-    <string name="stats_entry_country">Country</string>
-    <string name="stats_entry_posts_and_pages">Title</string>
-    <string name="stats_entry_clicks_link">Link</string>
-    <string name="stats_entry_tags_and_categories">Topic</string>
-    <string name="stats_entry_authors">Author</string>
-    <string name="stats_entry_referrers">Referrer</string>
-    <string name="stats_entry_video_plays">Video</string>
-    <string name="stats_entry_top_commenter">Author</string>
-    <string name="stats_entry_publicize">Service</string>
-    <string name="stats_entry_followers">Follower</string>
-    <string name="stats_entry_search_terms">Search Term</string>
-
-    <!-- stats: label for the totals -->
-    <string name="stats_totals_views">Views</string>
-    <string name="stats_totals_clicks">Clicks</string>
-    <string name="stats_totals_plays">Plays</string>
-    <string name="stats_totals_comments" translatable="false">@string/comments</string>
-    <string name="stats_totals_publicize">Followers</string>
-    <string name="stats_totals_followers">Since</string>
-
-    <!-- stats: empty list strings -->
-    <string name="stats_empty_geoviews">No countries recorded</string>
-    <string name="stats_empty_geoviews_desc">Explore the list to see which countries and regions generate the most traffic to your site.</string>
-    <string name="stats_empty_top_posts_title">No posts or pages viewed</string>
-    <string name="stats_empty_top_posts_desc">Discover what your most-viewed content is, and check how individual posts and pages perform over time.</string>
-    <string name="stats_empty_referrers_title">No referrers recorded</string>
-    <string name="stats_empty_referrers_desc">Learn more about your site’s visibility by looking at the websites and search engines that send the most traffic your way</string>
-    <string name="stats_empty_clicks_title">No clicks recorded</string>
-    <string name="stats_empty_clicks_desc">When your content includes links to other sites, you’ll see which ones your visitors click on the most.</string>
-    <string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
-    <string name="stats_empty_tags_and_categories">No tagged posts or pages viewed</string>
-    <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
-    <string name="stats_empty_video">No videos played</string>
-    <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
-    <string name="stats_empty_comments">No comments yet</string>
-    <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
-    <string name="stats_bar_graph_empty">No stats available</string>
-    <string name="stats_empty_publicize">No publicize followers recorded</string>
-    <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
-    <string name="stats_empty_followers">No followers</string>
-    <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
-    <string name="stats_empty_search_terms">No search terms recorded</string>
-    <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
-
-    <!-- stats: comments -->
-    <string name="stats_comments_by_authors">By Authors</string>
-    <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
-    <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
-
-    <!-- stats: referrers -->
-    <string name="stats_referrers_spam">Spam</string>
-    <string name="stats_referrers_unspam">Not spam</string>
-    <string name="stats_referrers_marking_spam">Marking as spam</string>
-    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
-    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
-
     <!-- stats: followers -->
-    <string name="stats_followers_wpcom_selector">WordPress.com</string>
-    <string name="stats_followers_email_selector">Email</string>
-    <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
-    <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
-    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
-    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -1039,24 +944,11 @@
     <!-- stats: search terms -->
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
-    <!-- stats: Authors -->
-    <string name="stats_unknown_author">Unknown Author</string>
-
-    <!-- Stats: Single post details view -->
-    <string name="stats_period">Period</string>
-    <string name="stats_total">Total</string>
-    <string name="stats_overall">Overall</string>
-    <string name="stats_months_and_years">Months and Years</string>
-    <string name="stats_average_per_day">Average per Day</string>
-    <string name="stats_recent_weeks">Recent Weeks</string>
-
     <!-- Stats insights -->
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
-    <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
-    <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
@@ -1070,9 +962,6 @@
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
-    <string name="stats_insights_most_popular_day">Most popular day</string>
-    <string name="stats_insights_most_popular_hour">Most popular hour</string>
-    <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
     <string name="stats_insights_today_stats">Today</string>
 
@@ -1532,7 +1421,6 @@
     <string name="error_refresh_pages" tools:ignore="UnusedResources">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
-    <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
@@ -1864,6 +1752,7 @@
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
+    <string name="notification_settings_moved_notices">Looking for notification settings? They’re in the Notifications tab — tap the cog.</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
@@ -2465,36 +2354,12 @@
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
-    <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">Open external link</string>
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
-    <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
-    <string name="stats_bar_desc">Showing %s</string>
-    <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
-    <string name="stats_bar_date_value_desc">%s, %d views</string>
-    <string name="stats_bar_week_desc">Week of %s</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">create</string>
-    <string name="stats_legend">stats graph legend</string>
-    <string name="stats_tab_tap_content_description">showing %s</string>
-    <string name="stats_follower_since_desc">since %s ago</string>
-    <string name="stats_views_zero_desc">zero views</string>
-    <string name="stats_views_one_desc">one view</string>
-    <string name="stats_views_many_desc">%d views</string>
-    <string name="stats_clicks_zero_desc">zero clicks</string>
-    <string name="stats_clicks_one_desc">one click</string>
-    <string name="stats_clicks_many_desc">%d clicks</string>
-    <string name="stats_plays_zero_desc">zero plays</string>
-    <string name="stats_plays_one_desc">one play</string>
-    <string name="stats_plays_many_desc">%d plays</string>
-    <string name="stats_comments_zero_desc">zero comments</string>
-    <string name="stats_comments_one_desc">one comment</string>
-    <string name="stats_comments_many_desc">%d comments</string>
-    <string name="stats_followers_zero_desc">zero followers</string>
-    <string name="stats_followers_one_desc">one follower</string>
-    <string name="stats_followers_many_desc">%d followers</string>
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
@@ -2505,6 +2370,7 @@
     <string name="navigate_back_desc">Go back</string>
     <string name="share_desc">Share</string>
     <string name="preview_type_desc">Select preview type</string>
+    <string name="close_dialog_button_desc">Close Dialog</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>

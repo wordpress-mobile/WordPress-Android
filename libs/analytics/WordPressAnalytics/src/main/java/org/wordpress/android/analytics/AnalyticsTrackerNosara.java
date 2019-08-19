@@ -157,6 +157,24 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
+            case EDITOR_TAPPED_ALIGN_LEFT:
+                predefinedEventProperties.put("button", "align_left");
+                break;
+            case EDITOR_TAPPED_ALIGN_CENTER:
+                predefinedEventProperties.put("button", "align_center");
+                break;
+            case EDITOR_TAPPED_ALIGN_RIGHT:
+                predefinedEventProperties.put("button", "align_right");
+                break;
+            case EDITOR_TAPPED_UNDO:
+                predefinedEventProperties.put("button", "undo");
+                break;
+            case EDITOR_TAPPED_REDO:
+                predefinedEventProperties.put("button", "redo");
+                break;
+            case EDITOR_TAPPED_HORIZONTAL_RULE:
+                predefinedEventProperties.put("button", "horizontal_rule");
+                break;
             case REVISIONS_DETAIL_VIEWED_FROM_LIST:
                 predefinedEventProperties.put("source", "list");
                 break;
@@ -524,7 +542,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
-            properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
+            // Only add the editor information if it was set before.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/10300#discussion_r309145514
+            if (metadata.isGutenbergEnabledVariableSet()) {
+                properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
+            }
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -803,6 +825,13 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_LINK_REMOVED:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ALIGN_LEFT:
+            case EDITOR_TAPPED_ALIGN_CENTER:
+            case EDITOR_TAPPED_ALIGN_RIGHT:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_UNDO:
+            case EDITOR_TAPPED_REDO:
                 return "editor_button_tapped";
             case REVISIONS_LIST_VIEWED:
                 return "revisions_list_viewed";

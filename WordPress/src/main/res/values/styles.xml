@@ -34,6 +34,12 @@
         <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
+    <style name="NumberPickerTheme" parent="WordPress">
+        <item name="colorControlNormal">@color/transparent</item>
+        <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
+        <item name="android:textColorPrimary">@color/primary</item>
+    </style>
+
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
     <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar"/>
 
@@ -79,18 +85,20 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="FilteredRecyclerViewFilterTextView.WordPress" parent="android:TextAppearance.Widget.TextView">
+    <style name="FilteredRecyclerViewFilterTextView">
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:paddingBottom">@dimen/margin_medium</item>
         <item name="android:paddingEnd">@dimen/margin_extra_large</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="textColor">@android:color/white</item>
+        <item name="textColorHint">@color/hint_text</item>
     </style>
 
-    <style name="FilteredRecyclerViewFilterTextView.WordPress.MainToolbar">
+    <style name="FilteredRecyclerViewFilterTextView.MainToolbar">
         <item name="android:textSize">@null</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Title</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
     <style name="DialogTheme.WordPress" parent="android:Theme.Material.Dialog">

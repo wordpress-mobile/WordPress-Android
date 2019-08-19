@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-26 16:08:52+0000
+Translation-Revision-Date: 2019-08-07 02:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="stats_posting_activity_graph">博文发布情况图表。</string>
+    <string name="stats_item_collapsed">收起条目</string>
+    <string name="stats_item_expanded">展开条目</string>
+    <string name="stats_collapse_content_description">收起</string>
+    <string name="stats_graph_updated">图表已更新。</string>
+    <string name="stats_overview_content_description">%1$s%2$s 针对以下时段：%3$s，与上个时段相比的变化 - %4$s</string>
+    <string name="stats_bar_chart_content_description">站点浏览量图表。</string>
+    <string name="stats_loading_card">正在加载选定的卡片数据</string>
     <string name="description_expand">展开</string>
     <string name="description_collapse">折叠</string>
     <string name="editor_retry_failed_uploads">重试上传</string>
@@ -23,8 +31,6 @@ Language: zh_CN
     <string name="link_dialog_title">插入链接</string>
     <string name="post_settings_retry_featured_image">重试上传</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">正在上传媒体。\n请轻点以查看选项。</string>
-    <string name="dialog_gutenberg_informative_description_page">此页面使用了区块编辑器，它是新页面的默认编辑器。要启用经典编辑器，请转到“我”>“应用程序设置”。</string>
-    <string name="dialog_gutenberg_informative_description_post">此文章使用了区块编辑器，它是新文章的默认编辑器。要启用经典编辑器，请转到“我”>“应用程序设置”。</string>
     <string name="link_open_new_window">在新窗口/选项卡中打开链接</string>
     <string name="post_list_search_prompt">搜索已发布文章</string>
     <string name="domain_contact_information_state_not_available_hint">州/省/自治区/直辖市（不可用）</string>
@@ -105,7 +111,6 @@ Language: zh_CN
     <string name="posts_scheduled_empty">您没有任何预发布的文章</string>
     <string name="posts_published_empty">您尚未发布任何文章</string>
     <string name="notification_wpcom_username_needed">请使用您的用户名和密码登录。</string>
-    <string name="login_invalid_site_url">您输入的站点地址无效。请重新输入。</string>
     <string name="error_user_username_instead_of_email">请使用您的 WordPress.com 用户名（而不是电子邮件地址）登录。</string>
     <string name="stats_insights_average_words">每篇文章的平均字数</string>
     <string name="stats_insights_total_words">总字数</string>
@@ -976,7 +981,6 @@ Language: zh_CN
     <string name="login_email_client_not_found">未侦测到您的电子邮件客户端应用</string>
     <string name="login_empty_2fa">请输入验证码</string>
     <string name="login_empty_username">请输入用户名</string>
-    <string name="login_empty_site_url">请输入站点地址</string>
     <string name="login_log_in_for_deeplink">登录 WordPress.com 以访问此文章。</string>
     <string name="login_error_while_adding_site">添加站点时出错。错误代码：%s</string>
     <string name="login_checking_site_address">正在检查站点地址</string>
@@ -985,7 +989,6 @@ Language: zh_CN
     <string name="login_site_address_help_title">我的站点地址是什么？</string>
     <string name="login_site_address_help">查找站点地址时需要帮助？</string>
     <string name="login_site_address">站点地址</string>
-    <string name="enter_site_address">输入您要连接的 WordPress 站点的地址。</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">已经登录 WordPress.com</string>
     <string name="login_continue">继续</string>
@@ -1407,7 +1410,6 @@ Language: zh_CN
     <string name="editor_page_title_placeholder">页面标题</string>
     <string name="editor_post_title_placeholder">文章标题</string>
     <string name="email_address">电子邮件地址</string>
-    <string name="preference_editor">编辑器</string>
     <string name="dlg_sure_to_delete_comments">是否永久删除这些评论？</string>
     <string name="dlg_sure_to_delete_comment">是否永久删除该评论？</string>
     <string name="mnu_comment_delete_permanently">删除</string>
@@ -1965,6 +1967,7 @@ Language: zh_CN
     <string name="pages">页面</string>
     <string name="no_network_title">无网络可用</string>
     <string name="featured_in_post">在文章内容中包含图片</string>
+    <string name="ok">确定</string>
     <string name="blogusername">博客用户名</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">正在上传…</string>
