@@ -91,12 +91,15 @@ public class PostStore extends Store {
         public String lastModified;
         public String status;
         public String autoSaveModified;
+        public long autoSaveRevisionId;
 
-        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified,
+                            long autoSaveRevisionId) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
             this.autoSaveModified = autoSaveModified;
+            this.autoSaveRevisionId = autoSaveRevisionId;
         }
     }
 
@@ -708,7 +711,8 @@ public class PostStore extends Store {
                 // will not be updated.
                 boolean isPostChanged =
                         !post.getLastModified().equals(item.lastModified)
-                        || !post.getStatus().equals(item.status);
+                        || !post.getStatus().equals(item.status)
+                        || item.autoSaveRevisionId > 0;
 
                 /*
                  * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
@@ -736,6 +740,7 @@ public class PostStore extends Store {
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
+                        post.setAutoSaveRevisionId(item.autoSaveRevisionId);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }
