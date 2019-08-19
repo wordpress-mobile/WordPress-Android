@@ -347,7 +347,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
             String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
 
-            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601, postStatus, null));
+            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601, postStatus, null, 0));
         }
         return postListItems;
     }
