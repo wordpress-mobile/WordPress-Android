@@ -48,6 +48,7 @@ public class PostUploadModel extends Payload<BaseNetworkError> implements Identi
     // Serialization of a PostError
     @Column private String mErrorType;
     @Column private String mErrorMessage;
+    @Column private int mNumberOfUploadErrorsOrCancellations;
 
     public PostUploadModel() {}
 
@@ -156,5 +157,17 @@ public class PostUploadModel extends Payload<BaseNetworkError> implements Identi
         List<Integer> idList = new ArrayList<>(ids);
         Collections.sort(idList);
         return TextUtils.join(",", idList);
+    }
+
+    public int getNumberOfUploadErrorsOrCancellations() {
+        return mNumberOfUploadErrorsOrCancellations;
+    }
+
+    public void incNumberOfUploadErrorsOrCancellations() {
+        mNumberOfUploadErrorsOrCancellations += 1;
+    }
+
+    public void setNumberOfUploadErrorsOrCancellations(int numberOfUploadErrorsOrCancellations) {
+        mNumberOfUploadErrorsOrCancellations = numberOfUploadErrorsOrCancellations;
     }
 }

@@ -205,6 +205,14 @@ public class UploadStore extends Store {
         return postUploadModel != null;
     }
 
+    public int getNumberOfPostUploadErrorsOrCancellations(PostModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        if (postUploadModel == null) {
+            return 0;
+        }
+        return postUploadModel.getNumberOfUploadErrorsOrCancellations();
+    }
+
     /**
      * If the {@code postModel} has been registered as uploading with the UploadStore, this will return the associated
      * {@link PostError}, if any.
@@ -255,18 +263,6 @@ public class UploadStore extends Store {
             mediaUploadModel.setMediaError(new MediaError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage));
         }
         UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
-
-        // If we have a FAILED or CANCELLED post associated with this media, we've already started making changes to
-        // this post and don't need a reference to the old PostUploadModel anymore
-        int localPostId = payload.media.getLocalPostId();
-        if (localPostId > 0) {
-            PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
-            if (postUploadModel != null
-                    && (postUploadModel.getUploadState() == PostUploadModel.CANCELLED
-                    || postUploadModel.getUploadState() == PostUploadModel.FAILED)) {
-                UploadSqlUtils.deletePostUploadModelWithLocalId(localPostId);
-            }
-        }
     }
 
     private void handleMediaUploaded(@NonNull ProgressPayload payload) {
@@ -378,7 +374,10 @@ public class UploadStore extends Store {
             if (postUploadModel == null) {
                 postUploadModel = new PostUploadModel(payload.post.getId());
             }
-            postUploadModel.setUploadState(PostUploadModel.FAILED);
+            if (postUploadModel.getUploadState() != PostUploadModel.FAILED) {
+                postUploadModel.setUploadState(PostUploadModel.FAILED);
+                postUploadModel.incNumberOfUploadErrorsOrCancellations();
+            }
             postUploadModel.setPostError(payload.error);
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
             return;
@@ -442,8 +441,9 @@ public class UploadStore extends Store {
 
     private void cancelPost(int localPostId) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
-        if (postUploadModel != null) {
+        if (postUploadModel != null && postUploadModel.getUploadState() != PostUploadModel.CANCELLED) {
             postUploadModel.setUploadState(PostUploadModel.CANCELLED);
+            postUploadModel.incNumberOfUploadErrorsOrCancellations();
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }

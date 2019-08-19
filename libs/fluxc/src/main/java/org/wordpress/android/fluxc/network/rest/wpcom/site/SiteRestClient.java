@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -41,6 +42,10 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError;
+import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
@@ -52,6 +57,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesRespo
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -64,6 +70,8 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartError;
 import org.wordpress.android.fluxc.store.SiteStore.QuickStartErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsError;
+import org.wordpress.android.fluxc.store.SiteStore.SiteEditorsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
@@ -175,8 +183,13 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
                         if (response != null) {
-                            SiteModel site = siteResponseToSiteModel(response);
-                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                            SiteModel newSite = siteResponseToSiteModel(response);
+                            // local ID is not copied into the new model, let's make sure it is
+                            // otherwise the call that updates the DB can add a new row?
+                            if (site.getId() > 0) {
+                                newSite.setId(site.getId());
+                            }
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(newSite));
                         } else {
                             AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
                             SiteModel payload = new SiteModel();
@@ -259,6 +272,95 @@ public class SiteRestClient extends BaseWPComRestClient {
         // Disable retries and increase timeout for site creation (it can sometimes take a long time to complete)
         request.setRetryPolicy(new DefaultRetryPolicy(NEW_SITE_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         add(request);
+    }
+
+    public void fetchSiteEditors(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
+        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                SiteEditorsResponse.class,
+                new Listener<SiteEditorsResponse>() {
+                    @Override
+                    public void onResponse(SiteEditorsResponse response) {
+                        if (response != null) {
+                            FetchedEditorsPayload payload;
+                            payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                        } else {
+                            AppLog.e(T.API, "Received empty response to /sites/$site/gutenberg for " + site.getUrl());
+                            FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                            payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                        }
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                        payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                    }
+                }
+                );
+        add(request);
+    }
+
+    public void designateMobileEditor(final SiteModel site, final String mobileEditorName) {
+        Map<String, Object> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).gutenberg.getUrl();
+        params.put("editor", mobileEditorName);
+        params.put("platform", "mobile");
+        final WPComGsonRequest<SiteEditorsResponse> request = WPComGsonRequest
+                .buildPostRequest(url, params, SiteEditorsResponse.class,
+                        new Listener<SiteEditorsResponse>() {
+                            @Override
+                            public void onResponse(SiteEditorsResponse response) {
+                                FetchedEditorsPayload payload;
+                                payload = new FetchedEditorsPayload(site, response.editor_web, response.editor_mobile);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                FetchedEditorsPayload payload = new FetchedEditorsPayload(site, "", "");
+                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedSiteEditorsAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    public void designateMobileEditorForAllSites(final String mobileEditorName) {
+        Map<String, Object> params = new HashMap<>();
+        String url = WPCOMV2.me.gutenberg.getUrl();
+        params.put("editor", mobileEditorName);
+        params.put("platform", "mobile");
+        params.put("set_only_if_empty", "true");
+
+        add(WPComGsonRequest
+                .buildPostRequest(url, params, Map.class,
+                        new Listener<Map<String, String>>() {
+                            @Override
+                            public void onResponse(Map<String, String> response) {
+                                DesignateMobileEditorForAllSitesResponsePayload payload =
+                                        new DesignateMobileEditorForAllSitesResponsePayload(response);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                DesignateMobileEditorForAllSitesResponsePayload payload =
+                                        new DesignateMobileEditorForAllSitesResponsePayload(null);
+                                payload.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newDesignatedMobileEditorForAllSitesAction(payload));
+                            }
+                        })
+           );
     }
 
     public void fetchPostFormats(@NonNull final SiteModel site) {
@@ -400,7 +502,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void suggestDomains(@NonNull final String query, final Boolean onlyWordpressCom,
                                final Boolean includeWordpressCom, final Boolean includeDotBlogSubdomain,
-                               final Long segmentId, final int quantity, final boolean includeVendorDot) {
+                               final Long segmentId, final int quantity, final boolean includeVendorDot,
+                               final String tlds) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
@@ -416,13 +519,17 @@ public class SiteRestClient extends BaseWPComRestClient {
         if (segmentId != null) {
             params.put("segment_id", String.valueOf(segmentId));
         }
+        if (tlds != null) {
+            params.put("tlds", tlds);
+        }
         params.put("quantity", String.valueOf(quantity));
         if (includeVendorDot) {
             params.put("vendor", "dot");
         }
         final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, params,
-                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
+                        new TypeToken<ArrayList<DomainSuggestionResponse>>() {
+                        }.getType(),
                         new Listener<ArrayList<DomainSuggestionResponse>>() {
                             @Override
                             public void onResponse(ArrayList<DomainSuggestionResponse> response) {
@@ -448,7 +555,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 }
                             }
                         }
-                );
+                                                );
         add(request);
     }
 
@@ -681,6 +788,35 @@ public class SiteRestClient extends BaseWPComRestClient {
                                         new DomainSupportedCountriesResponsePayload(domainSupportedCountriesError);
                                 mDispatcher.dispatch(
                                         SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    public void designatePrimaryDomain(@NonNull final SiteModel site, String domain) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).domains.primary.getUrlV1_1();
+        Map<String, Object> params = new HashMap<>();
+        params.put("domain", domain);
+        final WPComGsonRequest<DesignatePrimaryDomainResponse> request = WPComGsonRequest
+                .buildPostRequest(url, params, DesignatePrimaryDomainResponse.class,
+                        new Listener<DesignatePrimaryDomainResponse>() {
+                            @Override
+                            public void onResponse(DesignatePrimaryDomainResponse response) {
+                                mDispatcher.dispatch(SiteActionBuilder.newDesignatedPrimaryDomainAction(
+                                        new DesignatedPrimaryDomainPayload(site, response.getSuccess())));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                                DesignatePrimaryDomainError error = new DesignatePrimaryDomainError(
+                                        DesignatePrimaryDomainErrorType.GENERIC_ERROR, networkError.message);
+
+                                DesignatedPrimaryDomainPayload payload =
+                                        new DesignatedPrimaryDomainPayload(site, false);
+                                payload.error = error;
+
+                                mDispatcher.dispatch(SiteActionBuilder.newDesignatedPrimaryDomainAction(payload));
                             }
                         });
         add(request);
