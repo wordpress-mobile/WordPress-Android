@@ -67,15 +67,15 @@ class FileDownloadsRestClient
     data class FileDownloadsResponse(
         @SerializedName("period") val statsGranularity: String?,
         @SerializedName("date") val date: String?,
-        @SerializedName("days") val groups: Map<String, Groups>
+        @SerializedName("days") val groups: Map<String, Group>
     ) {
-        data class Groups(
+        data class Group(
             @SerializedName("other_downloads") val otherDownloads: Int?,
             @SerializedName("total_downloads") val totalDownloads: Int?,
-            @SerializedName("downloads") val downloads: List<Download>
+            @SerializedName("files") val files: List<File>
         )
 
-        data class Download(
+        data class File(
             @SerializedName("filename") val filename: String?,
             @SerializedName("downloads") var downloads: Int?
         )

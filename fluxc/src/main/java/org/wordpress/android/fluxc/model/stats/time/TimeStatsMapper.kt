@@ -284,7 +284,7 @@ class TimeStatsMapper
 
     fun map(response: FileDownloadsResponse, cacheMode: LimitMode): FileDownloadsModel {
         val first = response.groups.values.firstOrNull()
-        val downloads = first?.downloads?.let {
+        val downloads = first?.files?.let {
             if (cacheMode is LimitMode.Top) {
                 it.take(cacheMode.limit)
             } else {
@@ -297,6 +297,6 @@ class TimeStatsMapper
                 null
             }
         } ?: listOf()
-        return FileDownloadsModel(downloads, downloads.size < first?.downloads?.size ?: 0)
+        return FileDownloadsModel(downloads, downloads.size < first?.files?.size ?: 0)
     }
 }
