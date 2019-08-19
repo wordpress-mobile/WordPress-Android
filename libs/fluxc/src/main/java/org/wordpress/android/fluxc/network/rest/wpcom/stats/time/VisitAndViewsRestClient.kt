@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
-import org.wordpress.android.fluxc.utils.SiteUtils
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -29,13 +27,12 @@ class VisitAndViewsRestClient
     appContext: Context?,
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent,
-    private val statsUtils: StatsUtils
+    userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchVisits(
         site: SiteModel,
         granularity: StatsGranularity,
-        date: Date,
+        date: String,
         itemsToLoad: Int,
         forced: Boolean
     ): FetchStatsPayload<VisitsAndViewsResponse> {
@@ -43,7 +40,7 @@ class VisitAndViewsRestClient
         val params = mapOf(
                 "unit" to granularity.toString(),
                 "quantity" to itemsToLoad.toString(),
-                "date" to statsUtils.getFormattedDate(date, SiteUtils.getNormalizedTimezone(site.timezone))
+                "date" to date
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
