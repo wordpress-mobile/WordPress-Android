@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.stats.time.FileDownloadsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -23,16 +23,22 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_ITEM_COUNT = 1000
+private const val THRESHOLD_YEAR = 2019
+private const val THRESHOLD_MONTH = Calendar.JUNE
+private const val THRESHOLD_DAY = 29
 
 class FileDownloadsUseCase
 constructor(
@@ -42,6 +48,8 @@ constructor(
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val localeManagerWrapper: LocaleManagerWrapper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<FileDownloadsModel>(
         FILE_DOWNLOADS,
@@ -61,6 +69,17 @@ constructor(
                 LimitMode.Top(itemsToLoad),
                 selectedDate
         )
+    }
+
+    override fun buildEmptyItem(): List<BlockListItem> {
+        val selectedDate = selectedDateProvider.getSelectedDate(statsGranularity)
+        val startCalendar = localeManagerWrapper.getCurrentCalendar()
+        startCalendar.set(THRESHOLD_YEAR, THRESHOLD_MONTH, THRESHOLD_DAY, 0, 0, 0)
+        return if (selectedDate != null && selectedDate.before(startCalendar.time)) {
+            buildLoadingItem() + listOf(Empty(textResource = R.string.stats_data_not_recorded_for_period))
+        } else {
+            super.buildEmptyItem()
+        }
     }
 
     override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<FileDownloadsModel> {
@@ -91,12 +110,18 @@ constructor(
         if (domainModel.fileDownloads.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_file_downloads_title_label, R.string.stats_file_downloads_value_label))
+            val header = Header(R.string.stats_file_downloads_title_label, R.string.stats_file_downloads_value_label)
+            items.add(header)
             items.addAll(domainModel.fileDownloads.mapIndexed { index, fileDownloads ->
                 ListItemWithIcon(
                         text = fileDownloads.filename,
                         value = fileDownloads.downloads.toFormattedString(),
-                        showDivider = index < domainModel.fileDownloads.size - 1
+                        showDivider = index < domainModel.fileDownloads.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                header,
+                                fileDownloads.filename,
+                                fileDownloads.downloads
+                        )
                 )
             })
 
@@ -113,9 +138,9 @@ constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_FILE_DOWNLOADS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(
-                ViewVideoPlays(
+                ViewFileDownloads(
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity) ?: Date()
                 )
@@ -128,7 +153,9 @@ constructor(
         private val store: FileDownloadsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
+        private val localeManagerWrapper: LocaleManagerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 FileDownloadsUseCase(
@@ -138,6 +165,8 @@ constructor(
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
+                        localeManagerWrapper,
                         useCaseMode
                 )
     }

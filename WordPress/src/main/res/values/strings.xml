@@ -830,6 +830,7 @@
     <string name="stats_menu_move_up">Move up</string>
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
+    <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
