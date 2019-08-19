@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.FetchUsernameSuggestionsPayload;
@@ -47,7 +48,11 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class UsernameChangerFullScreenDialogFragment extends Fragment implements
+/**
+ * Created so that the base suggestions functionality can become shareable as similar functionality is being used in the
+ * the Account settings & sign-up flow to change the username.
+ */
+public abstract class BaseUsernameChangerFullScreenDialogFragment extends Fragment implements
         FullScreenDialogContent, OnUsernameSelectedListener {
     private ProgressBar mProgressBar;
 
@@ -77,6 +82,31 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     public static final int GET_SUGGESTIONS_INTERVAL_MS = 1000;
 
     @Inject protected Dispatcher mDispatcher;
+
+    /**
+     * Fragments that extend this class are required to provide the event that should be
+     * tracked in case fetching of the username suggestions fail.
+     *
+     * @return {@link Stat}
+     */
+    abstract Stat getSuggestionsFailedStat();
+
+    /**
+     * Specifies if the header text should be updated when a new username is selected
+     * or if the the initial username should remain.
+     *
+     * @return true or false
+     */
+    abstract boolean canHeaderTextLiveUpdate();
+
+    /**
+     * Creates the text that's displayed in the header.
+     *
+     * @param username
+     * @param display
+     * @return formatted header template
+     */
+    abstract Spanned getHeaderText(String username, String display);
 
     protected static Bundle newBundle(String displayName, String username) {
         Bundle bundle = new Bundle();
@@ -152,7 +182,9 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().isEmpty()) {
-                    mHeaderView.setText(getHeaderText(getUsernameOrSelected(), mDisplayName));
+                    if (canHeaderTextLiveUpdate()) {
+                        mHeaderView.setText(getHeaderText(getUsernameOrSelected(), mDisplayName));
+                    }
                     mGetSuggestionsHandler.removeCallbacks(mGetSuggestionsRunnable);
                 } else if (mShouldWatchText) {
                     mGetSuggestionsHandler.removeCallbacks(mGetSuggestionsRunnable);
@@ -225,23 +257,11 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
     @Override
     public void onUsernameSelected(String username) {
-        mHeaderView.setText(getHeaderText(username, mDisplayName));
+        if (canHeaderTextLiveUpdate()) {
+            mHeaderView.setText(getHeaderText(username, mDisplayName));
+        }
         mUsernameSelected = username;
         mUsernameSelectedIndex = mUsernamesAdapter.getSelectedItem();
-    }
-
-    protected Spanned getHeaderText(String username, String display) {
-        return Html.fromHtml(
-                String.format(
-                        getString(R.string.username_changer_header),
-                        "<b>",
-                        username,
-                        "</b>",
-                        "<b>",
-                        display,
-                        "</b>"
-                             )
-                            );
     }
 
     protected String getUsernameOrSelected() {
@@ -281,7 +301,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
     private void setUsernameSuggestions(List<String> suggestions) {
         mUsernamesAdapter = new UsernameChangerRecyclerViewAdapter(getActivity(), suggestions);
-        mUsernamesAdapter.setOnUsernameSelectedListener(UsernameChangerFullScreenDialogFragment.this);
+        mUsernamesAdapter.setOnUsernameSelectedListener(BaseUsernameChangerFullScreenDialogFragment.this);
         mUsernamesAdapter.setSelectedItem(mUsernameSelectedIndex);
         mUsernameSuggestions.setAdapter(mUsernamesAdapter);
     }
@@ -292,19 +312,19 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.LoginTheme))
                 .setMessage(R.string.username_changer_dismiss_message)
                 .setPositiveButton(R.string.username_changer_dismiss_button_positive,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(DialogInterface dialog, int which) {
-                                           mDialogController.dismiss();
-                                       }
-                                   })
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDialogController.dismiss();
+                            }
+                        })
                 .setNegativeButton(android.R.string.cancel,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(DialogInterface dialog, int which) {
-                                           mIsShowingDismissDialog = false;
-                                       }
-                                   })
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mIsShowingDismissDialog = false;
+                            }
+                        })
                 .show();
     }
 
@@ -327,7 +347,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         showProgress(false);
 
         if (event.isError()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED);
+            AnalyticsTracker.track(getSuggestionsFailedStat());
             AppLog.e(T.API, "onUsernameSuggestionsFetched: " + event.error.type + " - " + event.error.message);
             showErrorDialog(new SpannedString(getString(R.string.username_changer_error_generic)));
         } else if (event.suggestions.size() == 0) {
