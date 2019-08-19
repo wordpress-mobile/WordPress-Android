@@ -82,7 +82,11 @@ constructor(
         }
     }
 
-    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean): State<FileDownloadsModel> {
+    override suspend fun fetchRemoteData(
+        selectedDate: Date,
+        site: SiteModel,
+        forced: Boolean
+    ): State<FileDownloadsModel> {
         val response = store.fetchFileDownloads(
                 site,
                 statsGranularity,
