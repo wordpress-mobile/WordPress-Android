@@ -370,6 +370,7 @@ Language: da_DK
     <string name="posts">Indlæg</string>
     <string name="pages">Sider</string>
     <string name="width">Bredde</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Uploader</string>

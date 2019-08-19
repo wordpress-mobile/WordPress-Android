@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -32,8 +33,9 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val popupMenuHandler: ItemPopupMenuHandler
-) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
+    private val popupMenuHandler: ItemPopupMenuHandler,
+    private val contentDescriptionHelper: ContentDescriptionHelper
+) : BaseStatsUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
         val fetchMode = LimitMode.Top(BLOCK_ITEM_COUNT)
         val response = commentsStore.fetchComments(statsSiteProvider.siteModel, fetchMode, forced)
@@ -61,7 +63,7 @@ class CommentsUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
+    override fun buildUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
@@ -88,14 +90,20 @@ class CommentsUseCase
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
-            mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
+            val header = Header(R.string.stats_comments_author_label, R.string.stats_comments_label)
+            mutableItems.add(header)
             mutableItems.addAll(authors.mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
                         text = author.name,
                         value = author.comments.toFormattedString(),
-                        showDivider = index < authors.size - 1
+                        showDivider = index < authors.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                header,
+                                author.name,
+                                author.comments
+                        )
                 )
             })
         } else {
@@ -107,12 +115,18 @@ class CommentsUseCase
     private fun buildPostsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
-            mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
+            val header = Header(R.string.stats_comments_title_label, R.string.stats_comments_label)
+            mutableItems.add(header)
             mutableItems.addAll(posts.mapIndexed { index, post ->
                 ListItem(
                         post.name,
                         post.comments.toFormattedString(),
-                        index < posts.size - 1
+                        index < posts.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                header,
+                                post.name,
+                                post.comments
+                        )
                 )
             })
         } else {

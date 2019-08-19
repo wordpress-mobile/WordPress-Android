@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
@@ -56,6 +57,7 @@ sealed class BlockListItem(val type: Type) {
         TABS,
         HEADER,
         MAP,
+        MAP_LEGEND,
         EXPANDABLE_ITEM,
         DIVIDER,
         LOADING_ITEM,
@@ -95,7 +97,8 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val unit: Int,
         val isFirst: Boolean = false,
         val change: String? = null,
-        val state: State = POSITIVE
+        val state: State = POSITIVE,
+        val contentDescription: String
     ) : BlockListItem(VALUE_ITEM) {
         enum class State { POSITIVE, NEGATIVE, NEUTRAL }
     }
@@ -103,7 +106,8 @@ sealed class BlockListItem(val type: Type) {
     data class ListItem(
         val text: String,
         val value: String,
-        val showDivider: Boolean = true
+        val showDivider: Boolean = true,
+        val contentDescription: String
     ) : BlockListItem(LIST_ITEM) {
         override val itemId: Int
             get() = text.hashCode()
@@ -120,7 +124,8 @@ sealed class BlockListItem(val type: Type) {
         val barWidth: Int? = null,
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
-        val navigationAction: NavigationAction? = null
+        val navigationAction: NavigationAction? = null,
+        val contentDescription: String
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
@@ -155,13 +160,14 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Columns(
-        val headers: List<Int>,
-        val values: List<String>,
+        val columns: List<Column>,
         val selectedColumn: Int? = null,
         val onColumnSelected: ((position: Int) -> Unit)? = null
     ) : BlockListItem(COLUMNS) {
         override val itemId: Int
-            get() = headers.hashCode()
+            get() = columns.hashCode()
+
+        data class Column(val header: Int, val value: String, val contentDescription: String)
     }
 
     data class Link(
@@ -219,6 +225,8 @@ sealed class BlockListItem(val type: Type) {
     data class Empty(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(EMPTY)
 
     data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
+
+    data class MapLegend(val startLegend: String, val endLegend: String) : BlockListItem(MAP_LEGEND)
 
     object Divider : BlockListItem(DIVIDER)
 

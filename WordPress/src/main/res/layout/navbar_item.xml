@@ -39,7 +39,7 @@
         android:layout_gravity="center_horizontal"
         android:duplicateParentState="true"
         android:singleLine="true"
-        android:textColor="@color/primary_400"
+        android:textColor="@color/primary_40"
         android:textSize="12sp"
         android:visibility="gone"
         tools:text="label"

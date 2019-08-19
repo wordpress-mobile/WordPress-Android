@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-08 21:06:50+0000
+Translation-Revision-Date: 2019-08-07 00:54:15+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Bağlanırken kullandığınız e-postayı bulmak için yardıma mı ihtiyacınız var?</string>
+    <string name="enter_wordpress_site">Bu adresteki web sitesi bir WordPress sitesi değil. Siteyle bağlantı kurabilmemiz için sitede WordPress yüklü olmalıdır.</string>
+    <string name="login_invalid_site_url">Lütfen example.com gibi eksiksiz bir web sitesi adresi girin.</string>
+    <string name="enter_email_for_site">%1$s ile bağlanmak için WordPress.com hesabınıza giriş yapın</string>
+    <string name="sharing_facebook_account_must_have_pages">Hesabın herhangi bir sayfaya erişimi olmadığı için Facebook bağlantısı gerçekleştirilemedi. Facebook, Facebook Sayfalarına yapılan paylaşım bağlantılarını destekler fakat Facebook Profillerine yapılan bağlantıları desteklemez.</string>
+    <string name="stats_post_views_label">Görüntülemeler</string>
+    <string name="stats_post_label">Gönder</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Gönderi paylaşma etkinliğinin grafiği.</string>
+    <string name="stats_item_collapsed">Öğe daraltıldı</string>
+    <string name="stats_item_expanded">Öğe genişletildi</string>
+    <string name="stats_collapse_content_description">Gizle</string>
+    <string name="stats_expand_content_description">Genişletmek</string>
+    <string name="stats_graph_updated">Grafik güncellendi.</string>
+    <string name="stats_overview_content_description">Şu dönem için %1$s %2$s: %3$s, önceki dönemden değişiklik - %4$s</string>
+    <string name="stats_bar_chart_content_description">Site görüntülemelerinin grafiği.</string>
+    <string name="stats_loading_card">Seçilen kart verileri yükleniyor</string>
+    <string name="site_settings_editor">Düzenleyici</string>
+    <string name="dialog_gutenberg_informative_description_page">Şu anda yeni sayfalar oluşturmak için blok düzenleyiciyi kullanıyorsunuz. Varsayılan olarak klasik düzenleyiciyi kullanmak ister misiniz? Site Ayarları’na gidin.</string>
+    <string name="dialog_gutenberg_informative_description_post">Şu anda yeni gönderiler oluşturmak için blok düzenleyiciyi kullanıyorsunuz. Varsayılan olarak klasik düzenleyiciyi kullanmak ister misiniz? Site Ayarları’na gidin.</string>
+    <string name="description_expand">Genişlet</string>
+    <string name="description_collapse">Daralt</string>
+    <string name="editor_retry_failed_uploads">Yüklemeyi yeniden dene</string>
+    <string name="editor_toast_failed_uploads">Bazı ortam yüklemeleri başarısız oldu. Yazınızı bu durumda \nkaydedemez veya yayınlayamazsınız.</string>
+    <string name="my_site_verify_your_email_without_email">E-posta adresinizi doğrulayın - talimatlar e-postanıza gönderildi</string>
+    <string name="my_site_verify_your_email">E-posta adresinizi doğrulayın - talimatlar %s gönderildi</string>
+    <string name="error_media_recover_post_not_submitted">Ortam karşıya yüklenemedi. Yazı gönderilmedi.</string>
+    <string name="error_media_recover_post_not_scheduled">Ortam karşıya yüklenemedi. Yazı zamanlanmadı.</string>
+    <string name="error_media_recover_post_not_published">Ortam karşıya yüklenemedi. Yazı yayımlanmadı.</string>
+    <string name="error_media_recover_post">Ortam karşıya yüklenemedi</string>
+    <string name="link_dialog_button_cancel">İptal</string>
+    <string name="link_dialog_button_ok">Tamam</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Bağlantıyı kaldır</string>
+    <string name="link_dialog_title">Bağlantı ekle</string>
+    <string name="post_settings_retry_featured_image">Yüklemeyi yeniden dene</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Ortam yükleniyor.\nLütfen seçenekler için dokunun.</string>
+    <string name="link_open_new_window">Bağlantıyı yeni pencerede/sekmede aç</string>
+    <string name="post_list_search_prompt">Yayımlanmış yazıları ara</string>
+    <string name="stats_widget_error_no_access_token">İstatistiklerinizi görüntülemek için WordPress.com hesabında oturum açın.</string>
+    <string name="post_list_search_nothing_found">Aramanızla eşleşen gönderi yok</string>
+    <string name="domains_suggestions_intro_description">Bu, insanların sizi internette bulacakları yerdir.</string>
+    <string name="domains_suggestions_intro_title">Bir premium alan adı seçin</string>
+    <string name="my_site_custom_domain_name">Tüm WordPress.com planları kişisel bir alan adı içerir. Ücretsiz premium alan adınızı hemen kaydedin.</string>
+    <string name="stats_widget_minified_name">Bir bakışta</string>
+    <string name="stats_widget_today_insights_name">Bugün</string>
+    <string name="stats_widget_all_time_insights_name">Tüm zamanlar</string>
+    <string name="stats_widget_weekly_views_name">Bu haftadan görünümler</string>
+    <string name="stats_widget_log_in_message">Bir pencere öğesi eklemek için lütfen WordPress uygulamasında oturum açın.</string>
+    <string name="stats_widget_error_no_network">Ağ yok</string>
+    <string name="stats_widget_error_no_data">Veri yüklenemedi</string>
+    <string name="stats_widget_select_type">Tür</string>
+    <string name="stats_widget_select_color">Renk</string>
+    <string name="stats_widget_select_your_site">Sitenizi seçin</string>
+    <string name="stats_widget_color_dark">Koyu</string>
+    <string name="stats_widget_color_light">Açık</string>
+    <string name="stats_widget_color">Renk</string>
+    <string name="stats_widget_site_caption">Sitenizi Seçin</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_all_time_title">Tüm zamanlar</string>
+    <string name="stats_widget_views_title">Bu Haftadan Görünümler</string>
+    <string name="stats_widget_add">Pencere öğesi ekle</string>
+    <string name="dialog_confirm_update_yes">Şimdi güncelle</string>
+    <string name="dialog_confirm_update_message_page">Yayınlanan bu sayfa hemen güncellenecek.</string>
+    <string name="dialog_confirm_update_message_post">Yayınlanan bu gönderi hemen güncellenecek.</string>
+    <string name="dialog_confirm_update_title">Güncellemeye Hazır mısınız?</string>
+    <string name="plugin_fetching_error_after_at">Eklenti ayrıntılarının yenilenmesi normalden daha uzun sürer. Lütfen daha sonra tekrar kontrol edin.</string>
+    <string name="plugin_install_site_ineligible_default_error">Bir alan adı kaydettirdiyseniz lütfen kayıt tamamlanana kadar bekleyin ve ardından yeniden deneyin.\n\nAksi takdirde, bir şeyler yanlış gitmiş olabilir ve eklenti özelliği bu site için kullanılamayabilir.</string>
+    <string name="domain_contact_information_state_not_available_hint">Eyalet (mevcut değil)</string>
+    <string name="domain_registration_privacy_protection_tos">Bu etki alanını kaydettirerek %1$sşartlar ve koşulları%2$s kabul etmiş sayılırsınız.</string>
+    <string name="error_network_connection">Ağ bağlantınızı kontrol edin ve tekrar deneyin.</string>
+    <string name="error_browser_no_network">Bu sayfa şu anda yüklenemiyor.</string>
+    <string name="error_disabled_apis">Ayarlar getirilemedi: Bu OAuth uygulama idsi ve hesap birleşimi için bazı API\'ler kullanılamıyor.</string>
+    <string name="jetpack_connection_terms_and_conditions">Jetpack\'i kurarak %1$sşartlar ve koşulları%2$s kabul etmiş sayılırsınız.</string>
+    <string name="site_settings_disconnected_toast">Bağlantı yok. Düzenleme devre dışı bırakıldı.</string>
+    <string name="site_settings_update_password_message">Uygulamayı kendi barındırdığınız sitenize yeniden bağlamak için sitenin yeni parolasını buraya girin.</string>
+    <string name="site_settings_password_updated">Parola güncellendi</string>
+    <string name="site_settings_password_dialog_title">Parolayı güncelle</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Site ayrıntılarınızı güncellerken hata oluştu: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Alan adı iletişim bilgileri alınırken hata oluştu: %s</string>
-    <string name="domain_registration_error_registering_domain">Alan adı kaydedilirken hata oluştu: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
@@ -52,17 +127,17 @@ Language: tr
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
     <string name="stats_insights_management_drag_and_drop_hint">Yukarıda gösterilen öğeler Insights (İçgörüler) adlı sekmenizde gösterilecektir. Kişiselleştirmek için sürükleyip bırakın.</string>
-    <string name="stats_insights_add_insights_header">Insights Ekle</string>
+    <string name="stats_insights_add_insights_header">Tek bakışa ekle</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. İçgörülerinizi aşağıya ekleyin ve düzenleyin.</string>
     <string name="stats_insights_social">Sosyal</string>
-    <string name="stats_insights_annual_site_stats">Yıllık Site İstatistikleri</string>
+    <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
     <string name="stats_view_follower_totals">Toplam Takipçi Sayısı</string>
     <string name="domain_suggestions_fetch_error">Alan adı önerileri yüklenemedi</string>
     <string name="domain_suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
     <string name="domains_suggestions_empty_list">Hiçir öneri bulunamadı</string>
     <string name="register_domain">Alan Adını Kaydet</string>
     <string name="jetpack_installed_message">Jetpack yüklendiğine göre artık sadece ayarlarınızı tamamlamanız yeterli. Bu işlem sadece bir dakika sürer.</string>
-    <string name="stats_menu_remove">İçgörülerden çıkar</string>
+    <string name="stats_menu_remove">Tek bakıştan çıkar</string>
     <string name="stats_menu_move_down">Aşağı taşı</string>
     <string name="stats_menu_move_up">Yukarı taşı</string>
     <string name="stats_item_settings">İstatistikler öğesi ayarları</string>
@@ -80,7 +155,6 @@ Language: tr
     <string name="posts_scheduled_empty">Takvime eklenmiş yazınız yok</string>
     <string name="posts_published_empty">Henüz hiçbir gönderi yayımlamadınız</string>
     <string name="notification_wpcom_username_needed">Lütfen kullanıcı adı ve parola ile oturum açın.</string>
-    <string name="login_invalid_site_url">Girdiğiniz site adresi geçersiz. Lütfen tekrar girin.</string>
     <string name="error_user_username_instead_of_email">Lütfen e-posta adresiniz yerine WordPress.com kullanıcı adınızı kullanarak oturum açın.</string>
     <string name="stats_insights_average_words">Ort kelime/yazı</string>
     <string name="stats_insights_total_words">Toplam kelime</string>
@@ -149,14 +223,12 @@ Language: tr
     <string name="plans_loading_error_no_plans_subtitle">Şu anda Paketleri yükleyemiyoruz. Lütfen daha sonra tekrar deneyin.</string>
     <string name="plans_loading_error_no_plans_title">Paketler Yüklenemiyor</string>
     <string name="plans_loading_error_network_title">Bağlantı yok</string>
-    <string name="menu_switch_to_gutenberg_editor">Blok Düzenleyicisine Geç</string>
-    <string name="menu_switch_to_aztec_editor">Klasik Düzenleyiciye Geç</string>
+    <string name="menu_switch_to_gutenberg_editor">Blok düzenleyicisine geç</string>
+    <string name="menu_switch_to_aztec_editor">Klasik düzenleyiciye geç</string>
     <string name="stats_loading_block_error">Verileriniz yüklenirken bir sorun oluştu, sayfanızı yenileyip tekrar deneyin.</string>
     <string name="stats_loading_error">Veriler yüklenmedi</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Blog düzenleyicisi ile yeni gönderileri ve sayfaları düzenleyin</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Blok Düzenleyicisini Kullan</string>
-    <string name="dialog_gutenberg_informative_description_page">Bu sayfa ilk olarak Blok Düzenleyicisinde oluşturulduğundan bunu bu Sayfada da etkinleştirdik.\n Üstteki çubukta  ⋮  üzerine dokunarak istediğiniz zaman Klasik\'e geri dönebilirsiniz.</string>
-    <string name="dialog_gutenberg_informative_description_post">Bu gönderi ilk olarak Blok Düzenleyicisinde oluşturulduğundan bunu bu Gönderide de etkinleştirdik.\n Üstteki çubukta  ⋮  üzerine dokunarak istediğiniz zaman Klasik\'e geri dönebilirsiniz.</string>
     <string name="dialog_gutenberg_informative_title">Blok Düzenleyicisi Etkinleştirildi</string>
     <string name="exit">çıkış</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
@@ -199,7 +271,7 @@ Language: tr
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
     <string name="stats_most_popular_percent_views">Görüntülemelere ait %1$d%%</string>
-    <string name="stats_insights_popular">En Popüler Zaman</string>
+    <string name="stats_insights_popular">En popüler zaman</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Site önizlemesi gösteriliyor</string>
@@ -244,7 +316,6 @@ Language: tr
     <string name="dialog_confirm_load_remote_post_body_2">Yerel\n%s tarihinde kaydedildi\n\nWeb\n%s tarihinde kaydedildi\n</string>
     <string name="dialog_confirm_load_remote_post_body">Bu gönderinin birbiriyle çakışan iki sürümü var. Atmak istediğiniz sürümü seçin.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Senkron sorununu çöz</string>
-    <string name="local_changes_discarding_no_connection">Bu işlemi gerçekleştirmek için bir bağlantı gereklidir. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.</string>
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
@@ -423,7 +494,6 @@ Language: tr
     <string name="install_jetpack">Jetpack\'i kur</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Jetpack\'i kurarak şunu kabul etmiş olursunuz: </string>
     <string name="stats_jetpack_connection_setup_info">WordPress sitenizdeki istatistikleri kullanmak için Jetpack eklentisini yüklemeniz gerekir.</string>
     <string name="themes_empty_list">Aramanızla eşleşen bir tema yok</string>
     <string name="reader_label_post_search_explainer">Ne bulmak istersiniz?</string>
@@ -458,11 +528,6 @@ Language: tr
     <string name="blavatar_desc">site simgesi</string>
     <string name="theme_image_desc">tema görslei</string>
     <string name="featured_image_desc">öne çıkan görsel</string>
-    <string name="local_changes_discarding_error">Yerel değişiklikler gözardı edilirken bir hata oldu. Daha fazla yardım için lütfen destekle iletişime geçin.</string>
-    <string name="local_changes_discarding">Yerel değişiklikler gözardı ediliyor</string>
-    <string name="local_changes_discarded">Yerel değişiklikler gözardı edildi</string>
-    <string name="menu_discard_changes">Yerel değişiklikleri gözardı et</string>
-    <string name="button_discard_changes">Değişiklikleri gözardı et</string>
     <string name="button_discard">Gözardı et</string>
     <string name="reader_avatar_desc">profil fotoğrafı</string>
     <string name="reader_blavatar_desc">site simgesi</string>
@@ -553,7 +618,6 @@ Language: tr
     <string name="plugin_install_site_ineligible_site_private">Eklenti özelliği sitenin herkese açık olmasını gerektirir.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Eklenti özelliği business paket gerektirir.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Eklenti özelliği özel alan adı gerektirir.</string>
-    <string name="plugin_install_site_ineligible_default_error">Eklenti özelliği bu site için kullanılamaz.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Son kurulumu yapıyoruz — neredeyse bitti…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Eklenti yükleniyor…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Yükle</string>
@@ -876,7 +940,6 @@ Language: tr
     <string name="login_text_otp_another">Bana SMS ile başka bir kod gönder.</string>
     <string name="enter_verification_code_sms">%s ile biten telefon numaranıza mesaj gönderdik. Lütfen SMS ile aldığınız doğrulama kodunu giriniz.</string>
     <string name="error_generic_error">Işlem gerçekleştirilemedi</string>
-    <string name="error_media_recover_post">Bu yazının ortam dosyası yüklenemedi</string>
     <string name="image_size">Boyut</string>
     <string name="uploading_subtitle_media_only_one">1 dosya kaldı</string>
     <string name="uploading_subtitle_media_only">%2$d dosyadan %1$d kaldı</string>
@@ -995,7 +1058,6 @@ Language: tr
     <string name="login_email_client_not_found">E-posta istemcisi uygulamanızı tespit edemiyoruz</string>
     <string name="login_empty_2fa">Lütfen bir doğrulama kodu girin</string>
     <string name="login_empty_username">Lütfen bir kullanıcı adı girin</string>
-    <string name="login_empty_site_url">Lütfen bir site adresi girin</string>
     <string name="login_log_in_for_deeplink">Bu yazıya erişmek için WordPress.com hesabınıza giriş yapın.</string>
     <string name="login_error_while_adding_site">Site eklenirken hata oluştu. Hata kodu: %s</string>
     <string name="login_checking_site_address">Site adresi kontrol ediliyor</string>
@@ -1175,7 +1237,7 @@ Language: tr
     <string name="editor_post_saved_locally_failed_media">Yazı, ortam dosyası yüklemelerinde başarısız oldu ve yerel olarak kaydedildi</string>
     <string name="sure_to_remove_account">Bu site uygulamadan kaldırılsın mı?</string>
     <string name="photo_picker_title">Fotoğraf seç</string>
-    <string name="error_publish_no_network">Cihaz çevrimdışı. Değişiklikler yerel olarak kaydedildi.</string>
+    <string name="error_publish_no_network">Cihaz çevrimdışı. Yazılar yerel olarak kaydedildi.</string>
     <string name="editor_post_saved_online">Yazı çevrimiçi kaydedildi.</string>
     <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
@@ -1374,7 +1436,6 @@ Language: tr
     <string name="start_over">Baştan başla</string>
     <string name="me_btn_app_settings">Uygulama ayarları</string>
     <string name="editor_remove_failed_uploads">Başarısız yüklemeleri kaldır</string>
-    <string name="editor_toast_failed_uploads">Bazı ortam dosyası yüklemeleri başarısız oldu. Bu durumda yazınızı\n        kaydedemez ya da yayımlayamazsınız. Başarısız ortam dosyaları kaldırılsın mı?</string>
     <string name="site_settings_advanced_header">Gelişmiş</string>
     <string name="comments_empty_list_filtered_trashed">Çöpte yorum yok</string>
     <string name="comments_empty_list_filtered_pending">Bekleyen yorum yok</string>
@@ -1431,7 +1492,6 @@ Language: tr
     <string name="editor_page_title_placeholder">Sayfa başlığı</string>
     <string name="editor_post_title_placeholder">Yazı başlığı</string>
     <string name="email_address">E-posta adresi</string>
-    <string name="preference_editor">Düzenleyici</string>
     <string name="dlg_sure_to_delete_comments">Bu yorumlar kalıcı olarak silinsin mi?</string>
     <string name="dlg_sure_to_delete_comment">Bu yorum kalıcı olarak silinsin mi?</string>
     <string name="mnu_comment_delete_permanently">Sil</string>
@@ -1469,7 +1529,6 @@ Language: tr
     <string name="cd_related_post_preview_image">İlgili yazı önizleme görseli</string>
     <string name="error_post_remote_site_settings">Site bilgileri kaydedilemedi</string>
     <string name="error_fetch_remote_site_settings">Site bilgileri alınamadı</string>
-    <string name="site_settings_disconnected_toast">Çıkış yapılmış, düzenleme devre dışı.</string>
     <string name="site_settings_close_after_dialog_switch_text">Otomatik olarak kapat</string>
     <string name="site_settings_close_after_dialog_description">Makalelerdeki yorumları otomatik kapat.</string>
     <string name="site_settings_paging_dialog_description">Yorum zincirlerini birden çok sayfaya böl.</string>
@@ -1609,7 +1668,6 @@ Language: tr
     <string name="stats_enable_rest_api_in_jetpack">İstatistiklerinizi görmek için Jetpack içindeki JSON API modülünü etkinleştirin.</string>
     <string name="reader_short_comment_count_multi">%s Yorum</string>
     <string name="reader_short_comment_count_one">1 yorum</string>
-    <string name="reader_label_submit_comment">GÖNDER</string>
     <string name="reader_hint_comment_on_post">Yazıyı cevapla…</string>
     <string name="reader_discover_visit_blog">Ziyaret et %s</string>
     <string name="reader_discover_attribution_blog">Orijinal olarak %s adresinde yayınlandı</string>
@@ -1994,6 +2052,7 @@ Language: tr
     <string name="pages">Sayfalar</string>
     <string name="no_network_title">Kullanılabilir ağ yok</string>
     <string name="featured_in_post">Görseli yazı içeriğine ekle</string>
+    <string name="ok">Tamam</string>
     <string name="blogusername">blogkullanıcıadı</string>
     <string name="link_enter_url">Adres</string>
     <string name="uploading">Yükleniyor…</string>

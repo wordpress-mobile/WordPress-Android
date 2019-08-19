@@ -445,7 +445,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void onLoginFinished() {
-        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+        mAnalyticsListener.trackAnalyticsSignIn(mIsWpcom);
 
         mLoginListener.startPostLoginServices();
 
@@ -453,7 +453,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     }
 
     private void finishLogin() {
-        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+        mAnalyticsListener.trackAnalyticsSignIn(mIsWpcom);
 
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;

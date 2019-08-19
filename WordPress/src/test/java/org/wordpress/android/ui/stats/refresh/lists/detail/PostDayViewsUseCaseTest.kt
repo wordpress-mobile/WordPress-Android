@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostDetailStore
@@ -37,6 +39,7 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var mapper: PostDayViewsMapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var statsPostProvider: StatsPostProvider
+    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var title: ValueItem
     @Mock lateinit var barChartItem: BarChartItem
@@ -53,11 +56,13 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 statsSiteProvider,
                 statsPostProvider,
-                store
+                store,
+                resourceProvider
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsPostProvider.postId).thenReturn(postId)
         whenever(mapper.buildTitle(any(), isNull(), any())).thenReturn(title)
+        whenever(resourceProvider.getString(R.string.stats_loading_card)).thenReturn("Loading")
     }
 
     @Test

@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
@@ -22,6 +24,11 @@ import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
@@ -137,6 +144,31 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(StatsWidgetConfigureViewModel.class)
+    abstract ViewModel statsViewsWidgetViewModel(StatsWidgetConfigureViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsSiteSelectionViewModel.class)
+    abstract ViewModel statsSiteSelectionViewModel(StatsSiteSelectionViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsDataTypeSelectionViewModel.class)
+    abstract ViewModel statsDataTypeSelectionViewModel(StatsDataTypeSelectionViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsMinifiedWidgetConfigureViewModel.class)
+    abstract ViewModel statsMinifiedWidgetViewModel(StatsMinifiedWidgetConfigureViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsColorSelectionViewModel.class)
+    abstract ViewModel statsColorSelectionViewModel(StatsColorSelectionViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(InsightsManagementViewModel.class)
     abstract ViewModel insightsManagementViewModel(InsightsManagementViewModel viewModel);
 
@@ -209,6 +241,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DomainRegistrationDetailsViewModel.class)
     abstract ViewModel domainRegistrationDetailsViewModel(DomainRegistrationDetailsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DomainRegistrationMainViewModel.class)
+    abstract ViewModel domainRegistrationMainViewModel(DomainRegistrationMainViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditPostPublishSettingsViewModel.class)
+    abstract ViewModel editPostPublishedSettingsViewModel(EditPostPublishSettingsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

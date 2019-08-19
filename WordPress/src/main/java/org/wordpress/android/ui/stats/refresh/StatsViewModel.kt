@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
@@ -15,21 +17,31 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.StatsTimeframe.DAY
+import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
+import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
+import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
+import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -44,7 +56,7 @@ class StatsViewModel
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
-    private val newsCardHandler: NewsCardHandler
+    newsCardHandler: NewsCardHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -60,24 +72,67 @@ class StatsViewModel
 
     val siteChanged = statsSiteProvider.siteChanged
 
-    private val _toolbarHasShadow = MutableLiveData<Boolean>()
-    val toolbarHasShadow: LiveData<Boolean> = _toolbarHasShadow
+    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
 
     val hideToolbar = newsCardHandler.hideToolbar
 
-    fun start(launchedFromWidget: Boolean, initialSection: StatsSection?) {
+    val selectedSection = statsSectionManager.liveSelectedSection
+
+    fun start(intent: Intent, restart: Boolean = false) {
+        val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
+
+        val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
+        val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
+        val initialTimeFrame = getInitialTimeFrame(intent)
+        val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
+        start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
+    }
+
+    private fun getInitialTimeFrame(intent: Intent): StatsSection? {
+        return when (intent.getSerializableExtra(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
+            StatsTimeframe.INSIGHTS -> INSIGHTS
+            DAY -> DAYS
+            WEEK -> WEEKS
+            MONTH -> MONTHS
+            YEAR -> YEARS
+            else -> null
+        }
+    }
+
+    fun start(
+        localSiteId: Int,
+        launchedFromWidget: Boolean,
+        initialSection: StatsSection?,
+        initialSelectedPeriod: String?,
+        restart: Boolean
+    ) {
+        if (restart) {
+            selectedDateProvider.clear()
+        }
         // Check if VM is not already initialized
-        if (!isInitialized) {
+        if (!isInitialized || restart) {
             isInitialized = true
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
 
-            _toolbarHasShadow.value = statsSectionManager.getSelectedSection() == INSIGHTS
+            val initialGranularity = initialSection?.toStatsGranularity()
+            if (initialGranularity != null && initialSelectedPeriod != null) {
+                selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
+            }
 
             analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
 
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
+            }
+        }
+        val siteChanged = statsSiteProvider.start(localSiteId)
+        if (restart && siteChanged) {
+            launch {
+                listUseCases.forEach { useCase ->
+                    useCase.value.onCleared()
+                    useCase.value.refreshData(true)
+                }
             }
         }
     }
@@ -91,15 +146,13 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        refreshData()
-    }
-
-    fun refreshData() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
         if (networkUtilsWrapper.isNetworkAvailable()) {
             loadData {
-                listUseCases[statsSectionManager.getSelectedSection()]?.refreshData(true)
+                val baseListUseCase = listUseCases[statsSectionManager.getSelectedSection()]
+                baseListUseCase?.refreshTypes()
+                baseListUseCase?.refreshData(true)
             }
         } else {
             _isRefreshing.value = false
@@ -107,14 +160,16 @@ class StatsViewModel
         }
     }
 
-    fun getSelectedSection() = statsSectionManager.getSelectedSection()
+    fun onSiteChanged() {
+        loadData {
+            listUseCases.values.forEach { it.onParamChanged(SITE) }
+        }
+    }
 
     fun onSectionSelected(statsSection: StatsSection) {
         statsSectionManager.setSelectedSection(statsSection)
 
         listUseCases[statsSection]?.onListSelected()
-
-        _toolbarHasShadow.value = statsSection == INSIGHTS
 
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
@@ -122,7 +177,7 @@ class StatsViewModel
             WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
             MONTHS -> analyticsTracker.trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
             YEARS -> analyticsTracker.trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
-            DETAIL -> {
+            ANNUAL_STATS, DETAIL -> {
             }
         }
     }

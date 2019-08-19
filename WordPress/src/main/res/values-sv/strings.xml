@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-05 22:03:21+0000
+Translation-Revision-Date: 2019-07-31 22:14:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Behöver du hjälp att hitta e-postadressen du använde för att ansluta dig?</string>
+    <string name="enter_wordpress_site">Webbplatsen på den angivna adressen använder inte WordPress. För att vi ska kunna ansluta till webbplatsen måste WordPress vara installerat.</string>
+    <string name="login_invalid_site_url">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
+    <string name="enter_email_for_site">Logga in med WordPress.com för ansluta till %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Det gick inte att koppla till Facebook eftersom detta konto inte verkar ha åtkomst till någon sida. Facebook stöder delningskopplingar till Facebook-sidor, men inte till Facebook-profiler.</string>
+    <string name="stats_post_views_label">Visningar</string>
+    <string name="stats_post_label">Inlägg</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Diagram över publiceringar.</string>
+    <string name="stats_item_collapsed">Objektet minimerat</string>
+    <string name="stats_item_expanded">Objektet expanderat</string>
+    <string name="stats_collapse_content_description">Minimera</string>
+    <string name="stats_expand_content_description">Expandera</string>
+    <string name="stats_graph_updated">Diagrammet har uppdaterats.</string>
+    <string name="stats_overview_content_description">%1$s %2$s för perioden: %3$s, ändring mot föregående period – %4$s</string>
+    <string name="stats_bar_chart_content_description">Diagram över webbplatsvisningar.</string>
+    <string name="stats_loading_card">Laddar in vald kortinformation</string>
+    <string name="site_settings_editor">Redigerare</string>
+    <string name="dialog_gutenberg_informative_description_page">För närvarande använder du blockredigeraren för att skapa nya sidor. Gå till inställningarna för webbplatsen om du vill använda den klassiska redigeraren som standardval.</string>
+    <string name="dialog_gutenberg_informative_description_post">För närvarande använder du blockredigeraren för att skapa nya inlägg. Gå till inställningarna för webbplatsen om du vill använda den klassiska redigeraren som standardval.</string>
+    <string name="description_expand">Expandera</string>
+    <string name="description_collapse">Minimera</string>
+    <string name="editor_retry_failed_uploads">Försök ladda upp igen</string>
+    <string name="editor_toast_failed_uploads">Uppladdningen av vissa mediafiler misslyckades. Det går inte att spara eller publicera ditt inlägg i detta läge.</string>
+    <string name="my_site_verify_your_email_without_email">Bekräfta din e-postadress – instruktioner har skickats till din adress</string>
+    <string name="my_site_verify_your_email">Bekräfta din e-postadress – instruktioner har skickats till %s</string>
+    <string name="error_media_recover_post_not_submitted">Det gick inte att ladda upp mediafiler. Inlägget har inte skickats.</string>
+    <string name="error_media_recover_post_not_scheduled">Det gick inte att ladda upp mediafiler. Inlägget har inte schemalagts.</string>
+    <string name="error_media_recover_post_not_published">Det gick inte att ladda upp mediafiler. Inlägget har inte publicerats.</string>
+    <string name="error_media_recover_post">Det gick inte att ladda upp mediafiler</string>
+    <string name="link_dialog_button_cancel">Avbryt</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Ta bort länken</string>
+    <string name="link_dialog_title">Infoga länk</string>
+    <string name="post_settings_retry_featured_image">Försök ladda upp en gång till</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Ladda upp mediafiler.\nTryck för fler alternativ.</string>
+    <string name="link_open_new_window">Öppna länken i nytt fönster/ny flik</string>
+    <string name="post_list_search_prompt">Sök publicerade inlägg</string>
+    <string name="stats_widget_error_no_access_token">Logga in till ditt konto hos WordPress.com för att se din statistik.</string>
+    <string name="post_list_search_nothing_found">Inga inlägg passar in på dina sökbegrepp</string>
+    <string name="domains_suggestions_intro_description">Det är här du kommer att hittas på internet.</string>
+    <string name="domains_suggestions_intro_title">Välj ett premium-domännamn</string>
+    <string name="my_site_custom_domain_name">Alla prispaket hos WordPress.com innehåller ett anpassat domännamn. Registrera ditt fria premium-domännamn nu.</string>
+    <string name="stats_widget_minified_name">I korthet</string>
+    <string name="stats_widget_today_insights_name">Idag</string>
+    <string name="stats_widget_all_time_insights_name">Sedan starten</string>
+    <string name="stats_widget_weekly_views_name">Visningar denna vecka</string>
+    <string name="stats_widget_log_in_message">Logga in i WordPress-appen för att lägga till en widget.</string>
+    <string name="stats_widget_error_no_network">Inget nätverk är tillgängligt</string>
+    <string name="stats_widget_error_no_data">Det gick inte att ladda data</string>
+    <string name="stats_widget_select_type">Typ</string>
+    <string name="stats_widget_select_color">Färg</string>
+    <string name="stats_widget_select_your_site">Välj önskad webbplats</string>
+    <string name="stats_widget_color_dark">Mörk</string>
+    <string name="stats_widget_color_light">Ljus</string>
+    <string name="stats_widget_color">Färg</string>
+    <string name="stats_widget_site_caption">Välj önskad webbplats</string>
+    <string name="stats_widget_site">Webbplats</string>
+    <string name="stats_widget_all_time_title">Sedan starten</string>
+    <string name="stats_widget_views_title">Visningar denna vecka</string>
+    <string name="stats_widget_add">Lägg till widget</string>
+    <string name="dialog_confirm_update_yes">Uppdatera nu</string>
+    <string name="dialog_confirm_update_message_page">Denna publicerade sida kommer att uppdateras omedelbart.</string>
+    <string name="dialog_confirm_update_message_post">Detta publicerade inlägg kommer att uppdateras omedelbart.</string>
+    <string name="dialog_confirm_update_title">Är du klar att uppdatera?</string>
+    <string name="plugin_fetching_error_after_at">Det verkar ta längre tid än vanligt att uppdatera uppgifterna om tilläggen. Försök igen senare.</string>
+    <string name="plugin_install_site_ineligible_default_error">Om du alldeles nyss registrerat ett domännamn behöver du vänta tills vi har hunnit konfigurera det innan du försöker igen.\n\nOm så inte är fallet måste något ha blivit fel och i så fall kanske hantering av tillägg inte är tillgängligt för denna webbplats.</string>
+    <string name="domain_contact_information_state_not_available_hint">Delstat (Inte tillgänglig)</string>
+    <string name="domain_registration_privacy_protection_tos">I och med att du registrerar denna domän accepterar du våra %1$savtalsvillkor%2$s</string>
+    <string name="error_network_connection">Kontrollera din nätverksanslutning och försök igen.</string>
+    <string name="error_browser_no_network">Det går inte att ladda denna sida just nu.</string>
+    <string name="error_disabled_apis">Det gick inte att hämta inställningarna: Vissa API:er är inte tillgängliga för denna kombination av OAuth app-ID och användarkonto.</string>
+    <string name="jetpack_connection_terms_and_conditions">I och med att du konfigurerar Jetpack accepterar du våra %1$savtalsvillkor%2$s</string>
+    <string name="site_settings_disconnected_toast">Ingen anslutning. Redigering är inaktiverad.</string>
+    <string name="site_settings_update_password_message">För att återansluta appen till din webbplats som körs på extern server behöver du skriva in webbplatsens nya lösenord här.</string>
+    <string name="site_settings_password_updated">Lösenord uppdaterat</string>
+    <string name="site_settings_password_dialog_title">Uppdatera lösenord</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Ett fel inträffade när uppgifterna om webbplatsen skulle uppdateras: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Ett fel inträffade när kontaktinformationen för domänen skulle hämtas: %s</string>
-    <string name="domain_registration_error_registering_domain">Ett fel inträffade när domänen skulle registreras: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerar domännamn…</string>
     <string name="domain_registration_state_picker_dialog_title">Välj delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Välj land</string>
@@ -80,7 +155,6 @@ Language: sv_SE
     <string name="posts_scheduled_empty">Du har inte några schemalagda inlägg</string>
     <string name="posts_published_empty">Du har inte publicerat några inlägg ännu</string>
     <string name="notification_wpcom_username_needed">Logga in med ditt användarnamn och lösenord.</string>
-    <string name="login_invalid_site_url">Du har angivit en ogiltig webbplatsadress. Försök igen.</string>
     <string name="error_user_username_instead_of_email">Logga in med ditt användarnamn för WordPress.com och inte med din e-postadress.</string>
     <string name="stats_insights_average_words">Ord per inlägg i snitt</string>
     <string name="stats_insights_total_words">Totalt antal ord</string>
@@ -155,8 +229,6 @@ Language: sv_SE
     <string name="stats_loading_error">Uppgifterna kunde inte läsas in</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Redigera nya inlägg och sidor med blockredigeraren</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Använd blockredigerare</string>
-    <string name="dialog_gutenberg_informative_description_page">Denna sida skapades från början i blockredigeraren. Därför är den aktiverad på denna sida.\nVäxla tillbaka till den klassiska redigeraren när som helst genom att trycka på  ⋮  i verktygslisten längst upp.</string>
-    <string name="dialog_gutenberg_informative_description_post">Detta inlägg skapades från början i blockredigeraren. Därför är den aktiverad i detta inlägg.\nVäxla tillbaka till den klassiska redigeraren när som helst genom att trycka på  ⋮  i verktygslisten längst upp.</string>
     <string name="dialog_gutenberg_informative_title">Blockredigerare aktiverad</string>
     <string name="exit">avbryt</string>
     <string name="quick_start_sites_type_subtitle">%1$d av %2$d klart</string>
@@ -244,7 +316,6 @@ Language: sv_SE
     <string name="dialog_confirm_load_remote_post_body_2">Lokal version\nSparades %s\n\nWebbversion\nSparades %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Detta inlägg har två versioner som inte stämmer överens. Välj vilken version du vill kasta.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Lös synkroniseringskonflikt</string>
-    <string name="local_changes_discarding_no_connection">För att utföra denna åtgärd krävs en förbindelse. Kontrollera din internetuppkoppling och försök igen.</string>
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
     <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
@@ -423,7 +494,6 @@ Language: sv_SE
     <string name="install_jetpack">Installera Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Genom att installera Jetpack godkänner du vår </string>
     <string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress-webbplats måste du installera tillägget Jetpack.</string>
     <string name="themes_empty_list">Inga teman matchar din sökning</string>
     <string name="reader_label_post_search_explainer">Vad vill du hitta?</string>
@@ -458,11 +528,6 @@ Language: sv_SE
     <string name="blavatar_desc">webbplats-ikon</string>
     <string name="theme_image_desc">tema-bild</string>
     <string name="featured_image_desc">utvald bild</string>
-    <string name="local_changes_discarding_error">Ett fel inträffade när dina lokala ändringar skulle kastas. Kontakta supporten för vidare hjälp.</string>
-    <string name="local_changes_discarding">Kastar lokala ändringar</string>
-    <string name="local_changes_discarded">De lokala ändringarna har kastats</string>
-    <string name="menu_discard_changes">Kasta lokala ändringar</string>
-    <string name="button_discard_changes">Kasta ändringar</string>
     <string name="button_discard">Kasta</string>
     <string name="reader_avatar_desc">Profilbild</string>
     <string name="reader_blavatar_desc">webblatsikon</string>
@@ -553,7 +618,6 @@ Language: sv_SE
     <string name="plugin_install_site_ineligible_site_private">För funktionen med tillägg krävs att webbplatsen är publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">För funktionen med tillägg krävs ett business-konto.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">För funktionen med tillägg krävs ett anpassat domännamn.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funktionen med tillägg är inte tillgänglig för denna webbplats.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Vi genomför de sista förberedelserna – nästan klart…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installerar tillägget…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>
@@ -876,7 +940,6 @@ Language: sv_SE
     <string name="login_text_otp_another">Skicka ett nytt SMS med en kod till mig istället.</string>
     <string name="enter_verification_code_sms">Vi har skickat ett SMS till telefonnumret som slutar på %s. Skriv in bekräftelsekoden from SMS;et.</string>
     <string name="error_generic_error">Åtgärden kunde inte utföras</string>
-    <string name="error_media_recover_post">Det gick inte att ladda upp inläggets media</string>
     <string name="image_size">Storlek</string>
     <string name="uploading_subtitle_media_only_one">1 fil återstår</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer återstår</string>
@@ -995,7 +1058,6 @@ Language: sv_SE
     <string name="login_email_client_not_found">Lyckas inte hitta ditt e-postprogram</string>
     <string name="login_empty_2fa">Skriv in en verifieringskod</string>
     <string name="login_empty_username">Skriv in ett användarnamn</string>
-    <string name="login_empty_site_url">Skriv in en webbplatadress</string>
     <string name="login_log_in_for_deeplink">Logga in till ditt konto på WordPress.com för att nå inlägget.</string>
     <string name="login_error_while_adding_site">Ett fel inträffade när webbplatsen skulle läggas till. Felkod: %s</string>
     <string name="login_checking_site_address">Webbplatsadressen kontrolleras</string>
@@ -1175,7 +1237,7 @@ Language: sv_SE
     <string name="editor_post_saved_locally_failed_media">Inlägget innehåller media som inte kunde laddas upp och har sparats lokalt på enheten</string>
     <string name="sure_to_remove_account">Ta bort denna webbplats från appen?</string>
     <string name="photo_picker_title">Välj foto</string>
-    <string name="error_publish_no_network">Enheten är off-line. Ändringarna har sparats lokalt.</string>
+    <string name="error_publish_no_network">Enheten är offline. Inlägg sparad lokalt.</string>
     <string name="editor_post_saved_online">Inlägget har sparats on-line</string>
     <string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
@@ -1374,7 +1436,6 @@ Language: sv_SE
     <string name="start_over">Börja om</string>
     <string name="me_btn_app_settings">Appinställningar</string>
     <string name="editor_remove_failed_uploads">Ta bort misslyckade uppladdningar</string>
-    <string name="editor_toast_failed_uploads">En del mediauppladdningar har misslyckats. Du kan inte spara eller publicera\n ditt inlägg i dess nuvarande form. Vill du ta bort all media som inte gick att ladda upp?</string>
     <string name="site_settings_advanced_header">Avancerat</string>
     <string name="comments_empty_list_filtered_trashed">Inga kastade kommentarer</string>
     <string name="comments_empty_list_filtered_pending">Inga väntande kommentarer</string>
@@ -1431,7 +1492,6 @@ Language: sv_SE
     <string name="editor_page_title_placeholder">Sidans rubrik</string>
     <string name="editor_post_title_placeholder">Inläggets rubrik</string>
     <string name="email_address">E-postadress</string>
-    <string name="preference_editor">Redigerare</string>
     <string name="dlg_sure_to_delete_comments">Radera dessa kommentarer premanent?</string>
     <string name="dlg_sure_to_delete_comment">Radera denna kommentar premanent?</string>
     <string name="mnu_comment_delete_permanently">Ta bort</string>
@@ -1469,7 +1529,6 @@ Language: sv_SE
     <string name="cd_related_post_preview_image">Relaterat inlägg förhandsgranskningsbild</string>
     <string name="error_post_remote_site_settings">Kunde inte spara webbplatsinfo</string>
     <string name="error_fetch_remote_site_settings">Kunde inte hämta webbplatsinfo</string>
-    <string name="site_settings_disconnected_toast">Utloggad, redigering inaktiverad.</string>
     <string name="site_settings_close_after_dialog_switch_text">Stäng automatiskt</string>
     <string name="site_settings_close_after_dialog_description">Stäng kommentarer om inlägg automatiskt.</string>
     <string name="site_settings_paging_dialog_description">Dela upp kommentarstrådar i flera sidor.</string>
@@ -1609,7 +1668,6 @@ Language: sv_SE
     <string name="stats_enable_rest_api_in_jetpack">Aktivera JSON API-modulen i Jetpack för att visa din statistik.</string>
     <string name="reader_short_comment_count_multi">%s kommentarer</string>
     <string name="reader_short_comment_count_one">1 kommentar</string>
-    <string name="reader_label_submit_comment">SKICKA</string>
     <string name="reader_hint_comment_on_post">Svara inlägget…</string>
     <string name="reader_discover_visit_blog">Besök %s</string>
     <string name="reader_discover_attribution_blog">Först publicerat på %s</string>
@@ -1994,6 +2052,7 @@ Language: sv_SE
     <string name="pages">Sidor</string>
     <string name="no_network_title">Inget nätverk tillgängligt</string>
     <string name="featured_in_post">Inkludera bild i inlägget</string>
+    <string name="ok">OK</string>
     <string name="blogusername">användarnamn</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Laddar upp…</string>

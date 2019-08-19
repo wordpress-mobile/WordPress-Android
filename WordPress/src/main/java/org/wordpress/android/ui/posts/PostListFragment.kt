@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
@@ -24,7 +26,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -46,6 +47,7 @@ class PostListFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: PostListViewModel
+    private lateinit var mainViewModel: PostListMainViewModel
 
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
 
@@ -57,24 +59,14 @@ class PostListFragment : Fragment() {
     private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
     private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
 
-    private lateinit var nonNullActivity: FragmentActivity
-    private lateinit var site: SiteModel
+    private lateinit var postListType: PostListType
 
-    private val postViewHolderConfig: PostViewHolderConfig by lazy {
-        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
-        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
-        PostViewHolderConfig(
-                photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
-                isPhotonCapable = SiteUtils.isPhotonCapable(site),
-                imageManager = imageManager
-        )
-    }
+    private lateinit var nonNullActivity: FragmentActivity
 
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
                 context = nonNullActivity,
-                postViewHolderConfig = postViewHolderConfig,
+                imageManager = imageManager,
                 uiHelpers = uiHelpers
         )
     }
@@ -84,28 +76,20 @@ class PostListFragment : Fragment() {
         nonNullActivity = checkNotNull(activity)
         (nonNullActivity.application as WordPress).component().inject(this)
 
-        val site: SiteModel? = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
+        val nonNullIntent = checkNotNull(nonNullActivity.intent)
+        val site: SiteModel? = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
 
         if (site == null) {
             ToastUtils.showToast(nonNullActivity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             nonNullActivity.finish()
-        } else {
-            this.site = site
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
 
-        val authorFilter: AuthorFilterSelection = requireNotNull(arguments)
-                .getSerializable(EXTRA_POST_LIST_AUTHOR_FILTER) as AuthorFilterSelection
-        val postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
-        val mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
         mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
@@ -121,22 +105,60 @@ class PostListFragment : Fragment() {
                     }
                 }
 
-                recyclerView?.scrollToPosition(0)
-                postListAdapter.updateItemLayoutType(layoutType)
+                if (postListAdapter.updateItemLayoutType(layoutType)) {
+                    recyclerView?.scrollToPosition(0)
+                }
             }
         })
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PostListViewModel>(PostListViewModel::class.java)
-        viewModel.start(mainViewModel.getPostListViewModelConnector(authorFilter, postListType))
-        viewModel.pagedListData.observe(this, Observer {
-            it?.let { pagedListData -> updatePagedListData(pagedListData) }
+
+        mainViewModel.authorSelectionUpdated.observe(this, Observer {
+            if (it != null) {
+                if (viewModel.updateAuthorFilterIfNotSearch(it)) {
+                    recyclerView?.scrollToPosition(0)
+                }
+            }
         })
+
+        actionableEmptyView?.updateLayoutForSearch(postListType == SEARCH, 0)
+
+        val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(postListType)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListViewModel::class.java)
+
+        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
+
+        // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
+        viewModel.start(postListViewModelConnector,
+                mainViewModel.authorSelectionUpdated.value!!,
+                photonWidth = displayWidth - contentSpacing * 2,
+                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height))
+
+        initObservers()
+    }
+
+    private fun initObservers() {
+        if (postListType == SEARCH) {
+            mainViewModel.searchQuery.observe(this, Observer {
+                if (TextUtils.isEmpty(it)) {
+                    postListAdapter.submitList(null)
+                }
+                viewModel.search(it)
+            })
+        }
+
         viewModel.emptyViewState.observe(this, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
+
         viewModel.isFetchingFirstPage.observe(this, Observer {
             swipeRefreshLayout?.isRefreshing = it == true
         })
+
+        viewModel.pagedListData.observe(this, Observer {
+            it?.let { pagedListData -> updatePagedListData(pagedListData) }
+        })
+
         viewModel.isLoadingMore.observe(this, Observer {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
@@ -145,11 +167,6 @@ class PostListFragment : Fragment() {
                 recyclerView?.scrollToPosition(index)
             }
         })
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, site)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -240,13 +257,11 @@ class PostListFragment : Fragment() {
         @JvmStatic
         fun newInstance(
             site: SiteModel,
-            authorFilter: AuthorFilterSelection,
             postListType: PostListType
         ): PostListFragment {
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
-            bundle.putSerializable(EXTRA_POST_LIST_AUTHOR_FILTER, authorFilter)
             bundle.putSerializable(EXTRA_POST_LIST_TYPE, postListType)
             fragment.arguments = bundle
             return fragment

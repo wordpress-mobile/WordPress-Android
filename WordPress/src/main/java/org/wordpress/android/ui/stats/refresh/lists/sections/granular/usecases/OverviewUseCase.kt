@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -22,10 +22,11 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val ITEMS_TO_LOAD = 15
+const val OVERVIEW_ITEMS_TO_LOAD = 15
 
 class OverviewUseCase
 constructor(
@@ -36,8 +37,9 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val analyticsTracker: AnalyticsTrackerWrapper
-) : StatefulUseCase<VisitsAndViewsModel, UiState>(
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val resourceProvider: ResourceProvider
+) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         OVERVIEW,
         mainDispatcher,
         UiState()
@@ -47,9 +49,15 @@ constructor(
             onUiState()
         }
     }
+
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
-                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
+                    ValueItem(
+                            value = 0.toFormattedString(),
+                            unit = R.string.stats_views,
+                            isFirst = true,
+                            contentDescription = resourceProvider.getString(R.string.stats_loading_card)
+                    )
             )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
@@ -65,7 +73,7 @@ constructor(
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.Top(ITEMS_TO_LOAD),
+                LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
                 selectedDateProvider.getCurrentDate(),
                 forced
         )
@@ -88,35 +96,34 @@ constructor(
         }
     }
 
-    override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            val periodFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
             val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
-            val availablePeriods = domainModel.dates.takeLast(visibleBarCount)
-            val availableDates = availablePeriods.map {
+            val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
                         it.period
                 )
             }
-            val selectedDate = periodFromProvider ?: availableDates.last()
+            val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
             selectedDateProvider.selectDate(
-                    index,
-                    availableDates,
+                    selectedDate,
+                    availableDates.takeLast(visibleBarCount),
                     statsGranularity
             )
-            val shiftedIndex = index + domainModel.dates.size - visibleBarCount
-            val selectedItem = domainModel.dates.getOrNull(shiftedIndex) ?: domainModel.dates.last()
+            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
             val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
             items.add(
                     overviewMapper.buildTitle(
                             selectedItem,
                             previousItem,
                             uiState.selectedPosition,
-                            isLast = selectedItem == domainModel.dates.last()
+                            isLast = selectedItem == domainModel.dates.last(),
+                            statsGranularity = statsGranularity
                     )
             )
             items.addAll(
@@ -126,7 +133,7 @@ constructor(
                             this::onBarSelected,
                             this::onBarChartDrawn,
                             uiState.selectedPosition,
-                            shiftedIndex
+                            selectedItem.period
                     )
             )
             items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
@@ -167,7 +174,8 @@ constructor(
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
         private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 OverviewUseCase(
@@ -178,7 +186,8 @@ constructor(
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,
-                        analyticsTracker
+                        analyticsTracker,
+                        resourceProvider
                 )
     }
 }

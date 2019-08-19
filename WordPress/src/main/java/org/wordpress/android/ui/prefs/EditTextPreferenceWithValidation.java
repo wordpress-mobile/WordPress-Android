@@ -49,7 +49,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
             });
 
             positiveButton.setTextColor(ContextCompat.getColorStateList(getContext(),
-                    R.color.primary_400_neutral_400_selector));
+                    R.color.primary_40_neutral_40_selector));
 
             getEditText().addTextChangedListener(new TextWatcher() {
                 @Override

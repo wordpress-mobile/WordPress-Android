@@ -19,6 +19,7 @@ import androidx.annotation.DrawableRes
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
@@ -79,6 +80,30 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
+     * Loads an image from the "imgUrl" into the AppWidgetTarget. Adds a placeholder and an error placeholder depending
+     * on the ImageType.
+     *
+     * If no URL is provided, it only loads the placeholder
+     */
+    @JvmOverloads
+    fun load(
+        awt: AppWidgetTarget,
+        context: Context,
+        imageType: ImageType,
+        imgUrl: String = "",
+        scaleType: ScaleType = CENTER
+    ) {
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .asBitmap()
+                .load(imgUrl)
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .applyScaleType(scaleType)
+                .into(awt)
+    }
+
+    /**
      * Loads an image from the "imgUrl" into the ImageView and applies circle transformation. Adds placeholder and
      * error placeholder depending on the ImageType.
      */
@@ -115,6 +140,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         imageView: ImageView,
         imageType: ImageType,
         imgUrl: String,
+        scaleType: ScaleType = CENTER,
         thumbnailUrl: String? = null,
         requestListener: RequestListener<Drawable>
     ) {
@@ -125,6 +151,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .addThumbnail(context, thumbnailUrl, requestListener)
+                .applyScaleType(scaleType)
                 .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()

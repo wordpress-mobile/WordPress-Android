@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
@@ -50,6 +53,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: CountryViewsUseCase
     private val country = Country("CZ", "Czech Republic", 500, "flag.jpg", "flatFlag.jpg")
     @Before
@@ -61,16 +65,22 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
-                        0,
+                        selectedDate,
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn("title, views")
     }
 
     @Test
@@ -96,13 +106,16 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(4)
+            assertThat(this).hasSize(5)
             assertTitle(this[0])
             val mapItem = (this[1] as MapItem)
             assertThat(mapItem.mapData).isEqualTo("['CZ',500],")
             assertThat(mapItem.label).isEqualTo(R.string.stats_country_views_label)
-            assertLabel(this[2])
-            assertItem(this[3], country.fullName, country.views, country.flagIconUrl)
+            val mapLegendItem = (this[2] as MapLegend)
+            assertThat(mapLegendItem.startLegend).isEqualTo("0")
+            assertThat(mapLegendItem.endLegend).isEqualTo("500")
+            assertLabel(this[3])
+            assertItem(this[4], country.fullName, country.views, country.flagIconUrl)
         }
     }
 
@@ -129,8 +142,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(5)
-            assertLink(this[4])
+            assertThat(this).hasSize(6)
+            assertLink(this[5])
         }
     }
 

@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
@@ -67,6 +68,7 @@ class BlockDiffCallback(
                 DIVIDER,
                 LOADING_ITEM,
                 MAP,
+                MAP_LEGEND,
                 CHART_LEGEND,
                 REFERRED_ITEM,
                 QUICK_SCAN_ITEM,
@@ -99,7 +101,8 @@ class BlockDiffCallback(
                 TAB_CHANGED
             newItem is Columns && oldItem is Columns && oldItem.selectedColumn != newItem.selectedColumn ->
                 return SELECTED_COLUMN_CHANGED
-            newItem is Columns && oldItem is Columns && oldItem.values != newItem.values -> return COLUMNS_VALUE_CHANGED
+            newItem is Columns && oldItem is Columns && oldItem.columns != newItem.columns ->
+                return COLUMNS_VALUE_CHANGED
             newItem is BarChartItem && oldItem is BarChartItem && oldItem.selectedItem != newItem.selectedItem ->
                 return SELECTED_BAR_CHANGED
             else -> null

@@ -127,7 +127,6 @@ Language: bg
     <string name="login_empty_2fa">Моля въведете потвърждаващия код</string>
     <string name="login_email_client_not_found">Не можахме да засечем вашия имейл клиент</string>
     <string name="login_empty_username">Въведете име</string>
-    <string name="login_empty_site_url">Въведете адрес на сайта </string>
     <string name="login_checking_site_address">Проверяване на адреса на сайта</string>
     <string name="login_site_address_more_help">Имате нужда от помощ?</string>
     <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
@@ -248,7 +247,6 @@ Language: bg
     <string name="site_picker_remove_site_error">Грешка при премахването на сайта, опитайте отново.</string>
     <string name="editor_post_saved_locally_failed_media">Тази публикация има незавършени качвания на изображения и беше запазена в локален режим</string>
     <string name="sure_to_remove_account">Премахване на сайта от приложението?</string>
-    <string name="error_publish_no_network">Устройството е офлайн. Промените бяха запазени в локален режим.</string>
     <string name="photo_picker_title">Избор на изображение</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
     <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
@@ -431,7 +429,6 @@ Language: bg
     <string name="start_over">Започване отначало</string>
     <string name="me_btn_app_settings">Настройки на приложението</string>
     <string name="editor_remove_failed_uploads">Премахване на неуспешно качените файлове</string>
-    <string name="editor_toast_failed_uploads">Някои файлове не се качиха. Не можете да\n        запазите или публикувате в това състояние. Желаете ли да премахнете всички неуспешно качени файлове?</string>
     <string name="site_settings_advanced_header">Разширени</string>
     <string name="xmlrpc_missing_method_error">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
     <string name="post_format_status">Състояние</string>
@@ -484,7 +481,6 @@ Language: bg
     <string name="editor_page_title_placeholder">Заглавие на страницата</string>
     <string name="editor_post_title_placeholder">Заглавие на публикация</string>
     <string name="email_address">Имейл адрес</string>
-    <string name="preference_editor">Редактор</string>
     <string name="dlg_sure_to_delete_comments">Изтриване на коментарите завинаги?</string>
     <string name="dlg_sure_to_delete_comment">Изтриване на коментара завинаги?</string>
     <string name="mnu_comment_delete_permanently">Изтриване</string>
@@ -520,7 +516,6 @@ Language: bg
     <string name="cd_related_post_preview_image">Изображение на свързаната публикация</string>
     <string name="error_post_remote_site_settings">Грешка при запазване на информацията за сайта</string>
     <string name="error_fetch_remote_site_settings">Грешка при зареждане на информацията за сайта</string>
-    <string name="site_settings_disconnected_toast">Излезли сте, редактирането е изключено.</string>
     <string name="site_settings_close_after_dialog_switch_text">Автоматично затваряне</string>
     <string name="site_settings_close_after_dialog_description">Автоматично затваряне на коментарите на публикациите.</string>
     <string name="site_settings_paging_dialog_description">Разделяне на коментарите на няколко страници.</string>
@@ -653,7 +648,6 @@ Language: bg
     <string name="stats_enable_rest_api_in_jetpack">За да видите статистиката, то активирайте модула JSON API в Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s коментара</string>
     <string name="reader_short_comment_count_one">1 коментар</string>
-    <string name="reader_label_submit_comment">ИЗПРАЩАНЕ</string>
     <string name="reader_hint_comment_on_post">Отговор на публикацията…</string>
     <string name="reader_discover_visit_blog">Посещаване на %s</string>
     <string name="reader_discover_attribution_blog">Оригинална публикация на %s</string>
@@ -1017,6 +1011,7 @@ Language: bg
     <string name="anonymous">Анонимен</string>
     <string name="featured_in_post">Използване на снимката в съдържанието на публикацията</string>
     <string name="blogusername">потребителско име</string>
+    <string name="ok">ОК</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Качва се…</string>
     <string name="version">Версия</string>

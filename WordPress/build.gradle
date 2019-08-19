@@ -24,11 +24,16 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
+apply plugin: 'kotlin-allopen'
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'org.wordpress.android.testing.OpenClassAnnotation'
+}
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
-    useLibrary 'org.apache.http.legacy'
     useLibrary 'android.test.runner'
 
     useLibrary 'android.test.base'
@@ -44,31 +49,24 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-175"
-        versionCode 741
+        versionName "alpha-186"
+        versionCode 769
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 28
 
         multiDexEnabled true
-
-        ndk {
-            abiFilters 'armeabi-v7a', 'x86'
-        }
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
-        buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
-    // Java API 1.8 so we need this when building from source
-    if (rootProject.ext.buildGutenbergFromSource) {
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
+    // Java API 1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     flavorDimensions "buildType"
@@ -76,6 +74,8 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
+            versionName "13.1-rc-1"
+            versionCode 768
         }
 
         zalpha { // alpha version - enable experimental features
@@ -87,7 +87,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "DOMAIN_REGISTRATION_ENABLED", "true"
         }
     }
 
@@ -184,7 +183,7 @@ dependencies {
     implementation 'org.wordpress:emailchecker2:1.1.0'
     implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'org.apache.commons:commons-text:1.1'
-    implementation 'com.airbnb.android:lottie:2.0.0-rc2'
+    implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     implementation ('com.yalantis:ucrop:2.2.0') {

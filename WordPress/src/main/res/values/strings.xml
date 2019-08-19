@@ -110,6 +110,7 @@
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
+    <string name="ok">OK</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -223,6 +224,7 @@
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
     <string name="create_a_link">Create a link</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
 
     <!-- page view -->
     <string name="title">Title</string>
@@ -271,7 +273,6 @@
     <string name="button_delete" translatable="false">@string/delete</string>
     <string name="button_more" translatable="false">@string/more</string>
     <string name="button_discard">Discard</string>
-    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
 
@@ -350,10 +351,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.
-        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.
-        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -531,6 +530,7 @@
     <string name="site_settings_general_header">General</string>
     <string name="site_settings_account_header">Account</string>
     <string name="site_settings_writing_header">Writing</string>
+    <string name="site_settings_editor">Editor</string>
     <string name="site_settings_discussion_header" translatable="false">@string/discussion</string>
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
@@ -786,19 +786,10 @@
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
-    <string name="preference_editor">Editor</string>
     <string name="preference_strip_image_location">Remove location from media</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
-    <string name="stats_for">Stats for %s</string>
-    <string name="stats_other_recent_stats_label">Other Recent Stats</string>
-    <string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
-    <string name="stats_view_all">View all</string>
-    <string name="stats_view">View</string>
-    <string name="stats_pagination_label">Page %1$s of %2$s</string>
-    <string name="stats_no_activity_this_period">No activity this period</string>
-    <string name="stats_default_number_zero" translatable="false">0</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="stats_jetpack_connection_setup">Install Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -840,12 +831,41 @@
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
 
+    <!-- Stats accessibility strings -->
+    <string name="stats_loading_card">Loading selected card data</string>
+    <string name="stats_bar_chart_content_description">Graph of site views.</string>
+    <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_graph_updated">Graph updated.</string>
+    <string name="stats_expand_content_description">Expand</string>
+    <string name="stats_collapse_content_description">Collapse</string>
+    <string name="stats_item_expanded">Item expanded</string>
+    <string name="stats_item_collapsed">Item collapsed</string>
+    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_edit">Edit</string>
     <string name="stats_management_new">New</string>
+
+    <!-- Stats refreshed widgets -->
+
+    <string name="stats_widget_add">Add widget</string>
+    <string name="stats_widget_views_title">Views This Week</string>
+    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_color">Color</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color_dark">Dark</string>
+    <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_select_color">Color</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_error_no_network">No network available</string>
+    <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
@@ -881,28 +901,6 @@
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
-    <!-- stats: errors -->
-    <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
-    <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
-    <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
-
-    <!-- stats: Widget labels -->
-    <string name="stats_widget_name">WordPress Today\'s Stats</string>
-    <string name="stats_widget_name_for_blog">Today\'s Stats for %1$s</string>
-    <string name="stats_widget_loading_data">Loading data…</string>
-    <string name="stats_widget_error_generic">Stats couldn\'t be loaded</string>
-    <string name="stats_widget_error_no_account">Please login into WordPress</string>
-    <string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
-    <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
-    <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
-    <string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
-
-    <!-- stats: Widget Promote Dialog -->
-    <string name="stats_widget_promo_title">Home Screen Stats Widget</string>
-    <string name="stats_widget_promo_desc">Add the widget to your home screen to access your Stats in one click.</string>
-    <string name="stats_widget_promo_ok_btn_label">OK, got it</string>
-
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
@@ -912,13 +910,11 @@
     <string name="stats_timeframe_years">Years</string>
 
     <string name="stats_views">Views</string>
-    <string name="stats_views_with_date_param">Views: %s</string>
     <string name="stats_visitors">Visitors</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_comments" translatable="false">@string/comments</string>
 
     <!-- stats: labels for the views -->
-    <string name="stats_view_visitors_and_views">Visitors and Views</string>
     <string name="stats_view_countries">Countries</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_clicks">Clicks</string>
@@ -932,70 +928,7 @@
     <string name="stats_view_followers">Followers</string>
     <string name="stats_view_follower_totals">Followers Totals</string>
 
-    <!-- stats: label for the entries -->
-    <string name="stats_entry_country">Country</string>
-    <string name="stats_entry_posts_and_pages">Title</string>
-    <string name="stats_entry_clicks_link">Link</string>
-    <string name="stats_entry_tags_and_categories">Topic</string>
-    <string name="stats_entry_authors">Author</string>
-    <string name="stats_entry_referrers">Referrer</string>
-    <string name="stats_entry_video_plays">Video</string>
-    <string name="stats_entry_top_commenter">Author</string>
-    <string name="stats_entry_publicize">Service</string>
-    <string name="stats_entry_followers">Follower</string>
-    <string name="stats_entry_search_terms">Search Term</string>
-
-    <!-- stats: label for the totals -->
-    <string name="stats_totals_views">Views</string>
-    <string name="stats_totals_clicks">Clicks</string>
-    <string name="stats_totals_plays">Plays</string>
-    <string name="stats_totals_comments" translatable="false">@string/comments</string>
-    <string name="stats_totals_publicize">Followers</string>
-    <string name="stats_totals_followers">Since</string>
-
-    <!-- stats: empty list strings -->
-    <string name="stats_empty_geoviews">No countries recorded</string>
-    <string name="stats_empty_geoviews_desc">Explore the list to see which countries and regions generate the most traffic to your site.</string>
-    <string name="stats_empty_top_posts_title">No posts or pages viewed</string>
-    <string name="stats_empty_top_posts_desc">Discover what your most-viewed content is, and check how individual posts and pages perform over time.</string>
-    <string name="stats_empty_referrers_title">No referrers recorded</string>
-    <string name="stats_empty_referrers_desc">Learn more about your site’s visibility by looking at the websites and search engines that send the most traffic your way</string>
-    <string name="stats_empty_clicks_title">No clicks recorded</string>
-    <string name="stats_empty_clicks_desc">When your content includes links to other sites, you’ll see which ones your visitors click on the most.</string>
-    <string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
-    <string name="stats_empty_tags_and_categories">No tagged posts or pages viewed</string>
-    <string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
-    <string name="stats_empty_video">No videos played</string>
-    <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
-    <string name="stats_empty_comments">No comments yet</string>
-    <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
-    <string name="stats_bar_graph_empty">No stats available</string>
-    <string name="stats_empty_publicize">No publicize followers recorded</string>
-    <string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
-    <string name="stats_empty_followers">No followers</string>
-    <string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
-    <string name="stats_empty_search_terms">No search terms recorded</string>
-    <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
-
-    <!-- stats: comments -->
-    <string name="stats_comments_by_authors">By Authors</string>
-    <string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
-    <string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
-
-    <!-- stats: referrers -->
-    <string name="stats_referrers_spam">Spam</string>
-    <string name="stats_referrers_unspam">Not spam</string>
-    <string name="stats_referrers_marking_spam">Marking as spam</string>
-    <string name="stats_referrers_marking_not_spam">Marking as not spam</string>
-    <string name="stats_referrers_spam_generic_error">Something went wrong during the operation. The spam state wasn\'t changed.</string>
-
     <!-- stats: followers -->
-    <string name="stats_followers_wpcom_selector">WordPress.com</string>
-    <string name="stats_followers_email_selector">Email</string>
-    <string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
-    <string name="stats_followers_total_email">Total Email Followers: %1$s</string>
-    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
-    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -1011,24 +944,11 @@
     <!-- stats: search terms -->
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
-    <!-- stats: Authors -->
-    <string name="stats_unknown_author">Unknown Author</string>
-
-    <!-- Stats: Single post details view -->
-    <string name="stats_period">Period</string>
-    <string name="stats_total">Total</string>
-    <string name="stats_overall">Overall</string>
-    <string name="stats_months_and_years">Months and Years</string>
-    <string name="stats_average_per_day">Average per Day</string>
-    <string name="stats_recent_weeks">Recent Weeks</string>
-
     <!-- Stats insights -->
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
-    <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
-    <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
@@ -1042,9 +962,6 @@
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
-    <string name="stats_insights_most_popular_day">Most popular day</string>
-    <string name="stats_insights_most_popular_hour">Most popular hour</string>
-    <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
     <string name="stats_insights_today_stats">Today</string>
 
@@ -1070,6 +987,13 @@
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+
+    <!-- Stats refreshed widgets -->
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_minified_name">At a glance</string>
 
     <!-- Stats post detail -->
     <string name="stats_detail_months_and_years">Months and Years</string>
@@ -1097,6 +1021,8 @@
     <string name="stats_authors">Authors</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_author_views_label">Views</string>
+    <string name="stats_post_label">Post</string>
+    <string name="stats_post_views_label">Views</string>
     <string name="stats_file_downloads">File downloads</string>
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
@@ -1287,11 +1213,22 @@
     <string name="post_settings_post_format">Post Format</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
     <string name="post_settings_choose_featured_image">Choose featured image</string>
     <string name="post_settings_remove_featured_image">Remove featured image</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
+    <string name="post_settings_time_and_date">Time and Date</string>
+    <string name="post_settings_notification">Notification</string>
+    <string name="post_settings_add_to_calendar">Add to calendar</string>
+
+    <string name="post_notification_off">Off</string>
+    <string name="post_notification_one_hour_before">1 hour before</string>
+    <string name="post_notification_ten_minutes_before">10 minutes before</string>
+    <string name="post_notification_when_published">When published</string>
+    <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
 
     <!-- post date selection -->
     <string name="publish_date">Publish</string>
@@ -1303,6 +1240,15 @@
     <string name="schedule_for">Schedule for: %s</string>
     <string name="publish_on">Publish on: %s</string>
 
+    <!-- post schedule notifications -->
+    <string name="notification_scheduled_post">Scheduled post</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Scheduled post: 1 hour reminder</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
+    <string name="notification_post_has_been_published">\"%s\" has been published</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
+    <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
 
     <!-- location -->
     <string name="post_settings_location">Location</string>
@@ -1341,17 +1287,22 @@
     <string name="menu_visual_mode">Visual Mode</string>
     <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_discard_changes">Discard Local Changes</string>
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
     <string name="menu_debug">Debug Menu</string>
-    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
-    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
+    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
 
     <string name="post_title">Title</string>
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+
+    <string name="link_dialog_title">Insert link</string>
+    <string name="link_dialog_button_remove_link">Remove Link</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_button_cancel">Cancel</string>
 
     <!-- History -->
     <string name="description_user">User avatar</string>
@@ -1450,10 +1401,6 @@
 
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
-    <string name="local_changes_discarded">Local changes discarded</string>
-    <string name="local_changes_discarding">Discarding local changes</string>
-    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
-    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
@@ -1477,7 +1424,6 @@
     <string name="error_refresh_pages" tools:ignore="UnusedResources">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
-    <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
@@ -1511,7 +1457,10 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1619,7 +1568,6 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d followers</string>
-    <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
@@ -1767,6 +1715,9 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
     <string name="my_site_icon_dialog_add_message">Would you like to add a site icon?</string>
     <string name="my_site_icon_dialog_change_message">How would you like to edit the icon?</string>
@@ -1804,6 +1755,7 @@
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
+    <string name="notification_settings_moved_notices">Looking for notification settings? They’re in the Notifications tab — tap the cog.</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
@@ -1876,6 +1828,7 @@
     <string name="connecting_account">Connecting account</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -1991,6 +1944,8 @@
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
@@ -2025,7 +1980,7 @@
 
 
     <!-- Automated Transfer Eligibility Errors -->
-    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
     <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
@@ -2069,6 +2024,8 @@
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_external_link_icon_content_description">External link</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
+
+    <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
@@ -2178,8 +2135,9 @@
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
-        your post in this state. Would you like to remove all failed media?</string>
+        your post in this state.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="editor_retry_failed_uploads">Retry uploading</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
@@ -2242,6 +2200,7 @@
     <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
@@ -2263,7 +2222,7 @@
     <string name="login_continue">Continue</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
-    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
@@ -2274,8 +2233,7 @@
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
-    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
-    <string name="login_empty_site_url">Please enter a site address</string>
+    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
@@ -2292,6 +2250,8 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
+    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
+    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
@@ -2397,42 +2357,23 @@
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
-    <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
-    <string name="open_external_link_desc">open external link</string>
+    <string name="open_external_link_desc">Open external link</string>
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
-    <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
-    <string name="stats_bar_desc">Showing %s</string>
-    <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
-    <string name="stats_bar_date_value_desc">%s, %d views</string>
-    <string name="stats_bar_week_desc">Week of %s</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">create</string>
-    <string name="stats_legend">stats graph legend</string>
-    <string name="stats_tab_tap_content_description">showing %s</string>
-    <string name="stats_follower_since_desc">since %s ago</string>
-    <string name="stats_views_zero_desc">zero views</string>
-    <string name="stats_views_one_desc">one view</string>
-    <string name="stats_views_many_desc">%d views</string>
-    <string name="stats_clicks_zero_desc">zero clicks</string>
-    <string name="stats_clicks_one_desc">one click</string>
-    <string name="stats_clicks_many_desc">%d clicks</string>
-    <string name="stats_plays_zero_desc">zero plays</string>
-    <string name="stats_plays_one_desc">one play</string>
-    <string name="stats_plays_many_desc">%d plays</string>
-    <string name="stats_comments_zero_desc">zero comments</string>
-    <string name="stats_comments_one_desc">one comment</string>
-    <string name="stats_comments_many_desc">%d comments</string>
-    <string name="stats_followers_zero_desc">zero followers</string>
-    <string name="stats_followers_one_desc">one follower</string>
-    <string name="stats_followers_many_desc">%d followers</string>
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
+    <string name="navigate_forward_desc">Go forward</string>
+    <string name="navigate_back_desc">Go back</string>
+    <string name="share_desc">Share</string>
+    <string name="preview_type_desc">Select preview type</string>
+    <string name="close_dialog_button_desc">Close Dialog</string>
 
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
@@ -2549,7 +2490,13 @@
     <string name="post_list_drafts">Drafts</string>
     <string name="post_list_scheduled">Scheduled</string>
     <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="post_list_search_nothing_found">No posts matching your search</string>
 
+
+    <!-- Web Preview -->
+    <string name="web_preview_default">Default</string>
+    <string name="web_preview_desktop">Desktop</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
@@ -2628,4 +2575,8 @@
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_48" tools:ignore="UnusedResources">Move block up</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_55" tools:ignore="UnusedResources">Move block down</string>
     <string name="gutenberg_mobile_src_block_management_inline_toolbar_index_js_66" tools:ignore="UnusedResources">Remove content</string>
+
+    <string name="description_collapse">Collapse</string>
+    <string name="description_expand">Expand</string>
+
 </resources>

@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
@@ -38,8 +39,9 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -53,6 +55,7 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 private const val SCROLL_TO_DELAY = 50L
+private const val SEARCH_COLLAPSE_DELAY = 500L
 private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS)
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 private const val TRACKS_SELECTED_TAB = "selected_tab"
@@ -69,7 +72,7 @@ class PostListMainViewModel @Inject constructor(
     private val postListEventListenerFactory: PostListEventListener.Factory,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val localDraftUploadStarter: LocalDraftUploadStarter
+    private val uploadStarter: UploadStarter
 ) : ViewModel(), LifecycleOwner, CoroutineScope {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
@@ -86,8 +89,8 @@ class PostListMainViewModel @Inject constructor(
     private val _postListAction = SingleLiveEvent<PostListAction>()
     val postListAction: LiveData<PostListAction> = _postListAction
 
-    private val _updatePostsPager = SingleLiveEvent<AuthorFilterSelection>()
-    val updatePostsPager = _updatePostsPager
+    private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
+    val authorSelectionUpdated = _authorSelectionUpdated
 
     private val _selectTab = SingleLiveEvent<Int>()
     val selectTab = _selectTab as LiveData<Int>
@@ -112,6 +115,15 @@ class PostListMainViewModel @Inject constructor(
 
     private val _viewLayoutTypeMenuUiState = MutableLiveData<PostListViewLayoutTypeMenuUiState>()
     val viewLayoutTypeMenuUiState: LiveData<PostListViewLayoutTypeMenuUiState> = _viewLayoutTypeMenuUiState
+
+    private val _isSearchExpanded = MutableLiveData<Boolean>()
+    val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
+
+    private val _isSearchAvailable = MutableLiveData<Boolean>()
+    val isSearchAvailable: LiveData<Boolean> = _isSearchAvailable
+
+    private val _searchQuery = MutableLiveData<String>()
+    val searchQuery: LiveData<String> = _searchQuery
 
     private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
@@ -175,8 +187,11 @@ class PostListMainViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
 
-        val layout = prefs.postListViewLayoutType
-        setViewLayoutAndIcon(layout)
+        if (isSearchExpanded.value == true) {
+            setViewLayoutAndIcon(COMPACT, false)
+        } else {
+            setUserPreferredViewLayoutType()
+        }
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
@@ -205,16 +220,18 @@ class PostListMainViewModel @Inject constructor(
                 }
         )
 
-        _updatePostsPager.value = authorFilterSelection
+        _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
+        _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
-                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()),
+                isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
+                        isSearchExpanded.value != true,
                 isAuthorFilterVisible = isFilteringByAuthorSupported,
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
-        localDraftUploadStarter.queueUploadFromSite(site)
+        uploadStarter.queueUploadFromSite(site)
     }
 
     override fun onCleared() {
@@ -228,19 +245,52 @@ class PostListMainViewModel @Inject constructor(
      * info already
      */
     fun getPostListViewModelConnector(
-        authorFilter: AuthorFilterSelection,
         postListType: PostListType
     ): PostListViewModelConnector {
         return PostListViewModelConnector(
                 site = site,
                 postListType = postListType,
-                authorFilter = authorFilter,
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
                 postFetcher = postFetcher,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
+    }
+
+    fun onSearchExpanded(restorePreviousSearch: Boolean) {
+        if (isSearchExpanded.value != true) {
+            setViewLayoutAndIcon(COMPACT, false)
+            AnalyticsUtils.trackWithSiteDetails(POST_LIST_SEARCH_ACCESSED, site)
+
+            if (!restorePreviousSearch) {
+                clearSearch()
+            }
+
+            _isSearchExpanded.value = true
+            _viewState.value = _viewState.value?.copy(isFabVisible = false)
+        }
+    }
+
+    fun onSearchCollapsed(delay: Long = SEARCH_COLLAPSE_DELAY) {
+        setUserPreferredViewLayoutType()
+        _isSearchExpanded.value = false
+        clearSearch()
+
+        launch {
+            delay(delay)
+            withContext(mainDispatcher) {
+                _viewState.value = _viewState.value?.copy(isFabVisible = true)
+            }
+        }
+    }
+
+    fun onSearch(searchQuery: String) {
+        _searchQuery.value = searchQuery
+    }
+
+    private fun clearSearch() {
+        _searchQuery.value = null
     }
 
     fun newPost() {
@@ -339,7 +389,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
-            _updatePostsPager.value = authorFilterSelection
+            _authorSelectionUpdated.value = authorFilterSelection
 
             AnalyticsUtils.trackWithSiteDetails(
                     POST_LIST_AUTHOR_FILTER_CHANGED,
@@ -373,16 +423,23 @@ class PostListMainViewModel @Inject constructor(
             STANDARD -> COMPACT
             COMPACT -> STANDARD
         }
-        prefs.postListViewLayoutType = toggledValue
         AnalyticsUtils.trackAnalyticsPostListToggleLayout(toggledValue)
-        setViewLayoutAndIcon(toggledValue)
+        setViewLayoutAndIcon(toggledValue, true)
     }
 
-    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType) {
+    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType, storeIntoPreferences: Boolean = true) {
         _viewLayoutType.value = layout
         _viewLayoutTypeMenuUiState.value = when (layout) {
             STANDARD -> StandardViewLayoutTypeMenuUiState
             COMPACT -> CompactViewLayoutTypeMenuUiState
         }
+        if (storeIntoPreferences) {
+            prefs.postListViewLayoutType = layout
+        }
+    }
+
+    private fun setUserPreferredViewLayoutType() {
+        val savedLayoutType = prefs.postListViewLayoutType
+        setViewLayoutAndIcon(savedLayoutType, false)
     }
 }

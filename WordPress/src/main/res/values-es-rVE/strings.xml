@@ -152,7 +152,6 @@ Language: es_VE
     <string name="start_over">Comenzar de nuevo</string>
     <string name="me_btn_app_settings">Ajustes de la app</string>
     <string name="editor_remove_failed_uploads">Eliminar subidas fallidas</string>
-    <string name="editor_toast_failed_uploads">La subida de algunos archivos multimedia han fallado. No se puede guardar o publicar\n tu entrada tiene este estado. ¿Quieres eliminar todos los archivos multimedia fallidos?</string>
     <string name="site_settings_advanced_header">Avanzado</string>
     <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="post_format_video">Video</string>
@@ -203,7 +202,6 @@ Language: es_VE
     <string name="editor_page_title_placeholder">Título página</string>
     <string name="editor_post_title_placeholder">Título entrada</string>
     <string name="email_address">Correo electrónico</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
     <string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -239,7 +237,6 @@ Language: es_VE
     <string name="cd_related_post_preview_image">Imagen de vista previa de entradas relacionadas</string>
     <string name="error_post_remote_site_settings">No pudo guardar la información del sitio</string>
     <string name="error_fetch_remote_site_settings">No pudo recuperar la información del sitio</string>
-    <string name="site_settings_disconnected_toast">Desconectado, la edición se ha desactivado.</string>
     <string name="site_settings_close_after_dialog_switch_text">Cierra automáticamente</string>
     <string name="site_settings_close_after_dialog_description">Cierra automáticamente los comentarios en artículos</string>
     <string name="site_settings_paging_dialog_description">Rompe los hilos de comentarios en múltiples páginas</string>
@@ -371,7 +368,6 @@ Language: es_VE
     <string name="stats_enable_rest_api_in_jetpack">Para ver tus estadísticas debes activar el módulo JSON API en Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
-    <string name="reader_label_submit_comment">ENVIAR</string>
     <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
     <string name="reader_discover_visit_blog">Visita %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado en %s</string>
@@ -729,6 +725,7 @@ Language: es_VE
     <string name="posts">Entradas</string>
     <string name="anonymous">Anónimo</string>
     <string name="blogusername">Usuario del blog</string>
+    <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Subiendo…</string>
     <string name="version">Versión</string>

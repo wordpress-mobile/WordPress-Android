@@ -1,3 +1,2 @@
-* Quote and More blocks are now available, and we fixed an issue that caused the keyboard in the editor to flicker if you repeatedly pressed Enter on a post title.
-* Business plan customers can register a custom domain when installing a plugin.
-* Sometimes when you started a new draft, the app would create two. Fixed!
+* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.
+* We fixed a bug affecting some users who couldn’t connect their social media services.

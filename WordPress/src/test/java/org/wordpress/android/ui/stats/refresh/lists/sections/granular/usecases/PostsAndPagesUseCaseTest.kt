@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -51,7 +53,9 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: PostsAndPagesUseCase
+    private val contentDescription = "title, views"
     @Before
     fun setUp() {
         useCase = PostsAndPagesUseCase(
@@ -61,16 +65,22 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 siteModelProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDateState(statsGranularity))).thenReturn(
                 SelectedDate(
-                        0,
+                        selectedDate,
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -159,6 +169,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.text).isEqualTo(post.title)
         assertThat(item.value).isEqualTo("10")
         assertThat(item.barWidth).isEqualTo(100)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -202,6 +213,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toString())
         assertThat(item.barWidth).isEqualTo(100)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -244,6 +256,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_white_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toFormattedString())
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test

@@ -35,7 +35,7 @@
                 android:ellipsize="end"
                 android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textColor="@color/neutral_700"
+                android:textColor="@color/neutral_70"
                 android:textSize="@dimen/text_sz_large"
                 android:textAlignment="viewStart"
                 android:gravity="start"
@@ -101,7 +101,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
         android:paddingBottom="@dimen/margin_medium"
-        android:textColor="@color/neutral_700"
+        android:textColor="@color/neutral_70"
         android:textSize="@dimen/text_sz_large"
         android:fontFamily="serif"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />

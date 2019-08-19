@@ -36,6 +36,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
@@ -67,9 +68,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
-import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
-import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
@@ -91,7 +90,6 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stats.OldStatsActivity.LOGGED_INTO_JETPACK;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -129,11 +127,15 @@ public class ActivityLauncher {
 
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
-                                                @Nullable SiteModel site) {
+                                                @Nullable SiteModel site,
+                                                @Nullable Integer localPostId) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
+        }
+        if (localPostId != null) {
+            intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
         }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
@@ -220,6 +222,19 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
     public static void viewStatsInNewStack(Context context, SiteModel site) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
@@ -236,8 +251,7 @@ public class ActivityLauncher {
 
         Intent mainActivityIntent = getMainActivityInNewStack(context);
 
-        Intent statsIntent = new Intent(context, StatsActivity.class);
-        statsIntent.putExtra(WordPress.SITE, site);
+        Intent statsIntent = StatsActivity.buildIntent(context, site);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
@@ -276,14 +290,8 @@ public class ActivityLauncher {
                                   );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
+            StatsActivity.start(context, site);
         }
-    }
-
-    public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab) {
-        StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, null);
     }
 
     public static void viewAllTabbedInsightsStats(Context context, StatsViewType statsType, int selectedTab,
@@ -291,16 +299,18 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForTabbedInsightsStats(context, statsType, selectedTab, localSiteId);
     }
 
-    public static void viewAllInsightsStats(Context context, StatsViewType statsType) {
-        StatsViewAllActivity.startForInsights(context, statsType);
+    public static void viewAllInsightsStats(Context context, StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
+                                            int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
     }
 
-    public static void viewInsightsManagement(Context context) {
+    public static void viewInsightsManagement(Context context, int localSiteId) {
         Intent intent = new Intent(context, InsightsManagementActivity.class);
+        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId);
         context.startActivity(intent);
     }
 
@@ -316,10 +326,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.LOCAL_SITE_ID, site.getId());
-        intent.putExtra(LOGGED_INTO_JETPACK, true);
-        context.startActivity(intent);
+        StatsActivity.start(context, site);
     }
 
     public static void viewConnectJetpackForStats(Context context, SiteModel site) {
@@ -408,10 +415,12 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewDomainRegistrationActivity(Activity activity, SiteModel site) {
+    public static void viewDomainRegistrationActivityForResult(Activity activity, SiteModel site,
+                                                               @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(activity, DomainRegistrationActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        activity.startActivity(intent);
+        intent.putExtra(DomainRegistrationActivity.DOMAIN_REGISTRATION_PURPOSE_KEY, purpose);
+        activity.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
@@ -464,14 +473,15 @@ public class ActivityLauncher {
             String siteUrl = site.getUrl();
             if (site.isWPCom()) {
                 // Show wp.com sites authenticated
-                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl);
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, siteUrl, true);
             } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
                 // Show self-hosted sites as authenticated since we should have the username & password
-                WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false);
+                WPWebViewActivity
+                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true);
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl);
+                WPWebViewActivity.openURL(context, siteUrl, true);
             }
         }
     }
@@ -575,10 +585,10 @@ public class ActivityLauncher {
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
         if (site.isWPCom()) {
-            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject, true);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity
-                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
+                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce(), true);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
@@ -586,7 +596,7 @@ public class ActivityLauncher {
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
             WPWebViewActivity
-                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true);
+                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true, true);
         }
     }
 
@@ -687,20 +697,6 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
-    }
-
-    public static void viewStatsSinglePostDetails(Context context, StatsPostModel post) {
-        if (post == null) {
-            return;
-        }
-
-        Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, post.getBlogID());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_ID, post.getItemID());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_ITEM_TYPE, post.getPostType());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, post.getTitle());
-        statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, post.getUrl());
-        context.startActivity(statsPostViewIntent);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

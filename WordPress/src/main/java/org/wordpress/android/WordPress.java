@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.ListStore.RemoveExpiredListsPayload;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.modules.AppComponent;
@@ -74,11 +75,9 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.stats.StatsWidgetProvider;
-import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
-import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.ui.uploads.LocalDraftUploadStarter;
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.AppLogListener;
 import org.wordpress.android.util.AppLog.LogLevel;
@@ -93,6 +92,7 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
@@ -130,7 +130,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60; // 15 minutes
-    private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -146,7 +145,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
     @Inject ZendeskHelper mZendeskHelper;
-    @Inject LocalDraftUploadStarter mLocalDraftUploadStarter;
+    @Inject UploadStarter mUploadStarter;
+    @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
+    @Inject StatsStore mStatsStore;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -183,24 +184,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
             if (selectedSite != null) {
                 mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
-            }
-            return true;
-        }
-    };
-
-    /**
-     * Delete stats cache that is already expired
-     */
-    public static RateLimitedTask sDeleteExpiredStats = new RateLimitedTask(SECONDS_BETWEEN_DELETE_STATS) {
-        protected boolean run() {
-            // Offload to a separate thread. We don't want to slow down the app on startup/resume.
-            new Thread(new Runnable() {
-                public void run() {
-                    // subtracts to the current time the cache TTL
-                    long timeToDelete = System.currentTimeMillis() - (StatsTable.CACHE_TTL_MINUTES * 60 * 1000);
-                    StatsTable.deleteOldStats(WordPress.getContext(), timeToDelete);
+                // Reload editor details from the remote backend
+                if (!AppPrefs.isDefaultAppWideEditorPreferenceSet()) {
+                    // Check if the migration from app-wide to per-site setting has already happened - v12.9->13.0
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteEditorsAction(selectedSite));
                 }
-            }).start();
+            }
             return true;
         }
     };
@@ -283,7 +272,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
-        mLocalDraftUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
+        mUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
@@ -323,7 +312,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     protected void initWorkManager() {
-        UploadWorker.Factory factory = new UploadWorker.Factory(mLocalDraftUploadStarter, mSiteStore);
+        UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
         androidx.work.Configuration config =
                 (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
         WorkManager.initialize(this, config);
@@ -609,8 +598,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ReaderDatabase.reset(true);
 
         // Reset Stats Data
-        StatsDatabaseHelper.getDatabase(context).reset();
-        StatsWidgetProvider.refreshAllWidgets(context, mSiteStore);
+        mStatsStore.deleteAllData();
+        mStatsWidgetUpdaters.update(context);
 
         // Reset Notifications Data
         NotificationsTable.reset();
@@ -868,7 +857,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 // Rate limited Site information and options update
                 mUpdateSelectedSite.runIfNotLimited();
             }
-            sDeleteExpiredStats.runIfNotLimited();
+
+            // Let's migrate the old editor preference if available in AppPrefs to the remote backend
+            SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mContext, mDispatcher);
 
             if (mFirstActivityResumed) {
                 deferredInit();

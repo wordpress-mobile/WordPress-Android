@@ -36,7 +36,6 @@ Language: hr
     <string name="cd_related_post_preview_image">Predpregled slika srodnih objava</string>
     <string name="error_post_remote_site_settings">Nije moguće snimiti info o web-stranici</string>
     <string name="error_fetch_remote_site_settings">Nije moguće dohvatiti info o web-stranici</string>
-    <string name="site_settings_disconnected_toast">Odjavljeno, uređivanje onemogućeno</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatski zatvori</string>
     <string name="site_settings_close_after_dialog_description">Automatski zatvori komentare na člancima</string>
     <string name="site_settings_paging_dialog_description">Prijelom niza komentara u više stranica.</string>
@@ -175,7 +174,6 @@ Language: hr
     <string name="stats_enable_rest_api_in_jetpack">Za pregled statistike uključite JSON API modul u Jetpacku.</string>
     <string name="reader_short_comment_count_multi">%s komentara</string>
     <string name="reader_short_comment_count_one">1 komentar</string>
-    <string name="reader_label_submit_comment">POŠALJI</string>
     <string name="reader_hint_comment_on_post">Odgovori na objavu…</string>
     <string name="reader_discover_visit_blog">Pošalji %s</string>
     <string name="reader_discover_attribution_blog">Izvorno objavljeno na %s</string>
@@ -552,6 +550,7 @@ Language: hr
     <string name="caption">Opis (opcionalan)</string>
     <string name="posts">Objave</string>
     <string name="featured_in_post">Uključi sliku u sadržaj objave</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Prijenos…</string>

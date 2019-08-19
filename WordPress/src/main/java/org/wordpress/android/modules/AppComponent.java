@@ -35,6 +35,7 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
+import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment;
 import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
 import org.wordpress.android.ui.giphy.GiphyPickerActivity;
@@ -79,13 +80,18 @@ import org.wordpress.android.ui.plugins.PluginListFragment;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostPreviewFragment;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.HistoryListFragment;
+import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
+import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
+import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
@@ -129,14 +135,18 @@ import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragme
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.siteinfo.SiteCreationSiteInfoFragment;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsFragment;
-import org.wordpress.android.ui.stats.OldStatsActivity;
-import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
-import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
-import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
-import org.wordpress.android.ui.stats.service.StatsServiceLogic;
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.StatsTodayWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBlockListProviderFactory;
+import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetListProvider;
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidget;
+import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -212,21 +222,9 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SiteCreationPreviewFragment object);
 
-    void inject(StatsWidgetConfigureActivity object);
-
-    void inject(StatsWidgetConfigureAdapter object);
-
-    void inject(OldStatsActivity object);
-
     void inject(JetpackConnectionResultActivity object);
 
     void inject(StatsConnectJetpackActivity object);
-
-    void inject(StatsAbstractFragment object);
-
-    void inject(StatsServiceLogic object);
-
-    void inject(StatsWidgetProvider object);
 
     void inject(GCMMessageService object);
 
@@ -453,6 +451,38 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(DomainSuggestionsFragment object);
 
     void inject(DomainRegistrationDetailsFragment object);
+
+    void inject(StatsViewsWidget object);
+
+    void inject(StatsAllTimeWidget object);
+
+    void inject(StatsTodayWidget object);
+
+    void inject(StatsMinifiedWidget object);
+
+    void inject(ViewsWidgetListProvider object);
+
+    void inject(AllTimeWidgetListProvider object);
+
+    void inject(AllTimeWidgetBlockListProviderFactory object);
+
+    void inject(TodayWidgetListProvider object);
+
+    void inject(TodayWidgetBlockListProviderFactory object);
+
+    void inject(StatsActivity object);
+
+    void inject(DomainRegistrationActivity object);
+
+    void inject(EditPostPublishSettingsFragment object);
+
+    void inject(PostDatePickerDialogFragment object);
+
+    void inject(PostTimePickerDialogFragment object);
+
+    void inject(PostNotificationScheduleTimeDialogFragment object);
+
+    void inject(PublishNotificationReceiver object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

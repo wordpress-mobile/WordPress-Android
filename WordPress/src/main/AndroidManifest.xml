@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
 
@@ -62,6 +63,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/com_google_android_geo_api_key"/>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
         <activity
             android:name=".ui.WPLaunchActivity"
@@ -254,24 +259,6 @@
 
         <!-- Stats Activities -->
         <activity
-            android:name=".ui.stats.OldStatsActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity
-            android:name=".ui.stats.StatsViewAllActivity"
-            android:theme="@style/CalypsoTheme" />
-        <activity
-            android:name=".ui.stats.StatsSingleItemDetailsActivity"
-            android:theme="@style/CalypsoTheme" />
-        <activity
-            android:name=".ui.stats.StatsWidgetConfigureActivity"
-            android:label="@string/site_picker_title"
-            android:theme="@style/CalypsoTheme">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
@@ -339,6 +326,7 @@
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
+            android:theme="@style/Calypso.NoActionBar"
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -371,6 +359,21 @@
                 <data
                     android:host="notifications"
                     android:scheme="wordpress" />
+
+                <data
+                    android:host="public-api.wordpress.com"
+                    android:pathPattern="/mbar/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/post/..*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
@@ -444,7 +447,7 @@
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.AppLogViewerActivity"
@@ -591,16 +594,6 @@
             />
 
         <service
-            android:name=".ui.stats.service.StatsService"
-            android:exported="false"
-            android:label="Stats Update Service" />
-        <service
-            android:name=".ui.stats.service.StatsJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"
-            android:label="Stats Update Service" />
-
-        <service
             android:name=".ui.reader.services.update.ReaderUpdateService"
             android:exported="false"
             android:label="Reader Update Service" />
@@ -699,16 +692,85 @@
 
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
-            android:name=".ui.stats.StatsWidgetProvider"
-            android:label="@string/stats_widget_name">
+            android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
+            android:label="@string/stats_widget_weekly_views_name">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/stats_widget_info" />
+                android:resource="@xml/stats_views_widget_info"/>
         </receiver>
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
+            android:label="@string/stats_widget_all_time_insights_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_all_time_widget_info"/>
+        </receiver>
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
+            android:label="@string/stats_widget_today_insights_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_today_widget_info"/>
+        </receiver>
+        <receiver
+            android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
+            android:label="@string/stats_widget_minified_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stats_minified_widget_info"/>
+        </receiver>
+
+        <service
+            android:name=".ui.stats.refresh.lists.widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidgetConfigureActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
             android:permission="android.permission.INSTALL_PACKAGES"
@@ -718,6 +780,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".ui.quickstart.QuickStartReminderReceiver" />
+        <receiver android:name=".ui.posts.PublishNotificationReceiver" />
 
 
         <!-- Google Cloud Messaging receiver and services -->

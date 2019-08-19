@@ -28,9 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/login_background_color"
-        android:paddingLeft="@dimen/margin_small_medium"
         android:paddingStart="@dimen/margin_small_medium"
-        android:paddingRight="@dimen/margin_medium_large"
         android:paddingEnd="@dimen/margin_medium_large"
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
@@ -42,16 +40,14 @@
             android:id="@+id/secondary_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/primary_button"
             android:layout_toStartOf="@+id/primary_button"
             android:paddingLeft="@dimen/margin_medium_large"
             android:paddingStart="@dimen/margin_medium_large"
             android:paddingRight="@dimen/margin_medium_large"
             android:paddingEnd="@dimen/margin_medium_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"
+            android:textAlignment="viewStart"
             android:gravity="start|center_vertical"
             tools:text="Secondary action"/>
 
@@ -60,7 +56,6 @@
             android:id="@+id/primary_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:text="@string/next" />
     </RelativeLayout>

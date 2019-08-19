@@ -8,7 +8,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
-class PostListMainViewState(
+data class PostListMainViewState(
     val isFabVisible: Boolean,
     val isAuthorFilterVisible: Boolean,
     val authorFilterSelection: AuthorFilterSelection,
@@ -60,7 +60,7 @@ fun getAuthorFilterItems(
             ME -> AuthorFilterListItemUIState.Me(avatarUrl, backgroundColorRes)
             EVERYONE -> AuthorFilterListItemUIState.Everyone(
                     backgroundColorRes,
-                    R.drawable.bg_oval_neutral_300_multiple_users_white_40dp
+                    R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
             )
         }
     }

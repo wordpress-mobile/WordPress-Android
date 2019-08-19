@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-06 23:17:03+0000
+Translation-Revision-Date: 2019-08-02 00:49:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
+    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
+    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
+    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
+    <string name="stats_post_views_label">Views</string>
+    <string name="stats_post_label">Post</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
+    <string name="stats_item_collapsed">Item collapsed</string>
+    <string name="stats_item_expanded">Item expanded</string>
+    <string name="stats_collapse_content_description">Collapse</string>
+    <string name="stats_expand_content_description">Expand</string>
+    <string name="stats_graph_updated">Graph updated.</string>
+    <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_bar_chart_content_description">Graph of site views.</string>
+    <string name="stats_loading_card">Loading selected card data</string>
+    <string name="site_settings_editor">Editor</string>
+    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="description_expand">Expand</string>
+    <string name="description_collapse">Collapse</string>
+    <string name="editor_retry_failed_uploads">Retry uploading</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state.</string>
+    <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
+    <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
+    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
+    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
+    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
+    <string name="error_media_recover_post">Could not upload media</string>
+    <string name="link_dialog_button_cancel">Cancel</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Remove Link</string>
+    <string name="link_dialog_title">Insert link</string>
+    <string name="post_settings_retry_featured_image">Retry uploading</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Uploading media.\nPlease tap for options.</string>
+    <string name="link_open_new_window">Open link in a new window/tab</string>
+    <string name="post_list_search_prompt">Search published posts</string>
+    <string name="stats_widget_error_no_access_token">To view your stats, log in to the WordPress.com account.</string>
+    <string name="post_list_search_nothing_found">No posts matching your search</string>
+    <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
+    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="stats_widget_minified_name">At a glance</string>
+    <string name="stats_widget_today_insights_name">Today</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_weekly_views_name">Views this week</string>
+    <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
+    <string name="stats_widget_error_no_network">No network available</string>
+    <string name="stats_widget_error_no_data">Couldn\'t load data</string>
+    <string name="stats_widget_select_type">Type</string>
+    <string name="stats_widget_select_color">Colour</string>
+    <string name="stats_widget_select_your_site">Select your site</string>
+    <string name="stats_widget_color_dark">Dark</string>
+    <string name="stats_widget_color_light">Light</string>
+    <string name="stats_widget_color">Colour</string>
+    <string name="stats_widget_site_caption">Select your site</string>
+    <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_all_time_title">All-time</string>
+    <string name="stats_widget_views_title">Views This Week</string>
+    <string name="stats_widget_add">Add widget</string>
+    <string name="dialog_confirm_update_yes">Update now</string>
+    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
+    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
+    <string name="dialog_confirm_update_title">Ready to Update?</string>
+    <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
+    <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
+    <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
+    <string name="domain_registration_privacy_protection_tos">By registering this domain you agree to our %1$sterms and conditions%2$s</string>
+    <string name="error_network_connection">Check your network connection and try again.</string>
+    <string name="error_browser_no_network">Unable to load this page right now.</string>
+    <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
+    <string name="jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our %1$sterms and conditions%2$s</string>
+    <string name="site_settings_disconnected_toast">No connection. Editing is disabled.</string>
+    <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
+    <string name="site_settings_password_updated">Password updated</string>
+    <string name="site_settings_password_dialog_title">Update password</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Error occurred while updating your site details: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Error occurred fetching domain contact information: %s</string>
-    <string name="domain_registration_error_registering_domain">Error occurred during domain registration: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
@@ -80,7 +155,6 @@ Language: en_AU
     <string name="posts_scheduled_empty">You don\'t have any scheduled posts</string>
     <string name="posts_published_empty">You haven\'t published any posts yet</string>
     <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
-    <string name="login_invalid_site_url">The site address you entered is invalid. Please re-enter it.</string>
     <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_total_words">Total words</string>
@@ -149,14 +223,12 @@ Language: en_AU
     <string name="plans_loading_error_no_plans_subtitle">We cannot load Plans at the moment. Please try again later.</string>
     <string name="plans_loading_error_no_plans_title">Cannot load Plans</string>
     <string name="plans_loading_error_network_title">No connection</string>
-    <string name="menu_switch_to_gutenberg_editor">Switch to Block Editor</string>
-    <string name="menu_switch_to_aztec_editor">Switch to Classic Editor</string>
+    <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
+    <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
     <string name="stats_loading_error">Data not loaded</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
-    <string name="dialog_gutenberg_informative_description_page">This page was originally created in the Block Editor, so we\'ve also enabled it on this Page.\n        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
-    <string name="dialog_gutenberg_informative_description_post">This post was originally created in the Block Editor, so we\'ve also enabled it on this Post.\n        Switch back to Classic at any time by tapping  ⋮  in the top bar.</string>
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
@@ -244,7 +316,6 @@ Language: en_AU
     <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
-    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
@@ -423,7 +494,6 @@ Language: en_AU
     <string name="install_jetpack">Install Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our </string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
@@ -458,11 +528,6 @@ Language: en_AU
     <string name="blavatar_desc">site icon</string>
     <string name="theme_image_desc">theme image</string>
     <string name="featured_image_desc">featured image</string>
-    <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
-    <string name="local_changes_discarding">Discarding local changes</string>
-    <string name="local_changes_discarded">Local changes discarded</string>
-    <string name="menu_discard_changes">Discard Local Changes</string>
-    <string name="button_discard_changes">Discard Changes</string>
     <string name="button_discard">Discard</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_blavatar_desc">site icon</string>
@@ -553,7 +618,6 @@ Language: en_AU
     <string name="plugin_install_site_ineligible_site_private">Plugin feature requires the site to be public.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Plugin feature requires a business plan.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
-    <string name="plugin_install_site_ineligible_default_error">Plugin feature is not available for this site.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">We\'re doing the final setup — almost done…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Installing plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Install</string>
@@ -876,7 +940,6 @@ Language: en_AU
     <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
-    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
     <string name="image_size">Size</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
@@ -995,7 +1058,6 @@ Language: en_AU
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_empty_username">Please enter a username</string>
-    <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_checking_site_address">Checking site address</string>
@@ -1004,7 +1066,7 @@ Language: en_AU
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address">Site address</string>
-    <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_continue">Continue</string>
@@ -1175,7 +1237,7 @@ Language: en_AU
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="sure_to_remove_account">Remove this site from the app?</string>
     <string name="photo_picker_title">Choose photo</string>
-    <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
+    <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
@@ -1374,7 +1436,6 @@ Language: en_AU
     <string name="start_over">Start Over</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state. Would you like to remove all failed media?</string>
     <string name="site_settings_advanced_header">Advanced</string>
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
@@ -1431,7 +1492,6 @@ Language: en_AU
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="email_address">Email address</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
     <string name="mnu_comment_delete_permanently">Delete</string>
@@ -1469,7 +1529,6 @@ Language: en_AU
     <string name="cd_related_post_preview_image">Related post preview image</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
-    <string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
     <string name="site_settings_close_after_dialog_description">Automatically close comments on articles.</string>
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
@@ -1609,7 +1668,6 @@ Language: en_AU
     <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Comments</string>
     <string name="reader_short_comment_count_one">1 Comment</string>
-    <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_discover_visit_blog">Visit %s</string>
     <string name="reader_discover_attribution_blog">Originally posted on %s</string>
@@ -1994,6 +2052,7 @@ Language: en_AU
     <string name="pages">Pages</string>
     <string name="no_network_title">No network available</string>
     <string name="featured_in_post">Include image in post content</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Uploading…</string>

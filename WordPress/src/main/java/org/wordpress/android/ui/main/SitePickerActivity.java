@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -47,13 +48,13 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -96,6 +97,7 @@ public class SitePickerActivity extends AppCompatActivity
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject StatsStore mStatsStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -216,6 +218,21 @@ public class SitePickerActivity extends AppCompatActivity
                         data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
                         setResult(resultCode, data);
                         finish();
+                    }
+                }
+                break;
+        }
+
+        // Enable the block editor on sites created on mobile
+        switch (requestCode) {
+            case RequestCodes.CREATE_SITE:
+                if (data != null) {
+                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
+                    // Mark the site to show the GB popup at first editor run
+                    SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
+                    if (newSiteModel != null) {
+                        AppPrefs.setShowGutenbergInfoPopup(newSiteModel.getUrl(), true);
                     }
                 }
                 break;
@@ -384,7 +401,7 @@ public class SitePickerActivity extends AppCompatActivity
                 }
                 siteModel.setIsVisible(false);
                 // Remove stats data for hidden sites
-                StatsTable.deleteStatsForBlog(this, siteRecord.getLocalId());
+                mStatsStore.deleteSiteData(siteModel);
             } else {
                 siteModel.setIsVisible(true);
             }

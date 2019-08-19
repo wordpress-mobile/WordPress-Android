@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.view.HapticFeedbackConstants
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,11 +34,13 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.PostListType.SEARCH
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -62,6 +66,10 @@ class PostsListActivity : AppCompatActivity(),
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var pager: androidx.viewpager.widget.ViewPager
     private lateinit var fab: FloatingActionButton
+    private lateinit var searchActionButton: MenuItem
+    private lateinit var toggleViewLayoutMenuItem: MenuItem
+
+    private var restorePreviousSearch = false
 
     private var onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -105,6 +113,7 @@ class PostsListActivity : AppCompatActivity(),
         site = if (savedInstanceState == null) {
             intent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
+            restorePreviousSearch = true
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
@@ -157,6 +166,10 @@ class PostsListActivity : AppCompatActivity(),
             Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
+        fab.redirectContextClickToLongPressListener()
+
+        postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
+        pager.adapter = postsPagerAdapter
     }
 
     private fun initViewModel() {
@@ -192,17 +205,6 @@ class PostsListActivity : AppCompatActivity(),
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(this@PostsListActivity, action)
-            }
-        })
-        viewModel.updatePostsPager.observe(this, Observer { authorFilter ->
-            authorFilter?.let {
-                val currentItem: Int = pager.currentItem
-                postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, authorFilter, supportFragmentManager)
-                pager.adapter = postsPagerAdapter
-
-                pager.removeOnPageChangeListener(onPageChangeListener)
-                pager.currentItem = currentItem
-                pager.addOnPageChangeListener(onPageChangeListener)
             }
         })
         viewModel.selectTab.observe(this, Observer { tabIndex ->
@@ -300,15 +302,99 @@ class PostsListActivity : AppCompatActivity(),
         super.onCreateOptionsMenu(menu)
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
-            val toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
+            toggleViewLayoutMenuItem = it.findItem(R.id.toggle_post_list_item_layout)
             viewModel.viewLayoutTypeMenuUiState.observe(this, Observer { menuUiState ->
                 menuUiState?.let {
                     updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
                     updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
                 }
             })
+
+            searchActionButton = it.findItem(R.id.toggle_post_search)
+
+            viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
+                if (isAvailable) {
+                    initSearchFragment()
+                    initSearchView()
+                    searchActionButton.isVisible = true
+                } else {
+                    searchActionButton.isVisible = false
+                }
+            })
         }
         return true
+    }
+
+    private fun initSearchFragment() {
+        val searchFragmentTag = "search_fragment"
+
+        var searchFragment = supportFragmentManager.findFragmentByTag(searchFragmentTag)
+
+        if (searchFragment == null) {
+            searchFragment = PostListFragment.newInstance(site, SEARCH)
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.search_container, searchFragment, searchFragmentTag)
+                    .commit()
+        }
+    }
+
+    private fun initSearchView() {
+        searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded(restorePreviousSearch)
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
+
+        val searchView = searchActionButton.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (restorePreviousSearch) {
+                    restorePreviousSearch = false
+                    searchView.setQuery(viewModel.searchQuery.value, false)
+                } else {
+                    viewModel.onSearch(newText)
+                }
+                return true
+            }
+        })
+
+        viewModel.isSearchExpanded.observe(this, Observer { isExpanded ->
+            toggleViewLayoutMenuItem.isVisible = !isExpanded
+            toggleSearch(isExpanded)
+        })
+    }
+
+    private fun toggleSearch(isExpanded: Boolean) {
+        val tabContainer = findViewById<View>(R.id.tabContainer)
+        val searchContainer = findViewById<View>(R.id.search_container)
+
+        if (isExpanded) {
+            pager.visibility = View.GONE
+            tabContainer.visibility = View.GONE
+            searchContainer.visibility = View.VISIBLE
+            if (!searchActionButton.isActionViewExpanded) {
+                searchActionButton.expandActionView()
+            }
+        } else {
+            pager.visibility = View.VISIBLE
+            tabContainer.visibility = View.VISIBLE
+            searchContainer.visibility = View.GONE
+            if (searchActionButton.isActionViewExpanded) {
+                searchActionButton.collapseActionView()
+            }
+        }
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {

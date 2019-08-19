@@ -3,8 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
@@ -14,7 +12,7 @@ import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -29,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
@@ -49,8 +48,9 @@ class TagsAndCategoriesUseCase
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
-) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
+) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
         TagsAndCategoriesUiState(null)
@@ -79,7 +79,7 @@ class TagsAndCategoriesUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
+    override fun buildUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
         if (useCaseMode == BLOCK) {
@@ -89,29 +89,30 @@ class TagsAndCategoriesUseCase
         if (domainModel.tags.isEmpty()) {
             items.add(Empty())
         } else {
+            val header = Header(
+                    R.string.stats_tags_and_categories_title_label,
+                    R.string.stats_tags_and_categories_views_label
+            )
             items.add(
-                    Header(
-                            string.stats_tags_and_categories_title_label,
-                            string.stats_tags_and_categories_views_label
-                    )
+                    header
             )
             val tagsList = mutableListOf<BlockListItem>()
             val maxViews = domainModel.tags.maxBy { it.views }?.views ?: 0
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
-                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews))
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size, maxViews, header))
                     }
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, domainModel.tags.size, maxViews),
+                                mapCategory(tag, index, domainModel.tags.size, maxViews, header),
                                 isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
                         })
                         if (isExpanded) {
-                            tagsList.addAll(tag.items.map { subTag -> mapItem(subTag) })
+                            tagsList.addAll(tag.items.map { subTag -> mapItem(subTag, header) })
                             tagsList.add(Divider)
                         }
                     }
@@ -131,13 +132,13 @@ class TagsAndCategoriesUseCase
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_insights_tags_and_categories, menuAction = this::onMenuClick)
 
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
         return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
-    private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
+    private fun mapTag(tag: TagModel, index: Int, listSize: Int, maxViews: Long, header: Header): ListItemWithIcon {
         val item = tag.items.first()
         return ListItemWithIcon(
                 icon = getIcon(item.type),
@@ -145,11 +146,22 @@ class TagsAndCategoriesUseCase
                 value = tag.views.toFormattedString(),
                 barWidth = getBarWidth(tag.views, maxViews),
                 showDivider = index < listSize - 1,
-                navigationAction = NavigationAction.create(item.link, this::onTagClick)
+                navigationAction = NavigationAction.create(item.link, this::onTagClick),
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        item.name,
+                        tag.views
+                )
         )
     }
 
-    private fun mapCategory(tag: TagModel, index: Int, listSize: Int, maxViews: Long): ListItemWithIcon {
+    private fun mapCategory(
+        tag: TagModel,
+        index: Int,
+        listSize: Int,
+        maxViews: Long,
+        header: Header
+    ): ListItemWithIcon {
         val text = tag.items.foldIndexed("") { itemIndex, acc, item ->
             when (itemIndex) {
                 0 -> item.name
@@ -161,22 +173,31 @@ class TagsAndCategoriesUseCase
                 text = text,
                 value = tag.views.toFormattedString(),
                 barWidth = getBarWidth(tag.views, maxViews),
-                showDivider = index < listSize - 1
+                showDivider = index < listSize - 1,
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        text,
+                        tag.views
+                )
         )
     }
 
-    private fun mapItem(item: TagModel.Item): ListItemWithIcon {
+    private fun mapItem(item: TagModel.Item, header: Header): ListItemWithIcon {
         return ListItemWithIcon(
                 icon = getIcon(item.type),
                 textStyle = LIGHT,
                 text = item.name,
                 showDivider = false,
-                navigationAction = NavigationAction.create(item.link, this::onTagClick)
+                navigationAction = NavigationAction.create(item.link, this::onTagClick),
+                contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header.startLabel,
+                        item.name
+                )
         )
     }
 
     private fun getIcon(type: String) =
-            if (type == "tag") drawable.ic_tag_white_24dp else drawable.ic_folder_white_24dp
+            if (type == "tag") R.drawable.ic_tag_white_24dp else R.drawable.ic_folder_white_24dp
 
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED)
@@ -201,6 +222,7 @@ class TagsAndCategoriesUseCase
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
         private val popupMenuHandler: ItemPopupMenuHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
@@ -211,6 +233,7 @@ class TagsAndCategoriesUseCase
                         resourceProvider,
                         analyticsTracker,
                         popupMenuHandler,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

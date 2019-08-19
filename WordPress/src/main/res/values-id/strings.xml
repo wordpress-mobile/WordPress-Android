@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-11 10:54:10+0000
+Translation-Revision-Date: 2019-08-08 00:54:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">Perlu bantuan untuk menemukan email yang terhubung dengan Anda?</string>
+    <string name="enter_wordpress_site">Situs web di alamat ini bukan situs WordPress. Agar kami dapat terhubung ke situs tersebut, situs harus menggunakan WordPress.</string>
+    <string name="login_invalid_site_url">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
+    <string name="enter_email_for_site">Login dengan WordPress.com untuk terhubung ke %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">Sambungan Facebook tidak dapat dilakukan karena akun ini tidak memiliki akses ke halaman apa pun. Facebook mendukung sambungan berbagi ke Halaman Facebook, tetapi tidak ke Profil Facebook.</string>
+    <string name="stats_post_views_label">Tampilan</string>
+    <string name="stats_post_label">Pos</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">Grafik aktivitas pengiriman pos.</string>
+    <string name="stats_item_collapsed">Item diciutkan</string>
+    <string name="stats_item_expanded">Item dibentangkan</string>
+    <string name="stats_collapse_content_description">Ciutkan</string>
+    <string name="stats_expand_content_description">Bentangkan</string>
+    <string name="stats_graph_updated">Grafik diperbarui.</string>
+    <string name="stats_overview_content_description">%1$s %2$s untuk periode: %3$s, diubah dari periode sebelumnya - %4$s</string>
+    <string name="stats_bar_chart_content_description">Grafik penayangan situs.</string>
+    <string name="stats_loading_card">Memuat data kartu yang dipilih</string>
+    <string name="site_settings_editor">Penyunting</string>
+    <string name="dialog_gutenberg_informative_description_page">Saat ini Anda menggunakan penyunting blok untuk membuat halaman baru. Ingin menggunakan penyunting klasik sebagai pengaturan asal? Buka Pengaturan Situs.</string>
+    <string name="dialog_gutenberg_informative_description_post">Saat ini Anda menggunakan penyunting blok untuk membuat pos baru. Ingin menggunakan penyunting klasik sebagai pengaturan asal? Buka Pengaturan Situs.</string>
+    <string name="description_expand">Bentangkan</string>
+    <string name="description_collapse">Ciutkan</string>
+    <string name="editor_retry_failed_uploads">Coba mengunggah ulang</string>
+    <string name="editor_toast_failed_uploads">Gagal mengunggah beberapa media. Tidak dapat menyimpan atau menerbitkan\n pos Anda dalam status ini.</string>
+    <string name="my_site_verify_your_email_without_email">Verifikasi alamat email - instruksi dikirim ke email Anda</string>
+    <string name="my_site_verify_your_email">Verifikasi alamat email - instruksi dikirim ke %s</string>
+    <string name="error_media_recover_post_not_submitted">Tidak dapat mengunggah media. Pos tidak dikirim.</string>
+    <string name="error_media_recover_post_not_scheduled">Tidak dapat mengunggah media. Pos tidak dijadwalkan.</string>
+    <string name="error_media_recover_post_not_published">Tidak dapat mengunggah media. Pos tidak dipublikasikan.</string>
+    <string name="error_media_recover_post">Tidak dapat mengunggah media</string>
+    <string name="link_dialog_button_cancel">Batal</string>
+    <string name="link_dialog_button_ok">OK</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">Buang Tautan</string>
+    <string name="link_dialog_title">Sisipkan tautan</string>
+    <string name="post_settings_retry_featured_image">Coba mengunggah ulang</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Mengunggah media.\nKetuk untuk melihat pilihan.</string>
+    <string name="link_open_new_window">Buka tautan di jendela/tab baru</string>
+    <string name="post_list_search_prompt">Cari di pos yang telah dipublikasikan</string>
+    <string name="stats_widget_error_no_access_token">Untuk melihat statistik Anda, login ke akun WordPress.com.</string>
+    <string name="post_list_search_nothing_found">Tidak ada pos yang cocok dengan pencarian Anda</string>
+    <string name="domains_suggestions_intro_description">Di sinilah orang akan menemukan Anda di internet.</string>
+    <string name="domains_suggestions_intro_title">Pilih nama domain premium</string>
+    <string name="my_site_custom_domain_name">Semua paket WordPress.com menyertakan nama domain kustom. Daftarkan domain premium gratis Anda sekarang.</string>
+    <string name="stats_widget_minified_name">Sekilas</string>
+    <string name="stats_widget_today_insights_name">Hari Ini</string>
+    <string name="stats_widget_all_time_insights_name">Sepanjang waktu</string>
+    <string name="stats_widget_weekly_views_name">Dilihat minggu ini</string>
+    <string name="stats_widget_log_in_message">Silakan login ke aplikasi WordPress untuk menambahkan widget.</string>
+    <string name="stats_widget_error_no_network">Tidak ada jaringan</string>
+    <string name="stats_widget_error_no_data">Tidak dapat memuat data</string>
+    <string name="stats_widget_select_type">Jenis</string>
+    <string name="stats_widget_select_color">Warna</string>
+    <string name="stats_widget_select_your_site">Pilih situs Anda</string>
+    <string name="stats_widget_color_dark">Gelap</string>
+    <string name="stats_widget_color_light">Terang</string>
+    <string name="stats_widget_color">Warna</string>
+    <string name="stats_widget_site_caption">Pilih situs Anda</string>
+    <string name="stats_widget_site">Situs</string>
+    <string name="stats_widget_all_time_title">Sepanjang waktu</string>
+    <string name="stats_widget_views_title">Dilihat Minggu Ini</string>
+    <string name="stats_widget_add">Tambahkan widget</string>
+    <string name="dialog_confirm_update_yes">Perbarui sekarang</string>
+    <string name="dialog_confirm_update_message_page">Halaman yang telah diterbitkan ini akan segera diperbarui.</string>
+    <string name="dialog_confirm_update_message_post">Pos yang telah diterbitkan ini akan segera diperbarui.</string>
+    <string name="dialog_confirm_update_title">Siap Memperbarui?</string>
+    <string name="plugin_fetching_error_after_at">Diperlukan waktu yang lebih lama dari biasanya untuk menyegarkan detail plugin. Silakan periksa lagi nanti.</string>
+    <string name="plugin_install_site_ineligible_default_error">Jika Anda baru saja mendaftarkan nama domain, harap tunggu sampai kami selesai menyiapkannya dan silakan coba lagi.\n\nJika tidak, sepertinya terjadi kesalahan dan fitur plugin mungkin tidak tersedia di situs ini.</string>
+    <string name="domain_contact_information_state_not_available_hint">Negara Bagian (Tidak Tersedia)</string>
+    <string name="domain_registration_privacy_protection_tos">Dengan mendaftarkan domain ini, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
+    <string name="error_network_connection">Periksa koneksi jaringan Anda dan coba lagi.</string>
+    <string name="error_browser_no_network">Tidak dapat memuat halaman ini sekarang.</string>
+    <string name="error_disabled_apis">Tidak dapat memuat pengaturan: Beberapa API tidak tersedia untuk kombinasi ID aplikasi OAuth + akun ini.</string>
+    <string name="jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
+    <string name="site_settings_disconnected_toast">Tidak ada koneksi. Tidak dapat menyunting.</string>
+    <string name="site_settings_update_password_message">Untuk menghubungkan kembali aplikasi ke situs Anda yang di-hosting sendiri, masukkan kata sandi situs yang baru di sini.</string>
+    <string name="site_settings_password_updated">Kata sandi diperbarui</string>
+    <string name="site_settings_password_dialog_title">Perbarui kata sandi</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">Terjadi error saat memperbarui detail situs Anda: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">Terjadi error saat mengambil informasi kontak domain: %s</string>
-    <string name="domain_registration_error_registering_domain">Terjadi error saat registrasi domain: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Mendaftarkan nama domain…</string>
     <string name="domain_registration_state_picker_dialog_title">Pilih Provinsi</string>
     <string name="domain_registration_country_picker_dialog_title">Pilih Negara</string>
@@ -77,7 +152,6 @@ Language: id
     <string name="posts_scheduled_empty">Anda belum memiliki pos terjadwal</string>
     <string name="posts_published_empty">Anda belum memublikasikan pos sama sekali</string>
     <string name="notification_wpcom_username_needed">Silakan login dengan nama pengguna dan kata sandi Anda.</string>
-    <string name="login_invalid_site_url">Alamat situs yang Anda masukkan tidak valid. Harap masukkan lagi.</string>
     <string name="error_user_username_instead_of_email">Silakan login menggunakan nama pengguna WordPress.com sebagai ganti alamat email Anda.</string>
     <string name="stats_insights_average_words">Rata-rata kata/pos</string>
     <string name="stats_insights_total_words">Total kata</string>
@@ -145,14 +219,10 @@ Language: id
     <string name="plans_loading_error_no_plans_subtitle">Saat ini kami tidak dapat memuat Paket. Silakan coba lagi nanti.</string>
     <string name="plans_loading_error_no_plans_title">Tidak dapat memuat Paket</string>
     <string name="plans_loading_error_network_title">Tidak ada koneksi</string>
-    <string name="menu_switch_to_gutenberg_editor">Beralih ke Penyunting Blok</string>
-    <string name="menu_switch_to_aztec_editor">Beralih ke Penyunting Klasik</string>
     <string name="stats_loading_block_error">Terjadi masalah saat memuat data Anda, segarkan halaman untuk mencoba lagi.</string>
     <string name="stats_loading_error">Data tidak dimuat</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Sunting pos dan halaman baru dengan penyunting blok</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Gunakan Penyunting Blok</string>
-    <string name="dialog_gutenberg_informative_description_page">Pos ini awalnya dibuat di Penyunting Blok, jadi kami juga telah menyediakannya di Halaman ini.\n Kembali ke versi Klasik kapan pun dengan mengetuk  ⋮  di bilah atas.</string>
-    <string name="dialog_gutenberg_informative_description_post">Pos ini awalnya dibuat di Penyunting Blok, jadi kami juga telah menyediakannya di Pos ini.\n Kembali ke versi Klasik kapan pun dengan mengetuk  ⋮  di bilah atas.</string>
     <string name="dialog_gutenberg_informative_title">Penyunting Blok Diaktifkan</string>
     <string name="exit">keluar</string>
     <string name="quick_start_sites_type_subtitle">%1$d dari %2$d selesai</string>
@@ -240,7 +310,6 @@ Language: id
     <string name="dialog_confirm_load_remote_post_body_2">Lokal\nDisimpan pada %s\n\nWeb\nDisimpan pada %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Pos ini memiliki dua versi yang berkonflik. Pilih versi yang ingin Anda buang.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Selesaikan konflik sinkronisasi</string>
-    <string name="local_changes_discarding_no_connection">Perlu koneksi untuk melakukan tindakan ini. Periksa koneksi Anda dan coba lagi.</string>
     <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
     <string name="preference_strip_image_location">Hapus lokasi dari media</string>
     <string name="stats_cannot_be_started">Saat ini kami tidak dapat membuka statistik. Harap coba lagi nanti</string>
@@ -402,7 +471,6 @@ Language: id
     <string name="install_jetpack">Instal Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui </string>
     <string name="stats_jetpack_connection_setup_info">Untuk menggunakan Statistik di situs WordPress, Anda perlu menginstal plugin Jetpack.</string>
     <string name="themes_empty_list">Tidak ada tema yang cocok dengan pencarian Anda</string>
     <string name="reader_label_post_search_explainer">Apa yang ingin Anda cari?</string>
@@ -522,7 +590,6 @@ Language: id
     <string name="plugin_install_site_ineligible_site_private">Fitur plugin memerlukan situs berstatus publik.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Fitur plugin memerlukan paket bisnis.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Fitur plugin memerlukan domain kustom.</string>
-    <string name="plugin_install_site_ineligible_default_error">Fitur plugin tidak tersedia untuk situs ini.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Kami sedang mengerjakan penyiapan akhir — hampir selesai…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Menginstal plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instal</string>
@@ -829,7 +896,6 @@ Language: id
     <string name="login_text_otp_another">Kirimi saya kode baru.</string>
     <string name="enter_verification_code_sms">Kami mengirimkan SMS ke nomor ponsel yang berakhiran %s. Masukkan kode verifikasi yang tercantum di SMS tersebut.</string>
     <string name="error_generic_error">Tidak dapat melakukan operasi</string>
-    <string name="error_media_recover_post">Tidak dapat mengunggah media pos ini</string>
     <string name="image_size">Ukuran</string>
     <string name="uploading_subtitle_media_only_one">1 file tersisa</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d file tersisa</string>
@@ -948,7 +1014,6 @@ Language: id
     <string name="login_email_client_not_found">Tidak dapat mendeteksi aplikasi klien email Anda</string>
     <string name="login_empty_2fa">Masukkan kode verifikasi</string>
     <string name="login_empty_username">Masukkan nama pengguna</string>
-    <string name="login_empty_site_url">Masukkan alamat situs</string>
     <string name="login_log_in_for_deeplink">Login ke WordPress.com untuk mengakses pos.</string>
     <string name="login_error_while_adding_site">Error saat menambahkan situs. Kode error: %s</string>
     <string name="login_checking_site_address">Memeriksa alamat situs</string>
@@ -957,7 +1022,6 @@ Language: id
     <string name="login_site_address_help_title">Apa alamat situs saya?</string>
     <string name="login_site_address_help">Perlu bantuan untuk menemukan alamat situs Anda?</string>
     <string name="login_site_address">Alamat situs</string>
-    <string name="enter_site_address">Masukkan alamat situs WordPress yang ingin Anda hubungkan.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
     <string name="login_continue">Lanjutkan</string>
@@ -1119,7 +1183,6 @@ Language: id
     <string name="editor_post_saved_locally_failed_media">Pos memiliki unggahan media yang gagal dan telah disimpan secara lokal</string>
     <string name="sure_to_remove_account">Hapus situs ini dari aplikasi?</string>
     <string name="photo_picker_title">Pilih foto</string>
-    <string name="error_publish_no_network">Perangkat offline. Perubahan disimpan secara lokal.</string>
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
     <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
@@ -1317,7 +1380,6 @@ Language: id
     <string name="start_over">Mulai</string>
     <string name="me_btn_app_settings">Pengaturan Aplikasi</string>
     <string name="editor_remove_failed_uploads">Buang unggahan yang gagal</string>
-    <string name="editor_toast_failed_uploads">Gagal mengunggah beberapa media. Tidak dapat menyimpan atau menerbitkan\n pos Anda dalam status ini. Anda ingin membuang semua media yang gagal?</string>
     <string name="site_settings_advanced_header">Lanjutan</string>
     <string name="comments_empty_list_filtered_trashed">Tidak ada komentar yang dibuang</string>
     <string name="comments_empty_list_filtered_pending">Tidak komentar tertunda</string>
@@ -1373,7 +1435,6 @@ Language: id
     <string name="editor_page_title_placeholder">Judul Halaman</string>
     <string name="editor_post_title_placeholder">Judul Kiriman</string>
     <string name="email_address">Alamat email</string>
-    <string name="preference_editor">Penyunting</string>
     <string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
     <string name="dlg_sure_to_delete_comment">Hapus komentar ini secara permanen?</string>
     <string name="mnu_comment_delete_permanently">Hapus</string>
@@ -1411,7 +1472,6 @@ Language: id
     <string name="cd_related_post_preview_image">Gambar pratinjau pos terkait</string>
     <string name="error_post_remote_site_settings">Tidak dapat menyimpan info situs</string>
     <string name="error_fetch_remote_site_settings">Tidak dapat mengambil info situs</string>
-    <string name="site_settings_disconnected_toast">Log out, penyuntingan dinonaktifkan.</string>
     <string name="site_settings_close_after_dialog_switch_text">Tutup secara otomatis</string>
     <string name="site_settings_close_after_dialog_description">Tutup komentar secara otomatis di artikel.</string>
     <string name="site_settings_paging_dialog_description">Bagi utas komentar ke dalam beberapa halaman.</string>
@@ -1548,7 +1608,6 @@ Language: id
     <string name="stats_enable_rest_api_in_jetpack">Untuk menampilkan statistik Anda, aktifkan module JSON API di Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Komentar</string>
     <string name="reader_short_comment_count_one">1 Komentar</string>
-    <string name="reader_label_submit_comment">KIRIM</string>
     <string name="reader_hint_comment_on_post">Tanggapan untuk pos…</string>
     <string name="reader_discover_visit_blog">Kunjungi %s</string>
     <string name="reader_discover_attribution_blog">Semula diposkan pada %s</string>
@@ -1929,6 +1988,7 @@ Language: id
     <string name="pages">Halaman</string>
     <string name="no_network_title">Tidak ada jaringan</string>
     <string name="featured_in_post">Sertakan gambar dalam konten tulisan</string>
+    <string name="ok">OK</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Mengunggah…</string>

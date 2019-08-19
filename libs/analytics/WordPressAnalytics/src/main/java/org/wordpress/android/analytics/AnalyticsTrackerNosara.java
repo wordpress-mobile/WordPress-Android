@@ -157,6 +157,24 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
+            case EDITOR_TAPPED_ALIGN_LEFT:
+                predefinedEventProperties.put("button", "align_left");
+                break;
+            case EDITOR_TAPPED_ALIGN_CENTER:
+                predefinedEventProperties.put("button", "align_center");
+                break;
+            case EDITOR_TAPPED_ALIGN_RIGHT:
+                predefinedEventProperties.put("button", "align_right");
+                break;
+            case EDITOR_TAPPED_UNDO:
+                predefinedEventProperties.put("button", "undo");
+                break;
+            case EDITOR_TAPPED_REDO:
+                predefinedEventProperties.put("button", "redo");
+                break;
+            case EDITOR_TAPPED_HORIZONTAL_RULE:
+                predefinedEventProperties.put("button", "horizontal_rule");
+                break;
             case REVISIONS_DETAIL_VIEWED_FROM_LIST:
                 predefinedEventProperties.put("source", "list");
                 break;
@@ -524,7 +542,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
-            properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
+            // Only add the editor information if it was set before.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/pull/10300#discussion_r309145514
+            if (metadata.isGutenbergEnabledVariableSet()) {
+                properties.put(IS_GUTENBERG_ENABLED, metadata.isGutenbergEnabled());
+            }
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -718,6 +740,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_tab_changed";
             case POST_LIST_VIEW_LAYOUT_TOGGLED:
                 return "post_list_view_layout_toggled";
+            case POST_LIST_SEARCH_ACCESSED:
+                return "post_list_search_accessed";
             case EDITOR_OPENED:
                 return "editor_opened";
             case EDITOR_ADDED_PHOTO_NEW:
@@ -801,6 +825,13 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_LINK_REMOVED:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ALIGN_LEFT:
+            case EDITOR_TAPPED_ALIGN_CENTER:
+            case EDITOR_TAPPED_ALIGN_RIGHT:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_UNDO:
+            case EDITOR_TAPPED_REDO:
                 return "editor_button_tapped";
             case REVISIONS_LIST_VIEWED:
                 return "revisions_list_viewed";
@@ -1009,6 +1040,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_period_accessed";
             case STATS_VIEW_ALL_ACCESSED:
                 return "stats_view_all_accessed";
+            case STATS_PREVIOUS_DATE_TAPPED:
+                return "stats_previous_date_tapped";
+            case STATS_NEXT_DATE_TAPPED:
+                return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
@@ -1483,6 +1518,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "automated_transfer_status_failed";
             case AUTOMATED_TRANSFER_FLOW_COMPLETE:
                 return "automated_transfer_flow_complete";
+            case AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASED:
+                return "automated_transfer_custom_domain_purchased";
+            case AUTOMATED_TRANSFER_CUSTOM_DOMAIN_PURCHASE_FAILED:
+                return "automated_transfer_custom_domain_purchase_failed";
             case PUBLICIZE_SERVICE_CONNECTED:
                 return "publicize_service_connected";
             case PUBLICIZE_SERVICE_DISCONNECTED:
@@ -1614,6 +1653,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE:
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 return "app_reviews_significant_event_incremented";
+            case DOMAIN_CREDIT_PROMPT_SHOWN:
+                return "domain_credit_prompt_shown";
+            case DOMAIN_CREDIT_REDEMPTION_TAPPED:
+                return "domain_credit_redemption_tapped";
+            case DOMAIN_CREDIT_REDEMPTION_SUCCESS:
+                return "domain_credit_redemption_success";
         }
         return null;
     }

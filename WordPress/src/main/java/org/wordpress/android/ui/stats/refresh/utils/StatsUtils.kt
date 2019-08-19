@@ -13,6 +13,7 @@ private val SUFFIXES = TreeMap(mapOf(
         1_000_000_000_000_000_000L to "E"
 ))
 
+const val ONE_THOUSAND = 1000
 const val TEN_THOUSAND = 10000
 const val HUNDRED_THOUSAND = 100000
 const val MILLION = 1000000

@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-12 10:38:35+0000
+Translation-Revision-Date: 2019-08-04 08:38:19+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="login_need_help_finding_connected_email">هل تريد مساعدة في العثور على البريد الإلكتروني الذي أنت متصلاً به؟</string>
+    <string name="enter_wordpress_site">موقع الويب على هذا العنوان ليس موقع ووردبريس. بالنسبة لنا للاتصال به، يجب أن يكون الموقع مُنصّبًا ووردبريس.</string>
+    <string name="login_invalid_site_url">يرجى إدخال عنوان موقع ويب كامل، مثل example.com.</string>
+    <string name="enter_email_for_site">تسجيل الدخول باستخدام WordPress.com للاتصال بـ %1$s</string>
+    <string name="sharing_facebook_account_must_have_pages">يتعذر إجراء اتصال بالفيسبوك نظرًا لأن هذا الحساب لا يملك حق الوصول إلى أي صفحات. يدعم فيسبوك مشاركة الاتصالات بصفحات الفيسبوك، وليس بملفات تعريف الفيسبوك الشخصية.</string>
+    <string name="stats_post_views_label">المشاهدات</string>
+    <string name="stats_post_label">المقالة</string>
+    <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_posting_activity_graph">الرسم البياني لنشاط النشر.</string>
+    <string name="stats_item_collapsed">تم طيّ العنصر</string>
+    <string name="stats_item_expanded">تمّ توسيع العنصر</string>
+    <string name="stats_collapse_content_description">طيّ</string>
+    <string name="stats_expand_content_description">توسيع</string>
+    <string name="stats_graph_updated">تمّ تحديث الرسم البياني.</string>
+    <string name="stats_overview_content_description">%1$s %2$s للفترة: %3$s، التغييرات من الفترة السابقة - %4$s</string>
+    <string name="stats_bar_chart_content_description">رسم بياني لمشاهدات الموقع.</string>
+    <string name="stats_loading_card">تحميل بيانات البطاقة المُحدَّدة</string>
+    <string name="site_settings_editor">المُحرر</string>
+    <string name="dialog_gutenberg_informative_description_page">أنت تستخدم حاليًا مُحرّر المكوّنات لإنشاء صفحات جديدة. هل تريد استخدام المحرر التقليدي افتراضيًا؟ توجّه إلى إعدادات الموقع.</string>
+    <string name="dialog_gutenberg_informative_description_post">أنت تستخدم حاليًا مُحرّر المكوّنات لإنشاء مقالات جديدة. هل تريد استخدام المحرر التقليدي افتراضيًا؟ توجّه إلى إعدادات الموقع.</string>
+    <string name="description_expand">توسيع</string>
+    <string name="description_collapse">طيّ</string>
+    <string name="editor_retry_failed_uploads">إعادة محاولة الرفع</string>
+    <string name="editor_toast_failed_uploads">فشلت بعض عمليات رفع الوسائط. لا يمكنك حفظ أو نشر\n        مقالتك في هذه الحالة.</string>
+    <string name="my_site_verify_your_email_without_email">تحقق من عنوان بريدك الإلكتروني - تم إرسال الإرشادات إلى بريدك الإلكتروني</string>
+    <string name="my_site_verify_your_email">تحقق من عنوان بريدك الإلكتروني - تم إرسال الإرشادات إلى %s</string>
+    <string name="error_media_recover_post_not_submitted">تعذّر رفع الوسائط. لم يتم إرسال المقالة.</string>
+    <string name="error_media_recover_post_not_scheduled">تعذّر رفع الوسائط. المقالة لم يتم جدولتها.</string>
+    <string name="error_media_recover_post_not_published">تعذّر رفع الوسائط. المقالة لم يتم نشرها.</string>
+    <string name="error_media_recover_post">تعذّر رفع الوسائط</string>
+    <string name="link_dialog_button_cancel">إلغاء</string>
+    <string name="link_dialog_button_ok">موافق</string>
+    <string name="link_dialog_edit_hint">http(s)://</string>
+    <string name="link_dialog_button_remove_link">إزالة الرابط</string>
+    <string name="link_dialog_title">إدراج رابط</string>
+    <string name="post_settings_retry_featured_image">إعادة محاولة الرفع</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">جاري رفع الوسائط.\nيرجى النقر على الخيارات.</string>
+    <string name="link_open_new_window">فتح الرابط في نافذة/علامة تبويب جديدة</string>
+    <string name="post_list_search_prompt">بحث في المقالات المنشورة</string>
+    <string name="stats_widget_error_no_access_token">لعرض إحصائياتك، سجّل الدخول إلى حساب WordPress.com.</string>
+    <string name="post_list_search_nothing_found">لا تتطابق أي مقالة مع بحثك</string>
+    <string name="domains_suggestions_intro_description">هذا هو المكان الذي سيجده الأشخاص على الإنترنت.</string>
+    <string name="domains_suggestions_intro_title">اختيار اسم نطاق متميز</string>
+    <string name="my_site_custom_domain_name">تتضمن جميع خطط WordPress.com اسم نطاق مخصص. سجّل نطاقك المميز المجاني الآن.</string>
+    <string name="stats_widget_minified_name">نبذة سريعة</string>
+    <string name="stats_widget_today_insights_name">اليوم</string>
+    <string name="stats_widget_all_time_insights_name">كل الوقت</string>
+    <string name="stats_widget_weekly_views_name">المشاهدات هذا الأسبوع</string>
+    <string name="stats_widget_log_in_message">الرجاء تسجيل الدخول إلى تطبيق ووردبريس لإضافة ودجت.</string>
+    <string name="stats_widget_error_no_network">لا توجد شبكة متاحة</string>
+    <string name="stats_widget_error_no_data">لا يمكن تحميل البيانات</string>
+    <string name="stats_widget_select_type">النوع</string>
+    <string name="stats_widget_select_color">اللون</string>
+    <string name="stats_widget_select_your_site">تحديد الموقع الخاص بك</string>
+    <string name="stats_widget_color_dark">داكن</string>
+    <string name="stats_widget_color_light">فاتح</string>
+    <string name="stats_widget_color">اللون</string>
+    <string name="stats_widget_site_caption">تحديد الموقع الخاص بك</string>
+    <string name="stats_widget_site">الموقع</string>
+    <string name="stats_widget_all_time_title">كل الوقت</string>
+    <string name="stats_widget_views_title">المشاهدات هذا الأسبوع</string>
+    <string name="stats_widget_add">أضف الودجت</string>
+    <string name="dialog_confirm_update_yes">تحديث الآن</string>
+    <string name="dialog_confirm_update_message_page">سيتم تحديث هذه الصفحة المنشورة فورًا.</string>
+    <string name="dialog_confirm_update_message_post">سيتم تحديث هذه المقالة المنشورة فورًا.</string>
+    <string name="dialog_confirm_update_title">مستعد للتحديث؟</string>
+    <string name="plugin_fetching_error_after_at">استغرق تحديث تفاصيل الإضافة وقتًا أطول من المعتاد. يرجى التحقق مرة أخرى لاحقًا.</string>
+    <string name="plugin_install_site_ineligible_default_error">إذا قمت للتو بتسجيل اسم نطاق، فيرجى الانتظار حتى ننتهي من إعداده ومن ثم المحاولة مرة أخرى.\n\nإذا لم يكن الأمر كذلك، يبدو أنه حدث خطأ ما وقد لا تكون ميزة الإضافة متاحة لهذا الموقع.</string>
+    <string name="domain_contact_information_state_not_available_hint">الحالة (غير متوفرة)</string>
+    <string name="domain_registration_privacy_protection_tos">من خلال تسجيل هذا النطاق فإنك توافق على%1$sالشروط والأحكام%2$s</string>
+    <string name="error_network_connection">تحقق من اتصال الشبكة وحاول مرة أخرى.</string>
+    <string name="error_browser_no_network">يتعذر تحميل هذه الصفحة حاليًا.</string>
+    <string name="error_disabled_apis">تعذّر جلب الإعدادات: بعض واجهات برمجة التطبيقات APIs غير متاحة لمُعرّف تطبيق OAuth هذا + دمج الحساب.</string>
+    <string name="jetpack_connection_terms_and_conditions">من خلال إعداد Jetpack فإنك توافق على %1$sالشروط والأحكام%2$s</string>
+    <string name="site_settings_disconnected_toast">لا يوجد اتصال. التحرير مُعطّل.</string>
+    <string name="site_settings_update_password_message">لإعادة اتصال التطبيق بموقعك المستضاف ذاتيًا، أدخل كلمة المرور الجديد للموقع من هنا.</string>
+    <string name="site_settings_password_updated">تمّ تحديث كلمة المرور</string>
+    <string name="site_settings_password_dialog_title">تحديث كلمة المرور</string>
     <string name="domain_registration_phone_number_format">+%s.%s</string>
-    <string name="domain_registration_error_updating_site">حدث خطأ أثناء تحديث تفاصيل موقعك: %s</string>
-    <string name="domain_registration_error_fetching_contact_information">حدث خطأ أثناء جلب معلومات جهة اتصال النطاق: %s</string>
-    <string name="domain_registration_error_registering_domain">حدث خطأ أثناء تسجيل النطاق: %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">جاري تسجيل اسم النطاق…</string>
     <string name="domain_registration_state_picker_dialog_title">تحديد الولاية</string>
     <string name="domain_registration_country_picker_dialog_title">تحديد الدولة</string>
@@ -56,7 +131,7 @@ Language: ar
     <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
     <string name="stats_insights_social">اجتماعي</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>
-    <string name="stats_view_follower_totals">إجماليات المتابعين</string>
+    <string name="stats_view_follower_totals">مجموع المتابعين</string>
     <string name="domain_suggestions_fetch_error">تعذّر تحميل اقتراحات النطاق</string>
     <string name="domain_suggestions_search_hint">كتابة كلمة مفتاحية للحصول على مزيد من الأفكار</string>
     <string name="domains_suggestions_empty_list">لم يتم العثور على أي اقتراحات</string>
@@ -80,7 +155,6 @@ Language: ar
     <string name="posts_scheduled_empty">ليس لديك أية مقالات مجدولة</string>
     <string name="posts_published_empty">لم تنشر أي مقالات حتى الآن</string>
     <string name="notification_wpcom_username_needed">يرجى تسجيل الدخول باسم المستخدم وكلمة المرور الخاصة بك.</string>
-    <string name="login_invalid_site_url">عنوان الموقع الذي أدخلته غير صالح. يرجى إعادة إدخاله.</string>
     <string name="error_user_username_instead_of_email">يرجى تسجيل الدخول باستخدام اسم مستخدم WordPress.com الخاص بك بدلاً من عنوان بريدك الإلكتروني.</string>
     <string name="stats_insights_average_words">معدل الكلمات/المقالة</string>
     <string name="stats_insights_total_words">إجمالي الكلمات</string>
@@ -155,8 +229,6 @@ Language: ar
     <string name="stats_loading_error">لم يتم تحميل البيانات</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">تحرير المقالات والصفحات الجديدة باستخدام مُحرر المكوّنات</string>
     <string name="site_settings_gutenberg_default_for_new_posts">استخدام مُحرر المكوّنات</string>
-    <string name="dialog_gutenberg_informative_description_page">هذه الصفحة تم إنشاؤها بالأصل في محرر المكوّنات، لذلك قمنا بتمكين المحرر لهذه الصفحة.\n        التبديل للعودة إلى المحرر التقليدي في أي وقت من خلال النقر على ⋮ بالشريط العلوي.</string>
-    <string name="dialog_gutenberg_informative_description_post">هذه المقالة تم إنشاؤها بالأصل في محرر المكوّنات، لذلك قمنا بتمكين المحرر لهذه المقالة.\n        التبديل للعودة إلى المحرر التقليدي في أي وقت من خلال النقر على ⋮ بالشريط العلوي.</string>
     <string name="dialog_gutenberg_informative_title">تم تمكين محرر المكوّنات</string>
     <string name="exit">خروج</string>
     <string name="quick_start_sites_type_subtitle">تم استكمال %1$d من %2$d</string>
@@ -244,7 +316,6 @@ Language: ar
     <string name="dialog_confirm_load_remote_post_body_2">محلي\nتم الحفظ على %s\n\nالويب\nتم الحفظ على %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">تحتوي هذه المقالة على إصدارين متعارضين. حدّد الإصدار الذي ترغب في تجاهله.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">حل مزامنة التعارض</string>
-    <string name="local_changes_discarding_no_connection">يلزم وجود اتصال لتنفيذ هذا الإجراء. يرجى التحقّق من اتصالك والمحاولة لاحقًا.</string>
     <string name="stats_no_data_for_period">لا توجد بيانات لهذه الفترة</string>
     <string name="preference_strip_image_location">إزالة موقع من الوسائط</string>
     <string name="stats_cannot_be_started">يتعذر علينا فتح الإحصاءات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
@@ -423,7 +494,6 @@ Language: ar
     <string name="install_jetpack">تنصيب Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">يعني إعداد Jetpack موافقتك على </string>
     <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>
@@ -458,11 +528,6 @@ Language: ar
     <string name="blavatar_desc">أيقونة الموقع</string>
     <string name="theme_image_desc">صورة القالب</string>
     <string name="featured_image_desc">صورة مميزة</string>
-    <string name="local_changes_discarding_error">حدث خطأ أثناء تجاهل تغييراتك المحلية. يرجى الاتصال بالدعم للحصول على مزيد من المساعدة.</string>
-    <string name="local_changes_discarding">تجاهل التغييرات المحلية</string>
-    <string name="local_changes_discarded">تم تجاهل التغييرات المحلية</string>
-    <string name="menu_discard_changes">تجاهل التغييرات المحلية</string>
-    <string name="button_discard_changes">تجاهل التغييرات</string>
     <string name="button_discard">تجاهل</string>
     <string name="reader_avatar_desc">صورة ملف التعريف</string>
     <string name="reader_blavatar_desc">أيقونة الموقع</string>
@@ -553,7 +618,6 @@ Language: ar
     <string name="plugin_install_site_ineligible_site_private">تتطلب ميزة المكوّن الإضافي أن يكون الموقع عامًا.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">تتطلب ميزة المكوّن الإضافي باقة الشركات.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">تتطلب ميزة المكوّن الإضافي نطاقًا مخصصًا.</string>
-    <string name="plugin_install_site_ineligible_default_error">مميزات الإضافة غير متاحة لهذا الموقع.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">نقوم بالإعداد النهائي — انتهينا تقريبًا…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">جاري تثبيت الإضافة…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">تثبيت</string>
@@ -833,7 +897,7 @@ Language: ar
     <string name="site_settings_format_entry_custom">مخصص</string>
     <string name="site_settings_posts_per_page_title">عدد المقالات لكل صفحة</string>
     <string name="site_settings_timezone_subtitle">اختر مدينة في منطقتك الزمنية</string>
-    <string name="site_settings_timezone_title">المنطقة الزمنية</string>
+    <string name="site_settings_timezone_title">المنطقة الزمنيّة</string>
     <string name="site_settings_time_format_title">تنسيق الوقت</string>
     <string name="site_settings_date_format_title">تنسيق التاريخ</string>
     <string name="site_settings_week_start_title">يبدأ الأسبوع في</string>
@@ -861,7 +925,7 @@ Language: ar
     <string name="plugin_active">نشط</string>
     <string name="plugins">الإضافات</string>
     <string name="my_site_btn_plugins">الإضافات</string>
-    <string name="media_edit_link_hint">فتح الرابط في نافذة/علامة تبويب جديدة\"</string>
+    <string name="media_edit_link_hint">فتح الرابط في نافذة/علامة تبويب جديدة</string>
     <string name="media_edit_link_text">رابط إلى</string>
     <string name="notification_login_failed">حدث خطأ.</string>
     <string name="notification_2fa_needed">يرجى إدخال رمز المصادقة للمتابعة.</string>
@@ -876,7 +940,6 @@ Language: ar
     <string name="login_text_otp_another">أرسل إليّ رمزًا آخر بدلاً من ذلك.</string>
     <string name="enter_verification_code_sms">أرسلنا رسالة نصية إلى رقم الهاتف الذي ينتهي بـ %s. يرجى إرسال رمز التحقق في رسالة نصية قصيرة.</string>
     <string name="error_generic_error">تعذر إجراء التشغيل</string>
-    <string name="error_media_recover_post">تعذر رفع وسائط هذه المقالة</string>
     <string name="image_size">الحجم</string>
     <string name="uploading_subtitle_media_only_one">ثمة ملف واحد متبقٍّ</string>
     <string name="uploading_subtitle_media_only">%1$d من %2$d من الملفات متبقية</string>
@@ -995,7 +1058,6 @@ Language: ar
     <string name="login_email_client_not_found">لا يمكن اكتشاف تطبيق عميل البريد الإلكتروني الخاص بك</string>
     <string name="login_empty_2fa">يُرجى إدخال كود التحقق</string>
     <string name="login_empty_username">الرجاء إدخال اسم المستخدم</string>
-    <string name="login_empty_site_url">يُرجى إدخال عنوان موقع</string>
     <string name="login_log_in_for_deeplink">سجِّل الدخول إلى WordPress.com للوصول إلى المقالة.</string>
     <string name="login_error_while_adding_site">حدث خطأ أثناء إضافة الموقع. خطأ بالخصائص: %s</string>
     <string name="login_checking_site_address">التحقق من عنوان الموقع</string>
@@ -1004,7 +1066,7 @@ Language: ar
     <string name="login_site_address_help_title">ما عنوان الموقع الخاص بي؟</string>
     <string name="login_site_address_help">هل تحتاج إلى المساعدة في العثور على عنوان موقعك؟</string>
     <string name="login_site_address">عنوان الموقع</string>
-    <string name="enter_site_address">أدخل عنوان موقع ووردبريس الذي تود الاتصال به.</string>
+    <string name="enter_site_address">أدخل العنوان لموقع ووردبريس الذي تود الاتصال به.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">تم تسجيل الدخول بالفعل إلى WordPress.com</string>
     <string name="login_continue">المتابعة</string>
@@ -1175,7 +1237,7 @@ Language: ar
     <string name="editor_post_saved_locally_failed_media">تحتوي المقالة على عمليات رفع غير مكتملة للوسائط وتم حفظها محليًا</string>
     <string name="sure_to_remove_account">إزالة هذا الموقع من التطبيق؟</string>
     <string name="photo_picker_title">اختيار صورة</string>
-    <string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ التغييرات محليًا.</string>
+    <string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ المقالة محليًا.</string>
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
     <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
@@ -1374,7 +1436,6 @@ Language: ar
     <string name="start_over">البدء من جديد</string>
     <string name="me_btn_app_settings">إعدادات التطبيق</string>
     <string name="editor_remove_failed_uploads">إزالة عمليات الرفع الفاشلة</string>
-    <string name="editor_toast_failed_uploads">فشل بعض عمليات رفع الوسائط. لا يمكنك الحفظ أو النشر\n مقالتك بهذه الحالة. هل تريد إزالة كافة الوسائط الفاشلة؟</string>
     <string name="site_settings_advanced_header">متقدم</string>
     <string name="comments_empty_list_filtered_trashed">لا توجد تعليقات موضوعة في سلة المهملات</string>
     <string name="comments_empty_list_filtered_pending">لا توجد تعليقات معلّقة</string>
@@ -1431,7 +1492,6 @@ Language: ar
     <string name="editor_page_title_placeholder">عنوان الصفحة</string>
     <string name="editor_post_title_placeholder">عنوان المقالة</string>
     <string name="email_address">عنوان البريد الإلكتروني</string>
-    <string name="preference_editor">المحرر</string>
     <string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
     <string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>
     <string name="mnu_comment_delete_permanently">حذف</string>
@@ -1469,7 +1529,6 @@ Language: ar
     <string name="cd_related_post_preview_image">صورة معاينة المقالة ذات الصلة</string>
     <string name="error_post_remote_site_settings">تعذر حفظ معلومات الموقع</string>
     <string name="error_fetch_remote_site_settings">تعذر استرداد معلومات الموقع</string>
-    <string name="site_settings_disconnected_toast">غير متصل، التحرير مُعطّل.</string>
     <string name="site_settings_close_after_dialog_switch_text">إغلاق تلقائي</string>
     <string name="site_settings_close_after_dialog_description">إغلاق تلقائي للتعليقات على المقالات.</string>
     <string name="site_settings_paging_dialog_description">تحديد مناقشات التعليقات في صفحات متعددة.</string>
@@ -1609,7 +1668,6 @@ Language: ar
     <string name="stats_enable_rest_api_in_jetpack">لعرض الإحصائيات الخاصة بك، قم بتمكين وحدة JSON API في Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s تعليقات</string>
     <string name="reader_short_comment_count_one">تعليق واحد</string>
-    <string name="reader_label_submit_comment">إرسال</string>
     <string name="reader_hint_comment_on_post">رد على المقالة…</string>
     <string name="reader_discover_visit_blog">زيارة %s</string>
     <string name="reader_discover_attribution_blog">تم النشر في الأصل على %s</string>
@@ -1984,7 +2042,7 @@ Language: ar
     <string name="post_content">المحتوى (انقر لإضافة نص ووسائط)</string>
     <string name="incorrect_credentials">اسم المستخدم و/أو كلمة المرور غير صحيحين.</string>
     <string name="log_in">تسجيل الدخول</string>
-    <string name="username">إسم المستخدم</string>
+    <string name="username">اسم المستخدم</string>
     <string name="password">كلمة المرور</string>
     <string name="reader">القارئ</string>
     <string name="anonymous">مجهول</string>
@@ -1994,6 +2052,7 @@ Language: ar
     <string name="pages">صفحات</string>
     <string name="no_network_title">لا توجد شبكة متاحة</string>
     <string name="featured_in_post">إدراج الصورة في محتوى المقالة</string>
+    <string name="ok">موافق</string>
     <string name="blogusername">blogusername</string>
     <string name="link_enter_url">الرابط URL</string>
     <string name="uploading">جاري الرفع…</string>

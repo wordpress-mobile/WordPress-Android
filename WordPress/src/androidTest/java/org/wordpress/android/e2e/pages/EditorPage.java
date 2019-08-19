@@ -20,6 +20,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -64,6 +65,9 @@ public class EditorPage {
         }
 
         // Click on a random image
+        waitForElementToBeDisplayed(onView(withText("WordPress media")));
+        // wait for images to load before clicking
+        idleFor(2000);
         onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
 
         // Click the confirm button
@@ -73,6 +77,8 @@ public class EditorPage {
             // Accept alert for media access
             clickOn(onView(withText("LEAVE OFF")).inRoot(isDialog()));
         }
+
+        waitForElementToBeDisplayed(publishButton);
     }
 
     public void openSettings() {

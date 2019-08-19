@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-05-14 14:45:57+0000
+Translation-Revision-Date: 2019-06-28 13:23:40+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
@@ -217,7 +217,6 @@ Language: sk
     <string name="install_jetpack">Inštalovať Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
-    <string name="stats_jetpack_connection_terms_and_conditions">Nastavením Jetpack súhlasíte s našimi</string>
     <string name="stats_jetpack_connection_setup_info">Budete si musieť nainštalovať Jetpack plugin, keď chcete používať Štatistiky na vašej webovej stránke WordPress.</string>
     <string name="themes_empty_list">Žiadne témy nezodpovedajú vášmu vyhľadávaniu</string>
     <string name="reader_label_post_search_explainer">Čo by ste chceli nájsť?</string>
@@ -252,11 +251,6 @@ Language: sk
     <string name="blavatar_desc">ikona webovej stránky</string>
     <string name="theme_image_desc">obrázok témy</string>
     <string name="featured_image_desc">hlavný obrázok</string>
-    <string name="local_changes_discarding_error">Pri odstraňovaní vašich miestnych zmien došlo k chybe. Kontaktujte podporu pre ďalšiu pomoc.</string>
-    <string name="local_changes_discarding">Prebieha odstránenie lokálnych zmien</string>
-    <string name="local_changes_discarded">Lokálne zmeny boli odstránené</string>
-    <string name="menu_discard_changes">Odstrániť lokálne zmeny</string>
-    <string name="button_discard_changes">Odstrániť zmeny</string>
     <string name="button_discard">Odstrániť</string>
     <string name="reader_avatar_desc">profilová fotka</string>
     <string name="reader_blavatar_desc">ikona stránky</string>
@@ -347,7 +341,6 @@ Language: sk
     <string name="plugin_install_site_ineligible_site_private">Funkcia pluginu vyžaduje, aby webová stránka bola verejná.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">Funkcia pluginy vyžaduje biznis plán.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funkcia pluginu vyžaduje vlastnú doménu.</string>
-    <string name="plugin_install_site_ineligible_default_error">Funkcia pluginu nie je dostupná pre túto webovú stránku.</string>
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Robíme konečné nastavenie - takmer hotovo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Inštalácia pluginu…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Inštalovať</string>
@@ -670,7 +663,6 @@ Language: sk
     <string name="login_text_otp_another">Pošlite mi druhý kód.</string>
     <string name="enter_verification_code_sms">Poslali sme správu na telefónne číslo končiace sa %s. Prosím vložte verifikačný kód z SMS. </string>
     <string name="error_generic_error">Operáciu sa nepodarilo vykonať</string>
-    <string name="error_media_recover_post">Nemožno nahrať médium tohto príspevku</string>
     <string name="image_size">Veľkosť</string>
     <string name="uploading_subtitle_media_only_one">1 súbor zostáva</string>
     <string name="uploading_subtitle_media_only">%1$d z %2$d súborov zostáva</string>
@@ -789,7 +781,6 @@ Language: sk
     <string name="login_email_client_not_found">Nemožno zistiť vašu aplikáciu e-mailového klienta</string>
     <string name="login_empty_2fa">Prosím, zadajte overovací kód</string>
     <string name="login_empty_username">Prosím, zadajte používateľské meno</string>
-    <string name="login_empty_site_url">Prosím, zadajte adresu webovej stránky</string>
     <string name="login_log_in_for_deeplink">Prihláste sa do WordPress.com a prejdite k článku.</string>
     <string name="login_error_while_adding_site">Chyba pri pridávaní webovej stránky. Kód chyby: %s.</string>
     <string name="login_checking_site_address">Kontrolovanie adresy webovej stránky.</string>
@@ -798,7 +789,6 @@ Language: sk
     <string name="login_site_address_help_title">Aká je adresa mojej webovej stránky?</string>
     <string name="login_site_address_help">Potrebujete pomoc pri hľadaní adresy vašej webovej stránky?</string>
     <string name="login_site_address">Adresa webovej stránky</string>
-    <string name="enter_site_address">Vpíšte adresu vašej webovej stránky WordPress, na ktorú sa chcete pripojiť.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Už ste prihlásený vo WordPress.com</string>
     <string name="login_continue">Pokračovať</string>
@@ -969,7 +959,7 @@ Language: sk
     <string name="editor_post_saved_locally_failed_media">Článku sa nepodarilo načítať média, uložili sa lokálne</string>
     <string name="sure_to_remove_account">Odstrániť webovú stránku z aplikácie?</string>
     <string name="photo_picker_title">Vybrať fotografiu</string>
-    <string name="error_publish_no_network">Zariadenie je offline. Zmeny sa uložili lokálne.</string>
+    <string name="error_publish_no_network">Zariadenie je offline. Článok sa uložili lokálne.</string>
     <string name="editor_post_saved_online">článok uložený online.</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázkov. Vyššie hodnoty znamenajú lepšiu kvalitu obrázkov.</string>
     <string name="site_settings_optimize_images_summary">Povoliť zmenu veľkosti a komprimovanie obrázkov.</string>
@@ -1168,7 +1158,6 @@ Language: sk
     <string name="start_over">Začať znovu</string>
     <string name="me_btn_app_settings">Nastavenia aplikácie</string>
     <string name="editor_remove_failed_uploads">Odstrániť chybné súbory</string>
-    <string name="editor_toast_failed_uploads">Niektoré súbory neboli správne nahrané. V tomto stave nemôžete uložiť ani publikovať váš článok. Chcete odstrániť všetky chybné súbory?</string>
     <string name="site_settings_advanced_header">Rozšírené</string>
     <string name="comments_empty_list_filtered_trashed">Žiadne komentáre v koši</string>
     <string name="comments_empty_list_filtered_pending">Žiadne čakajúce komentáre</string>
@@ -1225,7 +1214,6 @@ Language: sk
     <string name="editor_page_title_placeholder">Nadpis stránky</string>
     <string name="editor_post_title_placeholder">Nadpis článku</string>
     <string name="email_address">Emailová adresa</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
     <string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
     <string name="mnu_comment_delete_permanently">Zmazať</string>
@@ -1263,7 +1251,6 @@ Language: sk
     <string name="cd_related_post_preview_image">Podobný obrázok náhľadu článku</string>
     <string name="error_post_remote_site_settings">Nepodarilo sa uložiť informácie webovej stránky</string>
     <string name="error_fetch_remote_site_settings">Nepodarilo sa načítať informácie webovej stránky</string>
-    <string name="site_settings_disconnected_toast">Odpojený, editovanie zakázané.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automaticky uzavrieť</string>
     <string name="site_settings_close_after_dialog_description">Automaticky uzavrieť komentáre pri článkoch.</string>
     <string name="site_settings_paging_dialog_description">Rozdeliť komentáre na stránky.</string>
@@ -1400,7 +1387,6 @@ Language: sk
     <string name="stats_enable_rest_api_in_jetpack">Povoľte modul JSON API v Jetpack k náhľadu vašej štatistiky.</string>
     <string name="reader_short_comment_count_multi">%s komentárov</string>
     <string name="reader_short_comment_count_one">1 komentár</string>
-    <string name="reader_label_submit_comment">ODOSLAŤ</string>
     <string name="reader_hint_comment_on_post">Pridať komentár k článku…</string>
     <string name="reader_discover_visit_blog">Návštevnosť %s</string>
     <string name="reader_discover_attribution_blog">Pôvodne publikované v %s</string>
@@ -1785,6 +1771,7 @@ Language: sk
     <string name="pages">Podstránky</string>
     <string name="no_network_title">Sieť nedostupná</string>
     <string name="featured_in_post">Vložiť obrázok do príspevku</string>
+    <string name="ok">OK</string>
     <string name="blogusername">Používateľské meno</string>
     <string name="link_enter_url">URL adresa</string>
     <string name="uploading">Nahrávanie…</string>

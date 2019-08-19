@@ -8,7 +8,6 @@ Language: sr_RS
 <resources>
     <string name="reader_short_comment_count_multi">%s коментара</string>
     <string name="reader_short_comment_count_one">1 коментар</string>
-    <string name="reader_label_submit_comment">ПОШАЉИ</string>
     <string name="reader_hint_comment_on_post">Одговор на чланак…</string>
     <string name="reader_discover_visit_blog">Посети %s</string>
     <string name="reader_discover_attribution_blog">Изворно објављено на %s</string>
@@ -353,6 +352,7 @@ Language: sr_RS
     <string name="featured_in_post">Укључи слику у садржај чланка</string>
     <string name="pages">Стране</string>
     <string name="blogusername">korisnickoimebloga</string>
+    <string name="ok">У реду</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови сервиса</string>
     <string name="version">Издање</string>

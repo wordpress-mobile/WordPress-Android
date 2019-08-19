@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-03 13:21:24+0000
+Translation-Revision-Date: 2019-06-21 11:52:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
+    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="post_list_drafts">Προσχέδια</string>
     <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
@@ -179,10 +180,6 @@ Language: el_GR
     <string name="blavatar_desc">Εικονίδιο ιστότοπου</string>
     <string name="theme_image_desc">εικόνα θέματος</string>
     <string name="featured_image_desc">προβεβλημένη εικόνα</string>
-    <string name="local_changes_discarding">Απόρριψη τοπικών αλλαγών</string>
-    <string name="local_changes_discarded">Οι τοπικές αλλαγές απορρίφθηκαν</string>
-    <string name="menu_discard_changes">Απόρριψη τοπικών αλλαγών</string>
-    <string name="button_discard_changes">Απόρριψη αλλαγών</string>
     <string name="button_discard">Απόρριψη</string>
     <string name="reader_avatar_desc">εικόνα προφίλ</string>
     <string name="reader_blavatar_desc">εικονίδιο ιστοτόπου</string>
@@ -579,7 +576,7 @@ Language: el_GR
     <string name="editor_post_saved_locally_failed_media">Το άρθρο έχει μη ολοκληρωμένες μεταφορτώσεις πολυμέσων και έχει αποθηκευτεί τοπικά.</string>
     <string name="sure_to_remove_account">Αφαίρεση αυτού του ιστότοπου από την εφαρμογή;</string>
     <string name="photo_picker_title">Επιλέξτε φωτογραφία</string>
-    <string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Οι αλλαγές αποθηκεύτηκαν τοπικά.</string>
+    <string name="error_publish_no_network">Η συσκευή είναι εκτός δικτύου. Το άρθρο αποθηκεύτηκε τοπικά.</string>
     <string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
     <string name="site_settings_image_quality_hint">Ποιότητα εικόνων. Υψηλότερες τιμές σημαίνουν εικόνες καλύτερης ποιότητας.</string>
     <string name="site_settings_optimize_images_summary">Ενεργοποιήστε για αλλαγή μεγέθους και συμπίεσης εικόνων</string>
@@ -778,7 +775,6 @@ Language: el_GR
     <string name="start_over">Ξεκινήστε από την Αρχή</string>
     <string name="me_btn_app_settings">Ρυθμίσεις Εφαρμογής</string>
     <string name="editor_remove_failed_uploads">Αφαίρεση αποτυχημένων μεταφορτώσεων</string>
-    <string name="editor_toast_failed_uploads">Μερικές μεταφορτώσεις πολυμέσων έχουν αποτύχει. Δεν μπορείτε να αποθηκεύσετε ή να δημοσιεύσετε\nτο άρθρο σας σε αυτή την κατάσταση. Θα θέλατε να αφαιρέσετε όλα τα προβληματικά πολυμέσα;</string>
     <string name="site_settings_advanced_header">Προχωρημένες</string>
     <string name="comments_empty_list_filtered_trashed">Δεν υπάρχουν Διαγραμμένα σχόλια</string>
     <string name="comments_empty_list_filtered_pending">Δεν υπάρχουν Εκκρεμή σχόλια</string>
@@ -835,7 +831,6 @@ Language: el_GR
     <string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
     <string name="editor_post_title_placeholder">Τίτλος Άρθρου</string>
     <string name="email_address">Διεύθυνση email</string>
-    <string name="preference_editor">Επεξεργαστής</string>
     <string name="dlg_sure_to_delete_comments">Να διαγραφούν οριστικά αυτά τα σχόλια;</string>
     <string name="dlg_sure_to_delete_comment">Οριστική διαγραφή αυτού του σχολίου;</string>
     <string name="mnu_comment_delete_permanently">Διαγραφή</string>
@@ -873,7 +868,6 @@ Language: el_GR
     <string name="cd_related_post_preview_image">Προεπισκόπηση εικόνας σχετικού άρθρου</string>
     <string name="error_post_remote_site_settings">Αδυναμία αποθήκευσης πληροφοριών ιστοτόπου</string>
     <string name="error_fetch_remote_site_settings">Αδυναμία ανάκτησης πληροφοριών ιστοτόπου</string>
-    <string name="site_settings_disconnected_toast">Αποσυνδεδεμένος, η επεξεργασία απενεργοποιήθηκε.</string>
     <string name="site_settings_close_after_dialog_switch_text">Αυτόματο κλείσιμο</string>
     <string name="site_settings_close_after_dialog_description">Αυτόματο κλείσιμο των σχολίων στα άρθρα.</string>
     <string name="site_settings_paging_dialog_description">Σπάσιμο των συζητήσεων με σχόλια σε πολλαπλές σελίδες.</string>
@@ -1013,7 +1007,6 @@ Language: el_GR
     <string name="stats_enable_rest_api_in_jetpack">Για να δείτε τα στατιστικά σας, ενεργοποιήστε το πρόσθετο JSON API στο Jetpack.</string>
     <string name="reader_short_comment_count_multi">%s Σχόλια</string>
     <string name="reader_short_comment_count_one">1 Σχόλιο</string>
-    <string name="reader_label_submit_comment">ΑΠΟΣΤΟΛΗ</string>
     <string name="reader_hint_comment_on_post">Απάντηση στο άρθρο…</string>
     <string name="reader_discover_visit_blog">Επισκεφθείτε το %s</string>
     <string name="reader_discover_attribution_blog">Δημοσιεύτηκε αρχικά στο %s</string>
@@ -1396,6 +1389,7 @@ Language: el_GR
     <string name="pages">Σελίδες</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
     <string name="featured_in_post">Συμπεριλάβετε την εικόνα στο περιεχόμενο του άρθρου</string>
+    <string name="ok">ΟΚ</string>
     <string name="blogusername">όνομα χρήστη ιστολογίου</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Γίνεται μεταφόρτωση</string>

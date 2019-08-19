@@ -1,6 +1,6 @@
 {
   "branch": "master",
-  "pinned_hash": "d300c2a2663c8baf3923112d13568f0a085e6207",
+  "pinned_hash": "98187303a1c3ee20443667fe1ce558f53592fafc",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",

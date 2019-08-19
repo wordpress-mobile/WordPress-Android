@@ -11,7 +11,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
 
 class StatsViewAllActivity : AppCompatActivity() {
@@ -37,13 +36,18 @@ class StatsViewAllActivity : AppCompatActivity() {
 
     companion object {
         @JvmStatic
-        fun startForGranularStats(context: Context, statsType: StatsViewType, granularity: StatsGranularity) {
-            start(context, statsType, granularity)
+        fun startForGranularStats(
+            context: Context,
+            statsType: StatsViewType,
+            granularity: StatsGranularity,
+            localSiteId: Int
+        ) {
+            start(context, statsType, granularity, localSiteId = localSiteId)
         }
 
         @JvmStatic
-        fun startForInsights(context: Context, statsType: StatsViewType) {
-            start(context, statsType)
+        fun startForInsights(context: Context, statsType: StatsViewType, localSiteId: Int) {
+            start(context, statsType, localSiteId = localSiteId)
         }
 
         @JvmStatic
@@ -51,7 +55,7 @@ class StatsViewAllActivity : AppCompatActivity() {
             context: Context,
             statsType: StatsViewType,
             selectedTab: Int,
-            localSiteId: Int?
+            localSiteId: Int
         ) {
             start(context, statsType, selectedTab = selectedTab, localSiteId = localSiteId)
         }
@@ -61,19 +65,17 @@ class StatsViewAllActivity : AppCompatActivity() {
             statsType: StatsViewType,
             granularity: StatsGranularity? = null,
             selectedTab: Int? = null,
-            localSiteId: Int? = null
+            localSiteId: Int
         ) {
             val intent = Intent(context, StatsViewAllActivity::class.java)
-            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType)
+            intent.putExtra(StatsViewAllFragment.ARGS_VIEW_TYPE, statsType)
             selectedTab?.let {
                 intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab)
             }
             granularity?.let {
-                intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity)
+                intent.putExtra(StatsViewAllFragment.ARGS_TIMEFRAME, granularity)
             }
-            localSiteId?.let {
-                intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-            }
+            intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             AnalyticsTracker.track(Stat.STATS_VIEW_ALL_ACCESSED)
             context.startActivity(intent)
         }
