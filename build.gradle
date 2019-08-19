@@ -106,5 +106,5 @@ buildScan {
 
 ext {
     daggerVersion = '2.22.1'
-    fluxCVersion = '969a8c3059e70e365837b9812b35b183a8e4bd42'
+    fluxCVersion = '5e98bf0ef2500014abae9160d45223d717f6327f'
 }

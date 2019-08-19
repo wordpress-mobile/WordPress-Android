@@ -1405,6 +1405,7 @@
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
+    <string name="local_post_autosave_conflict">Unhandled Auto Save</string>
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving&#8230;</string>
@@ -1414,7 +1415,7 @@
     <string name="error_preview_empty_post">Can\'t preview an empty post</string>
     <string name="error_preview_empty_page">Can\'t preview an empty page</string>
     <string name="error_preview_empty_draft">Can\'t preview an empty draft</string>
-    
+
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 

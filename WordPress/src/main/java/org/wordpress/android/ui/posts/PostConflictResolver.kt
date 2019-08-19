@@ -40,6 +40,20 @@ class PostConflictResolver(
         }
     }
 
+    fun updateConflictedPostWithAutosave(localPostId: Int) {
+        // We need network connection to load a remote post
+        if (!checkNetworkConnection()) {
+            return
+        }
+
+        val post = getPostByLocalPostId.invoke(localPostId)
+        if (post != null) {
+            originalPostCopyForConflictUndo = post.clone()
+            dispatcher.dispatch(PostActionBuilder.newRestoreToAutoSaveRevisionAction(RemotePostPayload(post, site)))
+            showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
+        }
+    }
+
     fun updateConflictedPostWithLocalVersion(localPostId: Int) {
         // We need network connection to push local version to remote
         if (!checkNetworkConnection()) {
@@ -82,6 +96,10 @@ class PostConflictResolver(
         val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
                 localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
         return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+    }
+
+    fun hasUnhandledAutoSave(post: PostModel): Boolean {
+        return PostUtils.isPostInConflictWithAutoSave(post)
     }
 
     fun onPostSuccessfullyUpdated() {

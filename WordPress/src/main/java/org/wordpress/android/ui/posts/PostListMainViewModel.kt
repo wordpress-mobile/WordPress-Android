@@ -168,6 +168,7 @@ class PostListMainViewModel @Inject constructor(
                 postStore = postStore,
                 postListDialogHelper = postListDialogHelper,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+                hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateList = this::invalidateAllLists,
@@ -269,6 +270,7 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+                doesPostHaveAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 postFetcher = postFetcher,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )

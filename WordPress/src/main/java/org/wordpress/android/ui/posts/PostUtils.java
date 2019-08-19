@@ -453,6 +453,17 @@ public class PostUtils {
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
     }
 
+    public static boolean isPostInConflictWithAutoSave(PostModel post) {
+        // TODO: would be great to check if title, content and excerpt are different,
+        // but we currently don't have them when we fetch the post list
+
+        // Ignore auto-saves in case the post is locally changed.
+        // This might be changed in the future to show a better conflict UX.
+        return !post.isLocallyChanged()
+               // has auto-save
+               && post.hasUnpublishedRevision();
+    }
+
     public static String getConflictedPostCustomStringForDialog(PostModel post) {
         Context context = WordPress.getContext();
         String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);

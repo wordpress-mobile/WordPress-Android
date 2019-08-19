@@ -109,6 +109,7 @@ class PostListViewModelTest : BaseUnitTest() {
                 postActionHandler = mock(),
                 getUploadStatus = mock(),
                 doesPostHaveUnhandledConflict = mock(),
+                doesPostHaveAutoSave = mock(),
                 getFeaturedImageUrl = mock(),
                 postFetcher = mock()
         )

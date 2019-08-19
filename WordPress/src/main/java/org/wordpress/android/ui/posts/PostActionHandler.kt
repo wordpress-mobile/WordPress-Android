@@ -57,6 +57,7 @@ class PostActionHandler(
     private val postStore: PostStore,
     private val postListDialogHelper: PostListDialogHelper,
     private val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
+    private val hasUnhandledAutoSave: (PostModel) -> Boolean,
     private val triggerPostListAction: (PostListAction) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
     private val invalidateList: () -> Unit,
@@ -170,9 +171,15 @@ class PostActionHandler(
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
-        // first of all, check whether this post is in Conflicted state.
+        // first of all, check whether this post is in Conflicted state with a more recent remote version
         if (doesPostHaveUnhandledConflict.invoke(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)
+            return
+        }
+
+        // Then check if it's in conflicted state with a remote auto-save
+        if (hasUnhandledAutoSave.invoke(post)) {
+            postListDialogHelper.showConflictedPostResolutionDialog(post) // FIXME
             return
         }
 
