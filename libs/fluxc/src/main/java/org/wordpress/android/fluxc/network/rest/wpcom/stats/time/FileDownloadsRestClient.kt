@@ -43,7 +43,7 @@ class FileDownloadsRestClient
         val url = WPCOMREST.sites.site(site.siteId).stats.file_downloads.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
-                "max" to itemsToLoad.toString(),
+                "num" to itemsToLoad.toString(),
                 "date" to statsUtils.getFormattedDate(date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
