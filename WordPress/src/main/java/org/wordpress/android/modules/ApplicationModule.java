@@ -82,6 +82,7 @@ public abstract class ApplicationModule {
     @ContributesAndroidInjector
     abstract CommentFullScreenDialogFragment contributecommentFullScreenDialogFragment();
 
+    @ContributesAndroidInjector
     abstract UsernameChangerFullScreenDialogFragment contributeUpUsernameChangerFullScreenDialogFragment();
 
     @Provides

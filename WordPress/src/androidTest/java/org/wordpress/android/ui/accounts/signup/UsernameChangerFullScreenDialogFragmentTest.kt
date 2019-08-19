@@ -42,7 +42,6 @@ class UsernameChangerFullScreenDialogFragmentTest {
         const val USERNAME_ALTERNATIVE = "john1"
     }
 
-    lateinit var dialog: FullScreenDialogFragment
     lateinit var fragment: BaseUsernameChangerFullScreenDialogFragment
     private val suggestions = OnUsernameSuggestionsFetched().apply {
         suggestions = listOf(USERNAME_TO_BE_SELECTED, USERNAME_ALTERNATIVE)
@@ -90,7 +89,7 @@ class UsernameChangerFullScreenDialogFragmentTest {
                     DISPLAY_NAME, USERNAME
             )
 
-            dialog = Builder(activity)
+            val dialog = Builder(activity)
                     .setTitle(string.username_changer_title)
                     .setAction(string.username_changer_action)
                     .setOnConfirmListener(null)
@@ -140,7 +139,8 @@ class UsernameChangerFullScreenDialogFragmentTest {
      * Inspired by Ronen Sabag
      * https://proandroiddev.com/fragment-espresso-testing-with-daggers-android-injector-2bd70b6a842d
      */
-    inline fun <reified F : Fragment> createFakeFragmentInjector(crossinline block: F.() -> Unit): DispatchingAndroidInjector<Fragment> {
+    inline fun <reified F : Fragment> createFakeFragmentInjector(crossinline block: F.() -> Unit)
+            : DispatchingAndroidInjector<Fragment> {
         // obtain the fragment level injector
         val myApp = InstrumentationRegistry.getTargetContext().applicationContext as WordPress
         val originalFragmentInjector = myApp.supportFragmentInjector()
