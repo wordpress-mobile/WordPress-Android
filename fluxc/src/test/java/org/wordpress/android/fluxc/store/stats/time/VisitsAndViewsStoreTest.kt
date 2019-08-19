@@ -34,7 +34,8 @@ import kotlin.test.assertNotNull
 
 private const val ITEMS_TO_LOAD = 8
 private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
-private const val DATE = "2019-10-10"
+private val DATE = Date(0)
+private const val FORMATTED_DATE = "2019-10-10"
 
 @RunWith(MockitoJUnitRunner::class)
 class VisitsAndViewsStoreTest {
@@ -59,10 +60,12 @@ class VisitsAndViewsStoreTest {
         whenever(currentTimeProvider.currentDate).thenReturn(currentDate)
         val timeZone = "GMT"
         whenever(site.timezone).thenReturn(timeZone)
-        whenever(statsUtils.getFormattedDate(
-                eq(currentDate),
-                any()
-        )).thenReturn(DATE)
+        whenever(
+                statsUtils.getFormattedDate(
+                        eq(currentDate),
+                        any()
+                )
+        ).thenReturn(FORMATTED_DATE)
     }
 
     @Test
@@ -71,19 +74,21 @@ class VisitsAndViewsStoreTest {
                 VISITS_AND_VIEWS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(restClient.fetchVisits(site, DAYS, FORMATTED_DATE, ITEMS_TO_LOAD, forced)).thenReturn(
+                fetchInsightsPayload
+        )
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, forced)
 
         assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
-        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
+        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, FORMATTED_DATE, ITEMS_TO_LOAD)
     }
 
     @Test
     fun `returns cached data per site`() = test {
-        whenever(sqlUtils.hasFreshRequest(site, DAYS, DATE, ITEMS_TO_LOAD)).thenReturn(true)
-        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
+        whenever(sqlUtils.hasFreshRequest(site, DAYS, FORMATTED_DATE, ITEMS_TO_LOAD)).thenReturn(true)
+        whenever(sqlUtils.select(site, DAYS, FORMATTED_DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
         val model = mock<VisitsAndViewsModel>()
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
@@ -101,7 +106,9 @@ class VisitsAndViewsStoreTest {
         val fetchInsightsPayload = FetchStatsPayload(
                 VISITS_AND_VIEWS_RESPONSE
         )
-        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
+        whenever(restClient.fetchVisits(site, DAYS, FORMATTED_DATE, ITEMS_TO_LOAD, forced)).thenReturn(
+                fetchInsightsPayload
+        )
         val emptyModel = VisitsAndViewsModel("", emptyList())
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(emptyModel)
 
@@ -117,7 +124,7 @@ class VisitsAndViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitsAndViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchVisits(site, DAYS, FORMATTED_DATE, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, forced)
 
@@ -129,7 +136,7 @@ class VisitsAndViewsStoreTest {
 
     @Test
     fun `returns data from db`() {
-        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
+        whenever(sqlUtils.select(site, DAYS, FORMATTED_DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
         val model = mock<VisitsAndViewsModel>()
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
