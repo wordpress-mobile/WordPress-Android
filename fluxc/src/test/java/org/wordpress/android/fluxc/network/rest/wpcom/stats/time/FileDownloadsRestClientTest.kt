@@ -123,7 +123,7 @@ class FileDownloadsRestClientTest {
                 .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/file-downloads/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
-                        "max" to pageSize.toString(),
+                        "num" to pageSize.toString(),
                         "period" to period.toString(),
                         "date" to stringDate
                 )
