@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
@@ -35,13 +36,23 @@ import kotlin.coroutines.CoroutineContext
 
 val DEFAULT_INSIGHTS = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
+
 @Singleton
 class StatsStore
 @Inject constructor(
     private val coroutineContext: CoroutineContext,
     private val insightTypeSqlUtils: InsightTypeSqlUtils,
-    private val preferenceUtils: PreferenceUtilsWrapper
+    private val preferenceUtils: PreferenceUtilsWrapper,
+    private val statsSqlUtils: StatsSqlUtils
 ) {
+    fun deleteAllData() {
+        statsSqlUtils.deleteAllStats()
+    }
+
+    fun deleteSiteData(site: SiteModel) {
+        statsSqlUtils.deleteSiteStats(site)
+    }
+
     suspend fun getInsightTypes(site: SiteModel): List<StatsType> = withContext(coroutineContext) {
         val types = mutableListOf<StatsType>()
         if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {

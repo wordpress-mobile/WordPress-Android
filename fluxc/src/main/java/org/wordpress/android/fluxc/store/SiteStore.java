@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,6 +57,7 @@ public class SiteStore extends Store {
     public static class CompleteQuickStartPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String variant;
+
         public CompleteQuickStartPayload(@NonNull SiteModel site, String variant) {
             this.site = site;
             this.variant = variant;
@@ -63,7 +65,9 @@ public class SiteStore extends Store {
     }
 
     public static class RefreshSitesXMLRPCPayload extends Payload<BaseNetworkError> {
-        public RefreshSitesXMLRPCPayload() {}
+        public RefreshSitesXMLRPCPayload() {
+        }
+
         public String username;
         public String password;
         public String url;
@@ -102,15 +106,54 @@ public class SiteStore extends Store {
     public static class FetchedPostFormatsPayload extends Payload<PostFormatsError> {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
+
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
         }
     }
 
+    public static class DesignateMobileEditorForAllSitesPayload extends Payload<SiteEditorsError> {
+        public String editor;
+
+        public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName) {
+            this.editor = editorName;
+        }
+    }
+
+    public static class DesignateMobileEditorPayload extends Payload<SiteEditorsError> {
+        public SiteModel site;
+        public String editor;
+
+        public DesignateMobileEditorPayload(@NonNull SiteModel site, @NonNull String editorName) {
+            this.site = site;
+            this.editor = editorName;
+        }
+    }
+
+    public static class FetchedEditorsPayload extends Payload<SiteEditorsError> {
+        public SiteModel site;
+        public String webEditor;
+        public String mobileEditor;
+
+        public FetchedEditorsPayload(@NonNull SiteModel site, @NonNull String webEditor, @NonNull String mobileEditor) {
+            this.site = site;
+            this.mobileEditor = mobileEditor;
+            this.webEditor = webEditor;
+        }
+    }
+
+    public static class DesignateMobileEditorForAllSitesResponsePayload extends Payload<SiteEditorsError> {
+        public Map<String, String> editors;
+        public DesignateMobileEditorForAllSitesResponsePayload(Map<String, String> editors) {
+            this.editors = editors;
+        }
+    }
+
     public static class FetchedUserRolesPayload extends Payload<UserRolesError> {
         public SiteModel site;
         public List<RoleModel> roles;
+
         public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
             this.site = site;
             this.roles = roles;
@@ -137,15 +180,18 @@ public class SiteStore extends Store {
         @Nullable public Boolean onlyWordpressCom;
         @Nullable public Boolean includeWordpressCom;
         @Nullable public Boolean includeDotBlogSubdomain;
+        @Nullable public String tlds;
         @Nullable public Long segmentId;
         public int quantity;
         public boolean includeVendorDot;
+
         public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
                                      boolean includeDotBlogSubdomain, int quantity, boolean includeVendorDot) {
             this.query = query;
             this.onlyWordpressCom = onlyWordpressCom;
             this.includeWordpressCom = includeWordpressCom;
             this.includeDotBlogSubdomain = includeDotBlogSubdomain;
+            this.tlds = tlds;
             this.quantity = quantity;
             this.includeVendorDot = includeVendorDot;
         }
@@ -156,11 +202,18 @@ public class SiteStore extends Store {
             this.quantity = quantity;
             this.includeVendorDot = includeVendorDot;
         }
+
+         public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
+            this.query = query;
+            this.quantity = quantity;
+            this.tlds = tlds;
+        }
     }
 
     public static class SuggestDomainsResponsePayload extends Payload<SuggestDomainError> {
         public String query;
         public List<DomainSuggestionResponse> suggestions;
+
         public SuggestDomainsResponsePayload(@NonNull String query, SuggestDomainError error) {
             this.query = query;
             this.error = error;
@@ -191,6 +244,16 @@ public class SiteStore extends Store {
         public String description() {
             return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b, urlAfterRedirects: %s",
                     url, exists, isWordPress, hasJetpack, isWPCom, urlAfterRedirects);
+        }
+    }
+
+    public static class DesignatePrimaryDomainPayload extends Payload<DesignatePrimaryDomainError> {
+        public SiteModel site;
+        public String domain;
+
+        public DesignatePrimaryDomainPayload(SiteModel site, @NonNull String domainName) {
+            this.site = site;
+            this.domain = domainName;
         }
     }
 
@@ -250,6 +313,7 @@ public class SiteStore extends Store {
             this.currentStep = currentStep;
             this.totalSteps = totalSteps;
         }
+
         public AutomatedTransferStatusResponsePayload(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
@@ -312,6 +376,20 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class SiteEditorsError implements OnChangedError {
+        public SiteEditorsErrorType type;
+        public String message;
+
+        public SiteEditorsError(SiteEditorsErrorType type) {
+            this(type, "");
+        }
+
+        SiteEditorsError(SiteEditorsErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     public static class PostFormatsError implements OnChangedError {
         public PostFormatsErrorType type;
         public String message;
@@ -343,6 +421,7 @@ public class SiteStore extends Store {
     public static class NewSiteError implements OnChangedError {
         public NewSiteErrorType type;
         public String message;
+
         public NewSiteError(NewSiteErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
@@ -352,10 +431,12 @@ public class SiteStore extends Store {
     public static class DeleteSiteError implements OnChangedError {
         public DeleteSiteErrorType type;
         public String message;
+
         public DeleteSiteError(String errorType, @NonNull String message) {
             this.type = DeleteSiteErrorType.fromString(errorType);
             this.message = message;
         }
+
         public DeleteSiteError(DeleteSiteErrorType errorType) {
             this.type = errorType;
             this.message = "";
@@ -383,6 +464,7 @@ public class SiteStore extends Store {
     public static class DomainAvailabilityError implements OnChangedError {
         @NonNull public DomainAvailabilityErrorType type;
         @Nullable public String message;
+
         public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
@@ -429,9 +511,20 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DesignatePrimaryDomainError implements OnChangedError {
+        @NonNull public DesignatePrimaryDomainErrorType type;
+        @Nullable public String message;
+
+        public DesignatePrimaryDomainError(@NonNull DesignatePrimaryDomainErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public static class OnProfileFetched extends OnChanged<SiteError> {
         public SiteModel site;
+
         public OnProfileFetched(SiteModel site) {
             this.site = site;
         }
@@ -439,6 +532,7 @@ public class SiteStore extends Store {
 
     public static class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
+
         public OnSiteChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
         }
@@ -446,6 +540,7 @@ public class SiteStore extends Store {
 
     public static class OnSiteRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
+
         public OnSiteRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
@@ -453,6 +548,7 @@ public class SiteStore extends Store {
 
     public static class OnAllSitesRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
+
         public OnAllSitesRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
@@ -476,13 +572,32 @@ public class SiteStore extends Store {
 
     public static class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
         public SiteModel site;
+
         public OnPostFormatsChanged(SiteModel site) {
             this.site = site;
         }
     }
 
+    public static class OnSiteEditorsChanged extends OnChanged<SiteEditorsError> {
+        public SiteModel site;
+        public int rowsAffected;
+
+        public OnSiteEditorsChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
+    public static class OnAllSitesMobileEditorChanged extends OnChanged<SiteEditorsError> {
+        public int rowsAffected;
+        public boolean isNetworkResponse; // True when all sites are self-hosted or wpcom backend response
+
+        public OnAllSitesMobileEditorChanged() {
+        }
+    }
+
     public static class OnUserRolesChanged extends OnChanged<UserRolesError> {
         public SiteModel site;
+
         public OnUserRolesChanged(SiteModel site) {
             this.site = site;
         }
@@ -502,6 +617,7 @@ public class SiteStore extends Store {
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
+
         public OnURLChecked(@NonNull String url) {
             this.url = url;
         }
@@ -509,6 +625,7 @@ public class SiteStore extends Store {
 
     public static class OnConnectSiteInfoChecked extends OnChanged<SiteError> {
         public ConnectSiteInfoPayload info;
+
         public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfoPayload info) {
             this.info = info;
         }
@@ -517,6 +634,7 @@ public class SiteStore extends Store {
     public static class OnWPComSiteFetched extends OnChanged<SiteError> {
         public String checkedUrl;
         public SiteModel site;
+
         public OnWPComSiteFetched(String checkedUrl, @NonNull SiteModel site) {
             this.checkedUrl = checkedUrl;
             this.site = site;
@@ -526,6 +644,7 @@ public class SiteStore extends Store {
     public static class SuggestDomainError implements OnChangedError {
         public SuggestDomainErrorType type;
         public String message;
+
         public SuggestDomainError(@NonNull String apiErrorType, @NonNull String message) {
             this.type = SuggestDomainErrorType.fromString(apiErrorType);
             this.message = message;
@@ -535,6 +654,7 @@ public class SiteStore extends Store {
     public static class OnSuggestedDomains extends OnChanged<SuggestDomainError> {
         public String query;
         public List<DomainSuggestionResponse> suggestions;
+
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
@@ -635,6 +755,7 @@ public class SiteStore extends Store {
         public @NonNull SiteModel site;
         public boolean isEligible;
         public @NonNull List<String> eligibilityErrorCodes;
+
         public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
                                                      boolean isEligible,
                                                      @NonNull List<String> eligibilityErrorCodes,
@@ -664,6 +785,7 @@ public class SiteStore extends Store {
         public boolean isCompleted;
         public int currentStep;
         public int totalSteps;
+
         public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, boolean isCompleted, int currentStep,
                                                 int totalSteps) {
             this.site = site;
@@ -671,6 +793,7 @@ public class SiteStore extends Store {
             this.currentStep = currentStep;
             this.totalSteps = totalSteps;
         }
+
         public OnAutomatedTransferStatusChecked(@NonNull SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
@@ -692,6 +815,26 @@ public class SiteStore extends Store {
         public boolean success;
 
         OnQuickStartCompleted(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
+    public static class DesignatedPrimaryDomainPayload extends OnChanged<DesignatePrimaryDomainError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        public DesignatedPrimaryDomainPayload(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
+    public static class OnPrimaryDomainDesignated extends OnChanged<DesignatePrimaryDomainError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        public OnPrimaryDomainDesignated(@NonNull SiteModel site, boolean status) {
             this.site = site;
             this.success = status;
         }
@@ -757,6 +900,10 @@ public class SiteStore extends Store {
     }
 
     public enum UserRolesErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum SiteEditorsErrorType {
         GENERIC_ERROR
     }
 
@@ -855,13 +1002,17 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
-      }
+    }
 
     public enum DomainSupportedCountriesErrorType {
         GENERIC_ERROR
     }
 
     public enum QuickStartErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum DesignatePrimaryDomainErrorType {
         GENERIC_ERROR
     }
 
@@ -1076,12 +1227,12 @@ public class SiteStore extends Store {
      */
     public boolean isWPComSiteVisibleByLocalId(int id) {
         return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
+                      .where().beginGroup()
+                      .equals(SiteModelTable.ID, id)
+                      .equals(SiteModelTable.IS_WPCOM, true)
+                      .equals(SiteModelTable.IS_VISIBLE, true)
+                      .endGroup().endWhere()
+                      .getAsCursor().getCount() > 0;
     }
 
     /**
@@ -1089,19 +1240,19 @@ public class SiteStore extends Store {
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
         List<SiteModel> sites = WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
-                .or()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
-                .endGroup().endWhere()
-                .getAsModel(new SelectMapper<SiteModel>() {
-                    @Override
-                    public SiteModel convert(Cursor cursor) {
-                        SiteModel siteModel = new SiteModel();
-                        siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                        return siteModel;
-                    }
-                });
+                                       .where().beginGroup()
+                                       .equals(SiteModelTable.SITE_ID, siteId)
+                                       .or()
+                                       .equals(SiteModelTable.SELF_HOSTED_SITE_ID, siteId)
+                                       .endGroup().endWhere()
+                                       .getAsModel(new SelectMapper<SiteModel>() {
+                                           @Override
+                                           public SiteModel convert(Cursor cursor) {
+                                               SiteModel siteModel = new SiteModel();
+                                               siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                                               return siteModel;
+                                           }
+                                       });
         if (sites.size() > 0) {
             return sites.get(0).getId();
         }
@@ -1113,18 +1264,18 @@ public class SiteStore extends Store {
      */
     public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
         List<SiteModel> sites = WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsModel(new SelectMapper<SiteModel>() {
-                    @Override
-                    public SiteModel convert(Cursor cursor) {
-                        SiteModel siteModel = new SiteModel();
-                        siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                        return siteModel;
-                    }
-                });
+                                       .where().beginGroup()
+                                       .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
+                                       .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
+                                       .endGroup().endWhere()
+                                       .getAsModel(new SelectMapper<SiteModel>() {
+                                           @Override
+                                           public SiteModel convert(Cursor cursor) {
+                                               SiteModel siteModel = new SiteModel();
+                                               siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                                               return siteModel;
+                                           }
+                                       });
         if (sites.size() > 0) {
             return sites.get(0).getId();
         }
@@ -1137,19 +1288,20 @@ public class SiteStore extends Store {
      */
     public long getSiteIdForLocalId(int id) {
         List<SiteModel> result = WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .endGroup().endWhere()
-                .getAsModel(new SelectMapper<SiteModel>() {
-                    @Override
-                    public SiteModel convert(Cursor cursor) {
-                        SiteModel siteModel = new SiteModel();
-                        siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                        siteModel.setSelfHostedSiteId(cursor.getLong(
-                                cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
-                        return siteModel;
-                    }
-                });
+                                        .where().beginGroup()
+                                        .equals(SiteModelTable.ID, id)
+                                        .endGroup().endWhere()
+                                        .getAsModel(new SelectMapper<SiteModel>() {
+                                            @Override
+                                            public SiteModel convert(Cursor cursor) {
+                                                SiteModel siteModel = new SiteModel();
+                                                siteModel.setSiteId(
+                                                        cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
+                                                siteModel.setSelfHostedSiteId(cursor.getLong(
+                                                        cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)));
+                                                return siteModel;
+                                            }
+                                        });
         if (result.isEmpty()) {
             return 0;
         }
@@ -1262,6 +1414,22 @@ public class SiteStore extends Store {
             case FETCHED_POST_FORMATS:
                 updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
                 break;
+            case FETCH_SITE_EDITORS:
+                fetchSiteEditors((SiteModel) action.getPayload());
+                break;
+            case DESIGNATE_MOBILE_EDITOR:
+                designateMobileEditor((DesignateMobileEditorPayload) action.getPayload());
+                break;
+            case DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES:
+                designateMobileEditorForAllSites((DesignateMobileEditorForAllSitesPayload) action.getPayload());
+                break;
+            case FETCHED_SITE_EDITORS:
+                updateSiteEditors((FetchedEditorsPayload) action.getPayload());
+                break;
+            case DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES:
+                handleDesignatedMobileEditorForAllSites(
+                        (DesignateMobileEditorForAllSitesResponsePayload) action.getPayload());
+                break;
             case FETCH_USER_ROLES:
                 fetchUserRoles((SiteModel) action.getPayload());
                 break;
@@ -1342,6 +1510,12 @@ public class SiteStore extends Store {
             case COMPLETED_QUICK_START:
                 handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
                 break;
+            case DESIGNATE_PRIMARY_DOMAIN:
+                designatePrimaryDomain((DesignatePrimaryDomainPayload) action.getPayload());
+                break;
+            case DESIGNATED_PRIMARY_DOMAIN:
+                handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
+                break;
         }
     }
 
@@ -1383,6 +1557,14 @@ public class SiteStore extends Store {
             event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
         } else {
             try {
+                // The REST API doesn't return info about the editor(s). Make sure to copy current values
+                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The apps will dispatch the action to update editor(s) when necessary.
+                SiteModel freshSiteFromDB = getSiteByLocalId(siteModel.getId());
+                if (freshSiteFromDB != null) {
+                    siteModel.setMobileEditor(freshSiteFromDB.getMobileEditor());
+                    siteModel.setWebEditor(freshSiteFromDB.getWebEditor());
+                }
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
             } catch (DuplicateSiteException e) {
                 event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
@@ -1426,6 +1608,14 @@ public class SiteStore extends Store {
         UpdateSitesResult result = new UpdateSitesResult();
         for (SiteModel site : sites.getSites()) {
             try {
+                // The REST API doesn't return info about the editor(s). Make sure to copy current values
+                // available on the DB. Otherwise the apps will receive an update site without editor prefs set.
+                // The apps will dispatch the action to update editor(s) when necessary.
+                SiteModel siteFromDB = getSiteBySiteId(site.getSiteId());
+                if (siteFromDB != null) {
+                    site.setMobileEditor(siteFromDB.getMobileEditor());
+                    site.setWebEditor(siteFromDB.getWebEditor());
+                }
                 result.rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
             } catch (DuplicateSiteException caughtException) {
                 result.duplicateSiteFound = true;
@@ -1530,6 +1720,108 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
+    private void fetchSiteEditors(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchSiteEditors(site);
+        }
+    }
+
+    private void designateMobileEditor(DesignateMobileEditorPayload payload) {
+        // wpcom sites sync the new value with the backend
+        if (payload.site.isUsingWpComRestApi()) {
+            mSiteRestClient.designateMobileEditor(payload.site, payload.editor);
+        }
+
+        // Update the editor pref on the DB, and emit the change immediately
+        SiteModel site = payload.site;
+        site.setMobileEditor(payload.editor);
+        OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
+        try {
+            event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
+        } catch (Exception e) {
+            event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+        }
+        emitChange(event);
+    }
+
+    private void designateMobileEditorForAllSites(DesignateMobileEditorForAllSitesPayload payload) {
+        int rowsAffected = 0;
+        OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
+        boolean wpcomPostRequestRequired = false;
+        for (SiteModel site : getSites()) {
+            site.setMobileEditor(payload.editor);
+            if (!wpcomPostRequestRequired && site.isUsingWpComRestApi()) {
+                wpcomPostRequestRequired = true;
+            }
+            try {
+                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (Exception e) {
+                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+            }
+        }
+
+        if (wpcomPostRequestRequired) {
+            mSiteRestClient.designateMobileEditorForAllSites(payload.editor);
+            event.isNetworkResponse = false;
+        } else {
+            event.isNetworkResponse = true;
+        }
+
+        event.rowsAffected = rowsAffected;
+        emitChange(event);
+    }
+
+    private void updateSiteEditors(FetchedEditorsPayload payload) {
+        SiteModel site = payload.site;
+        OnSiteEditorsChanged event = new OnSiteEditorsChanged(site);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            site.setMobileEditor(payload.mobileEditor);
+            site.setWebEditor(payload.webEditor);
+            try {
+                event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (Exception e) {
+                event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+            }
+        }
+
+        emitChange(event);
+    }
+
+    private void handleDesignatedMobileEditorForAllSites(DesignateMobileEditorForAllSitesResponsePayload payload) {
+        OnAllSitesMobileEditorChanged event = new OnAllSitesMobileEditorChanged();
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            // Loop over the returned sites and make sure we've the fresh values for editor prop stored locally
+            for (Map.Entry<String, String> entry : payload.editors.entrySet()) {
+                SiteModel currentModel = getSiteBySiteId(Long.parseLong(entry.getKey()));
+
+                if (currentModel == null) {
+                    // this could happen when a site was added to the current account with another app, or on the web
+                    AppLog.e(T.API, "handleDesignatedMobileEditorForAllSites - The backend returned info for "
+                                    + "the following siteID " + entry.getKey() + " but there is no site with that "
+                                    + "remote ID in SiteStore.");
+                    continue;
+                }
+
+                if (currentModel.getMobileEditor() == null
+                    || !currentModel.getMobileEditor().equals(entry.getValue())) {
+                    // the current editor is either null or != from the value on the server. Update it
+                    currentModel.setMobileEditor(entry.getValue());
+                    try {
+                        event.rowsAffected += SiteSqlUtils.insertOrUpdateSite(currentModel);
+                    } catch (Exception e) {
+                        event.error = new SiteEditorsError(SiteEditorsErrorType.GENERIC_ERROR);
+                    }
+                }
+            }
+        }
+        event.isNetworkResponse = true;
+        emitChange(event);
+    }
+
     private void fetchUserRoles(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
             mSiteRestClient.fetchUserRoles(site);
@@ -1591,7 +1883,8 @@ public class SiteStore extends Store {
 
     private void suggestDomains(SuggestDomainsPayload payload) {
         mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot);
+                payload.includeDotBlogSubdomain, payload.segmentId, payload.quantity, payload.includeVendorDot,
+                payload.tlds);
     }
 
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
@@ -1694,6 +1987,16 @@ public class SiteStore extends Store {
 
     private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
         OnQuickStartCompleted event = new OnQuickStartCompleted(payload.site, payload.success);
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void designatePrimaryDomain(@NonNull DesignatePrimaryDomainPayload payload) {
+        mSiteRestClient.designatePrimaryDomain(payload.site, payload.domain);
+    }
+
+    private void handleDesignatedPrimaryDomain(@NonNull DesignatedPrimaryDomainPayload payload) {
+        OnPrimaryDomainDesignated event = new OnPrimaryDomainDesignated(payload.site, payload.success);
         event.error = payload.error;
         emitChange(event);
     }

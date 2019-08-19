@@ -5,6 +5,8 @@
 /sites/$site/activity
 /sites/$site/rewind
 
+/sites/$site/gutenberg
+
 /sites/$site/stats/orders/
 /sites/$site/stats/top-earners
 
@@ -15,3 +17,5 @@
 /verticals/prompt
 
 /plans/mobile
+
+/me/gutenberg/

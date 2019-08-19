@@ -14,9 +14,15 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityR
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -43,6 +49,12 @@ public enum SiteAction implements IAction {
     CREATE_NEW_SITE,
     @Action(payloadType = SiteModel.class)
     FETCH_POST_FORMATS,
+    @Action(payloadType = SiteModel.class)
+    FETCH_SITE_EDITORS,
+    @Action(payloadType = DesignateMobileEditorPayload.class)
+    DESIGNATE_MOBILE_EDITOR,
+    @Action(payloadType = DesignateMobileEditorForAllSitesPayload.class)
+    DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES,
     @Action(payloadType = SiteModel.class)
     FETCH_USER_ROLES,
     @Action(payloadType = SiteModel.class)
@@ -73,6 +85,8 @@ public enum SiteAction implements IAction {
     FETCH_DOMAIN_SUPPORTED_COUNTRIES,
     @Action(payloadType = CompleteQuickStartPayload.class)
     COMPLETE_QUICK_START,
+    @Action(payloadType = DesignatePrimaryDomainPayload.class)
+    DESIGNATE_PRIMARY_DOMAIN,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
@@ -85,6 +99,10 @@ public enum SiteAction implements IAction {
     CREATED_NEW_SITE,
     @Action(payloadType = FetchedPostFormatsPayload.class)
     FETCHED_POST_FORMATS,
+    @Action(payloadType = FetchedEditorsPayload.class)
+    FETCHED_SITE_EDITORS,
+    @Action(payloadType = DesignateMobileEditorForAllSitesResponsePayload.class)
+    DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES,
     @Action(payloadType = FetchedUserRolesPayload.class)
     FETCHED_USER_ROLES,
     @Action(payloadType = DeleteSiteResponsePayload.class)
@@ -111,6 +129,8 @@ public enum SiteAction implements IAction {
     FETCHED_DOMAIN_SUPPORTED_COUNTRIES,
     @Action(payloadType = QuickStartCompletedResponsePayload.class)
     COMPLETED_QUICK_START,
+    @Action(payloadType = DesignatedPrimaryDomainPayload.class)
+    DESIGNATED_PRIMARY_DOMAIN,
 
     // Local actions
     @Action(payloadType = SiteModel.class)

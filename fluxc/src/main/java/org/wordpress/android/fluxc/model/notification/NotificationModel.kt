@@ -7,10 +7,13 @@ import java.util.Locale
 data class NotificationModel(
     val noteId: Int = 0,
     val remoteNoteId: Long = 0L,
-    var localSiteId: Int = 0,
+
+    // Note: this could be 0 in the db if the notification is not for one of the users sites
+    var remoteSiteId: Long = 0L,
+
     var noteHash: Long = 0L,
-    val type: Kind = NotificationModel.Kind.UNKNOWN,
-    val subtype: Subkind? = NotificationModel.Subkind.NONE,
+    val type: Kind = Kind.UNKNOWN,
+    val subtype: Subkind? = Subkind.NONE,
     var read: Boolean = false,
     val icon: String? = null,
     val noticon: String? = null,
@@ -36,7 +39,7 @@ data class NotificationModel(
         UNKNOWN;
 
         companion object {
-            private val reverseMap = Kind.values().associateBy(
+            private val reverseMap = values().associateBy(
                     Kind::name)
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
         }
@@ -49,7 +52,7 @@ data class NotificationModel(
         NONE;
 
         companion object {
-            private val reverseMap = Subkind.values().associateBy(
+            private val reverseMap = values().associateBy(
                     Subkind::name)
             fun fromString(type: String): Subkind {
                 return if (type.isEmpty()) {
@@ -61,10 +64,8 @@ data class NotificationModel(
         }
     }
 
-    fun getRemoteSiteId(): Long? = meta?.ids?.site
-
     fun toLogString(): String {
         return "[id=$noteId, remoteNoteId=$remoteNoteId, read=$read, " +
-                "localSiteId=$localSiteId, type=${type.name}, subtype=${subtype?.name}, title=$title]"
+                "siteId=$remoteSiteId, type=${type.name}, subtype=${subtype?.name}, title=$title]"
     }
 }

@@ -235,6 +235,7 @@ public class MediaSqlUtilsTest {
         boolean testVerticalAlign = false;
         boolean testFeatured = false;
         boolean testFeaturedInPost = false;
+        boolean testMarkedLocallyAsFeatured = false;
         MediaModel testModel = new MediaModel();
         testModel.setMediaId(testId);
         testModel.setPostId(testPostId);
@@ -262,6 +263,7 @@ public class MediaSqlUtilsTest {
         testModel.setVerticalAlignment(testVerticalAlign);
         testModel.setFeatured(testFeatured);
         testModel.setFeaturedInPost(testFeaturedInPost);
+        testModel.setMarkedLocallyAsFeatured(testMarkedLocallyAsFeatured);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testModel));
         testModel.setPostId(testPostId + 1);
         testModel.setAuthorId(testAuthorId + 1);
@@ -287,6 +289,7 @@ public class MediaSqlUtilsTest {
         testModel.setVerticalAlignment(!testVerticalAlign);
         testModel.setFeatured(!testFeatured);
         testModel.setFeaturedInPost(!testFeaturedInPost);
+        testModel.setMarkedLocallyAsFeatured(!testMarkedLocallyAsFeatured);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testModel));
         List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(testLocalSiteId));
         Assert.assertEquals(1, media.size());
@@ -316,6 +319,7 @@ public class MediaSqlUtilsTest {
         Assert.assertEquals(!testVerticalAlign, testMedia.getVerticalAlignment());
         Assert.assertEquals(!testFeatured, testMedia.getFeatured());
         Assert.assertEquals(!testFeaturedInPost, testMedia.getFeaturedInPost());
+        Assert.assertEquals(!testMarkedLocallyAsFeatured, testMedia.getMarkedLocallyAsFeatured());
     }
 
     // Inserts many items with matching titles, deletes all media with the title, verifies
