@@ -235,7 +235,7 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCasesFactories.map { it.build(DAYS, BLOCK) },
-                { statsStore.getTimeStatsTypes() },
+                { statsStore.getTimeStatsTypes(it) },
                 uiModelMapper::mapTimeStats
         )
     }
@@ -260,7 +260,7 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCasesFactories.map { it.build(WEEKS, BLOCK) },
-                { statsStore.getTimeStatsTypes() },
+                { statsStore.getTimeStatsTypes(it) },
                 uiModelMapper::mapTimeStats
         )
     }
@@ -284,7 +284,7 @@ class StatsModule {
                 bgDispatcher, mainDispatcher,
                 statsSiteProvider,
                 useCasesFactories.map { it.build(MONTHS, BLOCK) },
-                { statsStore.getTimeStatsTypes() },
+                { statsStore.getTimeStatsTypes(it) },
                 uiModelMapper::mapTimeStats
         )
     }
@@ -309,7 +309,7 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCasesFactories.map { it.build(YEARS, BLOCK) },
-                { statsStore.getTimeStatsTypes() },
+                { statsStore.getTimeStatsTypes(it) },
                 uiModelMapper::mapTimeStats
         )
     }
