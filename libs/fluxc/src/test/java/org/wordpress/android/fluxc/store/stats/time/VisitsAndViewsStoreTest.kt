@@ -34,7 +34,6 @@ import kotlin.test.assertNotNull
 
 private const val ITEMS_TO_LOAD = 8
 private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
-private val DATE = Date(0)
 private const val FORMATTED_DATE = "2019-10-10"
 
 @RunWith(MockitoJUnitRunner::class)
@@ -140,7 +139,7 @@ class VisitsAndViewsStoreTest {
         val model = mock<VisitsAndViewsModel>()
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val result = store.getVisits(site, DAYS, LIMIT_MODE, DATE)
+        val result = store.getVisits(site, DAYS, LIMIT_MODE)
 
         assertThat(result).isEqualTo(model)
     }
