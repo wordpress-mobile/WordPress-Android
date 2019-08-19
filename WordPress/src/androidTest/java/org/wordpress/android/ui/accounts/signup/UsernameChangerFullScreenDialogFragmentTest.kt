@@ -139,8 +139,8 @@ class UsernameChangerFullScreenDialogFragmentTest {
      * Inspired by Ronen Sabag
      * https://proandroiddev.com/fragment-espresso-testing-with-daggers-android-injector-2bd70b6a842d
      */
-    inline fun <reified F : Fragment> createFakeFragmentInjector(crossinline block: F.() -> Unit)
-            : DispatchingAndroidInjector<Fragment> {
+    inline fun <reified F : Fragment> createFakeFragmentInjector(crossinline block: F.() -> Unit):
+            DispatchingAndroidInjector<Fragment> {
         // obtain the fragment level injector
         val myApp = InstrumentationRegistry.getTargetContext().applicationContext as WordPress
         val originalFragmentInjector = myApp.supportFragmentInjector()
