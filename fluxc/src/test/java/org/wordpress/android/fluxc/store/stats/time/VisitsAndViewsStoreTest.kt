@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store.stats.time
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -25,19 +27,22 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 private const val ITEMS_TO_LOAD = 8
 private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
-private val DATE = Date(0)
+private const val DATE = "2019-10-10"
 
 @RunWith(MockitoJUnitRunner::class)
 class VisitsAndViewsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var restClient: VisitAndViewsRestClient
     @Mock lateinit var sqlUtils: VisitsAndViewsSqlUtils
+    @Mock lateinit var statsUtils: StatsUtils
+    @Mock lateinit var currentTimeProvider: CurrentTimeProvider
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: VisitsAndViewsStore
     @Before
@@ -46,8 +51,18 @@ class VisitsAndViewsStoreTest {
                 restClient,
                 sqlUtils,
                 mapper,
+                statsUtils,
+                currentTimeProvider,
                 Unconfined
         )
+        val currentDate = Date(0)
+        whenever(currentTimeProvider.currentDate).thenReturn(currentDate)
+        val timeZone = "GMT"
+        whenever(site.timezone).thenReturn(timeZone)
+        whenever(statsUtils.getFormattedDate(
+                eq(currentDate),
+                any()
+        )).thenReturn(DATE)
     }
 
     @Test
@@ -59,7 +74,7 @@ class VisitsAndViewsStoreTest {
         whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(fetchInsightsPayload)
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(VISITS_AND_VIEWS_MODEL)
 
-        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, forced)
 
         assertThat(responseModel.model).isEqualTo(VISITS_AND_VIEWS_MODEL)
         verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
@@ -73,11 +88,11 @@ class VisitsAndViewsStoreTest {
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
         val forced = false
-        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         assertThat(responseModel.cached).isTrue()
-        verify(sqlUtils, never()).insert(any(), any(), any(), any(), isNull())
+        verify(sqlUtils, never()).insert(any(), any(), any(), any<String>(), isNull())
     }
 
     @Test
@@ -90,7 +105,7 @@ class VisitsAndViewsStoreTest {
         val emptyModel = VisitsAndViewsModel("", emptyList())
         whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(emptyModel)
 
-        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, forced)
 
         assertThat(responseModel.error.type).isEqualTo(INVALID_DATA_ERROR.type)
         assertThat(responseModel.error.message).isEqualTo(INVALID_DATA_ERROR.message)
@@ -104,7 +119,7 @@ class VisitsAndViewsStoreTest {
         val forced = true
         whenever(restClient.fetchVisits(site, DAYS, DATE, ITEMS_TO_LOAD, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchVisits(site, DAYS, LIMIT_MODE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
