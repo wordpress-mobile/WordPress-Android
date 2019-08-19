@@ -46,7 +46,12 @@ class FileDownloadsStore
         }
     }
 
-    fun getFileDownloads(site: SiteModel, period: StatsGranularity, limitMode: LimitMode, date: Date): FileDownloadsModel? {
+    fun getFileDownloads(
+        site: SiteModel,
+        period: StatsGranularity,
+        limitMode: LimitMode,
+        date: Date
+    ): FileDownloadsModel? {
         return sqlUtils.select(site, period, date)?.let { timeStatsMapper.map(it, limitMode) }
     }
 }
