@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.fluxc.utils.SiteUtils
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -60,11 +59,10 @@ class VisitsAndViewsStore
     fun getVisits(
         site: SiteModel,
         granularity: StatsGranularity,
-        limitMode: LimitMode,
-        date: Date
+        limitMode: LimitMode
     ): VisitsAndViewsModel? {
         val dateWithTimeZone = statsUtils.getFormattedDate(
-                date,
+                currentTimeProvider.currentDate,
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
         return getVisits(site, granularity, limitMode, dateWithTimeZone)
