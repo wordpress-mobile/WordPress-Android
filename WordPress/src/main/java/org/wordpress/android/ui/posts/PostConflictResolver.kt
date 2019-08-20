@@ -21,8 +21,7 @@ class PostConflictResolver(
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
-    private val showToast: (ToastMessageHolder) -> Unit,
-    private val triggerPostListAction: (PostListAction) -> Unit
+    private val showToast: (ToastMessageHolder) -> Unit
 ) {
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
