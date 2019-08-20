@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -38,6 +39,7 @@ constructor(
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         OVERVIEW,
@@ -61,6 +63,7 @@ constructor(
             )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
+        statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         return visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
@@ -175,6 +178,7 @@ constructor(
         private val overviewMapper: OverviewMapper,
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsWidgetUpdaters: StatsWidgetUpdaters,
         private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
@@ -187,6 +191,7 @@ constructor(
                         overviewMapper,
                         mainDispatcher,
                         analyticsTracker,
+                        statsWidgetUpdaters,
                         resourceProvider
                 )
     }
