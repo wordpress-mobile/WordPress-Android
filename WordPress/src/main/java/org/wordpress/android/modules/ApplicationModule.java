@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.news.LocalNewsService;
@@ -76,6 +77,9 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract StatsWidgetDataTypeSelectionDialogFragment contributeDataTypeSelectionDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract CommentFullScreenDialogFragment contributecommentFullScreenDialogFragment();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(SiteCreationStepsProvider stepsProvider) {
