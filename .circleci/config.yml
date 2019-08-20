@@ -66,10 +66,20 @@ jobs:
       - android/restore-gradle-cache
       - run:
           name: Build APK
-          command: ./gradlew --stacktrace assembleVanillaRelease
+          command: |
+            PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
+            VERSION_NAME="pr-${PR_NUMBER}-build-${CIRCLE_BUILD_NUM}"
+            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
+
+            ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
+      - run:
+          name: Prepare APK
+          command: |
+            mkdir -p Artifacts
+            mv WordPress/build/outputs/apk/vanilla/release/WordPress-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
       - store_artifacts:
-          path: WordPress/build/outputs/apk/vanilla/release/WordPress-vanilla-release.apk
-          destination: WordPress.apk
+          path: Artifacts
+          destination: Artifacts
   connected-tests:
     executor:
       name: android/default
