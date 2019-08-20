@@ -272,7 +272,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                             webPreviewUiState.getActionableEmptyView());
                     mUiHelpers.updateVisibility(mFullScreenProgressLayout,
                             webPreviewUiState.getFullscreenProgressLayoutVisibility());
-                    mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
                 }
             }
         });
