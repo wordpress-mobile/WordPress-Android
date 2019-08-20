@@ -1345,10 +1345,8 @@ public class MySiteFragment extends Fragment implements
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
                 verticalOffset = 0;
             } else if (mActiveTutorialPrompt.getTask() == QuickStartTask.UPLOAD_SITE_ICON) {
-                horizontalOffset =
-                        getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
-                        / 2;
-                verticalOffset = -(quickStartTarget.getWidth() / 2);
+                horizontalOffset = focusPointSize;
+                verticalOffset = -focusPointSize / 2;
             } else {
                 horizontalOffset =
                         getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
@@ -1364,7 +1362,6 @@ public class MySiteFragment extends Fragment implements
                     @Override
                     public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
-                        quickStartTarget.setPressed(mActiveTutorialPrompt.getTask() != QuickStartTask.UPLOAD_SITE_ICON);
                     }
                 });
             }
