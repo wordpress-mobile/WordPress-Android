@@ -104,7 +104,7 @@ class PostListDialogHelper(
         deletePost: (Int) -> Unit,
         publishPost: (Int) -> Unit,
         updateConflictedPostWithRemoteVersion: (Int) -> Unit,
-        updateConflictedPostWithAutoSave: (Int) -> Unit
+        editRestoredAutoSavePost: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
@@ -125,8 +125,9 @@ class PostListDialogHelper(
                 trashPostWithLocalChanges(it)
             }
             CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
+                // open the editor with the restored auto save
                 localPostIdForAutoSaveConflictResolutionDialog = null
-                updateConflictedPostWithAutoSave(it)
+                editRestoredAutoSavePost(it)
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -134,7 +135,8 @@ class PostListDialogHelper(
 
     fun onNegativeClickedForBasicDialog(
         instanceTag: String,
-        updateConflictedPostWithLocalVersion: (Int) -> Unit
+        updateConflictedPostWithLocalVersion: (Int) -> Unit,
+        editLocalPost: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
@@ -144,7 +146,8 @@ class PostListDialogHelper(
                 updateConflictedPostWithLocalVersion(it)
             }
             CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
-                updateConflictedPostWithLocalVersion(it) // TODO
+                // open the editor with the local post (don't use the auto save version)
+                editLocalPost(it)
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
@@ -152,14 +155,17 @@ class PostListDialogHelper(
 
     fun onDismissByOutsideTouchForBasicDialog(
         instanceTag: String,
-        updateConflictedPostWithLocalVersion: (Int) -> Unit
+        updateConflictedPostWithLocalVersion: (Int) -> Unit,
+        editLocalPost: (Int) -> Unit
     ) {
-        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialog,
+        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialogs,
         // for which tapping outside and actively tapping the "edit local" have different meanings
-        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG) {
+        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG
+                && instanceTag != CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG) {
             onNegativeClickedForBasicDialog(
                     instanceTag = instanceTag,
-                    updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion
+                    updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion,
+                    editLocalPost = editLocalPost
             )
         }
     }

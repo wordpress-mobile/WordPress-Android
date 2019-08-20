@@ -21,7 +21,8 @@ class PostConflictResolver(
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
-    private val showToast: (ToastMessageHolder) -> Unit
+    private val showToast: (ToastMessageHolder) -> Unit,
+    private val triggerPostListAction: (PostListAction) -> Unit
 ) {
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
@@ -36,20 +37,6 @@ class PostConflictResolver(
         if (post != null) {
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
-            showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
-        }
-    }
-
-    fun updateConflictedPostWithAutoSave(localPostId: Int) {
-        // We need network connection to load a remote post
-        if (!checkNetworkConnection()) {
-            return
-        }
-
-        val post = getPostByLocalPostId.invoke(localPostId)
-        if (post != null) {
-            originalPostCopyForConflictUndo = post.clone()
-            dispatcher.dispatch(PostActionBuilder.newRestoreToAutoSaveRevisionAction(RemotePostPayload(post, site)))
             showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
     }
