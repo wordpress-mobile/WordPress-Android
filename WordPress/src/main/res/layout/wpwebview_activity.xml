@@ -41,7 +41,6 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/navbar_container"
             android:layout_alignParentTop="true"
-            android:layout_below="@+id/toolbar"
             tools:visibility="gone"/>
 
         <TextView
