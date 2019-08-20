@@ -78,6 +78,33 @@ class UploadActionUseCaseTest {
     }
 
     @Test
+    fun `autoUploadAction is DO NOTHING when the post is older than 2 days no matter other parameters`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val twoDaysAgoTimestamp = run {
+            val twoDaysInSeconds = 60 * 60 * 24 * 2
+            val twoDaysAgo = (Date().time / 1000) - twoDaysInSeconds
+            DateTimeUtils.iso8601FromTimestamp(twoDaysAgo)
+        }
+
+        val posts = listOf(
+                createPostModel(dateLocallyChanged = twoDaysAgoTimestamp),
+                createPostModel(dateLocallyChanged = twoDaysAgoTimestamp, isLocalDraft = true, changesConfirmed = true),
+                createPostModel(dateLocallyChanged = twoDaysAgoTimestamp, isLocalDraft = false, changesConfirmed = true)
+        )
+
+        val siteModel: SiteModel = createSiteModel()
+
+        // Act and Assert
+        assertThat(posts).allSatisfy { post ->
+            val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+            assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+        }
+    }
+
+    @Test
     fun `autoUploadAction is REMOTE_AUTO_SAVE when the post is younger than 2 days and changes are NOT confirmed`() {
         // Arrange
         val uploadActionUseCase = createUploadActionUseCase()
