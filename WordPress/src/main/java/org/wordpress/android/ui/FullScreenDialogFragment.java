@@ -48,12 +48,10 @@ public class FullScreenDialogFragment extends DialogFragment {
     private String mTitle;
     private Toolbar mToolbar;
     private boolean mHideActivityBar;
-    private boolean mDismissAfterConfirm;
     private int mToolbarColor;
 
     private static final String ARG_ACTION = "ARG_ACTION";
     private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_HIDE_ACTIVITY_BAR";
-    private static final String ARG_DISMISS_AFTER_CONFIRM = "ARG_DISMISS_AFTER_CONFIRM";
     private static final String ARG_SUBTITLE = "ARG_SUBTITLE";
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final String ARG_TOOLBAR_COLOR = "ARG_TOOLBAR_COLOR";
@@ -92,7 +90,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         dialog.setOnConfirmListener(builder.mOnConfirmListener);
         dialog.setOnDismissListener(builder.mOnDismissListener);
         dialog.setHideActivityBar(builder.mHideActivityBar);
-        dialog.setDismissAfterConfirm(builder.mDismissAfterConfirm);
         return dialog;
     }
 
@@ -103,7 +100,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         bundle.putString(ARG_SUBTITLE, builder.mSubtitle);
         bundle.putInt(ARG_TOOLBAR_COLOR, builder.mToolbarColor);
         bundle.putBoolean(ARG_HIDE_ACTIVITY_BAR, builder.mHideActivityBar);
-        bundle.putBoolean(ARG_DISMISS_AFTER_CONFIRM, builder.mDismissAfterConfirm);
         return bundle;
     }
 
@@ -220,9 +216,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             mOnConfirmListener.onConfirm(result);
         }
 
-        if (mDismissAfterConfirm) {
-            dismiss();
-        }
+        dismiss();
     }
 
     /**
@@ -259,7 +253,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         mSubtitle = bundle.getString(ARG_SUBTITLE);
         mToolbarColor = bundle.getInt(ARG_TOOLBAR_COLOR);
         mHideActivityBar = bundle.getBoolean(ARG_HIDE_ACTIVITY_BAR);
-        mDismissAfterConfirm = bundle.getBoolean(ARG_DISMISS_AFTER_CONFIRM);
     }
 
     /**
@@ -383,15 +376,6 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
-     * Set flag to dismiss fragment after confirm action is clicked.
-     *
-     * @param dismissAfterConfirm boolean to dismiss after confirm click.
-     */
-    public void setDismissAfterConfirm(boolean dismissAfterConfirm) {
-        mDismissAfterConfirm = dismissAfterConfirm;
-    }
-
-    /**
      * Set theme background for {@link FullScreenDialogFragment} view.
      *
      * @param view {@link View} to set background
@@ -437,7 +421,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         String mSubtitle = "";
         String mTitle = "";
         boolean mHideActivityBar = false;
-        boolean mDismissAfterConfirm = true;
         int mToolbarColor = R.color.primary;
 
         /**
@@ -506,17 +489,6 @@ public class FullScreenDialogFragment extends DialogFragment {
          */
         public Builder setHideActivityBar(boolean hide) {
             this.mHideActivityBar = hide;
-            return this;
-        }
-
-        /**
-         * Set flag to dismiss the fragment after confirm action is clicked.
-         *
-         * @param dismiss boolean to dismiss the fragment after confirm click.
-         * @return {@link Builder} object to allow for chaining of calls to set methods
-         */
-        public Builder setDismissAferConfirm(boolean dismiss) {
-            this.mDismissAfterConfirm = dismiss;
             return this;
         }
 
