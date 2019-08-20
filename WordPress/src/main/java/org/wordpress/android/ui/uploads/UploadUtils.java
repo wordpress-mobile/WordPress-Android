@@ -434,7 +434,7 @@ public class UploadUtils {
     }
 
     public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostModel post) {
-        return post.getAutoSaveModified() != null
+        return !TextUtils.isEmpty(post.getAutoSaveModified())
                && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
                                .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));
     }
