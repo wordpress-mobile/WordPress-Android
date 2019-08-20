@@ -10,6 +10,7 @@ private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_T
 private const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
+private const val CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG"
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -24,6 +25,7 @@ class PostListDialogHelper(
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
+    private var localPostIdForAutoSaveConflictResolutionDialog: Int? = null
 
     fun showDeletePostConfirmationDialog(post: PostModel) {
         // We need network connection to delete a remote post, but not a local draft
@@ -84,12 +86,25 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
+    fun showAutoSaveConflictedPostResolutionDialog(post: PostModel) {
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_autosave_title),
+                message = UiStringRes(R.string.dialog_confirm_autosave_body),
+                positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
+                negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
+        )
+        localPostIdForAutoSaveConflictResolutionDialog = post.id
+        showDialog.invoke(dialogHolder)
+    }
+
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
         trashPostWithLocalChanges: (Int) -> Unit,
         deletePost: (Int) -> Unit,
         publishPost: (Int) -> Unit,
-        updateConflictedPostWithRemoteVersion: (Int) -> Unit
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit,
+        updateConflictedPostWithAutoSave: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
@@ -109,6 +124,10 @@ class PostListDialogHelper(
                 localPostIdForTrashPostWithLocalChangesDialog = null
                 trashPostWithLocalChanges(it)
             }
+            CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
+                localPostIdForAutoSaveConflictResolutionDialog = null
+                updateConflictedPostWithAutoSave(it)
+            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -123,6 +142,9 @@ class PostListDialogHelper(
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
+            }
+            CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
+                updateConflictedPostWithLocalVersion(it) // TODO
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }

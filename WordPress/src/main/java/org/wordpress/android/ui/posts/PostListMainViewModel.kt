@@ -270,7 +270,7 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-                doesPostHaveAutoSave = postConflictResolver::hasUnhandledAutoSave,
+                hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 postFetcher = postFetcher,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
@@ -368,7 +368,8 @@ class PostListMainViewModel @Inject constructor(
                 trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
                 deletePost = postActionHandler::deletePost,
                 publishPost = postActionHandler::publishPost,
-                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
+                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
+                updateConflictedPostWithAutoSave = postConflictResolver::updateConflictedPostWithAutoSave
         )
     }
 

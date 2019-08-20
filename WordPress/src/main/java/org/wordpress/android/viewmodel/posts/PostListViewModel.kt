@@ -360,7 +360,7 @@ class PostListViewModel @Inject constructor(
                     post = post,
                     uploadStatus = connector.getUploadStatus(post, connector.site),
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
-                    hasAutoSave = connector.doesPostHaveAutoSave(post),
+                    hasAutoSave = connector.hasAutoSave(post),
                     capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
                     statsSupported = isStatsSupported,
                     featuredImageUrl =

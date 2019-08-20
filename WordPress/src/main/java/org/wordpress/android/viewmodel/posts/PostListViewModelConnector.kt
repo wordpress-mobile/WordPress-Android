@@ -11,7 +11,7 @@ class PostListViewModelConnector(
     val postActionHandler: PostActionHandler,
     val getUploadStatus: (PostModel, SiteModel) -> PostListItemUploadStatus,
     val doesPostHaveUnhandledConflict: (PostModel) -> Boolean,
-    val doesPostHaveAutoSave: (PostModel) -> Boolean,
+    val hasAutoSave: (PostModel) -> Boolean,
     val postFetcher: PostFetcher,
     private val getFeaturedImageUrl: (site: SiteModel, featuredImageId: Long) -> String?
 ) {

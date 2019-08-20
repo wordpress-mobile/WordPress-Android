@@ -40,7 +40,7 @@ class PostConflictResolver(
         }
     }
 
-    fun updateConflictedPostWithAutosave(localPostId: Int) {
+    fun updateConflictedPostWithAutoSave(localPostId: Int) {
         // We need network connection to load a remote post
         if (!checkNetworkConnection()) {
             return

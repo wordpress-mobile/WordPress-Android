@@ -179,7 +179,7 @@ class PostActionHandler(
 
         // Then check if it's in conflicted state with a remote auto-save
         if (hasUnhandledAutoSave.invoke(post)) {
-            postListDialogHelper.showConflictedPostResolutionDialog(post) // FIXME
+            postListDialogHelper.showAutoSaveConflictedPostResolutionDialog(post)
             return
         }
 
