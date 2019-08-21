@@ -399,15 +399,14 @@ public class MySiteFragment extends Fragment implements
 
         rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
-                ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
-                        DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
+                registerDomain();
             }
         });
 
         rootView.findViewById(R.id.quick_action_stats_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_STATS_TAPPED);
                 viewStats();
             }
         });
@@ -437,6 +436,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.quick_action_posts_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_POSTS_TAPPED);
                 viewPosts();
             }
         });
@@ -451,6 +451,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.quick_action_media_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_MEDIA_TAPPED);
                 viewMedia();
             }
         });
@@ -465,6 +466,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.quick_action_pages_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_PAGES_TAPPED);
                 viewPages();
             }
         });
@@ -567,6 +569,13 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
+    }
+
+    private void registerDomain() {
+        AnalyticsUtils
+                .trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
+        ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
+                DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
     }
 
     private void viewMedia() {
