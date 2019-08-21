@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.PostStore.PostListItem
+import org.wordpress.android.fluxc.store.PostStore.PostListItem.PostListAutoSave
 
 @RunWith(MockitoJUnitRunner::class)
 class PostStoreTest {
@@ -241,6 +242,6 @@ class PostStoreTest {
         post: PostModel,
         status: String = post.status,
         lastModified: String = post.lastModified,
-        autoSaveModified: String = post.autoSaveModified
-    ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified)
+        autoSave: PostListAutoSave = mock()
+    ) = PostListItem(post.remotePostId, lastModified, status, autoSave)
 }
