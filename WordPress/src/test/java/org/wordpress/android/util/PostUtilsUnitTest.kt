@@ -67,12 +67,14 @@ class PostUtilsUnitTest {
         ): PostModel {
             val post = PostModel()
             post.status = postStatus.toString()
-            val site = SiteModel()
-            site.hasCapabilityPublishPosts = hasCapabilityPublishPosts
-            site.origin = if (isSelfHosted) SiteModel.ORIGIN_XMLRPC else SiteModel.ORIGIN_WPCOM_REST
             if (dateLocallyChanged != null) {
                 post.dateLocallyChanged = dateLocallyChanged
             }
+
+            val site = SiteModel()
+            site.hasCapabilityPublishPosts = hasCapabilityPublishPosts
+            site.origin = if (isSelfHosted) SiteModel.ORIGIN_XMLRPC else SiteModel.ORIGIN_WPCOM_REST
+
             PostUtils.preparePostForPublish(post, site)
             return post
         }
