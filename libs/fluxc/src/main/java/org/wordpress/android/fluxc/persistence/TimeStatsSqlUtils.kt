@@ -42,7 +42,16 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
         date: Date,
         requestedItems: Int? = null
     ) {
-        val formattedDate = statsUtils.getFormattedDate(date)
+        insert(site, data, granularity, statsUtils.getFormattedDate(date), requestedItems)
+    }
+
+    fun insert(
+        site: SiteModel,
+        data: RESPONSE_TYPE,
+        granularity: StatsGranularity,
+        formattedDate: String,
+        requestedItems: Int?
+    ) {
         statsSqlUtils.insert(site, blockType, granularity.toStatsType(), data, true, formattedDate)
         statsRequestSqlUtils.insert(
                 site,
@@ -54,12 +63,16 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
     }
 
     fun select(site: SiteModel, granularity: StatsGranularity, date: Date): RESPONSE_TYPE? {
+        return select(site, granularity, statsUtils.getFormattedDate(date))
+    }
+
+    fun select(site: SiteModel, granularity: StatsGranularity, date: String): RESPONSE_TYPE? {
         return statsSqlUtils.select(
                 site,
                 blockType,
                 granularity.toStatsType(),
                 classOfResponse,
-                statsUtils.getFormattedDate(date)
+                date
         )
     }
 
@@ -69,12 +82,25 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
         date: Date,
         requestedItems: Int? = null
     ): Boolean {
+        return hasFreshRequest(site,
+                granularity,
+                statsUtils.getFormattedDate(date),
+                requestedItems
+        )
+    }
+
+    fun hasFreshRequest(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        date: String,
+        requestedItems: Int? = null
+    ): Boolean {
         return statsRequestSqlUtils.hasFreshRequest(
                 site,
                 blockType,
                 granularity.toStatsType(),
                 requestedItems,
-                date = statsUtils.getFormattedDate(date)
+                date = date
         )
     }
 
