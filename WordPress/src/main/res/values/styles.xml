@@ -276,7 +276,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
     </style>
-    
+
     <style name="MySiteQuickActionButton" parent="Widget.Design.FloatingActionButton">
         <item name="borderWidth">0dp</item>
         <item name="elevation">@dimen/card_elevation</item>
@@ -293,7 +293,6 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
-
 
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
