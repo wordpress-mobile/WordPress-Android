@@ -65,10 +65,11 @@ class WPWebViewViewModelTest {
     }
 
     @Test
-    fun `show content on UrlLoaded`() {
+    fun `show content on UrlLoaded and enable preview mode switch`() {
         viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         viewModel.onUrlLoaded()
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
+        assertThat(viewModel.previewModeSelector.value!!.isEnabled).isTrue()
     }
 
     @Test
@@ -79,7 +80,7 @@ class WPWebViewViewModelTest {
     }
 
     @Test
-    fun `initially navigation is not enabled and preview mode is set to default`() {
+    fun `initially navigation is not enabled and preview mode is set to default and disabled`() {
         viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
@@ -88,6 +89,7 @@ class WPWebViewViewModelTest {
         assertThat(viewModel.previewMode.value).isEqualTo(DEFAULT)
         assertThat(viewModel.previewModeSelector.value).isNotNull()
         assertThat(viewModel.previewModeSelector.value!!.isVisible).isFalse()
+        assertThat(viewModel.previewModeSelector.value!!.isEnabled).isFalse()
         assertThat(viewModel.previewModeSelector.value!!.selectedPreviewMode).isEqualTo(DEFAULT)
     }
 
@@ -217,6 +219,17 @@ class WPWebViewViewModelTest {
         assertThat(previewModeSelectorStatus).isNotNull()
         assertThat(previewModeSelectorStatus!!.isVisible).isTrue()
         assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DESKTOP)
+    }
+
+    @Test
+    fun `selecting preview mode triggers progress indicator`() {
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
+
+        viewModel.selectPreviewMode(DESKTOP)
+        assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
+
+        viewModel.onUrlLoaded()
+        assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
     }
 
     @Test

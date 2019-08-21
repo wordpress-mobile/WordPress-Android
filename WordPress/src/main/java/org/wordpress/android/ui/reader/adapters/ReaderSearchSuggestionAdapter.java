@@ -40,7 +40,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         mSuggestionBgColor = ContextCompat.getColor(context, R.color.neutral_0);
     }
 
-    public void setFilter(String filter) {
+    public synchronized void setFilter(String filter) {
         // skip if unchanged
         if (isCurrentFilter(filter) && getCursor() != null) {
             return;
@@ -74,7 +74,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     /*
      * forces setFilter() to always repopulate by skipping the isCurrentFilter() check
      */
-    private void reload() {
+    private synchronized void reload() {
         String newFilter = mCurrentFilter;
         mCurrentFilter = null;
         setFilter(newFilter);
@@ -180,7 +180,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         alert.show();
     }
 
-    private void clearSavedSearches() {
+    private synchronized void clearSavedSearches() {
         ReaderSearchTable.deleteAllQueries();
         swapCursor(null);
     }

@@ -7,6 +7,9 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -32,6 +36,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -106,10 +111,14 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_list_fragment, container, false);
+        setHasOptionsMenu(true);
 
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
+
         mToolbar = view.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+
         mTabLayout = view.findViewById(R.id.tab_layout);
         mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
             @Override
@@ -344,5 +353,28 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
                 AppLog.e(T.NOTIFS, exception);
             }
         }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem notificationSettings = menu.findItem(R.id.notifications_settings);
+        notificationSettings.setVisible(mAccountStore.hasAccessToken());
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.notifications_list_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.notifications_settings) {
+            ActivityLauncher.viewNotificationsSettings(getActivity());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
