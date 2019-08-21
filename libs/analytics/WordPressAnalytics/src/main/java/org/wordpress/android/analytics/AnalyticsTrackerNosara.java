@@ -1632,6 +1632,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_redemption_tapped";
             case DOMAIN_CREDIT_REDEMPTION_SUCCESS:
                 return "domain_credit_redemption_success";
+            case AUTO_UPLOAD_POST_INVOKED:
+                return "auto_upload_post_invoked";
         }
         return null;
     }
