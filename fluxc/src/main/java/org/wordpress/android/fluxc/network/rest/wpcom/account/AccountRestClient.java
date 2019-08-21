@@ -1130,9 +1130,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         if (from.containsKey("primary_site_ID")) {
             accountModel.setPrimarySiteId(((Double) from.get("primary_site_ID")).longValue());
         }
-        if (from.containsKey("user_login_can_be_changed")) {
-            accountModel.setUsernameCanBeChanged((Boolean) from.get("user_login_can_be_changed"));
-        }
         return !old.equals(accountModel);
     }
 
