@@ -64,8 +64,7 @@ constructor(
         return visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.All,
-                selectedDateProvider.getCurrentDate()
+                LimitMode.All
         )
     }
 
@@ -74,7 +73,6 @@ constructor(
                 statsSiteProvider.siteModel,
                 statsGranularity,
                 LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
-                selectedDateProvider.getCurrentDate(),
                 forced
         )
         val model = response.model

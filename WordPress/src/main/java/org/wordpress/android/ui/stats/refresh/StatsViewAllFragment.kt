@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -198,19 +199,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
-            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
-            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
-                date_selection_toolbar.visibility = dateSelectorVisibility
-            }
-            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
-            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (previousDateButton.isEnabled != enablePreviousButton) {
-                previousDateButton.isEnabled = enablePreviousButton
-            }
-            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (nextDateButton.isEnabled != enableNextButton) {
-                nextDateButton.isEnabled = enableNextButton
-            }
+            drawDateSelector(dateSelectorUiModel)
         })
 
         viewModel.navigationTarget.observe(this, Observer { event ->
