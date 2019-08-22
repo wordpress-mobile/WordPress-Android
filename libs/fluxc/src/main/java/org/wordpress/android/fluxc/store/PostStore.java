@@ -89,6 +89,7 @@ public class PostStore extends Store {
     public static class PostListItem {
         public static class PostListAutoSave {
             public long revisionId = 0;
+            public String modified;
             public String previewUrl;
             public String title;
             public String content;
@@ -730,7 +731,8 @@ public class PostStore extends Store {
                   * was updated. However, if we know the last modified date is equal to the date we have in local
                   * autosave object we are sure that our invocation of /autosave updated the post directly.
                  */
-                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())) {
+                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())
+                    && item.autoSave.modified == null) {
                     isPostChanged = false;
                 }
 
@@ -749,6 +751,7 @@ public class PostStore extends Store {
                         post.setAutoSaveContent(item.autoSave.content);
                         post.setAutoSaveExcerpt(item.autoSave.excerpt);
                         post.setAutoSavePreviewUrl(item.autoSave.previewUrl);
+                        post.setAutoSaveModified(item.autoSave.modified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }
