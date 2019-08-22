@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsRespons
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponsePart;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.RevisionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
-import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
@@ -48,6 +47,8 @@ import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
+import org.wordpress.android.fluxc.store.PostStore.PostListItem.PostListAutoSave;
+import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
 
@@ -125,13 +126,17 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onResponse(PostsResponse response) {
                         List<PostListItem> postListItems = new ArrayList<>(response.getPosts().size());
                         for (PostWPComRestResponse postResponse : response.getPosts()) {
-                            String autoSaveModified = null;
+                            PostListAutoSave postListAutoSave = new PostListAutoSave();
                             if (postResponse.getPostAutoSave() != null) {
-                                autoSaveModified = postResponse.getPostAutoSave().getModified();
+                                postListAutoSave.revisionId = postResponse.getPostAutoSave().getRevisionId();
+                                postListAutoSave.title = postResponse.getPostAutoSave().getTitle();
+                                postListAutoSave.content = postResponse.getPostAutoSave().getContent();
+                                postListAutoSave.excerpt = postResponse.getPostAutoSave().getExcerpt();
+                                postListAutoSave.previewUrl = postResponse.getPostAutoSave().getPreviewUrl();
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
-                                            postResponse.getStatus(), autoSaveModified));
+                                            postResponse.getStatus(), postListAutoSave));
                         }
                         boolean canLoadMore = postListItems.size() == pageSize;
                         FetchPostListResponsePayload responsePayload =
@@ -418,6 +423,9 @@ public class PostRestClient extends BaseWPComRestClient {
             post.setAutoSaveModified(autoSave.getModified());
             post.setRemoteAutoSaveModified(autoSave.getModified());
             post.setAutoSavePreviewUrl(autoSave.getPreviewUrl());
+            post.setAutoSaveTitle(autoSave.getTitle());
+            post.setAutoSaveContent(autoSave.getContent());
+            post.setAutoSaveExcerpt(autoSave.getExcerpt());
         }
 
         if (from.getCapabilities() != null) {
