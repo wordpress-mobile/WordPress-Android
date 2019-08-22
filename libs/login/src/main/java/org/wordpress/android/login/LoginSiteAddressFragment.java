@@ -426,7 +426,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             if (event.info.isWPCom && event.info.hasJetpack) {
                 // This is likely an atomic site.
                 hasJetpack = true;
-            } else if (event.info.hasJetpack && event.info.isJetpackActive && event.info.isJetpackConnected) {
+            } else if (event.info.isJetpackConnected) {
                 hasJetpack = true;
             }
             properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
