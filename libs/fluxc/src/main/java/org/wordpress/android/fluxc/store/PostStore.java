@@ -87,16 +87,24 @@ public class PostStore extends Store {
     }
 
     public static class PostListItem {
+        public static class PostListAutoSave {
+            public long revisionId = 0;
+            public String previewUrl;
+            public String title;
+            public String content;
+            public String excerpt;
+        }
+
         public Long remotePostId;
         public String lastModified;
         public String status;
-        public String autoSaveModified;
+        public PostListAutoSave autoSave;
 
-        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
+        public PostListItem(Long remotePostId, String lastModified, String status, PostListAutoSave autoSave) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
-            this.autoSaveModified = autoSaveModified;
+            this.autoSave = autoSave;
         }
     }
 
@@ -708,7 +716,8 @@ public class PostStore extends Store {
                 // will not be updated.
                 boolean isPostChanged =
                         !post.getLastModified().equals(item.lastModified)
-                        || !post.getStatus().equals(item.status);
+                        || !post.getStatus().equals(item.status)
+                        || item.autoSave.revisionId != post.getAutoSaveRevisionId();
 
                 /*
                  * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
@@ -721,8 +730,7 @@ public class PostStore extends Store {
                   * was updated. However, if we know the last modified date is equal to the date we have in local
                   * autosave object we are sure that our invocation of /autosave updated the post directly.
                  */
-                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())
-                    && item.autoSaveModified == null) {
+                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())) {
                     isPostChanged = false;
                 }
 
@@ -736,6 +744,11 @@ public class PostStore extends Store {
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
+                        post.setAutoSaveRevisionId(item.autoSave.revisionId);
+                        post.setAutoSaveTitle(item.autoSave.title);
+                        post.setAutoSaveContent(item.autoSave.content);
+                        post.setAutoSaveExcerpt(item.autoSave.excerpt);
+                        post.setAutoSavePreviewUrl(item.autoSave.previewUrl);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
                     }
                 }

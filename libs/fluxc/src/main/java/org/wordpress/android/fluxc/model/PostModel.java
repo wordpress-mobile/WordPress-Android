@@ -73,7 +73,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private String mAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mRemoteAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mAutoSavePreviewUrl;
-
+    @Column private String mAutoSaveTitle;
+    @Column private String mAutoSaveContent;
+    @Column private String mAutoSaveExcerpt;
 
     // Local only
     @Column private boolean mIsLocalDraft;
@@ -394,6 +396,30 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setAutoSavePreviewUrl(String autoSavePreviewUrl) {
         mAutoSavePreviewUrl = autoSavePreviewUrl;
+    }
+
+    public String getAutoSaveTitle() {
+        return mAutoSaveTitle;
+    }
+
+    public void setAutoSaveTitle(String autoSaveTitle) {
+        mAutoSaveTitle = autoSaveTitle;
+    }
+
+    public String getAutoSaveContent() {
+        return mAutoSaveContent;
+    }
+
+    public void setAutoSaveContent(String autoSaveContent) {
+        mAutoSaveContent = autoSaveContent;
+    }
+
+    public String getAutoSaveExcerpt() {
+        return mAutoSaveExcerpt;
+    }
+
+    public void setAutoSaveExcerpt(String autoSaveExcerpt) {
+        mAutoSaveExcerpt = autoSaveExcerpt;
     }
 
     @Deprecated
