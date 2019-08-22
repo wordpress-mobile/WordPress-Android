@@ -830,6 +830,9 @@
     <string name="stats_menu_move_up">Move up</string>
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
+    <string name="stats_site_neutral_utc">Site timezone (UTC)</string>
+    <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
+    <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>

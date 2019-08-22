@@ -19,7 +19,6 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Date
 import javax.inject.Inject
 
 const val LIST_ITEM_COUNT = 7
@@ -49,15 +48,13 @@ class ViewsWidgetListViewModel
         siteId?.apply {
             val site = siteStore.getSiteByLocalId(this)
             if (site != null) {
-                val currentDate = Date()
                 runBlocking {
-                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD), currentDate)
+                    visitsAndViewsStore.fetchVisits(site, DAYS, Top(OVERVIEW_ITEMS_TO_LOAD))
                 }
                 val visitsAndViewsModel = visitsAndViewsStore.getVisits(
                         site,
                         DAYS,
-                        LimitMode.All,
-                        currentDate
+                        LimitMode.All
                 )
                 val periods = visitsAndViewsModel?.dates?.asReversed() ?: listOf()
                 val uiModels = periods.mapIndexed { index, periodData ->
