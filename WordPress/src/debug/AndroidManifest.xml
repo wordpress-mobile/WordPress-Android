@@ -8,6 +8,8 @@
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
         android:supportsRtl="true">
+        <activity
+            android:name="androidx.fragment.app.FragmentActivity"/>
     </application>
 
     <!--
