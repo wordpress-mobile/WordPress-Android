@@ -160,8 +160,8 @@ class PostListDialogHelper(
     ) {
         // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialogs,
         // for which tapping outside and actively tapping the "edit local" have different meanings
-        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG
-                && instanceTag != CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG) {
+        if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG &&
+                instanceTag != CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG) {
             onNegativeClickedForBasicDialog(
                     instanceTag = instanceTag,
                     updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion,
