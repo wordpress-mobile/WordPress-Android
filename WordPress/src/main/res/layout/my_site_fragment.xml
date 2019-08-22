@@ -76,7 +76,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:orientation="vertical">
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/content_margin"
+                    android:paddingStart="@dimen/content_margin">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_title_label"
@@ -87,8 +90,6 @@
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:paddingEnd="@dimen/margin_large"
-                        android:paddingStart="@dimen/margin_large"
                         android:textAlignment="center"
                         android:textColor="@color/neutral_70"
                         android:textSize="@dimen/text_sz_extra_large"
@@ -115,7 +116,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?attr/selectableItemBackground"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center_vertical"
@@ -154,7 +155,6 @@
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/quick_action_pages_button"
                             style="@style/MySiteQuickActionButton"
-                            android:backgroundTint="@android:color/white"
                             android:src="@drawable/ic_pages_white_24dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
@@ -196,7 +196,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
-                    android:background="@color/white"
+                    android:background="@android:color/white"
                     android:paddingEnd="@dimen/content_margin"
                     android:paddingStart="@dimen/content_margin">
 
@@ -315,7 +315,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
-                    android:background="@color/white"
+                    android:background="@android:color/white"
                     android:orientation="vertical"
                     android:visibility="gone">
 

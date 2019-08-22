@@ -299,7 +299,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
