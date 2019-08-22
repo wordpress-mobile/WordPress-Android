@@ -1,4 +1,4 @@
-package org.wordpress.android.util
+package org.wordpress.android.ui.posts
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
-import org.wordpress.android.ui.posts.PostUtils
 
 @RunWith(MockitoJUnitRunner::class)
 class PostUtilsUnitTest {
@@ -45,8 +44,14 @@ class PostUtilsUnitTest {
 
     @Test
     fun `prepareForPublish updates post status to Publish when on self-hosted site`() {
-        val firstPost = invokePreparePostForPublish(false, isSelfHosted = true)
-        val secondPost = invokePreparePostForPublish(true, isSelfHosted = true)
+        val firstPost = invokePreparePostForPublish(
+                false,
+                isSelfHosted = true
+        )
+        val secondPost = invokePreparePostForPublish(
+                true,
+                isSelfHosted = true
+        )
 
         assertThat(firstPost.status).isEqualTo(PostStatus.PUBLISHED.toString())
         assertThat(secondPost.status).isEqualTo(PostStatus.PUBLISHED.toString())
