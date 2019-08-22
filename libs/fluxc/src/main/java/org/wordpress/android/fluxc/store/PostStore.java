@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.ListStore.ListError;
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
+import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -87,25 +88,16 @@ public class PostStore extends Store {
     }
 
     public static class PostListItem {
-        public static class PostListAutoSave {
-            public long revisionId = 0;
-            public String modified;
-            public String previewUrl;
-            public String title;
-            public String content;
-            public String excerpt;
-        }
-
         public Long remotePostId;
         public String lastModified;
         public String status;
-        public PostListAutoSave autoSave;
+        public String autoSaveModified;
 
-        public PostListItem(Long remotePostId, String lastModified, String status, PostListAutoSave autoSave) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
-            this.autoSave = autoSave;
+            this.autoSaveModified = autoSaveModified;
         }
     }
 
@@ -712,13 +704,15 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
+
+                boolean isAutoSaveChanged = !ObjectsUtils.equals(post.getAutoSaveModified(), item.autoSaveModified);
+
                 // Check if the post's last modified date or status have changed.
                 // We need to check status separately because when a scheduled post is published, its modified date
                 // will not be updated.
                 boolean isPostChanged =
                         !post.getLastModified().equals(item.lastModified)
-                        || !post.getStatus().equals(item.status)
-                        || item.autoSave.revisionId != post.getAutoSaveRevisionId();
+                        || !post.getStatus().equals(item.status);
 
                 /*
                  * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
@@ -732,27 +726,28 @@ public class PostStore extends Store {
                   * autosave object we are sure that our invocation of /autosave updated the post directly.
                  */
                 if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())
-                    && item.autoSave.modified == null) {
+                    && item.autoSaveModified == null) {
                     isPostChanged = false;
+                    isAutoSaveChanged = false;
                 }
 
-                if (isPostChanged) {
+                if (isPostChanged || isAutoSaveChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
                     if (!post.isLocallyChanged()) {
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
-                    } else {
+                    } else if (isPostChanged) {
                         // at this point we know there's a potential version conflict (the post has been modified
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
-                        post.setAutoSaveRevisionId(item.autoSave.revisionId);
-                        post.setAutoSaveTitle(item.autoSave.title);
-                        post.setAutoSaveContent(item.autoSave.content);
-                        post.setAutoSaveExcerpt(item.autoSave.excerpt);
-                        post.setAutoSavePreviewUrl(item.autoSave.previewUrl);
-                        post.setAutoSaveModified(item.autoSave.modified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+                    } else if (isAutoSaveChanged) {
+                        // We currently don't want to do anything - we can't fetch the post from the remote as we'd
+                        // override the local changes. The plan is to introduce improved conflict resolution on the
+                        // UI and handle even the scenario for cases when the only thing that has changed is the
+                        // autosave object. We'll probably need to introduce something like `remoteAutoSaveModified`
+                        // field.
                     }
                 }
             }
