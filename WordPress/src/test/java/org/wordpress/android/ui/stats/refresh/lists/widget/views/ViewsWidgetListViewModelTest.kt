@@ -62,7 +62,7 @@ class ViewsWidgetListViewModelTest {
                 PeriodData("2019-01-07", firstViews, 0, 0, 0, 0, 0),
                 PeriodData("2019-01-08", todayViews, 0, 0, 0, 0, 0)
         )
-        whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(LimitMode.All), any())).thenReturn(
+        whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(LimitMode.All))).thenReturn(
                 VisitsAndViewsModel("2019-01-08", dates)
         )
         val todayString = "Today"
