@@ -144,10 +144,8 @@ class InsightsStoreTest {
                 todayInsightsRestClient,
                 todaySqlUtils,
                 mapper,
-                timeProvider,
                 Unconfined
         )
-        whenever(timeProvider.currentDate).thenReturn(currentDate)
     }
 
     @Test
@@ -288,7 +286,7 @@ class InsightsStoreTest {
                 VISITS_RESPONSE
         )
         val forced = true
-        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(
+        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<VisitsModel>()
@@ -317,7 +315,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitResponse>(StatsError(type, message))
         val forced = true
-        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(errorPayload)
+        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, forced)).thenReturn(errorPayload)
 
         val responseModel = todayStore.fetchTodayInsights(site, forced)
 
