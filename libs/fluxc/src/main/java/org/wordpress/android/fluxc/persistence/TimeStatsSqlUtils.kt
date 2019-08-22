@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COUNTRY_VIEWS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SEARCH_TERMS
@@ -42,7 +44,16 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
         date: Date,
         requestedItems: Int? = null
     ) {
-        val formattedDate = statsUtils.getFormattedDate(date)
+        insert(site, data, granularity, statsUtils.getFormattedDate(date), requestedItems)
+    }
+
+    fun insert(
+        site: SiteModel,
+        data: RESPONSE_TYPE,
+        granularity: StatsGranularity,
+        formattedDate: String,
+        requestedItems: Int?
+    ) {
         statsSqlUtils.insert(site, blockType, granularity.toStatsType(), data, true, formattedDate)
         statsRequestSqlUtils.insert(
                 site,
@@ -54,12 +65,16 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
     }
 
     fun select(site: SiteModel, granularity: StatsGranularity, date: Date): RESPONSE_TYPE? {
+        return select(site, granularity, statsUtils.getFormattedDate(date))
+    }
+
+    fun select(site: SiteModel, granularity: StatsGranularity, date: String): RESPONSE_TYPE? {
         return statsSqlUtils.select(
                 site,
                 blockType,
                 granularity.toStatsType(),
                 classOfResponse,
-                statsUtils.getFormattedDate(date)
+                date
         )
     }
 
@@ -69,12 +84,25 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
         date: Date,
         requestedItems: Int? = null
     ): Boolean {
+        return hasFreshRequest(site,
+                granularity,
+                statsUtils.getFormattedDate(date),
+                requestedItems
+        )
+    }
+
+    fun hasFreshRequest(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        date: String,
+        requestedItems: Int? = null
+    ): Boolean {
         return statsRequestSqlUtils.hasFreshRequest(
                 site,
                 blockType,
                 granularity.toStatsType(),
                 requestedItems,
-                date = statsUtils.getFormattedDate(date)
+                date = date
         )
     }
 
@@ -180,6 +208,19 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
             statsRequestSqlUtils,
             VIDEO_PLAYS,
             VideoPlaysResponse::class.java
+    )
+
+    class FileDownloadsSqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<FileDownloadsResponse>(
+            statsSqlUtils,
+            statsUtils,
+            statsRequestSqlUtils,
+            FILE_DOWNLOADS,
+            FileDownloadsResponse::class.java
     )
 
     private fun StatsGranularity.toStatsType(): StatsType {

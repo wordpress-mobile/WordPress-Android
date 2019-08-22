@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistance.stats.time
 
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
@@ -42,7 +43,7 @@ class AuthorsSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = AuthorsSqlUtils(statsSqlUtils, statsUtils, statsRequestSqlUtils)
-        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(STRING_DATE)
+        whenever(statsUtils.getFormattedDate(eq(DATE), isNull())).thenReturn(STRING_DATE)
     }
 
     @Test
