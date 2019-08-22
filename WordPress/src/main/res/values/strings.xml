@@ -929,7 +929,7 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
-    <string name="stats_view_follower_totals">Followers Totals</string>
+    <string name="stats_view_follower_totals">Follower Totals</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_seconds_ago">seconds ago</string>
