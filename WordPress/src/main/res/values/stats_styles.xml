@@ -70,6 +70,11 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="StatsDateTimeZone" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="StatsBlockBigTitle" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/gray_100</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
