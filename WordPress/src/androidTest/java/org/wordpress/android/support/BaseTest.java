@@ -1,7 +1,10 @@
 package org.wordpress.android.support;
 
+import android.app.Instrumentation;
+
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.github.jknack.handlebars.Helper;
@@ -23,6 +26,7 @@ import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
 import org.wordpress.android.modules.AppComponentTest;
 import org.wordpress.android.modules.DaggerAppComponentTest;
+import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -53,9 +57,11 @@ public class BaseTest {
     public WireMockRule wireMockRule;
 
     {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+
         wireMockRule = new WireMockRule(
                 options().port(WIREMOCK_PORT)
-                         .fileSource(new AssetFileSource(InstrumentationRegistry.getContext().getAssets()))
+                         .fileSource(new AssetFileSource(instrumentation.getContext().getAssets()))
                          .extensions(new ResponseTemplateTransformer(true, new HashMap<String, Helper>() {
                              {
                                  put("fnow", new UnlocalizedDateHelper());
