@@ -748,6 +748,8 @@ public class PostStore extends Store {
                         // UI and handle even the scenario for cases when the only thing that has changed is the
                         // autosave object. We'll probably need to introduce something like `remoteAutoSaveModified`
                         // field.
+                        // Btw we'll also need to add `else if (isPostChanged && isAutoSaveChanged) case in front of
+                        // `else if (isPostChanged)` in v2.
                     }
                 }
             }
