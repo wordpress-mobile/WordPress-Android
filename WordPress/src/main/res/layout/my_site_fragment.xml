@@ -121,6 +121,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center_vertical"
                     android:maxLines="1"
+                    android:padding="@dimen/margin_medium"
                     android:text="@string/my_site_btn_switch_site"
                     android:textAllCaps="true"
                     android:textColor="@color/blue_50"
