@@ -133,6 +133,7 @@ public class PostRestClient extends BaseWPComRestClient {
                                 postListAutoSave.content = postResponse.getPostAutoSave().getContent();
                                 postListAutoSave.excerpt = postResponse.getPostAutoSave().getExcerpt();
                                 postListAutoSave.previewUrl = postResponse.getPostAutoSave().getPreviewUrl();
+                                postListAutoSave.modified = postResponse.getPostAutoSave().getModified();
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
