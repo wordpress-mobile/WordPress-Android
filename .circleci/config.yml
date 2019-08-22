@@ -53,6 +53,33 @@ jobs:
             fi 
       - android/save-gradle-cache
       - android/save-lint-results
+  Installable Build:
+    executor: 
+      name: android/default
+      api-version: "28"
+    steps:
+      - checkout
+      - bundle-install/bundle-install
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - android/restore-gradle-cache
+      - run:
+          name: Build APK
+          command: |
+            PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
+            VERSION_NAME="pr-${PR_NUMBER}-build-${CIRCLE_BUILD_NUM}"
+            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
+
+            ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
+      - run:
+          name: Prepare APK
+          command: |
+            mkdir -p Artifacts
+            mv WordPress/build/outputs/apk/vanilla/release/WordPress-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+      - store_artifacts:
+          path: Artifacts
+          destination: Artifacts
   connected-tests:
     executor:
       name: android/default
@@ -97,6 +124,7 @@ workflows:
       - strings-check
       - test
       - lint
+      - Installable Build
   nightly:
     triggers:
       - schedule:

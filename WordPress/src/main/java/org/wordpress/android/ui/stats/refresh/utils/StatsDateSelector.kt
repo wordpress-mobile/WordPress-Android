@@ -18,6 +18,7 @@ class StatsDateSelector
 constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val siteProvider: StatsSiteProvider,
     private val statsSection: StatsSection
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
@@ -38,11 +39,13 @@ constructor(
         if (!shouldShowDateSelection && currentState?.isVisible != false) {
             emitValue(currentState, DateSelectorUiModel(false))
         } else {
+            val timeZone = statsDateFormatter.printTimeZone(siteProvider.siteModel)
             val updatedState = DateSelectorUiModel(
                     shouldShowDateSelection,
                     updatedDate,
                     enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
-                    enableSelectNext = selectedDateProvider.hasNextDate(statsSection)
+                    enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
+                    timeZone = timeZone
             )
             emitValue(currentState, updatedState)
         }
@@ -91,10 +94,16 @@ constructor(
     class Factory
     @Inject constructor(
         private val selectedDateProvider: SelectedDateProvider,
+        private val siteProvider: StatsSiteProvider,
         private val statsDateFormatter: StatsDateFormatter
     ) {
         fun build(statsSection: StatsSection): StatsDateSelector {
-            return StatsDateSelector(selectedDateProvider, statsDateFormatter, statsSection)
+            return StatsDateSelector(
+                    selectedDateProvider,
+                    statsDateFormatter,
+                    siteProvider,
+                    statsSection
+            )
         }
     }
 }
