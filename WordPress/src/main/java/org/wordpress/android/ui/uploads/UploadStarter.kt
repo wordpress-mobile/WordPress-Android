@@ -158,7 +158,7 @@ class UploadStarter @Inject constructor(
                         if (action == DO_NOTHING) {
                             false
                         } else {
-                            trackAutoUploadAction(action)
+                            trackAutoUploadAction(action, it.status)
                             true
                         }
                     }
@@ -178,7 +178,13 @@ class UploadStarter @Inject constructor(
         }
     }
 
-    private fun trackAutoUploadAction(action: UploadAction) {
-        tracker.track(Stat.AUTO_UPLOAD_POST_INVOKED, mapOf("upload_action" to action.toString()))
+    private fun trackAutoUploadAction(action: UploadAction, status: String) {
+        tracker.track(
+                Stat.AUTO_UPLOAD_POST_INVOKED,
+                mapOf(
+                        "upload_action" to action.toString(),
+                        "post_status" to status
+                )
+        )
     }
 }
