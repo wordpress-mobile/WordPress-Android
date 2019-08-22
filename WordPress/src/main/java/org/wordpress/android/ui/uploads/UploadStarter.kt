@@ -14,6 +14,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -21,10 +22,12 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.testing.OpenForTesting
+import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.DO_NOTHING
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.skip
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
@@ -51,6 +54,7 @@ class UploadStarter @Inject constructor(
     private val pageStore: PageStore,
     private val siteStore: SiteStore,
     private val uploadActionUseCase: UploadActionUseCase,
+    private val tracker: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val uploadServiceFacade: UploadServiceFacade,
@@ -150,7 +154,13 @@ class UploadStarter @Inject constructor(
             postsAndPages
                     .asSequence()
                     .filter {
-                        uploadActionUseCase.getAutoUploadAction(it, site) != DO_NOTHING
+                        val action = uploadActionUseCase.getAutoUploadAction(it, site)
+                        if (action == DO_NOTHING) {
+                            false
+                        } else {
+                            trackAutoUploadAction(action, it.status)
+                            true
+                        }
                     }
                     .toList()
                     .forEach { post ->
@@ -166,5 +176,15 @@ class UploadStarter @Inject constructor(
         } finally {
             mutex.unlock()
         }
+    }
+
+    private fun trackAutoUploadAction(action: UploadAction, status: String) {
+        tracker.track(
+                Stat.AUTO_UPLOAD_POST_INVOKED,
+                mapOf(
+                        "upload_action" to action.toString(),
+                        "post_status" to status
+                )
+        )
     }
 }

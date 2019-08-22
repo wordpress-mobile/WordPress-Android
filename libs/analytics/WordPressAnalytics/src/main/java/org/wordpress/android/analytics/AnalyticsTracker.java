@@ -586,7 +586,8 @@ public final class AnalyticsTracker {
         APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST,
         DOMAIN_CREDIT_PROMPT_SHOWN,
         DOMAIN_CREDIT_REDEMPTION_TAPPED,
-        DOMAIN_CREDIT_REDEMPTION_SUCCESS
+        DOMAIN_CREDIT_REDEMPTION_SUCCESS,
+        AUTO_UPLOAD_POST_INVOKED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
