@@ -1072,6 +1072,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_search_terms_view_more_tapped";
             case STATS_AUTHORS_VIEW_MORE_TAPPED:
                 return "stats_authors_view_more_tapped";
+            case STATS_FILE_DOWNLOADS_VIEW_MORE_TAPPED:
+                return "stats_file_downloads_view_more_tapped";
             case STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED:
                 return "stats_latest_post_summary_add_new_post_tapped";
             case STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED:
@@ -1657,6 +1659,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_redemption_tapped";
             case DOMAIN_CREDIT_REDEMPTION_SUCCESS:
                 return "domain_credit_redemption_success";
+            case AUTO_UPLOAD_POST_INVOKED:
+                return "auto_upload_post_invoked";
         }
         return null;
     }

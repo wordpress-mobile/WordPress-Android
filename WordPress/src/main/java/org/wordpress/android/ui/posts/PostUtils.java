@@ -519,7 +519,9 @@ public class PostUtils {
         // changed the UploadStarter wouldn't upload the post if the only change the user did was clicking on Publish
         // button.
         if (UploadUtils.userCanPublish(site)) {
-            post.setStatus(PostStatus.PUBLISHED.toString());
+            if (PostStatus.fromPost(post) != PostStatus.PRIVATE) {
+                post.setStatus(PostStatus.PUBLISHED.toString());
+            }
         } else {
             post.setStatus(PostStatus.PENDING.toString());
         }

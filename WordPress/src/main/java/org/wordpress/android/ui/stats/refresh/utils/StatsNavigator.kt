@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
+import org.wordpress.android.ui.stats.StatsViewType.FILE_DOWNLOADS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
@@ -168,6 +170,14 @@ class StatsNavigator
                         activity,
                         target.statsGranularity,
                         AUTHORS,
+                        siteProvider.siteModel.id
+                )
+            }
+            is ViewFileDownloads -> {
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        target.statsGranularity,
+                        FILE_DOWNLOADS,
                         siteProvider.siteModel.id
                 )
             }

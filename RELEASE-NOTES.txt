@@ -4,12 +4,14 @@ XX.X
 * Post List: Trashed post must now be restored before edit or preview.
 * All changes to posts and pages will be automatically synced with the server.
 * Post List: Unhandled conflict with auto saves are now detected and visible. On post opening, the app will let you choose which version you prefer.
+* Clicking on "Publish" on a private post sometimes published the post as public
 
 13.2
 -----
 * Fix issue where establishing LinkedIn connection would always fail
 * Display author of each post on Blog Posts screen
 * Moved Notifications settings to Notifications List.
+* File downloads in Stats for WP.com sites
 
 
 13.1

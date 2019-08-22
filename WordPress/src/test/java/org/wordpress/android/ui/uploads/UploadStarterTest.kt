@@ -482,7 +482,8 @@ class UploadStarterTest {
             networkUtilsWrapper = createMockedNetworkUtilsWrapper(),
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade,
-            uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade)
+            uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
+            tracker = mock()
     )
 
     private companion object Fixtures {
