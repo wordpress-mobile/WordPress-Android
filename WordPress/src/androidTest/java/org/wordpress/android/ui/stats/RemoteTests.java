@@ -105,11 +105,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testClicksForMonth() throws Exception {
@@ -140,9 +140,9 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 SingleItemModel firstChild = second.getClicks().get(0);
                 assertNotNull(firstChild);
                 assertEquals(firstChild.getUrl(), "http://blog.wordpress.tv/2014/10/03/"
-                                                  + "build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
+                             + "build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
                 assertEquals(firstChild.getTitle(), "blog.wordpress.tv/2014/10/03/"
-                                                    + "build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
+                             + "build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
                 assertEquals(firstChild.getTotals(), 1);
                 assertEquals(firstChild.getIcon(), "");
 
@@ -150,19 +150,19 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 SingleItemModel secondChild = second.getClicks().get(1);
                 assertNotNull(secondChild);
                 assertEquals(secondChild.getUrl(), "http://blog.wordpress.tv/"
-                                                   + "2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
+                             + "2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
                 assertEquals(secondChild.getTitle(), "blog.wordpress.tv/"
-                                                     + "2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
+                             + "2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
                 assertEquals(secondChild.getTotals(), 1);
                 assertEquals(secondChild.getIcon(), "");
             }
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/clicks",
-                null,
-                listener,
-                mErrListener);
+                                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/clicks",
+                                null,
+                                listener,
+                                mErrListener);
     }
 
     public void testCommentsDay() throws Exception {
@@ -181,10 +181,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(author.getName(), "Aaron Douglas");
                 assertEquals(author.getViews(), 20);
                 assertEquals(author.getAvatar(),
-                        "https://1.gravatar.com/avatar/db127a496309f2717657d6f6167abd49?s=64&amp;"
-                        + "d=https%3A%2F%2F1.gravatar.com%2Favatar%2F"
-                        + "ad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=R"
-                );
+                             "https://1.gravatar.com/avatar/db127a496309f2717657d6f6167abd49?s=64&amp;"
+                             + "d=https%3A%2F%2F1.gravatar.com%2Favatar%2F"
+                             + "ad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=R"
+                            );
                 assertNull(author.getFollowData());
                 assertNull(author.getPosts());
 
@@ -195,16 +195,16 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(mostCommentedPost.getTotals(), 29);
                 assertEquals(mostCommentedPost.getTitle(), "Mac Screen Sharing (VNC) & White Screen");
                 assertEquals(mostCommentedPost.getUrl(),
-                        "http://astralbodi.es/2010/05/02/mac-screen-sharing-vnc-white-screen/");
+                             "http://astralbodi.es/2010/05/02/mac-screen-sharing-vnc-white-screen/");
             }
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/comments",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/comments",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testCountryViewsDay() throws Exception {
@@ -220,26 +220,26 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 GeoviewModel first = model.getCountries().get(0);
                 assertEquals(first.getCountryFullName(), "United States");
                 assertEquals(first.getFlagIconURL(),
-                        "https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48");
+                             "https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48");
                 assertEquals(first.getFlatFlagIconURL(),
-                        "https://secure.gravatar.com/blavatar/9f4faa5ad0c723474f7a6d810172447c?s=48");
+                             "https://secure.gravatar.com/blavatar/9f4faa5ad0c723474f7a6d810172447c?s=48");
                 assertEquals(first.getViews(), 8);
                 GeoviewModel second = model.getCountries().get(1);
                 assertEquals(second.getCountryFullName(), "Taiwan");
                 assertEquals(second.getFlagIconURL(),
-                        "https://secure.gravatar.com/blavatar/f983fff0dda7387746b697cfd865e657?s=48");
+                             "https://secure.gravatar.com/blavatar/f983fff0dda7387746b697cfd865e657?s=48");
                 assertEquals(second.getFlatFlagIconURL(),
-                        "https://secure.gravatar.com/blavatar/2c224480a40527ee89d7340d4396e8e6?s=48");
+                             "https://secure.gravatar.com/blavatar/2c224480a40527ee89d7340d4396e8e6?s=48");
                 assertEquals(second.getViews(), 6);
             }
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/country-views",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/country-views",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testFollowersEmail() throws Exception {
@@ -277,11 +277,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testFollowersWPCOM() throws Exception {
@@ -313,11 +313,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/followers",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/followers",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testPostDetails() throws Exception {
@@ -358,11 +358,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testReferrers() throws Exception {
@@ -388,7 +388,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 ReferrerResultModel refResultModel = gModel.getResults().get(0);
                 assertEquals(refResultModel.getName(), "Google Search");
                 assertEquals(refResultModel.getIcon(),
-                        "https://secure.gravatar.com/blavatar/6741a05f4bc6e5b65f504c4f3df388a1?s=48");
+                             "https://secure.gravatar.com/blavatar/6741a05f4bc6e5b65f504c4f3df388a1?s=48");
                 assertEquals(refResultModel.getViews(), 461);
                 assertNotNull(refResultModel.getChildren());
                 assertNull(refResultModel.getUrl()); // has childs. No URL.
@@ -398,13 +398,13 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(child.getUrl(), "http://www.google.com/");
                 assertEquals(child.getTitle(), "google.com");
                 assertEquals(child.getIcon(),
-                        "https://secure.gravatar.com/blavatar/ff90821feeb2b02a33a6f9fc8e5f3fcd?s=48");
+                             "https://secure.gravatar.com/blavatar/ff90821feeb2b02a33a6f9fc8e5f3fcd?s=48");
                 assertEquals(child.getTotals(), 176);
                 child = refResultModel.getChildren().get(10);
                 assertEquals(child.getUrl(), "http://www.google.co.jp");
                 assertEquals(child.getTitle(), "google.co.jp");
                 assertEquals(child.getIcon(),
-                        "https://secure.gravatar.com/blavatar/a28b8206a6562f6098688508d4665905?s=48");
+                             "https://secure.gravatar.com/blavatar/a28b8206a6562f6098688508d4665905?s=48");
                 assertEquals(child.getTotals(), 6);
 
 
@@ -413,7 +413,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(gModel.getName(), "ma.tt");
                 assertEquals(gModel.getGroupId(), "ma.tt");
                 assertEquals(gModel.getIcon(),
-                        "https://secure.gravatar.com/blavatar/733a27a6b983dd89d6dd64d0445a3e8e?s=48");
+                             "https://secure.gravatar.com/blavatar/733a27a6b983dd89d6dd64d0445a3e8e?s=48");
                 assertEquals(gModel.getTotal(), 56);
                 assertNotNull(gModel.getResults());
                 assertEquals(gModel.getResults().size(), 11);
@@ -428,11 +428,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testTagsCategories() throws Exception {
@@ -466,10 +466,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
 
         mRestClient
                 .makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags",
-                        null,
-                        listener,
-                        mErrListener
-                );
+                             null,
+                             listener,
+                             mErrListener
+                            );
     }
 
     public void testTopPost() throws Exception {
@@ -499,11 +499,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testTopPostEmptyURL() throws Exception {
@@ -519,18 +519,18 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(postModel.getTotals(), 7);
                 assertEquals(postModel.getTitle(), "Asynchronous unit testing Core Data with Xcode 6");
                 assertEquals(postModel.getUrl(),
-                        ""); // This post has no URL?!? Unpublished post that was prev published?
+                             ""); // This post has no URL?!? Unpublished post that was prev published?
                 assertEquals(postModel.getDate(), StatsUtils.toMs("2014-08-06 14:52:11"));
                 assertEquals(postModel.getPostType(), "post");
             }
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/top-posts",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/top-posts",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testInsightsAllTime() throws Exception {
@@ -547,10 +547,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats",
-                null,
-                listener,
-                mErrListener
-        );
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testInsightsToday() throws Exception {
@@ -570,11 +570,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testInsightsPopular() throws Exception {
@@ -589,11 +589,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testVideoPlaysNoData() throws Exception {
@@ -609,11 +609,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testVideoPlays() throws Exception {
@@ -628,18 +628,18 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 SingleItemModel videoItemModel = model.getPlays().get(0);
                 assertEquals(videoItemModel.getTitle(), "Test Video");
                 assertEquals(videoItemModel.getUrl(),
-                        "http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144");
+                             "http://maplebaconyummies.wordpress.com/wp-admin/media.php?action=edit&attachment_id=144");
                 assertEquals(videoItemModel.getItemID(), "144");
                 assertEquals(videoItemModel.getTotals(), 2);
             }
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/video-plays",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/video-plays",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 
     public void testVisits() throws Exception {
@@ -664,10 +664,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
         mRestClient.makeRequest(Request.Method.POST,
-                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits",
-                null,
-                listener,
-                mErrListener
-        );
+                                "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits",
+                                null,
+                                listener,
+                                mErrListener
+                               );
     }
 }
