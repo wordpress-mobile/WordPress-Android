@@ -3,6 +3,8 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -42,12 +45,14 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var overviewMapper: OverviewMapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
     @Mock lateinit var columns: Columns
     @Mock lateinit var title: ValueItem
     @Mock lateinit var barChartItem: BarChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
     private lateinit var useCase: OverviewUseCase
+    private val site = SiteModel()
+    private val siteId = 1L
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
     private val limitMode = Top(15)
@@ -66,8 +71,10 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 overviewMapper,
                 Dispatchers.Unconfined,
                 analyticsTrackerWrapper,
+                statsWidgetUpdaters,
                 resourceProvider
         )
+        site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
         whenever(overviewMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
@@ -95,6 +102,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
             assertThat(this[1]).isEqualTo(barChartItem)
             assertThat(this[2]).isEqualTo(columns)
         }
+        verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
     }
 
     @Test
