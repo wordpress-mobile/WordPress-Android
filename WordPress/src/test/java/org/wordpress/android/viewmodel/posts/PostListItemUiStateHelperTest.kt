@@ -22,8 +22,8 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 
@@ -405,8 +405,15 @@ class PostListItemUiStateHelperTest {
         assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
     }
 
+    @Test
     fun `label has error color on version conflict`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
+        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
+    }
+
+    @Test
+    fun `label has error color on auto-save conflict`() {
+        val state = createPostListItemUiState(hasAutoSave = true)
         assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
