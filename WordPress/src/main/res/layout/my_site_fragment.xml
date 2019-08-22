@@ -130,6 +130,8 @@
                     android:id="@+id/quick_action_buttons_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/content_margin"
+                    android:paddingEnd="@dimen/content_margin"
                     android:layout_marginBottom="@dimen/margin_my_site_quick_actions_bottom"
                     android:orientation="horizontal"
                     android:weightSum="100">
