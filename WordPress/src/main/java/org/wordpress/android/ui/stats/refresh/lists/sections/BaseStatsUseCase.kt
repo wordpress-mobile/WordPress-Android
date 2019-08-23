@@ -45,7 +45,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             field = value
             updateState()
         }
-    private var uiState: UI_STATE? = null
+    private var uiState: UI_STATE = defaultUiState
         set(value) {
             field = value
             updateState()
@@ -58,6 +58,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mutableNavigationTarget
 
+    init {
+        updateState()
+    }
+
     /**
      * Fetches data either from a local cache or from remote API
      * @param refresh is true when we want to get the remote data
@@ -69,7 +73,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         if (firstLoad) {
             updateUseCaseState(LOADING)
         }
-        if (firstLoad || domainState == LOADING) {
+        if (domainState == LOADING) {
             val cachedData = loadCachedData()
             if (cachedData != null) {
                 domainModel = cachedData
@@ -77,7 +81,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 emptyDb = true
             }
         }
-        if (firstLoad || refresh || domainState != SUCCESS || emptyDb) {
+        if (refresh || domainState != SUCCESS || emptyDb) {
             updateUseCaseState(LOADING)
             val state = fetchRemoteData(forced)
             evaluateState(state)
@@ -143,7 +147,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     fun clear() {
         domainModel = null
         domainState = LOADING
-        uiState = null
+        uiState = defaultUiState
     }
 
     /**
@@ -194,7 +198,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             }
         }
         updateJob = GlobalScope.launch(backgroundDispatcher) {
-            val currentData = domainModel?.let { buildUiModel(it, uiState ?: defaultUiState) }
+            val currentData = domainModel?.let { buildUiModel(it, uiState) }
 
             val useCaseModel = try {
                 when (domainState) {
@@ -212,7 +216,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                     SUCCESS -> {
                         UseCaseModel(type, data = currentData)
                     }
-                    EMPTY, null -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
+                    EMPTY -> UseCaseModel(type, state = EMPTY, stateData = buildEmptyItem())
                 }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.STATS, e)

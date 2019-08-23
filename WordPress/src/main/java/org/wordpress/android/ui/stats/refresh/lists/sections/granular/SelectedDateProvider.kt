@@ -35,10 +35,6 @@ class SelectedDateProvider
 
     private val selectedDateChanged = MutableLiveData<Event<SectionChange>>()
 
-    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<Event<SectionChange>> {
-        return selectedDateChanged.filter { it.peekContent().selectedSection == statsGranularity.toStatsSection() }
-    }
-
     fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<Event<SectionChange>> {
         return selectedDateChanged.filter { it.peekContent().selectedSection == statsSection }
     }

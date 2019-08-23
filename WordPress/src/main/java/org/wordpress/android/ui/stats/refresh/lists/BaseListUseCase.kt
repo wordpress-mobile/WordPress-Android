@@ -21,6 +21,8 @@ import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
+import org.wordpress.android.util.mapAsync
+import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -40,7 +42,7 @@ class BaseListUseCase(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = MutableLiveData<List<StatsType>>()
-    val data: MediatorLiveData<UiModel> = mergeNotNull(statsTypes, blockListData) { types, map ->
+    val data: MediatorLiveData<UiModel> = mergeAsyncNotNull(bgDispatcher, statsTypes, blockListData) { types, map ->
         types.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]
@@ -48,7 +50,7 @@ class BaseListUseCase(
                 null
             }
         }
-    }.map { useCaseModels ->
+    }.mapAsync(bgDispatcher) { useCaseModels ->
         mapUiModel(useCaseModels) { message ->
             mutableSnackbarMessage.postValue(message)
         }

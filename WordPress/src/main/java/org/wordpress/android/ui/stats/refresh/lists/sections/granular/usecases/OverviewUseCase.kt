@@ -60,11 +60,15 @@ constructor(
             )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
-        return visitsAndViewsStore.getVisits(
+        val cachedData = visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
                 LimitMode.All
         )
+        if (cachedData != null) {
+            selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
+        }
+        return cachedData
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {

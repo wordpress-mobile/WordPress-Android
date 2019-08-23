@@ -43,7 +43,8 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `on fetch loads data from DB when current value is null`() = test {
-        assertThat(result).isEmpty()
+        assertThat(result.size).isEqualTo(1)
+        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
 
         block.fetch(false, false)
 
@@ -52,26 +53,29 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `on fetch returns null item when DB is empty`() = test {
-        assertThat(result).isEmpty()
+        assertThat(result.size).isEqualTo(1)
+        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
+
         whenever(localDataProvider.get()).thenReturn(null)
 
         block.fetch(false, false)
 
-        assertThat(result).hasSize(1)
-        assertThat(result[0]!!.data).isNull()
-        assertThat(result[0]!!.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result).hasSize(2)
+        assertThat(result[1]!!.data).isNull()
+        assertThat(result[1]!!.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
     fun `on refresh calls loads data from DB and later from API`() = test {
-        assertThat(result).isEmpty()
+        assertThat(result.size).isEqualTo(1)
+        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
 
         block.fetch(true, false)
 
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
-        assertData(1, localData)
-        assertThat(result[1]?.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.size).isEqualTo(3)
+        assertThat(result[1]?.state).isEqualTo(UseCaseState.LOADING)
+        assertData(2, localData)
+        assertThat(result[2]?.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
