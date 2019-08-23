@@ -54,6 +54,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = AnnualSiteStatsUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 selectedDateProvider,
@@ -128,6 +129,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
     @Test
     fun `hide title and view more block in view all mode`() = test {
         useCase = AnnualSiteStatsUseCase(
+                Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,

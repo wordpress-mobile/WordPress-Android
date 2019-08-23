@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
@@ -28,12 +27,6 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     private lateinit var block: TestUseCase
     private val result = mutableListOf<UseCaseModel?>()
     private val loadingData = listOf<BlockListItem>(Title(R.string.stats_insights_all_time))
-    private val loadingBlock = UseCaseModel(
-            ALL_TIME_STATS,
-            data = null,
-            stateData = loadingData,
-            state = LOADING
-    )
 
     @Before
     fun setUp() {
@@ -64,7 +57,9 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(false, false)
 
-        assertThat(result).startsWith(loadingBlock)
+        assertThat(result).hasSize(1)
+        assertThat(result[0]!!.data).isNull()
+        assertThat(result[0]!!.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
@@ -73,10 +68,10 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(true, false)
 
-        assertThat(result.size).isEqualTo(3)
+        assertThat(result.size).isEqualTo(2)
         assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
         assertData(1, localData)
-        assertThat(result[2]?.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result[1]?.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
@@ -107,6 +102,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         private val loadingItems: List<BlockListItem>
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
+            Dispatchers.Unconfined,
             Dispatchers.Unconfined,
             0,
             listOf()

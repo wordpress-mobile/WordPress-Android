@@ -40,6 +40,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = AllTimeStatsUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 statsDateFormatter,

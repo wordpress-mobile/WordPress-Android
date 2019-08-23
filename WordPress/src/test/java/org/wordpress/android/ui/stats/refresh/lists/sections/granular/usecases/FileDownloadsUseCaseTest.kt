@@ -63,6 +63,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         useCase = FileDownloadsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 store,
                 siteModelProvider,
                 selectedDateProvider,

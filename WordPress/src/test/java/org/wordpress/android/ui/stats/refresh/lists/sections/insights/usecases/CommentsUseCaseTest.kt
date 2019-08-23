@@ -59,6 +59,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = CommentsUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 popupMenuHandler,

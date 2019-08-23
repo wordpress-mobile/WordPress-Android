@@ -58,6 +58,7 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PostMonthsAndYearsUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 statsSiteProvider,
                 statsPostProvider,
                 store,

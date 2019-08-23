@@ -46,6 +46,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = MostPopularInsightsUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 dateUtils,

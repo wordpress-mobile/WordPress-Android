@@ -61,6 +61,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         useCase = SearchTermsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

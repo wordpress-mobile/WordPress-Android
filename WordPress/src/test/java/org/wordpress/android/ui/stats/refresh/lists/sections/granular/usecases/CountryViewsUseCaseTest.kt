@@ -61,6 +61,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         useCase = CountryViewsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

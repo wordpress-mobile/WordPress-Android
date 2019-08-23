@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
@@ -54,7 +53,6 @@ class OverviewUseCaseTest : BaseUnitTest() {
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
     @Before
     fun setUp() {
-        whenever(selectedDateProvider.granularSelectedDateChanged(statsGranularity)).thenReturn(MutableLiveData())
         useCase = OverviewUseCase(
                 statsGranularity,
                 store,
@@ -62,6 +60,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsDateFormatter,
                 overviewMapper,
+                Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 analyticsTrackerWrapper,
                 resourceProvider

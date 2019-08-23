@@ -50,6 +50,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = PublicizeUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 serviceMapper,

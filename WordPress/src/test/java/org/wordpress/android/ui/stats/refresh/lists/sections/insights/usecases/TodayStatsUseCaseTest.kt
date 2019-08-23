@@ -40,6 +40,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 popupMenuHandler

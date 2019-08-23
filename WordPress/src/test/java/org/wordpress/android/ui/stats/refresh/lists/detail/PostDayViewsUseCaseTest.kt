@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
@@ -20,7 +19,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
@@ -48,8 +46,8 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     private val postId = 1L
     @Before
     fun setUp() {
-        whenever(selectedDateProvider.granularSelectedDateChanged(DETAIL)).thenReturn(MutableLiveData())
         useCase = PostDayViewsUseCase(
+                Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
                 mapper,
                 statsDateFormatter,

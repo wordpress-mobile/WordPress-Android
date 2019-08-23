@@ -48,6 +48,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     fun setUp() = test {
         useCase = LatestPostSummaryUseCase(
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
                 latestPostSummaryMapper,

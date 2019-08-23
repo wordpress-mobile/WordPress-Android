@@ -68,6 +68,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         useCase = ReferrersUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                Dispatchers.Unconfined,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
