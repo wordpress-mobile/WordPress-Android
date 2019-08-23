@@ -209,7 +209,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is PostUploadUiState.UploadFailed -> {
-                getErrorLabel(uploadUiState.error, postStatus)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.post_uploading_draft))
@@ -253,17 +253,27 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return labels
     }
 
-    private fun getErrorLabel(uploadError: UploadError, postStatus: PostStatus): UiString? {
+    private fun getErrorLabel(uploadUiState: PostUploadUiState.UploadFailed, postStatus: PostStatus): UiString? {
         return when {
-            uploadError.mediaError != null -> when (postStatus) {
-                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
-                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
-                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
-                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
-            }
-            uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+            uploadUiState.error.mediaError != null ->
+                if (uploadUiState.autoRetry) {
+                    when (postStatus) {
+                        PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                        SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
+                        PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
+                        DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post_retrying)
+                    }
+                } else {
+                    when (postStatus) {
+                        PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                        SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
+                        PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
+                        DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
+                    }
+                }
+            uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
                     false,
-                    uploadError.postError
+                    uploadUiState.error.postError
             )
             else -> {
                 val errorMsg = "MediaError and postError are both null."
@@ -409,7 +419,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private sealed class PostUploadUiState {
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
-        data class UploadFailed(val error: UploadError) : PostUploadUiState()
+        data class UploadFailed(val error: UploadError, val autoRetry: Boolean) : PostUploadUiState()
         data class UploadWaitingForConnection(val postStatus: PostStatus) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
@@ -424,7 +434,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
             uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
-            uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(uploadStatus.uploadError)
+            uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(
+                    uploadStatus.uploadError,
+                    uploadStatus.isEligibleForAutoUpload
+            )
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued

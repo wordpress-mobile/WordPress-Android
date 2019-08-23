@@ -22,8 +22,8 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.widgets.PostListButtonType
 
@@ -500,28 +500,73 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for pending post`() {
+    fun `media upload error shown with specific message for pending post when pending auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
-                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = true
+                )
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted_retrying))
+    }
+
+    @Test
+    fun `media upload error shown with specific message for pending post when auto-upload disabled`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = false
+                )
         )
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted))
     }
 
     @Test
-    fun `media upload error shown with specific message for scheduled post`() {
+    fun `media upload error shown with specific message for scheduled post when pending auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
-                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = true
+                )
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying))
+    }
+
+    @Test
+    fun `media upload error shown with specific message for scheduled post when auto-upload disabled`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = false
+                )
         )
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled))
     }
 
     @Test
-    fun `base media upload error shown for draft`() {
+    fun `retrying media upload shown for draft when pending auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
-                uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = true
+                )
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_retrying))
+    }
+
+    @Test
+    fun `base media upload error shown for draft when auto-upload disabled`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
+                        isEligibleForAutoUpload = false
+                )
         )
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post))
     }

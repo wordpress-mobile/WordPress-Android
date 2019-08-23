@@ -13,7 +13,7 @@ import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
 
-const val MAXIMUM_AUTO_UPLOAD_RETRIES = 10
+const val MAXIMUM_AUTO_UPLOAD_RETRIES = 3
 private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
 
 @Reusable
