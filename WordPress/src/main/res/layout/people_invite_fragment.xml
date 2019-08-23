@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/invite_names_title"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/colorText"
             android:labelFor="@+id/invite_usernames"
             android:textSize="@dimen/text_sz_large" />
 
@@ -59,7 +59,7 @@
                     android:paddingBottom="0dp"
                     android:paddingTop="@dimen/margin_large"
                     android:singleLine="true"
-                    android:textColor="@color/neutral_70"
+                    android:textColor="?attr/colorText"
                     android:textColorHint="#AAAAAA"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="sdfwefef"
@@ -106,7 +106,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:text="@string/role"
-                    android:textColor="@color/neutral_70"
+                    android:textColor="?attr/colorText"
                     android:labelFor="@+id/role"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="@string/role" />
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/invite_message_title"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/colorText"
             android:labelFor="@+id/message"
             android:textSize="@dimen/text_sz_large" />
 

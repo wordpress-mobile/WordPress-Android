@@ -17,6 +17,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.ColorUtilsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -250,7 +251,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalTextColor = context.getResources().getColor(R.color.neutral_70);
+        mNormalTextColor = ColorUtilsKt.getThemeColor(context, R.attr.colorText);
         mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
         mAgoTextColor = context.getResources().getColor(R.color.neutral);
         mUnapprovedTextColor = context.getResources().getColor(R.color.warning_60);

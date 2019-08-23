@@ -59,7 +59,7 @@
             android:importantForAccessibility="no"
             android:lineSpacingMultiplier="1.1"
             android:maxLines="3"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/colorText"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

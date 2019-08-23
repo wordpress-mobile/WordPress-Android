@@ -4,9 +4,13 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import android.widget.ImageView
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 
@@ -24,3 +28,17 @@ object ColorUtils {
         imageView.setImageResource(drawableResId)
     }
 }
+
+@IdRes
+fun Context.getThemeColorResId(@AttrRes attribute: Int) =
+        TypedValue().let {
+            theme.resolveAttribute(attribute, it, true)
+            it.resourceId
+        }
+
+@ColorInt
+fun Context.getThemeColor(@AttrRes attribute: Int) =
+        TypedValue().let {
+            theme.resolveAttribute(attribute, it, true)
+            it.data
+        }

@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/neutral_70_neutral_20_selector"
+            android:textColor="?attr/colorText"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/preference_crash_reports">
         </TextView>

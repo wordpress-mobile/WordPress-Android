@@ -95,7 +95,7 @@
                         android:ellipsize="end"
                         android:fontFamily="sans-serif-light"
                         android:maxLines="1"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/colorText"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold"
                         tools:text="Full Name"/>

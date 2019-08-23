@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:text="@string/role"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/colorText"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/role"/>
 

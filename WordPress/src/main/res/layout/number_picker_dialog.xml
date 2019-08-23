@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/neutral_70_neutral_20_selector"
+        android:textColor="?attr/colorText"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:textAlignment="viewStart"
@@ -40,7 +40,7 @@
             android:layout_marginBottom="8dp"
             android:duplicateParentState="true"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/neutral_70_neutral_20_selector"
+            android:textColor="?attr/colorText"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"/>
 

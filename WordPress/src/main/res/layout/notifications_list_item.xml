@@ -92,7 +92,7 @@
                 android:layout_width="fill_parent"
                 android:maxLines="2"
                 android:textAlignment="viewStart"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/colorText"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross commented on your post Happy Trees" >
             </org.wordpress.android.widgets.WPTextView>

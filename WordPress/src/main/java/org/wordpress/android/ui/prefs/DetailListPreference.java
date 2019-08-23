@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.util.ColorUtilsKt;
 
 import java.util.Locale;
 
@@ -67,9 +68,10 @@ public class DetailListPreference extends ListPreference
         super.onBindView(view);
 
         setupView((TextView) view.findViewById(android.R.id.title),
-                  R.dimen.text_sz_large, R.color.neutral_70, R.color.neutral_20);
+                R.dimen.text_sz_large, ColorUtilsKt.getThemeColorResId(getContext(), R.attr.colorText),
+                R.color.neutral_20);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                  R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_20);
+                R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_20);
     }
 
     @Override

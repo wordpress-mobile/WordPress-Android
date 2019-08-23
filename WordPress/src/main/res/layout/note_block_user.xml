@@ -46,7 +46,7 @@
                     android:singleLine="true"
                     android:textSize="@dimen/text_sz_medium"
                     android:textStyle="bold"
-                    android:textColor="@color/neutral_70"
+                    android:textColor="?attr/colorText"
                     tools:text="Bob Ross" />
 
                 <org.wordpress.android.widgets.WPTextView

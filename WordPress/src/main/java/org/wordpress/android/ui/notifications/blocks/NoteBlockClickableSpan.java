@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
+import org.wordpress.android.util.ColorUtilsKt;
 
 import java.util.List;
 
@@ -43,10 +44,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         mIsFooter = isFooter;
 
         // Text/background colors
-        mTextColor = context.getResources().getColor(R.color.neutral_70);
+        mTextColor = ColorUtilsKt.getThemeColor(context, R.attr.colorText);
         mBackgroundColor = context.getResources().getColor(R.color.primary_5);
         mLinkColor = context.getResources().getColor(R.color.primary_40);
-        mLightTextColor = context.getResources().getColor(R.color.neutral_70);
+        mLightTextColor = ColorUtilsKt.getThemeColor(context, R.attr.colorText);
 
         processRangeData(range);
     }

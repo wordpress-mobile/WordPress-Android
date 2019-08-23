@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
+import org.wordpress.android.util.getThemeColorResId
 import org.wordpress.android.util.image.ImageManager
 
 class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
@@ -28,7 +29,7 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         iconContainer.setIconOrAvatar(item, imageManager)
         text.setTextOrHide(item.textResource, item.text)
         val textColor = when (item.textStyle) {
-            TextStyle.NORMAL -> R.color.neutral_70
+            TextStyle.NORMAL -> text.context.getThemeColorResId(R.attr.colorText)
             LIGHT -> R.color.neutral_50
         }
         text.setTextColor(ContextCompat.getColor(text.context, textColor))
