@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
@@ -226,5 +227,25 @@ class StatsStoreTest {
         store.deleteSiteData(site)
 
         verify(statsSqlUtils).deleteSiteStats(site)
+    }
+
+    @Test
+    fun `filters out file downloads on Jetpack site`() = test {
+        val site = SiteModel()
+        site.setIsJetpackConnected(true)
+
+        val timeStatsTypes = store.getTimeStatsTypes(site)
+
+        assertThat(timeStatsTypes).doesNotContain(FILE_DOWNLOADS)
+    }
+
+    @Test
+    fun `does not filter out file downloads on non-Jetpack site`() = test {
+        val site = SiteModel()
+        site.setIsJetpackConnected(false)
+
+        val timeStatsTypes = store.getTimeStatsTypes(site)
+
+        assertThat(timeStatsTypes).contains(FILE_DOWNLOADS)
     }
 }
