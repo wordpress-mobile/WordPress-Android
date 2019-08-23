@@ -113,9 +113,9 @@ abstract class StatsListViewModel(
         }
     }
 
-    fun onDateChanged() {
+    fun onDateChanged(selectedSection: StatsSection) {
         launch {
-            statsUseCase.onDateChanged()
+            statsUseCase.onDateChanged(selectedSection)
         }
     }
 

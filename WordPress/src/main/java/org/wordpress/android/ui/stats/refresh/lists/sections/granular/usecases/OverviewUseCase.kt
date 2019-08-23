@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.O
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -37,19 +39,16 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         OVERVIEW,
         mainDispatcher,
-        UiState()
+        backgroundDispatcher,
+        UiState(),
+        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
 ) {
-    init {
-        uiState.addSource(selectedDateProvider.granularSelectedDateChanged(statsGranularity)) {
-            onUiState()
-        }
-    }
-
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
                     ValueItem(
@@ -167,6 +166,7 @@ constructor(
     class OverviewUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
@@ -184,6 +184,7 @@ constructor(
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,
+                        backgroundDispatcher,
                         analyticsTracker,
                         resourceProvider
                 )

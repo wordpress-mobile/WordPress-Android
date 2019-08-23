@@ -7,6 +7,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -23,10 +24,11 @@ import javax.inject.Named
 class TodayStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val todayStore: TodayInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher) {
+) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): VisitsModel? {
         return todayStore.getTodayInsights(statsSiteProvider.siteModel)
     }

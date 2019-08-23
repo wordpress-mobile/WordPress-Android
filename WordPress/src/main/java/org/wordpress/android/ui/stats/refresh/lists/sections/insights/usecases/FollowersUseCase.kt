@@ -59,6 +59,7 @@ class FollowersUseCase(
 ) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
+        bgDispatcher,
         FollowersUiState(isLoading = true)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT

@@ -11,11 +11,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SELECTED_DATE
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
@@ -125,8 +125,8 @@ class BaseListUseCase(
         data.value = null
     }
 
-    suspend fun onDateChanged() {
-        onParamChanged(SELECTED_DATE)
+    suspend fun onDateChanged(selectedSection: StatsSection) {
+        onParamChanged(UseCaseParam.SelectedDateParam(selectedSection))
     }
 
     fun onListSelected() {

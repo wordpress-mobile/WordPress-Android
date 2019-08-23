@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
@@ -49,6 +50,7 @@ class AuthorsUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
@@ -58,6 +60,7 @@ constructor(
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
         mainDispatcher,
+        backgroundDispatcher,
         statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
@@ -198,6 +201,7 @@ constructor(
     class AuthorsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
@@ -208,6 +212,7 @@ constructor(
                 AuthorsUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         authorsStore,
                         statsSiteProvider,
                         selectedDateProvider,
