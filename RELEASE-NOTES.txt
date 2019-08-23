@@ -5,6 +5,7 @@
 * Moved Notifications settings to Notifications List.
 * Redesigned My Site screen to make most commonly used actions easily accessible.
 * File downloads in Stats for WP.com sites
+* Significant performance improvements to Stats
 
 
 13.1
