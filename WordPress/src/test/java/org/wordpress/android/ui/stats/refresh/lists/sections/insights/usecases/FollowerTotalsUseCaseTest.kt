@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class FollowerTotalsUseCaseTest : BaseUnitTest() {
@@ -34,6 +35,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var publicizeStore: PublicizeStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: FollowerTotalsUseCase
 
@@ -53,7 +55,8 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
                 followersStore,
                 publicizeStore,
                 statsSiteProvider,
-                contentDescriptionHelper
+                contentDescriptionHelper,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
 
@@ -67,7 +70,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maps follower totals to U`() = test {
+    fun `maps follower totals to UI model`() = test {
         val forced = false
         val refresh = true
 
@@ -107,6 +110,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_follower_totals)
+        assertThat(item.menuAction).isNotNull
     }
 
     private suspend fun loadFollowerTotalsData(refresh: Boolean, forced: Boolean): UseCaseModel {
