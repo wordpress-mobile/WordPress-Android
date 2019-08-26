@@ -138,6 +138,8 @@ public class MySiteFragment extends Fragment implements
     private LinearLayout mThemesContainer;
     private LinearLayout mPeopleView;
     private LinearLayout mPageView;
+    private View mQuickActionPageButtonContainer;
+    private LinearLayout mQuickActionButtonsContainer;
     private LinearLayout mPlanContainer;
     private LinearLayout mPluginsContainer;
     private LinearLayout mActivityLogContainer;
@@ -351,6 +353,8 @@ public class MySiteFragment extends Fragment implements
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
+        mQuickActionPageButtonContainer = rootView.findViewById(R.id.quick_action_pages_container);
+        mQuickActionButtonsContainer = rootView.findViewById(R.id.quick_action_buttons_container);
         mQuickStartContainer = rootView.findViewById(R.id.quick_start);
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize);
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon);
@@ -372,11 +376,10 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void setupClickListeners(View rootView) {
-        rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.site_info_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                completeQuickStarTask(QuickStartTask.VIEW_SITE);
-                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
+                viewSite();
             }
         });
 
@@ -390,58 +393,35 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completeQuickStarTask(QuickStartTask.VIEW_SITE);
-                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
+                viewSite();
             }
         });
 
         rootView.findViewById(R.id.row_register_domain).setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                AnalyticsUtils.trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
-                ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
-                        DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
+                registerDomain();
+            }
+        });
+
+        rootView.findViewById(R.id.quick_action_stats_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_STATS_TAPPED);
+                viewStats();
             }
         });
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SiteModel selectedSite = getSelectedSite();
-                if (selectedSite != null) {
-                    completeQuickStarTask(QuickStartTask.CHECK_STATS);
-                    if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected()) {
-                        // If the user is not connected to WordPress.com, ask him to connect first.
-                        startWPComLoginForJetpackStats();
-                    } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite
-                            .isJetpackConnected())) {
-                        ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
-                    } else {
-                        ActivityLauncher.viewConnectJetpackForStats(getActivity(), selectedSite);
-                    }
-                }
+                viewStats();
             }
         });
 
         mBlavatarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
-                SiteModel site = getSelectedSite();
-                if (site != null) {
-                    boolean hasIcon = site.getIconUrl() != null;
-                    if (site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
-                        if (hasIcon) {
-                            showChangeSiteIconDialog();
-                        } else {
-                            showAddSiteIconDialog();
-                        }
-                        completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
-                    } else {
-                        showEditingSiteIconRequiresPermissionDialog(
-                                hasIcon ? getString(R.string.my_site_icon_dialog_change_requires_permission_message)
-                                        : getString(R.string.my_site_icon_dialog_add_requires_permission_message));
-                    }
-                }
+                updateBlavatar();
             }
         });
 
@@ -453,25 +433,48 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
+        rootView.findViewById(R.id.quick_action_posts_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_POSTS_TAPPED);
+                viewPosts();
+            }
+        });
+
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
+                viewPosts();
+            }
+        });
+
+        rootView.findViewById(R.id.quick_action_media_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnalyticsTracker.track(Stat.QUICK_ACTION_MEDIA_TAPPED);
+                viewMedia();
             }
         });
 
         rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogMedia(getActivity(), getSelectedSite());
+                viewMedia();
             }
         });
 
-        rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.quick_action_pages_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestNextStepOfActiveQuickStartTask();
-                ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
+                AnalyticsTracker.track(Stat.QUICK_ACTION_PAGES_TAPPED);
+                viewPages();
+            }
+        });
+
+        mPageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPages();
             }
         });
 
@@ -566,6 +569,67 @@ public class MySiteFragment extends Fragment implements
                 showQuickStartCardMenu();
             }
         });
+    }
+
+    private void registerDomain() {
+        AnalyticsUtils
+                .trackWithSiteDetails(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, getSelectedSite());
+        ActivityLauncher.viewDomainRegistrationActivityForResult(getActivity(), getSelectedSite(),
+                DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION);
+    }
+
+    private void viewMedia() {
+        ActivityLauncher.viewCurrentBlogMedia(getActivity(), getSelectedSite());
+    }
+
+    private void updateBlavatar() {
+        AnalyticsTracker.track(Stat.MY_SITE_ICON_TAPPED);
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            boolean hasIcon = site.getIconUrl() != null;
+            if (site.getHasCapabilityManageOptions() && site.getHasCapabilityUploadFiles()) {
+                if (hasIcon) {
+                    showChangeSiteIconDialog();
+                } else {
+                    showAddSiteIconDialog();
+                }
+                completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
+            } else {
+                showEditingSiteIconRequiresPermissionDialog(
+                        hasIcon ? getString(R.string.my_site_icon_dialog_change_requires_permission_message)
+                                : getString(R.string.my_site_icon_dialog_add_requires_permission_message));
+            }
+        }
+    }
+
+    private void viewPosts() {
+        ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
+    }
+
+    private void viewPages() {
+        requestNextStepOfActiveQuickStartTask();
+        ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
+    }
+
+    private void viewStats() {
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite != null) {
+            completeQuickStarTask(QuickStartTask.CHECK_STATS);
+            if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected()) {
+                // If the user is not connected to WordPress.com, ask him to connect first.
+                startWPComLoginForJetpackStats();
+            } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite
+                    .isJetpackConnected())) {
+                ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
+            } else {
+                ActivityLauncher.viewConnectJetpackForStats(getActivity(), selectedSite);
+            }
+        }
+    }
+
+    private void viewSite() {
+        completeQuickStarTask(QuickStartTask.VIEW_SITE);
+        ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
     }
 
     @Override
@@ -974,6 +1038,13 @@ public class MySiteFragment extends Fragment implements
         // Do not show pages menu item to Collaborators.
         int pageVisibility = site.isSelfHostedAdmin() || site.getHasCapabilityEditPages() ? View.VISIBLE : View.GONE;
         mPageView.setVisibility(pageVisibility);
+        mQuickActionPageButtonContainer.setVisibility(pageVisibility);
+
+        if (pageVisibility == View.VISIBLE) {
+            mQuickActionButtonsContainer.setWeightSum(100f);
+        } else {
+            mQuickActionButtonsContainer.setWeightSum(75f);
+        }
 
         // Refresh the title
         setTitle(site.getName());
@@ -1283,10 +1354,8 @@ public class MySiteFragment extends Fragment implements
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
                 verticalOffset = 0;
             } else if (mActiveTutorialPrompt.getTask() == QuickStartTask.UPLOAD_SITE_ICON) {
-                horizontalOffset =
-                        getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
-                        / 2;
-                verticalOffset = -(quickStartTarget.getWidth() / 2);
+                horizontalOffset = focusPointSize;
+                verticalOffset = -focusPointSize / 2;
             } else {
                 horizontalOffset =
                         getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
@@ -1302,7 +1371,6 @@ public class MySiteFragment extends Fragment implements
                     @Override
                     public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
-                        quickStartTarget.setPressed(mActiveTutorialPrompt.getTask() != QuickStartTask.UPLOAD_SITE_ICON);
                     }
                 });
             }

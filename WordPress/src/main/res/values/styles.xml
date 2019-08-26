@@ -269,12 +269,38 @@
     </style>
 
     <!--My Site Styles-->
+    <style name="MySiteQuickActionButtonContainer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">25</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MySiteQuickActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">@dimen/card_elevation</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:tint">@color/neutral_60</item>
+    </style>
+
+    <style name="MySiteQuickActionButtonLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/gray_70</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="MySiteListRowIcon">

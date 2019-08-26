@@ -830,6 +830,10 @@
     <string name="stats_menu_move_up">Move up</string>
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_remove">Remove from insights</string>
+    <string name="stats_site_neutral_utc">Site timezone (UTC)</string>
+    <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
+    <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
+    <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
@@ -926,7 +930,7 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
-    <string name="stats_view_follower_totals">Followers Totals</string>
+    <string name="stats_view_follower_totals">Follower Totals</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_seconds_ago">seconds ago</string>
@@ -1023,6 +1027,9 @@
     <string name="stats_author_views_label">Views</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_post_views_label">Views</string>
+    <string name="stats_file_downloads">File downloads</string>
+    <string name="stats_file_downloads_title_label">File</string>
+    <string name="stats_file_downloads_value_label">Downloads</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
@@ -1752,7 +1759,7 @@
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
-    <string name="notification_settings_moved_notices">Looking for notification settings? They’re in the Notifications tab — tap the cog.</string>
+    <string name="notification_settings_moved_notices">Notification Settings can now be found in the Notifications tab.</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
