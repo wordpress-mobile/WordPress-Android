@@ -345,12 +345,14 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         AccountModel account = mAccountStore.getAccount();
         mUsernamePreference.setEnabled(account.getUsernameCanBeChanged());
         mUsernamePreference.setOnPreferenceClickListener(preference -> {
-            showUsernameChangerFragment(account);
+            showUsernameChangerFragment();
             return false;
         });
     }
 
-    private void showUsernameChangerFragment(AccountModel account) {
+    private void showUsernameChangerFragment() {
+        AccountModel account = mAccountStore.getAccount();
+
         final Bundle bundle =
                 SettingsUsernameChangerFragment.newBundle(account.getDisplayName(), account.getUserName());
 

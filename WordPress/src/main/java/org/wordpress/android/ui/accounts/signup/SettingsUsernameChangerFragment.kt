@@ -15,7 +15,6 @@ import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.R.style
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -42,7 +41,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     override fun canHeaderTextLiveUpdate() = false
     override fun getHeaderText(username: String?, display: String?): Spanned = HtmlCompat.fromHtml(
             String.format(
-                    getString(string.settings_username_changer_header),
+                    getString(R.string.settings_username_changer_header),
                     "<b>",
                     username,
                     "</b>"
@@ -63,7 +62,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 val username = mUsernamesAdapter.mItems[mUsernamesAdapter.selectedItem]
                 showUsernameConfirmationDialog(username)
             } else {
-                ToastUtils.showToast(activity, string.settings_username_changer_toast_content_new_username)
+                ToastUtils.showToast(activity, R.string.settings_username_changer_toast_content_new_username)
             }
         } else {
             controller?.dismiss()
@@ -86,7 +85,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
 
         content.text = HtmlCompat.fromHtml(
                 String.format(
-                        getString(string.settings_username_changer_confirm_dialog_content),
+                        getString(R.string.settings_username_changer_confirm_dialog_content),
                         "<b>",
                         username,
                         "</b>"
@@ -94,10 +93,10 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         )
 
         AlertDialog.Builder(ContextThemeWrapper(activity, style.Calypso_Dialog_Alert)).apply {
-            setTitle(string.settings_username_changer_confirm_dialog_title)
+            setTitle(R.string.settings_username_changer_confirm_dialog_title)
             setView(layout)
             setPositiveButton(
-                    string.settings_username_changer_confirm_dialog_positive_action
+                    R.string.settings_username_changer_confirm_dialog_positive_action
             ) { _, _ -> saveUsername(username) }
             setNegativeButton(android.R.string.cancel, null)
             create()
@@ -142,7 +141,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                     event.error.type + " - " + event.error.message
             )
             endProgress()
-            showErrorDialog(SpannableStringBuilder(getString(string.signup_epilogue_error_generic)))
+            showErrorDialog(SpannableStringBuilder(getString(R.string.signup_epilogue_error_generic)))
         } else if (event.username != null) {
             endProgress()
             val result = Bundle().apply { putString(RESULT_USERNAME, event.username) }
@@ -156,7 +155,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             progressDialog = ProgressDialog(context).apply {
                 isIndeterminate = true
                 setCancelable(true)
-                setMessage(getString(string.settings_username_changer_progress_dialog))
+                setMessage(getString(R.string.settings_username_changer_progress_dialog))
             }
         }
         try {
