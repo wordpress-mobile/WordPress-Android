@@ -106,11 +106,4 @@ public class EditorPage {
         waitForElementToBeDisplayed(publishConfirmation);
         return isElementDisplayed(publishConfirmation);
     }
-
-    public boolean publishPage() {
-        clickOn(publishButton);
-        clickOn(onView(withText("PUBLISH NOW")));
-        waitForElementToBeDisplayed(R.id.page_title);
-        return isElementDisplayed(R.id.page_title);
-    }
 }
