@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -15,38 +16,41 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class VisitAndViewsRestClient
+class FileDownloadsRestClient
 @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
     @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent
+    userAgent: UserAgent,
+    val gson: Gson,
+    private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchVisits(
+    suspend fun fetchFileDownloads(
         site: SiteModel,
         granularity: StatsGranularity,
-        date: String,
+        date: Date,
         itemsToLoad: Int,
         forced: Boolean
-    ): FetchStatsPayload<VisitsAndViewsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
+    ): FetchStatsPayload<FileDownloadsResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.file_downloads.urlV1_1
         val params = mapOf(
-                "unit" to granularity.toString(),
-                "quantity" to itemsToLoad.toString(),
-                "date" to date
+                "period" to granularity.toString(),
+                "num" to itemsToLoad.toString(),
+                "date" to statsUtils.getFormattedDate(date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
                 params,
-                VisitsAndViewsResponse::class.java,
+                FileDownloadsResponse::class.java,
                 enableCaching = false,
                 forced = forced
         )
@@ -60,10 +64,20 @@ class VisitAndViewsRestClient
         }
     }
 
-    data class VisitsAndViewsResponse(
+    data class FileDownloadsResponse(
+        @SerializedName("period") val statsGranularity: String?,
         @SerializedName("date") val date: String?,
-        @SerializedName("fields") val fields: List<String>?,
-        @SerializedName("data") val data: List<List<String>?>?,
-        @SerializedName("unit") val unit: String?
-    )
+        @SerializedName("days") val groups: Map<String, Group>
+    ) {
+        data class Group(
+            @SerializedName("other_downloads") val otherDownloads: Int?,
+            @SerializedName("total_downloads") val totalDownloads: Int?,
+            @SerializedName("files") val files: List<File>
+        )
+
+        data class File(
+            @SerializedName("filename") val filename: String?,
+            @SerializedName("downloads") var downloads: Int?
+        )
+    }
 }

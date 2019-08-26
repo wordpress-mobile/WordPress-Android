@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRes
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse.CountryInfo
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse.CountryView
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse.Day
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse.File
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse.PostViewsResponse
@@ -30,9 +32,6 @@ import org.wordpress.android.fluxc.store.stats.DATE
 import org.wordpress.android.fluxc.store.stats.POST_COUNT
 
 const val DAY_GRANULARITY = "day"
-const val WEEK_GRANULARITY = "week"
-const val MONTH_GRANULARITY = "month"
-const val YEAR_GRANULARITY = "year"
 const val TOTAL_VIEWS = 100
 const val POST_ID = 1L
 const val POST_TITLE = "ABCD"
@@ -107,4 +106,14 @@ val PLAY = Play("post1", "Post 1", "post1.com", 50)
 val VIDEO_PLAYS_RESPONSE = VideoPlaysResponse(
         "day",
         mapOf("2018-10-10" to VideoPlaysResponse.Days(10, 15, listOf(PLAY)))
+)
+val FILE_DOWNLOAD = File("file.txt", 153)
+val FILE_DOWNLOADS_RESPONSE = FileDownloadsResponse(
+        "day", null, mapOf(
+        "2019-10-10" to FileDownloadsResponse.Group(
+                0, 0, listOf(
+                FILE_DOWNLOAD
+        )
+        )
+)
 )

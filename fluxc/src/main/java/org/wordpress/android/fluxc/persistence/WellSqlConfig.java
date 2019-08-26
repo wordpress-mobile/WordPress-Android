@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 79;
+        return 83;
     }
 
     @Override
@@ -554,6 +554,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)");
                 oldVersion++;
             case 74:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add WEB_EDITOR TEXT;");
                 db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT;");
                 oldVersion++;
@@ -573,6 +574,22 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table PostModel add AUTHOR_DISPLAY_NAME TEXT;");
                 oldVersion++;
             case 78:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 79:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE INTEGER;");
+                oldVersion++;
+            case 80:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 81:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 82:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
@@ -876,6 +893,42 @@ public class WellSqlConfig extends DefaultWellConfig {
                                + "  DATA TEXT NOT NULL,\n"
                                + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
                     break;
+                case 80:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCNewVisitorStatsModel(\n"
+                               + "  LOCAL_SITE_ID INTEGER,\n"
+                               + "  GRANULARITY TEXT NOT NULL,\n"
+                               + "  DATE TEXT NOT NULL,\n"
+                               + "  START_DATE TEXT NOT NULL,\n"
+                               + "  END_DATE TEXT NOT NULL,\n"
+                               + "  QUANTITY TEXT NOT NULL,\n"
+                               + "  IS_CUSTOM_FIELD INTEGER,\n"
+                               + "  FIELDS TEXT NOT NULL,\n"
+                               + "  DATA TEXT NOT NULL,\n"
+                               + "  _id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                    break;
+                case 81:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("CREATE TABLE WCProductReviewModel ("
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "REMOTE_PRODUCT_REVIEW_ID INTEGER,"
+                               + "REMOTE_PRODUCT_ID INTEGER,"
+                               + "DATE_CREATED TEXT NOT NULL,"
+                               + "STATUS TEXT NOT NULL,"
+                               + "REVIEWER_NAME TEXT NOT NULL,"
+                               + "REVIEWER_EMAIL TEXT NOT NULL,"
+                               + "REVIEW TEXT NOT NULL,"
+                               + "RATING INTEGER,"
+                               + "VERIFIED INTEGER,"
+                               + "REVIEWER_AVATARS_JSON TEXT NOT NULL,"
+                               + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE,"
+                               + "UNIQUE (REMOTE_PRODUCT_REVIEW_ID, REMOTE_PRODUCT_ID, LOCAL_SITE_ID) "
+                               + "ON CONFLICT REPLACE)");
+                    break;
+                case 82:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCOrderModel ADD COLUMN DATE_PAID TEXT NOT NULL DEFAULT '';");
             }
         }
     }

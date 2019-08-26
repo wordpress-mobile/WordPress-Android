@@ -15,12 +15,12 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel
+import org.wordpress.android.fluxc.model.stats.time.FileDownloadsModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.CountryViewsSqlUtils
+import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.FileDownloadsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -34,15 +34,15 @@ private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
 private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
-class CountryViewsStoreTest {
+class FileDownloadsStoreTest {
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var restClient: CountryViewsRestClient
-    @Mock lateinit var sqlUtils: CountryViewsSqlUtils
+    @Mock lateinit var restClient: FileDownloadsRestClient
+    @Mock lateinit var sqlUtils: FileDownloadsSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
-    private lateinit var store: CountryViewsStore
+    private lateinit var store: FileDownloadsStore
     @Before
     fun setUp() {
-        store = CountryViewsStore(
+        store = FileDownloadsStore(
                 restClient,
                 sqlUtils,
                 mapper,
@@ -51,31 +51,31 @@ class CountryViewsStoreTest {
     }
 
     @Test
-    fun `returns country views per site`() = test {
+    fun `returns file downloads per site`() = test {
         val fetchInsightsPayload = FetchStatsPayload(
-                COUNTRY_VIEWS_RESPONSE
+                FILE_DOWNLOADS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchCountryViews(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced))
+        whenever(restClient.fetchFileDownloads(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced))
                 .thenReturn(fetchInsightsPayload)
-        val model = mock<CountryViewsModel>()
-        whenever(mapper.map(COUNTRY_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
+        val model = mock<FileDownloadsModel>()
+        whenever(mapper.map(FILE_DOWNLOADS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val responseModel = store.fetchCountryViews(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchFileDownloads(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, COUNTRY_VIEWS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
+        verify(sqlUtils).insert(site, FILE_DOWNLOADS_RESPONSE, DAYS, DATE, ITEMS_TO_LOAD)
     }
 
     @Test
     fun `returns cached data per site`() = test {
         whenever(sqlUtils.hasFreshRequest(site, DAYS, DATE, ITEMS_TO_LOAD)).thenReturn(true)
-        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(COUNTRY_VIEWS_RESPONSE)
-        val model = mock<CountryViewsModel>()
-        whenever(mapper.map(COUNTRY_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(FILE_DOWNLOADS_RESPONSE)
+        val model = mock<FileDownloadsModel>()
+        whenever(mapper.map(FILE_DOWNLOADS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
         val forced = false
-        val responseModel = store.fetchCountryViews(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchFileDownloads(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         assertThat(responseModel.cached).isTrue()
@@ -83,14 +83,14 @@ class CountryViewsStoreTest {
     }
 
     @Test
-    fun `returns error when country views call fail`() = test {
+    fun `returns error when file downloads call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchStatsPayload<CountryViewsResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<FileDownloadsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchCountryViews(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchFileDownloads(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchCountryViews(site, DAYS, LIMIT_MODE, DATE, forced)
+        val responseModel = store.fetchFileDownloads(site, DAYS, LIMIT_MODE, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -99,12 +99,12 @@ class CountryViewsStoreTest {
     }
 
     @Test
-    fun `returns country views from db`() {
-        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(COUNTRY_VIEWS_RESPONSE)
-        val model = mock<CountryViewsModel>()
-        whenever(mapper.map(COUNTRY_VIEWS_RESPONSE, LIMIT_MODE)).thenReturn(model)
+    fun `returns file downloads from db`() {
+        whenever(sqlUtils.select(site, DAYS, DATE)).thenReturn(FILE_DOWNLOADS_RESPONSE)
+        val model = mock<FileDownloadsModel>()
+        whenever(mapper.map(FILE_DOWNLOADS_RESPONSE, LIMIT_MODE)).thenReturn(model)
 
-        val result = store.getCountryViews(site, DAYS, LIMIT_MODE, DATE)
+        val result = store.getFileDownloads(site, DAYS, LIMIT_MODE, DATE)
 
         assertThat(result).isEqualTo(model)
     }

@@ -87,6 +87,18 @@ class StatsSqlUtils
         return null
     }
 
+    fun deleteAllStats(): Int {
+        return WellSql.delete(StatsBlockBuilder::class.java).execute()
+    }
+
+    fun deleteSiteStats(site: SiteModel): Int {
+        return WellSql.delete(StatsBlockBuilder::class.java)
+                .where()
+                .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+    }
+
     private fun createSelectStatement(
         site: SiteModel,
         blockType: BlockType,
@@ -154,6 +166,7 @@ class StatsSqlUtils
         SEARCH_TERMS,
         VIDEO_PLAYS,
         PUBLICIZE_INSIGHTS,
-        POSTING_ACTIVITY
+        POSTING_ACTIVITY,
+        FILE_DOWNLOADS
     }
 }
