@@ -21,7 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ColorUtilsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 
 public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
@@ -57,7 +57,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             Resources res = getContext().getResources();
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
             titleView.setTextColor(res.getColor(
-                    isEnabled() ? ColorUtilsKt.getThemeColorResId(getContext(), R.attr.wpColorText)
+                    isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
                             : R.color.neutral_20));
 
             // add padding to the start of nested preferences

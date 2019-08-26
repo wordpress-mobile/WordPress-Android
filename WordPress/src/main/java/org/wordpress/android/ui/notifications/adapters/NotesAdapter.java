@@ -24,7 +24,7 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
-import org.wordpress.android.util.ColorUtilsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -254,10 +254,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 noteSubjectSpanned.getSpans(0, noteSubjectSpanned.length(), NoteBlockClickableSpan.class);
         for (NoteBlockClickableSpan span : spans) {
             span.setColors(
-                    ColorUtilsKt.getThemeColor(noteViewHolder.mContentView.getContext(), R.attr.wpColorText),
+                    ContextExtensionsKt.getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText),
                     noteViewHolder.mContentView.getContext().getResources().getColor(R.color.primary_5),
                     noteViewHolder.mContentView.getContext().getResources().getColor(R.color.primary_40),
-                    ColorUtilsKt.getThemeColor(noteViewHolder.mContentView.getContext(), R.attr.wpColorText));
+                    ContextExtensionsKt.getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText));
         }
 
         noteViewHolder.mTxtSubject.setText(noteSubjectSpanned);

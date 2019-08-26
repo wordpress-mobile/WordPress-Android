@@ -10,8 +10,8 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.getThemeColor
-import org.wordpress.android.util.getThemeColorResId
+import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.getColorResIdFromAttribute
 
 /*
  * buttons in footer of post cards
@@ -83,11 +83,11 @@ class PostListButton : LinearLayout {
     }
 
     private fun loadResourcesForButtonType(buttonType: PostListButtonType) {
-        val color = context.getThemeColor(buttonType.colorAttrId)
+        val color = context.getColorFromAttribute(buttonType.colorAttrId)
         ColorUtils.setImageResourceWithTint(
                 imageView,
                 buttonType.iconResId,
-                context.getThemeColorResId(buttonType.colorAttrId)
+                context.getColorResIdFromAttribute(buttonType.colorAttrId)
         )
         textView.setText(buttonType.textResId)
         textView.setTextColor(color)

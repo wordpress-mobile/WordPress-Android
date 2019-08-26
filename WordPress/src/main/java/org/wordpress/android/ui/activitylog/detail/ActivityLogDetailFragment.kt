@@ -19,7 +19,7 @@ import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandl
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.getThemeColor
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
@@ -83,10 +83,10 @@ class ActivityLogDetailFragment : Fragment() {
 
                 noteBlockSpans?.forEach {
                     it.setColors(
-                            activity.getThemeColor(R.attr.wpColorText),
+                            activity.getColorFromAttribute(R.attr.wpColorText),
                             activity.resources.getColor(R.color.primary_5, activity.theme),
                             activity.resources.getColor(R.color.primary_40, activity.theme),
-                            activity.getThemeColor(R.attr.wpColorText)
+                            activity.getColorFromAttribute(R.attr.wpColorText)
                     )
                 }
 

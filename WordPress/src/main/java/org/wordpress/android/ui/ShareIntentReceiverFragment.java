@@ -24,7 +24,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.ColorUtilsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -180,7 +180,7 @@ public class ShareIntentReceiverFragment extends Fragment {
                                     mBottomButtonsShadow.setVisibility(View.GONE);
                                     mBottomButtonsContainer.setBackground(null);
                                     mShareMediaBtn.setTextColor(
-                                            ColorUtilsKt.getThemeColor(getContext(), R.attr.wpColorText));
+                                            ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.wpColorText));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
                                             R.style.WordPress_Button,
                                             R.attr.colorButtonNormal);

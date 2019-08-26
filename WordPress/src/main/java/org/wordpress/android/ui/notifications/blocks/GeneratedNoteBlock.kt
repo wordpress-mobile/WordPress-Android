@@ -25,8 +25,7 @@ class GeneratedNoteBlock(
 
         // Process Ranges to add links and text formatting
         val formattableRange = FormattableRange(null, null, null, null, pingbackUrl, null)
-        val clickableSpan = object : NoteBlockClickableSpan(formattableRange,
-                true, false) {
+        val clickableSpan = object : NoteBlockClickableSpan(formattableRange, true, false) {
             override fun onClick(widget: View) {
                 clickListener.onNoteBlockTextClicked(this)
             }

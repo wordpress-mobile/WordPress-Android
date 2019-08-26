@@ -17,7 +17,7 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ColorUtilsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -97,7 +97,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtTitle.setOnClickListener(mClickListener);
             txtSubtitle.setOnClickListener(mClickListener);
         } else {
-            int color = ColorUtilsKt.getThemeColor(getContext(), R.attr.wpColorText);
+            int color = ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.wpColorText);
             txtTitle.setTextColor(color);
             txtSubtitle.setTextColor(color);
         }

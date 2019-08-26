@@ -40,7 +40,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
-import org.wordpress.android.util.getThemeColor
+import org.wordpress.android.util.getColorFromAttribute
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
@@ -267,7 +267,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableTitle.setSpan(
-                ForegroundColorSpan(context.getThemeColor(R.attr.wpColorTextSubtle)),
+                ForegroundColorSpan(context.getColorFromAttribute(R.attr.wpColorTextSubtle)),
                 domainSpan.first,
                 domainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
