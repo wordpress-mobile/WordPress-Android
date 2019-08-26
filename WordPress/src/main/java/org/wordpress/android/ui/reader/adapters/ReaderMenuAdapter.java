@@ -79,7 +79,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 break;
             case ITEM_BLOCK:
                 textRes = R.string.reader_menu_block_blog;
-                colorRes = ColorUtilsKt.getThemeColorResId(convertView.getContext(), R.attr.colorText);
+                colorRes = ColorUtilsKt.getThemeColorResId(convertView.getContext(), R.attr.wpColorText);
                 iconRes = R.drawable.ic_block_white_24dp;
                 break;
             case ITEM_NOTIFICATIONS_OFF:
@@ -94,7 +94,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 break;
             case ITEM_SHARE:
                 textRes = R.string.reader_btn_share;
-                colorRes = ColorUtilsKt.getThemeColorResId(convertView.getContext(), R.attr.colorText);
+                colorRes = ColorUtilsKt.getThemeColorResId(convertView.getContext(), R.attr.wpColorText);
                 iconRes = R.drawable.ic_share_white_24dp;
                 break;
             default:

@@ -251,7 +251,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalTextColor = ColorUtilsKt.getThemeColor(context, R.attr.colorText);
+        mNormalTextColor = ColorUtilsKt.getThemeColor(context, R.attr.wpColorText);
         mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
         mAgoTextColor = context.getResources().getColor(R.color.neutral);
         mUnapprovedTextColor = context.getResources().getColor(R.color.warning_60);

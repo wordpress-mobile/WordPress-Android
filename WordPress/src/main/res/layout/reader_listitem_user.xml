@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?attr/colorText"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_name" />
 

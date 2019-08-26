@@ -97,7 +97,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtTitle.setOnClickListener(mClickListener);
             txtSubtitle.setOnClickListener(mClickListener);
         } else {
-            int color = ColorUtilsKt.getThemeColor(getContext(), R.attr.colorText);
+            int color = ColorUtilsKt.getThemeColor(getContext(), R.attr.wpColorText);
             txtTitle.setTextColor(color);
             txtSubtitle.setTextColor(color);
         }

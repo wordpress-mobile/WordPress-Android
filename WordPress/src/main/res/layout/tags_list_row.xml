@@ -14,7 +14,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="@dimen/margin_medium"
-        android:textColor="?attr/colorText"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"/>
 
     <View

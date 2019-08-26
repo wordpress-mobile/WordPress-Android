@@ -46,7 +46,7 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/colorTextSubtle"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"

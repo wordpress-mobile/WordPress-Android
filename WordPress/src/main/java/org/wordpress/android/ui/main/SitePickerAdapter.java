@@ -158,7 +158,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mDataLoadedListener = dataLoadedListener;
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
-        mTextColorNormal = ColorUtilsKt.getThemeColor(context, R.attr.colorText);
+        mTextColorNormal = ColorUtilsKt.getThemeColor(context, R.attr.wpColorText);
         mTextColorHidden = context.getResources().getColor(R.color.neutral_30);
 
         mSelectedItemBackground =

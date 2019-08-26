@@ -4,9 +4,9 @@
     <attr name="longClickHint" format="string" />
 
     <!-- Semantic colors -->
-    <attr name="colorText" format="reference" />
-    <attr name="colorTextSubtle" format="reference" />
-    <attr name="colorError" format="reference" />
+    <attr name="wpColorText" format="reference" />
+    <attr name="wpColorTextSubtle" format="reference" />
+    <attr name="wpColorError" format="reference" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">

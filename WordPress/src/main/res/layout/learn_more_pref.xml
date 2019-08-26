@@ -31,7 +31,7 @@
             android:id="@+id/learn_more_caption"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textColor="?attr/colorText"
+            android:textColor="?attr/wpColorText"
             android:visibility="invisible"
             tools:text="Learn more text"
             tools:visibility="visible"

@@ -68,7 +68,7 @@ public class DetailListPreference extends ListPreference
         super.onBindView(view);
 
         setupView((TextView) view.findViewById(android.R.id.title),
-                R.dimen.text_sz_large, ColorUtilsKt.getThemeColorResId(getContext(), R.attr.colorText),
+                R.dimen.text_sz_large, ColorUtilsKt.getThemeColorResId(getContext(), R.attr.wpColorText),
                 R.color.neutral_20);
         setupView((TextView) view.findViewById(android.R.id.summary),
                 R.dimen.text_sz_medium, R.color.neutral, R.color.neutral_20);

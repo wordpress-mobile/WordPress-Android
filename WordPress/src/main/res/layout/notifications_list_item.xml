@@ -17,7 +17,7 @@
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_large"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-        android:textColor="?attr/colorTextSubtle"
+        android:textColor="?attr/wpColorTextSubtle"
         android:visibility="gone"
         tools:text="Today"
         tools:visibility="visible" >
@@ -92,7 +92,7 @@
                 android:layout_width="fill_parent"
                 android:maxLines="2"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/colorText"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross commented on your post Happy Trees" >
             </org.wordpress.android.widgets.WPTextView>

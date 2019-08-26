@@ -43,7 +43,7 @@ public class WPPreference extends Preference implements PreferenceHint {
         if (titleView != null) {
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
             titleView.setTextColor(res.getColor(
-                    isEnabled() ? ColorUtilsKt.getThemeColorResId(getContext(), R.attr.colorText)
+                    isEnabled() ? ColorUtilsKt.getThemeColorResId(getContext(), R.attr.wpColorText)
                             : R.color.neutral_20));
         }
         if (summaryView != null) {
