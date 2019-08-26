@@ -607,7 +607,6 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_AUTO_UPLOAD_ATTEMPTS INTEGER");
                 oldVersion++;
-
         }
         db.setTransactionSuccessful();
         db.endTransaction();
