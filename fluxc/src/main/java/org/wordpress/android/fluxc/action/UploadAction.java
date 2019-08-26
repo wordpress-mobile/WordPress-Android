@@ -21,6 +21,8 @@ public enum UploadAction implements IAction {
 
     // Local actions
     @Action(payloadType = PostModel.class)
+    INCREMENT_NUMBER_OF_AUTO_UPLOAD_ATTEMPTS,
+    @Action(payloadType = PostModel.class)
     CANCEL_POST,
     @Action(payloadType = ClearMediaPayload.class)
     CLEAR_MEDIA_FOR_POST

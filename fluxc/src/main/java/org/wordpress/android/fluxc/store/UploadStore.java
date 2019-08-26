@@ -115,6 +115,9 @@ public class UploadStore extends Store {
                 mDispatcher
                         .dispatch(PostActionBuilder.newRemoteAutoSavedPostAction((RemoteAutoSavePostPayload) payload));
                 break;
+            case INCREMENT_NUMBER_OF_AUTO_UPLOAD_ATTEMPTS:
+                handleIncrementNumberOfAutoUploadAttempts((PostModel) payload);
+                break;
             case CANCEL_POST:
                 handleCancelPost((PostModel) payload);
                 break;
@@ -403,6 +406,14 @@ public class UploadStore extends Store {
 
             // Delete the PostUploadModel itself
             UploadSqlUtils.deletePostUploadModelWithLocalId(localPostId);
+        }
+    }
+
+    private void handleIncrementNumberOfAutoUploadAttempts(PostModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        if (postUploadModel != null) {
+            postUploadModel.incNumberOfAutoUploadAttempts();
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }
 
