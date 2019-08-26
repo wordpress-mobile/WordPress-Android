@@ -43,7 +43,6 @@ Language: uz
     <string name="theme_activate_button">Faollashtir</string>
     <string name="share_action">Bo‘lish</string>
     <string name="stats">Statistika</string>
-    <string name="stats_view_visitors_and_views">Kirivchular va ko‘rishlar</string>
     <string name="stats_view_clicks">Bosishlar</string>
     <string name="stats_view_tags_and_categories">Teg va bo‘limlar</string>
     <string name="stats_timeframe_today">Bugun</string>
@@ -51,15 +50,7 @@ Language: uz
     <string name="stats_timeframe_days">Kunlar</string>
     <string name="stats_timeframe_weeks">Xaftalar</string>
     <string name="stats_timeframe_months">Oylar</string>
-    <string name="stats_entry_country">Mamlakat</string>
-    <string name="stats_entry_posts_and_pages">Sarlavha</string>
-    <string name="stats_entry_tags_and_categories">Mavzu</string>
-    <string name="stats_entry_authors">Muallif</string>
-    <string name="stats_totals_views">Ko‘rishlar</string>
-    <string name="stats_totals_clicks">Bosishlar</string>
-    <string name="stats_totals_plays">Ko‘rishlar</string>
     <string name="stats_view_referrers">Referrerlar</string>
-    <string name="stats_entry_referrers">Referrer</string>
     <string name="media_gallery_type_slideshow">Slaydshou</string>
     <string name="manage">Boshqarish</string>
     <string name="discard">Bekor qilish</string>
