@@ -33,7 +33,15 @@ class JetpackTunnelGsonRequestBuilder
         errorListener: WPComErrorListener,
         jpTimeoutListener: ((WPComGsonRequest<*>) -> Unit)?
     ): WPComGsonRequest<JetpackTunnelResponse<T>>? {
-        return JetpackTunnelGsonRequest.buildGetRequest(url, site.siteId, params, clazz, listener, errorListener, jpTimeoutListener)
+        return JetpackTunnelGsonRequest.buildGetRequest(
+                url,
+                site.siteId,
+                params,
+                clazz,
+                listener,
+                errorListener,
+                jpTimeoutListener
+        )
     }
 
     /**
