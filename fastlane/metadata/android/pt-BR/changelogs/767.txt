@@ -1,4 +1,0 @@
-13.0:
-* Melhorias no editor de blocos: o editor é aberto automaticamente ao abrir um post com blocos (a menos que você tenha desativado isso na versão 12.9). Você também pode configurar o editor por site.
-* Melhorias de acessibilidade: agora leitores de tela podem ler mais informações em estatísticas.
-* Melhorias gerais: acessar o aplicativo agora é mais rápido, atualizamos as cores para ter mais consistência e corrigimos erros que causavam falhas no aplicativo.
