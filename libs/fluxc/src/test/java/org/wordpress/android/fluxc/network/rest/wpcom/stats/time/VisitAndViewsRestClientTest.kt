@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
-import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class VisitAndViewsRestClientTest {
@@ -42,14 +41,12 @@ class VisitAndViewsRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
-    @Mock private lateinit var statsUtils: StatsUtils
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: VisitAndViewsRestClient
     private val siteId: Long = 12
     private val pageSize = 5
     private val currentDateValue = "2018-10-10"
-    private val currentDate = Date(0)
 
     @Before
     fun setUp() {
@@ -61,10 +58,8 @@ class VisitAndViewsRestClientTest {
                 null,
                 requestQueue,
                 accessToken,
-                userAgent,
-                statsUtils
+                userAgent
         )
-        whenever(statsUtils.getFormattedDate(eq(currentDate))).thenReturn(currentDateValue)
     }
 
     @Test
@@ -111,7 +106,7 @@ class VisitAndViewsRestClientTest {
         val response = mock<VisitsAndViewsResponse>()
         initVisitsAndViewsResponse(response)
 
-        val responseModel = restClient.fetchVisits(site, period, currentDate, pageSize, false)
+        val responseModel = restClient.fetchVisits(site, period, currentDateValue, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -138,7 +133,7 @@ class VisitAndViewsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchVisits(site, period, currentDate, pageSize, false)
+        val responseModel = restClient.fetchVisits(site, period, currentDateValue, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

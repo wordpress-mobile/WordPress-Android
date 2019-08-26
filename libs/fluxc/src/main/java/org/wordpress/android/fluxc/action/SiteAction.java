@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityR
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSitesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload;
@@ -51,6 +53,8 @@ public enum SiteAction implements IAction {
     FETCH_SITE_EDITORS,
     @Action(payloadType = DesignateMobileEditorPayload.class)
     DESIGNATE_MOBILE_EDITOR,
+    @Action(payloadType = DesignateMobileEditorForAllSitesPayload.class)
+    DESIGNATE_MOBILE_EDITOR_FOR_ALL_SITES,
     @Action(payloadType = SiteModel.class)
     FETCH_USER_ROLES,
     @Action(payloadType = SiteModel.class)
@@ -97,6 +101,8 @@ public enum SiteAction implements IAction {
     FETCHED_POST_FORMATS,
     @Action(payloadType = FetchedEditorsPayload.class)
     FETCHED_SITE_EDITORS,
+    @Action(payloadType = DesignateMobileEditorForAllSitesResponsePayload.class)
+    DESIGNATED_MOBILE_EDITOR_FOR_ALL_SITES,
     @Action(payloadType = FetchedUserRolesPayload.class)
     FETCHED_USER_ROLES,
     @Action(payloadType = DeleteSiteResponsePayload.class)
