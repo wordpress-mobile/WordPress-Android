@@ -19,22 +19,29 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNAUTHORIZED
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST_TYPE
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNSUPPORTED_ACTION
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.NothingToUpload
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadQueued
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
@@ -253,30 +260,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return labels
     }
 
-    private fun getErrorLabel(uploadUiState: PostUploadUiState.UploadFailed, postStatus: PostStatus): UiString? {
+    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
         return when {
-            uploadUiState.error.mediaError != null ->
-                if (uploadUiState.autoRetry) {
-                    when (postStatus) {
-                        PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
-                        SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
-                        PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
-                        DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post_retrying)
-                    }
-                } else if (!uploadUiState.changesExplicitlyConfirmed) {
-                    UiStringRes(R.string.error_media_recover_post)
-                } else {
-                    when (postStatus) {
-                        PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
-                        SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
-                        PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
-                        DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
-                    }
-                }
-            uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
-                    false,
-                    uploadUiState.error.postError
-            )
+            uploadUiState.error.mediaError != null -> getMediaUploadErrorMessage(uploadUiState, postStatus)
+            uploadUiState.error.postError != null -> getPostUploadErrorMessage(uploadUiState)
             else -> {
                 val errorMsg = "MediaError and postError are both null."
                 if (BuildConfig.DEBUG) {
@@ -289,6 +276,43 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
     }
 
+    private fun getMediaUploadErrorMessage(uploadUiState: UploadFailed, postStatus: PostStatus): UiStringRes {
+        return when {
+            uploadUiState.autoRetry -> when (postStatus) {
+                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
+                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post_retrying)
+            }
+            uploadUiState.changesExplicitlyConfirmed -> when (postStatus) {
+                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
+                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
+            }
+            else -> UiStringRes(R.string.error_media_recover_post)
+        }
+    }
+
+    private fun getPostUploadErrorMessage(uploadUiState: UploadFailed): UiStringRes {
+        val error = uploadUiState.error.postError
+        return when (error.type ?: GENERIC_ERROR) {
+            UNKNOWN_POST -> UiStringRes(R.string.error_unknown_post)
+            UNKNOWN_POST_TYPE -> UiStringRes(R.string.error_unknown_post_type)
+            UNAUTHORIZED -> UiStringRes(R.string.error_refresh_unauthorized_posts)
+            UNSUPPORTED_ACTION,
+            INVALID_RESPONSE,
+            GENERIC_ERROR -> {
+                AppLog.w(T.MAIN, "Error message: " + error.message + " ,Error Type: " + error.type)
+                if (uploadUiState.autoRetry) {
+                    UiStringRes(R.string.error_generic_error_retrying)
+                } else {
+                    UiStringRes(R.string.error_generic_error)
+                }
+            }
+        }
+    }
+
     @ColorRes private fun getStatusesColor(
         postStatus: PostStatus,
         isLocalDraft: Boolean,
@@ -296,7 +320,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         uploadUiState: PostUploadUiState,
         hasUnhandledConflicts: Boolean
     ): Int? {
-        val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts
+        val isError = uploadUiState is UploadFailed || hasUnhandledConflicts
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
         val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||

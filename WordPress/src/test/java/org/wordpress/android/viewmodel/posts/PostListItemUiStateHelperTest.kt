@@ -496,7 +496,7 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE),
                 uploadStatus = createUploadStatus(uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)))
         )
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_published))
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post))
     }
 
     @Test
@@ -517,7 +517,8 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
                 uploadStatus = createUploadStatus(
                         uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false
+                        isEligibleForAutoUpload = false,
+                        changesExplicitlyConfirmed = true
                 )
         )
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted))
@@ -541,7 +542,8 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
                 uploadStatus = createUploadStatus(
                         uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false
+                        isEligibleForAutoUpload = false,
+                        changesExplicitlyConfirmed = true
                 )
         )
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled))
@@ -565,10 +567,37 @@ class PostListItemUiStateHelperTest {
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(
                         uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED)),
-                        isEligibleForAutoUpload = false
+                        isEligibleForAutoUpload = false,
+                        changesExplicitlyConfirmed = false
                 )
         )
         assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post))
+    }
+
+    @Test
+    fun `base upload error shown on GENERIC ERROR and disabled auto upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(PostError(GENERIC_ERROR)),
+                        isEligibleForAutoUpload = false,
+                        changesExplicitlyConfirmed = false
+                )
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_generic_error))
+    }
+
+    @Test
+    fun `retrying upload shown for draft when pending auto-upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
+                uploadStatus = createUploadStatus(
+                        uploadError = UploadError(PostError(GENERIC_ERROR)),
+                        isEligibleForAutoUpload = true,
+                        changesExplicitlyConfirmed = true
+                )
+        )
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_generic_error_retrying))
     }
 
     @Test
@@ -823,7 +852,8 @@ class PostListItemUiStateHelperTest {
         isUploadFailed: Boolean = false,
         hasInProgressMediaUpload: Boolean = false,
         hasPendingMediaUpload: Boolean = false,
-        isEligibleForAutoUpload: Boolean = false
+        isEligibleForAutoUpload: Boolean = false,
+        changesExplicitlyConfirmed: Boolean = false
     ): PostListItemUploadStatus =
             PostListItemUploadStatus(
                     uploadError = uploadError,
@@ -834,7 +864,8 @@ class PostListItemUiStateHelperTest {
                     isUploadFailed = isUploadFailed,
                     hasInProgressMediaUpload = hasInProgressMediaUpload,
                     hasPendingMediaUpload = hasPendingMediaUpload,
-                    isEligibleForAutoUpload = isEligibleForAutoUpload
+                    isEligibleForAutoUpload = isEligibleForAutoUpload,
+                    changesExplicitlyConfirmed = changesExplicitlyConfirmed
                     )
 
     private fun createGenericError(): UploadError = UploadError(PostError(GENERIC_ERROR))

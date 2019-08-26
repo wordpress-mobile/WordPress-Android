@@ -483,7 +483,8 @@ class UploadStarterTest {
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade,
             uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
-            tracker = mock()
+            tracker = mock(),
+            dispatcher = mock()
     )
 
     private companion object Fixtures {
