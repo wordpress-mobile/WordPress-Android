@@ -68,15 +68,17 @@ public class WPPrefUtils {
      */
     public static void layoutAsDarkTitle(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
+        setTextViewAttributes(view, size,
+                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
     }
 
     /**
      * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
      */
     public static void layoutAsSubhead(TextView view) {
-        int color = view.isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText)
-                : R.color.neutral_20;
+        int color =
+                view.isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText)
+                        : R.color.neutral_20;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, color);
     }
@@ -127,7 +129,8 @@ public class WPPrefUtils {
      */
     public static void layoutAsInput(EditText view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
+        setTextViewAttributes(view, size,
+                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
         view.setHintTextColor(view.getResources().getColor(R.color.neutral_20));
         view.setTextColor(ContextExtensionsKt.getColorFromAttribute(view.getContext(), R.attr.wpColorText));
         view.setSingleLine(true);
@@ -146,7 +149,8 @@ public class WPPrefUtils {
      */
     public static void layoutAsNumberPickerPeek(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
+        setTextViewAttributes(view, size,
+                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
     }
 
     /**

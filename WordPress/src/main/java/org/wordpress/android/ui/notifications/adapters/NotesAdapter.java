@@ -254,10 +254,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                 noteSubjectSpanned.getSpans(0, noteSubjectSpanned.length(), NoteBlockClickableSpan.class);
         for (NoteBlockClickableSpan span : spans) {
             span.setColors(
-                    ContextExtensionsKt.getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText),
+                    ContextExtensionsKt
+                            .getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText),
                     noteViewHolder.mContentView.getContext().getResources().getColor(R.color.primary_5),
                     noteViewHolder.mContentView.getContext().getResources().getColor(R.color.primary_40),
-                    ContextExtensionsKt.getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText));
+                    ContextExtensionsKt
+                            .getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText));
         }
 
         noteViewHolder.mTxtSubject.setText(noteSubjectSpanned);
