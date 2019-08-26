@@ -1,4 +1,0 @@
-13.0:
-* Verbeteringen aan de blok-editor: De editor is automatisch ingeschakeld als je een blokbericht opent (tenzij je je hebt uitgeschreven in v12.9), of je kunt het per site inschakelen.
-* Verbeteringen aan de toegankelijkheid: Schermlezers kunnen nu meer zien van het statistiekenscherm.
-* algemene verbeteringen voor gebruik Inloggen gaat sneller, kleuren zijn consistenter over de schermen verdeeld, en bugfixes hebben sommige crashes beëindigd.

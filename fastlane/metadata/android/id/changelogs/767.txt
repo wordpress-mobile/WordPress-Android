@@ -1,4 +1,0 @@
-13.0:
-* Peningkatan penyunting blok: penyunting diaktifkan otomatis saat Anda membuka pos blok (kecuali Anda tidak memilihnya di v12.9), atau Anda dapat mengaktifkannya untuk setiap situs.
-* Peningkatan aksesibilitas: pembaca layar kini dapat membaca lebih banyak layar statistik.
-* Peningkatan kegunaan umum: login lebih cepat, warna lebih konsisten antarlayar, dan perbaikan bug mengakhiri sejumlah masalah crash.
