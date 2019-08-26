@@ -5,6 +5,7 @@ import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
+import org.wordpress.android.fluxc.model.stats.time.FileDownloadsModel.FileDownloads
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
@@ -12,6 +13,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
@@ -215,8 +217,10 @@ class TimeStatsMapper
                 if (author.name == null || author.views == null || author.avatarUrl == null) {
                     AppLog.e(STATS, "AuthorsResponse: Missing fields on an author")
                 }
-                AuthorsModel.Author(StringEscapeUtils.unescapeHtml4(author.name) ?: "",
-                        author.views ?: 0, author.avatarUrl, posts ?: listOf())
+                AuthorsModel.Author(
+                        StringEscapeUtils.unescapeHtml4(author.name) ?: "",
+                        author.views ?: 0, author.avatarUrl, posts ?: listOf()
+                )
             }
         }
         val hasMore = if (first != null && authors != null) first.authors.size > authors.size else false
@@ -276,5 +280,23 @@ class TimeStatsMapper
                 groups ?: listOf(),
                 hasMore
         )
+    }
+
+    fun map(response: FileDownloadsResponse, cacheMode: LimitMode): FileDownloadsModel {
+        val first = response.groups.values.firstOrNull()
+        val downloads = first?.files?.let {
+            if (cacheMode is LimitMode.Top) {
+                it.take(cacheMode.limit)
+            } else {
+                it
+            }
+        }?.mapNotNull {
+            if (it.filename != null) {
+                FileDownloads(it.filename, it.downloads ?: 0)
+            } else {
+                null
+            }
+        } ?: listOf()
+        return FileDownloadsModel(downloads, downloads.size < first?.files?.size ?: 0)
     }
 }
