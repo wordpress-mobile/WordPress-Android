@@ -83,9 +83,9 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     val showStatePickerDialog: LiveData<List<SupportedStateResponse>>
         get() = _showStatePickerDialog
 
-    private val _domainContactDetails = MutableLiveData<DomainContactModel>()
-    val domainContactDetails: LiveData<DomainContactModel>
-        get() = _domainContactDetails
+    private val _domainContactForm = MutableLiveData<DomainContactFormModel>()
+    val domainContactForm: LiveData<DomainContactFormModel>
+        get() = _domainContactForm
 
     private val _handleCompletedDomainRegistration = SingleLiveEvent<DomainRegistrationCompletedEvent>()
     val handleCompletedDomainRegistration: LiveData<DomainRegistrationCompletedEvent>
@@ -153,7 +153,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             _showErrorMessage.value = event.error.message
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching domain contact details")
         } else {
-            _domainContactDetails.value = event.contactModel
+            _domainContactForm.value = DomainContactFormModel.fromDomainContactModel(event.contactModel)
             _uiState.value = _uiState.value?.copy(isFormProgressIndicatorVisible = false)
 
             val countryCode = event.contactModel?.countryCode
@@ -171,11 +171,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                 // if customer does not have a phone number we will try to prefill a country code
                 if (TextUtils.isEmpty(event.contactModel?.phone)) {
                     val countryCodePrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(countryCode!!)
-                    _domainContactDetails.value = _domainContactDetails.value?.copy(
-                            phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                                    countryCodePrefix,
-                                    null
-                            )
+                    _domainContactForm.value = _domainContactForm.value?.copy(
+                            phoneNumberPrefix = countryCodePrefix
                     )
                 }
 
@@ -198,7 +195,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
             AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching supported countries")
         } else {
             _uiState.value = uiState.value?.copy(
-                    selectedState = event.supportedStates?.firstOrNull { it.code == domainContactDetails.value?.state },
+                    selectedState = event.supportedStates?.firstOrNull { it.code == domainContactForm.value?.state },
                     isStateProgressIndicatorVisible = false,
                     isDomainRegistrationButtonEnabled = true,
                     isStateInputEnabled = !event.supportedStates.isNullOrEmpty()
@@ -222,7 +219,8 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         dispatcher.dispatch(
                 TransactionActionBuilder.newRedeemCartWithCreditsAction(
                         RedeemShoppingCartPayload(
-                                event.cartDetails!!, domainContactDetails.value!!
+                                event.cartDetails!!,
+                                DomainContactFormModel.toDomainContactModel(domainContactForm.value)!!
                         )
                 )
         )
@@ -311,7 +309,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         _handleCompletedDomainRegistration.postValue(
                 DomainRegistrationCompletedEvent(
                         domainProductDetails.domainName,
-                        domainContactDetails.value!!.email!!
+                        domainContactForm.value!!.email!!
                 )
         )
     }
@@ -326,7 +324,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
 
     fun onRegisterDomainButtonClicked() {
         _uiState.value = uiState.value?.copy(isRegistrationProgressIndicatorVisible = true)
-        _domainContactDetails.value = _domainContactDetails.value?.copy(
+        _domainContactForm.value = _domainContactForm.value?.copy(
                 countryCode = uiState.value?.selectedCountry?.code,
                 state = uiState.value?.selectedState?.code
         )
@@ -354,31 +352,10 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
                             isStateInputEnabled = false
                     )
 
-            val phoneCountryCode = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
-            val newPhoneNumber: String?
-
-            if (phoneCountryCode != null) {
-                newPhoneNumber = if (TextUtils.isEmpty(_domainContactDetails.value?.phone)) {
-                    DomainPhoneNumberUtils.formatPhoneNumberandPrefix(phoneCountryCode, "")
-                } else {
-                    val phoneNumberWithoutCountryCode = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(
-                            _domainContactDetails.value?.phone!!
-                    )
-
-                    DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
-                            phoneCountryCode,
-                            phoneNumberWithoutCountryCode
-                    )
-                }
-            } else {
-                // should not happen unless we'll get some new countries
-                newPhoneNumber = _domainContactDetails.value?.phone
-            }
-
-            _domainContactDetails.value = _domainContactDetails.value?.copy(
+            _domainContactForm.value = _domainContactForm.value?.copy(
                     countryCode = country.code,
                     state = null,
-                    phone = newPhoneNumber
+                    phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefix(country.code)
             )
             dispatcher.dispatch(SiteActionBuilder.newFetchDomainSupportedStatesAction(country.code))
         }
@@ -392,16 +369,80 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
         _showTos.call()
     }
 
-    fun onDomainContactDetailsChanged(domainContactModel: DomainContactModel) {
+    fun onDomainContactDetailsChanged(domainContacFormModel: DomainContactFormModel) {
         val isFormBusy = uiState.value?.isFormProgressIndicatorVisible == true ||
                 uiState.value?.isRegistrationProgressIndicatorVisible == true
 
         if (!isFormBusy) {
-            _domainContactDetails.value = domainContactModel
+            _domainContactForm.value = domainContacFormModel
         }
     }
 
     fun togglePrivacyProtection(isEnabled: Boolean) {
         _uiState.value = uiState.value?.copy(isPrivacyProtectionEnabled = isEnabled)
+    }
+
+    data class DomainContactFormModel(
+        val firstName: String?,
+        val lastName: String?,
+        val organization: String?,
+        val addressLine1: String?,
+        val addressLine2: String?,
+        val postalCode: String?,
+        val city: String?,
+        val state: String?,
+        val countryCode: String?,
+        val email: String?,
+        val phoneNumberPrefix: String?,
+        val phoneNumber: String?
+    ) {
+        companion object {
+            fun toDomainContactModel(domainContactFormModel: DomainContactFormModel?): DomainContactModel? {
+                if (domainContactFormModel == null) {
+                    return null
+                }
+
+                return DomainContactModel(
+                        firstName = domainContactFormModel.firstName,
+                        lastName = domainContactFormModel.lastName,
+                        organization = domainContactFormModel.organization,
+                        addressLine1 = domainContactFormModel.addressLine1,
+                        addressLine2 = domainContactFormModel.addressLine2,
+                        postalCode = domainContactFormModel.postalCode,
+                        city = domainContactFormModel.city,
+                        state = domainContactFormModel.state,
+                        countryCode = domainContactFormModel.countryCode,
+                        email = domainContactFormModel.email,
+                        phone = DomainPhoneNumberUtils.formatPhoneNumberandPrefix(
+                                domainContactFormModel.phoneNumberPrefix,
+                                domainContactFormModel.phoneNumber
+                        ),
+                        fax = null
+                )
+            }
+
+            fun fromDomainContactModel(domainContactModel: DomainContactModel?): DomainContactFormModel? {
+                if (domainContactModel == null) {
+                    return null
+                }
+
+                return DomainContactFormModel(
+                        firstName = domainContactModel.firstName,
+                        lastName = domainContactModel.lastName,
+                        organization = domainContactModel.organization,
+                        addressLine1 = domainContactModel.addressLine1,
+                        addressLine2 = domainContactModel.addressLine2,
+                        postalCode = domainContactModel.postalCode,
+                        city = domainContactModel.city,
+                        state = domainContactModel.state,
+                        countryCode = domainContactModel.countryCode,
+                        email = domainContactModel.email,
+                        phoneNumberPrefix = DomainPhoneNumberUtils.getPhoneNumberPrefixFromFullPhoneNumber(
+                                domainContactModel.phone
+                        ),
+                        phoneNumber = DomainPhoneNumberUtils.getPhoneNumberWithoutPrefix(domainContactModel.phone)
+                )
+            }
+        }
     }
 }

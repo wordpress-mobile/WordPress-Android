@@ -59,6 +59,7 @@ import org.wordpress.android.ui.domains.DomainProductDetails
 import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainRegistrationDetailsUiState
 
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
@@ -68,7 +69,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var analyticsTracker: AnalyticsTrackerWrapper
     private var site: SiteModel = SiteModel()
 
-    @Mock private lateinit var domainContactDetailsObserver: Observer<DomainContactModel>
+    @Mock private lateinit var domainContactDetailsObserver: Observer<DomainContactFormModel>
     @Mock private lateinit var countryPickerDialogObserver: Observer<List<SupportedDomainCountry>>
     @Mock private lateinit var statePickerDialogObserver: Observer<List<SupportedStateResponse>>
     @Mock private lateinit var tosLinkObserver: Observer<Unit>
@@ -104,7 +105,22 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
             "US",
             "email@wordpress.org",
             "+1.3124567890",
-            ""
+            null
+    )
+
+    private val domainContactFormModel = DomainContactFormModel(
+            "John",
+            "Smith",
+            "",
+            "Street 1",
+            "Apt 1",
+            "10018",
+            "First City",
+            "CA",
+            "US",
+            "email@wordpress.org",
+            "1",
+            "3124567890"
     )
 
     private val domainRegistrationCompletedEvent = DomainRegistrationCompletedEvent(
@@ -165,7 +181,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         uiStateResults.clear()
         viewModel.uiState.observeForever { if (it != null) uiStateResults.add(it) }
-        viewModel.domainContactDetails.observeForever(domainContactDetailsObserver)
+        viewModel.domainContactForm.observeForever(domainContactDetailsObserver)
         viewModel.showCountryPickerDialog.observeForever(countryPickerDialogObserver)
         viewModel.showStatePickerDialog.observeForever(statePickerDialogObserver)
         viewModel.showTos.observeForever(tosLinkObserver)
@@ -222,7 +238,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(domainContactDetailsFetchedState.selectedState).isNull()
         assertThat(domainContactDetailsFetchedState.selectedCountry).isNull()
 
-        verify(domainContactDetailsObserver).onChanged(domainContactModel)
+        verify(domainContactDetailsObserver).onChanged(domainContactFormModel)
 
         val fetchingStatesState = uiStateResults[3]
 
@@ -253,14 +269,14 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         setupFetchDomainContactInformationDispatcher(false, domainContactModel.copy(phone = null))
         viewModel.start(site, domainProductDetails)
 
-        var domainContactModelWithPrefilledPhonePrefix: DomainContactModel? = null
+        var domainContactModelWithPrefilledPhonePrefix: DomainContactFormModel? = null
 
-        viewModel.domainContactDetails.observeForever {
+        viewModel.domainContactForm.observeForever {
             domainContactModelWithPrefilledPhonePrefix = it
         }
 
         assertThat(domainContactModelWithPrefilledPhonePrefix).isNotNull()
-        assertThat(domainContactModelWithPrefilledPhonePrefix?.phone).isEqualTo("+1.")
+        assertThat(domainContactModelWithPrefilledPhonePrefix?.phoneNumberPrefix).isEqualTo("1")
     }
 
     @Test
@@ -268,14 +284,14 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         setupFetchDomainContactInformationDispatcher(false, domainContactModel.copy(phone = null, countryCode = null))
         viewModel.start(site, domainProductDetails)
 
-        var domainContactModelWithPrefilledPhonePrefix: DomainContactModel? = null
+        var domainContactModelWithPrefilledPhonePrefix: DomainContactFormModel? = null
 
-        viewModel.domainContactDetails.observeForever {
+        viewModel.domainContactForm.observeForever {
             domainContactModelWithPrefilledPhonePrefix = it
         }
 
         assertThat(domainContactModelWithPrefilledPhonePrefix).isNotNull()
-        assertThat(domainContactModelWithPrefilledPhonePrefix?.phone).isNull()
+        assertThat(domainContactModelWithPrefilledPhonePrefix?.phoneNumberPrefix).isNull()
     }
 
     @Test
@@ -336,7 +352,7 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(errorFetchingDomainContactDetailsState.selectedCountry).isNull()
 
         verify(domainContactDetailsObserver, times(0)).onChanged(any())
-        assertThat(viewModel.domainContactDetails.value).isNull()
+        assertThat(viewModel.domainContactForm.value).isNull()
     }
 
     @Test
@@ -401,10 +417,11 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         val actionsDispatched = captor.allValues
         validateFetchStatesAction(actionsDispatched[3], secondaryCountry.code)
 
-        assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo("AU")
-        assertThat(viewModel.domainContactDetails.value?.state).isNull()
+        assertThat(viewModel.domainContactForm.value?.countryCode).isEqualTo("AU")
+        assertThat(viewModel.domainContactForm.value?.state).isNull()
         // phone number preffix was correctly switched to AU one
-        assertThat(viewModel.domainContactDetails.value?.phone).isEqualTo("+61.3124567890")
+        assertThat(viewModel.domainContactForm.value?.phoneNumberPrefix).isEqualTo("61")
+        assertThat(viewModel.domainContactForm.value?.phoneNumber).isEqualTo("3124567890")
 
         assertThat(uiStateResults.size).isEqualTo(2)
 
@@ -465,8 +482,8 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.onRegisterDomainButtonClicked()
 
-        assertThat(viewModel.domainContactDetails.value?.countryCode).isEqualTo(primaryCountry.code)
-        assertThat(viewModel.domainContactDetails.value?.state).isEqualTo(primaryState.code)
+        assertThat(viewModel.domainContactForm.value?.countryCode).isEqualTo(primaryCountry.code)
+        assertThat(viewModel.domainContactForm.value?.state).isEqualTo(primaryState.code)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher, times(7)).dispatch(captor.capture())
@@ -588,11 +605,11 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     fun onDomainContactDetailsChanged() = test {
         viewModel.start(site, domainProductDetails)
 
-        val updatedDomainContactDetails = domainContactModel.copy(firstName = "Peter")
+        val updatedDomainContactDetails = domainContactFormModel.copy(firstName = "Peter")
         viewModel.onDomainContactDetailsChanged(updatedDomainContactDetails)
 
         verify(domainContactDetailsObserver).onChanged(updatedDomainContactDetails)
-        assertThat(viewModel.domainContactDetails.value).isEqualTo(updatedDomainContactDetails)
+        assertThat(viewModel.domainContactForm.value).isEqualTo(updatedDomainContactDetails)
     }
 
     @Test
@@ -611,6 +628,15 @@ class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
         assertThat(privacyProtectionOffState.isPrivacyProtectionEnabled).isEqualTo(false)
 
         assertThat(uiStateResults.size).isEqualTo(2)
+    }
+
+    @Test
+    fun mappingOfDomainContactDetailModels() = test {
+        val convertedDomainContactModel = DomainContactFormModel.toDomainContactModel(domainContactFormModel)
+        assertThat(convertedDomainContactModel).isEqualTo(domainContactModel)
+
+        val convertedDomainContactFormModel = DomainContactFormModel.fromDomainContactModel(domainContactModel)
+        assertThat(convertedDomainContactFormModel).isEqualTo(domainContactFormModel)
     }
 
     private fun setupFetchSupportedCountriesDispatcher(isError: Boolean) {
