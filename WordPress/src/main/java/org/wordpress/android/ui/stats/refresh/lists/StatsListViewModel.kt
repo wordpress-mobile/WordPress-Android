@@ -149,6 +149,10 @@ abstract class StatsListViewModel(
             statsUseCase.refreshTypes()
         }
     }
+
+    fun onResume() {
+        dateSelector.updateDateSelector()
+    }
 }
 
 class InsightsListViewModel

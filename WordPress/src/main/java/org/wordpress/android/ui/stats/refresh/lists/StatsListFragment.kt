@@ -123,6 +123,11 @@ class StatsListFragment : DaggerFragment() {
         initializeViewModels(nonNullActivity)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
     private fun initializeViewModels(activity: FragmentActivity) {
         val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
                 ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection

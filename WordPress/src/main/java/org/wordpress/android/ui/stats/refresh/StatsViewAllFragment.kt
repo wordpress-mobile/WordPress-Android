@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
@@ -54,6 +55,7 @@ class StatsViewAllFragment : DaggerFragment() {
         const val SELECTED_TAB_KEY = "selected_tab_key"
         const val ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE"
         const val ARGS_TIMEFRAME = "ARGS_TIMEFRAME"
+        const val ARGS_SELECTED_DATE = "ARGS_SELECTED_DATE"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,7 +83,7 @@ class StatsViewAllFragment : DaggerFragment() {
             }
             outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
         }
-
+        outState.putParcelable(ARGS_SELECTED_DATE, viewModel.getSelectedDate())
         super.onSaveInstanceState(outState)
     }
 
@@ -123,30 +125,34 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+        val nonNullIntent = checkNotNull(activity.intent)
         val type = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
         } else {
             savedInstanceState.getSerializable(ARGS_VIEW_TYPE) as StatsViewType
         }
 
         val granularity = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(ARGS_TIMEFRAME) as StatsGranularity?
         } else {
             savedInstanceState.getSerializable(ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        val nonNullIntent = checkNotNull(activity.intent)
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
                 ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
+
+        val selectedDate = if (savedInstanceState == null) {
+            nonNullIntent.getSerializableExtra(ARGS_SELECTED_DATE) as SelectedDate?
+        } else {
+            savedInstanceState.getSerializable(ARGS_SELECTED_DATE) as SelectedDate?
+        }
         setupObservers(activity)
 
-        viewModel.start()
+        viewModel.start(selectedDate)
     }
 
     private fun setupObservers(activity: FragmentActivity) {

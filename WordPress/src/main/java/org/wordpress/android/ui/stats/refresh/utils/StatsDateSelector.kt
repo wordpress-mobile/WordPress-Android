@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.perform
 import javax.inject.Inject
 
@@ -30,6 +31,10 @@ constructor(
                     updateDateSelector()
                 }
             }
+
+    fun start(startDate: SelectedDate) {
+        selectedDateProvider.updateSelectedDate(startDate, statsSection)
+    }
 
     fun updateDateSelector() {
         val shouldShowDateSelection = this.statsSection != INSIGHTS
@@ -89,6 +94,10 @@ constructor(
 
     fun clear() {
         selectedDateProvider.clear(statsSection)
+    }
+
+    fun getSelectedDate(): SelectedDate {
+        return selectedDateProvider.getSelectedDateState(statsSection)
     }
 
     class Factory
