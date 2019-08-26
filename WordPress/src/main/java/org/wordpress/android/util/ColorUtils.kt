@@ -10,7 +10,6 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 
@@ -29,7 +28,7 @@ object ColorUtils {
     }
 }
 
-@IdRes
+@ColorRes
 fun Context.getThemeColorResId(@AttrRes attribute: Int) =
         TypedValue().let {
             theme.resolveAttribute(attribute, it, true)

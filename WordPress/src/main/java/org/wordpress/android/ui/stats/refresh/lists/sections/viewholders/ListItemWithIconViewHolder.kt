@@ -30,7 +30,7 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         text.setTextOrHide(item.textResource, item.text)
         val textColor = when (item.textStyle) {
             TextStyle.NORMAL -> text.context.getThemeColorResId(R.attr.colorText)
-            LIGHT -> R.color.neutral_50
+            LIGHT -> text.context.getThemeColorResId(R.attr.colorTextSubtle)
         }
         text.setTextColor(ContextCompat.getColor(text.context, textColor))
         value.setTextOrHide(item.valueResource, item.value)
