@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_large"
                         android:text="@string/connections_description"
-                        android:textColor="@color/neutral"
+                        android:textColor="?attr/colorTextSubtle"
                         android:textSize="@dimen/text_sz_medium"/>
 
                     <org.wordpress.android.ui.reader.views.ReaderRecyclerView
@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/margin_extra_large"
-                        android:textColor="@color/neutral_50"
+                        android:textColor="?attr/colorTextSubtle"
                         android:textSize="@dimen/text_sz_extra_large"
                         android:visibility="gone"
                         tools:text="@string/empty_list_default"

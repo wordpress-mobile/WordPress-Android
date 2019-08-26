@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/colorTextSubtle"
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="italic"
                 android:text="@string/invite_message_usernames_limit"/>
@@ -130,7 +130,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/colorTextSubtle"
                 android:drawableTint="@color/primary_50"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role"
@@ -185,7 +185,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/invite_message_info"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/colorTextSubtle"
             android:textSize="@dimen/text_sz_small"
             android:textStyle="italic" />
     </LinearLayout>

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_medium"
-        android:textColor="@color/neutral"
+        android:textColor="?attr/colorTextSubtle"
         android:textSize="@dimen/text_sz_small"/>
 
     <EditText

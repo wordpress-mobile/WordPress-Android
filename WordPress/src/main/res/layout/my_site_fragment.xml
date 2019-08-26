@@ -104,9 +104,9 @@
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:textColor="@color/neutral"
+                        android:textColor="?attr/colorTextSubtle"
                         android:textSize="@dimen/text_sz_medium"
-                        tools:text="example.wordpress.com"/>
+                        tools:text="example.wordpress.com" />
                 </LinearLayout>
 
                 <org.wordpress.android.widgets.WPTextView

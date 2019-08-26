@@ -78,7 +78,7 @@
                 android:layout_marginBottom="@dimen/margin_large"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/colorTextSubtle"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="text_post_date" />
 

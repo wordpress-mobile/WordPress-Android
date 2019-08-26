@@ -5,6 +5,8 @@
 
     <!-- Semantic colors -->
     <attr name="colorText" format="reference" />
+    <attr name="colorTextSubtle" format="reference" />
+    <attr name="colorError" format="reference" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">

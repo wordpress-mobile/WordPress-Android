@@ -10,6 +10,8 @@
         <item name="colorControlHighlight">@color/neutral_10</item>
 
         <item name="colorText">@color/neutral_70</item>
+        <item name="colorTextSubtle">@color/neutral</item>
+        <item name="colorError">@color/error</item>
 
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
@@ -186,7 +188,7 @@
     <style name="MediaSettings.Value">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -259,7 +261,7 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
@@ -366,7 +368,7 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/neutral_50</item>
+         <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -457,7 +459,7 @@
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -506,7 +508,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/neutral_50</item>
+         <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -557,7 +559,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textColor">@color/neutral_50</item>
+         <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -626,7 +628,7 @@
     <style name="PostSettingsSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_50_neutral_20_selector</item>
+        <item name="android:textColor">@color/neutral_50</item>
         <item name="android:textColorHint">@color/neutral</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
@@ -651,7 +653,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">@color/neutral_50</item>
+         <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -764,7 +766,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
@@ -802,7 +804,7 @@
         <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
         <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 

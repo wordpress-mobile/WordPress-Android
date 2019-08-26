@@ -75,7 +75,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/neutral_50"
+            android:textColor="?attr/colorTextSubtle"
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

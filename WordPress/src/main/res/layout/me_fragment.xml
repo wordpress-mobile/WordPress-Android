@@ -108,7 +108,7 @@
                         android:layout_centerHorizontal="true"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/neutral_50"
+                        android:textColor="?attr/colorTextSubtle"
                         android:textSize="@dimen/text_sz_medium"
                         tools:text="username"/>
                 </RelativeLayout>

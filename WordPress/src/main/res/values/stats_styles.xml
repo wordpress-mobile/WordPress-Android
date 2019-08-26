@@ -71,7 +71,7 @@
     </style>
 
     <style name="StatsDateTimeZone" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -86,17 +86,17 @@
     </style>
 
     <style name="StatsBlockValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
@@ -153,7 +153,7 @@
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/colorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:drawableStart">@drawable/bg_rectangle_primary_60_16dp</item>
     </style>

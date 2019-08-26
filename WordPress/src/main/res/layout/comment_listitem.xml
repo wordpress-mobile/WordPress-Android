@@ -94,7 +94,7 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/colorTextSubtle"
             android:importantForAccessibility="no"
             android:textSize="@dimen/text_sz_medium"
             tools:text="comment"
