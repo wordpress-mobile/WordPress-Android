@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -79,13 +80,13 @@ class ActivityLogDetailFragment : Fragment() {
                     }, false)
                 }
 
-                val noteBlockSpans = spannable?.getSpans(0, spannable.length, NoteBlockClickableSpan::class.java);
+                val noteBlockSpans = spannable?.getSpans(0, spannable.length, NoteBlockClickableSpan::class.java)
 
                 noteBlockSpans?.forEach {
                     it.setColors(
                             activity.getColorFromAttribute(R.attr.wpColorText),
-                            activity.resources.getColor(R.color.primary_5, activity.theme),
-                            activity.resources.getColor(R.color.primary_40, activity.theme),
+                            ContextCompat.getColor(activity, R.color.primary_5),
+                            ContextCompat.getColor(activity, R.color.primary_40),
                             activity.getColorFromAttribute(R.attr.wpColorText)
                     )
                 }

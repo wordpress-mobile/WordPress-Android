@@ -11,6 +11,7 @@ import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.text.BidiFormatter;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -256,8 +257,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             span.setColors(
                     ContextExtensionsKt
                             .getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText),
-                    noteViewHolder.mContentView.getContext().getResources().getColor(R.color.primary_5),
-                    noteViewHolder.mContentView.getContext().getResources().getColor(R.color.primary_40),
+                    ContextCompat.getColor(noteViewHolder.mContentView.getContext(), R.color.primary_5),
+                    ContextCompat.getColor(noteViewHolder.mContentView.getContext(), R.color.primary_40),
                     ContextExtensionsKt
                             .getColorFromAttribute(noteViewHolder.mContentView.getContext(), R.attr.wpColorText));
         }
