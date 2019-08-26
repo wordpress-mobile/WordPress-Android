@@ -263,8 +263,11 @@ class DomainPhoneNumberUtils {
             return null
         }
 
-        fun getPhoneNumberPrefixFromFullPhoneNumber(phoneNumber: String): String? {
-            val phoneParts = phoneNumber.split(PHONE_NUMBER_CONNECTING_CHARACTER)
+        fun getPhoneNumberPrefixFromFullPhoneNumber(phoneNumber: String?): String? {
+            if(TextUtils.isEmpty(phoneNumber)){
+                return null
+            }
+            val phoneParts = phoneNumber!!.split(PHONE_NUMBER_CONNECTING_CHARACTER)
             if (phoneParts.size == 2) {
                 var countryCode = phoneParts[0]
                 if (countryCode.startsWith(PHONE_NUMBER_PREFIX)) {
@@ -276,8 +279,11 @@ class DomainPhoneNumberUtils {
             return null
         }
 
-        fun getPhoneNumberWithoutPrefix(phoneNumber: String): String? {
-            val phoneParts = phoneNumber.split(PHONE_NUMBER_CONNECTING_CHARACTER)
+        fun getPhoneNumberWithoutPrefix(phoneNumber: String?): String? {
+            if(TextUtils.isEmpty(phoneNumber)){
+                return null
+            }
+            val phoneParts = phoneNumber!!.split(PHONE_NUMBER_CONNECTING_CHARACTER)
             if (phoneParts.size == 2) {
                 val phoneNumberWithoutPrefix = phoneParts[1]
                 if (!TextUtils.isEmpty(phoneNumberWithoutPrefix)) {
