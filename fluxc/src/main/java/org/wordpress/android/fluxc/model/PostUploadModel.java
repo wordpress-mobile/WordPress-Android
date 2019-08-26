@@ -49,6 +49,7 @@ public class PostUploadModel extends Payload<BaseNetworkError> implements Identi
     @Column private String mErrorType;
     @Column private String mErrorMessage;
     @Column private int mNumberOfUploadErrorsOrCancellations;
+    @Column private int mNumberOfAutoUploadAttempts;
 
     public PostUploadModel() {}
 
@@ -169,5 +170,17 @@ public class PostUploadModel extends Payload<BaseNetworkError> implements Identi
 
     public void setNumberOfUploadErrorsOrCancellations(int numberOfUploadErrorsOrCancellations) {
         mNumberOfUploadErrorsOrCancellations = numberOfUploadErrorsOrCancellations;
+    }
+
+    public int getNumberOfAutoUploadAttempts() {
+        return mNumberOfAutoUploadAttempts;
+    }
+
+    public void setNumberOfAutoUploadAttempts(int numberOfAutoUploadAttempts) {
+        mNumberOfAutoUploadAttempts = numberOfAutoUploadAttempts;
+    }
+
+    public void incNumberOfAutoUploadAttempts() {
+        mNumberOfAutoUploadAttempts += 1;
     }
 }
