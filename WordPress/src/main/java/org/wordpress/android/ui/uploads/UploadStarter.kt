@@ -15,6 +15,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -50,6 +52,7 @@ class UploadStarter @Inject constructor(
      * The Application context
      */
     private val context: Context,
+    private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val pageStore: PageStore,
     private val siteStore: SiteStore,
@@ -150,7 +153,6 @@ class UploadStarter @Inject constructor(
 
             val postsAndPages = posts.await() + pages.await()
 
-            // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
             postsAndPages
                     .asSequence()
                     .filter {
@@ -165,6 +167,7 @@ class UploadStarter @Inject constructor(
                     .toList()
                     .forEach { post ->
                         AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
+                        dispatcher.dispatch(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(post))
                         uploadServiceFacade.uploadPost(
                                 context = context,
                                 post = post,

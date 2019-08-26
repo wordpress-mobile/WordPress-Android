@@ -488,9 +488,9 @@ class UploadActionUseCaseTest {
             uploadServiceFacade: UploadServiceFacade = createdMockedUploadServiceFacade()
         ) = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade)
 
-        private fun createdMockedUploadStore(numberOfPostUploadErrors: Int = 0): UploadStore {
+        private fun createdMockedUploadStore(numberOfAutoUploadAttempts: Int = 0): UploadStore {
             val uploadStore: UploadStore = mock()
-            whenever(uploadStore.getNumberOfPostUploadErrorsOrCancellations(any())).thenReturn(numberOfPostUploadErrors)
+            whenever(uploadStore.getNumberOfPostAutoUploadAttempts(any())).thenReturn(numberOfAutoUploadAttempts)
             return uploadStore
         }
 

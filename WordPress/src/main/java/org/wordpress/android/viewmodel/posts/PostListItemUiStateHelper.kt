@@ -263,6 +263,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
                         DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post_retrying)
                     }
+                } else if (!uploadUiState.changesExplicitlyConfirmed) {
+                    UiStringRes(R.string.error_media_recover_post)
                 } else {
                     when (postStatus) {
                         PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
@@ -419,7 +421,12 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private sealed class PostUploadUiState {
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
-        data class UploadFailed(val error: UploadError, val autoRetry: Boolean) : PostUploadUiState()
+        data class UploadFailed(
+            val error: UploadError,
+            val autoRetry: Boolean,
+            val changesExplicitlyConfirmed: Boolean
+        ) : PostUploadUiState()
+
         data class UploadWaitingForConnection(val postStatus: PostStatus) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
@@ -436,7 +443,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
             uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(
                     uploadStatus.uploadError,
-                    uploadStatus.isEligibleForAutoUpload
+                    uploadStatus.isEligibleForAutoUpload,
+                    uploadStatus.changesExplicitlyConfirmed
             )
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||

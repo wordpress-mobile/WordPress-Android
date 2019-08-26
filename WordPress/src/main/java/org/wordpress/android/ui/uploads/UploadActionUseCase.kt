@@ -44,7 +44,7 @@ class UploadActionUseCase @Inject constructor(
         }
 
         // Do not auto-upload post which we already tried to upload certain number of times
-        if (uploadStore.getNumberOfPostUploadErrorsOrCancellations(post) >= MAXIMUM_AUTO_UPLOAD_RETRIES) {
+        if (uploadStore.getNumberOfPostAutoUploadAttempts(post) >= MAXIMUM_AUTO_UPLOAD_RETRIES) {
             return DO_NOTHING
         }
 
