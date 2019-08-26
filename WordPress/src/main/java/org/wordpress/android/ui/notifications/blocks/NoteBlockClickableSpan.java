@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications.blocks;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextPaint;
@@ -8,9 +7,9 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
-import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
 
@@ -38,17 +37,18 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int mLightTextColor;
 
 
-    public NoteBlockClickableSpan(Context context, FormattableRange range, boolean shouldLink, boolean isFooter) {
+    public NoteBlockClickableSpan(FormattableRange range, boolean shouldLink, boolean isFooter) {
         mShouldLink = shouldLink;
         mIsFooter = isFooter;
-
-        // Text/background colors
-        mTextColor = context.getResources().getColor(R.color.neutral_70);
-        mBackgroundColor = context.getResources().getColor(R.color.primary_5);
-        mLinkColor = context.getResources().getColor(R.color.primary_40);
-        mLightTextColor = context.getResources().getColor(R.color.neutral_70);
-
         processRangeData(range);
+    }
+
+    public void setColors(@ColorInt int textColor, @ColorInt int backgroundColor, @ColorInt int linkColor,
+                          @ColorInt int lightTextColor) {
+        mTextColor = textColor;
+        mBackgroundColor = backgroundColor;
+        mLinkColor = linkColor;
+        mLightTextColor = lightTextColor;
     }
 
 
