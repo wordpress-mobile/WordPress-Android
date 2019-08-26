@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="?attr/wpColorText"
+            android:textColor="@color/neutral_70_neutral_20_selector"
             android:textSize="@dimen/text_sz_large"
             android:text="@string/site_settings_rp_show_header_title"
             android:textAlignment="viewStart"
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="?attr/wpColorText"
+            android:textColor="@color/neutral_70_neutral_20_selector"
             android:textSize="@dimen/text_sz_large"
             android:text="@string/site_settings_rp_show_images_title"
             android:textAlignment="viewStart"
@@ -86,7 +86,7 @@
             android:text="@string/site_settings_rp_preview_header"
             android:textStyle="bold"
             android:textSize="@dimen/text_sz_medium"
-            android:textColor="?attr/wpColorText"
+            android:textColor="@color/black_translucent_50_neutral_70_selector"
             android:fontFamily="sans-serif-light" />
 
         <LinearLayout
