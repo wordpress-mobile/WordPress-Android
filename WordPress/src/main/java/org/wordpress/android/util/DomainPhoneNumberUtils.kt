@@ -264,7 +264,7 @@ class DomainPhoneNumberUtils {
         }
 
         fun getPhoneNumberPrefixFromFullPhoneNumber(phoneNumber: String?): String? {
-            if(TextUtils.isEmpty(phoneNumber)){
+            if (TextUtils.isEmpty(phoneNumber)) {
                 return null
             }
             val phoneParts = phoneNumber!!.split(PHONE_NUMBER_CONNECTING_CHARACTER)
@@ -280,7 +280,7 @@ class DomainPhoneNumberUtils {
         }
 
         fun getPhoneNumberWithoutPrefix(phoneNumber: String?): String? {
-            if(TextUtils.isEmpty(phoneNumber)){
+            if (TextUtils.isEmpty(phoneNumber)) {
                 return null
             }
             val phoneParts = phoneNumber!!.split(PHONE_NUMBER_CONNECTING_CHARACTER)
