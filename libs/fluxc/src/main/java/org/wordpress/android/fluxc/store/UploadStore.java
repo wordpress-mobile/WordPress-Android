@@ -222,6 +222,14 @@ public class UploadStore extends Store {
         return postUploadModel.getNumberOfUploadErrorsOrCancellations();
     }
 
+    public int getNumberOfPostAutoUploadAttempts(PostModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        if (postUploadModel == null) {
+            return 0;
+        }
+        return postUploadModel.getNumberOfAutoUploadAttempts();
+    }
+
     /**
      * If the {@code postModel} has been registered as uploading with the UploadStore, this will return the associated
      * {@link PostError}, if any.
