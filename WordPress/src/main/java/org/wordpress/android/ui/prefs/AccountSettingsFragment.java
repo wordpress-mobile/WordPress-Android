@@ -374,7 +374,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                         String.format(getString(R.string.settings_username_changer_toast_content), username),
                         ToastUtils.Duration.LONG);
 
-                refreshAccountDetails();
+                mUsernamePreference.setSummary(username);
             }
         }
     }

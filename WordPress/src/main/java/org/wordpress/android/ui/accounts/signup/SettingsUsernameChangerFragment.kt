@@ -144,6 +144,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             endProgress()
             showErrorDialog(SpannableStringBuilder(getString(string.signup_epilogue_error_generic)))
         } else if (event.username != null) {
+            endProgress()
             val result = Bundle().apply { putString(RESULT_USERNAME, event.username) }
             dialogController.confirm(result)
             AnalyticsTracker.track(Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED)
