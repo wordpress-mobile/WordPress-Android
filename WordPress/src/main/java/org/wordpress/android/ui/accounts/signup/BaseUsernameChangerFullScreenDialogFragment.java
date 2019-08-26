@@ -108,7 +108,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
      */
     abstract Spanned getHeaderText(String username, String display);
 
-    protected static Bundle newBundle(String displayName, String username) {
+    public static Bundle newBundle(String displayName, String username) {
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_DISPLAY_NAME, displayName);
         bundle.putString(EXTRA_USERNAME, username);

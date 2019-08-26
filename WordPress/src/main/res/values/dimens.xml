@@ -431,4 +431,7 @@
     <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
     <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
 
+    <!--settings username changer-->
+    <dimen name="settings_username_changer_confirm_dialog_adding">20dp</dimen>
+
 </resources>

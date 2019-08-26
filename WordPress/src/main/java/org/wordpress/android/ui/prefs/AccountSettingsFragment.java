@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -30,6 +33,10 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.FullScreenDialogFragment;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment;
+import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -43,7 +50,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 @SuppressWarnings("deprecation")
-public class AccountSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+public class AccountSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
+        OnConfirmListener {
     private Preference mUsernamePreference;
     private EditTextPreferenceWithValidation mEmailPreference;
     private DetailListPreference mPrimarySitePreference;
@@ -190,6 +198,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference.setSummary(account.getWebAddress());
         changePrimaryBlogPreference(account.getPrimarySiteId());
         checkIfEmailChangeIsPending();
+        checkIfUsernameCanBeChanged();
     }
 
     private void checkIfEmailChangeIsPending() {
@@ -323,6 +332,48 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                         break;
                 }
             } else {
+                refreshAccountDetails();
+            }
+        }
+    }
+
+    /**
+     * If the username can be changed then the control can be clicked to open to the
+     * Username Changer screen.
+     */
+    private void checkIfUsernameCanBeChanged() {
+        AccountModel account = mAccountStore.getAccount();
+        mUsernamePreference.setEnabled(account.getUsernameCanBeChanged());
+        mUsernamePreference.setOnPreferenceClickListener(preference -> {
+            showUsernameChangerFragment(account);
+            return false;
+        });
+    }
+
+    private void showUsernameChangerFragment(AccountModel account) {
+        final Bundle bundle =
+                SettingsUsernameChangerFragment.newBundle(account.getDisplayName(), account.getUserName());
+
+        new FullScreenDialogFragment.Builder(getActivity())
+                .setTitle(R.string.username_changer_title)
+                .setAction(R.string.username_changer_action)
+                .setOnConfirmListener(this)
+                .setHideActivityBar(true)
+                .setOnDismissListener(null)
+                .setContent(SettingsUsernameChangerFragment.class, bundle)
+                .build()
+                .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), FullScreenDialogFragment.TAG);
+    }
+
+    @Override public void onConfirm(@Nullable Bundle result) {
+        if (result != null) {
+            String username = result.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME);
+
+            if (username != null) {
+                ToastUtils.showToast(getActivity(),
+                        String.format(getString(R.string.settings_username_changer_toast_content), username),
+                        ToastUtils.Duration.LONG);
+
                 refreshAccountDetails();
             }
         }

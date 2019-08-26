@@ -2303,6 +2303,14 @@
     <string name="username_changer_hint">Type to get more suggestions</string>
     <string name="username_changer_title">Change username</string>
 
+    <string name="settings_username_changer_header">You are about to change your username, which is currently %1$s%2$s%3$s.You will not be able to change your username back.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Careful!</string>
+    <string name="settings_username_changer_confirm_dialog_content">You are changing your username to %1$s%2$s%3$s. Changing your username will also affect your Gravatar profile and Intense Debate profile addresses. Confirm your new username to continue.</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Change Username</string>
+    <string name="settings_username_changer_progress_dialog">Saving username…</string>
+    <string name="settings_username_changer_toast_content">Your new username is %1$s</string>
+    <string name="settings_username_changer_toast_content_new_username">Select a new username.</string>
+
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
