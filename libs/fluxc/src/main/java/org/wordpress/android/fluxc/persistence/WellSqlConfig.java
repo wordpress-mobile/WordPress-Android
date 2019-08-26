@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 84;
+        return 85;
     }
 
     @Override
@@ -603,6 +603,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_CONTENT TEXT");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_EXCERPT TEXT");
                 oldVersion++;
+            case 84:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_AUTO_UPLOAD_ATTEMPTS INTEGER");
+                oldVersion++;
+
         }
         db.setTransactionSuccessful();
         db.endTransaction();
