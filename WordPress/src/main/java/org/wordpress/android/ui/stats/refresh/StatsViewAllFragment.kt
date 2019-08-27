@@ -146,9 +146,9 @@ class StatsViewAllFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
 
         val selectedDate = if (savedInstanceState == null) {
-            nonNullIntent.getSerializableExtra(ARGS_SELECTED_DATE) as SelectedDate?
+            nonNullIntent.getParcelableExtra(ARGS_SELECTED_DATE) as SelectedDate?
         } else {
-            savedInstanceState.getSerializable(ARGS_SELECTED_DATE) as SelectedDate?
+            savedInstanceState.getParcelable(ARGS_SELECTED_DATE) as SelectedDate?
         }
         setupObservers(activity)
 
@@ -215,7 +215,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.selectedDate.observe(this, Observer { event ->
-            if (event?.getContentIfNotHandled() != null) {
+            if (event != null) {
                 viewModel.onDateChanged()
             }
         })

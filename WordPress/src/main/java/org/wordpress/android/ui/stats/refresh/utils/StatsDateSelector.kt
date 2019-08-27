@@ -27,9 +27,7 @@ constructor(
 
     val selectedDate = selectedDateProvider.granularSelectedDateChanged(this.statsSection)
             .perform {
-                if (!it.hasBeenHandled) {
-                    updateDateSelector()
-                }
+                updateDateSelector()
             }
 
     fun start(startDate: SelectedDate) {

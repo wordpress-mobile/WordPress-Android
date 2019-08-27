@@ -93,8 +93,13 @@ class StatsViewModel
         selectedDateProvider.onSaveInstanceState(outState)
     }
 
-    fun onRestoreInstanceState(savedState: Bundle) {
-        selectedDateProvider.onRestoreInstanceState(savedState)
+    fun onRestoreInstanceState(savedState: Bundle?) {
+        if (savedState != null) {
+            selectedDateProvider.onRestoreInstanceState(savedState)
+        } else {
+            selectedDateProvider.clear()
+            statsSiteProvider.reset()
+        }
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
@@ -194,8 +199,6 @@ class StatsViewModel
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null
-        selectedDateProvider.clear()
-        statsSiteProvider.reset()
     }
 
     data class DateSelectorUiModel(

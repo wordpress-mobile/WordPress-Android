@@ -83,9 +83,7 @@ class StatsFragment : DaggerFragment() {
     ) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewModel::class.java)
 
-        savedInstanceState?.let {
-            viewModel.onRestoreInstanceState(it)
-        }
+        viewModel.onRestoreInstanceState(savedInstanceState)
 
         setupObservers(activity)
 

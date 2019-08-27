@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PREVIOUS_DATE_TAPPED
@@ -19,7 +21,6 @@ import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackWithSection
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.filter
-import org.wordpress.android.viewmodel.Event
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,20 +40,17 @@ class SelectedDateProvider
             YEARS to SelectedDate(loading = true)
     )
 
-    private val selectedDateChanged = MutableLiveData<Event<SectionChange>>()
+    private val selectedDateChanged = MutableLiveData<SectionChange>()
 
-    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<Event<SectionChange>> {
-        log(statsGranularity, "granularSelectedDateChanged")
-        return selectedDateChanged.filter { it.peekContent().selectedSection == statsGranularity.toStatsSection() }
+    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<SectionChange> {
+        return selectedDateChanged.filter { it.selectedSection == statsGranularity.toStatsSection() }
     }
 
-    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<Event<SectionChange>> {
-        log(statsSection, "granularSelectedDateChanged")
-        return selectedDateChanged.filter { it.peekContent().selectedSection == statsSection }
+    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<SectionChange> {
+        return selectedDateChanged.filter { it.selectedSection == statsSection }
     }
 
     fun selectDate(date: Date, statsSection: StatsSection) {
-        log(statsSection, "selectDate: $date")
         val selectedDate = getSelectedDateState(statsSection)
         updateSelectedDate(selectedDate.copy(dateValue = date), statsSection)
     }
@@ -62,7 +60,6 @@ class SelectedDateProvider
     }
 
     fun selectDate(updatedDate: Date, availableDates: List<Date>, statsSection: StatsSection) {
-        log(statsSection, "selectDate: $updatedDate")
         val selectedDate = getSelectedDateState(statsSection)
         if (selectedDate.dateValue != updatedDate || selectedDate.availableDates != availableDates) {
             updateSelectedDate(
@@ -80,15 +77,13 @@ class SelectedDateProvider
         val currentDate = mutableDates[statsSection]
         mutableDates[statsSection] = selectedDate
         if (selectedDate != currentDate) {
-            log(statsSection, "update selected date: $selectedDate")
-            selectedDateChanged.postValue(Event(SectionChange(statsSection)))
+            selectedDateChanged.postValue(SectionChange(statsSection))
         }
     }
 
     fun setInitialSelectedPeriod(statsGranularity: StatsGranularity, period: String) {
         val updatedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
         val selectedDate = getSelectedDateState(statsGranularity)
-        log(statsGranularity, "setInitialSelectedPeriod: $period")
         updateSelectedDate(selectedDate.copy(dateValue = updatedDate), statsGranularity.toStatsSection())
     }
 
@@ -123,7 +118,6 @@ class SelectedDateProvider
         val selectedDateState = getSelectedDateState(statsSection)
         if (selectedDateState.hasData()) {
             analyticsTrackerWrapper.trackWithSection(STATS_PREVIOUS_DATE_TAPPED, statsSection)
-            log(statsSection, "selectPreviousDate: ${selectedDateState.getPreviousDate()}")
             updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getPreviousDate()), statsSection)
         }
     }
@@ -132,7 +126,6 @@ class SelectedDateProvider
         val selectedDateState = getSelectedDateState(statsSection)
         if (selectedDateState.hasData()) {
             analyticsTrackerWrapper.trackWithSection(STATS_NEXT_DATE_TAPPED, statsSection)
-            log(statsSection, "selectNextDate: ${selectedDateState.getNextDate()}")
             updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsSection)
         }
     }
@@ -165,32 +158,16 @@ class SelectedDateProvider
     fun clear() {
         mutableDates.clear()
         selectedDateChanged.value = null
-        Log.d("vojta", "clear")
     }
 
     fun clear(statsSection: StatsSection) {
         mutableDates[statsSection] = SelectedDate(loading = true)
         selectedDateChanged.value = null
-        log(statsSection, "clear for section")
-    }
-
-    private fun log(statsSection: StatsSection, message: String) {
-        Log.d("vojta", "$statsSection, m: $message")
-    }
-
-    private fun log(statsGranularity: StatsGranularity, message: String) {
-        Log.d("vojta", "$statsGranularity, m: $message")
     }
 
     fun onSaveInstanceState(outState: Bundle) {
         mutableDates.entries.forEach { (key, value) ->
             outState.putParcelable(buildStateKey(key), value)
-        }
-    }
-
-    fun onSaveInstanceState(statsSection: StatsSection, outState: Bundle) {
-        mutableDates[statsSection]?.let { value ->
-            outState.putParcelable(buildStateKey(statsSection), value)
         }
     }
 
@@ -200,13 +177,6 @@ class SelectedDateProvider
             if (selectedDate != null) {
                 mutableDates[period] = selectedDate
             }
-        }
-    }
-
-    fun onRestoreInstanceState(statsSection: StatsSection, savedState: Bundle) {
-        val selectedDate: SelectedDate? = savedState.getParcelable(buildStateKey(statsSection)) as SelectedDate?
-        if (selectedDate != null) {
-            mutableDates[statsSection] = selectedDate
         }
     }
 
@@ -240,6 +210,31 @@ class SelectedDateProvider
                 availableDates[dateIndex + 1]
             } else {
                 null
+            }
+        }
+
+        companion object : Parceler<SelectedDate> {
+            @SuppressLint("ParcelClassLoader")
+            override fun create(parcel: Parcel): SelectedDate {
+                val dateTimeStamp = parcel.readLong()
+                val date = if (dateTimeStamp > -1) {
+                    Date(dateTimeStamp)
+                } else {
+                    null
+                }
+                val availableTimeStamps = mutableListOf<Long>()
+                parcel.readList(availableTimeStamps, null)
+                val availableDates = availableTimeStamps.map { Date(it) }
+                val loading = parcel.readValue(null) as Boolean
+                val error = parcel.readValue(null) as Boolean
+                return SelectedDate(date, availableDates, loading, error)
+            }
+
+            override fun SelectedDate.write(parcel: Parcel, flags: Int) {
+                parcel.writeLong(dateValue?.time ?: -1)
+                parcel.writeList(availableDates.map { it.time })
+                parcel.writeValue(loading)
+                parcel.writeValue(error)
             }
         }
     }
