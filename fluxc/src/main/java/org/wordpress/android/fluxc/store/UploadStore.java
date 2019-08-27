@@ -214,14 +214,6 @@ public class UploadStore extends Store {
         return postUploadModel != null;
     }
 
-    public int getNumberOfPostUploadErrorsOrCancellations(PostModel post) {
-        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
-        if (postUploadModel == null) {
-            return 0;
-        }
-        return postUploadModel.getNumberOfUploadErrorsOrCancellations();
-    }
-
     public int getNumberOfPostAutoUploadAttempts(PostModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         if (postUploadModel == null) {
@@ -401,7 +393,6 @@ public class UploadStore extends Store {
             }
             if (postUploadModel.getUploadState() != PostUploadModel.FAILED) {
                 postUploadModel.setUploadState(PostUploadModel.FAILED);
-                postUploadModel.incNumberOfUploadErrorsOrCancellations();
             }
             postUploadModel.setPostError(error);
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
@@ -476,7 +467,6 @@ public class UploadStore extends Store {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
         if (postUploadModel != null && postUploadModel.getUploadState() != PostUploadModel.CANCELLED) {
             postUploadModel.setUploadState(PostUploadModel.CANCELLED);
-            postUploadModel.incNumberOfUploadErrorsOrCancellations();
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }
