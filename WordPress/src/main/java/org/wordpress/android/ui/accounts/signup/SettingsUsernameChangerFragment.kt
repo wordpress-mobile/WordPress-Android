@@ -17,9 +17,9 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.R.style
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_FAILED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_SUCCEEDED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged
@@ -38,7 +38,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     private lateinit var dialogController: FullScreenDialogController
     private var progressDialog: ProgressDialog? = null
 
-    override fun getSuggestionsFailedStat() = SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED
+    override fun getSuggestionsFailedStat() = ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED
     override fun canHeaderTextLiveUpdate() = false
     override fun getHeaderText(username: String?, display: String?): Spanned = HtmlCompat.fromHtml(
             String.format(
@@ -140,7 +140,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onUsernameChanged(event: OnUsernameChanged) {
         if (event.isError) {
-            AnalyticsTracker.track(SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_FAILED)
+            AnalyticsTracker.track(ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED)
             AppLog.e(
                     T.API, "SettingsUsernameChangerFragment.onUsernameChanged: " +
                     event.error.type + " - " + event.error.message
@@ -148,10 +148,10 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             endProgress()
             showErrorDialog(SpannableStringBuilder(getString(R.string.signup_epilogue_error_generic)))
         } else if (event.username != null) {
+            AnalyticsTracker.track(ACCOUNT_SETTINGS_CHANGE_USERNAME_SUCCEEDED)
             endProgress()
             val result = Bundle().apply { putString(RESULT_USERNAME, event.username) }
             dialogController.confirm(result)
-            AnalyticsTracker.track(Stat.SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED)
         }
     }
 
