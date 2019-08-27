@@ -1,0 +1,3 @@
+13.1:
+* Site ve Sayfa önizlemesinde, artık sitenin masaüstü ve mobil sürümü arasında geçiş yapabilirsiniz.
+* Sosyal medya hizmetlerine bağlanamayan bazı kullanıcıları etkileyen bir hata düzeltildi.
