@@ -25,9 +25,11 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType.
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
+import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.widgets.WPDialogSnackbar
 
 /**
  * Allows the user to change their username from the Account Settings screen.
@@ -159,6 +161,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 isIndeterminate = true
                 setCancelable(true)
                 setMessage(getString(R.string.settings_username_changer_progress_dialog))
+                setOnCancelListener { showActionCancelMessage() }
             }
         }
         try {
@@ -166,7 +169,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 progressDialog?.show()
             }
         } catch (e: WindowManager.BadTokenException) {
-            AppLog.e(T.NUX, e)
+            AppLog.e(T.SETTINGS, e)
         }
     }
 
@@ -175,5 +178,16 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             progressDialog?.dismiss()
         }
         progressDialog = null
+    }
+
+    private fun showActionCancelMessage() {
+        val duration = AccessibilityUtils.getSnackbarDuration(
+                requireContext(),
+                resources.getInteger(R.integer.site_creation_snackbar_duration)
+        )
+        val message = getString(R.string.settings_username_changer_snackbar_cancel)
+        view?.let {
+            WPDialogSnackbar.make(it, message, duration).show()
+        }
     }
 }
