@@ -115,6 +115,9 @@ public class UploadStore extends Store {
                 mDispatcher
                         .dispatch(PostActionBuilder.newRemoteAutoSavedPostAction((RemoteAutoSavePostPayload) payload));
                 break;
+            case INCREMENT_NUMBER_OF_AUTO_UPLOAD_ATTEMPTS:
+                handleIncrementNumberOfAutoUploadAttempts((PostModel) payload);
+                break;
             case CANCEL_POST:
                 handleCancelPost((PostModel) payload);
                 break;
@@ -211,12 +214,12 @@ public class UploadStore extends Store {
         return postUploadModel != null;
     }
 
-    public int getNumberOfPostUploadErrorsOrCancellations(PostModel post) {
+    public int getNumberOfPostAutoUploadAttempts(PostModel post) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         if (postUploadModel == null) {
             return 0;
         }
-        return postUploadModel.getNumberOfUploadErrorsOrCancellations();
+        return postUploadModel.getNumberOfAutoUploadAttempts();
     }
 
     /**
@@ -390,7 +393,6 @@ public class UploadStore extends Store {
             }
             if (postUploadModel.getUploadState() != PostUploadModel.FAILED) {
                 postUploadModel.setUploadState(PostUploadModel.FAILED);
-                postUploadModel.incNumberOfUploadErrorsOrCancellations();
             }
             postUploadModel.setPostError(error);
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
@@ -403,6 +405,14 @@ public class UploadStore extends Store {
 
             // Delete the PostUploadModel itself
             UploadSqlUtils.deletePostUploadModelWithLocalId(localPostId);
+        }
+    }
+
+    private void handleIncrementNumberOfAutoUploadAttempts(PostModel post) {
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
+        if (postUploadModel != null) {
+            postUploadModel.incNumberOfAutoUploadAttempts();
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }
 
@@ -457,7 +467,6 @@ public class UploadStore extends Store {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(localPostId);
         if (postUploadModel != null && postUploadModel.getUploadState() != PostUploadModel.CANCELLED) {
             postUploadModel.setUploadState(PostUploadModel.CANCELLED);
-            postUploadModel.incNumberOfUploadErrorsOrCancellations();
             UploadSqlUtils.insertOrUpdatePost(postUploadModel);
         }
     }
