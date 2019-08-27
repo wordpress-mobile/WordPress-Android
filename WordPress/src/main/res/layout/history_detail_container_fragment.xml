@@ -122,7 +122,7 @@
                 android:freezesText="true"
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/aztec_title_size"
                 android:textStyle="bold"/>
 

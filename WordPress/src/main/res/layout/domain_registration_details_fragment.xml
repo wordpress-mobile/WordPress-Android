@@ -57,7 +57,7 @@
                         android:paddingBottom="@dimen/margin_medium"
                         android:paddingTop="@dimen/margin_medium"
                         android:text="@string/domain_privacy_option_on_title"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         android:textSize="@dimen/text_sz_large"
                         tools:checked="true">
                     </RadioButton>
@@ -69,7 +69,7 @@
                         android:paddingBottom="@dimen/margin_extra_large"
                         android:paddingTop="@dimen/margin_medium"
                         android:text="@string/domain_privacy_option_off_title"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         android:textSize="@dimen/text_sz_large">
                     </RadioButton>
                 </RadioGroup>
