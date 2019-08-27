@@ -47,7 +47,6 @@ import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
-import org.wordpress.android.fluxc.store.PostStore.PostListItem.PostListAutoSave;
 import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
@@ -126,18 +125,13 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onResponse(PostsResponse response) {
                         List<PostListItem> postListItems = new ArrayList<>(response.getPosts().size());
                         for (PostWPComRestResponse postResponse : response.getPosts()) {
-                            PostListAutoSave postListAutoSave = new PostListAutoSave();
+                            String autoSaveModified = null;
                             if (postResponse.getPostAutoSave() != null) {
-                                postListAutoSave.revisionId = postResponse.getPostAutoSave().getRevisionId();
-                                postListAutoSave.title = postResponse.getPostAutoSave().getTitle();
-                                postListAutoSave.content = postResponse.getPostAutoSave().getContent();
-                                postListAutoSave.excerpt = postResponse.getPostAutoSave().getExcerpt();
-                                postListAutoSave.previewUrl = postResponse.getPostAutoSave().getPreviewUrl();
-                                postListAutoSave.modified = postResponse.getPostAutoSave().getModified();
+                                autoSaveModified = postResponse.getPostAutoSave().getModified();
                             }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
-                                            postResponse.getStatus(), postListAutoSave));
+                                            postResponse.getStatus(), autoSaveModified));
                         }
                         boolean canLoadMore = postListItems.size() == pageSize;
                         FetchPostListResponsePayload responsePayload =
