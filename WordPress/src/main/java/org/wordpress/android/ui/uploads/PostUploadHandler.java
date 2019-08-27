@@ -608,7 +608,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                               + event.error.message);
             Context context = WordPress.getContext();
             String errorMessage = mUiHelpers.getTextOfUiString(context,
-                    UploadUtils.getErrorMessageResIdFromPostError(event.post.isPage(), event.error));
+                    UploadUtils.getErrorMessageResIdFromPostError(event.post.isPage(), event.error, false));
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
                     mMediaStore.getMediaForPost(event.post));

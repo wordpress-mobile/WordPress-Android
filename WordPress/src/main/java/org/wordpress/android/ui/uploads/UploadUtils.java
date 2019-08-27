@@ -71,7 +71,7 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    UiString getErrorMessageResIdFromPostError(boolean isPage, PostError error) {
+    UiString getErrorMessageResIdFromPostError(boolean isPage, PostError error, boolean eligibleForAutoUpload) {
         switch (error.type) {
             case UNKNOWN_POST:
                 return isPage ? new UiStringRes(R.string.error_unknown_page)
@@ -86,7 +86,8 @@ public class UploadUtils {
             case GENERIC_ERROR:
             default:
                 AppLog.w(T.MAIN, "Error message: " + error.message + " ,Error Type: " + error.type);
-                return new UiStringRes(R.string.error_generic_error);
+                return eligibleForAutoUpload ? new UiStringRes(R.string.error_generic_error_retrying)
+                        : new UiStringRes(R.string.error_generic_error);
         }
     }
 

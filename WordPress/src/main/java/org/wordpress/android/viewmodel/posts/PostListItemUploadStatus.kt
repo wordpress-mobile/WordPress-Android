@@ -12,5 +12,5 @@ data class PostListItemUploadStatus(
     val hasInProgressMediaUpload: Boolean,
     val hasPendingMediaUpload: Boolean,
     val isEligibleForAutoUpload: Boolean,
-    val changesExplicitlyConfirmed: Boolean
+    val retryWillPushChanges: Boolean
 )

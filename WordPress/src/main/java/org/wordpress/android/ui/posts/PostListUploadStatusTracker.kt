@@ -36,7 +36,7 @@ class PostListUploadStatusTracker(
                 hasInProgressMediaUpload = hasInProgressMediaUpload,
                 hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post),
                 isEligibleForAutoUpload = isEligibleForAutoUpload(siteModel, post),
-                changesExplicitlyConfirmed = post.changesConfirmedContentHashcode == post.contentHashcode()
+                retryWillPushChanges = post.changesConfirmedContentHashcode == post.contentHashcode()
         )
         uploadStatusMap[post.id] = newStatus
         return newStatus
