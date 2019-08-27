@@ -2309,7 +2309,6 @@
     <string name="settings_username_changer_confirm_dialog_positive_action">Change Username</string>
     <string name="settings_username_changer_progress_dialog">Saving username…</string>
     <string name="settings_username_changer_toast_content">Your new username is %1$s</string>
-    <string name="settings_username_changer_toast_content_new_username">Select a new username.</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 

@@ -28,7 +28,6 @@ import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogControl
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.ToastUtils
 
 /**
  * Allows the user to change their username from the Account Settings screen.
@@ -51,19 +50,23 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     override fun onViewCreated(controller: FullScreenDialogController) {
         super.onViewCreated(controller)
         dialogController = controller
+
+        dialogController.setActionEnabled(false)
+    }
+
+    /**
+     * The Save Action will only be enabled when a new username has been selected.
+     */
+    override fun onUsernameSelected(username: String?) {
+        super.onUsernameSelected(username)
+        dialogController.setActionEnabled(mUsernameSelectedIndex != 0)
     }
 
     override fun onConfirmClicked(controller: FullScreenDialogController?): Boolean {
         ActivityUtils.hideKeyboard(activity)
         if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
-            // Confirmation dialog is only shown is a new username is selected.
-            // Otherwise the user is prompted to select one.
-            if (mUsernameSelectedIndex != 0) {
-                val username = mUsernamesAdapter.mItems[mUsernamesAdapter.selectedItem]
-                showUsernameConfirmationDialog(username)
-            } else {
-                ToastUtils.showToast(activity, R.string.settings_username_changer_toast_content_new_username)
-            }
+            val username = mUsernamesAdapter.mItems[mUsernamesAdapter.selectedItem]
+            showUsernameConfirmationDialog(username)
         } else {
             controller?.dismiss()
         }
