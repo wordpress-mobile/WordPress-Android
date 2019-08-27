@@ -508,7 +508,8 @@ class PostListItemUiStateHelperTest {
                         isEligibleForAutoUpload = true
                 )
         )
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted_retrying))
+        assertThat(state.data.statuses)
+                .containsOnly(UiStringRes(R.string.error_media_recover_post_not_submitted_retrying))
     }
 
     @Test
@@ -533,7 +534,8 @@ class PostListItemUiStateHelperTest {
                         isEligibleForAutoUpload = true
                 )
         )
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying))
+        assertThat(state.data.statuses)
+                .containsOnly(UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying))
     }
 
     @Test
