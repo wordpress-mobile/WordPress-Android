@@ -90,7 +90,7 @@ class PostListDialogHelper(
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = UiStringRes(R.string.dialog_confirm_autosave_body),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
