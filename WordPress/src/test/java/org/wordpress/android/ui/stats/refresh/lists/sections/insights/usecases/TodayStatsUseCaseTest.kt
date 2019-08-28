@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
@@ -30,20 +33,24 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: TodayInsightsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var site: SiteModel
+    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
     private lateinit var useCase: TodayStatsUseCase
     private val views = 10
     private val visitors = 15
     private val likes = 20
     private val comments = 30
+    private val site = SiteModel()
+    private val siteId = 1L
     @Before
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsSiteProvider,
+                statsWidgetUpdaters,
                 popupMenuHandler
         )
+        site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
 
@@ -69,6 +76,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
             assertViewsAndVisitors(this[1])
             assertLikesAndComments(this[2])
         }
+        verify(statsWidgetUpdaters, times(2)).updateTodayWidget(siteId)
     }
 
     @Test
