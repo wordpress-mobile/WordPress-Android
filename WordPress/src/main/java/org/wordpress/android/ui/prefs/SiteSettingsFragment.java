@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -652,26 +653,21 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.enableLazyLoadImages((Boolean) newValue);
         } else if (preference == mSiteAccelerator) {
             Boolean checked = (Boolean) newValue;
-            mSiteAccelerator.setChecked(checked);
             mFasterImages.setChecked(checked);
             mFasterStaticFiles.setChecked(checked);
-//            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
+            mSiteSettings.enableServeImagesFromOurServers(checked);
+            mSiteSettings.enableServeStaticFilesFromOurServers(checked);
+            updateSiteAccelerator();
         } else if (preference == mFasterImages) {
             Boolean checked = (Boolean) newValue;
             mFasterImages.setChecked(checked);
-            boolean siteAcceleratorIsChecked = checked && mFasterStaticFiles.isChecked();
-            if (siteAcceleratorIsChecked != mSiteAccelerator.isChecked()) {
-                mSiteAccelerator.setChecked(siteAcceleratorIsChecked);
-            }
-//            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
+            mSiteSettings.enableServeImagesFromOurServers((Boolean) newValue);
+            updateSiteAccelerator();
         } else if (preference == mFasterStaticFiles) {
             Boolean checked = (Boolean) newValue;
             mFasterStaticFiles.setChecked(checked);
-            boolean siteAcceleratorIsChecked = checked && mFasterImages.isChecked();
-            if (siteAcceleratorIsChecked != mSiteAccelerator.isChecked()) {
-                mSiteAccelerator.setChecked(siteAcceleratorIsChecked);
-            }
-//            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
+            mSiteSettings.enableServeStaticFilesFromOurServers((Boolean) newValue);
+            updateSiteAccelerator();
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
@@ -1306,6 +1302,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
 
+        updateSiteAccelerator();
+        mFasterImages.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
+        mFasterStaticFiles.setChecked(mSiteSettings.isServeStaticFilesFromOurServersEnabled());
+
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
         } else {
@@ -1318,6 +1318,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref.setSummary(String.valueOf(mSiteSettings.getPostsPerPage()));
         setTimezonePref(mSiteSettings.getTimezone());
         changeEditTextPreferenceValue(mSiteQuotaSpacePref, mSiteSettings.getQuotaDiskSpace());
+    }
+
+    private void updateSiteAccelerator() {
+        boolean siteAcceleratorEnabled = mSiteSettings.isServeImagesFromOurServersEnabled() && mSiteSettings
+                .isServeStaticFilesFromOurServersEnabled();
+        mSiteAcceleratorSettings.setSummary(siteAcceleratorEnabled ? R.string.site_settings_site_accelerator_on
+                : R.string.site_settings_site_accelerator_off);
+        mSiteAccelerator.setChecked(siteAcceleratorEnabled);
+        ListAdapter adapter = mSiteAcceleratorSettings.getRootAdapter();
+        if (adapter instanceof BaseAdapter) {
+            ((BaseAdapter) adapter).notifyDataSetChanged();
+        }
     }
 
     private void setDateTimeFormatPref(FormatType formatType, WPPreference formatPref, String formatValue) {
@@ -1387,7 +1399,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setPostFormats() {
         // Ignore if there are no changes
         if (mSiteSettings.isSameFormatList(mFormatPref.getEntryValues())) {
-            mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultPostFormat()));
+            mFormatPref.setValue(mSiteSettings.getDefaultPostFormat());
             mFormatPref.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             return;
         }
@@ -1398,7 +1410,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // transform the keys and values into arrays and set the ListPreference's data
         mFormatPref.setEntries(postFormats.values().toArray(new String[0]));
         mFormatPref.setEntryValues(postFormats.keySet().toArray(new String[0]));
-        mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultPostFormat()));
+        mFormatPref.setValue(mSiteSettings.getDefaultPostFormat());
         mFormatPref.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
     }
 
@@ -1706,7 +1718,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String title = getString(R.string.site_settings_speed_up_your_site);
         Dialog dialog = mSpeedUpYourSiteSettings.getDialog();
         if (dialog != null) {
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
     }
@@ -1718,7 +1730,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String title = getString(R.string.site_settings_site_accelerator);
         Dialog dialog = mSiteAcceleratorSettings.getDialog();
         if (dialog != null) {
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
     }
@@ -1731,7 +1743,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         Dialog dialog = mMorePreference.getDialog();
         if (dialog != null) {
             dialog.setTitle(title);
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
             return true;
         }

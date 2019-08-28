@@ -99,8 +99,8 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
                     switchControl.setThumbTintList(mThumbTint);
                 }
                 if (mTrackTint == null) {
-                switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.primary_40_gray_90_gray_50_selector));
+                    switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
+                            R.color.primary_40_gray_90_gray_50_selector));
                 } else {
                     switchControl.setTrackTintList(mTrackTint);
                 }
@@ -111,9 +111,6 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         // Add padding to start of switch.
         ViewCompat.setPaddingRelative(getSwitch((ViewGroup) view),
                 getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_large), 0, 0, 0);
-        if (titleView != null) {
-            titleView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.white));
-        }
     }
 
     private void setBackground(boolean checked) {
@@ -144,7 +141,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
 
     @Override public void setChecked(boolean checked) {
         super.setChecked(checked);
-            setBackground(checked);
+        setBackground(checked);
     }
 
     @Override

@@ -68,6 +68,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
     // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
+    private static final String SERVE_STATIC_FILES_FROM_OUR_SERVERS = "photon-cdn";
     private static final String LAZY_LOAD_IMAGES = "lazy-images";
     private static final String SHARING_MODULE = "sharedaddy";
 
@@ -127,6 +128,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
             pushJetpackProtectAndSsoSettings();
             if (supportsJetpackSpeedUpSettings(mSite)) {
                 pushServeImagesFromOurServersModuleSettings();
+                pushServeStaticFilesFromOurServersModuleSettings();
                 pushLazyLoadModule();
             }
         }
@@ -334,6 +336,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
                                     case SERVE_IMAGES_FROM_OUR_SERVERS:
                                         mRemoteJpSettings.serveImagesFromOurServers = isActive;
                                         break;
+                                    case SERVE_STATIC_FILES_FROM_OUR_SERVERS:
+                                        mRemoteJpSettings.serveStaticFilesFromOurServers = isActive;
+                                        break;
                                     case LAZY_LOAD_IMAGES:
                                         mRemoteJpSettings.lazyLoadImages = isActive;
                                         break;
@@ -343,6 +348,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
                                 }
                             }
                             mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
+                            mJpSettings.serveStaticFilesFromOurServers =
+                                    mRemoteJpSettings.serveStaticFilesFromOurServers;
                             mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
                             mJpSettings.sharingEnabled = mRemoteJpSettings.sharingEnabled;
                         }
@@ -484,6 +491,33 @@ class WPComSiteSettings extends SiteSettingsInterface {
                             error.printStackTrace();
                             AppLog.w(AppLog.T.API,
                                      "Error updating Jetpack module - Serve images from our servers: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
+    }
+
+    private void pushServeStaticFilesFromOurServersModuleSettings() {
+        ++mSaveRequestCount;
+        // The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.serveStaticFilesFromOurServers != mRemoteJpSettings.serveStaticFilesFromOurServers) {
+            final boolean fallbackValue = mRemoteJpSettings.serveStaticFilesFromOurServers;
+            mRemoteJpSettings.serveStaticFilesFromOurServers = mJpSettings.serveStaticFilesFromOurServers;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), SERVE_STATIC_FILES_FROM_OUR_SERVERS, mJpSettings.serveStaticFilesFromOurServers,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Serve static files from our servers");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.serveStaticFilesFromOurServers = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API,
+                                    "Error updating Jetpack module - Serve static files from our servers: " + error);
                             onSaveResponseReceived(error);
                         }
                     });

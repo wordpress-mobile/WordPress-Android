@@ -18,6 +18,7 @@ public class JetpackSettingsModel {
     public boolean ssoRequireTwoFactor;
     // Modules
     public boolean serveImagesFromOurServers;
+    public boolean serveStaticFilesFromOurServers;
     public boolean lazyLoadImages;
     public boolean commentLikes;
     public boolean sharingEnabled = true;
@@ -43,6 +44,7 @@ public class JetpackSettingsModel {
         commentLikes = other.commentLikes;
         jetpackProtectWhitelist.addAll(other.jetpackProtectWhitelist);
         serveImagesFromOurServers = other.serveImagesFromOurServers;
+        serveStaticFilesFromOurServers = other.serveStaticFilesFromOurServers;
         lazyLoadImages = other.lazyLoadImages;
         sharingEnabled = other.sharingEnabled;
     }
@@ -59,6 +61,7 @@ public class JetpackSettingsModel {
                 && ssoMatchEmail == otherModel.ssoMatchEmail
                 && ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor
                 && serveImagesFromOurServers == otherModel.serveImagesFromOurServers
+                && serveStaticFilesFromOurServers == otherModel.serveStaticFilesFromOurServers
                 && lazyLoadImages == otherModel.lazyLoadImages
                 && commentLikes == otherModel.commentLikes
                 && sharingEnabled == otherModel.sharingEnabled

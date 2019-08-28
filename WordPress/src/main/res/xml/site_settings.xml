@@ -198,8 +198,7 @@
         app:longClickHint="@string/site_settings_jetpack_performance_settings_hint">
 
         <PreferenceScreen
-            android:id="@+id/site_accelerator"
-            android:defaultValue="@string/off"
+            android:id="@+id/site_accelerator_settings"
             android:key="@string/pref_key_site_accelerator_settings"
             android:title="@string/site_settings_site_accelerator">
 
