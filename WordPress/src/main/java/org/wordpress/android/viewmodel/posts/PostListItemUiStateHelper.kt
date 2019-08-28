@@ -333,8 +333,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
-                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
-                && postStatus != DRAFT
+                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload)) &&
+                postStatus != DRAFT
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
