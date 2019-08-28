@@ -453,7 +453,7 @@ public class PostUtils {
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
     }
 
-    public static boolean isPostInConflictWithAutoSave(PostModel post) {
+    public static boolean hasAutoSave(PostModel post) {
         // TODO: would be great to check if title, content and excerpt are different,
         // but we currently don't have them when we fetch the post list
 
