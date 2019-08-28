@@ -14,17 +14,7 @@ public class MasterbarComponent {
     }
 
     public MasterbarComponent clickBlogPosts() {
-        clickOn(R.id.row_blog_posts);
-        return this;
-    }
-
-    public MasterbarComponent clickSitePages() {
-        clickOn(R.id.row_pages);
-        return this;
-    }
-
-    public MasterbarComponent clickActivity() {
-        clickOn(R.id.row_activity_log);
+        clickOn(R.id.quick_action_posts_button);
         return this;
     }
 
