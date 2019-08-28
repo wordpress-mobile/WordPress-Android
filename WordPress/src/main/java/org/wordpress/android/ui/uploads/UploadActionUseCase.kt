@@ -65,7 +65,7 @@ class UploadActionUseCase @Inject constructor(
 
     fun getUploadAction(post: PostModel): UploadAction {
         return when {
-            post.changesConfirmedContentHashcode == post.contentHashcode() ->
+            willUploadPushChanges(post) ->
                 // We are sure we can push the post as the user has explicitly confirmed the changes
                 UPLOAD
             post.isLocalDraft ->
@@ -74,4 +74,13 @@ class UploadActionUseCase @Inject constructor(
             else -> REMOTE_AUTO_SAVE
         }
     }
+
+    fun isEligibleForAutoUpload(site: SiteModel, post: PostModel): Boolean {
+        return when (getAutoUploadAction(post, site)) {
+            UPLOAD -> true
+            UPLOAD_AS_DRAFT, REMOTE_AUTO_SAVE, DO_NOTHING -> false
+        }
+    }
+
+    fun willUploadPushChanges(post: PostModel) = post.changesConfirmedContentHashcode == post.contentHashcode()
 }

@@ -71,7 +71,7 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    UiString getErrorMessageResIdFromPostError(boolean isPage, PostError error, boolean eligibleForAutoUpload) {
+    UiString getErrorMessageResIdFromPostError(PostStatus postStatus, boolean isPage, PostError error, boolean eligibleForAutoUpload) {
         switch (error.type) {
             case UNKNOWN_POST:
                 return isPage ? new UiStringRes(R.string.error_unknown_page)
@@ -86,8 +86,38 @@ public class UploadUtils {
             case GENERIC_ERROR:
             default:
                 AppLog.w(T.MAIN, "Error message: " + error.message + " ,Error Type: " + error.type);
-                return eligibleForAutoUpload ? new UiStringRes(R.string.error_generic_error_retrying)
-                        : new UiStringRes(R.string.error_generic_error);
+                if (eligibleForAutoUpload) {
+                    switch (postStatus) {
+                        case PRIVATE:
+                            return new UiStringRes(R.string.error_post_not_published_retrying_private);
+                        case PUBLISHED:
+                            return new UiStringRes(R.string.error_post_not_published_retrying);
+                        case SCHEDULED:
+                            return new UiStringRes(R.string.error_post_not_scheduled_retrying);
+                        case PENDING:
+                            return new UiStringRes(R.string.error_post_not_submitted_retrying);
+                        case UNKNOWN:
+                        case DRAFT:
+                        case TRASHED:
+                            return new UiStringRes(R.string.error_generic_error_retrying);
+                    }
+                } else {
+                    switch (postStatus) {
+                        case PRIVATE:
+                            return new UiStringRes(R.string.error_post_not_published_private);
+                        case PUBLISHED:
+                            return new UiStringRes(R.string.error_post_not_published);
+                        case SCHEDULED:
+                            return new UiStringRes(R.string.error_post_not_scheduled);
+                        case PENDING:
+                            return new UiStringRes(R.string.error_post_not_submitted);
+                        case UNKNOWN:
+                        case DRAFT:
+                        case TRASHED:
+                            return new UiStringRes(R.string.error_generic_error);
+                    }
+                }
+                return new UiStringRes(R.string.error_generic_error);
         }
     }
 

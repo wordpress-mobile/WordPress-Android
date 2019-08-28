@@ -382,6 +382,27 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
+    fun `verify published with local changes eligible for auto upload after a failed upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(
+                        isEligibleForAutoUpload = true,
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED))
+                )
+        )
+
+        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
+
+        assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
+        assertThat(state.actions).hasSize(3)
+
+        assertThat((state.actions[2] as MoreItem).actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
+        assertThat((state.actions[2] as MoreItem).actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat((state.actions[2] as MoreItem).actions).hasSize(2)
+    }
+
+    @Test
     fun `label has progress color when post queued`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isQueued = true))
         assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
@@ -403,6 +424,30 @@ class PostListItemUiStateHelperTest {
     fun `label has progress color when uploading post`() {
         val state = createPostListItemUiState(uploadStatus = createUploadStatus(isUploading = true))
         assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
+    }
+
+    @Test
+    fun `label has info color after failed upload but eligible for auto upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(
+                        isEligibleForAutoUpload = true,
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED))
+                )
+        )
+        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
+    }
+
+    @Test
+    fun `label has error color after failed upload when not eligible for auto upload`() {
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true),
+                uploadStatus = createUploadStatus(
+                        isEligibleForAutoUpload = false,
+                        uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED))
+                )
+        )
+        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
     fun `label has error color on version conflict`() {
@@ -560,7 +605,7 @@ class PostListItemUiStateHelperTest {
                         isEligibleForAutoUpload = true
                 )
         )
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_media_recover_post_retrying))
+        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.error_generic_error_retrying))
     }
 
     @Test
@@ -867,7 +912,7 @@ class PostListItemUiStateHelperTest {
                     hasInProgressMediaUpload = hasInProgressMediaUpload,
                     hasPendingMediaUpload = hasPendingMediaUpload,
                     isEligibleForAutoUpload = isEligibleForAutoUpload,
-                    retryWillPushChanges = retryWillPushChanges
+                    uploadWillPushChanges = retryWillPushChanges
                     )
 
     private fun createGenericError(): UploadError = UploadError(PostError(GENERIC_ERROR))

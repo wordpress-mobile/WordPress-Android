@@ -258,6 +258,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return when {
             uploadUiState.error.mediaError != null -> getMediaUploadErrorMessage(uploadUiState, postStatus)
             uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+                    postStatus,
                     false,
                     uploadUiState.error.postError,
                     uploadUiState.isEligibleForAutoUpload
@@ -277,13 +278,15 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private fun getMediaUploadErrorMessage(uploadUiState: UploadFailed, postStatus: PostStatus): UiStringRes {
         return when {
             uploadUiState.isEligibleForAutoUpload -> when (postStatus) {
-                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_retrying_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
-                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post_retrying)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_generic_error_retrying)
             }
             uploadUiState.retryWillPushChanges -> when (postStatus) {
-                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
@@ -299,9 +302,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         uploadUiState: PostUploadUiState,
         hasUnhandledConflicts: Boolean
     ): Int? {
-        val isError = uploadUiState is UploadFailed || hasUnhandledConflicts
-        val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
-                uploadUiState is UploadQueued
+        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) || hasUnhandledConflicts
+        val isProgressInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
+                uploadUiState is UploadingPost || uploadUiState is UploadingMedia || uploadUiState is UploadQueued
         val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
                 uploadUiState is UploadWaitingForConnection
 
@@ -329,7 +332,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         statsSupported: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
-        val canCancelPendingAutoUpload = uploadUiState is UploadWaitingForConnection && postStatus != DRAFT
+        val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
+                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
+                && postStatus != DRAFT
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
@@ -345,6 +350,11 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         if (postStatus != TRASHED) {
             buttonTypes.add(BUTTON_EDIT)
         }
+
+        if (canCancelPendingAutoUpload) {
+            buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
+        }
+
         if (canShowPublishButton) {
             buttonTypes.add(
                     if (canRetryUpload) {
@@ -357,10 +367,6 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                         BUTTON_PUBLISH
                     }
             )
-        }
-
-        if (canCancelPendingAutoUpload) {
-            buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         }
 
         if (canShowViewButton) {
@@ -447,7 +453,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             uploadStatus.uploadError != null -> UploadFailed(
                     uploadStatus.uploadError,
                     uploadStatus.isEligibleForAutoUpload,
-                    uploadStatus.retryWillPushChanges
+                    uploadStatus.uploadWillPushChanges
             )
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||

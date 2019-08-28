@@ -1469,14 +1469,6 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">Could not upload media</string>
-    <string name="error_media_recover_post_not_published">Could not upload media. Post not published.</string>
-    <string name="error_media_recover_post_not_scheduled">Could not upload media. Post not scheduled.</string>
-    <string name="error_media_recover_post_not_submitted">Could not upload media. Post not submitted.</string>
-    <string name="error_media_recover_post_retrying">Could not upload media. Trying again</string>
-    <string name="error_media_recover_post_not_published_retrying">Could not publish. Trying again</string>
-    <string name="error_media_recover_post_not_scheduled_retrying">Could not schedule. Trying again</string>
-    <string name="error_media_recover_post_not_submitted_retrying">Could not submit. Trying again</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1495,7 +1487,7 @@
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
-    <string name="error_generic_error_retrying">Couldn\'t perform operation. Trying again</string>
+    <string name="error_generic_error_retrying">Couldn\'t perform operation. We\'ll try again later</string>
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
 
@@ -1503,6 +1495,25 @@
     <string name="error_unknown_post">Could not find the post on the server</string>
     <string name="error_unknown_page">Could not find the page on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
+
+    <string name="error_media_recover_post">Couldn\'t upload media</string>
+    <string name="error_media_recover_post_not_published">Couldn\'t upload media. Post not published</string>
+    <string name="error_media_recover_post_not_published_private">Couldn\'t upload media. Private post not published</string>
+    <string name="error_media_recover_post_not_scheduled">Couldn\'t upload media. Post not scheduled</string>
+    <string name="error_media_recover_post_not_submitted">Couldn\'t upload media. Post not submitted</string>
+    <string name="error_media_recover_post_not_published_retrying" translatable="false">@string/error_post_not_published_retrying</string>
+    <string name="error_media_recover_post_not_published_retrying_private" translatable="false">@string/error_post_not_published_retrying_private</string>
+    <string name="error_media_recover_post_not_scheduled_retrying" translatable="false">@string/error_post_not_scheduled_retrying</string>
+    <string name="error_media_recover_post_not_submitted_retrying" translatable="false">@string/error_post_not_submitted_retrying</string>
+
+    <string name="error_post_not_published">Couldn\'t perform operation. Post not published</string>
+    <string name="error_post_not_published_private">Couldn\'t perform operation. Private post not published</string>
+    <string name="error_post_not_scheduled">Couldn\'t perform operation. Post not scheduled</string>
+    <string name="error_post_not_submitted">Couldn\'t perform operation. Post not submitted</string>
+    <string name="error_post_not_published_retrying">Post couldn\'t be published. We\'ll try again later</string>
+    <string name="error_post_not_published_retrying_private">Private post couldn\'t be published. We\'ll try again later</string>
+    <string name="error_post_not_scheduled_retrying">Post couldn\'t be scheduled. We\'ll try again later</string>
+    <string name="error_post_not_submitted_retrying">Post couldn\'t be submitted. We\'ll try again later</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="error_load_comment">Couldn\'t load the comment</string>
