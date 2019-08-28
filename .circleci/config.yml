@@ -78,6 +78,7 @@ jobs:
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
             ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
+      - android/save-gradle-cache
       - run:
           name: Prepare APK
           command: |
