@@ -427,7 +427,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `label has info color after failed upload but eligible for auto upload`() {
+    fun `label has state info color after failed upload but eligible for auto upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true),
                 uploadStatus = createUploadStatus(
@@ -435,7 +435,7 @@ class PostListItemUiStateHelperTest {
                         uploadError = UploadError(MediaError(AUTHORIZATION_REQUIRED))
                 )
         )
-        assertThat(state.data.statusesColor).isEqualTo(PROGRESS_INFO_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(STATE_INFO_COLOR)
     }
 
     @Test

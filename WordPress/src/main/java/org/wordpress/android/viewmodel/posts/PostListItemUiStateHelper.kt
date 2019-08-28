@@ -303,9 +303,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         hasUnhandledConflicts: Boolean
     ): Int? {
         val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) || hasUnhandledConflicts
-        val isProgressInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
-                uploadUiState is UploadingPost || uploadUiState is UploadingMedia || uploadUiState is UploadQueued
-        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
+        val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
+                uploadUiState is UploadQueued
+        val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
+                isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
                 uploadUiState is UploadWaitingForConnection
 
         return when {
