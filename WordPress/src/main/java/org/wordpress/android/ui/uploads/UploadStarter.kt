@@ -10,13 +10,11 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
@@ -51,7 +49,6 @@ class UploadStarter @Inject constructor(
      */
     private val context: Context,
     private val postStore: PostStore,
-    private val pageStore: PageStore,
     private val siteStore: SiteStore,
     private val uploadActionUseCase: UploadActionUseCase,
     private val tracker: AnalyticsTrackerWrapper,
@@ -145,13 +142,10 @@ class UploadStarter @Inject constructor(
     private suspend fun upload(site: SiteModel) = coroutineScope {
         try {
             mutex.lock()
-            val posts = async { postStore.getPostsWithLocalChanges(site) }
-            val pages = async { pageStore.getPagesWithLocalChanges(site) }
-
-            val postsAndPages = posts.await() + pages.await()
+            val posts = postStore.getPostsWithLocalChanges(site)
 
             // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
-            postsAndPages
+            posts
                     .asSequence()
                     .filter {
                         val action = uploadActionUseCase.getAutoUploadAction(it, site)
