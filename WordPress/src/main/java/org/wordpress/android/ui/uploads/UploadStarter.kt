@@ -34,7 +34,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Automatically uploads local drafts.
+ * Automatically remote-auto-save or upload all local modifications to posts.
  *
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
  * addition to this, call sites can also request an immediate execution by calling [checkConnectionAndUpload].
