@@ -3,6 +3,7 @@ XX.X
 * Add Remote Preview support for posts and pages.
 * Post List: Trashed post must now be restored before edit or preview.
 * All changes to posts and pages will be automatically synced with the server.
+* Post List: Unhandled conflict with auto saves are now detected and visible. On post opening, the app will let you choose which version you prefer.
 * Clicking on "Publish" on a private post sometimes published the post as public
 
 13.2

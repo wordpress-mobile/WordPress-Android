@@ -353,6 +353,12 @@
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
 
+    <!-- post autosave conflict dialog -->
+    <string name="dialog_confirm_autosave_title">More Recent Version Conflict</string>
+    <string name="dialog_confirm_autosave_body">A more recent version exists. Edit current version or most recent version?\n\n</string>
+    <string name="dialog_confirm_autosave_restore_button">More recent version</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">Current version</string>
+
     <!-- trash post with local changes dialog -->
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
@@ -1412,6 +1418,7 @@
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
+    <string name="local_post_autosave_conflict">Unhandled Auto Save</string>
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving&#8230;</string>
@@ -1421,7 +1428,7 @@
     <string name="error_preview_empty_post">Can\'t preview an empty post</string>
     <string name="error_preview_empty_page">Can\'t preview an empty page</string>
     <string name="error_preview_empty_draft">Can\'t preview an empty draft</string>
-    
+
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 

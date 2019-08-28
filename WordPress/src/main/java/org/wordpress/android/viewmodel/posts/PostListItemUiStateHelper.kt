@@ -69,6 +69,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         post: PostModel,
         uploadStatus: PostListItemUploadStatus,
         unhandledConflicts: Boolean,
+        hasAutoSave: Boolean,
         capabilitiesToPublish: Boolean,
         statsSupported: Boolean,
         featuredImageUrl: String?,
@@ -102,14 +103,16 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 isLocalDraft = post.isLocalDraft,
                 isLocallyChanged = post.isLocallyChanged,
                 uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts
+                hasUnhandledConflicts = unhandledConflicts,
+                hasAutoSave = hasAutoSave
         )
         val statusesColor = getStatusesColor(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
                 isLocallyChanged = post.isLocallyChanged,
                 uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts
+                hasUnhandledConflicts = unhandledConflicts,
+                hasAutoSave = hasAutoSave
         )
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
@@ -204,7 +207,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean
+        hasUnhandledConflicts: Boolean,
+        hasAutoSave: Boolean
     ): List<UiString> {
         val labels: MutableList<UiString> = ArrayList()
         when {
@@ -233,6 +237,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
+            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_conflict))
         }
 
         // we want to show either single error/progress label or 0-n info labels.
@@ -282,9 +287,10 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean
+        hasUnhandledConflicts: Boolean,
+        hasAutoSave: Boolean
     ): Int? {
-        val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts
+        val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts || hasAutoSave
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
         val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
