@@ -346,7 +346,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         mUsernamePreference.setEnabled(account.getUsernameCanBeChanged());
         mUsernamePreference.setOnPreferenceClickListener(preference -> {
             showUsernameChangerFragment();
-            return false;
+            return true;
         });
     }
 

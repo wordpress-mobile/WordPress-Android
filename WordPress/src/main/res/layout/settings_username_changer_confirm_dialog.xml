@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/settings_username_changer_confirm_dialog_adding"
+    android:padding="@dimen/settings_username_changer_confirm_dialog_padding"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <TextView

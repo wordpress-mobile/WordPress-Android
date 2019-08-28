@@ -7,11 +7,11 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
 import android.view.ContextThemeWrapper
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
+import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType.
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
-import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -156,38 +155,35 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     }
 
     fun showProgress() {
-        if (progressDialog == null || progressDialog?.window == null || progressDialog?.isShowing == false) {
-            progressDialog = ProgressDialog(context).apply {
-                isIndeterminate = true
-                setCancelable(true)
-                setMessage(getString(R.string.settings_username_changer_progress_dialog))
-                setOnCancelListener { showActionCancelMessage() }
+        progressDialog?.let {
+            if (it.window == null && !it.isShowing) {
+                progressDialog = ProgressDialog(context).apply {
+                    isIndeterminate = true
+                    setCancelable(true)
+                    setMessage(getString(R.string.settings_username_changer_progress_dialog))
+                    setOnCancelListener { showChangeUsernameActionCancelledMessage() }
+                }
             }
         }
-        try {
-            if (progressDialog?.isShowing == false) {
-                progressDialog?.show()
+
+        progressDialog?.let {
+            if (!it.isShowing) {
+                it.show()
             }
-        } catch (e: WindowManager.BadTokenException) {
-            AppLog.e(T.SETTINGS, e)
         }
     }
 
     private fun endProgress() {
-        if (progressDialog != null && progressDialog?.isShowing == true && progressDialog?.window != null) {
-            progressDialog?.dismiss()
+        progressDialog?.let {
+            if (it.isShowing && it.window != null) {
+                it.dismiss()
+            }
         }
         progressDialog = null
     }
 
-    private fun showActionCancelMessage() {
-        val duration = AccessibilityUtils.getSnackbarDuration(
-                requireContext(),
-                resources.getInteger(R.integer.site_creation_snackbar_duration)
-        )
-        val message = getString(R.string.settings_username_changer_snackbar_cancel)
-        view?.let {
-            WPDialogSnackbar.make(it, message, duration).show()
-        }
+    private fun showChangeUsernameActionCancelledMessage() = view?.let {
+        WPDialogSnackbar.make(it, getString(R.string.settings_username_changer_snackbar_cancel), Snackbar.LENGTH_LONG)
+                .show()
     }
 }
