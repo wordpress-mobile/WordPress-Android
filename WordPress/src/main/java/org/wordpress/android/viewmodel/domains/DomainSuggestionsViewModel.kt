@@ -7,6 +7,8 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -30,6 +32,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 ) : ViewModel() {
     lateinit var site: SiteModel
     private var isStarted = false
+    private var isQueryTrackingCompleted = false
 
     private val _suggestions = MutableLiveData<DomainSuggestionsListState>()
     val suggestionsLiveData: LiveData<DomainSuggestionsListState>
@@ -57,6 +60,11 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
+            if (isStarted && !isQueryTrackingCompleted) {
+                isQueryTrackingCompleted = true
+                AnalyticsTracker.track(Stat.DOMAIN_CREDIT_SUGGESTION_QUERIED)
+            }
+
             debouncer.debounce(Void::class.java, {
                 fetchSuggestions()
             }, SEARCH_QUERY_DELAY_MS, TimeUnit.MILLISECONDS)
@@ -86,8 +94,8 @@ class DomainSuggestionsViewModel @Inject constructor(
             return
         }
         this.site = site
-        isStarted = true
         initializeDefaultSuggestions()
+        isStarted = true
     }
 
     private fun initializeDefaultSuggestions() {
