@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
@@ -31,7 +30,6 @@ public class FooterNoteBlock extends NoteBlock {
         }
 
         mClickableSpan = new NoteBlockClickableSpan(
-                WordPress.getContext(),
                 rangeObject,
                 false,
                 true

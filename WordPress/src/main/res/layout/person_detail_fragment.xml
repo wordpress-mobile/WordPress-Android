@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:text="@string/role"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/role"/>
 
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_medium"
             tools:text="@string/title_follower"/>
 
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_medium"
             tools:text="Since {date}"/>
 

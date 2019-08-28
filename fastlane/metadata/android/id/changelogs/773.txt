@@ -1,0 +1,3 @@
+13.1:
+* Di pratinjau Situs dan Halaman, sekarang Anda dapat mengganti antara versi desktop dan seluler untuk situs.
+* Kami telah memperbaiki bug yang berpengaruh pada beberapa pengguna yang tidak dapat terhubung ke layanan media sosial mereka.

@@ -77,7 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         android:text="@string/customize" />
 
                 </LinearLayout>
@@ -109,7 +109,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         android:text="@string/details" />
 
                 </LinearLayout>
@@ -141,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         android:text="@string/support" />
 
                 </LinearLayout>

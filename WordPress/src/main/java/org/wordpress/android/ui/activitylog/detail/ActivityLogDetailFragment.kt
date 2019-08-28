@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,10 +15,12 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
@@ -75,6 +78,17 @@ class ActivityLogDetailFragment : Fragment() {
                     notificationsUtilsWrapper.getSpannableContentForRanges(it, activityMessage, { range ->
                         viewModel.onRangeClicked(range)
                     }, false)
+                }
+
+                val noteBlockSpans = spannable?.getSpans(0, spannable.length, NoteBlockClickableSpan::class.java)
+
+                noteBlockSpans?.forEach {
+                    it.setColors(
+                            activity.getColorFromAttribute(R.attr.wpColorText),
+                            ContextCompat.getColor(activity, R.color.primary_5),
+                            ContextCompat.getColor(activity, R.color.primary_40),
+                            activity.getColorFromAttribute(R.attr.wpColorText)
+                    )
                 }
 
                 uiHelpers.setTextOrHide(activityMessage, spannable)
@@ -146,11 +160,13 @@ class ActivityLogDetailFragment : Fragment() {
     private fun onRewindButtonClicked(item: ActivityLogDetailModel) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
-            dialog.initialize(it,
+            dialog.initialize(
+                    it,
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
                     getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel))
+                    getString(R.string.cancel)
+            )
             dialog.show(fragmentManager, it)
         }
     }
