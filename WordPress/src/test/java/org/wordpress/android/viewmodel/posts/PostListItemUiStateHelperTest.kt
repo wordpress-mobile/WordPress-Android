@@ -545,7 +545,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for pending post when pending auto-upload`() {
+    fun `media upload error shown with specific message for pending post eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
                 uploadStatus = createUploadStatus(
@@ -558,7 +558,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for pending post when auto-upload disabled`() {
+    fun `media upload error shown with specific message for pending post not eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_PENDING),
                 uploadStatus = createUploadStatus(
@@ -571,7 +571,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for scheduled post when pending auto-upload`() {
+    fun `media upload error shown with specific message for scheduled post eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
                 uploadStatus = createUploadStatus(
@@ -584,7 +584,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `media upload error shown with specific message for scheduled post when auto-upload disabled`() {
+    fun `media upload error shown with specific message for scheduled post not eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_SCHEDULED),
                 uploadStatus = createUploadStatus(
@@ -597,7 +597,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `retrying media upload shown for draft when pending auto-upload`() {
+    fun `retrying media upload shown for draft eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(
@@ -609,7 +609,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `base media upload error shown for draft when auto-upload disabled`() {
+    fun `base media upload error shown for draft not eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(
@@ -622,7 +622,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `base upload error shown on GENERIC ERROR and disabled auto upload`() {
+    fun `base upload error shown on GENERIC ERROR and not eligible for auto upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(
@@ -635,7 +635,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `retrying upload shown for draft when pending auto-upload`() {
+    fun `retrying upload shown for draft eligible for auto-upload`() {
         val state = createPostListItemUiState(
                 post = createPostModel(isLocallyChanged = true, status = POST_STATE_DRAFT),
                 uploadStatus = createUploadStatus(

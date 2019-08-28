@@ -65,7 +65,7 @@ class UploadActionUseCase @Inject constructor(
 
     fun getUploadAction(post: PostModel): UploadAction {
         return when {
-            willUploadPushChanges(post) ->
+            uploadWillPushChanges(post) ->
                 // We are sure we can push the post as the user has explicitly confirmed the changes
                 UPLOAD
             post.isLocalDraft ->
@@ -82,5 +82,5 @@ class UploadActionUseCase @Inject constructor(
         }
     }
 
-    fun willUploadPushChanges(post: PostModel) = post.changesConfirmedContentHashcode == post.contentHashcode()
+    fun uploadWillPushChanges(post: PostModel) = post.changesConfirmedContentHashcode == post.contentHashcode()
 }

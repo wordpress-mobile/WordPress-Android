@@ -71,7 +71,8 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    UiString getErrorMessageResIdFromPostError(PostStatus postStatus, boolean isPage, PostError error, boolean eligibleForAutoUpload) {
+    UiString getErrorMessageResIdFromPostError(PostStatus postStatus, boolean isPage, PostError error,
+                                               boolean eligibleForAutoUpload) {
         switch (error.type) {
             case UNKNOWN_POST:
                 return isPage ? new UiStringRes(R.string.error_unknown_page)

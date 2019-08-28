@@ -32,7 +32,7 @@ class PostListUploadStatusTracker(
                 hasInProgressMediaUpload = hasInProgressMediaUpload,
                 hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post),
                 isEligibleForAutoUpload = uploadActionUseCase.isEligibleForAutoUpload(siteModel, post),
-                uploadWillPushChanges = uploadActionUseCase.willUploadPushChanges(post)
+                uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
         )
         uploadStatusMap[post.id] = newStatus
         return newStatus
