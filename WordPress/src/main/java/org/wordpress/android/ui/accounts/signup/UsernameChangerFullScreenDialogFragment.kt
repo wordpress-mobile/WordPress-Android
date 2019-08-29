@@ -6,7 +6,6 @@ import android.text.Spanned
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
-import org.wordpress.android.util.ActivityUtils
 
 /**
  * Implements functionality specific to the Username Changer functionality in the sign-up flow.
@@ -26,16 +25,8 @@ class UsernameChangerFullScreenDialogFragment : BaseUsernameChangerFullScreenDia
             )
     )
 
-    override fun onConfirmClicked(controller: FullScreenDialogController): Boolean {
-        ActivityUtils.hideKeyboard(activity)
-
-        if (usernamesAdapter != null && usernamesAdapter.mItems != null) {
-            val result = Bundle().apply { putString(RESULT_USERNAME, usernameSelected) }
-            controller.confirm(result)
-        } else {
-            controller.dismiss()
-        }
-
-        return true
+    override fun onUsernameConfirmed(controller: FullScreenDialogController, usernameSelected: String) {
+        val result = Bundle().apply { putString(RESULT_USERNAME, usernameSelected) }
+        controller.confirm(result)
     }
 }

@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType.
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
-import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.widgets.WPDialogSnackbar
@@ -63,15 +62,8 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         dialogController.setActionEnabled(hasUsernameChanged())
     }
 
-    override fun onConfirmClicked(controller: FullScreenDialogController?): Boolean {
-        ActivityUtils.hideKeyboard(activity)
-        if (usernamesAdapter != null && usernamesAdapter.mItems != null) {
-            showUsernameConfirmationDialog(usernameSelected)
-        } else {
-            controller?.dismiss()
-        }
-
-        return true
+    override fun onUsernameConfirmed(controller: FullScreenDialogController, usernameSelected: String){
+        showUsernameConfirmationDialog(usernameSelected)
     }
 
     /**

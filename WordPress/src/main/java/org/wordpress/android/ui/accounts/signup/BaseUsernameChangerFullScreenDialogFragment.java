@@ -212,7 +212,19 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     }
 
     @Override
-    public abstract boolean onConfirmClicked(FullScreenDialogController controller);
+    public boolean onConfirmClicked(FullScreenDialogController controller) {
+        ActivityUtils.hideKeyboard(getActivity());
+
+        if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
+           onUsernameConfirmed(controller, mUsernameSelected);
+        } else {
+            controller.dismiss();
+        }
+
+        return true;
+    }
+
+    public abstract void onUsernameConfirmed(FullScreenDialogController controller, String usernameSelected);
 
     @Override
     public boolean onDismissClicked(FullScreenDialogController controller) {
@@ -259,10 +271,6 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
 
         FetchUsernameSuggestionsPayload payload = new FetchUsernameSuggestionsPayload(usernameQuery);
         mDispatcher.dispatch(AccountActionBuilder.newFetchUsernameSuggestionsAction(payload));
-    }
-
-    public UsernameChangerRecyclerViewAdapter getUsernamesAdapter() {
-        return mUsernamesAdapter;
     }
 
     private String getUsernameQueryFromDisplayName() {
