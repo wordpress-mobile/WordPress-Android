@@ -2,11 +2,7 @@ package org.wordpress.android.viewmodel.pages
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -155,34 +151,6 @@ class PagesViewModelTest {
         // Assert
         val result = viewModel.searchPages.value
         assertThat(result).isNull()
-    }
-
-    @Test
-    fun `when started, it uploads all local drafts`() = runBlocking {
-        // Arrange
-        setUpPageStoreWithEmptyPages()
-
-        // Act
-        viewModel.start(site)
-
-        // Assert
-        verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
-        verifyNoMoreInteractions(uploadStarter)
-    }
-
-    @Test
-    fun `when pulling to refresh, it uploads all local drafts`() = runBlocking {
-        // Arrange
-        setUpPageStoreWithEmptyPages()
-        viewModel.start(site)
-
-        // Act
-        viewModel.onPullToRefresh()
-
-        // Assert
-        // We get 2 calls because the `viewModel.start()` also requests an upload
-        verify(uploadStarter, times(2)).queueUploadFromSite(eq(site))
-        verifyNoMoreInteractions(uploadStarter)
     }
 
     @Test

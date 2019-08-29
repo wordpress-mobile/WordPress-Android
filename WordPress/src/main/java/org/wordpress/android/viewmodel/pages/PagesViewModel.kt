@@ -177,8 +177,6 @@ class PagesViewModel
             eventBusWrapper.register(this)
 
             loadPagesAsync()
-
-            uploadStarter.queueUploadFromSite(site)
         }
     }
 
@@ -462,8 +460,6 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        uploadStarter.queueUploadFromSite(site)
-
         launch {
             reloadPages(FETCHING)
         }
