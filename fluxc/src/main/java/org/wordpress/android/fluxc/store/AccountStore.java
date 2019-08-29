@@ -1045,6 +1045,7 @@ public class AccountStore extends Store {
     private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
         if (!payload.isError()) {
             AccountSqlUtils.updateUsername(getAccount(), payload.username);
+            getAccount().setUserName(payload.username);
         }
 
         OnUsernameChanged onUsernameChanged = new OnUsernameChanged();
