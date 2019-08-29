@@ -57,7 +57,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         android:textStyle="bold"
                         tools:text="John Smith"/>
 
@@ -68,7 +68,7 @@
                         android:ellipsize="end"
                         android:lines="1"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         tools:text="Administrator"/>
 
                 </LinearLayout>
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         tools:ignore="RelativeOverlap"
                         tools:text="January 8, 2018"/>
 
@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/neutral_70"
+                        android:textColor="?attr/wpColorText"
                         tools:ignore="RelativeOverlap"
                         tools:text="11:32 PM"/>
                 </LinearLayout>
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:linksClickable="true"
                 tools:text="Jetpack by WordPress.com autoupdated to 5.6"
                 android:focusable="true"/>

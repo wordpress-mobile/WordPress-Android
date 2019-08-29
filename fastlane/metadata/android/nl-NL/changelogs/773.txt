@@ -1,0 +1,3 @@
+13.1:
+* In de voorbeeldweergave van je site en pagina kun je nu schakelen tussen de desktop- en mobiele versie van de site.
+* We hebben een bug gerepareerd waardoor sommige gebruikers geen verbinding kunnen maken via hun social media.

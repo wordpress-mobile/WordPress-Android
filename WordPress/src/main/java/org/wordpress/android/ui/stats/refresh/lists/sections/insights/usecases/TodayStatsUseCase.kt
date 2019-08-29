@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -25,9 +26,11 @@ class TodayStatsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val todayStore: TodayInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
+    private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher) {
     override suspend fun loadCachedData(): VisitsModel? {
+        statsWidgetUpdaters.updateTodayWidget(statsSiteProvider.siteModel.siteId)
         return todayStore.getTodayInsights(statsSiteProvider.siteModel)
     }
 

@@ -272,7 +272,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                             webPreviewUiState.getActionableEmptyView());
                     mUiHelpers.updateVisibility(mFullScreenProgressLayout,
                             webPreviewUiState.getFullscreenProgressLayoutVisibility());
-                    mUiHelpers.updateVisibility(mWebView, webPreviewUiState.getWebViewVisibility());
                 }
             }
         });
@@ -346,7 +345,13 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mViewModel.getPreviewModeSelector().observe(this, new Observer<PreviewModeSelectorStatus>() {
             @Override
             public void onChanged(final @Nullable PreviewModeSelectorStatus previewModelSelectorStatus) {
-                if (previewModelSelectorStatus != null && previewModelSelectorStatus.isVisible()) {
+                if (previewModelSelectorStatus != null) {
+                    mPreviewModeButton.setEnabled(previewModelSelectorStatus.isEnabled());
+
+                    if (!previewModelSelectorStatus.isVisible()) {
+                        return;
+                    }
+
                     mPreviewModeButton.post(new Runnable() {
                         @Override public void run() {
                             int popupWidth = getResources().getDimensionPixelSize(R.dimen.web_preview_mode_popup_width);
@@ -388,6 +393,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 mWebView.getSettings().setLoadWithOverviewMode(previewMode == PreviewMode.DESKTOP);
                 mWebView.getSettings().setUseWideViewPort(previewMode != PreviewMode.DESKTOP);
                 mWebView.setInitialScale(100);
+                mWebView.reload();
             }
         });
         mViewModel.start();

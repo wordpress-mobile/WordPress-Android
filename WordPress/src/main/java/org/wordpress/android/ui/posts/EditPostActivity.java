@@ -554,7 +554,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
@@ -3882,6 +3882,15 @@ public class EditPostActivity extends AppCompatActivity implements
             case HORIZONTAL_RULE_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_HORIZONTAL_RULE;
                 break;
+            case FORMAT_ALIGN_LEFT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_LEFT);
+                break;
+            case FORMAT_ALIGN_CENTER_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_CENTER);
+                break;
+            case FORMAT_ALIGN_RIGHT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_RIGHT);
+                break;
             case HTML_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_HTML;
                 hidePhotoPicker();
@@ -3928,6 +3937,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case UNDERLINE_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_UNDERLINE;
+                break;
+            case REDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_REDO);
+                break;
+            case UNDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDO);
+                break;
+            default:
+                AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
                 break;
         }
 

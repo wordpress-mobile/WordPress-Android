@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="?android:selectableItemBackground"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="text_comment_author"
@@ -65,7 +65,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:lineSpacingMultiplier="1.1"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_medium"
             android:fontFamily="serif"
             tools:text="text_comment_text" />
@@ -79,7 +79,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="date" />
 
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/reader_label_reply"
-                    android:textColor="@color/neutral"
+                    android:textColor="?attr/wpColorTextSubtle"
                     android:textSize="@dimen/text_sz_medium" />
             </LinearLayout>
 

@@ -23,7 +23,7 @@
         android:breakStrategy="simple"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         tools:text="plugin_name"
