@@ -212,19 +212,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     }
 
     @Override
-    public boolean onConfirmClicked(FullScreenDialogController controller) {
-        ActivityUtils.hideKeyboard(getActivity());
-
-        if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
-            Bundle result = new Bundle();
-            result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
-            controller.confirm(result);
-        } else {
-            controller.dismiss();
-        }
-
-        return true;
-    }
+    public abstract boolean onConfirmClicked(FullScreenDialogController controller);
 
     @Override
     public boolean onDismissClicked(FullScreenDialogController controller) {
