@@ -1661,6 +1661,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_redemption_success";
             case AUTO_UPLOAD_POST_INVOKED:
                 return "auto_upload_post_invoked";
+            case UNPUBLISHED_REVISION_DIALOG_SHOWN:
+                return "unpublished_revision_dialog_shown";
+            case UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED:
+                return "unpublished_revision_dialog_load_local_version_clicked";
+            case UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED:
+                return "unpublished_revision_dialog_load_unpublished_version_clicked";
         }
         return null;
     }

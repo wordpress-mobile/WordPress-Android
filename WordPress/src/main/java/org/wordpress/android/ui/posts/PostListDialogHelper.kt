@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_SHOWN
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
@@ -18,7 +22,8 @@ private const val CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE
  */
 class PostListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
-    private val checkNetworkConnection: () -> Boolean
+    private val checkNetworkConnection: () -> Boolean,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -87,6 +92,7 @@ class PostListDialogHelper(
     }
 
     fun showAutoSaveConflictedPostResolutionDialog(post: PostModel) {
+        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN)
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
@@ -128,6 +134,7 @@ class PostListDialogHelper(
                 // open the editor with the restored auto save
                 localPostIdForAutoSaveConflictResolutionDialog = null
                 editRestoredAutoSavePost(it)
+                analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -148,6 +155,7 @@ class PostListDialogHelper(
             CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPost(it)
+                analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
