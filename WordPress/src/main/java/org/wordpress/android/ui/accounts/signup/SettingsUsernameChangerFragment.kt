@@ -62,7 +62,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
         dialogController.setActionEnabled(hasUsernameChanged())
     }
 
-    override fun onUsernameConfirmed(controller: FullScreenDialogController, usernameSelected: String){
+    override fun onUsernameConfirmed(controller: FullScreenDialogController, usernameSelected: String) {
         showUsernameConfirmationDialog(usernameSelected)
     }
 
@@ -146,14 +146,12 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
     }
 
     fun showProgress() {
-        progressDialog?.let {
-            if (it.window == null && !it.isShowing) {
-                progressDialog = ProgressDialog(context).apply {
-                    isIndeterminate = true
-                    setCancelable(true)
-                    setMessage(getString(R.string.settings_username_changer_progress_dialog))
-                    setOnCancelListener { showChangeUsernameActionCancelledMessage() }
-                }
+        if (progressDialog == null || progressDialog?.window == null || progressDialog?.isShowing == false) {
+            progressDialog = ProgressDialog(context).apply {
+                isIndeterminate = true
+                setCancelable(true)
+                setMessage(getString(R.string.settings_username_changer_progress_dialog))
+                setOnCancelListener { showChangeUsernameActionCancelledMessage() }
             }
         }
 
