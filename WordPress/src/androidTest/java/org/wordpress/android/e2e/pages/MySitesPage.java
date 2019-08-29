@@ -31,7 +31,6 @@ public class MySitesPage {
 
     public void switchSite() {
         clickOn(R.id.switch_site);
-
         chooseSiteLabel.check(matches(withText("Choose site")));
     }
 
