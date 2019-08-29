@@ -30,8 +30,7 @@ class UsernameChangerFullScreenDialogFragment : BaseUsernameChangerFullScreenDia
         ActivityUtils.hideKeyboard(activity)
 
         if (usernamesAdapter != null && usernamesAdapter.mItems != null) {
-            val result = Bundle()
-            result.putString(RESULT_USERNAME, usernamesAdapter.mItems[usernamesAdapter.selectedItem])
+            val result = Bundle().apply { putString(RESULT_USERNAME, usernameSelected) }
             controller.confirm(result)
         } else {
             controller.dismiss()
