@@ -121,7 +121,7 @@ class UsernameChangerFullScreenDialogFragmentTest {
         )
 
         // Verifies that the username was selected.
-        assertEquals(USERNAME_TO_BE_SELECTED, fragment.mUsernameSelected)
+        assertEquals(USERNAME_TO_BE_SELECTED, fragment.usernameSelected)
 
         // Verifies that the header text has updated.
         checkViewHasText(

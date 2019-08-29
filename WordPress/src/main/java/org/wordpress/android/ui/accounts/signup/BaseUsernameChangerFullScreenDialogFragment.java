@@ -56,20 +56,20 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         FullScreenDialogContent, OnUsernameSelectedListener {
     private ProgressBar mProgressBar;
 
-    protected FullScreenDialogController mDialogController;
-    protected Handler mGetSuggestionsHandler;
-    protected RecyclerView mUsernameSuggestions;
-    protected Runnable mGetSuggestionsRunnable;
-    protected String mDisplayName;
-    protected String mUsername;
-    protected String mUsernameSelected;
-    protected String mUsernameSuggestionInput;
-    protected TextInputEditText mUsernameView;
-    protected TextView mHeaderView;
-    protected UsernameChangerRecyclerViewAdapter mUsernamesAdapter;
-    protected boolean mIsShowingDismissDialog;
-    protected boolean mShouldWatchText; // Flag handling text watcher to avoid network call on device rotation.
-    protected int mUsernameSelectedIndex;
+    private FullScreenDialogController mDialogController;
+    private Handler mGetSuggestionsHandler;
+    private RecyclerView mUsernameSuggestions;
+    private Runnable mGetSuggestionsRunnable;
+    private String mDisplayName;
+    private String mUsername;
+    private String mUsernameSelected;
+    private String mUsernameSuggestionInput;
+    private TextInputEditText mUsernameView;
+    private TextView mHeaderView;
+    private UsernameChangerRecyclerViewAdapter mUsernamesAdapter;
+    private boolean mIsShowingDismissDialog;
+    private boolean mShouldWatchText; // Flag handling text watcher to avoid network call on device rotation.
+    private int mUsernameSelectedIndex;
 
     public static final String EXTRA_DISPLAY_NAME = "EXTRA_DISPLAY_NAME";
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
@@ -258,22 +258,30 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         mUsernameSelectedIndex = mUsernamesAdapter.getSelectedItem();
     }
 
-    protected String getUsernameOrSelected() {
+    private String getUsernameOrSelected() {
         return TextUtils.isEmpty(mUsernameSelected) ? mUsername : mUsernameSelected;
     }
 
-    protected void getUsernameSuggestions(String usernameQuery) {
+    public String getUsernameSelected() {
+        return mUsernameSelected;
+    }
+
+    private void getUsernameSuggestions(String usernameQuery) {
         showProgress(true);
 
         FetchUsernameSuggestionsPayload payload = new FetchUsernameSuggestionsPayload(usernameQuery);
         mDispatcher.dispatch(AccountActionBuilder.newFetchUsernameSuggestionsAction(payload));
     }
 
+    public UsernameChangerRecyclerViewAdapter getUsernamesAdapter() {
+        return mUsernamesAdapter;
+    }
+
     private String getUsernameQueryFromDisplayName() {
         return mDisplayName.replace(" ", "").toLowerCase(Locale.ROOT);
     }
 
-    protected boolean hasUsernameChanged() {
+    public boolean hasUsernameChanged() {
         return !TextUtils.equals(mUsername, mUsernameSelected);
     }
 
@@ -300,7 +308,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         mUsernameSuggestions.setAdapter(mUsernamesAdapter);
     }
 
-    protected void showDismissDialog() {
+    private void showDismissDialog() {
         mIsShowingDismissDialog = true;
 
         new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.LoginTheme))

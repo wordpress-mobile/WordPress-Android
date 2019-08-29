@@ -60,14 +60,13 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
      */
     override fun onUsernameSelected(username: String?) {
         super.onUsernameSelected(username)
-        dialogController.setActionEnabled(mUsernameSelectedIndex != 0)
+        dialogController.setActionEnabled(hasUsernameChanged())
     }
 
     override fun onConfirmClicked(controller: FullScreenDialogController?): Boolean {
         ActivityUtils.hideKeyboard(activity)
-        if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
-            val username = mUsernamesAdapter.mItems[mUsernamesAdapter.selectedItem]
-            showUsernameConfirmationDialog(username)
+        if (usernamesAdapter != null && usernamesAdapter.mItems != null) {
+            showUsernameConfirmationDialog(usernameSelected)
         } else {
             controller?.dismiss()
         }
