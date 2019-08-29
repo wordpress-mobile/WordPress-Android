@@ -126,7 +126,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             pushJetpackMonitorSettings();
             pushJetpackProtectAndSsoSettings();
-            if (supportsJetpackSpeedUpSettings(mSite)) {
+            if (supportsJetpackSiteAcceleratorSettings(mSite)) {
                 pushServeImagesFromOurServersModuleSettings();
                 pushServeStaticFilesFromOurServersModuleSettings();
                 pushLazyLoadModule();
@@ -154,7 +154,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
     }
 
-    static boolean supportsJetpackSpeedUpSettings(SiteModel site) {
+    static boolean supportsJetpackSiteAcceleratorSettings(SiteModel site) {
         return SiteUtils.checkMinimalJetpackVersion(site, SPEED_UP_SETTINGS_JETPACK_VERSION);
     }
 

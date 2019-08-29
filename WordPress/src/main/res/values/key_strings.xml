@@ -92,15 +92,13 @@
     <string name="pref_key_change_password" translatable="false">pref_key_change_password</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
     <!-- Speed up your site -->
-    <string name="pref_key_speed_up_your_site_screen" translatable="false">wp_pref_speed_up_your_site_screen</string>
-    <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_serve_images_from_our_servers</string>
     <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
     <!-- Jetpack performance settings -->
     <string name="pref_key_jetpack_performance_settings" translatable="false">wp_pref_jetpack_performance_settings</string>
     <string name="pref_key_site_accelerator" translatable="false">wp_pref_site_accelerator</string>
     <string name="pref_key_site_accelerator_settings" translatable="false">wp_pref_site_accelerator_settings</string>
-    <string name="pref_key_faster_images" translatable="false">wp_pref_key_faster_images</string>
-    <string name="pref_key_faster_static_files" translatable="false">wp_pref_key_faster_static_files</string>
+    <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_key_serve_images_from_our_servers</string>
+    <string name="pref_key_serve_static_files_from_our_servers" translatable="false">wp_pref_key_serve_static_files_from_our_servers</string>
     <!-- Media -->
     <string name="pref_key_site_quota" translatable="false">wp_pref_key_site_quota</string>
     <string name="pref_key_site_quota_space" translatable="false">wp_pref_key_site_quota_space</string>
