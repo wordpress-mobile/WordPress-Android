@@ -59,6 +59,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     private EditTextPreferenceWithValidation mChangePasswordPreference;
     private ProgressDialog mChangePasswordProgressDialog;
     private Snackbar mEmailSnackbar;
+    private String mUpdatedUsername;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -193,7 +194,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
 
     private void refreshAccountDetails() {
         AccountModel account = mAccountStore.getAccount();
-        mUsernamePreference.setSummary(account.getUserName());
+        mUsernamePreference.setSummary(fetchLatestUsername(account));
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
         changePrimaryBlogPreference(account.getPrimarySiteId());
@@ -354,7 +355,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         AccountModel account = mAccountStore.getAccount();
 
         final Bundle bundle =
-                SettingsUsernameChangerFragment.newBundle(account.getDisplayName(), account.getUserName());
+                SettingsUsernameChangerFragment.newBundle(account.getDisplayName(), fetchLatestUsername(account));
 
         new FullScreenDialogFragment.Builder(getActivity())
                 .setTitle(R.string.username_changer_title)
@@ -367,11 +368,25 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                 .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), FullScreenDialogFragment.TAG);
     }
 
+    /**
+     * If the username was recently updated then the mUpdatedUsername field will have a copy of it from the bundle
+     * returned
+     * from the change username fragment. This is necessary since the AccountStore doesn't update the Account
+     * instance when the dispatcher sends a request to update the username.
+     *
+     * @param account the current account of the user.
+     * @return username the current username the user has selected.
+     */
+    private String fetchLatestUsername(AccountModel account) {
+        return TextUtils.isEmpty(mUpdatedUsername) ? account.getUserName() : mUpdatedUsername;
+    }
+
     @Override public void onConfirm(@Nullable Bundle result) {
         if (result != null) {
             String username = result.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME);
 
             if (username != null) {
+                mUpdatedUsername = username;
                 ToastUtils.showToast(getActivity(),
                         String.format(getString(R.string.settings_username_changer_toast_content), username),
                         ToastUtils.Duration.LONG);
