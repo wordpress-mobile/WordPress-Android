@@ -10,7 +10,6 @@ import android.view.ViewParent;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
-import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.GeneralClickAction;
@@ -99,7 +98,7 @@ public class WPSupportUtils {
 
     public static void clickOn(ViewInteraction viewInteraction) {
         waitForElementToBeDisplayed(viewInteraction);
-        viewInteraction.perform(click(closeSoftKeyboard()));
+        viewInteraction.perform(click(closeSoftKeyboard())); // attempt to close the soft keyboard as the rollback
         idleFor(500); // allow for transitions
     }
 
@@ -526,35 +525,6 @@ public class WPSupportUtils {
                 ViewParent parent = view.getParent();
                 return parent instanceof ViewGroup && parentMatcher.matches(parent)
                         && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
-    }
-
-    private static ViewAction noAction() {
-        return new ViewAction() {
-            @Override public Matcher<View> getConstraints() {
-                return new Matcher<View>() {
-                    @Override public boolean matches(Object item) {
-                        return true;
-                    }
-
-                    @Override public void describeMismatch(Object item, Description mismatchDescription) {
-                    }
-
-                    @Override public void _dont_implement_Matcher___instead_extend_BaseMatcher_() {
-                    }
-
-                    @Override public void describeTo(Description description) {
-                        description.appendText("does nothing");
-                    }
-                };
-            }
-
-            @Override public String getDescription() {
-                return "do nothing";
-            }
-
-            @Override public void perform(UiController uiController, View view) {
             }
         };
     }
