@@ -214,6 +214,7 @@ public class EditPostActivity extends AppCompatActivity implements
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
+    public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -520,6 +521,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID)); // Load post from extras
 
                 if (mPost != null) {
+                    if (extras.getBoolean(EXTRA_LOAD_AUTO_SAVE_REVISION)) {
+                        mPost.setTitle(TextUtils.isEmpty(mPost.getAutoSaveTitle()) ? mPost.getTitle()
+                                : mPost.getAutoSaveTitle());
+                        mPost.setContent(TextUtils.isEmpty(mPost.getAutoSaveContent()) ? mPost.getContent()
+                                : mPost.getAutoSaveContent());
+                        mPost.setExcerpt(TextUtils.isEmpty(mPost.getAutoSaveExcerpt()) ? mPost.getExcerpt()
+                                : mPost.getAutoSaveExcerpt());
+                    }
+
                     initializePostObject();
                 } else if (isRestarting) {
                     newPostSetup();
@@ -752,9 +762,11 @@ public class EditPostActivity extends AppCompatActivity implements
                         updatePostObject(true);
                     } catch (EditorFragmentNotAddedException e) {
                         AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                        return;
                     }
-                    savePostToDb();
+                    // make sure we save the post only after the user made some changes
+                    if (mPostSnapshotWhenEditorOpened == null || !mPostSnapshotWhenEditorOpened.equals(mPost)) {
+                        savePostToDb();
+                    }
                 }
             }).start();
         }
