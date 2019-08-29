@@ -450,8 +450,15 @@ class PostListItemUiStateHelperTest {
         assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
+    @Test
     fun `label has error color on version conflict`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
+        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
+    }
+
+    @Test
+    fun `label has error color on auto-save conflict`() {
+        val state = createPostListItemUiState(hasAutoSave = true)
         assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
     }
 
@@ -483,6 +490,12 @@ class PostListItemUiStateHelperTest {
     fun `version conflict label shown for posts with version conflict`() {
         val state = createPostListItemUiState(unhandledConflicts = true)
         assertThat(state.data.statuses).contains(UiStringRes(R.string.local_post_is_conflicted))
+    }
+
+    @Test
+    fun `unhandled auto-save label shown for posts with existing auto-save`() {
+        val state = createPostListItemUiState(hasAutoSave = true)
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_post_autosave_conflict))
     }
 
     @Test
@@ -871,6 +884,7 @@ class PostListItemUiStateHelperTest {
         post: PostModel = PostModel(),
         uploadStatus: PostListItemUploadStatus = createUploadStatus(),
         unhandledConflicts: Boolean = false,
+        hasAutoSave: Boolean = false,
         capabilitiesToPublish: Boolean = true,
         statsSupported: Boolean = true,
         featuredImageUrl: String? = null,
@@ -882,6 +896,7 @@ class PostListItemUiStateHelperTest {
             post = post,
             uploadStatus = uploadStatus,
             unhandledConflicts = unhandledConflicts,
+            hasAutoSave = hasAutoSave,
             capabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
             featuredImageUrl = featuredImageUrl,
