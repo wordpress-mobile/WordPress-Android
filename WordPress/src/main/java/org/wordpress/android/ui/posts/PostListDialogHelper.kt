@@ -14,7 +14,7 @@ private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_T
 private const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
-private const val CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG"
+private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -30,7 +30,7 @@ class PostListDialogHelper(
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
-    private var localPostIdForAutoSaveConflictResolutionDialog: Int? = null
+    private var localPostIdForAutosaveRevisionResolutionDialog: Int? = null
 
     fun showDeletePostConfirmationDialog(post: PostModel) {
         // We need network connection to delete a remote post, but not a local draft
@@ -91,16 +91,16 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    fun showAutoSaveConflictedPostResolutionDialog(post: PostModel) {
+    fun showAutoSaveRevisionDialog(post: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN)
         val dialogHolder = DialogHolder(
-                tag = CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG,
+                tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
-                message = UiStringRes(R.string.dialog_confirm_autosave_body),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
                 positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
                 negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
         )
-        localPostIdForAutoSaveConflictResolutionDialog = post.id
+        localPostIdForAutosaveRevisionResolutionDialog = post.id
         showDialog.invoke(dialogHolder)
     }
 
@@ -130,9 +130,9 @@ class PostListDialogHelper(
                 localPostIdForTrashPostWithLocalChangesDialog = null
                 trashPostWithLocalChanges(it)
             }
-            CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
+            CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
-                localPostIdForAutoSaveConflictResolutionDialog = null
+                localPostIdForAutosaveRevisionResolutionDialog = null
                 editRestoredAutoSavePost(it)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
             }
@@ -152,7 +152,7 @@ class PostListDialogHelper(
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
             }
-            CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG -> localPostIdForAutoSaveConflictResolutionDialog?.let {
+            CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPost(it)
                 analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
@@ -166,10 +166,10 @@ class PostListDialogHelper(
         updateConflictedPostWithLocalVersion: (Int) -> Unit,
         editLocalPost: (Int) -> Unit
     ) {
-        // Cancel and outside touch dismiss works the same way for all, except for conflict resolution dialogs,
-        // for which tapping outside and actively tapping the "edit local" have different meanings
+        // Cancel and outside touch dismiss works the same way for all, except for conflict and autosave revision
+        // dialogs, for which tapping outside and actively tapping the "edit local" have different meanings
         if (instanceTag != CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG &&
-                instanceTag != CONFIRM_ON_AUTOSAVE_CONFLICT_DIALOG_TAG) {
+                instanceTag != CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG) {
             onNegativeClickedForBasicDialog(
                     instanceTag = instanceTag,
                     updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion,
