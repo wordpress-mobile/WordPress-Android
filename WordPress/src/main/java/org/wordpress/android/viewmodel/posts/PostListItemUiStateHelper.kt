@@ -308,7 +308,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         hasUnhandledConflicts: Boolean,
         hasAutoSave: Boolean
     ): Int? {
-        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) || hasUnhandledConflicts || hasAutoSave
+        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
+                hasUnhandledConflicts || hasAutoSave
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
         val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
