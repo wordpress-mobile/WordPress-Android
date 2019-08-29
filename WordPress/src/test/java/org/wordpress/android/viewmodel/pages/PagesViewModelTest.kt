@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
 import org.wordpress.android.ui.uploads.PostEvents
-import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -46,7 +45,6 @@ class PagesViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
-    @Mock lateinit var uploadStarter: UploadStarter
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -61,7 +59,6 @@ class PagesViewModelTest {
                 dispatcher = dispatcher,
                 actionPerfomer = actionPerformer,
                 networkUtils = networkUtils,
-                uploadStarter = uploadStarter,
                 previewStateHelper = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
