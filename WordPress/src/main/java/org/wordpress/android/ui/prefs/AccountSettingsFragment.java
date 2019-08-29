@@ -42,6 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -372,10 +373,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
             String username = result.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME);
 
             if (username != null) {
-                ToastUtils.showToast(getActivity(),
+                WPSnackbar.make(getView(),
                         String.format(getString(R.string.settings_username_changer_toast_content), username),
-                        ToastUtils.Duration.LONG);
-
+                        Snackbar.LENGTH_LONG).show();
                 mUsernamePreference.setSummary(username);
             }
         }
