@@ -54,7 +54,13 @@ public class FooterNoteBlock extends NoteBlock {
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
-            noteBlockHolder.getTextView().setText(getNoteText());
+            Spannable spannable = getNoteText();
+            NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
+            for (NoteBlockClickableSpan span : spans) {
+                span.enableColors(view.getContext());
+            }
+
+            noteBlockHolder.getTextView().setText(spannable);
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
