@@ -479,12 +479,12 @@ public class PostUtils {
 
     public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
         Context context = WordPress.getContext();
-        String firstPart = context.getString(R.string.dialog_confirm_autosave_body);
+        String firstPart = context.getString(R.string.dialog_confirm_autosave_body_first_part);
 
         String lastModified =
                 TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
         String secondPart =
-                String.format(context.getString(R.string.dialog_confirm_autosave_body_2),
+                String.format(context.getString(R.string.dialog_confirm_autosave_body_second_part),
                         getFormattedDateForLastModified(
                                 context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
                         getFormattedDateForLastModified(
