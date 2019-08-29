@@ -34,7 +34,8 @@ import javax.inject.Provider
 /**
  * Test to verify that the UsernameChanger functionality is still intact.
  */
-@Ignore("Ignored because these type of Espresso tests can cause flakiness and overall slower completion time for the test suite.")
+@Ignore("Ignored because these type of Espresso tests can cause flakiness " +
+        "and overall slower completion time for the test suite.")
 @RunWith(AndroidJUnit4::class)
 class UsernameChangerFullScreenDialogFragmentTest {
     companion object {
