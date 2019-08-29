@@ -5,6 +5,9 @@ XX.X
 * All changes to posts will be automatically synced with the server.
 * Post List: Unhandled conflict with auto saves are now detected and visible. On post opening, the app will let you choose which version you prefer.
 * Fixed: Clicking on "Publish" on a private post sometimes published the post as public
+* All changes to posts and pages will be automatically synced with the server.
+* Post List: Unsaved changes are automatically backed up on all devices. On post opening, the app will let you choose which version you prefer.
+* Clicking on "Publish" on a private post sometimes published the post as public
 
 13.2
 -----

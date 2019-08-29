@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -453,7 +454,7 @@ public class PostUtils {
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
     }
 
-    public static boolean isPostInConflictWithAutoSave(PostModel post) {
+    public static boolean hasAutoSave(PostModel post) {
         // TODO: would be great to check if title, content and excerpt are different,
         // but we currently don't have them when we fetch the post list
 
@@ -474,6 +475,21 @@ public class PostUtils {
                         getFormattedDateForLastModified(
                                 context, DateTimeUtils.timestampFromIso8601Millis(post.getRemoteLastModified())));
         return firstPart + secondPart;
+    }
+
+    public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
+        Context context = WordPress.getContext();
+        String firstPart = context.getString(R.string.dialog_confirm_autosave_body_first_part);
+
+        String lastModified =
+                TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
+        String secondPart =
+                String.format(context.getString(R.string.dialog_confirm_autosave_body_second_part),
+                        getFormattedDateForLastModified(
+                                context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
+                        getFormattedDateForLastModified(
+                                context, DateTimeUtils.timestampFromIso8601Millis(post.getAutoSaveModified())));
+        return new UiStringText(firstPart + secondPart);
     }
 
     /**
