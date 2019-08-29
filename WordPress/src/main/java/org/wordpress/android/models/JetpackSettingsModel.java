@@ -22,6 +22,8 @@ public class JetpackSettingsModel {
     public boolean lazyLoadImages;
     public boolean commentLikes;
     public boolean sharingEnabled = true;
+    public boolean improvedSearch;
+    public boolean adFreeVideoHosting;
 
     public JetpackSettingsModel() {
         super();
@@ -47,6 +49,8 @@ public class JetpackSettingsModel {
         serveStaticFilesFromOurServers = other.serveStaticFilesFromOurServers;
         lazyLoadImages = other.lazyLoadImages;
         sharingEnabled = other.sharingEnabled;
+        improvedSearch = other.improvedSearch;
+        adFreeVideoHosting = other.adFreeVideoHosting;
     }
 
     @Override
@@ -65,6 +69,8 @@ public class JetpackSettingsModel {
                 && lazyLoadImages == otherModel.lazyLoadImages
                 && commentLikes == otherModel.commentLikes
                 && sharingEnabled == otherModel.sharingEnabled
+                && improvedSearch == otherModel.improvedSearch
+                && adFreeVideoHosting == otherModel.adFreeVideoHosting
                 && whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 

@@ -70,6 +70,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AppLog;
@@ -243,12 +244,25 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Speed up settings
     private WPSwitchPreference mLazyLoadImages;
+    private WPSwitchPreference mLazyLoadImagesNested;
 
+    // Jetpack media settings
+    private WPSwitchPreference mAdFreeHosting;
+    private WPSwitchPreference mAdFreeHostingNested;
+
+    // Jetpack search
+    private WPSwitchPreference mImprovedSearch;
+
+    private PreferenceScreen mJetpackPerformanceMoreSettings;
     // Site accelerator settings
     private PreferenceScreen mSiteAcceleratorSettings;
+    private PreferenceScreen mSiteAcceleratorSettingsNested;
     private WPSwitchPreference mSiteAccelerator;
+    private WPSwitchPreference mSiteAcceleratorNested;
     private WPSwitchPreference mServeImagesFromOurServers;
+    private WPSwitchPreference mServeImagesFromOurServersNested;
     private WPSwitchPreference mServeStaticFilesFromOurServers;
+    private WPSwitchPreference mServeStaticFilesFromOurServersNested;
 
     public boolean mEditingEnabled = true;
 
@@ -511,6 +525,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupJetpackSecurityScreen();
         } else if (preference == mSiteAcceleratorSettings) {
             setupSiteAcceleratorScreen();
+        } else if (preference == mSiteAcceleratorSettingsNested) {
+            setupNestedSiteAcceleratorScreen();
+        } else if (preference == mJetpackPerformanceMoreSettings) {
+            setupJetpackMoreSettingsScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) {
@@ -641,25 +659,24 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpUseTwoFactorPref) {
             mJpUseTwoFactorPref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
-        } else if (preference == mLazyLoadImages) {
-            mLazyLoadImages.setChecked((Boolean) newValue);
-            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
-        } else if (preference == mSiteAccelerator) {
+        } else if (preference == mLazyLoadImages || preference == mLazyLoadImagesNested) {
+            setLazyLoadImagesChecked((Boolean) newValue);
+        } else if (preference == mAdFreeHosting || preference == mAdFreeHostingNested) {
+            setAdFreeHostingChecked((Boolean) newValue);
+        } else if (preference == mImprovedSearch) {
+            mImprovedSearch.setChecked((Boolean) newValue);
+        } else if (preference == mSiteAccelerator || preference == mSiteAcceleratorNested) {
             Boolean checked = (Boolean) newValue;
-            mServeImagesFromOurServers.setChecked(checked);
-            mServeStaticFilesFromOurServers.setChecked(checked);
-            mSiteSettings.enableServeImagesFromOurServers(checked);
-            mSiteSettings.enableServeStaticFilesFromOurServers(checked);
+            setServeImagesFromOurServersChecked(checked);
+            setServeStaticFilesFromOurServersChecked(checked);
             updateSiteAccelerator();
-        } else if (preference == mServeImagesFromOurServers) {
+        } else if (preference == mServeImagesFromOurServers || preference == mServeImagesFromOurServersNested) {
             Boolean checked = (Boolean) newValue;
-            mServeImagesFromOurServers.setChecked(checked);
-            mSiteSettings.enableServeImagesFromOurServers((Boolean) newValue);
+            setServeImagesFromOurServersChecked(checked);
             updateSiteAccelerator();
-        } else if (preference == mServeStaticFilesFromOurServers) {
+        } else if (preference == mServeStaticFilesFromOurServers || preference == mServeStaticFilesFromOurServersNested) {
             Boolean checked = (Boolean) newValue;
-            mServeStaticFilesFromOurServers.setChecked(checked);
-            mSiteSettings.enableServeStaticFilesFromOurServers((Boolean) newValue);
+            setServeStaticFilesFromOurServersChecked(checked);
             updateSiteAccelerator();
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
@@ -934,7 +951,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
-        mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
         mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
         mGutenbergDefaultForNewPosts =
@@ -942,9 +958,28 @@ public class SiteSettingsFragment extends PreferenceFragment
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
 
         mSiteAcceleratorSettings = (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings);
+        mSiteAcceleratorSettingsNested =
+                (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings_nested);
         mSiteAccelerator = (WPSwitchPreference) getChangePref(R.string.pref_key_site_accelerator);
-        mServeImagesFromOurServers = (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
-        mServeStaticFilesFromOurServers = (WPSwitchPreference) getChangePref(R.string.pref_key_serve_static_files_from_our_servers);
+        mSiteAcceleratorNested = (WPSwitchPreference) getChangePref(R.string.pref_key_site_accelerator_nested);
+        mServeImagesFromOurServers =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
+        mServeImagesFromOurServersNested =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers_nested);
+        mServeStaticFilesFromOurServers =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_serve_static_files_from_our_servers);
+        mServeStaticFilesFromOurServersNested =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_serve_static_files_from_our_servers_nested);
+
+        mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
+        mLazyLoadImagesNested = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images_nested);
+
+        mAdFreeHosting = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting);
+        mAdFreeHostingNested = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting_nested);
+
+        mImprovedSearch = (WPSwitchPreference) getChangePref(R.string.pref_key_improved_search);
+
+        mJetpackPerformanceMoreSettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_performance_more_settings);
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -969,6 +1004,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         // hide site accelerator jetpack settings if plugin version < 5.8
         if (!supportsJetpackSiteAcceleratorSettings(mSite)) {
             removeJetpackSiteAcceleratorSettings();
+        }
+        long planId = mSite.getPlanId();
+        if (planId == PlansConstants.JETPACK_FREE_PLAN_ID || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
+            removeJetpackSearchSettings();
+        }
+        if (planId != PlansConstants.BUSINESS_PLAN_ID && planId != PlansConstants.JETPACK_BUSINESS_PLAN_ID
+            && planId != PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
+            removeJetpackMediaSettings();
         }
     }
 
@@ -1288,12 +1331,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
-        mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
+        setLazyLoadImagesChecked(mSiteSettings.isLazyLoadImagesEnabled());
+        setAdFreeHostingChecked(mSiteSettings.isLazyLoadImagesEnabled());
+        boolean checked = mSiteSettings.isLazyLoadImagesEnabled();
+        mImprovedSearch.setChecked(checked);
 
         updateSiteAccelerator();
-        mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
-        mServeStaticFilesFromOurServers.setChecked(mSiteSettings.isServeStaticFilesFromOurServersEnabled());
+        setServeImagesFromOurServersChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
+        setServeStaticFilesFromOurServersChecked(mSiteSettings.isServeStaticFilesFromOurServersEnabled());
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
@@ -1312,13 +1358,50 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void updateSiteAccelerator() {
         boolean siteAcceleratorEnabled = mSiteSettings.isServeImagesFromOurServersEnabled() && mSiteSettings
                 .isServeStaticFilesFromOurServersEnabled();
-        mSiteAcceleratorSettings.setSummary(siteAcceleratorEnabled ? R.string.site_settings_site_accelerator_on
+        setSiteAcceleratorSettingsSummary(siteAcceleratorEnabled ? R.string.site_settings_site_accelerator_on
                 : R.string.site_settings_site_accelerator_off);
-        mSiteAccelerator.setChecked(siteAcceleratorEnabled);
+        setSiteAcceleratorChecked(siteAcceleratorEnabled);
         ListAdapter adapter = mSiteAcceleratorSettings.getRootAdapter();
         if (adapter instanceof BaseAdapter) {
             ((BaseAdapter) adapter).notifyDataSetChanged();
         }
+        ListAdapter adapterNested = mSiteAcceleratorSettingsNested.getRootAdapter();
+        if (adapterNested instanceof BaseAdapter) {
+            ((BaseAdapter) adapterNested).notifyDataSetChanged();
+        }
+    }
+
+    private void setSiteAcceleratorSettingsSummary(int summaryRes) {
+        mSiteAcceleratorSettings.setSummary(summaryRes);
+        mSiteAcceleratorSettingsNested.setSummary(summaryRes);
+    }
+
+    private void setSiteAcceleratorChecked(boolean checked) {
+        mSiteAccelerator.setChecked(checked);
+        mSiteAcceleratorNested.setChecked(checked);
+    }
+
+    private void setLazyLoadImagesChecked(boolean checked) {
+        mSiteSettings.enableLazyLoadImages(checked);
+        mLazyLoadImages.setChecked(checked);
+        mLazyLoadImagesNested.setChecked(checked);
+    }
+
+    private void setAdFreeHostingChecked(boolean checked) {
+        mAdFreeHosting.setChecked(checked);
+        mAdFreeHostingNested.setChecked(checked);
+    }
+
+    private void setServeImagesFromOurServersChecked(boolean checked) {
+        mSiteSettings.enableServeImagesFromOurServers(checked);
+        mServeImagesFromOurServers.setChecked(checked);
+        mServeImagesFromOurServersNested.setChecked(checked);
+    }
+
+    private void setServeStaticFilesFromOurServersChecked(boolean checked) {
+        mSiteSettings.enableServeStaticFilesFromOurServers(checked);
+        mServeStaticFilesFromOurServers.setChecked(checked);
+        mServeStaticFilesFromOurServersNested.setChecked(checked);
     }
 
     private void setDateTimeFormatPref(FormatType formatType, WPPreference formatPref, String formatValue) {
@@ -1712,6 +1795,30 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    private void setupJetpackMoreSettingsScreen() {
+        if (mJetpackPerformanceMoreSettings == null || !isAdded()) {
+            return;
+        }
+        String title = getString(R.string.site_settings_performance);
+        Dialog dialog = mJetpackPerformanceMoreSettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
+    private void setupNestedSiteAcceleratorScreen() {
+        if (mSiteAcceleratorSettingsNested == null || !isAdded()) {
+            return;
+        }
+        String title = getString(R.string.site_settings_site_accelerator);
+        Dialog dialog = mSiteAcceleratorSettingsNested.getDialog();
+        if (dialog != null) {
+            setupPreferenceList(dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
     private boolean setupMorePreferenceScreen() {
         if (mMorePreference == null || !isAdded()) {
             return false;
@@ -1777,6 +1884,16 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.pref_key_site_accelerator_settings);
     }
 
+    private void removeJetpackMediaSettings() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_jetpack_performance_media_settings);
+    }
+
+    private void removeJetpackSearchSettings() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_jetpack_search_settings);
+    }
+
     private void removePrivateOptionFromPrivacySetting() {
         if (mPrivacyPref == null) {
             return;
@@ -1789,6 +1906,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeNonWPComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+                R.string.pref_key_jetpack_performance_media_settings);
+        removeJetpackMediaSettings();
+        removeJetpackSearchSettings();
     }
 
     private Preference getChangePref(int id) {

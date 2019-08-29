@@ -609,7 +609,7 @@
     <string name="file_size_in_terabytes">%s TB</string>
 
     <!-- Speed up your site -->
-    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
+    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen.</string>
 
     <!-- Site accelerator -->
     <string name="site_settings_site_accelerator">Site Accelerator</string>
@@ -619,6 +619,16 @@
     <string name="site_settings_faster_images">Faster images</string>
     <string name="site_settings_faster_static_files">Faster static files</string>
     <string name="site_settings_site_accelerator_summary">Load pages faster by allowing Jetpack to optimize your images and static files (like CSS and JavaScript).</string>
+    <!-- Media performance -->
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_ad_free_video_hosting">Ad-free Video Hosting</string>
+    <!-- Jetpack search -->
+    <string name="site_settings_jetpack_search">Jetpack Search</string>
+    <string name="site_settings_improved_search">Improved Search</string>
+    <string name="site_settings_improved_search_summary">Replace WordPress build-in search with an improved search experience</string>
+
+    <string name="site_settings_more">More</string>
+    <string name="site_settings_performance_and_speed">Performance and Speed</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
