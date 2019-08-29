@@ -177,9 +177,9 @@ class PostActionHandler(
             return
         }
 
-        // Then check if it's in conflicted state with a remote auto-save
+        // Then check if an autosave revision is available
         if (hasUnhandledAutoSave.invoke(post)) {
-            postListDialogHelper.showAutoSaveConflictedPostResolutionDialog(post)
+            postListDialogHelper.showAutoSaveRevisionDialog(post)
             return
         }
 

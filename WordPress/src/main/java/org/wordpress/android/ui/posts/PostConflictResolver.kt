@@ -85,7 +85,7 @@ class PostConflictResolver(
     }
 
     fun hasUnhandledAutoSave(post: PostModel): Boolean {
-        return PostUtils.isPostInConflictWithAutoSave(post)
+        return PostUtils.hasAutoSave(post)
     }
 
     fun onPostSuccessfullyUpdated() {
