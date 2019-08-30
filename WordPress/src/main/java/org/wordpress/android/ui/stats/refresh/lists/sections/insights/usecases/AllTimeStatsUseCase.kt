@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -28,6 +29,7 @@ class AllTimeStatsUseCase
     private val allTimeStore: AllTimeInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher, backgroundDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
@@ -37,6 +39,7 @@ class AllTimeStatsUseCase
     }
 
     override suspend fun loadCachedData(): InsightsAllTimeModel? {
+        statsWidgetUpdaters.updateAllTimeWidget(statsSiteProvider.siteModel.siteId)
         return allTimeStore.getAllTimeInsights(statsSiteProvider.siteModel)
     }
 

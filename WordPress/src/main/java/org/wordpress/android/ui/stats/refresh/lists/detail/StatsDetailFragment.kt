@@ -78,8 +78,8 @@ class StatsDetailFragment : DaggerFragment() {
         })
 
         viewModel.selectedDateChanged.observe(this, Observer { event ->
-            event?.applyIfNotHandled {
-                viewModel.onDateChanged(this.selectedSection)
+            if (event != null) {
+                viewModel.onDateChanged(event.selectedSection)
             }
         })
 

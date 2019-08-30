@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -32,10 +35,12 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
-    @Mock lateinit var site: SiteModel
+    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    private val site = SiteModel()
     private lateinit var useCase: AllTimeStatsUseCase
     private val bestDay = "2018-11-25"
     private val bestDayTransformed = "Nov 25, 2018"
+    private val siteId = 1L
     @Before
     fun setUp() {
         useCase = AllTimeStatsUseCase(
@@ -44,8 +49,10 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 statsDateFormatter,
+                statsWidgetUpdaters,
                 popupMenuHandler
         )
+        site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsDateFormatter.printDate(bestDay)).thenReturn(bestDayTransformed)
     }
@@ -129,6 +136,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
             assertThat(this.endColumn.value).isEqualTo(viewsBestDayTotal.toString())
             assertThat(this.endColumn.tooltip).isEqualTo(bestDayTransformed)
         }
+        verify(statsWidgetUpdaters, times(2)).updateAllTimeWidget(siteId)
     }
 
     @Test

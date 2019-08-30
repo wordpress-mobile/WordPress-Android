@@ -42,7 +42,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="text_title"/>
 
@@ -53,7 +53,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_domain"/>
 

@@ -8,11 +8,14 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
+import org.wordpress.android.util.ContextExtensionsKt;
 
 import java.util.List;
 
@@ -38,17 +41,27 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int mLightTextColor;
 
 
-    public NoteBlockClickableSpan(Context context, FormattableRange range, boolean shouldLink, boolean isFooter) {
+    public NoteBlockClickableSpan(FormattableRange range, boolean shouldLink, boolean isFooter) {
         mShouldLink = shouldLink;
         mIsFooter = isFooter;
-
-        // Text/background colors
-        mTextColor = context.getResources().getColor(R.color.neutral_70);
-        mBackgroundColor = context.getResources().getColor(R.color.primary_5);
-        mLinkColor = context.getResources().getColor(R.color.primary_40);
-        mLightTextColor = context.getResources().getColor(R.color.neutral_70);
-
         processRangeData(range);
+    }
+
+    // We need to use theme-styled colors in NoteBlockClickableSpan but current Notifications architecture makes it
+    // difficult to get right type of context to this span to style the colors. We are doing it in this method instead.
+    public void enableColors(Context context) {
+        mTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
+        mBackgroundColor = ContextCompat.getColor(context, R.color.primary_5);
+        mLinkColor = ContextCompat.getColor(context, R.color.primary_40);
+        mLightTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
+    }
+
+    public void setColors(@ColorInt int textColor, @ColorInt int backgroundColor, @ColorInt int linkColor,
+                          @ColorInt int lightTextColor) {
+        mTextColor = textColor;
+        mBackgroundColor = backgroundColor;
+        mLinkColor = linkColor;
+        mLightTextColor = lightTextColor;
     }
 
 
