@@ -114,7 +114,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
 
         // We want to fetch only the minimal data required in order to save users' data
-        params.put("meta_fields","autosave.modified");
+        params.put("meta_fields", "autosave.modified");
 
         final boolean loadedMore = offset > 0;
 
