@@ -71,20 +71,24 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         }
 
         TextView titleView = view.findViewById(android.R.id.title);
-        if (titleView != null) {
+        TextView coloredTitleView = view.findViewById(R.id.colored_title);
+        if (titleView != null && coloredTitleView != null) {
             Resources res = getContext().getResources();
+            coloredTitleView.setText(titleView.getText());
+            coloredTitleView.setVisibility(View.VISIBLE);
+            titleView.setVisibility(View.GONE);
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
             if (mTextColor == 0) {
-                titleView.setTextColor(res.getColor(
+                coloredTitleView.setTextColor(res.getColor(
                         isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
                                 : R.color.neutral_20));
             } else {
-                titleView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.white));
+                coloredTitleView.setTextColor(ContextCompat.getColor(this.getContext(), R.color.white));
             }
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
-                ViewCompat.setPaddingRelative(titleView, res.getDimensionPixelSize(R.dimen.margin_large), 0, 0, 0);
+                ViewCompat.setPaddingRelative(coloredTitleView, res.getDimensionPixelSize(R.dimen.margin_large), 0, 0, 0);
             }
         }
 
