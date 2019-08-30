@@ -249,7 +249,7 @@
 
             <PreferenceCategory
                 android:id="@+id/pref_performance_and_speed_settings"
-                android:key="@string/pref_key_jetpack_performance_media_settings"
+                android:key="@string/pref_key_jetpack_performance_and_speed_settings"
                 android:title="@string/site_settings_performance_and_speed">
 
                 <PreferenceScreen

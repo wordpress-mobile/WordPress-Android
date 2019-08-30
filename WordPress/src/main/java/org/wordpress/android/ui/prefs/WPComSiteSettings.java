@@ -82,6 +82,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
     private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
     private static final String AMP_ENABLED_KEY = "amp_is_enabled";
+    private static final String JETPACK_SEARCH_ENABLED_KEY = "jetpack_search_enabled";
+    private static final String JETPACK_SEARCH_SUPPORTED_KEY = "jetpack_search_supported";
     private static final String COMMENT_LIKES = "comment-likes";
 
     // WP.com REST keys used to GET certain site settings
@@ -569,7 +571,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
             final boolean fallbackValue = mRemoteJpSettings.improvedSearch;
             mRemoteJpSettings.improvedSearch = mJpSettings.improvedSearch;
             WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
-                    mSite.getSiteId(), LAZY_LOAD_IMAGES, mJpSettings.improvedSearch, new RestRequest.Listener() {
+                    mSite.getSiteId(), SEARCH_MODULE, mJpSettings.improvedSearch, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Jetpack module updated - Improved search");
@@ -594,7 +596,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
             final boolean fallbackValue = mRemoteJpSettings.adFreeVideoHosting;
             mRemoteJpSettings.adFreeVideoHosting = mJpSettings.adFreeVideoHosting;
             WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
-                    mSite.getSiteId(), LAZY_LOAD_IMAGES, mJpSettings.adFreeVideoHosting, new RestRequest.Listener() {
+                    mSite.getSiteId(), AD_FREE_VIDEO_HOSTING_MODULE, mJpSettings.adFreeVideoHosting, new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Jetpack module updated - Videopress");
@@ -690,6 +692,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
         mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
         mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
+        mRemoteSettings.jetpackSearchSupported = settingsObject.optBoolean(JETPACK_SEARCH_SUPPORTED_KEY, false);
+        mRemoteSettings.jetpackSearchEnabled = settingsObject.optBoolean(JETPACK_SEARCH_ENABLED_KEY, false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -876,6 +880,12 @@ class WPComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
             params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
+        }
+        if (mSettings.jetpackSearchSupported != mRemoteSettings.jetpackSearchSupported) {
+            params.put(JETPACK_SEARCH_SUPPORTED_KEY, String.valueOf(mSettings.jetpackSearchSupported));
+        }
+        if (mSettings.jetpackSearchEnabled != mRemoteSettings.jetpackSearchEnabled) {
+            params.put(JETPACK_SEARCH_ENABLED_KEY, String.valueOf(mSettings.jetpackSearchEnabled));
         }
 
         return params;

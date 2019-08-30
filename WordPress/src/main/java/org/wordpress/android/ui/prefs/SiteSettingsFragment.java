@@ -664,7 +664,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mAdFreeHosting || preference == mAdFreeHostingNested) {
             setAdFreeHostingChecked((Boolean) newValue);
         } else if (preference == mImprovedSearch) {
-            mImprovedSearch.setChecked((Boolean) newValue);
+            Boolean checked = (Boolean) newValue;
+            mImprovedSearch.setChecked(checked);
+            mSiteSettings.enableImprovedSearch(checked);
+            mSiteSettings.setJetpackSearchEnabled(checked);
         } else if (preference == mSiteAccelerator || preference == mSiteAcceleratorNested) {
             Boolean checked = (Boolean) newValue;
             setServeImagesFromOurServersChecked(checked);
@@ -1005,13 +1008,19 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!supportsJetpackSiteAcceleratorSettings(mSite)) {
             removeJetpackSiteAcceleratorSettings();
         }
-        long planId = mSite.getPlanId();
-        if (planId == PlansConstants.JETPACK_FREE_PLAN_ID || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
-            removeJetpackSearchSettings();
-        }
-        if (planId != PlansConstants.BUSINESS_PLAN_ID && planId != PlansConstants.JETPACK_BUSINESS_PLAN_ID
-            && planId != PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
+        if (!mSite.isJetpackConnected() || mSite.getPlanId() == PlansConstants.JETPACK_FREE_PLAN_ID) {
             removeJetpackMediaSettings();
+        }
+    }
+
+    private void setupJetpackSearch() {
+        boolean isJetpackBusiness =
+                mSite.isJetpackConnected() && mSite.getPlanId() == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
+        if (isJetpackBusiness || mSiteSettings.getJetpackSearchSupported()) {
+            mImprovedSearch
+                    .setChecked(mSiteSettings.isImprovedSearchEnabled() || mSiteSettings.getJetpackSearchEnabled());
+        } else {
+            removeJetpackSearchSettings();
         }
     }
 
@@ -1333,8 +1342,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
         setLazyLoadImagesChecked(mSiteSettings.isLazyLoadImagesEnabled());
-        setAdFreeHostingChecked(mSiteSettings.isLazyLoadImagesEnabled());
-        boolean checked = mSiteSettings.isLazyLoadImagesEnabled();
+        setAdFreeHostingChecked(mSiteSettings.isAdFreeHostingEnabled());
+        boolean checked = mSiteSettings.isImprovedSearchEnabled() || mSiteSettings.getJetpackSearchEnabled();
         mImprovedSearch.setChecked(checked);
 
         updateSiteAccelerator();
@@ -1346,6 +1355,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_traffic);
         }
+
+        setupJetpackSearch();
 
         setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
         setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
@@ -1388,6 +1399,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setAdFreeHostingChecked(boolean checked) {
+        mSiteSettings.enableAdFreeHosting(checked);
         mAdFreeHosting.setChecked(checked);
         mAdFreeHostingNested.setChecked(checked);
     }
@@ -1882,16 +1894,25 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeJetpackSiteAcceleratorSettings() {
         WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
                 R.string.pref_key_site_accelerator_settings);
+        WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_and_speed_settings,
+                R.string.pref_key_site_accelerator_settings_nested);
     }
 
     private void removeJetpackMediaSettings() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+        WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
+                R.string.pref_key_ad_free_video_hosting);
+        WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
                 R.string.pref_key_jetpack_performance_media_settings);
     }
 
     private void removeJetpackSearchSettings() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
+        WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_more_settings,
                 R.string.pref_key_jetpack_search_settings);
+    }
+
+    private void removeMoreJetpackSettings() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_jetpack_performance_settings,
+                R.string.pref_key_jetpack_performance_more_settings);
     }
 
     private void removePrivateOptionFromPrivacySetting() {
@@ -1908,8 +1929,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_media_settings);
-        removeJetpackMediaSettings();
-        removeJetpackSearchSettings();
     }
 
     private Preference getChangePref(int id) {
