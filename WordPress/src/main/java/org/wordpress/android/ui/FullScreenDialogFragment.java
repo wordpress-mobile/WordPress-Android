@@ -43,16 +43,15 @@ public class FullScreenDialogFragment extends DialogFragment {
     private OnConfirmListener mOnConfirmListener;
     private OnDismissListener mOnDismissListener;
     private String mAction;
+    private MenuItem mActionItem;
     private String mSubtitle;
     private String mTitle;
     private Toolbar mToolbar;
     private boolean mHideActivityBar;
-    private boolean mDismissAfterConfirm;
     private int mToolbarColor;
 
     private static final String ARG_ACTION = "ARG_ACTION";
     private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_HIDE_ACTIVITY_BAR";
-    private static final String ARG_DISMISS_AFTER_CONFIRM = "ARG_DISMISS_AFTER_CONFIRM";
     private static final String ARG_SUBTITLE = "ARG_SUBTITLE";
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final String ARG_TOOLBAR_COLOR = "ARG_TOOLBAR_COLOR";
@@ -72,6 +71,8 @@ public class FullScreenDialogFragment extends DialogFragment {
         void confirm(@Nullable Bundle result);
 
         void dismiss();
+
+        void setActionEnabled(boolean enabled);
     }
 
     public interface OnConfirmListener {
@@ -89,7 +90,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         dialog.setOnConfirmListener(builder.mOnConfirmListener);
         dialog.setOnDismissListener(builder.mOnDismissListener);
         dialog.setHideActivityBar(builder.mHideActivityBar);
-        dialog.setDismissAfterConfirm(builder.mDismissAfterConfirm);
         return dialog;
     }
 
@@ -100,7 +100,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         bundle.putString(ARG_SUBTITLE, builder.mSubtitle);
         bundle.putInt(ARG_TOOLBAR_COLOR, builder.mToolbarColor);
         bundle.putBoolean(ARG_HIDE_ACTIVITY_BAR, builder.mHideActivityBar);
-        bundle.putBoolean(ARG_DISMISS_AFTER_CONFIRM, builder.mDismissAfterConfirm);
         return bundle;
     }
 
@@ -112,7 +111,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             getChildFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.full_screen_dialog_fragment_none, 0, 0,
-                                         R.anim.full_screen_dialog_fragment_none)
+                            R.anim.full_screen_dialog_fragment_none)
                     .add(R.id.full_screen_dialog_fragment_content, mFragment)
                     .commitNow();
         }
@@ -135,6 +134,12 @@ public class FullScreenDialogFragment extends DialogFragment {
             @Override
             public void dismiss() {
                 FullScreenDialogFragment.this.dismiss();
+            }
+
+            @Override public void setActionEnabled(boolean enabled) {
+                if (mActionItem != null) {
+                    mActionItem.setEnabled(enabled);
+                }
             }
         };
     }
@@ -202,7 +207,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     public int show(FragmentTransaction transaction, String tag) {
         initBuilderArguments();
         transaction.setCustomAnimations(R.anim.full_screen_dialog_fragment_slide_up, 0, 0,
-                                        R.anim.full_screen_dialog_fragment_slide_down);
+                R.anim.full_screen_dialog_fragment_slide_down);
         return transaction.add(android.R.id.content, this, tag).addToBackStack(null).commit();
     }
 
@@ -211,9 +216,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             mOnConfirmListener.onConfirm(result);
         }
 
-        if (mDismissAfterConfirm) {
-            dismiss();
-        }
+        dismiss();
     }
 
     /**
@@ -250,7 +253,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         mSubtitle = bundle.getString(ARG_SUBTITLE);
         mToolbarColor = bundle.getInt(ARG_TOOLBAR_COLOR);
         mHideActivityBar = bundle.getBoolean(ARG_HIDE_ACTIVITY_BAR);
-        mDismissAfterConfirm = bundle.getBoolean(ARG_DISMISS_AFTER_CONFIRM);
     }
 
     /**
@@ -275,9 +277,9 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         if (!mAction.isEmpty()) {
             Menu menu = mToolbar.getMenu();
-            MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
-            action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            action.setOnMenuItemClickListener(
+            mActionItem = menu.add(0, ID_ACTION, 0, this.mAction);
+            mActionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            mActionItem.setOnMenuItemClickListener(
                     new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
@@ -374,15 +376,6 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
-     * Set flag to dismiss fragment after confirm action is clicked.
-     *
-     * @param dismissAfterConfirm boolean to dismiss after confirm click.
-     */
-    public void setDismissAfterConfirm(boolean dismissAfterConfirm) {
-        mDismissAfterConfirm = dismissAfterConfirm;
-    }
-
-    /**
      * Set theme background for {@link FullScreenDialogFragment} view.
      *
      * @param view {@link View} to set background
@@ -428,7 +421,6 @@ public class FullScreenDialogFragment extends DialogFragment {
         String mSubtitle = "";
         String mTitle = "";
         boolean mHideActivityBar = false;
-        boolean mDismissAfterConfirm = true;
         int mToolbarColor = R.color.primary;
 
         /**
@@ -472,11 +464,11 @@ public class FullScreenDialogFragment extends DialogFragment {
         /**
          * Set {@link Fragment} to be added as dialog, which must implement {@link FullScreenDialogContent}.
          *
-         * @param contentClass Fragment class to be instantiated
+         * @param contentClass     Fragment class to be instantiated
          * @param contentArguments arguments to be added to Fragment
          * @return {@link Builder} object to allow for chaining of calls to set methods
          * @throws IllegalArgumentException if content class does not implement
-         * {@link FullScreenDialogContent} interface
+         *                                  {@link FullScreenDialogContent} interface
          */
         public Builder setContent(Class<? extends Fragment> contentClass, @Nullable Bundle contentArguments) {
             if (!FullScreenDialogContent.class.isAssignableFrom(contentClass)) {
@@ -497,17 +489,6 @@ public class FullScreenDialogFragment extends DialogFragment {
          */
         public Builder setHideActivityBar(boolean hide) {
             this.mHideActivityBar = hide;
-            return this;
-        }
-
-        /**
-         * Set flag to dismiss the fragment after confirm action is clicked.
-         *
-         * @param dismiss boolean to dismiss the fragment after confirm click.
-         * @return {@link Builder} object to allow for chaining of calls to set methods
-         */
-        public Builder setDismissAferConfirm(boolean dismiss) {
-            this.mDismissAfterConfirm = dismiss;
             return this;
         }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
+import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
@@ -83,7 +84,10 @@ public abstract class ApplicationModule {
     abstract CommentFullScreenDialogFragment contributecommentFullScreenDialogFragment();
 
     @ContributesAndroidInjector
-    abstract UsernameChangerFullScreenDialogFragment contributeUpUsernameChangerFullScreenDialogFragment();
+    abstract UsernameChangerFullScreenDialogFragment contributeUsernameChangerFullScreenDialogFragment();
+
+    @ContributesAndroidInjector
+    abstract SettingsUsernameChangerFragment contributeSettingsUsernameChangerFragment();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(

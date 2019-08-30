@@ -22,7 +22,6 @@ import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -734,12 +733,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     @Override public AndroidInjector<Fragment> supportFragmentInjector() {
         return mSupportFragmentInjector;
-    }
-
-    @VisibleForTesting
-    public void setSupportFragmentInjector(
-            DispatchingAndroidInjector<Fragment> supportFragmentInjector) {
-        mSupportFragmentInjector = supportFragmentInjector;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
