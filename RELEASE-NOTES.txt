@@ -1,3 +1,7 @@
+13.3
+-----
+* Added ability to change the username via Account Settings
+
 13.2
 -----
 * Fix issue where establishing LinkedIn connection would always fail
