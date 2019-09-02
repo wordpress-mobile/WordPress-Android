@@ -106,8 +106,6 @@
     <string name="pref_key_serve_static_files_from_our_servers_nested" translatable="false">wp_pref_key_serve_static_files_from_our_servers_nested</string>
     <string name="pref_key_ad_free_video_hosting" translatable="false">wp_pref_key_ad_free_video_hosting</string>
     <string name="pref_key_ad_free_video_hosting_nested" translatable="false">wp_pref_key_ad_free_video_hosting_nested</string>
-    <string name="pref_key_more_settings" translatable="false">wp_pref_key_more_settings</string>
-    <string name="pref_key_more_settings_nested" translatable="false">wp_pref_key_more_settings_nested</string>
     <string name="pref_key_jetpack_performance_media_settings" translatable="false">wp_pref_key_jetpack_performance_media_settings</string>
     <string name="pref_key_jetpack_performance_media_settings_nested" translatable="false">wp_pref_key_jetpack_performance_media_settings_nested</string>
     <string name="pref_key_jetpack_performance_and_speed_settings" translatable="false">wp_pref_key_jetpack_performance_and_speed_settings</string>
