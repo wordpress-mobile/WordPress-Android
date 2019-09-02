@@ -596,7 +596,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
             final boolean fallbackValue = mRemoteJpSettings.adFreeVideoHosting;
             mRemoteJpSettings.adFreeVideoHosting = mJpSettings.adFreeVideoHosting;
             WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
-                    mSite.getSiteId(), AD_FREE_VIDEO_HOSTING_MODULE, mJpSettings.adFreeVideoHosting, new RestRequest.Listener() {
+                    mSite.getSiteId(), AD_FREE_VIDEO_HOSTING_MODULE, mJpSettings.adFreeVideoHosting,
+                    new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
                             AppLog.d(AppLog.T.API, "Jetpack module updated - Videopress");

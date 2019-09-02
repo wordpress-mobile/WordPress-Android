@@ -88,7 +88,8 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
-                ViewCompat.setPaddingRelative(coloredTitleView, res.getDimensionPixelSize(R.dimen.margin_large), 0, 0, 0);
+                int margin = res.getDimensionPixelSize(R.dimen.margin_large);
+                ViewCompat.setPaddingRelative(coloredTitleView, margin, 0, 0, 0);
             }
         }
 

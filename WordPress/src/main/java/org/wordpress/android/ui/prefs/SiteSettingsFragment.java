@@ -677,7 +677,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             Boolean checked = (Boolean) newValue;
             setServeImagesFromOurServersChecked(checked);
             updateSiteAccelerator();
-        } else if (preference == mServeStaticFilesFromOurServers || preference == mServeStaticFilesFromOurServersNested) {
+        } else if (preference == mServeStaticFilesFromOurServers
+                   || preference == mServeStaticFilesFromOurServersNested) {
             Boolean checked = (Boolean) newValue;
             setServeStaticFilesFromOurServersChecked(checked);
             updateSiteAccelerator();
@@ -982,7 +983,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mImprovedSearch = (WPSwitchPreference) getChangePref(R.string.pref_key_improved_search);
 
-        mJetpackPerformanceMoreSettings = (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_performance_more_settings);
+        mJetpackPerformanceMoreSettings =
+                (PreferenceScreen) getClickPref(R.string.pref_key_jetpack_performance_more_settings);
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
