@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -26,6 +27,7 @@ import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import kotlin.coroutines.CoroutineContext
 
 class BaseListUseCase(
     private val bgDispatcher: CoroutineDispatcher,
@@ -37,20 +39,24 @@ class BaseListUseCase(
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
     ) -> UiModel
-) {
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = bgDispatcher
+
     private val blockListData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
     )
     private val statsTypes = MutableLiveData<List<StatsType>>()
-    val data: MediatorLiveData<UiModel> = mergeAsyncNotNull(bgDispatcher, statsTypes, blockListData) { types, map ->
-        types.mapNotNull {
+    val data: MediatorLiveData<UiModel> = mergeAsyncNotNull(this, statsTypes, blockListData) { types, map ->
+        val result = types.mapNotNull {
             if (map.containsKey(it)) {
                 map[it]
             } else {
                 null
             }
         }
-    }.mapAsync(bgDispatcher) { useCaseModels ->
+        result
+    }.mapAsync(this) { useCaseModels ->
         mapUiModel(useCaseModels) { message ->
             mutableSnackbarMessage.postValue(message)
         }

@@ -3,8 +3,9 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Do not override this class directly. Use StatefulUseCase or StatelessUseCase instead.
@@ -34,22 +36,13 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val defaultUiState: UI_STATE,
     private val fetchParams: List<UseCaseParam> = listOf(UseCaseParam.Site),
     private val uiUpdateParams: List<UseCaseParam> = listOf()
-) {
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = backgroundDispatcher
+
     private var domainState: UseCaseState = LOADING
-        set(value) {
-            field = value
-            updateState()
-        }
     private var domainModel: DOMAIN_MODEL? = null
-        set(value) {
-            field = value
-            updateState()
-        }
     private var uiState: UI_STATE = defaultUiState
-        set(value) {
-            field = value
-            updateState()
-        }
     private var updateJob: Job? = null
 
     private val _liveData = MutableLiveData<UseCaseModel>()
@@ -57,10 +50,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mutableNavigationTarget
-
-    init {
-        updateState()
-    }
 
     /**
      * Fetches data either from a local cache or from remote API
@@ -77,6 +66,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
             val cachedData = loadCachedData()
             if (cachedData != null) {
                 domainModel = cachedData
+                updateState()
             } else {
                 emptyDb = true
             }
@@ -105,6 +95,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                     val updatedCachedData = loadCachedData()
                     if (domainModel != updatedCachedData) {
                         domainModel = updatedCachedData
+                        updateState()
                     }
                 }
                 SUCCESS
@@ -121,6 +112,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     fun onUiState(newState: UI_STATE? = null) {
         uiState = newState ?: uiState
+        updateState()
     }
 
     /**
@@ -131,13 +123,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         val previousState = uiState ?: defaultUiState
         val updatedState = update(previousState)
         if (previousState != updatedState) {
-            uiState = updatedState
+            onUiState(updatedState)
         }
     }
 
     private fun updateUseCaseState(newState: UseCaseState) {
         if (domainState != newState) {
             domainState = newState
+            updateState()
         }
     }
 
@@ -148,6 +141,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         domainModel = null
         domainState = LOADING
         uiState = defaultUiState
+        updateState()
     }
 
     /**
@@ -197,7 +191,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 job.cancel()
             }
         }
-        updateJob = GlobalScope.launch(backgroundDispatcher) {
+
+        updateJob = launch {
+            delay(50)
             val currentData = domainModel?.let { buildUiModel(it, uiState) }
 
             val useCaseModel = try {

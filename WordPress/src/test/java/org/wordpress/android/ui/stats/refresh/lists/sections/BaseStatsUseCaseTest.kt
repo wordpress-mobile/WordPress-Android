@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -9,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.test
@@ -18,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Provider
 
+@InternalCoroutinesApi
 class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<String?>
     @Mock lateinit var remoteDataProvider: Provider<String?>
@@ -43,8 +46,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `on fetch loads data from DB when current value is null`() = test {
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
+        assertThat(result).isEmpty()
 
         block.fetch(false, false)
 
@@ -53,29 +55,25 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `on fetch returns null item when DB is empty`() = test {
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
-
+        assertThat(result).isEmpty()
         whenever(localDataProvider.get()).thenReturn(null)
 
         block.fetch(false, false)
 
-        assertThat(result).hasSize(2)
-        assertThat(result[1]!!.data).isNull()
-        assertThat(result[1]!!.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result).hasSize(1)
+        assertThat(result[0]!!.data).isNull()
+        assertThat(result[0]!!.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
     fun `on refresh calls loads data from DB and later from API`() = test {
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result[0]?.state).isEqualTo(UseCaseState.LOADING)
+        assertThat(result).isEmpty()
 
         block.fetch(true, false)
 
-        assertThat(result.size).isEqualTo(3)
-        assertThat(result[1]?.state).isEqualTo(UseCaseState.LOADING)
-        assertData(2, localData)
-        assertThat(result[2]?.state).isEqualTo(UseCaseState.SUCCESS)
+        assertThat(result.size).isEqualTo(2)
+        assertData(0, localData)
+        assertThat(result[1]?.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
     @Test
@@ -100,6 +98,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(firstItem.text).isEqualTo(data)
     }
 
+    @InternalCoroutinesApi
     class TestUseCase(
         private val localDataProvider: Provider<String?>,
         private val remoteDataProvider: Provider<String?>,
@@ -107,7 +106,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
             Dispatchers.Unconfined,
-            Dispatchers.Unconfined,
+            TEST_DISPATCHER,
             0,
             listOf()
     ) {

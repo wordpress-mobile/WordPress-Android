@@ -3,12 +3,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.SearchTermsModel
@@ -56,12 +58,13 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     private val contentDescription = "title, views"
 
     private val limitMode = Top(ITEMS_TO_LOAD)
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = SearchTermsUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,

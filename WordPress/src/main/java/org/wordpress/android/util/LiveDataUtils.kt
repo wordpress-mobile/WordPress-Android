@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -64,7 +62,7 @@ fun <T> mergeNotNull(
  * @return new data source
  */
 fun <T, U, V> mergeAsyncNotNull(
-    bgDispatcher: CoroutineDispatcher,
+    scope: CoroutineScope,
     sourceA: LiveData<T>,
     sourceB: LiveData<U>,
     merger: suspend (T, U) -> V
@@ -80,7 +78,7 @@ fun <T, U, V> mergeAsyncNotNull(
             mediator.value = mediator.value?.first to it
         }
     }
-    return mediator.mapAsync(bgDispatcher) { (dataA, dataB) ->
+    return mediator.mapAsync(scope) { (dataA, dataB) ->
         if (dataA != null && dataB != null) {
             merger(dataA, dataB)
         } else {
@@ -195,12 +193,12 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
 
 /**
  * A wrapper of the map utility method that is null safe and runs the mapping on a background thread
- * @param bgDispatcher defines the thread on which the mapper runs
+ * @param scope defines the scope to run mapping in
  */
-fun <T, U> LiveData<T>.mapAsync(bgDispatcher: CoroutineDispatcher, mapper: suspend (T) -> U?): MediatorLiveData<U> {
+fun <T, U> LiveData<T>.mapAsync(scope: CoroutineScope, mapper: suspend (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x ->
-        GlobalScope.launch(bgDispatcher) {
+        scope.launch {
             val mappedValue = x?.let { mapper(x) }
             result.postValue(mappedValue)
         }

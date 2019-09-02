@@ -6,12 +6,14 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -56,6 +58,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     private val limitMode = Top(15)
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = OverviewUseCase(
@@ -66,7 +69,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 overviewMapper,
                 Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
                 resourceProvider

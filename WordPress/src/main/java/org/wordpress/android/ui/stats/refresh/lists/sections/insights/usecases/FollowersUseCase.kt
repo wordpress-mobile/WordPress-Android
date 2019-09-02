@@ -180,7 +180,7 @@ class FollowersUseCase(
     private fun buildTitle() = Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
 
     private fun loadMore() {
-        GlobalScope.launch(bgDispatcher) {
+        launch {
             val state = fetchData(true, PagedMode(itemsToLoad, true))
             evaluateState(state)
         }

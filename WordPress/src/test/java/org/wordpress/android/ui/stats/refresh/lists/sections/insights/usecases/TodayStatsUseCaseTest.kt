@@ -4,12 +4,14 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -41,11 +43,12 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private val comments = 30
     private val site = SiteModel()
     private val siteId = 1L
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = TodayStatsUseCase(
                 Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
                 statsWidgetUpdaters,

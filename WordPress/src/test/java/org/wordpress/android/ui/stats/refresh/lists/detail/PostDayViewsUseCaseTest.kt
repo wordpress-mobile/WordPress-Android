@@ -4,12 +4,14 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
@@ -44,11 +46,12 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var model: PostDetailStatsModel
     private lateinit var useCase: PostDayViewsUseCase
     private val postId = 1L
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostDayViewsUseCase(
                 Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 mapper,
                 statsDateFormatter,
                 selectedDateProvider,
