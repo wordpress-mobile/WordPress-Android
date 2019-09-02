@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.F
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase.FollowerType.SOCIAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase.FollowerType.WP_COM
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -33,9 +35,14 @@ class FollowerTotalsUseCase
     private val followersStore: FollowersStore,
     private val publicizeStore: PublicizeStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val contentDescriptionHelper: ContentDescriptionHelper
+    private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<Map<FollowerType, Int>>(FOLLOWER_TOTALS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_follower_totals))
+
+    override fun buildEmptyItem(): List<BlockListItem> {
+        return listOf(buildTitle(), Empty())
+    }
 
     override suspend fun loadCachedData(): Map<FollowerType, Int>? {
         val wpComFollowers = followersStore.getWpComFollowers(statsSiteProvider.siteModel, LimitMode.Top(0))
@@ -135,7 +142,7 @@ class FollowerTotalsUseCase
 
     override fun buildUiModel(domainModel: Map<FollowerType, Int>): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_view_follower_totals))
+        items.add(buildTitle())
 
         if (domainModel.isNotEmpty()) {
             domainModel.entries.forEach {
@@ -157,6 +164,12 @@ class FollowerTotalsUseCase
             items.add(Empty())
         }
         return items
+    }
+
+    private fun buildTitle() = Title(R.string.stats_view_follower_totals, menuAction = this::onMenuClick)
+
+    private fun onMenuClick(view: View) {
+        popupMenuHandler.onMenuClick(view, type)
     }
 
     enum class FollowerType { WP_COM, EMAIL, SOCIAL }

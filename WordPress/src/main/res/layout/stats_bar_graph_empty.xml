@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:text="@string/stats_bar_graph_empty"
-    android:id="@+id/stats_bar_graph_empty_label">
-</org.wordpress.android.widgets.WPTextView>

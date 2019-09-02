@@ -1,7 +1,20 @@
+13.3
+-----
+ 
+13.2
+-----
+* Fix issue where establishing LinkedIn connection would always fail
+* Display author of each post on Blog Posts screen
+* Moved Notifications settings to Notifications List.
+* Redesigned My Site screen to make most commonly used actions easily accessible.
+* File downloads in Stats for WP.com sites
+
+
 13.1
 -----
 * Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.
 * Improvement to the functionality and design of Web Preview.
+* Fixed an issue with social media service connections
 
 13.0
 -----

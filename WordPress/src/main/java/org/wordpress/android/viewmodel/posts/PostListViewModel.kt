@@ -353,6 +353,7 @@ class PostListViewModel @Inject constructor(
 
     private fun transformPostModelToPostListItemUiState(post: PostModel) =
             listItemUiStateHelper.createPostListItemUiState(
+                    authorFilterSelection,
                     post = post,
                     uploadStatus = connector.getUploadStatus(post),
                     unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),

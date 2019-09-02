@@ -18,7 +18,6 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -324,26 +323,6 @@ public class AppPrefs {
 
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
-    public static StatsTimeframe getStatsTimeframe() {
-        int idx = getInt(DeletablePrefKey.STATS_ITEM_INDEX);
-        StatsTimeframe[] timeframeValues = StatsTimeframe.values();
-        if (timeframeValues.length < idx) {
-            return timeframeValues[0];
-        } else {
-            return timeframeValues[idx];
-        }
-    }
-
-    public static void setStatsTimeframe(StatsTimeframe timeframe) {
-        if (timeframe != null) {
-            setInt(DeletablePrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
-        } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.STATS_ITEM_INDEX.name())
-                   .apply();
-        }
     }
 
     public static CommentStatusCriteria getCommentsStatusFilter() {

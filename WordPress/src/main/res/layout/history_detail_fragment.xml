@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/aztec_title_size"
                 android:textStyle="bold" >
@@ -57,7 +57,7 @@
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_extra_large"
                 android:scrollbars="vertical"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/text_sz_post_content" >
             </org.wordpress.android.widgets.DiffView>
