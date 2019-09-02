@@ -63,7 +63,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 val date = if (page.date == Date(0)) Date() else page.date
                 time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context).capitalize()
 
-                labels.text = page.labels.map { parent.context.getString(it) }.sorted().joinToString(" · ")
+                if (page.labels.isNotEmpty()) {
+                    labels.text = page.labels.map { parent.context.getString(it) }.sorted()
+                            .joinToString(prefix = " · ", separator = " · ")
+                }
 
                 itemView.setOnClickListener { onItemTapped(page) }
 
