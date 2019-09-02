@@ -288,7 +288,7 @@ public class PhotoPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon) {
+    public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon, boolean multiple) {
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCamera();

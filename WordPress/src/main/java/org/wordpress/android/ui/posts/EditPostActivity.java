@@ -1146,7 +1146,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * picker, or WP media picker
      */
     @Override
-    public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon) {
+    public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         hidePhotoPicker();
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
@@ -1156,7 +1156,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 launchVideoCamera();
                 break;
             case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary();
+                launchPictureLibrary(allowMultipleSelection);
                 break;
             case ANDROID_CHOOSE_VIDEO:
                 launchVideoLibrary();
@@ -1618,9 +1618,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void launchPictureLibrary() {
+    private void launchPictureLibrary(boolean allowMultipleSelection) {
         // don't allow multiple selection for Gutenberg, as we're on a single image block for now
-        WPMediaUtils.launchPictureLibrary(this, !mShowGutenbergEditor);
+        WPMediaUtils.launchPictureLibrary(this, allowMultipleSelection);
     }
 
     private void launchVideoLibrary() {
@@ -2998,10 +2998,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private void addMediaItemGroupOrSingleItem(Intent data) {
         ClipData clipData = data.getClipData();
         if (clipData != null) {
+            ArrayList<Uri> uriList = new ArrayList<>();
             for (int i = 0; i < clipData.getItemCount(); i++) {
                 ClipData.Item item = clipData.getItemAt(i);
-                addMedia(item.getUri(), false);
+                uriList.add(item.getUri());
             }
+            addMediaList(uriList, false);
         } else {
             addMedia(data.getData(), false);
         }
@@ -3474,23 +3476,23 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddPhotoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+    public void onAddPhotoClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO, allowMultipleSelection);
     }
 
     @Override
     public void onCapturePhotoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO, false);
     }
 
     @Override
     public void onAddVideoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, true);
     }
 
     @Override
     public void onCaptureVideoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false);
     }
 
     @Override
