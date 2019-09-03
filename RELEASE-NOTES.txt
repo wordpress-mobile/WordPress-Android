@@ -1,5 +1,6 @@
 13.3
 -----
+* Sort more than 100 published pages chronologically like Calypso
 * Significant performance improvements to Stats
  
 13.2
