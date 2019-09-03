@@ -77,9 +77,9 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.pages.observeForever { result.add(it) }
 
-        val earlyPages = (0 .. 30).map { buildPageModel(it, Date(HOUR_IN_MILLISECONDS * it)) }
-        val latePages = (31 .. 60).map { buildPageModel(it, Date(100 * HOUR_IN_MILLISECONDS * it)) }
-        val middlePages = (61 .. 96).map { buildPageModel(it, Date(10 * HOUR_IN_MILLISECONDS * it)) }
+        val earlyPages = (0..30).map { buildPageModel(it, Date(HOUR_IN_MILLISECONDS * it)) }
+        val latePages = (31..60).map { buildPageModel(it, Date(100 * HOUR_IN_MILLISECONDS * it)) }
+        val middlePages = (61..96).map { buildPageModel(it, Date(10 * HOUR_IN_MILLISECONDS * it)) }
         val earlyChild = buildPageModel(97, Date(40 * HOUR_IN_MILLISECONDS), earlyPages[0])
         val middleChild = buildPageModel(98, Date(1000 * HOUR_IN_MILLISECONDS), middlePages[0])
         val lateChild = buildPageModel(99, Date(7000 * HOUR_IN_MILLISECONDS), latePages[0])
@@ -100,11 +100,11 @@ class PageListViewModelTest : BaseUnitTest() {
             assertPublishedPage(pageItems[index], latePages[latePages.size - index])
         }
         assertPublishedPage(pageItems[31], middleChild)
-        for (index in 1 .. middlePages.size) {
+        for (index in 1..middlePages.size) {
             assertPublishedPage(pageItems[31 + index], middlePages[middlePages.size - index])
         }
         assertPublishedPage(pageItems[68], earlyChild)
-        for (index in 1 .. earlyPages.size) {
+        for (index in 1..earlyPages.size) {
             assertPublishedPage(pageItems[68 + index], earlyPages[earlyPages.size - index])
         }
         assertDivider(pageItems[100])
@@ -122,9 +122,9 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.pages.observeForever { result.add(it) }
 
-        val earlyPages = (0 .. 30).map { buildPageModel(it, Date(HOUR_IN_MILLISECONDS * it)) }
-        val latePages = (31 .. 60).map { buildPageModel(it, Date(100 * HOUR_IN_MILLISECONDS * it)) }
-        val middlePages = (61 .. 95).map { buildPageModel(it, Date(10 * HOUR_IN_MILLISECONDS * it)) }
+        val earlyPages = (0..30).map { buildPageModel(it, Date(HOUR_IN_MILLISECONDS * it)) }
+        val latePages = (31..60).map { buildPageModel(it, Date(100 * HOUR_IN_MILLISECONDS * it)) }
+        val middlePages = (61..95).map { buildPageModel(it, Date(10 * HOUR_IN_MILLISECONDS * it)) }
         val earlyChild = buildPageModel(96, Date(40 * HOUR_IN_MILLISECONDS), earlyPages[0])
         val middleChild = buildPageModel(97, Date(1000 * HOUR_IN_MILLISECONDS), middlePages[0])
         val lateChild = buildPageModel(98, Date(7000 * HOUR_IN_MILLISECONDS), latePages[0])
@@ -146,12 +146,12 @@ class PageListViewModelTest : BaseUnitTest() {
             assertPublishedPage(pageItems[index + 1], earlyPages[index], 0)
         }
         assertPublishedPage(pageItems[32], latePages[0], 0)
-        assertPublishedPage(pageItems[33], lateChild,  1)
+        assertPublishedPage(pageItems[33], lateChild, 1)
         for (index in 1 until latePages.size) {
             assertPublishedPage(pageItems[index + 33], latePages[index], 0)
         }
         assertPublishedPage(pageItems[63], middlePages[0], 0)
-        assertPublishedPage(pageItems[64], middleChild,  1)
+        assertPublishedPage(pageItems[64], middleChild, 1)
         for (index in 1 until middlePages.size) {
             assertPublishedPage(pageItems[index + 64], middlePages[index], 0)
         }
@@ -170,7 +170,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
     private fun assertPublishedPage(pageItem: PageItem, pageModel: PageModel, indent: Int = 0) {
         val publishedPage = pageItem as PublishedPage
-         assertThat(publishedPage.title).isEqualTo(pageModel.title)
+        assertThat(publishedPage.title).isEqualTo(pageModel.title)
         assertThat(publishedPage.date).isEqualTo(pageModel.date)
         assertThat(publishedPage.indent).isEqualTo(indent)
         assertThat(publishedPage.actionsEnabled).isEqualTo(false)
