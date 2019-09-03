@@ -34,7 +34,6 @@ class PageListViewModelTest : BaseUnitTest() {
         viewModel = PageListViewModel(mediaStore, dispatcher, Dispatchers.Unconfined)
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
-        whenever(pagesViewModel.listState).thenReturn(pageListState)
         whenever(pagesViewModel.site).thenReturn(site)
         site.id = 10
         pageListState.value = PageListState.DONE
@@ -59,7 +58,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val pageItems = result[0].first
         assertThat(pageItems).hasSize(3)
         val firstItem = pageItems[0] as PublishedPage
-        assertThat(firstItem.title).isEqualTo("Title 1")
+        assertThat(firstItem.title).isEqualTo("Title 01")
         assertThat(firstItem.date).isEqualTo(date)
         assertThat(firstItem.actionsEnabled).isEqualTo(false)
         assertDivider(pageItems[1])
