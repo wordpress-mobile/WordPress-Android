@@ -780,7 +780,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     // Mark the site to show the GB popup at first editor run
                     SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
                     if (newSiteModel != null) {
-                        AppPrefs.setShowGutenbergInfoPopup(newSiteModel.getUrl(), true);
+                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(newSiteModel.getUrl(), true);
                     }
                 }
 

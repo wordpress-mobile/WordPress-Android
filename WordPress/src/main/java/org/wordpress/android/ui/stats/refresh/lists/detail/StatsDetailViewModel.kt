@@ -9,6 +9,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
@@ -50,9 +51,9 @@ class StatsDetailViewModel
         statsPostProvider.init(postId, postType, postTitle, postUrl)
     }
 
-    fun onDateChanged() {
+    fun onDateChanged(selectedSection: StatsSection) {
         launch {
-            detailUseCase.onDateChanged()
+            detailUseCase.onDateChanged(selectedSection)
         }
     }
 

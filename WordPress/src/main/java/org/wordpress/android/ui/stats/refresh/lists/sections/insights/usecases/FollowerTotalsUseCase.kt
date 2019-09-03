@@ -37,7 +37,7 @@ class FollowerTotalsUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<Map<FollowerType, Int>>(FOLLOWER_TOTALS, mainDispatcher) {
+) : StatelessUseCase<Map<FollowerType, Int>>(FOLLOWER_TOTALS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_follower_totals))
 
     override fun buildEmptyItem(): List<BlockListItem> {
