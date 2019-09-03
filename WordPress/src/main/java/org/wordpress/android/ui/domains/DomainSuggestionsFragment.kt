@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.models.networkresource.ListState
@@ -64,7 +62,6 @@ class DomainSuggestionsFragment : Fragment() {
         domain_suggestions_list.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         domain_suggestions_list.setEmptyView(actionableEmptyView)
         chose_domain_button.setOnClickListener {
-            AnalyticsTracker.track(Stat.DOMAIN_CREDIT_NAME_SELECTED)
             val selectedDomain = viewModel.selectedSuggestion.value
 
             mainViewModel.selectDomain(
