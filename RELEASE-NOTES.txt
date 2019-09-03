@@ -1,5 +1,6 @@
 13.3
 -----
+* Sort more than 100 published pages chronologically like Calypso
  
 13.2
 -----
