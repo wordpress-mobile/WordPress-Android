@@ -152,9 +152,6 @@ public class AppPrefs {
         // aztec editor toolbar expanded state
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
-        // When we need to show the async promo dialog
-        ASYNC_PROMO_REQUIRED,
-
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
         // When we need to show the new image optimize promo dialog
@@ -485,14 +482,6 @@ public class AppPrefs {
     public static boolean isVisualEditorEnabled() {
         // hardcode the Visual editor enable to "false". Aztec and Gutenberg are the only ones supported now.
         return false;
-    }
-
-    public static boolean isAsyncPromoRequired() {
-        return getBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, true);
-    }
-
-    public static void setAsyncPromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
     }
 
     public static boolean shouldShowBookmarksSavedLocallyDialog() {

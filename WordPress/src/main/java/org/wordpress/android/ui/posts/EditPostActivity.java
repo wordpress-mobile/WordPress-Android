@@ -130,7 +130,6 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -246,11 +245,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_HISTORY = 4;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
-    private static final String ASYNC_PROMO_PUBLISH_DIALOG_TAG = "ASYNC_PROMO_PUBLISH_DIALOG_TAG";
-    private static final String ASYNC_PROMO_SCHEDULE_DIALOG_TAG = "ASYNC_PROMO_SCHEDULE_DIALOG_TAG";
-
-    private static final String WHAT_IS_NEW_IN_MOBILE_URL =
-            "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
+    
     private static final int CHANGE_SAVE_DELAY = 500;
     public static final int MAX_UNSAVED_POSTS = 50;
     private AztecImageLoader mAztecImageLoader;
@@ -1525,18 +1520,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 showUpdateConfirmationDialogAndUploadPost();
                 return;
             case PUBLISH_NOW:
-                if (AppPrefs.isAsyncPromoRequired()) {
-                    showAsyncPromoDialog(mPost.isPage(), false);
-                } else {
-                    showPublishConfirmationDialogAndPublishPost();
-                }
+                showPublishConfirmationDialogAndPublishPost();
                 return;
             case SCHEDULE:
-                if (AppPrefs.isAsyncPromoRequired()) {
-                    showAsyncPromoDialog(mPost.isPage(), true);
-                } else {
-                    uploadPost(false);
-                }
+                uploadPost(false);
                 return;
             // In other cases, we'll upload the post without changing its status
             case SUBMIT_FOR_REVIEW:
@@ -1788,8 +1775,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mFeaturedImageHelper.cancelFeaturedImageUpload(this, mSite, mPost, true);
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
-            case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
-            case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_UPDATE_CONFIRMATION_DIALOG:
                 break;
@@ -1818,12 +1803,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
                 savePostOnlineAndFinishAsync(isFirstTimePublish(false), true);
                 break;
-            case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
-                uploadPost(true);
-                break;
-            case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
-                uploadPost(false);
-                break;
             case TAG_GB_INFORMATIVE_DIALOG:
                 // no op
                 break;
@@ -1835,16 +1814,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onLinkClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case ASYNC_PROMO_PUBLISH_DIALOG_TAG:
-            case ASYNC_PROMO_SCHEDULE_DIALOG_TAG:
-                startActivity(ReleaseNotesActivity.createIntent(EditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
-                        null, mSite));
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
-                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
-        }
     }
 
     /*
@@ -4058,28 +4027,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
         }
-    }
-
-    private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
-        int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
-        int description = isScheduled
-            ? (isPage ? R.string.async_promo_description_schedule_page : R.string.async_promo_description_schedule_post)
-            : (isPage ? R.string.async_promo_description_publish_page : R.string.async_promo_description_publish_post);
-        int button = isScheduled ? R.string.async_promo_schedule_now : R.string.async_promo_publish_now;
-
-        final PromoDialog asyncPromoDialog = new PromoDialog();
-        asyncPromoDialog.initialize(isScheduled ? ASYNC_PROMO_SCHEDULE_DIALOG_TAG : ASYNC_PROMO_PUBLISH_DIALOG_TAG,
-                getString(title),
-                getString(description),
-                getString(button),
-                R.drawable.img_illustration_hand_checkmark_button_124dp,
-                getString(R.string.keep_editing),
-                getString(R.string.async_promo_link));
-
-        asyncPromoDialog.show(getSupportFragmentManager(),
-                isScheduled ? ASYNC_PROMO_SCHEDULE_DIALOG_TAG : ASYNC_PROMO_PUBLISH_DIALOG_TAG);
-
-        AppPrefs.setAsyncPromoRequired(false);
     }
 
     // EditPostActivityHook methods
