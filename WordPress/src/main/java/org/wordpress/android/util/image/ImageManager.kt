@@ -91,7 +91,9 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         context: Context,
         imageType: ImageType,
         imgUrl: String = "",
-        scaleType: ScaleType = CENTER
+        scaleType: ScaleType = CENTER,
+        width: Int? = null,
+        height: Int? = null
     ) {
         if (!context.isAvailable()) return
         GlideApp.with(context)
@@ -100,6 +102,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .applyScaleType(scaleType)
+                .applySize(width, height)
                 .into(awt)
     }
 
@@ -268,6 +271,14 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 AppLog.e(AppLog.T.UTILS, String.format("ScaleType %s is not supported.", scaleType.toString()))
                 this
             }
+        }
+    }
+
+    private fun <T : Any> GlideRequest<T>.applySize(width: Int?, height: Int?): GlideRequest<T> {
+        return if (width != null && height != null) {
+            this.override(width, height)
+        } else {
+            this
         }
     }
 
