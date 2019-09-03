@@ -46,13 +46,17 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCatego
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class StatsNavigator
-@Inject constructor(private val siteProvider: StatsSiteProvider) {
+@Inject constructor(
+    private val siteProvider: StatsSiteProvider,
+    private val selectedDateProvider: SelectedDateProvider
+) {
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false)
@@ -121,6 +125,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         TOP_POSTS_AND_PAGES,
                         siteProvider.siteModel.id
                 )
@@ -129,6 +134,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         REFERRERS,
                         siteProvider.siteModel.id
                 )
@@ -137,6 +143,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         CLICKS,
                         siteProvider.siteModel.id
                 )
@@ -145,6 +152,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         GEOVIEWS,
                         siteProvider.siteModel.id
                 )
@@ -153,6 +161,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         VIDEO_PLAYS,
                         siteProvider.siteModel.id
                 )
@@ -161,6 +170,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         SEARCH_TERMS,
                         siteProvider.siteModel.id
                 )
@@ -169,6 +179,7 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         AUTHORS,
                         siteProvider.siteModel.id
                 )
@@ -177,12 +188,19 @@ class StatsNavigator
                 ActivityLauncher.viewAllGranularStats(
                         activity,
                         target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
                         FILE_DOWNLOADS,
                         siteProvider.siteModel.id
                 )
             }
             is ViewAnnualStats -> {
-                ActivityLauncher.viewAllGranularStats(activity, YEARS, ANNUAL_STATS, siteProvider.siteModel.id)
+                ActivityLauncher.viewAllGranularStats(
+                        activity,
+                        YEARS,
+                        selectedDateProvider.getSelectedDateState(YEARS),
+                        ANNUAL_STATS,
+                        siteProvider.siteModel.id
+                )
             }
             is ViewUrl -> {
                 WPWebViewActivity.openURL(activity, target.url)

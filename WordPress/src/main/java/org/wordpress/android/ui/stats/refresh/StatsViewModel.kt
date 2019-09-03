@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -86,6 +87,19 @@ class StatsViewModel
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        selectedDateProvider.onSaveInstanceState(outState)
+    }
+
+    fun onRestoreInstanceState(savedState: Bundle?) {
+        if (savedState != null) {
+            selectedDateProvider.onRestoreInstanceState(savedState)
+        } else {
+            selectedDateProvider.clear()
+            statsSiteProvider.reset()
+        }
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
@@ -185,8 +199,6 @@ class StatsViewModel
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null
-        selectedDateProvider.clear()
-        statsSiteProvider.reset()
     }
 
     data class DateSelectorUiModel(
