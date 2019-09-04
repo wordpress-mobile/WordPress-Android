@@ -57,7 +57,12 @@ class UiModelMapper
                 UiModel.Error(getErrorMessage())
             }
         } else {
-            return UiModel.Empty
+            return UiModel.Empty(
+                    R.string.stats_empty_insights_title,
+                    R.string.stats_insights_management_title,
+                    R.drawable.img_illustration_insights_94dp,
+                    true
+            )
         }
     }
 
@@ -116,7 +121,7 @@ class UiModelMapper
                     }
                 })
             } else {
-                UiModel.Empty
+                UiModel.Empty(R.string.loading)
             }
         } else if (overviewHasData) {
             showError(getErrorMessage())

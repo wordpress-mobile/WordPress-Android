@@ -30,3 +30,7 @@ private class TestDispatcher : CoroutineDispatcher(), Delay {
         block.run()
     }
 }
+
+object TestScope : CoroutineScope {
+    override val coroutineContext: CoroutineContext = Unconfined
+}

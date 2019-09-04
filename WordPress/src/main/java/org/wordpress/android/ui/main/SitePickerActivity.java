@@ -91,7 +91,6 @@ public class SitePickerActivity extends AppCompatActivity
     private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
-    private boolean mDidUserSelectSite;
     private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
@@ -134,14 +133,6 @@ public class SitePickerActivity extends AppCompatActivity
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
         outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        if (mDidUserSelectSite) {
-            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
-        }
     }
 
     @Override
@@ -232,7 +223,7 @@ public class SitePickerActivity extends AppCompatActivity
                     // Mark the site to show the GB popup at first editor run
                     SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
                     if (newSiteModel != null) {
-                        AppPrefs.setShowGutenbergInfoPopup(newSiteModel.getUrl(), true);
+                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(newSiteModel.getUrl(), true);
                     }
                 }
                 break;
@@ -548,7 +539,6 @@ public class SitePickerActivity extends AppCompatActivity
             hideSoftKeyboard();
             AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
-            mDidUserSelectSite = true;
             // If the site is hidden, make sure to make it visible
             if (siteRecord.isHidden()) {
                 siteRecord.setHidden(false);

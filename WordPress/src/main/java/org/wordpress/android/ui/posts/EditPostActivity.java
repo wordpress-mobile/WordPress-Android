@@ -1556,10 +1556,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl());
+        if (AppPrefs.isGutenbergInfoPopupDisplayed(mSite.getUrl())) {
+            return;
+        }
+
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
 
         if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);

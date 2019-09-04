@@ -1,16 +1,17 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
@@ -20,7 +21,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
@@ -46,11 +46,12 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var model: PostDetailStatsModel
     private lateinit var useCase: PostDayViewsUseCase
     private val postId = 1L
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        whenever(selectedDateProvider.granularSelectedDateChanged(DETAIL)).thenReturn(MutableLiveData())
         useCase = PostDayViewsUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 mapper,
                 statsDateFormatter,
                 selectedDateProvider,
