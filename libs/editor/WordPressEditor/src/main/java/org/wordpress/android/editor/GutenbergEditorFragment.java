@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -219,15 +220,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryImageButtonClicked() {
+                    @Override public void onMediaLibraryImageButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddMediaImageClicked();
+                        mEditorFragmentListener.onAddMediaImageClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onMediaLibraryVideoButtonClicked() {
+                    public void onMediaLibraryVideoButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddMediaVideoClicked();
+                        mEditorFragmentListener.onAddMediaVideoClicked(allowMultipleSelection);
                     }
 
                     @Override
@@ -672,6 +673,24 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     "file://" + mediaUrl,
                     mediaFile.isVideo());
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
+        }
+    }
+
+    @Override
+    public void appendMediaFiles(ArrayList<Map<String, MediaFile>> mediaList) {
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            // Activity may have already be gone.
+            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null!");
+            return;
+        }
+        String mediaUrl = (String) mediaList.get(0).keySet().toArray()[0];
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+//            getGutenbergContainerFragment().appendMediaFile(mediaList);
+        } else {
+//            getGutenbergContainerFragment().appendUploadMediaFile(mediaList);
+//            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
         }
     }
 

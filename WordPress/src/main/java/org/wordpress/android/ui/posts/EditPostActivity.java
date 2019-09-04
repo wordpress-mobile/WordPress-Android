@@ -22,6 +22,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.util.ArrayMap;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -273,6 +274,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mShowNewEditor;
     private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
+    private boolean mAllowMultipleSelection;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
@@ -1148,6 +1150,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         hidePhotoPicker();
+        mAllowMultipleSelection = allowMultipleSelection;
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
@@ -2397,6 +2400,26 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
+    private boolean addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, List<Long> mediaIdList) {
+        ArrayList<Map<String, MediaFile>> mediaList = new ArrayList<>();
+        for (Long mediaId : mediaIdList) {
+            MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
+            if (media == null) {
+                AppLog.w(T.MEDIA, "Cannot add null media to post");
+                return false;
+            }
+            trackAddMediaEvent(source, media);
+
+            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+            ArrayMap<String, MediaFile> mediaMap = new ArrayMap<>();
+            mediaMap.put(urlToUse, mediaFile);
+            mediaList.add(mediaMap);
+        }
+        mEditorFragment.appendMediaFiles(mediaList);
+        return true;
+    }
+
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
         @Override
         protected Spanned doInBackground(String... params) {
@@ -3228,8 +3251,13 @@ public class EditPostActivity extends AppCompatActivity implements
         if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
-            for (Long id : ids) {
-                addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+            if (mAllowMultipleSelection) {
+                addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, ids);
+                mAllowMultipleSelection = false;
+            } else {
+                for (Long id : ids) {
+                    addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+                }
             }
             savePostAsync(null);
         }
@@ -3466,12 +3494,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddMediaImageClicked() {
+    public void onAddMediaImageClicked(boolean allowMultipleSelection) {
+        mAllowMultipleSelection = allowMultipleSelection;
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
     @Override
-    public void onAddMediaVideoClicked() {
+    public void onAddMediaVideoClicked(boolean allowMultipleSelection) {
+        mAllowMultipleSelection = allowMultipleSelection;
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 

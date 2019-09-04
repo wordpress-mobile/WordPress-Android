@@ -71,7 +71,9 @@ import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
 import org.wordpress.android.util.widgets.WPEditText;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 public class LegacyEditorFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -1146,6 +1148,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         addMediaFile(mediaFile, imageUrl, imageLoader,
                      mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd());
     }
+
+    @Override public void appendMediaFiles(ArrayList<Map<String, MediaFile>> mediaList) {}
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {

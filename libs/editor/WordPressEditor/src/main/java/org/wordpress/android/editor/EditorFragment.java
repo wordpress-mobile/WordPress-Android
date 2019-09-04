@@ -1059,6 +1059,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
+    @Override public void appendMediaFiles(ArrayList<Map<String, MediaFile>> mediaList) {}
+
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
         if (!mDomHasLoaded) {
