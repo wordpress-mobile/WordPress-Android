@@ -1,6 +1,6 @@
 13.3
 -----
-* Add Jetpack performace settings
+* Add Jetpack performance settings
  
 13.2
 -----
