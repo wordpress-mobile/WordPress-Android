@@ -1007,10 +1007,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide site accelerator jetpack settings if plugin version < 5.8
-        if (!supportsJetpackSiteAcceleratorSettings(mSite)) {
+        if (!supportsJetpackSiteAcceleratorSettings(mSite)
+            && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID) {
             removeJetpackSiteAcceleratorSettings();
         }
-        if (!mSite.isJetpackConnected() || mSite.getPlanId() == PlansConstants.JETPACK_FREE_PLAN_ID) {
+        if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
+                                            && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
         }
     }
@@ -1360,6 +1362,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         setupJetpackSearch();
 
+        // Remove More Jetpack performance settings when the search is not visible
+        if (!isShowingImproveSearchPreference()) {
+            removeMoreJetpackSettings();
+        }
+
         setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
         setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
 
@@ -1368,8 +1375,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mSiteQuotaSpacePref, mSiteSettings.getQuotaDiskSpace());
     }
 
+    private boolean isShowingImproveSearchPreference() {
+        return mJetpackPerformanceMoreSettings.findPreference(getString(R.string.pref_key_jetpack_search_settings))
+               != null;
+    }
+
     private void updateSiteAccelerator() {
-        boolean siteAcceleratorEnabled = mSiteSettings.isServeImagesFromOurServersEnabled() && mSiteSettings
+        boolean siteAcceleratorEnabled = mSiteSettings.isServeImagesFromOurServersEnabled() || mSiteSettings
                 .isServeStaticFilesFromOurServersEnabled();
         setSiteAcceleratorSettingsSummary(siteAcceleratorEnabled ? R.string.site_settings_site_accelerator_on
                 : R.string.site_settings_site_accelerator_off);
