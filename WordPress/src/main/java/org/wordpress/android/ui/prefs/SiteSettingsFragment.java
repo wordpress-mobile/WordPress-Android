@@ -247,8 +247,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mLazyLoadImagesNested;
 
     // Jetpack media settings
-    private WPSwitchPreference mAdFreeHosting;
-    private WPSwitchPreference mAdFreeHostingNested;
+    private WPSwitchPreference mAdFreeVideoHosting;
+    private WPSwitchPreference mAdFreeVideoHostingNested;
 
     // Jetpack search
     private WPSwitchPreference mImprovedSearch;
@@ -661,7 +661,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
         } else if (preference == mLazyLoadImages || preference == mLazyLoadImagesNested) {
             setLazyLoadImagesChecked((Boolean) newValue);
-        } else if (preference == mAdFreeHosting || preference == mAdFreeHostingNested) {
+        } else if (preference == mAdFreeVideoHosting || preference == mAdFreeVideoHostingNested) {
             setAdFreeHostingChecked((Boolean) newValue);
         } else if (preference == mImprovedSearch) {
             Boolean checked = (Boolean) newValue;
@@ -978,8 +978,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
         mLazyLoadImagesNested = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images_nested);
 
-        mAdFreeHosting = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting);
-        mAdFreeHostingNested = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting_nested);
+        mAdFreeVideoHosting = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting);
+        mAdFreeVideoHostingNested = (WPSwitchPreference) getChangePref(R.string.pref_key_ad_free_video_hosting_nested);
 
         mImprovedSearch = (WPSwitchPreference) getChangePref(R.string.pref_key_improved_search);
 
@@ -1402,8 +1402,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setAdFreeHostingChecked(boolean checked) {
         mSiteSettings.enableAdFreeHosting(checked);
-        mAdFreeHosting.setChecked(checked);
-        mAdFreeHostingNested.setChecked(checked);
+        mAdFreeVideoHosting.setChecked(checked);
+        mAdFreeVideoHostingNested.setChecked(checked);
     }
 
     private void setServeImagesFromOurServersChecked(boolean checked) {

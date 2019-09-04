@@ -209,7 +209,7 @@
                 android:title="@string/site_settings_site_accelerator"
                 app:backgroundColorChecked="@color/primary_40"
                 app:backgroundColorUnchecked="@color/neutral_40"
-                app:preferenceTextColor="@color/white"
+                app:preferenceTextColor="@android:color/white"
                 app:switchThumbTint="@color/primary_0_gray_20_gray_40_selector"
                 app:switchTrackTint="@color/primary_0_gray_90_gray_50_selector" />
 

@@ -49,11 +49,11 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             } else if (index == R.styleable.SummaryEditTextPreference_switchTrackTint) {
                 mTrackTint = array.getColorStateList(index);
             } else if (index == R.styleable.SummaryEditTextPreference_preferenceTextColor) {
-                mTextColor = array.getResourceId(index, R.color.white);
+                mTextColor = array.getResourceId(index, android.R.color.white);
             } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorChecked) {
-                mBackgroundCheckedColor = array.getResourceId(index, R.color.white);
+                mBackgroundCheckedColor = array.getResourceId(index, android.R.color.white);
             } else if (index == R.styleable.SummaryEditTextPreference_backgroundColorUnchecked) {
-                mBackgroundUncheckedColor = array.getResourceId(index, R.color.white);
+                mBackgroundUncheckedColor = array.getResourceId(index, android.R.color.white);
             }
         }
 
