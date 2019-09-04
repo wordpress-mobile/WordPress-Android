@@ -105,7 +105,8 @@ public class WPPrefUtils {
      */
     public static void layoutAsCaption(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.neutral_40);
+        setTextViewAttributes(view, size,
+                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorTextTetriary));
     }
 
     /**
