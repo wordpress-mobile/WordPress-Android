@@ -13,7 +13,7 @@ commands:
 version: 2.1
 jobs:
   test:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -26,7 +26,7 @@ jobs:
       - android/save-gradle-cache
       - android/save-test-results
   lint:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -49,12 +49,12 @@ jobs:
             if [ -n "$GITHUB_API_TOKEN" ]; then
               ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
             else
-              echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found."
-            fi 
+              echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
+            fi
       - android/save-gradle-cache
       - android/save-lint-results
   Installable Build:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -74,10 +74,8 @@ jobs:
             else
               PREFIX="$CIRCLE_BRANCH"
             fi
-
             VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
-
             ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
       - android/save-gradle-cache
       - run:
