@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.OTHER
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -113,7 +114,7 @@ constructor(
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_white_24dp
-                    HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
+                    OTHER, HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
                 }
                 ListItemWithIcon(
                         icon = icon,
@@ -157,7 +158,7 @@ constructor(
     private fun onLinkClicked(params: LinkClickParams) {
         val type = when (params.postType) {
             POST -> ITEM_TYPE_POST
-            PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
+            OTHER, PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
         }
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(
