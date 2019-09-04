@@ -72,6 +72,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -303,9 +304,9 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
-                                            int localSiteId) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, SelectedDate selectedDate,
+                                            StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, selectedDate, localSiteId);
     }
 
     public static void viewInsightsManagement(Context context, int localSiteId) {

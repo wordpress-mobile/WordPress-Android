@@ -122,8 +122,13 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
         mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
 
-        noteBlockHolder.mCommentTextView
-                .setText(getCommentTextOfNotification(noteBlockHolder));
+        Spannable spannable = getCommentTextOfNotification(noteBlockHolder);
+        NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
+        for (NoteBlockClickableSpan span : spans) {
+            span.enableColors(view.getContext());
+        }
+
+        noteBlockHolder.mCommentTextView.setText(spannable);
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background

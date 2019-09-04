@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.CLICKS
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
@@ -44,6 +45,7 @@ class ClicksUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val store: ClicksStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
@@ -53,6 +55,7 @@ constructor(
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
         mainDispatcher,
+        backgroundDispatcher,
         statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
@@ -174,6 +177,7 @@ constructor(
     class ClicksUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val store: ClicksStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
@@ -184,6 +188,7 @@ constructor(
                 ClicksUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         store,
                         statsSiteProvider,
                         selectedDateProvider,

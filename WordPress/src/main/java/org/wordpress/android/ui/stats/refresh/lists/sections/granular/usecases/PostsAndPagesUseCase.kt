@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsT
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.POSTS_AND_PAGES
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
@@ -46,6 +47,7 @@ class PostsAndPagesUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
@@ -55,6 +57,7 @@ constructor(
 ) : GranularStatelessUseCase<PostAndPageViewsModel>(
         POSTS_AND_PAGES,
         mainDispatcher,
+        backgroundDispatcher,
         selectedDateProvider,
         statsSiteProvider,
         statsGranularity
@@ -177,6 +180,7 @@ constructor(
     class PostsAndPagesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
@@ -187,6 +191,7 @@ constructor(
                 PostsAndPagesUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         postsAndPageViewsStore,
                         statsSiteProvider,
                         selectedDateProvider,

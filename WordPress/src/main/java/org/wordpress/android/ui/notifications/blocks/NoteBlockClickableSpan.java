@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextPaint;
@@ -9,9 +10,12 @@ import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
+import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
+import org.wordpress.android.util.ContextExtensionsKt;
 
 import java.util.List;
 
@@ -41,6 +45,15 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         mShouldLink = shouldLink;
         mIsFooter = isFooter;
         processRangeData(range);
+    }
+
+    // We need to use theme-styled colors in NoteBlockClickableSpan but current Notifications architecture makes it
+    // difficult to get right type of context to this span to style the colors. We are doing it in this method instead.
+    public void enableColors(Context context) {
+        mTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
+        mBackgroundColor = ContextCompat.getColor(context, R.color.primary_5);
+        mLinkColor = ContextCompat.getColor(context, R.color.primary_40);
+        mLightTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
     }
 
     public void setColors(@ColorInt int textColor, @ColorInt int backgroundColor, @ColorInt int linkColor,

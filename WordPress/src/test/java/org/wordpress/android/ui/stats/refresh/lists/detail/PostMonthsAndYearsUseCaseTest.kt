@@ -6,12 +6,14 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Month
@@ -54,10 +56,12 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedYearUiState) -> Unit>
     private val postId: Long = 1L
     private val year = Year(2010, listOf(Month(1, 100)), 150)
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostMonthsAndYearsUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 statsSiteProvider,
                 statsPostProvider,
                 store,
