@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
         android:visibility="gone"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/wpColorTextInverted"
         android:textStyle="bold"
         android:textSize="@dimen/text_sz_extra_large"
         android:fontFamily="sans-serif-light" />

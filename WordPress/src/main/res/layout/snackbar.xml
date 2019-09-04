@@ -41,7 +41,7 @@
         android:paddingEnd="@dimen/margin_medium"
         android:paddingStart="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_large"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/wpColorTextInverted"
         android:textSize="@dimen/text_sz_medium"
         android:visibility="gone"
         tools:text="Message that is limited to two lines of text with an ellipsis is shown when there is more text"

@@ -107,6 +107,7 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -707,7 +708,8 @@ public class ReaderPostListFragment extends Fragment
 
         // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
+        mRecyclerView.setToolbarSpinnerTextColor(
+                ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorTextInverted));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium),

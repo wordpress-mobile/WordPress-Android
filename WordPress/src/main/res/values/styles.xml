@@ -13,6 +13,7 @@
         <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorTextTetriary">@color/neutral_40</item>
         <item name="wpColorTextQuaternary">@color/neutral_30</item>
+        <item name="wpColorTextInverted">@android:color/white</item>
 
         <item name="wpColorError">@color/error</item>
 
@@ -140,7 +141,7 @@
     </style>
 
     <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -213,7 +214,7 @@
 
     <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/accent</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
     </style>
 
     <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
@@ -258,7 +259,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">24dp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
         <item name="android:textSize">@dimen/nux_title_font_size</item>
         <item name="android:lineSpacingExtra">-4sp</item>
     </style>

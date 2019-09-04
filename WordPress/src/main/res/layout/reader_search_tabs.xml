@@ -8,7 +8,7 @@
     app:tabIndicatorColor="@android:color/white"
     app:tabMaxWidth="0dp"
     app:tabMode="fixed"
-    app:tabSelectedTextColor="@android:color/white"
+    app:tabSelectedTextColor="?attr/wpColorTextInverted"
     app:tabTextColor="@color/primary_30">
 
     <com.google.android.material.tabs.TabItem

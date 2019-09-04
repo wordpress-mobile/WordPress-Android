@@ -43,6 +43,7 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
@@ -380,7 +381,8 @@ public class CommentsListFragment extends Fragment {
 
         // the following will change the look and feel of the toolbar to match the current design
         mFilteredCommentsView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.primary_40));
-        mFilteredCommentsView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), android.R.color.white));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(
+                ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.wpColorTextInverted));
         mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),

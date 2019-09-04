@@ -12,5 +12,5 @@
         android:gravity="center_vertical"
         android:text="@string/save"
         android:textAllCaps="true"
-        android:textColor="@android:color/white"/>
+        android:textColor="?attr/wpColorTextInverted"/>
 </LinearLayout>

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_width="match_parent"
-            android:textColor="@color/white"
+            android:textColor="?attr/wpColorTextInverted"
             android:textSize="@dimen/text_sz_large"
             android:visibility="gone"
             tools:text="Add social media account"

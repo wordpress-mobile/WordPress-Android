@@ -33,7 +33,7 @@
                 android:id="@+id/person_display_name"
                 style="@style/PersonTextView"
                 android:fontFamily="sans-serif-light"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/wpColorTextInverted"
                 android:textSize="@dimen/text_sz_extra_large"
                 android:textStyle="bold"
                 tools:text="display_name"/>
@@ -41,7 +41,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/person_username"
                 style="@style/PersonTextView"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/wpColorTextInverted"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="username"/>
 

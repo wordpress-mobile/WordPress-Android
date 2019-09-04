@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -99,7 +100,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         int normalColor = ContextCompat.getColor(this, R.color.primary_30);
-        int selectedColor = ContextCompat.getColor(this, android.R.color.white);
+        int selectedColor = ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorTextInverted);
         tabLayout.setTabTextColors(normalColor, selectedColor);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);

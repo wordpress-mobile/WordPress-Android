@@ -61,7 +61,7 @@
                 android:layout_marginStart="@dimen/notifications_note_icon_margin"
                 android:layout_marginTop="@dimen/notifications_note_icon_margin"
                 android:layout_width="@dimen/note_icon_sz"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/wpColorTextInverted"
                 android:textSize="14sp" >
             </org.wordpress.android.widgets.NoticonTextView>
 

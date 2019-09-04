@@ -31,7 +31,7 @@
         android:shadowDx="@dimen/reader_photo_title_shadow_offset"
         android:shadowDy="@dimen/reader_photo_title_shadow_offset"
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/wpColorTextInverted"
         android:textSize="@dimen/text_sz_double_extra_large"
         tools:text="text_tag"
         android:drawableStart="@drawable/ic_tag_white_24dp"/>
@@ -49,7 +49,7 @@
         android:shadowDx="@dimen/reader_photo_title_shadow_offset"
         android:shadowDy="@dimen/reader_photo_title_shadow_offset"
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/wpColorTextInverted"
         android:textSize="@dimen/text_sz_medium"
         tools:text="text_attribution"
         android:layout_marginEnd="@dimen/margin_medium"

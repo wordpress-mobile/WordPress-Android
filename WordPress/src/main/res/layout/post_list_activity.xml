@@ -40,8 +40,8 @@
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white"
+                app:tabSelectedTextColor="?attr/wpColorTextInverted"
+                app:tabTextColor="?attr/wpColorTextInverted"
                 tools:paddingEnd="0dp"
                 tools:paddingStart="@dimen/posts_list_tab_layout_fading_edge_width"/>
 

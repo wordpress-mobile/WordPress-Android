@@ -74,6 +74,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.FormatUtils;
@@ -287,7 +288,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void setupTabs() {
         if (shouldShowTabs()) {
             int normalColor = ContextCompat.getColor(this, R.color.primary_30);
-            int selectedColor = ContextCompat.getColor(this, android.R.color.white);
+            int selectedColor = ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorTextInverted);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 
             mTabLayout.removeAllTabs();

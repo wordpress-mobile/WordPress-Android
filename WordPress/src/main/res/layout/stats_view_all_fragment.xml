@@ -50,8 +50,8 @@
                 app:tabMode="scrollable"
                 app:tabPaddingEnd="16dp"
                 app:tabPaddingStart="16dp"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white"
+                app:tabSelectedTextColor="?attr/wpColorTextInverted"
+                app:tabTextColor="?attr/wpColorTextInverted"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
 
         </com.google.android.material.appbar.AppBarLayout>
