@@ -10,7 +10,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
@@ -118,7 +117,7 @@ public class ActivityLauncher {
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, null);
+        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     public static void showPhotoPickerForResult(Activity activity,

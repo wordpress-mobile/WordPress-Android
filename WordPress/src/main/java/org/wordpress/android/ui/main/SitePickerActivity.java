@@ -137,14 +137,6 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        if (mDidUserSelectSite) {
-            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
