@@ -254,24 +254,6 @@
 
         <!-- Stats Activities -->
         <activity
-            android:name=".ui.stats.OldStatsActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity
-            android:name=".ui.stats.StatsViewAllActivity"
-            android:theme="@style/CalypsoTheme" />
-        <activity
-            android:name=".ui.stats.StatsSingleItemDetailsActivity"
-            android:theme="@style/CalypsoTheme" />
-        <activity
-            android:name=".ui.stats.StatsWidgetConfigureActivity"
-            android:label="@string/site_picker_title"
-            android:theme="@style/CalypsoTheme">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
@@ -594,16 +576,6 @@
             />
 
         <service
-            android:name=".ui.stats.service.StatsService"
-            android:exported="false"
-            android:label="Stats Update Service" />
-        <service
-            android:name=".ui.stats.service.StatsJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"
-            android:label="Stats Update Service" />
-
-        <service
             android:name=".ui.reader.services.update.ReaderUpdateService"
             android:exported="false"
             android:label="Reader Update Service" />
@@ -701,17 +673,6 @@
         </receiver>
 
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
-        <receiver
-            android:name=".ui.stats.StatsWidgetProvider"
-            android:label="@string/stats_widget_name">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/stats_widget_info" />
-        </receiver>
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name">

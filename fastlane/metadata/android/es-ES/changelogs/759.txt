@@ -1,4 +1,0 @@
-12.9:
-* Los clientes con créditos de dominio no reclamados pueden registrar dominios en la aplicación.
-* Puedes expandir el editor de comentarios a pantalla completa para tener más espacio durante la edición.
-* El editor de bloques tiene algunas mejoras: Los bloques de vídeo ya están disponibles, y se han resuelto algunos problemas que llevaron a la pérdida de contenido cuando se utilizaban bloques no compatibles.

@@ -381,7 +381,8 @@ public class UploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploadingOrQueued(PostModel post) {
-        if (sInstance == null || post == null) {
+        UploadService instance = sInstance;
+        if (instance == null || post == null) {
             return false;
         }
 
@@ -391,7 +392,7 @@ public class UploadService extends Service {
         }
 
         // Then check the list of posts waiting for media to complete
-        return sInstance.mUploadStore.isPendingPost(post);
+        return instance.mUploadStore.isPendingPost(post);
     }
 
     public static boolean isPostQueued(PostModel post) {
@@ -491,12 +492,13 @@ public class UploadService extends Service {
     }
 
     public static float getMediaUploadProgressForPost(PostModel postModel) {
-        if (postModel == null || sInstance == null) {
+        UploadService instance = sInstance;
+        if (postModel == null || instance == null) {
             // If the UploadService isn't running, there's no progress for this post
             return 0;
         }
 
-        Set<MediaModel> pendingMediaList = sInstance.mUploadStore.getUploadingMediaForPost(postModel);
+        Set<MediaModel> pendingMediaList = instance.mUploadStore.getUploadingMediaForPost(postModel);
 
         if (pendingMediaList.size() == 0) {
             return 1;
@@ -512,12 +514,13 @@ public class UploadService extends Service {
     }
 
     public static float getUploadProgressForMedia(MediaModel mediaModel) {
-        if (mediaModel == null || sInstance == null) {
+        UploadService instance = sInstance;
+        if (mediaModel == null || instance == null) {
             // If the UploadService isn't running, there's no progress for this media
             return 0;
         }
 
-        float uploadProgress = sInstance.mUploadStore.getUploadProgressForMedia(mediaModel);
+        float uploadProgress = instance.mUploadStore.getUploadProgressForMedia(mediaModel);
 
         // If this is a video and video optimization is enabled, include the optimization progress in the outcome
         if (mediaModel.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
@@ -529,10 +532,11 @@ public class UploadService extends Service {
 
     public static @NonNull
     Set<MediaModel> getPendingMediaForPost(PostModel postModel) {
-        if (postModel == null || sInstance == null) {
+        UploadService instance = sInstance;
+        if (postModel == null || instance == null) {
             return Collections.emptySet();
         }
-        return sInstance.mUploadStore.getUploadingMediaForPost(postModel);
+        return instance.mUploadStore.getUploadingMediaForPost(postModel);
     }
 
     public static boolean isPendingOrInProgressMediaUpload(@NonNull MediaModel media) {

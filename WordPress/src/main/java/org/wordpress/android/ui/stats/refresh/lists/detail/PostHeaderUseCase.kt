@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -18,11 +19,13 @@ import javax.inject.Named
 class PostHeaderUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val statsPostProvider: StatsPostProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<String>(
         PostDetailType.POST_HEADER,
         mainDispatcher,
+        backgroundDispatcher,
         listOf()
 ) {
     override suspend fun loadCachedData(): String? {

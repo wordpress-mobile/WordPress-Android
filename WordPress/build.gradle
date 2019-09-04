@@ -49,8 +49,13 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-185"
-        versionCode 766
+        // Allow versionName to be overridden with property. e.g. -PversionName=1234
+        if (project.hasProperty("versionName")) {
+            versionName project.property("versionName")
+        } else {
+            versionName "alpha-188"
+        }
+        versionCode 775
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -74,8 +79,11 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-            versionName "13.0-rc-3"
-            versionCode 765
+            // Only set the release version if one isn't provided
+            if (!project.hasProperty("versionName")) {
+                versionName "13.2-rc-1"
+            }
+            versionCode 774
         }
 
         zalpha { // alpha version - enable experimental features
@@ -366,7 +374,7 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     android {
         signingConfigs {
             release {
-                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
+                storeFile = rootProject.file(project.storeFile)
                 storePassword = project.storePassword
                 keyAlias = project.keyAlias
                 keyPassword = project.keyPassword

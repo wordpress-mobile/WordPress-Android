@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewRecentWeeksStats
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedWeekUiState
@@ -27,6 +28,7 @@ private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class PostRecentWeeksUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore,
@@ -35,6 +37,7 @@ class PostRecentWeeksUseCase(
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedWeekUiState>(
         PostDetailType.CLICKS_BY_WEEKS,
         mainDispatcher,
+        backgroundDispatcher,
         ExpandedWeekUiState()
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
@@ -105,6 +108,7 @@ class PostRecentWeeksUseCase(
     class PostRecentWeeksUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsPostProvider: StatsPostProvider,
         private val postDetailMapper: PostDetailMapper,
@@ -113,6 +117,7 @@ class PostRecentWeeksUseCase(
         override fun build(useCaseMode: UseCaseMode) =
                 PostRecentWeeksUseCase(
                         mainDispatcher,
+                        backgroundDispatcher,
                         statsSiteProvider,
                         statsPostProvider,
                         postDetailStore,

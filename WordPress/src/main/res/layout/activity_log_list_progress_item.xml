@@ -48,7 +48,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 tools:text="Rewinding to June 1 2018 12:22PM" >
             </org.wordpress.android.widgets.WPTextView>
 

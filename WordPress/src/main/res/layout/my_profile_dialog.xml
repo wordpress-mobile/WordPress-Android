@@ -12,7 +12,7 @@
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginStart="@dimen/margin_small"
         android:fontFamily="sans-serif-light"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         android:labelFor="@+id/my_profile_dialog_input"
         android:textSize="@dimen/text_sz_extra_large"
         android:textStyle="bold"/>
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_medium"
-        android:textColor="@color/neutral"
+        android:textColor="?attr/wpColorTextSubtle"
         android:textSize="@dimen/text_sz_small"/>
 
     <EditText

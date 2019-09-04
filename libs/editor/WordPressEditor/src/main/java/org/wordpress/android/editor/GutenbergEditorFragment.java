@@ -528,6 +528,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                               getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
+    @Override
+    public void onUndo() {
+        // Analytics tracking is not available in GB mobile
+    }
+
+    @Override
+    public void onRedo() {
+        // Analytics tracking is not available in GB mobile
+    }
+
     private ActionBar getActionBar() {
         if (!isAdded()) {
             return null;

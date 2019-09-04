@@ -18,7 +18,6 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -117,6 +116,7 @@ public class AppPrefs {
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+        GUTENBERG_OPT_IN_DIALOG_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
 
@@ -317,26 +317,6 @@ public class AppPrefs {
 
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(DeletablePrefKey.READER_SUBS_PAGE_TITLE, pageTitle);
-    }
-
-    public static StatsTimeframe getStatsTimeframe() {
-        int idx = getInt(DeletablePrefKey.STATS_ITEM_INDEX);
-        StatsTimeframe[] timeframeValues = StatsTimeframe.values();
-        if (timeframeValues.length < idx) {
-            return timeframeValues[0];
-        } else {
-            return timeframeValues[idx];
-        }
-    }
-
-    public static void setStatsTimeframe(StatsTimeframe timeframe) {
-        if (timeframe != null) {
-            setInt(DeletablePrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
-        } else {
-            prefs().edit()
-                   .remove(DeletablePrefKey.STATS_ITEM_INDEX.name())
-                   .apply();
-        }
     }
 
     public static CommentStatusCriteria getCommentsStatusFilter() {
@@ -636,7 +616,7 @@ public class AppPrefs {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
 
-    public static boolean shouldShowGutenbergInfoPopup(String siteURL) {
+    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
         if (TextUtils.isEmpty(siteURL)) {
             return false;
         }
@@ -654,14 +634,14 @@ public class AppPrefs {
             if (urls.contains(siteURL)) {
                 flag = true;
                 // remove the flag from Prefs
-                setShowGutenbergInfoPopup(siteURL, false);
+                setShowGutenbergInfoPopupForTheNewPosts(siteURL, false);
             }
         }
 
         return flag;
     }
 
-    public static void setShowGutenbergInfoPopup(String siteURL, boolean show) {
+    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
         if (TextUtils.isEmpty(siteURL)) {
             return;
         }
@@ -687,6 +667,49 @@ public class AppPrefs {
 
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
+        editor.apply();
+    }
+
+    public static boolean isGutenbergInfoPopupDisplayed(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return false;
+        }
+
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), null);
+        } catch (ClassCastException exp) {
+            // no operation - This should not happen.
+            return false;
+        }
+
+        return urls != null && urls.contains(siteURL);
+    }
+
+    public static void setGutenbergInfoPopupDisplayed(String siteURL) {
+        if (isGutenbergInfoPopupDisplayed(siteURL)) {
+            return;
+        }
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), null);
+        } catch (ClassCastException exp) {
+            // nope - this should never happens
+            return;
+        }
+
+        Set<String> newUrls = new HashSet<>();
+        // re-add the old urls here
+        if (urls != null) {
+            newUrls.addAll(urls);
+        }
+        newUrls.add(siteURL);
+
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.putStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), newUrls);
         editor.apply();
     }
 
@@ -868,14 +891,6 @@ public class AppPrefs {
 
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
-    }
-
-    public static void setGutenbergInformativeDialogDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, isDisabled);
-    }
-
-    public static boolean isGutenbergInformativeDialogDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED, false);
     }
 
     @NonNull public static AuthorFilterSelection getAuthorFilterSelection() {

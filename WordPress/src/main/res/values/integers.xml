@@ -4,8 +4,6 @@
 
     <integer name="full_screen_dialog_animation_duration">@android:integer/config_mediumAnimTime</integer>
 
-    <integer name="smallest_width_dp">320</integer>
-
     <!-- max #chars user can type when adding a new topic to the reader -->
     <integer name="max_length_reader_topic_name">96</integer>
 
