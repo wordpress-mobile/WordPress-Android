@@ -159,7 +159,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
         mTextColorNormal = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
-        mTextColorHidden = context.getResources().getColor(R.color.neutral_30);
+        mTextColorHidden = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorTextQuaternary);
 
         mSelectedItemBackground =
                 new ColorDrawable(context.getResources().getColor(R.color.gray_5));

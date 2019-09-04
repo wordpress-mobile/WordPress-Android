@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sharing_disabled_description"
-                android:textColor="@color/neutral_30"
+                 android:textColor="?attr/wpColorTextQuaternary"
                 android:textSize="@dimen/text_sz_medium" />
 
         </LinearLayout>

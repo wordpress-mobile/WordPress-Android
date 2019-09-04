@@ -26,7 +26,7 @@
         android:singleLine="true"
         android:textAlignment="viewStart"
         android:textColor="?attr/wpColorText"
-        android:textColorHint="@color/neutral_30"
+        android:textColorHint="?attr/wpColorTextQuaternary"
         tools:drawableStart="@drawable/ic_search_white_24dp"
         tools:drawableTint="@color/neutral_30"
         tools:hint="Type a keyword for more ideas"
