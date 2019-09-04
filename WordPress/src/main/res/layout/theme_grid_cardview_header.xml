@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                     android:textColor="?attr/wpColorTextQuaternary"
+                    android:textColor="?attr/wpColorTextQuaternary"
                     android:textSize="@dimen/text_sz_small"
                     android:textAllCaps="true"
                     android:text="@string/current_theme" />

@@ -113,7 +113,7 @@
         android:drawablePadding="@dimen/margin_small"
         android:drawableTop="@drawable/ic_notice_48dp"
         android:gravity="center"
-         android:textColor="?attr/wpColorTextQuaternary"
+        android:textColor="?attr/wpColorTextQuaternary"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
         tools:text="Error message"

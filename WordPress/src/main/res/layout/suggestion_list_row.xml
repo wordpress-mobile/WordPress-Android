@@ -36,7 +36,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical|end"
         android:maxLines="1"
-         android:textColor="?attr/wpColorTextQuaternary"
+        android:textColor="?attr/wpColorTextQuaternary"
         android:textSize="@dimen/text_sz_medium"
         tools:text="display_name"
         android:layout_marginStart="@dimen/margin_medium"/>
