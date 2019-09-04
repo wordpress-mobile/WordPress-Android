@@ -98,6 +98,7 @@ public class WPSupportUtils {
 
     public static void clickOn(ViewInteraction viewInteraction) {
         waitForElementToBeDisplayed(viewInteraction);
+        idleFor(2000); // allow for transitions
         viewInteraction.perform(click(closeSoftKeyboard())); // attempt to close the soft keyboard as the rollback
         idleFor(500); // allow for transitions
     }
