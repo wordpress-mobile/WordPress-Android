@@ -76,7 +76,7 @@ public class EditorExampleActivity extends FragmentActivity implements EditorFra
     }
 
     @Override
-    public void onAttachFragment(androidx.fragment.app.Fragment fragment) {
+    public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         if (fragment instanceof EditorFragmentAbstract) {
             mEditorFragment = (EditorFragmentAbstract) fragment;
@@ -112,8 +112,8 @@ public class EditorExampleActivity extends FragmentActivity implements EditorFra
 
     @Override
     public void onBackPressed() {
-        androidx.fragment.app.Fragment fragment =  getSupportFragmentManager()
-                .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        Fragment fragment =
+                getSupportFragmentManager().findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
             ((ImageSettingsDialogFragment) fragment).dismissFragment();
         } else {
