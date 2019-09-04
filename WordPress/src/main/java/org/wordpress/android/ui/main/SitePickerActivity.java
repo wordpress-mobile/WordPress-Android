@@ -91,7 +91,6 @@ public class SitePickerActivity extends AppCompatActivity
     private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
-    private boolean mDidUserSelectSite;
     private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
@@ -540,7 +539,6 @@ public class SitePickerActivity extends AppCompatActivity
             hideSoftKeyboard();
             AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
-            mDidUserSelectSite = true;
             // If the site is hidden, make sure to make it visible
             if (siteRecord.isHidden()) {
                 siteRecord.setHidden(false);
