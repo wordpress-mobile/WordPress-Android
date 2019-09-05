@@ -1687,7 +1687,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        // only makes sense to change the publish date and locally changed date if the Post was actaully changed
+        // only makes sense to change the publish date and locally changed date if the Post was actually changed
         if (postTitleOrContentChanged) {
             PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
