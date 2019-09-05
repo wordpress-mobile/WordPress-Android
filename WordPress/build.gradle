@@ -83,6 +83,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "13.2-rc-1"
             }
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             versionCode 774
         }
 
