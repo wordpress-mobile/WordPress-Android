@@ -104,5 +104,4 @@ public class EditorTests extends BaseTest {
         boolean isPublished = editorPage.publishPost();
         assertTrue(isPublished);
     }
-
 }
