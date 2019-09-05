@@ -10,11 +10,13 @@
         <item name="colorControlHighlight">@color/neutral_10</item>
 
         <item name="wpColorText">@color/neutral_70</item>
-        <item name="wpColorTextSubtle">@color/neutral</item>
+        <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorTextTetriary">@color/neutral_40</item>
         <item name="wpColorTextQuaternary">@color/neutral_30</item>
         <item name="wpColorTextInverted">@android:color/white</item>
-        <item name="wpColorError">@color/error</item>
+
+        <item name="wpColorError">@color/error_50</item>
+        <item name="wpColorAccentLight">@color/accent_30</item>
 
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
