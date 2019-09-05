@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -371,6 +374,16 @@ public class MySiteFragment extends Fragment implements
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
+        if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+            mToolbar.inflateMenu(R.menu.my_site_menu);
+            mToolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.me_item) {
+                    // TODO start activity
+                    return true;
+                }
+                return false;
+            });
+        }
 
         return rootView;
     }
@@ -1106,6 +1119,10 @@ public class MySiteFragment extends Fragment implements
                 mToolbar.setTitle(mToolbarTitle);
             }
         }
+    }
+
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**
