@@ -62,7 +62,7 @@ class ViewsWidgetListViewModelTest {
                 PeriodData("2019-01-07", firstViews, 0, 0, 0, 0, 0),
                 PeriodData("2019-01-08", todayViews, 0, 0, 0, 0, 0)
         )
-        whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(LimitMode.All), any())).thenReturn(
+        whenever(visitsAndViewsStore.getVisits(any(), eq(DAYS), eq(LimitMode.All))).thenReturn(
                 VisitsAndViewsModel("2019-01-08", dates)
         )
         val todayString = "Today"
@@ -77,27 +77,30 @@ class ViewsWidgetListViewModelTest {
                         isNull(),
                         any(),
                         any(),
+                        any(),
                         any()
                 )
-        ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE))
+        ).thenReturn(ValueItem(firstViews.toFormattedString(), 0, false, change, POSITIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[1]),
                         eq(dates[0]),
                         any(),
                         any(),
+                        any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEGATIVE))
+        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEGATIVE, change))
         whenever(
                 overviewMapper.buildTitle(
                         eq(dates[2]),
                         eq(dates[1]),
                         any(),
                         any(),
+                        any(),
                         any()
                 )
-        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL))
+        ).thenReturn(ValueItem(todayViews.toFormattedString(), 0, true, change, NEUTRAL, change))
 
         viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 

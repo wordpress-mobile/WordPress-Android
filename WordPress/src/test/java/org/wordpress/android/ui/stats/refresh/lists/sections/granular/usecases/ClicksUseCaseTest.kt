@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
@@ -37,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -53,21 +57,26 @@ class ClicksUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: ClicksUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 30
     private val singleClick = Group("group1", "Group 1", "group1.jpg", "group1.com", firstGroupViews, listOf())
     private val click = Click("Click 1", 20, "click.jpg", "click.com")
     private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(click))
+    private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = ClicksUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 store,
                 statsSiteProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -78,6 +87,11 @@ class ClicksUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -233,6 +247,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
             assertThat(item.value).isNull()
         }
         assertThat(item.iconUrl).isNull()
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertExpandableItem(
@@ -244,6 +259,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
         assertThat(item.header.value).isEqualTo(views.toFormattedString())
         assertThat(item.header.iconUrl).isNull()
+        assertThat(item.header.contentDescription).isEqualTo(contentDescription)
         return item
     }
 

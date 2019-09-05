@@ -101,7 +101,8 @@ class BlockDiffCallback(
                 TAB_CHANGED
             newItem is Columns && oldItem is Columns && oldItem.selectedColumn != newItem.selectedColumn ->
                 return SELECTED_COLUMN_CHANGED
-            newItem is Columns && oldItem is Columns && oldItem.values != newItem.values -> return COLUMNS_VALUE_CHANGED
+            newItem is Columns && oldItem is Columns && oldItem.columns != newItem.columns ->
+                return COLUMNS_VALUE_CHANGED
             newItem is BarChartItem && oldItem is BarChartItem && oldItem.selectedItem != newItem.selectedItem ->
                 return SELECTED_BAR_CHANGED
             else -> null

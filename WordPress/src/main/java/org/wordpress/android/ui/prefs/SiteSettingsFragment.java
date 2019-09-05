@@ -59,6 +59,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -79,9 +80,11 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.HashMap;
@@ -183,6 +186,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreferenceWithValidation mPasswordPref;
 
     // Writing settings
+    private WPSwitchPreference mGutenbergDefaultForNewPosts;
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
     private WPPreference mDateFormatPref;
@@ -319,9 +323,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onPause() {
         super.onPause();
         // Locally save the site. mSite can be null after site deletion or site removal (.org sites)
-        if (mSite != null) {
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
-        }
+        updateTitle();
         mIsFragmentPaused = true;
     }
 
@@ -732,6 +734,17 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mTimezonePref) {
             setTimezonePref(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
+        } else if (preference == mGutenbergDefaultForNewPosts) {
+            if (((Boolean) newValue)) {
+                SiteUtils.enableBlockEditor(mDispatcher, mSite);
+            } else {
+                SiteUtils.disableBlockEditor(mDispatcher, mSite);
+            }
+            AnalyticsUtils.trackWithSiteDetails(
+                    ((Boolean) newValue) ? Stat.EDITOR_GUTENBERG_ENABLED : Stat.EDITOR_GUTENBERG_DISABLED,
+                    mSite, BlockEditorEnabledSource.VIA_SITE_SETTINGS.asPropertyMap());
+            // we need to refresh metadata as gutenberg_enabled is now part of the user data
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else {
             return false;
         }
@@ -806,9 +819,17 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onSettingsSaved() {
-        mSite.setName(mSiteSettings.getTitle());
-        // Locally save the site
-        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+        updateTitle();
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+    }
+
+    private void updateTitle() {
+        if (mSite != null) {
+            SiteModel updatedSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            updatedSite.setName(mSiteSettings.getTitle());
+            // Locally save the site
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+        }
     }
 
     @Override
@@ -900,6 +921,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
         mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
+        mGutenbergDefaultForNewPosts =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_default_for_new_posts);
+        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
@@ -938,7 +962,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
-                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
+                mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
+                mGutenbergDefaultForNewPosts
         };
 
         for (Preference preference : editablePreference) {
@@ -1244,6 +1269,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
         mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
+        mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
@@ -1587,6 +1613,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return true;
             }
         });
+        ViewUtilsKt.redirectContextClickToLongPressListener(button);
 
         return view;
     }

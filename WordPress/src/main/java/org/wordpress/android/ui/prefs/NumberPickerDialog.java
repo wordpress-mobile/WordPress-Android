@@ -8,12 +8,14 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -82,6 +84,12 @@ public class NumberPickerDialog extends DialogFragment
             value = args.getInt(CUR_VALUE_KEY, mMinValue);
 
             builder.setCustomTitle(getDialogTitleView(args.getString(TITLE_KEY, "")));
+        }
+
+        // Fix for https://issuetracker.google.com/issues/36952035
+        View editText = mNumberPicker.getChildAt(0);
+        if (editText instanceof EditText) {
+            ((EditText) editText).setFilters(new InputFilter[0]);
         }
 
         mNumberPicker.setFormatter(mFormat);

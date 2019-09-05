@@ -11,8 +11,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.StatsAbstractFragment
 import org.wordpress.android.ui.stats.StatsViewType
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 
 class StatsViewAllActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +41,10 @@ class StatsViewAllActivity : AppCompatActivity() {
             context: Context,
             statsType: StatsViewType,
             granularity: StatsGranularity,
+            selectedDate: SelectedDate,
             localSiteId: Int
         ) {
-            start(context, statsType, granularity, localSiteId = localSiteId)
+            start(context, statsType, granularity, selectedDate, localSiteId = localSiteId)
         }
 
         @JvmStatic
@@ -65,16 +66,20 @@ class StatsViewAllActivity : AppCompatActivity() {
             context: Context,
             statsType: StatsViewType,
             granularity: StatsGranularity? = null,
+            selectedDate: SelectedDate? = null,
             selectedTab: Int? = null,
             localSiteId: Int
         ) {
             val intent = Intent(context, StatsViewAllActivity::class.java)
-            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, statsType)
+            intent.putExtra(StatsViewAllFragment.ARGS_VIEW_TYPE, statsType)
             selectedTab?.let {
                 intent.putExtra(StatsViewAllFragment.SELECTED_TAB_KEY, selectedTab)
             }
             granularity?.let {
-                intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, granularity)
+                intent.putExtra(StatsViewAllFragment.ARGS_TIMEFRAME, granularity)
+            }
+            selectedDate?.let {
+                intent.putExtra(StatsViewAllFragment.ARGS_SELECTED_DATE, selectedDate)
             }
             intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
             AnalyticsTracker.track(Stat.STATS_VIEW_ALL_ACCESSED)

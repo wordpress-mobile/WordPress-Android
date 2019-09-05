@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-06-07 18:11:45+0000
+Translation-Revision-Date: 2019-07-25 16:31:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="link_dialog_edit_hint">http(s)://</string>
     <string name="domain_contact_information_postal_code_hint">Código Postal</string>
     <string name="domain_contact_information_city_hint">Cidade</string>
     <string name="domain_contact_information_address_hint_two">Enderezo 2</string>
@@ -49,7 +50,6 @@ Language: gl_ES
     <string name="posts_scheduled_empty">Non tes ningunha entrada programada</string>
     <string name="posts_published_empty">Aínda non publicaches ningunha entrada</string>
     <string name="notification_wpcom_username_needed">Por favor, accede co teu nome de usuario e contrasinal.</string>
-    <string name="login_invalid_site_url">A dirección do sitio que introduciches non é válida. Por favor, volve a introducila.</string>
     <string name="error_user_username_instead_of_email">Por favor, accede usando o teu nome de usuario de WordPress.com en vez da túa dirección de correo electrónico.</string>
     <string name="stats_insights_average_words">Promedio de palabras/entrada</string>
     <string name="stats_insights_total_words">Total de palabras</string>
@@ -134,7 +134,6 @@ Language: gl_ES
     <string name="activity_log_event">Evento</string>
     <string name="comment_title">%s en %s</string>
     <string name="media_preview_title">%1$d de %2$d</string>
-    <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
@@ -280,7 +279,6 @@ Language: gl_ES
     <string name="enter_your_password_instead">Introduce o teu contrasinal se non</string>
     <string name="web_address_dialog_hint">Móstrase publicamente no teus comentarios.</string>
     <string name="new_editor_reflection_error">O editor visual non é compatible co teu dispositivo. Foi\ndesactivado automaticamente.</string>
-    <string name="stats_insights_latest_post_no_title">(sen título)</string>
     <string name="capture_or_pick_photo">Fai ou escolle unha foto</string>
     <string name="plans">Plans</string>
     <string name="plan">Plan</string>
@@ -309,7 +307,6 @@ Language: gl_ES
     <string name="start_over">Comezar desde cero</string>
     <string name="me_btn_app_settings">Configuración da aplicación</string>
     <string name="editor_remove_failed_uploads">Eliminar os contidos que non foi posible cargar</string>
-    <string name="editor_toast_failed_uploads">Fallou a carga dalgúns ficheiros. Nesta situación non se pode \n gardar nin publicar o artigo. Queres borrar todas as cargas que fallaron?</string>
     <string name="site_settings_advanced_header">Avanzado</string>
     <string name="comments_empty_list_filtered_trashed">Non hai comentarios no lixo</string>
     <string name="comments_empty_list_filtered_pending">Non hai comentarios pendentes</string>
@@ -366,7 +363,6 @@ Language: gl_ES
     <string name="editor_page_title_placeholder">Título da páxina</string>
     <string name="editor_post_title_placeholder">Título do artigo</string>
     <string name="email_address">Correo electrónico</string>
-    <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Eliminar definitivamente estes comentarios?</string>
     <string name="dlg_sure_to_delete_comment">Eliminar definitivamente este comentario?</string>
     <string name="mnu_comment_delete_permanently">Eliminar</string>
@@ -381,9 +377,6 @@ Language: gl_ES
     <string name="error_post_account_settings">Non foi posible gardar a configuración da conta</string>
     <string name="error_fetch_account_settings">Non foi posible acceder á configuración da conta</string>
     <string name="error_fetch_my_profile">Non foi posible acceder ao teu perfil</string>
-    <string name="stats_widget_promo_ok_btn_label">Vale, entendido.</string>
-    <string name="stats_widget_promo_desc">Engade o widget á pantalla de inicio para acceder ás estatísticas cun toque</string>
-    <string name="stats_widget_promo_title">Widget de estatísticas para a pantalla de inicio</string>
     <string name="site_settings_unknown_language_code_error">Código de idioma no aceptado</string>
     <string name="site_settings_threading_dialog_description">Permitir a xerarquización dos comentarios en fíos</string>
     <string name="site_settings_threading_dialog_header">Fíos até</string>
@@ -511,11 +504,6 @@ Language: gl_ES
     <string name="details">Detalles</string>
     <string name="customize">Personalizar</string>
     <string name="current_theme">Tema actual</string>
-    <string name="stats_referrers_spam_generic_error">Algo foi mal durante o proceso. O estado de spam non foi cambiado.</string>
-    <string name="stats_referrers_marking_not_spam">Sinalando como non spam</string>
-    <string name="stats_referrers_marking_spam">Sinalando como spam</string>
-    <string name="stats_referrers_unspam">Non é spam</string>
-    <string name="stats_referrers_spam">Spam</string>
     <string name="page_updated">Páxina actualizada</string>
     <string name="post_updated">Artigo actualizado</string>
     <string name="page_published">Páxina publicada</string>
@@ -531,19 +519,8 @@ Language: gl_ES
     <string name="notifications_empty_action_all">Sé activo! Comenta nos contidos dos blogs que segues.</string>
     <string name="notifications_empty_comments">Non hai comentarios novos … de momento</string>
     <string name="notifications_empty_unread">Xa estás ao día!</string>
-    <string name="stats_widget_error_jetpack_no_blogid">Por favor, accede ás estatísticas na aplicación e tenta engadir o widget máis tarde.</string>
-    <string name="stats_widget_error_readd_widget">Elimina o widget e engádeo de novo</string>
-    <string name="stats_widget_error_no_visible_blog">Non se pode acceder ás estatísticas sen ter un blogue visible.</string>
-    <string name="stats_widget_error_no_permissions">A túa conta de WordPress.com non pode acceder ás estatísticas deste blogue</string>
-    <string name="stats_widget_error_no_account">Por favor, inicia sesión en WordPress.</string>
-    <string name="stats_widget_error_generic">Non foi posible cargar as estatísticas</string>
-    <string name="stats_widget_loading_data">Cargando datos…</string>
-    <string name="stats_widget_name_for_blog">Estatísticas de hoxe para  %1$s</string>
-    <string name="stats_widget_name">Estatísticas de WordPress hoxe</string>
-    <string name="stats_enable_rest_api_in_jetpack">Para ver as estatísticas debes activar o módulo JSON API en Jetpack</string>
     <string name="reader_short_comment_count_multi">%s comentarios</string>
     <string name="reader_short_comment_count_one">1 comentario</string>
-    <string name="reader_label_submit_comment">ENVIADO</string>
     <string name="reader_hint_comment_on_post">Responder ao artigo…</string>
     <string name="reader_discover_visit_blog">Ver %s</string>
     <string name="reader_discover_attribution_blog">Publicado orixinalmente en %s</string>
@@ -568,7 +545,6 @@ Language: gl_ES
     <string name="notifications_tab">Lapela de notificacións</string>
     <string name="app_notifications">Notificacións da aplicación</string>
     <string name="notification_settings_item_other_account_emails_summary">Enviaremos sempre mensaxes importantes relativos á túa conta, e terás tamén algúns extras de utilidade.</string>
-    <string name="stats_insights_latest_post_trend">Hai %1$s que %2$s foi publicado. Aquí tes como lle foi ao artigo até este momento…</string>
     <string name="stats_insights_latest_post_summary">Resumo do último artigo</string>
     <string name="connectionbar_no_connection">Sen conexión</string>
     <string name="button_publish">Publicar</string>
@@ -577,22 +553,16 @@ Language: gl_ES
     <string name="button_preview">Vista previa</string>
     <string name="button_trash">Lixo</string>
     <string name="button_stats">Estatísticas</string>
-    <string name="stats_no_activity_this_period">Non hai actividade neste período</string>
     <string name="post_trashed">Artigo botado ao lixo</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
     <string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
     <string name="undo">Desfacer</string>
     <string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
-    <string name="stats_insights_most_popular_percent_views">%1$d%% de visitas</string>
     <string name="ignore">Ignorar</string>
     <string name="stats_insights_best_ever">A mellor de todas</string>
-    <string name="stats_insights_most_popular_hour">Hora máis popular</string>
-    <string name="stats_insights_most_popular_day">Día máis popular</string>
     <string name="stats_insights_today">Estatísticas de hoxe</string>
     <string name="stats_insights_all_time">Entradas, visitas e lectores desde o comezo.</string>
     <string name="stats_insights">Información</string>
-    <string name="stats_sign_in_jetpack_different_com_account">Para ver as estatísticas, inicia sesión na conta de WordPress.com que utilizaches para conectar a Jetpack.</string>
-    <string name="stats_other_recent_stats_moved_label">Estás a buscar outras estatísticas recentes? Trasladámolas á páxina \"Información\".</string>
     <string name="me_disconnect_from_wordpress_com">Desconectarse de WordPress.com</string>
     <string name="me_btn_login_logout">Entrar/Saír</string>
     <string name="me_connect_to_wordpress_com">Conectarse a WordPress.com</string>
@@ -613,12 +583,10 @@ Language: gl_ES
     <string name="my_site_btn_blog_posts">Artigos do blogue</string>
     <string name="reader_label_new_posts_subtitle">Pulsa para velos</string>
     <string name="my_site_header_configuration">Configuración</string>
-    <string name="stats_unknown_author">Autor descoñecido</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="hide">Ocultar</string>
     <string name="show">Mostrar</string>
     <string name="deselect_all">Desmarcar todo</string>
-    <string name="stats_generic_error">Non foi posible cargar as estatísticas requiridas</string>
     <string name="auth_required">Inicia sesión de novo para continuar</string>
     <string name="invalid_verification_code">Código de verificación non válido</string>
     <string name="verification_code">Código de verificación</string>
@@ -630,69 +598,25 @@ Language: gl_ES
     <string name="comments_fetching">Á procura dos comentarios…</string>
     <string name="stats_view_search_terms">Termos de busca</string>
     <string name="stats_view_authors">Autores</string>
-    <string name="stats_entry_search_terms">Termo de busca</string>
-    <string name="stats_empty_search_terms">Non se rexistraron termos de busca</string>
-    <string name="stats_empty_search_terms_desc">Aprende máis sobre o tráfico de buscas mirando os termos que levaron aos lectores ao teu sitio.</string>
-    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d - %2$d de %3$s seguidores de WordPress.com</string>
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
-    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo-e</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
     <string name="publisher">Editor:</string>
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
-    <string name="stats_months_and_years">Meses e anos</string>
     <string name="reader_page_recommended_blogs">Sitios que poden gustarche</string>
     <string name="error_copy_to_clipboard">Houbo un erro ao copiar o texto no portapapeis</string>
-    <string name="stats_recent_weeks">Últimas semanas</string>
-    <string name="stats_average_per_day">Media diaria</string>
     <string name="reader_empty_posts_in_blog">Este blogue está baleiro</string>
     <string name="reader_label_new_posts">Artigos novos</string>
     <string name="logs_copied_to_clipboard">Os rexistros da aplicación foron copiados no portapapeis</string>
-    <string name="stats_period">Período</string>
-    <string name="stats_overall">En total</string>
-    <string name="stats_total">Total</string>
     <string name="post_uploading">Cargando</string>
     <string name="stats_visitors">Lectores</string>
     <string name="stats_views">Visitas</string>
     <string name="stats_timeframe_years">Anos</string>
-    <string name="stats_pagination_label">Páxina %1$s de %2$s</string>
     <string name="stats_likes">\"Gústame\"</string>
     <string name="stats_view_countries">Países</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Vídeos</string>
     <string name="stats_view_top_posts_and_pages">Artigos e páxinas</string>
-    <string name="stats_entry_clicks_link">Enlace</string>
-    <string name="stats_totals_publicize">Seguidores</string>
-    <string name="stats_entry_followers">Seguidor</string>
-    <string name="stats_entry_publicize">Servizo</string>
-    <string name="stats_entry_top_commenter">Autor</string>
-    <string name="stats_entry_video_plays">Vídeo</string>
-    <string name="stats_empty_geoviews_desc">Nesta lista verás que países e rexións xeran máis tráfico no teu sitio</string>
-    <string name="stats_empty_geoviews">Sen países rexistrados</string>
-    <string name="stats_totals_followers">Desde</string>
-    <string name="stats_empty_top_posts_desc">Descobre cal é o teu contido máis visitado e comproba como lle vai a cada artigo ou paxina ao longo do tempo.</string>
-    <string name="stats_empty_top_posts_title">Sen visitas en artigos ou páxinas</string>
-    <string name="stats_empty_referrers_title">Sen referencias rexistradas</string>
-    <string name="stats_empty_clicks_title">Non se rexistraron clics</string>
-    <string name="stats_empty_referrers_desc">Aprende máis sobre a visibilidade do teu sitio mirando os sitios e buscadores desde os que chegan máis visitas.</string>
-    <string name="stats_empty_clicks_desc">Se os teus contidos inclúen enlaces a outros sitios, poderás ver cales son os máis utilizados polos lectores.</string>
-    <string name="stats_empty_tags_and_categories">Sen visitas a artigos ou páxinas etiquetados</string>
-    <string name="stats_empty_top_authors_desc">Fai seguimento das visitas aos artigos de cada colaborador e descobre o contido máis popular de cada un.</string>
-    <string name="stats_empty_tags_and_categories_desc">Bota unha ollada aos asuntos máis populares no teu sitio, segundo os teus artigos máis lidos da semana pasada.</string>
-    <string name="stats_empty_comments_desc">Se admites comentarios no teu sitio, fai seguimento dos comentadores máis activos e descobre que contidos provocan as conversas máis animadas (baseado nos 1000 comentarios máis recentes).</string>
-    <string name="stats_empty_video_desc">Se tes cargado vídeos con VideoPress, descobre cantas veces foron vistos.</string>
-    <string name="stats_empty_video">Sen reproducións de vídeos</string>
-    <string name="stats_empty_publicize">Nos se rexistraron seguidores en Publicize</string>
-    <string name="stats_empty_publicize_desc">Fai un seguimento dos teus seguidores desde diversas redes sociais utilizando Publicize.</string>
-    <string name="stats_empty_followers">Sen seguidores</string>
-    <string name="stats_empty_followers_desc">Fai un seguimento do número total de seguidores e do tempo que cada un leva seguindo o teu sitio.</string>
-    <string name="stats_comments_by_posts_and_pages">Por artigos e páxinas</string>
-    <string name="stats_comments_by_authors">Por autores</string>
-    <string name="stats_comments_total_comments_followers">Total de artigos con seguidores dos comentarios: %1$s</string>
-    <string name="stats_followers_total_wpcom">Total de seguidores en WordPress.com: %1$s</string>
-    <string name="stats_followers_email_selector">Correo-e</string>
-    <string name="stats_followers_wpcom_selector">WordPress.com</string>
-    <string name="stats_followers_total_email">Total de seguidores por correo-e: %1$s</string>
     <string name="stats_followers_seconds_ago">hai uns segundos</string>
     <string name="stats_followers_a_minute_ago">hai un minuto</string>
     <string name="stats_followers_days">%1$d días</string>
@@ -704,10 +628,6 @@ Language: gl_ES
     <string name="stats_followers_years">%1$d anos</string>
     <string name="stats_followers_a_year">Un ano</string>
     <string name="stats_followers_months">%1$d meses</string>
-    <string name="stats_view">Ver</string>
-    <string name="stats_view_all">Ver todo</string>
-    <string name="stats_other_recent_stats_label">Outras estatísticas recentes</string>
-    <string name="stats_for">Estatísticas para %s</string>
     <string name="themes_fetching">Á procura dos temas…</string>
     <string name="ssl_certificate_details">Detalles</string>
     <string name="cab_selected">%d seleccionados</string>
@@ -717,7 +637,6 @@ Language: gl_ES
     <string name="comment_trashed">Comentario no lixo</string>
     <string name="comment">Comentario</string>
     <string name="mnu_comment_liked">Gustou</string>
-    <string name="stats_no_blog">Non foi posible cargar as estatísticas do blogue requirido</string>
     <string name="older_last_week">Con máis dunha semana de antigüidade</string>
     <string name="older_two_days">Con máis de dous días de antigüidade</string>
     <string name="more">Máis</string>
@@ -765,14 +684,11 @@ Language: gl_ES
     <string name="error_edit_comment">Houbo un erro durante a edición do comentario</string>
     <string name="error_moderate_comment">Houbo un erro durante a moderación</string>
     <string name="error_generic">Houbo un erro</string>
-    <string name="error_refresh_stats">Non foi posible actualizar as estatísticas neste momento</string>
     <string name="error_refresh_comments">Non foi posible actualizar os comentarios neste momento</string>
     <string name="error_refresh_pages">Non foi posible actualizar as páxinas neste momento</string>
     <string name="error_refresh_posts">Non foi posible actualizar os artigos neste momento</string>
     <string name="error_deleting_post">Houbo un erro mentres se eliminaba a entrada</string>
     <string name="notifications_empty_list">Sen notificacións</string>
-    <string name="stats_bar_graph_empty">Non hai estatísticas dispoñibles</string>
-    <string name="stats_empty_comments">Non hai comentarios aínda</string>
     <string name="sdcard_message">Para cargar ficheiros fai é necesario ter unha tarxeta SD montada</string>
     <string name="cat_name_required">O campo de nome de categoría é obrigatorio</string>
     <string name="adding_cat_success">Categoría engadida con éxito</string>
@@ -872,14 +788,6 @@ Language: gl_ES
     <string name="reader_untitled_post">(Sen título)</string>
     <string name="comments_empty_list">Sen comentarios aínda</string>
     <string name="empty_list_default">Esta lista está baleira</string>
-    <string name="stats_totals_plays">Reproducións</string>
-    <string name="stats_totals_clicks">Clics</string>
-    <string name="stats_totals_views">Visitas</string>
-    <string name="stats_entry_referrers">Referencia</string>
-    <string name="stats_entry_authors">Autor</string>
-    <string name="stats_entry_tags_and_categories">Asunto</string>
-    <string name="stats_entry_posts_and_pages">Título</string>
-    <string name="stats_entry_country">País</string>
     <string name="stats_timeframe_months">Meses</string>
     <string name="stats_timeframe_weeks">Semanas</string>
     <string name="stats_timeframe_days">Días</string>
@@ -888,7 +796,6 @@ Language: gl_ES
     <string name="stats_view_referrers">Referencias</string>
     <string name="stats_view_tags_and_categories">Etiquetas e categorías</string>
     <string name="stats_view_clicks">Clics</string>
-    <string name="stats_view_visitors_and_views">Lectores e visitas</string>
     <string name="stats">Estatísticas</string>
     <string name="share_action">Compartir</string>
     <string name="theme_activate_button">Activar</string>
@@ -926,6 +833,7 @@ Language: gl_ES
     <string name="pages">Páxinas</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
     <string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
+    <string name="ok">Vale</string>
     <string name="blogusername">usuario</string>
     <string name="link_enter_url">URL</string>
     <string name="uploading">Cargando…</string>

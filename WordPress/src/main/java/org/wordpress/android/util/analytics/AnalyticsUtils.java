@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -70,6 +69,18 @@ public class AnalyticsUtils {
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
 
+    public enum BlockEditorEnabledSource {
+        VIA_SITE_SETTINGS,
+        ON_SITE_CREATION,
+        ON_BLOCK_POST_OPENING;
+
+        public Map<String, Object> asPropertyMap() {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("source", name().toLowerCase(Locale.ROOT));
+            return properties;
+        }
+    }
+
     public static void updateAnalyticsPreference(Context ctx,
                                                  Dispatcher mDispatcher,
                                                  AccountStore mAccountStore,
@@ -105,7 +116,12 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
+        for (SiteModel currentSite : siteStore.getSites()) {
+            if (SiteUtils.GB_EDITOR_NAME.equals(currentSite.getMobileEditor())) {
+                metadata.setGutenbergEnabled(true);
+                break;
+            }
+        }
 
         AnalyticsTracker.refreshMetadata(metadata);
     }
@@ -127,7 +143,8 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(1);
         metadata.setUsername(username);
         metadata.setEmail(email);
-        metadata.setGutenbergEnabled(AppPrefs.isGutenbergDefaultForNewPosts());
+        // GB is enabled for new users
+        metadata.setGutenbergEnabled(true);
         AnalyticsTracker.refreshMetadata(metadata);
     }
 

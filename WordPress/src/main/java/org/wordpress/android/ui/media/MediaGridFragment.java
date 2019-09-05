@@ -791,7 +791,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             inflater.inflate(R.menu.media_multiselect, menu);
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_600);
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_60);
             updateActionModeTitle(selectCount);
             return true;
         }

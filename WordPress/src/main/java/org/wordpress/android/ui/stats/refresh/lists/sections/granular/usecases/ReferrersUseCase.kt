@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.SelectedGroup
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -45,14 +47,17 @@ class ReferrersUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val referrersStore: ReferrersStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
+        backgroundDispatcher,
         statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
@@ -99,9 +104,16 @@ constructor(
         if (domainModel.groups.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
+            val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
+            items.add(header)
             domainModel.groups.forEachIndexed { index, group ->
                 val icon = buildIcon(group.icon)
+                val contentDescription =
+                    contentDescriptionHelper.buildContentDescription(
+                            header,
+                            group.name ?: "",
+                            group.total ?: 0
+                    )
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
                             icon = icon,
@@ -109,7 +121,8 @@ constructor(
                             text = group.name,
                             value = group.total?.toFormattedString(),
                             showDivider = index < domainModel.groups.size - 1,
-                            navigationAction = group.url?.let { create(it, this::onItemClick) }
+                            navigationAction = group.url?.let { create(it, this::onItemClick) },
+                            contentDescription = contentDescription
                     )
                     items.add(headerItem)
                 } else {
@@ -118,7 +131,8 @@ constructor(
                             iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
                             value = group.total?.toFormattedString(),
-                            showDivider = index < domainModel.groups.size - 1
+                            showDivider = index < domainModel.groups.size - 1,
+                            contentDescription = contentDescription
                     )
                     val isExpanded = group.groupId == uiState.groupId
                     items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
@@ -140,7 +154,12 @@ constructor(
                                     text = referrer.name,
                                     value = referrer.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = referrer.url?.let { create(it, this::onItemClick) }
+                                    navigationAction = referrer.url?.let { create(it, this::onItemClick) },
+                                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                                            header,
+                                            referrer.name,
+                                            referrer.views
+                                    )
                             )
                         })
                         items.add(Divider)
@@ -188,19 +207,23 @@ constructor(
     class ReferrersUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val referrersStore: ReferrersStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 ReferrersUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         referrersStore,
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

@@ -39,7 +39,7 @@
                     android:contentDescription="@string/media_settings_image_preview_desc"
                     tools:layout_height="224dp"
                     tools:src="@drawable/ic_audio_white_24dp"
-                    tools:tint="@color/neutral_300" >
+                    tools:tint="@color/neutral_30" >
                 </ImageView>
 
                 <ImageView
@@ -112,7 +112,7 @@
                             android:layout_marginBottom="@dimen/margin_large"
                             android:layout_marginStart="@dimen/margin_small"
                             android:text="@string/media_edit_customize_card_caption"
-                            android:textColor="@color/primary_500"
+                            android:textColor="@color/primary_50"
                             android:textSize="@dimen/text_sz_large"
                             android:textStyle="bold" />
 
@@ -245,7 +245,7 @@
                         android:layout_marginBottom="@dimen/margin_large"
                         android:layout_marginStart="@dimen/margin_small"
                         android:text="@string/media_edit_file_details_card_caption"
-                        android:textColor="@color/primary_500"
+                        android:textColor="@color/primary_50"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold" />
 
@@ -391,7 +391,7 @@
                             android:paddingTop="@dimen/margin_small"
                             android:text="@string/copy"
                             android:textAllCaps="true"
-                            android:textColor="@color/neutral_700"
+                            android:textColor="?attr/wpColorText"
                             android:textSize="@dimen/text_sz_medium"
                             android:paddingEnd="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"/></RelativeLayout></LinearLayout>

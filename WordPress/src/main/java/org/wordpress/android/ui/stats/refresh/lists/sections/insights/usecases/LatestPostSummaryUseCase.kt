@@ -10,6 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_S
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -33,12 +35,14 @@ import javax.inject.Named
 class LatestPostSummaryUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val latestPostStore: LatestPostInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
+    private val popupMenuHandler: ItemPopupMenuHandler,
+    private val contentDescriptionHelper: ContentDescriptionHelper
+) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsLatestPostModel? {
         return latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
     }
@@ -75,26 +79,40 @@ class LatestPostSummaryUseCase
             items.add(
                     ValueItem(
                             domainModel.postViewsCount.toFormattedString(startValue = MILLION),
-                            R.string.stats_views
+                            R.string.stats_views,
+                            contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    R.string.stats_views,
+                                    domainModel.postViewsCount
+                            )
                     )
             )
             if (domainModel.dayViews.isNotEmpty()) {
                 items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
+            val postLikeCount = domainModel.postLikeCount.toFormattedString()
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_star_white_24dp,
                             textResource = R.string.stats_likes,
-                            value = domainModel.postLikeCount.toFormattedString(),
-                            showDivider = true
+                            value = postLikeCount,
+                            showDivider = true,
+                            contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    R.string.stats_likes,
+                                    domainModel.postLikeCount
+                            )
                     )
             )
+            val postCommentCount = domainModel.postCommentCount.toFormattedString()
             items.add(
                     ListItemWithIcon(
                             R.drawable.ic_comment_white_24dp,
                             textResource = R.string.stats_comments,
-                            value = domainModel.postCommentCount.toFormattedString(),
-                            showDivider = false
+                            value = postCommentCount,
+                            showDivider = false,
+                            contentDescription = contentDescriptionHelper.buildContentDescription(
+                                    R.string.stats_comments,
+                                    domainModel.postCommentCount
+                            )
                     )
             )
         }

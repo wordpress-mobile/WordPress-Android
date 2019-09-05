@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewDayAverageStats
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDetailMapper.ExpandedYearUiState
@@ -27,6 +28,7 @@ private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class PostAverageViewsPerDayUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val postDetailStore: PostDetailStore,
@@ -35,6 +37,7 @@ class PostAverageViewsPerDayUseCase(
 ) : BaseStatsUseCase<PostDetailStatsModel, ExpandedYearUiState>(
         PostDetailType.AVERAGE_VIEWS_PER_DAY,
         mainDispatcher,
+        backgroundDispatcher,
         ExpandedYearUiState()
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
@@ -67,14 +70,20 @@ class PostAverageViewsPerDayUseCase(
         if (useCaseMode == BLOCK) {
             items.add(Title(R.string.stats_detail_average_views_per_day))
         }
+        val header = Header(
+                R.string.stats_months_and_years_period_label,
+                R.string.stats_months_and_years_views_label
+        )
         items.add(
-                Header(
-                        R.string.stats_months_and_years_period_label,
-                        R.string.stats_months_and_years_views_label
-                )
+                header
         )
         val shownYears = domainModel.yearsAverage.sortedByDescending { it.year }.takeLast(itemsToLoad)
-        val yearList = postDetailMapper.mapYears(shownYears, uiState, this::onUiState)
+        val yearList = postDetailMapper.mapYears(
+                shownYears,
+                uiState,
+                header,
+                this::onUiState
+        )
 
         items.addAll(yearList)
         if (useCaseMode == BLOCK && domainModel.yearsAverage.size > itemsToLoad) {
@@ -99,6 +108,7 @@ class PostAverageViewsPerDayUseCase(
     class PostAverageViewsPerDayUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsPostProvider: StatsPostProvider,
         private val postDetailMapper: PostDetailMapper,
@@ -107,6 +117,7 @@ class PostAverageViewsPerDayUseCase(
         override fun build(useCaseMode: UseCaseMode) =
                 PostAverageViewsPerDayUseCase(
                         mainDispatcher,
+                        backgroundDispatcher,
                         statsSiteProvider,
                         statsPostProvider,
                         postDetailStore,

@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ContextExtensionsKt;
 
 public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
@@ -55,7 +56,9 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (titleView != null) {
             Resources res = getContext().getResources();
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(isEnabled() ? R.color.neutral_700 : R.color.neutral_200));
+            titleView.setTextColor(res.getColor(
+                    isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
+                            : R.color.neutral_20));
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
@@ -68,9 +71,9 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             Switch switchControl = getSwitch((ViewGroup) view);
             if (switchControl != null) {
                 switchControl.setThumbTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.primary_400_gray_200_gray_400_selector));
+                        R.color.primary_40_gray_20_gray_40_selector));
                 switchControl.setTrackTintList(ContextCompat.getColorStateList(this.getContext(),
-                        R.color.primary_400_gray_900_gray_500_selector));
+                        R.color.primary_40_gray_90_gray_50_selector));
             }
         }
 

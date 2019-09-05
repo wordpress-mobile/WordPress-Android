@@ -181,7 +181,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
      */
     public interface EditorFragmentListener {
         void onEditorFragmentInitialized();
-        void onEditorFragmentContentReady(boolean hasUnsupportedContent);
+        void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
         void onSettingsClicked();
         void onAddMediaClicked();
         void onAddMediaImageClicked();
@@ -225,6 +225,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
         HEADING_5_BUTTON_TAPPED,
         HEADING_6_BUTTON_TAPPED,
         HORIZONTAL_RULE_BUTTON_TAPPED,
+        FORMAT_ALIGN_LEFT_BUTTON_TAPPED,
+        FORMAT_ALIGN_CENTER_BUTTON_TAPPED,
+        FORMAT_ALIGN_RIGHT_BUTTON_TAPPED,
         HTML_BUTTON_TAPPED,
         IMAGE_EDITED,
         ITALIC_BUTTON_TAPPED,
@@ -239,6 +242,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         PREFORMAT_BUTTON_TAPPED,
         READ_MORE_BUTTON_TAPPED,
         STRIKETHROUGH_BUTTON_TAPPED,
-        UNDERLINE_BUTTON_TAPPED
+        UNDERLINE_BUTTON_TAPPED,
+        REDO_TAPPED,
+        UNDO_TAPPED
     }
 }

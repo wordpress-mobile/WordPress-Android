@@ -29,6 +29,7 @@ sealed class NavigationTarget {
     data class ViewVideoPlays(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewSearchTerms(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
+    data class ViewFileDownloads(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewUrl(val url: String) : NavigationTarget()
     object ViewMonthsAndYearsStats : NavigationTarget()
     object ViewDayAverageStats : NavigationTarget()

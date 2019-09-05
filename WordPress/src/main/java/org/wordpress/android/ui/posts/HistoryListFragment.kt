@@ -31,13 +31,13 @@ class HistoryListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
-        private const val KEY_POST = "key_post"
+        private const val KEY_POST_LOCAL_ID = "key_post_local_id"
         private const val KEY_SITE = "key_site"
 
         fun newInstance(@NonNull post: PostModel, @NonNull site: SiteModel): HistoryListFragment {
             val fragment = HistoryListFragment()
             val bundle = Bundle()
-            bundle.putSerializable(KEY_POST, post)
+            bundle.putInt(KEY_POST_LOCAL_ID, post.id)
             bundle.putSerializable(KEY_SITE, site)
             fragment.arguments = bundle
             return fragment
@@ -56,9 +56,12 @@ class HistoryListFragment : Fragment() {
         viewModel.onItemClicked(item)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, viewModel.site)
-        super.onSaveInstanceState(outState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        (checkNotNull(activity).application as WordPress).component()?.inject(this)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,18 +83,16 @@ class HistoryListFragment : Fragment() {
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
-        viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(KEY_SITE) as SiteModel)
+        viewModel.create(
+                localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
+                site = arguments?.get(KEY_SITE) as SiteModel
+        )
         updatePostOrPageEmptyView()
         setObservers()
     }
 
     private fun updatePostOrPageEmptyView() {
         actionable_empty_view.title.text = getString(R.string.history_empty_title)
-        actionable_empty_view.subtitle.text = if ((arguments?.get(KEY_POST) as PostModel).isPage) {
-            getString(R.string.history_empty_subtitle_page)
-        } else {
-            getString(R.string.history_empty_subtitle_post)
-        }
         actionable_empty_view.button.visibility = View.GONE
         actionable_empty_view.subtitle.visibility = View.VISIBLE
     }
@@ -149,6 +150,14 @@ class HistoryListFragment : Fragment() {
         viewModel.showDialog.observe(this, Observer {
             if (it is Revision && activity is HistoryItemClickInterface) {
                 (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
+            }
+        })
+
+        viewModel.post.observe(this, Observer { post ->
+            actionable_empty_view.subtitle.text = if (post?.isPage == true) {
+                getString(R.string.history_empty_subtitle_page)
+            } else {
+                getString(R.string.history_empty_subtitle_post)
             }
         })
     }

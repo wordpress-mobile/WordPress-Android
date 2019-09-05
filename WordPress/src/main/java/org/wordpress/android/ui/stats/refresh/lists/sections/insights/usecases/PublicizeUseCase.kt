@@ -3,12 +3,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -34,13 +34,14 @@ private const val VIEW_ALL_ITEM_COUNT = 100
 class PublicizeUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val publicizeStore: PublicizeStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val mapper: ServiceMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val useCaseMode: UseCaseMode
-) : StatelessUseCase<PublicizeModel>(PUBLICIZE, mainDispatcher) {
+) : StatelessUseCase<PublicizeModel>(PUBLICIZE, mainDispatcher, backgroundDispatcher) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override suspend fun loadCachedData(): PublicizeModel? {
@@ -84,12 +85,15 @@ class PublicizeUseCase
         if (domainModel.services.isEmpty()) {
             items.add(Empty())
         } else {
-            items.add(Header(string.stats_publicize_service_label, string.stats_publicize_followers_label))
-            items.addAll(domainModel.services.let { mapper.map(it) })
+            val header = Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            items.add(header)
+            items.addAll(domainModel.services.let {
+                mapper.map(it, header)
+            })
             if (useCaseMode == BLOCK && domainModel.hasMore) {
                 items.add(
                         Link(
-                                text = string.stats_insights_view_more,
+                                text = R.string.stats_insights_view_more,
                                 navigateAction = NavigationAction.create(this::onLinkClick)
                         )
                 )
@@ -112,6 +116,7 @@ class PublicizeUseCase
     class PublicizeUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val publicizeStore: PublicizeStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val mapper: ServiceMapper,
@@ -121,6 +126,7 @@ class PublicizeUseCase
         override fun build(useCaseMode: UseCaseMode) =
                 PublicizeUseCase(
                         mainDispatcher,
+                        backgroundDispatcher,
                         publicizeStore,
                         statsSiteProvider,
                         mapper,

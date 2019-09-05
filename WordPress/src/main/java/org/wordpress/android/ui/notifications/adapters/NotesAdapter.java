@@ -2,6 +2,7 @@ package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
@@ -242,9 +244,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         // Subject is stored in db as html to preserve text formatting
-        CharSequence noteSubjectSpanned = note.getFormattedSubject(mNotificationsUtilsWrapper);
+        Spanned noteSubjectSpanned = note.getFormattedSubject(mNotificationsUtilsWrapper);
         // Trim the '\n\n' added by Html.fromHtml()
-        noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
+        noteSubjectSpanned =
+                (Spanned) noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
+
+        NoteBlockClickableSpan[] spans =
+                noteSubjectSpanned.getSpans(0, noteSubjectSpanned.length(), NoteBlockClickableSpan.class);
+        for (NoteBlockClickableSpan span : spans) {
+            span.enableColors(noteViewHolder.mContentView.getContext());
+        }
+
         noteViewHolder.mTxtSubject.setText(noteSubjectSpanned);
 
         String noteSubjectNoticon = note.getCommentSubjectNoticon();
@@ -287,9 +297,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
         } else if (isUnread) {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_400_stroke_notification_unread);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_primary_40_stroke_notification_unread);
         } else {
-            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_200_stroke_white);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_neutral_20_stroke_white);
         }
 
         if (isUnread) {

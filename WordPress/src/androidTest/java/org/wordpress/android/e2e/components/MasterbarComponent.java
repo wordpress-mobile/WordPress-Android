@@ -17,4 +17,8 @@ public class MasterbarComponent {
         clickOn(R.id.row_blog_posts);
         return this;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 08af53e32d62b1f12e4ddc0cda6f29025481acd7
 }

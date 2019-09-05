@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularSt
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -48,14 +50,17 @@ class AuthorsUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
         AUTHORS,
         mainDispatcher,
+        backgroundDispatcher,
         statsSiteProvider,
         selectedDateProvider,
         statsGranularity,
@@ -102,7 +107,8 @@ constructor(
         if (domainModel.authors.isEmpty()) {
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
-            items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
+            val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
+            items.add(header)
             val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
@@ -111,7 +117,12 @@ constructor(
                         text = author.name,
                         barWidth = getBarWidth(author.views, maxViews),
                         value = author.views.toFormattedString(),
-                        showDivider = index < domainModel.authors.size - 1
+                        showDivider = index < domainModel.authors.size - 1,
+                        contentDescription = contentDescriptionHelper.buildContentDescription(
+                                header,
+                                author.name,
+                                author.views
+                        )
                 )
                 if (author.posts.isEmpty()) {
                     items.add(headerItem)
@@ -131,6 +142,12 @@ constructor(
                                     navigationAction = create(
                                             PostClickParams(post.id, post.url, post.title),
                                             this::onPostClicked
+                                    ),
+                                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                                            R.string.stats_post_label,
+                                            post.title,
+                                            R.string.stats_post_views_label,
+                                            post.views
                                     )
                             )
                         })
@@ -184,19 +201,23 @@ constructor(
     class AuthorsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 AuthorsUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         authorsStore,
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

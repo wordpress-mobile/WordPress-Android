@@ -1,14 +1,18 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
@@ -44,10 +48,12 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: PublicizeUseCase
     private val itemsToLoad = 6
     private val limitMode = LimitMode.Top(itemsToLoad)
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PublicizeUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
                 serviceMapper,
@@ -71,7 +77,10 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(services)).thenReturn(listOf(mockedItem))
+        whenever(serviceMapper.map(
+                eq(services),
+                any()
+        )).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 
@@ -102,7 +111,10 @@ class PublicizeUseCaseTest : BaseUnitTest() {
                 )
         )
         val mockedItem = mock<ListItemWithIcon>()
-        whenever(serviceMapper.map(services.take(5))).thenReturn(listOf(mockedItem))
+        whenever(serviceMapper.map(
+                eq(services.take(5)),
+                any()
+        )).thenReturn(listOf(mockedItem))
 
         val result = loadPublicizeModel(true, forced)
 

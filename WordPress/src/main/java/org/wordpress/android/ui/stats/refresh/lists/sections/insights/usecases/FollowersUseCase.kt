@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUiState
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -53,10 +54,12 @@ class FollowersUseCase(
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
+        bgDispatcher,
         FollowersUiState(isLoading = true)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_PAGE_SIZE else BLOCK_ITEM_COUNT
@@ -177,7 +180,7 @@ class FollowersUseCase(
     private fun buildTitle() = Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
 
     private fun loadMore() {
-        GlobalScope.launch(bgDispatcher) {
+        launch {
             val state = fetchData(true, PagedMode(itemsToLoad, true))
             evaluateState(state)
         }
@@ -195,22 +198,30 @@ class FollowersUseCase(
                             )
                     )
             )
-            mutableItems.add(Header(R.string.stats_follower_label, R.string.stats_follower_since_label))
-            model.followers.toUserItems().let { mutableItems.addAll(it) }
+            val header = Header(R.string.stats_follower_label, R.string.stats_follower_since_label)
+            mutableItems.add(header)
+            model.followers.toUserItems(header)
+                    .let { mutableItems.addAll(it) }
         } else {
             mutableItems.add(Empty())
         }
         return mutableItems
     }
 
-    private fun List<FollowerModel>.toUserItems(): List<ListItemWithIcon> {
+    private fun List<FollowerModel>.toUserItems(header: Header): List<ListItemWithIcon> {
         return this.mapIndexed { index, follower ->
+            val value = statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed)
             ListItemWithIcon(
                     iconUrl = follower.avatar,
                     iconStyle = AVATAR,
                     text = follower.label,
-                    value = statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed),
-                    showDivider = index < this.size - 1
+                    value = value,
+                    showDivider = index < this.size - 1,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                            header,
+                            follower.label,
+                            value
+                    )
             )
         }
     }
@@ -235,7 +246,8 @@ class FollowersUseCase(
         private val statsUtilsWrapper: StatsUtilsWrapper,
         private val resourceProvider: ResourceProvider,
         private val popupMenuHandler: ItemPopupMenuHandler,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 FollowersUseCase(
@@ -247,6 +259,7 @@ class FollowersUseCase(
                         resourceProvider,
                         analyticsTracker,
                         popupMenuHandler,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

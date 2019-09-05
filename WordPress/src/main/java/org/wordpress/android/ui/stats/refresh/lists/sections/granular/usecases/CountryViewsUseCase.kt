@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.CountryViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.COUNTRIES
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -40,14 +42,17 @@ class CountryViewsUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val store: CountryViewsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val useCaseMode: UseCaseMode
 ) : GranularStatelessUseCase<CountryViewsModel>(
         COUNTRIES,
         mainDispatcher,
+        backgroundDispatcher,
         selectedDateProvider,
         statsSiteProvider,
         statsGranularity
@@ -117,14 +122,20 @@ constructor(
             val endLabel = (maxViews ?: 0).toFormattedString()
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
             items.add(MapLegend(startLabel, endLabel))
-            items.add(Header(R.string.stats_country_label, R.string.stats_country_views_label))
+            val header = Header(R.string.stats_country_label, R.string.stats_country_views_label)
+            items.add(header)
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
                         ListItemWithIcon(
                                 iconUrl = group.flagIconUrl,
                                 text = group.fullName,
                                 value = group.views.toFormattedString(),
-                                showDivider = index < domainModel.countries.size - 1
+                                showDivider = index < domainModel.countries.size - 1,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        header,
+                                        group.fullName,
+                                        group.views
+                                )
                         )
                 )
             }
@@ -154,19 +165,23 @@ constructor(
     class CountryViewsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val store: CountryViewsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val contentDescriptionHelper: ContentDescriptionHelper
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 CountryViewsUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         store,
                         statsSiteProvider,
                         selectedDateProvider,
                         analyticsTracker,
+                        contentDescriptionHelper,
                         useCaseMode
                 )
     }

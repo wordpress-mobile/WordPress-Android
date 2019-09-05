@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/new_site_creation_site_title_hint"
                 android:labelFor="@+id/site_info_site_title"
-                android:textColorHint="@color/neutral_300"
+                android:textColorHint="@color/neutral_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/header_container">
@@ -49,11 +49,11 @@
                     android:id="@+id/site_info_site_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/neutral_300"
+                    android:backgroundTint="@color/neutral_30"
                     android:inputType="text"
                     android:singleLine="true"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/neutral_800">
+                    android:textColor="@color/neutral_80">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,7 +64,7 @@
                 android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
                 android:hint="@string/new_site_creation_tag_line_hint"
                 android:labelFor="@+id/site_info_tag_line"
-                android:textColorHint="@color/neutral_300"
+                android:textColorHint="@color/neutral_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/site_info_site_title_layout">
@@ -73,9 +73,9 @@
                     android:id="@+id/site_info_tag_line"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/neutral_300"
+                    android:backgroundTint="@color/neutral_30"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/neutral_800">
+                    android:textColor="@color/neutral_80">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,7 +86,7 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="@string/new_site_creation_tag_line_description"
-                android:textColor="@color/neutral_500"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="@dimen/text_sz_medium"
                 app:fixWidowWords="true"
                 app:layout_constraintEnd_toEndOf="parent"

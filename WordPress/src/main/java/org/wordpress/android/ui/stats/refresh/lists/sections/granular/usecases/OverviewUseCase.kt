@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -15,13 +16,16 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,30 +40,38 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val statsWidgetUpdaters: StatsWidgetUpdaters,
+    private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         OVERVIEW,
         mainDispatcher,
-        UiState()
+        backgroundDispatcher,
+        UiState(),
+        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
 ) {
-    init {
-        uiState.addSource(selectedDateProvider.granularSelectedDateChanged(statsGranularity)) {
-            onUiState()
-        }
-    }
-
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
-                    ValueItem(value = 0.toFormattedString(), unit = R.string.stats_views, isFirst = true)
+                    ValueItem(
+                            value = 0.toFormattedString(),
+                            unit = R.string.stats_views,
+                            isFirst = true,
+                            contentDescription = resourceProvider.getString(R.string.stats_loading_card)
+                    )
             )
 
     override suspend fun loadCachedData(): VisitsAndViewsModel? {
-        return visitsAndViewsStore.getVisits(
+        statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
+        val cachedData = visitsAndViewsStore.getVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.All,
-                selectedDateProvider.getCurrentDate()
+                LimitMode.All
         )
+        if (cachedData != null) {
+            selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
+        }
+        return cachedData
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
@@ -67,7 +79,6 @@ constructor(
                 statsSiteProvider.siteModel,
                 statsGranularity,
                 LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
-                selectedDateProvider.getCurrentDate(),
                 forced
         )
         val model = response.model
@@ -115,7 +126,8 @@ constructor(
                             selectedItem,
                             previousItem,
                             uiState.selectedPosition,
-                            isLast = selectedItem == domainModel.dates.last()
+                            isLast = selectedItem == domainModel.dates.last(),
+                            statsGranularity = statsGranularity
                     )
             )
             items.addAll(
@@ -161,12 +173,15 @@ constructor(
     class OverviewUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val statsSiteProvider: StatsSiteProvider,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
         private val visitsAndViewsStore: VisitsAndViewsStore,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsWidgetUpdaters: StatsWidgetUpdaters,
+        private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 OverviewUseCase(
@@ -177,7 +192,10 @@ constructor(
                         statsDateFormatter,
                         overviewMapper,
                         mainDispatcher,
-                        analyticsTracker
+                        backgroundDispatcher,
+                        analyticsTracker,
+                        statsWidgetUpdaters,
+                        resourceProvider
                 )
     }
 }

@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.utils
 
+import org.wordpress.android.R
+import android.app.Dialog
 import android.content.Context
 import android.view.View
+import android.view.WindowManager.LayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -12,6 +15,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
+import android.graphics.Point
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
@@ -51,6 +55,27 @@ class UiHelpers @Inject constructor() {
         updateVisibility(imageView, resId != null)
         resId?.let {
             imageView.setImageResource(resId)
+        }
+    }
+
+    companion object {
+        fun adjustDialogSize(dialog: Dialog) {
+            val window = dialog.window
+            val size = Point()
+
+            val display = window.windowManager.defaultDisplay
+            display.getSize(size)
+
+            val width = size.x
+
+            val maximumWidth = window.context.resources.getDimension(R.dimen.alert_dialog_max_width).toInt()
+            var proposedWidth = (width * 0.8).toInt()
+
+            if (proposedWidth > maximumWidth) {
+                proposedWidth = maximumWidth
+            }
+
+            window.setLayout(proposedWidth, LayoutParams.WRAP_CONTENT)
         }
     }
 }

@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.stats.insights.PostingActivityStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -21,11 +22,12 @@ import javax.inject.Named
 class PostingActivityUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val store: PostingActivityStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val postingActivityMapper: PostingActivityMapper,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<PostingActivityModel>(POSTING_ACTIVITY, mainDispatcher) {
+) : StatelessUseCase<PostingActivityModel>(POSTING_ACTIVITY, mainDispatcher, backgroundDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_posting_activity))
 
     override fun buildEmptyItem(): List<BlockListItem> {

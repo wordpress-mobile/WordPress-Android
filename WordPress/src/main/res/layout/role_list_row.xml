@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:buttonTint="@color/primary_400_gray_200_gray_400_selector" >
+        android:buttonTint="@color/primary_40_gray_20_gray_40_selector" >
     </RadioButton>
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_marginEnd="@dimen/dlp_text_margin_end"
         android:layout_marginStart="@dimen/dlp_text_margin_start"
         android:layout_toEndOf="@id/radio"
-        android:textColor="@color/neutral_700"
+        android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_large"
         tools:text="Main Text"/>
 

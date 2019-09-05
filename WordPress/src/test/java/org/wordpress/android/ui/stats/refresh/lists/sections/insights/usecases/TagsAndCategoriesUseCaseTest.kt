@@ -4,12 +4,14 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.TagsModel
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -46,6 +49,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: TagsAndCategoriesUseCase
     private val blockItemCount = 6
     private val singleTagViews: Long = 10
@@ -53,18 +57,31 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private val secondTag = TagModel.Item("tag2", "tag", "url2.com")
     private val singleTag = TagModel(listOf(firstTag), singleTagViews)
     private val categoryViews: Long = 20
+    private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
                 resourceProvider,
                 tracker,
                 popupMenuHandler,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn(contentDescription)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -209,6 +226,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
             assertThat(item.barWidth).isNull()
         }
         assertThat(item.icon).isEqualTo(R.drawable.ic_tag_white_24dp)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertCategory(
@@ -222,6 +240,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat(item.header.value).isEqualTo(views.toString())
         assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_white_24dp)
         assertThat(item.header.barWidth).isEqualTo(bar)
+        assertThat(item.header.contentDescription).isEqualTo(contentDescription)
         return item
     }
 

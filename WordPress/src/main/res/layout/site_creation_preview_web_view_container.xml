@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/neutral_500"
+                    android:textColor="?attr/wpColorTextSubtle"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="example.wordpress.com"/>
             </FrameLayout>
@@ -63,7 +63,7 @@
             android:id="@+id/sitePreviewWebViewShimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/neutral_50">
+            android:background="@color/neutral_5">
 
             <include layout="@layout/site_creation_preview_skeleton"/>
         </com.facebook.shimmer.ShimmerFrameLayout>

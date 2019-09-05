@@ -16,14 +16,14 @@
         android:contentDescription="@null"
         android:layout_marginEnd="@dimen/margin_medium"
         tools:src="@drawable/ic_pencil_white_24dp"
-        tools:tint="@color/neutral_500" />
+        tools:tint="@color/neutral_50" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:textColor="@color/neutral_500"
+        android:textColor="?attr/wpColorTextSubtle"
         android:textSize="@dimen/text_sz_medium"
         tools:text="text" />
 

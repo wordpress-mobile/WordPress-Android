@@ -1,0 +1,3 @@
+13.1
+* En la vista previa del sitio y de la página, ahora puedes cambiar entre las versiones del sitio para escritorio y móvil.
+* Hemos corregido un fallo que afectaba a algunos usuarios que no podían conectar con sus servicios de medios sociales.

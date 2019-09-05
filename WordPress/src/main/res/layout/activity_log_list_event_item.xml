@@ -26,7 +26,7 @@
             android:layout_margin="@dimen/activity_log_icon_margin"
             android:layout_width="@dimen/activity_log_icon_size"
             android:padding="@dimen/margin_medium"
-            tools:background="@drawable/bg_oval_neutral_300"
+            tools:background="@drawable/bg_oval_neutral_30"
             tools:src="@drawable/ic_comment_white_24dp" >
         </ImageView>
 
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:padding="@dimen/activity_log_icon_margin"
             android:src="@drawable/ic_history_white_24dp"
-            android:tint="@color/primary_500" >
+            android:tint="@color/primary_50" >
         </ImageButton>
 
         <LinearLayout
@@ -63,7 +63,7 @@
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="@color/neutral_700"
+                android:textColor="?attr/wpColorText"
                 tools:text="Comment by oguzkocer on Android Studio 3.1 Configuration Issue: I think the bigger problem for me was the lack of make option, so hopefully at least that'll work." >
             </org.wordpress.android.widgets.WPTextView>
 
@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_400"
+                android:textColor="@color/neutral_40"
                 tools:text="Comment posted" >
             </org.wordpress.android.widgets.WPTextView>
 

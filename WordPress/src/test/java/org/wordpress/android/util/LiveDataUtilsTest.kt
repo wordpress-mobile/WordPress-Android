@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TestScope
+import org.wordpress.android.test
 
 class LiveDataUtilsTest : BaseUnitTest() {
     @Test
@@ -24,11 +26,11 @@ class LiveDataUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `merge merges sources with function`() {
+    fun `merge merges sources with function`() = test {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<String>()
 
-        val mergedSources = mergeNotNull(sourceA, sourceB) { i, s ->
+        val mergedSources = mergeAsyncNotNull(TestScope, sourceA, sourceB) { i, s ->
             "$s: $i"
         }
         mergedSources.observeForever { }

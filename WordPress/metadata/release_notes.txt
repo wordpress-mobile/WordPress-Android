@@ -1,4 +1,2 @@
-* In Posts and Pages, Authors, Tags, and Categories Stats cards, a percentage bar has been added to communicate the impact of each item.
-* You can now search posts on the Post List page.
-* New! Widgets for All-time, Today, and Weekly Stats are now available.
-* Block Editor: Fixed a bug that affected pasting text into the Post Title.
+* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.
+* We fixed a bug affecting some users who couldn’t connect their social media services.

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+
+        <shape
+            android:shape="oval">
+
+            <solid
+                android:color="@color/neutral_30" >
+            </solid>
+
+        </shape>
+
+    </item>
+
+    <item
+        android:drawable="@drawable/ic_multiple_users_white_24dp"
+        android:bottom="8dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp">
+    </item>
+
+</layer-list>

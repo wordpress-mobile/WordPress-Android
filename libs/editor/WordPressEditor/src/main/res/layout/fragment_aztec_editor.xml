@@ -58,6 +58,7 @@
                 style="@style/DividerSourceView"/>
 
             <FrameLayout
+                android:id="@+id/aztec_content_and_source_container"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent" >
 

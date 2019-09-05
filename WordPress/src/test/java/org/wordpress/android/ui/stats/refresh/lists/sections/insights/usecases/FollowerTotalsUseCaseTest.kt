@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import org.assertj.core.api.Assertions
+import kotlinx.coroutines.InternalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -25,12 +28,16 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
+import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 
 class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var followersStore: FollowersStore
     @Mock lateinit var publicizeStore: PublicizeStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
+    @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: FollowerTotalsUseCase
 
@@ -40,25 +47,33 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
             Service("Twitter", 10),
             Service("FB", 5)),
             false)
+    private val contentDescription = "title, views"
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = FollowerTotalsUseCase(
                 Dispatchers.Unconfined,
-                Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 followersStore,
                 publicizeStore,
-                statsSiteProvider
+                statsSiteProvider,
+                contentDescriptionHelper,
+                popupMenuHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
 
         whenever(followersStore.getEmailFollowers(site, LimitMode.Top(0))).thenReturn(emailModel)
         whenever(followersStore.getWpComFollowers(site, LimitMode.Top(0))).thenReturn(wpModel)
         whenever(publicizeStore.getPublicizeData(site, LimitMode.All)).thenReturn(socialModel)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<Int>()
+        )).thenReturn(contentDescription)
     }
 
     @Test
-    fun `maps follower totals to U`() = test {
+    fun `maps follower totals to UI model`() = test {
         val forced = false
         val refresh = true
 
@@ -68,13 +83,13 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowerTotalsData(refresh, forced)
 
-        Assertions.assertThat(result.state).isEqualTo(SUCCESS)
+        assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            Assertions.assertThat(this).hasSize(4)
+            assertThat(this).hasSize(4)
             assertTitle(this[0])
 
             for (i in 1..3) {
-                Assertions.assertThat(this[i].type).isEqualTo(LIST_ITEM_WITH_ICON)
+                assertThat(this[i].type).isEqualTo(LIST_ITEM_WITH_ICON)
                 assertItem(this[i] as ListItemWithIcon)
             }
         }
@@ -83,20 +98,22 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     private fun assertItem(item: ListItemWithIcon) {
         when (item.icon) {
             R.drawable.ic_my_sites_white_24dp -> {
-                Assertions.assertThat(item.value).isEqualTo(3.toString())
+                assertThat(item.value).isEqualTo(3.toString())
             }
             R.drawable.ic_mail_white_24dp -> {
-                Assertions.assertThat(item.value).isEqualTo(7.toString())
+                assertThat(item.value).isEqualTo(7.toString())
             }
             R.drawable.ic_share_white_24dp -> {
-                Assertions.assertThat(item.value).isEqualTo(15.toString())
+                assertThat(item.value).isEqualTo(15.toString())
             }
         }
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     private fun assertTitle(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_follower_totals)
+        assertThat(item.type).isEqualTo(TITLE)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_follower_totals)
+        assertThat(item.menuAction).isNotNull
     }
 
     private suspend fun loadFollowerTotalsData(refresh: Boolean, forced: Boolean): UseCaseModel {

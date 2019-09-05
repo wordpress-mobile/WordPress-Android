@@ -13,10 +13,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 import static java.lang.String.format;
 
@@ -60,6 +62,7 @@ public class AppLog {
     public static final int HEADER_LINE_COUNT = 2;
     private static boolean mEnableRecording = false;
     private static List<AppLogListener> mListeners = new ArrayList<>(0);
+    private static TimeZone mUtcTimeZone = TimeZone.getTimeZone("UTC");
 
     private AppLog() {
         throw new AssertionError();
@@ -224,7 +227,7 @@ public class AppLog {
 
         LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
-            mDate = DateTimeUtils.nowUTC();
+            mDate = new Date();
             if (logText == null) {
                 mLogText = "null";
             } else {
@@ -234,7 +237,9 @@ public class AppLog {
         }
 
         private String formatLogDate() {
-            return new SimpleDateFormat("MMM-dd kk:mm", Locale.US).format(mDate);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd kk:mm", Locale.US);
+            sdf.setTimeZone(mUtcTimeZone);
+            return sdf.format(mDate);
         }
 
         private String toHtml() {

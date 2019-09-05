@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/neutral_700"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_title"
             android:layout_marginEnd="@dimen/margin_medium"/>
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/neutral_400"
+            android:textColor="@color/neutral_40"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_description" />
 

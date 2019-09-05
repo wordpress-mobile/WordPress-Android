@@ -122,6 +122,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -159,9 +160,9 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -177,7 +178,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -208,8 +208,8 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
-        PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
-        HistoryListFragment.HistoryItemClickInterface {
+        HistoryListFragment.HistoryItemClickInterface,
+        EditPostSettingsCallback {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -241,8 +241,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
-    private static final int PAGE_PREVIEW = 2;
-    private static final int PAGE_HISTORY = 3;
+    private static final int PAGE_PUBLISH_SETTINGS = 2;
+    private static final int PAGE_PREVIEW = 3;
+    private static final int PAGE_HISTORY = 4;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_PUBLISH_DIALOG_TAG = "ASYNC_PROMO_PUBLISH_DIALOG_TAG";
@@ -410,6 +411,15 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
+        // FIXME: Make sure to use the latest fresh info about the site we've in the DB
+        // set only the editor setting for now.
+        if (mSite != null) {
+            SiteModel refreshedSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            if (refreshedSite != null) {
+                mSite.setMobileEditor(refreshedSite.getMobileEditor());
+            }
+        }
+
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
@@ -517,7 +527,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     restartEditorOptionName == null ? RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
                             : RestartEditorOptions.valueOf(restartEditorOptionName);
 
-            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost)
+            mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost, mSite)
                                    && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
         } else {
             mShowGutenbergEditor = savedInstanceState.getBoolean(STATE_KEY_GUTENBERG_IS_SHOWN);
@@ -544,7 +554,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
@@ -558,6 +568,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    hidePhotoPicker();
+                } else if (position == PAGE_PUBLISH_SETTINGS) {
+                    setTitle(R.string.publish_date);
                     hidePhotoPicker();
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
@@ -1226,7 +1239,8 @@ public class EditPostActivity extends AppCompatActivity implements
             MenuItem primaryAction = menu.findItem(R.id.menu_primary_action);
             if (primaryAction != null) {
                 primaryAction.setTitle(getPrimaryActionText());
-                primaryAction.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
+                primaryAction.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY
+                                         && mViewPager.getCurrentItem() != PAGE_PUBLISH_SETTINGS);
             }
         }
 
@@ -1254,8 +1268,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
             // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
             //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
-            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" App setting, don't offer the switch.
-            switchToGutenbergMenuItem.setVisible(hasBlocks || (AppPrefs.isGutenbergDefaultForNewPosts() && isEmpty));
+            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" in Site Setting,
+            //  don't offer the switch.
+            switchToGutenbergMenuItem.setVisible(
+                    hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(mSite) && isEmpty));
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1296,7 +1312,10 @@ public class EditPostActivity extends AppCompatActivity implements
             return false;
         }
 
-        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+        if (mViewPager.getCurrentItem() == PAGE_PUBLISH_SETTINGS) {
+            mViewPager.setCurrentItem(PAGE_SETTINGS);
+            invalidateOptionsMenu();
+        } else if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
@@ -1537,14 +1556,24 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.isGutenbergAutoEnabledForTheNewPosts()
-            && !mIsNewPost
-            && !AppPrefs.isGutenbergDefaultForNewPosts()) {
-            AppPrefs.setGutenbergDefaultForNewPosts(true);
-            AppPrefs.setGutenbergAutoEnabledForTheNewPosts(false);
+        if (AppPrefs.isGutenbergInfoPopupDisplayed(mSite.getUrl())) {
+            return;
+        }
+
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
+
+        if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
+            SiteUtils.enableBlockEditor(mDispatcher, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
+                    BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
+            showPopup = true;
+        }
+
+        if (showPopup) {
             showGutenbergInformativeDialog();
         }
     }
@@ -1826,18 +1855,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment dialog) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(dialog);
-        }
-    }
-
-    /*
-     * user clicked OK on a settings date/time dialog displayed from the settings fragment - pass the event
-     * along to the settings fragment
-     */
-    @Override
-    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
-                                                            @NonNull Calendar calender) {
-        if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
         }
     }
 
@@ -2269,7 +2286,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 4;
+        private static final int NUM_PAGES_EDITOR = 5;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -2279,17 +2296,16 @@ public class EditPostActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
-                        // Enable gutenberg upon opening a block based post
+                        // Enable gutenberg on the site & show the informative popup upon opening
+                        // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
-                        WPPrefUtils.setMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
                     } else if (mShowAztecEditor) {
-                        WPPrefUtils.setMobileEditorPreferenceToRemote(mDispatcher, mSiteStore);
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
@@ -2298,12 +2314,16 @@ public class EditPostActivity extends AppCompatActivity implements
                     } else {
                         return new LegacyEditorFragment();
                     }
-                case 1:
+                case PAGE_SETTINGS:
                     return EditPostSettingsFragment.newInstance();
-                case 3:
+                case PAGE_PUBLISH_SETTINGS:
+                    return EditPostPublishSettingsFragment.Companion.newInstance();
+                case PAGE_HISTORY:
                     return HistoryListFragment.Companion.newInstance(mPost, mSite);
-                default:
+                case PAGE_PREVIEW:
                     return EditPostPreviewFragment.newInstance(mPost, mSite);
+                default:
+                    throw new IllegalArgumentException("Unexpected page type");
             }
         }
 
@@ -2311,7 +2331,7 @@ public class EditPostActivity extends AppCompatActivity implements
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
             switch (position) {
-                case 0:
+                case PAGE_CONTENT:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
@@ -2338,10 +2358,10 @@ public class EditPostActivity extends AppCompatActivity implements
                         reattachUploadingMediaForAztec();
                     }
                     break;
-                case 1:
+                case PAGE_SETTINGS:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
                     break;
-                case 2:
+                case PAGE_PREVIEW:
                     mEditPostPreviewFragment = (EditPostPreviewFragment) fragment;
                     break;
             }
@@ -3422,6 +3442,11 @@ public class EditPostActivity extends AppCompatActivity implements
         return media;
     }
 
+    @Override
+    public void onEditPostPublishedSettingsClick() {
+        mViewPager.setCurrentItem(PAGE_PUBLISH_SETTINGS);
+    }
+
     /**
      * EditorFragmentListener methods
      */
@@ -3802,13 +3827,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
-            mPostEditorAnalyticsSession.start(false);
+            mPostEditorAnalyticsSession.start(null);
         }
     }
 
     @Override
-    public void onEditorFragmentContentReady(boolean hasUnsupportedContent) {
-        mPostEditorAnalyticsSession.start(hasUnsupportedContent);
+    public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
+        mPostEditorAnalyticsSession.start(unsupportedBlocksList);
     }
 
     @Override
@@ -3821,93 +3846,129 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onTrackableEvent(TrackableEvent event) {
+    public void onTrackableEvent(TrackableEvent event) throws IllegalArgumentException {
+        AnalyticsTracker.Stat currentStat = null;
         switch (event) {
             case BOLD_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
+                currentStat = Stat.EDITOR_TAPPED_BOLD;
                 break;
             case BLOCKQUOTE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+                currentStat = Stat.EDITOR_TAPPED_BLOCKQUOTE;
                 break;
             case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE);
+                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE;
                 AppPrefs.setAztecEditorToolbarExpanded(false);
                 break;
             case ELLIPSIS_EXPAND_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND);
+                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND;
                 AppPrefs.setAztecEditorToolbarExpanded(true);
                 break;
             case HEADING_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING);
+                currentStat = Stat.EDITOR_TAPPED_HEADING;
                 break;
             case HEADING_1_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_1);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_1;
                 break;
             case HEADING_2_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_2);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_2;
                 break;
             case HEADING_3_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_3);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_3;
                 break;
             case HEADING_4_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_4);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_4;
                 break;
             case HEADING_5_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_5);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_5;
                 break;
             case HEADING_6_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_6);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_6;
                 break;
             case HORIZONTAL_RULE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HORIZONTAL_RULE);
+                currentStat = Stat.EDITOR_TAPPED_HORIZONTAL_RULE;
+                break;
+            case FORMAT_ALIGN_LEFT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_LEFT);
+                break;
+            case FORMAT_ALIGN_CENTER_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_CENTER);
+                break;
+            case FORMAT_ALIGN_RIGHT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_RIGHT);
                 break;
             case HTML_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+                currentStat = Stat.EDITOR_TAPPED_HTML;
                 hidePhotoPicker();
                 break;
             case IMAGE_EDITED:
-                AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
+                currentStat = Stat.EDITOR_EDITED_IMAGE;
                 break;
             case ITALIC_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
+                currentStat = Stat.EDITOR_TAPPED_ITALIC;
                 break;
             case LINK_ADDED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_ADDED);
+                currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 hidePhotoPicker();
                 break;
             case LINK_REMOVED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_REMOVED);
+                currentStat = Stat.EDITOR_TAPPED_LINK_REMOVED;
                 break;
             case LIST_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST);
+                currentStat = Stat.EDITOR_TAPPED_LIST;
                 break;
             case LIST_ORDERED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_ORDERED);
+                currentStat = Stat.EDITOR_TAPPED_LIST_ORDERED;
                 break;
             case LIST_UNORDERED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_UNORDERED);
+                currentStat = Stat.EDITOR_TAPPED_LIST_UNORDERED;
                 break;
             case MEDIA_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
+                currentStat = Stat.EDITOR_TAPPED_IMAGE;
                 break;
             case NEXT_PAGE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_NEXT_PAGE);
+                currentStat = Stat.EDITOR_TAPPED_NEXT_PAGE;
                 break;
             case PARAGRAPH_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_PARAGRAPH);
+                currentStat = Stat.EDITOR_TAPPED_PARAGRAPH;
                 break;
             case PREFORMAT_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_PREFORMAT);
+                currentStat = Stat.EDITOR_TAPPED_PREFORMAT;
                 break;
             case READ_MORE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_READ_MORE);
+                currentStat = Stat.EDITOR_TAPPED_READ_MORE;
                 break;
             case STRIKETHROUGH_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
+                currentStat = Stat.EDITOR_TAPPED_STRIKETHROUGH;
                 break;
             case UNDERLINE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
+                currentStat = Stat.EDITOR_TAPPED_UNDERLINE;
                 break;
+            case REDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_REDO);
+                break;
+            case UNDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDO);
+                break;
+            default:
+                AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
+                break;
+        }
+
+        if (currentStat != null) {
+            Map<String, String> properties = new HashMap<>();
+            String editorName = null;
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                editorName = "gutenberg";
+            } else if (mEditorFragment instanceof AztecEditorFragment) {
+                editorName = "aztec";
+            }
+            if (editorName == null) {
+                throw new IllegalArgumentException("Unexpected Editor Fragment - got "
+                                                   + mEditorFragment.getClass().getName()
+                                                   + " but expected GutenbergEditorFragment or AztecEditorFragment");
+            }
+            properties.put("editor", editorName);
+            AnalyticsTracker.track(currentStat, properties);
         }
     }
 
@@ -4037,5 +4098,23 @@ public class EditPostActivity extends AppCompatActivity implements
     // External Access to the Image Loader
     public AztecImageLoader getAztecImageLoader() {
         return mAztecImageLoader;
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
+        // Editor fragments are messing with window focus, which causes keyboard events to get ignored
+
+        // this fixes issue with GB editor
+        View editorFragmentView = mEditorFragment.getView();
+        if (editorFragmentView != null) {
+            editorFragmentView.requestFocus();
+        }
+
+        // this fixes issue with Aztec editor
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment) mEditorFragment).requestContentAreaFocus();
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 }

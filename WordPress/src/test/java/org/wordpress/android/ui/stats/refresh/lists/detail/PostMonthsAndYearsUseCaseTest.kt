@@ -1,16 +1,19 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Month
@@ -53,10 +56,12 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
     private lateinit var expandCaptor: KArgumentCaptor<(ExpandedYearUiState) -> Unit>
     private val postId: Long = 1L
     private val year = Year(2010, listOf(Month(1, 100)), 150)
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostMonthsAndYearsUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 statsSiteProvider,
                 statsPostProvider,
                 store,
@@ -81,15 +86,38 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
         )
         val nonExpandedUiState = ExpandedYearUiState()
         val expandedUiState = ExpandedYearUiState(expandedYear = 2019)
-        whenever(postDetailMapper.mapYears(eq(data), eq(nonExpandedUiState), expandCaptor.capture())).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                })
+        whenever(
+                postDetailMapper.mapYears(
+                        eq(data),
+                        eq(nonExpandedUiState),
+                        any(),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                                false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        })
         )
-        whenever(postDetailMapper.mapYears(eq(data), eq(expandedUiState), expandCaptor.capture())).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                }, ListItemWithIcon(text = "Jan", value = "100"))
+        whenever(
+                postDetailMapper.mapYears(
+                        eq(data),
+                        eq(expandedUiState),
+                        any(),
+                        expandCaptor.capture()
+                )
+        ).thenReturn(
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                                false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        }, ListItemWithIcon(text = "Jan", value = "100", contentDescription = "2010: 150")
+                )
         )
 
         val result = loadData(true, forced)
@@ -140,12 +168,17 @@ class PostMonthsAndYearsUseCaseTest : BaseUnitTest() {
                 postDetailMapper.mapYears(
                         eq(data.takeLast(6)),
                         eq(nonExpandedUiState),
+                        any(),
                         expandCaptor.capture()
                 )
         ).thenReturn(
-                listOf(ExpandableItem(ListItemWithIcon(text = "2010", value = "150"), false) {
-                    expandCaptor.lastValue.invoke(expandedUiState)
-                })
+                listOf(
+                        ExpandableItem(
+                                ListItemWithIcon(text = "2010", value = "150", contentDescription = "2010: 150"),
+                                false
+                        ) {
+                            expandCaptor.lastValue.invoke(expandedUiState)
+                        })
         )
 
         val result = loadData(true, forced)

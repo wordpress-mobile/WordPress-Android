@@ -4,12 +4,14 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
@@ -34,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -44,6 +47,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
@@ -52,15 +56,24 @@ class CommentsUseCaseTest : BaseUnitTest() {
     private val url = "www.url.com"
     private val totalCount = 50
     private val blockItemCount = 6
+    private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = CommentsUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
-                popupMenuHandler
+                popupMenuHandler,
+                contentDescriptionHelper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -171,6 +184,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat((userItem as ListItem).text).isEqualTo(postTitle)
         assertThat(userItem.showDivider).isEqualTo(false)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
+        assertThat(userItem.contentDescription).isEqualTo(contentDescription)
         return tabsItem
     }
 
@@ -196,6 +210,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(userItem.iconStyle).isEqualTo(AVATAR)
         assertThat(userItem.text).isEqualTo(user)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
+        assertThat(userItem.contentDescription).isEqualTo(contentDescription)
         return tabsItem
     }
 

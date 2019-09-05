@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
@@ -36,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -51,16 +55,21 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
+    @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     private lateinit var useCase: PostsAndPagesUseCase
+    private val contentDescription = "title, views"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostsAndPagesUseCase(
                 statsGranularity,
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 store,
                 siteModelProvider,
                 selectedDateProvider,
                 tracker,
+                contentDescriptionHelper,
                 BLOCK
         )
         whenever(siteModelProvider.siteModel).thenReturn(site)
@@ -71,6 +80,11 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
+        whenever(contentDescriptionHelper.buildContentDescription(
+                any(),
+                any<String>(),
+                any()
+        )).thenReturn(contentDescription)
     }
 
     @Test
@@ -159,6 +173,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.text).isEqualTo(post.title)
         assertThat(item.value).isEqualTo("10")
         assertThat(item.barWidth).isEqualTo(100)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -202,6 +217,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toString())
         assertThat(item.barWidth).isEqualTo(100)
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
@@ -244,6 +260,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_white_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toFormattedString())
+        assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
     @Test
