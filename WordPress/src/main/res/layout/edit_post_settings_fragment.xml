@@ -190,7 +190,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/editor_failed_to_insert_media_tap_to_retry"
-                            android:textColor="@color/white"
+                            android:textColor="?attr/wpColorTextInverted"
                             android:textSize="@dimen/text_sz_medium"/>
 
                     </LinearLayout>
@@ -224,7 +224,7 @@
                             android:paddingTop="@dimen/margin_small"
                             android:gravity="center"
                             android:text="@string/post_settings_featured_image_uploading_tap_for_options"
-                            android:textColor="@color/white"
+                            android:textColor="?attr/wpColorTextInverted"
                             android:textSize="@dimen/text_sz_medium"/>
 
                     </RelativeLayout>

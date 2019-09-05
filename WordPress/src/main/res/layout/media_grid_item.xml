@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/wpColorTextInverted"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="@string/media_upload_state_failed" />
@@ -152,7 +152,7 @@
             android:elevation="4dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/wpColorTextInverted"
             android:textSize="@dimen/text_sz_small"
             tools:text="5"
             tools:ignore="UnusedAttribute"/>

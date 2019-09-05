@@ -64,7 +64,7 @@
             android:layout_margin="@dimen/margin_extra_large"
             android:fontFamily="sans-serif-medium"
             android:text="@string/new_site_creation_create_site_button"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/wpColorTextInverted"
             android:textSize="@dimen/text_sz_medium"
             style="@style/WordPress.Button"/>
     </androidx.cardview.widget.CardView>

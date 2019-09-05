@@ -43,7 +43,7 @@
 
     <style name="Calypso.ActionMode.Text">
         <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>

@@ -203,7 +203,7 @@
     </style>
 
     <style name="StatsTag" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -260,7 +260,7 @@
     </style>
 
     <style name="StatsWidgetTitle.Dark">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
     </style>
 
     <style name="StatsWidgetErrorMessage" parent="TextAppearance.AppCompat.Body1">
@@ -299,7 +299,7 @@
     </style>
 
     <style name="StatsWidgetKey.Dark">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
     </style>
 
     <style name="StatsMinifiedWidgetKey" parent="TextAppearance.AppCompat.Body1">
@@ -313,7 +313,7 @@
     </style>
 
     <style name="StatsMinifiedWidgetKey.Dark">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
     </style>
 
     <style name="StatsWidgetValue" parent="TextAppearance.AppCompat.Body1">
@@ -366,7 +366,7 @@
     </style>
 
     <style name="StatsWidgetBlockKey.Dark">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">?attr/wpColorTextInverted</item>
     </style>
 
     <style name="StatsWidgetBlockKey.Light">

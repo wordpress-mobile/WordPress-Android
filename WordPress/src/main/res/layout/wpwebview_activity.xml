@@ -52,7 +52,7 @@
             android:background="@drawable/preview_mode_indicator_background"
             android:padding="@dimen/margin_medium"
             android:text="@string/web_preview_desktop"
-            android:textColor="@color/white"/>
+            android:textColor="?attr/wpColorTextInverted"/>
 
         <LinearLayout
             android:id="@+id/navbar_container"

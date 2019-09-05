@@ -24,7 +24,7 @@
         android:elevation="4dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/wpColorTextInverted"
         android:textSize="@dimen/text_sz_small"
         tools:text="5"
         tools:ignore="UnusedAttribute"/>

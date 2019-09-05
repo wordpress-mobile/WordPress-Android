@@ -113,7 +113,7 @@
                 android:shadowDx="@dimen/reader_photo_title_shadow_offset"
                 android:shadowDy="@dimen/reader_photo_title_shadow_offset"
                 android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/wpColorTextInverted"
                 android:textStyle="bold"
                 tools:text="text_photo_title" >
             </org.wordpress.android.widgets.WPTextView>

@@ -59,8 +59,8 @@
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white"
+                app:tabSelectedTextColor="?attr/wpColorTextInverted"
+                app:tabTextColor="?attr/wpColorTextInverted"
                 app:theme="@style/Base.Widget.Design.TabLayout"/>
 
         </com.google.android.material.appbar.AppBarLayout>

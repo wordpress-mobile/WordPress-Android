@@ -34,7 +34,7 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/wpColorTextInverted"
             android:textSize="@dimen/text_sz_medium"
             tools:text="Explanation of what a local draft is or what local changes are"
             android:layout_marginStart="@dimen/margin_large"

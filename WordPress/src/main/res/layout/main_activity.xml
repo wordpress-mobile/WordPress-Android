@@ -36,7 +36,7 @@
             android:paddingTop="@dimen/margin_medium"
             android:text="@string/connectionbar_no_connection"
             android:textAllCaps="true"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/wpColorTextInverted"
             android:textSize="@dimen/text_sz_small"
             android:visibility="gone"
             tools:visibility="visible"/>
