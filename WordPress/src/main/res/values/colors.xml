@@ -10,7 +10,7 @@
     <color name="background_shortcut">#f5f5f5</color>
     <color name="background_snackbar">@color/neutral_80</color>
     <color name="link_reader">@color/primary</color>
-    <color name="link_stats">@color/accent</color>
+    <color name="link_stats">?attr/wpColorAccent</color>
     <color name="stats_activity_high">@color/primary_dark</color>
     <color name="stats_activity_low">@color/primary_light</color>
     <color name="stats_activity_medium">@color/primary</color>
@@ -24,7 +24,7 @@
     <color name="login_edit_text_color_control_highlight">@color/neutral_10</color>
     <color name="login_google_button_text_color">@color/primary</color>
     <color name="login_secondary_button_text_color">@color/primary</color>
-    <color name="login_theme_accent_color">@color/accent</color>
+    <color name="login_theme_accent_color">?attr/wpColorAccent</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>

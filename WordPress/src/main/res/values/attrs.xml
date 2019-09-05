@@ -10,6 +10,7 @@
     <attr name="wpColorTextQuaternary" format="reference|color" />
     <attr name="wpColorTextInverted" format="reference|color" />
 
+    <attr name="wpColorAccent" format="reference|color" />
     <attr name="wpColorAccentLight" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
 

@@ -538,7 +538,7 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_content_description_preview"
         android:visibility="gone"
-        app:backgroundTint="@color/accent"
+        app:backgroundTint="?attr/wpColorAccent"
         app:elevation="8dp"
         app:fabSize="normal"
         app:layout_anchor="@id/app_bar_layout"
