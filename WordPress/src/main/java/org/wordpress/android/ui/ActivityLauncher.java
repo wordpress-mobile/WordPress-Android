@@ -39,6 +39,7 @@ import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -598,6 +599,13 @@ public class ActivityLauncher {
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        context.startActivity(intent);
+    }
+
+    public static void viewMeActivity(Context context) {
+        Intent intent = new Intent(context, MeActivity.class);
+        // TODO: evaluate tracking
+        // AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         context.startActivity(intent);
     }
 

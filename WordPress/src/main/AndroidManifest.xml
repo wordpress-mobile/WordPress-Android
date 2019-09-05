@@ -91,6 +91,10 @@
 
         <!-- Account activities -->
         <activity
+            android:name=".ui.main.MeActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/me_section_screen_title" />
+        <activity
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
