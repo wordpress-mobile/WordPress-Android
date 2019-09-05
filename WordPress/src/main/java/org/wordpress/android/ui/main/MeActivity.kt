@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
@@ -16,5 +17,13 @@ class MeActivity : AppCompatActivity() {
             it.setDisplayHomeAsUpEnabled(true)
             it.setTitle(R.string.me_section_screen_title)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
