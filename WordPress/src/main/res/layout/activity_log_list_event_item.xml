@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
+                android:textColor="?attr/wpColorTextTetriary"
                 tools:text="Comment posted" >
             </org.wordpress.android.widgets.WPTextView>
 

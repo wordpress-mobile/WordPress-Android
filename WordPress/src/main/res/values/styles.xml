@@ -11,6 +11,7 @@
 
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
+        <item name="wpColorTextTetriary">@color/neutral_40</item>
         <item name="wpColorError">@color/error</item>
 
         <item name="android:windowBackground">@color/background_default</item>
@@ -163,7 +164,7 @@
 
     <style name="MediaSettings.TextInputTheme" parent="ThemeOverlay.AppCompat.Light">
         <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/neutral_40</item>
+        <item name="android:textColorHint">?attr/wpColorTextTetriary</item>
         <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/neutral</item>
         <item name="colorControlActivated">@color/primary_50</item>
@@ -196,7 +197,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorTextTetriary</item>
     </style>
 
     <style name="WhiteButton" parent="Widget.AppCompat.Button">
@@ -349,7 +350,7 @@
     <style name="MySiteListRowDescription">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorTextTetriary</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
@@ -391,7 +392,7 @@
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorTextTetriary</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -697,7 +698,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorTextTetriary</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -938,7 +939,7 @@
     <style name="DomainSuggestionsFormIntroductionDescription">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorTextTetriary</item>
         <item name="android:text">@dimen/text_sz_large</item>
         <item name="android:gravity">center_horizontal</item>
     </style>

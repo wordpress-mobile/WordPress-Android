@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/neutral_40"
+            android:textColor="?attr/wpColorTextTetriary"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_description" />
 

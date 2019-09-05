@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:textAlignment="viewStart"
-        android:textColorHint="@color/neutral_40"
+        android:textColorHint="?attr/wpColorTextTetriary"
         android:textSize="@dimen/text_sz_large" >
     </org.wordpress.android.widgets.SuggestionAutoCompleteText>
 

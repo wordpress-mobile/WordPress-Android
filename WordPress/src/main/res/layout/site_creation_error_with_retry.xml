@@ -26,7 +26,7 @@
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:gravity="center"
-        android:textColor="@color/neutral_40"
+        android:textColor="?attr/wpColorTextTetriary"
         android:textSize="@dimen/text_sz_extra_large"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/error_subtitle"
