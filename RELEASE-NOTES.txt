@@ -1,5 +1,8 @@
 13.3
 -----
+* Add Jetpack performance settings
+* Sort more than 100 published pages chronologically like Calypso
+* Significant performance improvements to Stats
  
 13.2
 -----
@@ -8,7 +11,6 @@
 * Moved Notifications settings to Notifications List.
 * Redesigned My Site screen to make most commonly used actions easily accessible.
 * File downloads in Stats for WP.com sites
-
 
 13.1
 -----

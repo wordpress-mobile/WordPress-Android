@@ -1671,6 +1671,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_redemption_tapped";
             case DOMAIN_CREDIT_REDEMPTION_SUCCESS:
                 return "domain_credit_redemption_success";
+            case DOMAIN_CREDIT_SUGGESTION_QUERIED:
+                return "domain_credit_suggestion_queried";
+            case DOMAIN_CREDIT_NAME_SELECTED:
+                return "domain_credit_name_selected";
             case QUICK_ACTION_STATS_TAPPED:
             case QUICK_ACTION_PAGES_TAPPED:
             case QUICK_ACTION_POSTS_TAPPED:

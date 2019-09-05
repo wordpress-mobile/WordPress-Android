@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.time.FileDownloadsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.stats.time.FileDownloadsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -44,6 +45,7 @@ class FileDownloadsUseCase
 constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val store: FileDownloadsStore,
     statsSiteProvider: StatsSiteProvider,
     selectedDateProvider: SelectedDateProvider,
@@ -54,6 +56,7 @@ constructor(
 ) : GranularStatelessUseCase<FileDownloadsModel>(
         FILE_DOWNLOADS,
         mainDispatcher,
+        backgroundDispatcher,
         selectedDateProvider,
         statsSiteProvider,
         statsGranularity
@@ -154,6 +157,7 @@ constructor(
     class FileDownloadsUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val store: FileDownloadsStore,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsSiteProvider: StatsSiteProvider,
@@ -165,6 +169,7 @@ constructor(
                 FileDownloadsUseCase(
                         granularity,
                         mainDispatcher,
+                        backgroundDispatcher,
                         store,
                         statsSiteProvider,
                         selectedDateProvider,
