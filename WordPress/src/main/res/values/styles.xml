@@ -12,6 +12,7 @@
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorTextTetriary">@color/neutral_40</item>
+        <item name="wpColorTextQuaternary">@color/neutral_30</item>
         <item name="wpColorError">@color/error</item>
 
         <item name="android:windowBackground">@color/background_default</item>
