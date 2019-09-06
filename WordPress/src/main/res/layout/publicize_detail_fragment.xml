@@ -120,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_divider_height"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/divider" />
+                android:background="?attr/wpColorDivider" />
 
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"

@@ -9,7 +9,7 @@
             android:shape="rectangle">
 
             <solid
-                android:color="@color/divider" />
+                android:color="?attr/wpColorDivider" />
 
         </shape>
 

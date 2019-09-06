@@ -91,7 +91,7 @@
                         android:id="@+id/divider"
                         android:layout_width="@dimen/theme_browser_separator_thickness"
                         android:layout_height="match_parent"
-                        android:background="@color/divider" />
+                        android:background="?attr/wpColorDivider" />
 
                     <ImageButton
                         android:id="@+id/theme_grid_item_image_button"

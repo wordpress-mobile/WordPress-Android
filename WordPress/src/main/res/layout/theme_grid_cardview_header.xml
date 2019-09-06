@@ -48,7 +48,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/theme_browser_separator_thickness"
-                android:background="@color/divider" />
+                android:background="?attr/wpColorDivider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/divider" />
+                    android:background="?attr/wpColorDivider" />
 
                 <LinearLayout
                     android:id="@+id/details"
@@ -117,7 +117,7 @@
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:background="@color/divider" />
+                    android:background="?attr/wpColorDivider" />
 
                 <LinearLayout
                     android:id="@+id/support"

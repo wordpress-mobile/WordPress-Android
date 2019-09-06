@@ -19,7 +19,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/divider"
+        android:background="?attr/wpColorDivider"
         android:layout_toEndOf="@+id/image_avatar"/>
 
     <org.wordpress.android.widgets.WPTextView

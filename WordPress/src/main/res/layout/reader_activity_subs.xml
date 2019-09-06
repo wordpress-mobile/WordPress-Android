@@ -37,7 +37,7 @@
         android:layout_height="1dp"
         android:layout_above="@+id/layout_bottom"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@color/divider" />
+        android:background="?attr/wpColorDivider" />
 
     <LinearLayout
         android:id="@+id/layout_bottom"

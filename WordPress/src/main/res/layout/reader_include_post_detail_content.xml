@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/divider"
+        android:background="?attr/wpColorDivider"
         android:visibility="gone"
         tools:visibility="visible"/>
 

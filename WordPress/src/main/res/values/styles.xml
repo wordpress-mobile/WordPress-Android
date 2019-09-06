@@ -26,6 +26,7 @@
         <item name="wpColorWarningLight">@color/warning</item>
 
         <item name="wpColorBasicBackground">@color/neutral_0</item>
+        <item name="wpColorDivider">@color/gray_5</item>
 
         <item name="android:windowBackground">?attr/wpColorBasicBackground</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
@@ -187,7 +188,7 @@
     </style>
 
     <style name="MediaSettings.Divider">
-        <item name="android:background">@color/divider</item>
+        <item name="android:background">?attr/wpColorDivider</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
@@ -444,7 +445,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/divider</item>
+        <item name="android:background">?attr/wpColorDivider</item>
         <item name="android:layout_marginEnd">@dimen/content_margin</item>
         <item name="android:layout_marginStart">@dimen/content_margin</item>
     </style>
@@ -480,7 +481,7 @@
     <style name="MyProfileDividerView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/divider</item>
+        <item name="android:background">?attr/wpColorDivider</item>
     </style>
 
     <!--Quick Start-->

@@ -62,7 +62,7 @@
             android:layout_height="1dp"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/divider"/>
+            android:background="?attr/wpColorDivider"/>
 
         <LinearLayout
             android:id="@+id/plan_features_container"

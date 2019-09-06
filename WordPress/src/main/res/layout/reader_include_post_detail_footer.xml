@@ -14,7 +14,7 @@
 
     <View
         android:id="@+id/divider_footer"
-        android:background="@color/divider"
+        android:background="?attr/wpColorDivider"
         android:layout_height="1dp"
         android:layout_width="match_parent" >
     </View>

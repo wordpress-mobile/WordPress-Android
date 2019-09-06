@@ -28,7 +28,7 @@
         android:textColor="?attr/wpColorTextTetriary" />
 
     <View
-        android:background="@color/divider"
+        android:background="?attr/wpColorDivider"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/list_editor_header_text"
         android:layout_height="@dimen/list_divider_height"
