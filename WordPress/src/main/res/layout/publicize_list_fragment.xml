@@ -117,7 +117,7 @@
                             android:layout_gravity="center_vertical"
                             android:contentDescription="@null"
                             android:src="@drawable/ic_cog_white_24dp"
-                            android:tint="?attr/wpColorPrimary""/>
+                            android:tint="?attr/wpColorPrimary"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/text_manage_button"

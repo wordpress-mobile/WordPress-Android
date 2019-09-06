@@ -70,7 +70,7 @@
             android:padding="@dimen/margin_small"
             android:contentDescription="@string/add"
             android:src="@drawable/ic_reader_follow_white_24dp"
-            android:tint="@color/primary_40" />
+            android:tint="?attr/wpColorPrimaryLight" />
 
     </LinearLayout>
 

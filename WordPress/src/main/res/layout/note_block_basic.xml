@@ -33,7 +33,7 @@
             android:layout_gravity="end"
             android:gravity="end|center_vertical"
             android:text="@string/comment_read_source_post"
-            android:textColor="@color/primary_40"
+            android:textColor="?attr/wpColorPrimaryLight"
             android:visibility="gone"/>
     </LinearLayout>
 

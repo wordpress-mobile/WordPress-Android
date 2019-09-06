@@ -78,7 +78,7 @@
         android:gravity="center"
         android:text="@string/contact_support"
         android:textAllCaps="true"
-        android:textColor="@color/primary_40"
+        android:textColor="?attr/wpColorPrimaryLight"
         android:visibility="gone"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -30,7 +30,7 @@
         <item name="android:windowContentOverlay">@color/neutral_0</item>
         <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="dialogTheme">@style/Calypso.Dialog.Alert</item>
-        <item name="colorControlActivated">@color/primary_40</item>
+        <item name="colorControlActivated">?attr/wpColorPrimaryLight</item>
         <item name="colorControlNormal">@color/neutral_10</item>
         <item name="colorAccent">?attr/wpColorAccent</item>
         <item name="android:listDivider">@drawable/bg_rectangle_divider</item>
@@ -56,7 +56,7 @@
     <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">?attr/wpColorPrimary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/primary_40</item>
+        <item name="colorAccent">?attr/wpColorPrimaryLight</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="android:listDivider">@drawable/bg_rectangle_divider</item>
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
@@ -65,7 +65,7 @@
     <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">?attr/wpColorPrimary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/primary_40</item>
+        <item name="colorAccent">?attr/wpColorPrimaryLight</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="android:listDivider">@drawable/bg_rectangle_divider</item>
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
