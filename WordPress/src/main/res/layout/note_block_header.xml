@@ -94,7 +94,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:background="@color/neutral_0"
+            android:background="?attr/wpColorBasicBackground"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"/>
     </LinearLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neutral_0"
+    android:background="?attr/wpColorBasicBackground"
     android:orientation="vertical">
 
     <include
@@ -48,7 +48,7 @@
             android:layout_height="@dimen/site_creation_preview_ok_button_container_height"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/margin_medium"
-            app:cardBackgroundColor="@color/neutral_0"
+            app:cardBackgroundColor="?attr/wpColorBasicBackground"
             app:cardElevation="@dimen/site_creation_container_elevation"
             tools:ignore="InconsistentLayout">
 

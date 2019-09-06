@@ -72,7 +72,7 @@
 
     <LinearLayout
         android:id="@+id/notifications_settings_message_container"
-        android:background="@color/background_default"
+        android:background="?attr/wpColorBasicBackground"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"

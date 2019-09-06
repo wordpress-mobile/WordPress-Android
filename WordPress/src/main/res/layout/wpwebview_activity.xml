@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:background="@color/background_default"
+        android:background="?attr/wpColorBasicBackground"
         android:visibility="gone"
         app:aevButton="@string/retry"
         app:aevImage="@drawable/img_illustration_cloud_off_152dp"

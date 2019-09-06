@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:background="@color/neutral_0"
+        android:background="?attr/wpColorBasicBackground"
         android:visibility="gone"
         tools:visibility="visible">
 

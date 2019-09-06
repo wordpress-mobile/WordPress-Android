@@ -64,7 +64,7 @@
     </RelativeLayout>
 
     <View
-        android:background="@color/neutral_0"
+        android:background="?attr/wpColorBasicBackground"
         android:layout_height="@dimen/list_divider_height"
         android:layout_width="match_parent" >
     </View>

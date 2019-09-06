@@ -27,7 +27,7 @@
         <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="colorPrimaryDark">@color/neutral_40</item>
 
-        <item name="android:windowContentOverlay">@color/neutral_0</item>
+        <item name="android:windowContentOverlay">?attr/wpColorBasicBackground</item>
         <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="dialogTheme">@style/Calypso.Dialog.Alert</item>
         <item name="colorControlActivated">?attr/wpColorPrimaryLight</item>

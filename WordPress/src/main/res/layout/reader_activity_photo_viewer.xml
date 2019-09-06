@@ -21,7 +21,7 @@
         android:background="@drawable/bg_rectangle_black_translucent_50_radius_36dp"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
-        android:textColor="@color/neutral_0"
+        android:textColor="?attr/wpColorBasicBackground"
         android:textSize="@dimen/text_sz_large"
         tools:text="title"
         android:paddingEnd="@dimen/margin_large"

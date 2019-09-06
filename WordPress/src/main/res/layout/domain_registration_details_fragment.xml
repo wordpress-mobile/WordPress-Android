@@ -311,7 +311,7 @@
         android:id="@+id/form_progress_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_default"
+        android:background="?attr/wpColorBasicBackground"
         android:visibility="gone"
         tools:visibility="gone">
 

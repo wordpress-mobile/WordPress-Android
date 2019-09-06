@@ -278,7 +278,7 @@
                         android:layout_height="@dimen/list_divider_height"
                         android:layout_below="@+id/quick_start_customize"
                         android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
-                        android:background="@color/neutral_0">
+                        android:background="?attr/wpColorBasicBackground">
                     </View>
 
                     <RelativeLayout

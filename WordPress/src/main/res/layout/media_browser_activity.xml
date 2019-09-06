@@ -54,7 +54,7 @@
 
     <View
         android:id="@+id/quota_divider"
-        android:background="@color/neutral_0"
+        android:background="?attr/wpColorBasicBackground"
         android:layout_above="@+id/quota_bar"
         android:layout_alignWithParentIfMissing="true"
         android:layout_height="@dimen/list_divider_height"

@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/neutral_0"
+        android:background="?attr/wpColorBasicBackground"
         android:orientation="vertical"
         android:clipToPadding="false"
         android:padding="@dimen/margin_extra_large">

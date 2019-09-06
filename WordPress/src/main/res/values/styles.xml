@@ -25,7 +25,9 @@
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorWarningLight">@color/warning</item>
 
-        <item name="android:windowBackground">@color/background_default</item>
+        <item name="wpColorBasicBackground">@color/neutral_0</item>
+
+        <item name="android:windowBackground">?attr/wpColorBasicBackground</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
@@ -527,7 +529,7 @@
     <style name="QuickStartDivider">
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:background">@color/neutral_0</item>
+        <item name="android:background">?attr/wpColorBasicBackground</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -899,7 +901,7 @@
     <style name="SitePreviewSkeletonView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:background">@color/neutral_0</item>
+        <item name="android:background">?attr/wpColorBasicBackground</item>
     </style>
 
     <style name="DomainRegistrationFormTitle">
@@ -934,7 +936,7 @@
         <item name="android:paddingTop">@dimen/domain_suggestions_intro_vertical_padding</item>
         <item name="android:paddingEnd">@dimen/domain_suggestions_intro_horizontal_padding</item>
         <item name="android:paddingBottom">@dimen/domain_suggestions_intro_vertical_padding</item>
-        <item name="android:background">@color/neutral_0</item>
+        <item name="android:background">?attr/wpColorBasicBackground</item>
     </style>
 
     <style name="DomainSuggestionsFormIntroductionTitle">

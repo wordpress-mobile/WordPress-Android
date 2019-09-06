@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neutral_0">
+    android:background="?attr/wpColorBasicBackground">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"

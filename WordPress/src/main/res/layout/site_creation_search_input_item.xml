@@ -75,6 +75,6 @@
         android:layout_alignBottom="@+id/input"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="@color/neutral_0"
+        android:background="?attr/wpColorBasicBackground"
         android:visibility="gone"/>
 </RelativeLayout>

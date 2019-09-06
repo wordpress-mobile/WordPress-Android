@@ -47,7 +47,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/neutral_0" />
+            android:background="?attr/wpColorBasicBackground" />
 
         <NumberPicker
             android:id="@+id/number_picker"
@@ -59,7 +59,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/neutral_0" />
+            android:background="?attr/wpColorBasicBackground" />
 
     </LinearLayout>
 
