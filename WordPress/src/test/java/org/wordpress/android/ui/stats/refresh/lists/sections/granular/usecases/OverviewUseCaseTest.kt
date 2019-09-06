@@ -33,7 +33,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Date
 
 class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: VisitsAndViewsStore
@@ -53,7 +52,6 @@ class OverviewUseCaseTest : BaseUnitTest() {
     private val limitMode = Top(15)
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
-    private val currentDate = Date(10)
     @Before
     fun setUp() {
         whenever(selectedDateProvider.granularSelectedDateChanged(statsGranularity)).thenReturn(MutableLiveData())
@@ -69,7 +67,6 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 resourceProvider
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
         whenever(overviewMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
@@ -79,8 +76,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps domain model to UI model`() = test {
         val forced = false
-        whenever(store.getVisits(site, statsGranularity, LimitMode.All, currentDate)).thenReturn(model)
-        whenever(store.fetchVisits(site, statsGranularity, limitMode, currentDate, forced)).thenReturn(
+        whenever(store.getVisits(site, statsGranularity, LimitMode.All)).thenReturn(model)
+        whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -101,7 +98,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(store.fetchVisits(site, statsGranularity, limitMode, currentDate, forced)).thenReturn(
+        whenever(store.fetchVisits(site, statsGranularity, limitMode, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

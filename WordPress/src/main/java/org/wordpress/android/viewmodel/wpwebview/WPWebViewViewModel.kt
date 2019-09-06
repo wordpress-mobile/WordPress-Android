@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
@@ -77,7 +76,11 @@ class WPWebViewViewModel
         )
 
         _previewMode.value = DEFAULT
-        _previewModeSelector.value = PreviewModeSelectorStatus(false, DEFAULT)
+        _previewModeSelector.value = PreviewModeSelectorStatus(
+                isVisible = false,
+                isEnabled = false,
+                selectedPreviewMode = DEFAULT
+        )
 
         // If there is no internet show the error screen
         if (networkUtils.isNetworkAvailable()) {
@@ -104,6 +107,7 @@ class WPWebViewViewModel
     fun onUrlLoaded() {
         if (uiState.value !is WebPreviewContentUiState) {
             updateUiState(WebPreviewContentUiState)
+            _previewModeSelector.value = _previewModeSelector.value?.copy(isEnabled = true)
         }
         _loadNeeded.value = false
     }
@@ -113,11 +117,6 @@ class WPWebViewViewModel
      */
     fun onReceivedError() {
         if (uiState.value is WebPreviewContentUiState) {
-            CrashLoggingUtils.log(
-                    IllegalStateException(
-                            "WPWebViewViewModel.onReceivedError() called with uiState WebPreviewContentUiState"
-                    )
-            )
             return
         }
         if (uiState.value !is WebPreviewFullscreenErrorUiState) {
@@ -158,7 +157,7 @@ class WPWebViewViewModel
     }
 
     fun togglePreviewModeSelectorVisibility(isVisible: Boolean) {
-        _previewModeSelector.value = PreviewModeSelectorStatus(isVisible, previewMode.value!!)
+        _previewModeSelector.value = PreviewModeSelectorStatus(isVisible, true, previewMode.value!!)
     }
 
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {
@@ -166,6 +165,7 @@ class WPWebViewViewModel
             _previewMode.value = selectedPreviewMode
             _navbarUiState.value =
                     navbarUiState.value!!.copy(desktopPreviewHintVisible = selectedPreviewMode == DESKTOP)
+            updateUiState(WebPreviewFullscreenProgressUiState)
         }
     }
 
@@ -180,16 +180,17 @@ class WPWebViewViewModel
         DESKTOP
     }
 
-    data class PreviewModeSelectorStatus(val isVisible: Boolean, val selectedPreviewMode: PreviewMode)
+    data class PreviewModeSelectorStatus(
+        val isVisible: Boolean,
+        val isEnabled: Boolean,
+        val selectedPreviewMode: PreviewMode
+    )
 
     sealed class WebPreviewUiState(
         val fullscreenProgressLayoutVisibility: Boolean = false,
-        val webViewVisibility: Boolean = false,
         val actionableEmptyView: Boolean = false
     ) {
-        object WebPreviewContentUiState : WebPreviewUiState(
-                webViewVisibility = true
-        )
+        object WebPreviewContentUiState : WebPreviewUiState()
 
         object WebPreviewFullscreenProgressUiState : WebPreviewUiState(
                 fullscreenProgressLayoutVisibility = true

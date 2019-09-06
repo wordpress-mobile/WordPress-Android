@@ -323,9 +323,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onPause() {
         super.onPause();
         // Locally save the site. mSite can be null after site deletion or site removal (.org sites)
-        if (mSite != null) {
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
-        }
+        updateTitle();
         mIsFragmentPaused = true;
     }
 
@@ -821,9 +819,17 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onSettingsSaved() {
-        mSite.setName(mSiteSettings.getTitle());
-        // Locally save the site
-        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
+        updateTitle();
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+    }
+
+    private void updateTitle() {
+        if (mSite != null) {
+            SiteModel updatedSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            updatedSite.setName(mSiteSettings.getTitle());
+            // Locally save the site
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+        }
     }
 
     @Override

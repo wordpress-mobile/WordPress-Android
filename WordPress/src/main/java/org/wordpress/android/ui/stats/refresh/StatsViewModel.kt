@@ -192,6 +192,7 @@ class StatsViewModel
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,
         val date: String? = null,
+        val timeZone: String? = null,
         val enableSelectPrevious: Boolean = false,
         val enableSelectNext: Boolean = false
     )
