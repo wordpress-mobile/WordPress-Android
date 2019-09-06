@@ -35,7 +35,7 @@
         android:layout_height="1dp"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:background="@color/neutral_5"
+        android:background="?attr/wpColorDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -56,7 +56,7 @@
     <style name="NumberPickerTheme" parent="WordPress">
         <item name="colorControlNormal">@color/transparent</item>
         <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
-        <item name="android:textColorPrimary">@color/primary</item>
+        <item name="android:textColorPrimary">?attr/wpColorPrimary</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -111,7 +111,7 @@
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="textColor">@android:color/white</item>
+        <item name="textColor">?attr/wpColorTextInverted</item>
         <item name="textColorHint">@color/hint_text</item>
     </style>
 

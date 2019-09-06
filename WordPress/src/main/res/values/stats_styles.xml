@@ -268,7 +268,7 @@
     </style>
 
     <style name="StatsWidgetErrorMessage.Light">
-        <item name="android:textColor">@color/gray_50</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
     </style>
 
     <style name="StatsWidgetErrorMessage.Dark">

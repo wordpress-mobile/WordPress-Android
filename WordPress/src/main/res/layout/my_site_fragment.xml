@@ -124,7 +124,7 @@
                     android:padding="@dimen/margin_medium"
                     android:text="@string/my_site_btn_switch_site"
                     android:textAllCaps="true"
-                    android:textColor="@color/blue_50"
+                    android:textColor="?attr/wpColorPrimary"
                     android:textSize="@dimen/text_sz_medium"/>
 
                 <LinearLayout

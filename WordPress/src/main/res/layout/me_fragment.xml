@@ -218,7 +218,7 @@
                 android:layout_marginStart="@dimen/content_margin"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:text="@string/notification_settings_moved_notices"
-                android:textColor="@color/gray_50"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="@dimen/text_sz_small" />
 
         </LinearLayout>
