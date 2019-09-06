@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/insightsManagementItemButton"

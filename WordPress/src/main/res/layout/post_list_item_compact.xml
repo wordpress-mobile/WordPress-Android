@@ -8,7 +8,7 @@
     android:layout_height="@dimen/posts_list_compact_row_height"
     android:layout_marginEnd="@dimen/post_list_content_margin_compact"
     android:layout_marginStart="@dimen/post_list_content_margin_compact"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -214,7 +214,7 @@
                             android:layout_marginBottom="@dimen/margin_small"
                             android:layout_centerHorizontal="true"
                             android:indeterminate="true"
-                            android:indeterminateTint="@color/white"/>
+                            android:indeterminateTint="@android:color/white"/>
 
                         <TextView
                             android:id="@+id/featured_image_progress_desc"
