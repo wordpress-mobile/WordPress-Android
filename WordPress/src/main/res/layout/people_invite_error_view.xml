@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp"
-    android:textColor="@color/error_50"
+    android:textColor="?attr/wpColorError"
     android:textSize="@dimen/text_sz_small"
     tools:text="Username 'qwer' is not found"/>
