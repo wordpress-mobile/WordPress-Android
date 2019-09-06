@@ -3,7 +3,7 @@
 
     <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
-        <item name="colorPrimary">?attr/wpColorPrimary</item>
+        <item name="colorPrimary">?attr/wpColorAppBar</item>
         <item name="colorPrimaryDark">?attr/wpColorPrimaryDark</item>
         <item name="colorAccent">?attr/wpColorAccent</item>
         <item name="colorControlActivated">@color/primary_30</item>
@@ -24,6 +24,7 @@
         <item name="wpColorSuccess">@color/success_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorWarningLight">@color/warning</item>
+        <item name="wpColorAppBar">@color/primary_50</item>
 
         <item name="wpColorBasicBackground">@color/neutral_0</item>
         <item name="wpColorDivider">@color/gray_5</item>

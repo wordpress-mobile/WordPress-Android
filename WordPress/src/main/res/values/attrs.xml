@@ -22,6 +22,22 @@
 
     <attr name="wpColorBasicBackground" format="reference|color" />
     <attr name="wpColorDivider" format="reference|color" />
+    <attr name="wpColorAppBar" format="reference|color" />
+
+    <attr name="wpColorNeutral0" format="reference|color" />
+    <attr name="wpColorNeutral5" format="reference|color" />
+    <attr name="wpColorNeutral10" format="reference|color" />
+    <attr name="wpColorNeutral20" format="reference|color" />
+    <attr name="wpColorNeutral30" format="reference|color" />
+    <attr name="wpColorNeutral40" format="reference|color" />
+    <attr name="wpColorNeutral50" format="reference|color" />
+    <attr name="wpColorNeutral60" format="reference|color" />
+    <attr name="wpColorNeutral70" format="reference|color" />
+    <attr name="wpColorNeutral80" format="reference|color" />
+    <attr name="wpColorNeutral90" format="reference|color" />
+    <attr name="wpColorNeutral100" format="reference|color" />
+
+
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
