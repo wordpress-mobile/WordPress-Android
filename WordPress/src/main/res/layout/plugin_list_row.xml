@@ -65,7 +65,7 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@null"
             tools:src="@drawable/ic_sync_white_24dp"
-            tools:tint="@color/warning_50" />
+            tools:tint="?attr/wpColorWarningDark" />
 
         <TextView
             android:id="@+id/plugin_status_text"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_small"
             android:gravity="center_vertical"
-            android:textColor="@color/warning_50"
+            android:textColor="?attr/wpColorWarningDark"
             android:textSize="@dimen/text_sz_large"
             tools:text="@string/plugin_needs_update" />
 

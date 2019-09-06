@@ -22,6 +22,8 @@
         <item name="wpColorPrimaryLight">@color/primary_40</item>
         <item name="wpColorPrimaryDark">@color/primary_70</item>
         <item name="wpColorSuccess">@color/success_50</item>
+        <item name="wpColorWarningDark">@color/warning_50</item>
+        <item name="wpColorWarningLight">@color/warning</item>
 
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
