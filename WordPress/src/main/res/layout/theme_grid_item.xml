@@ -64,7 +64,7 @@
                         android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/success"
+                        android:textColor="?attr/wpColorSuccess"
                         android:textStyle="bold"
                         android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"/>
 

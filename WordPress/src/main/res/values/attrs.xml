@@ -16,6 +16,7 @@
     <attr name="wpColorPrimary" format="reference|color" />
     <attr name="wpColorPrimaryLight" format="reference|color" />
     <attr name="wpColorPrimaryDark" format="reference|color" />
+    <attr name="wpColorSuccess" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
