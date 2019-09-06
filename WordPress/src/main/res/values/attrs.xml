@@ -15,6 +15,7 @@
     <attr name="wpColorError" format="reference|color" />
     <attr name="wpColorPrimary" format="reference|color" />
     <attr name="wpColorPrimaryLight" format="reference|color" />
+    <attr name="wpColorPrimaryDark" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">

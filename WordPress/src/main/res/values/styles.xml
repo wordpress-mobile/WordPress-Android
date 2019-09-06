@@ -4,7 +4,7 @@
     <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
         <item name="colorPrimary">?attr/wpColorPrimary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">?attr/wpColorPrimaryDark</item>
         <item name="colorAccent">?attr/wpColorAccent</item>
         <item name="colorControlActivated">@color/primary_30</item>
         <item name="colorControlHighlight">@color/neutral_10</item>
@@ -20,13 +20,14 @@
         <item name="wpColorAccentLight">@color/accent_30</item>
         <item name="wpColorPrimary">@color/primary</item>
         <item name="wpColorPrimaryLight">@color/primary_40</item>
+        <item name="wpColorPrimaryDark">@color/primary_70</item>
 
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
-        <item name="android:actionModeBackground">@color/primary_dark</item>
+        <item name="android:actionModeBackground">?attr/wpColorPrimaryDark</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
         <item name="android:statusBarColor">@color/status_bar</item>

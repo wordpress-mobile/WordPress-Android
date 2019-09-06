@@ -55,7 +55,7 @@
 
     <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">?attr/wpColorPrimary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">?attr/wpColorPrimaryDark</item>
         <item name="colorAccent">?attr/wpColorPrimaryLight</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="android:listDivider">@drawable/bg_rectangle_divider</item>
@@ -64,7 +64,7 @@
 
     <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">?attr/wpColorPrimary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryDark">?attr/wpColorPrimaryDark</item>
         <item name="colorAccent">?attr/wpColorPrimaryLight</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="android:listDivider">@drawable/bg_rectangle_divider</item>
