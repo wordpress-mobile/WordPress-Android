@@ -1,6 +1,10 @@
 13.3
 -----
 * Significant performance improvements to Stats
+* Block Editor: Add rich text styling to video captions
+* Block Editor: Prevent keyboard dismissal when switching between caption and text block
+* Block Editor: Blocks that would be replaced are now hidden when add block bottom sheet displays
+* Block Editor: Tapping on empty editor area now always inserts new block at end of post
  
 13.2
 -----
