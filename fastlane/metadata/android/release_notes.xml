@@ -1,84 +1,85 @@
+<ar>
+13.1:
+* في معاينة الموقع والصفحة، يمكنك الآن التبديل بين إصدارات سطح المكتب وإصدارات الأجهزة المحمولة للموقع.
+* تم إصلاح الخلل الذي يؤثر على بعض المستخدمين الذين لا يمكنهم توصيل خدمات الوسائط الاجتماعية الخاصة بهم.
+</ar>
 <de-DE>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1:
+* Auf der Vorschau für Websites und Seiten kannst du jetzt zwischen der mobilen und der Desktopversion der Website wechseln.
+* Wir haben einen Fehler behoben, der einige Benutzer betraf, die keine Verbindung zu ihren Social-Media-Diensten herstellen konnten.
 </de-DE>
 <en-US>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1:
+* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.
+* We fixed a bug affecting some users who couldn’t connect their social media services.
 </en-US>
 <es-ES>
-12.9:
-* Los clientes con créditos de dominio no reclamados pueden registrar dominios en la aplicación.
-* Puedes expandir el editor de comentarios a pantalla completa para tener más espacio durante la edición.
-* El editor de bloques tiene algunas mejoras: Los bloques de vídeo ya están disponibles, y se han resuelto algunos problemas que llevaron a la pérdida de contenido cuando se utilizaban bloques no compatibles.
+13.1
+* En la vista previa del sitio y de la página, ahora puedes cambiar entre las versiones del sitio para escritorio y móvil.
+* Hemos corregido un fallo que afectaba a algunos usuarios que no podían conectar con sus servicios de medios sociales.
 </es-ES>
 <fr-CA>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1 :
+* Dans l'aperçu du site et de la page, vous pouvez désormais basculer entre les versions bureau et mobile du site.
+* Nous avons résolu un bug affectant certains utilisateurs qui ne pouvaient pas se connecter à leurs services de réseaux sociaux.
 </fr-CA>
 <fr-FR>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1 :
+* Dans l'aperçu du site et de la page, vous pouvez désormais basculer entre les versions bureau et mobile du site.
+* Nous avons résolu un bug affectant certains utilisateurs qui ne pouvaient pas se connecter à leurs services de réseaux sociaux.
 </fr-FR>
 <iw-IL>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1:
+* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.
+* We fixed a bug affecting some users who couldn’t connect their social media services.
 </iw-IL>
+<id>
+13.1:
+* Di pratinjau Situs dan Halaman, sekarang Anda dapat mengganti antara versi desktop dan seluler untuk situs.
+* Kami telah memperbaiki bug yang berpengaruh pada beberapa pengguna yang tidak dapat terhubung ke layanan media sosial mereka.
+</id>
 <it-IT>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1:
+* Nell'anteprima del sito e della pagina è ora possibile passare dalla versione desktop a quella mobile del sito e viceversa.
+* Abbiamo corretto un bug che riguardava alcuni utenti che non potevano connettersi ai loro servizi di social media.
 </it-IT>
+<ja-JP>
+13.1:
+* 「サイトとページ」のプレビューで、サイトのデスクトップ版とモバイル版との切り替えができるようになりました。
+* ソーシャルメディアサービスに接続できなかった一部のユーザーに影響するバグを修正しました。
+</ja-JP>
+<ko-KR>
+13.1:
+* 사이트 및 페이지 미리보기에서 이제 사이트의 데스크톱 버전과 모바일 버전 간에 전환할 수 있습니다.
+* 소셜 미디어 서비스를 연결할 수 없는 일부 사용자에게 영향을 주는 버그가 수정되었습니다.
+</ko-KR>
 <nl-NL>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements: Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1:
+* In de voorbeeldweergave van je site en pagina kun je nu schakelen tussen de desktop- en mobiele versie van de site.
+* We hebben een bug gerepareerd waardoor sommige gebruikers geen verbinding kunnen maken via hun social media.
 </nl-NL>
-<pt-BR>
-12.9:
-* Usuários com crédito de domínios disponíveis podem registrar domínios no aplicativo.
-* Você pode expandir o editor de comentários para tela cheia para ter mais espaço ao editar.
-* Algumas melhorias no editor de blocos: blocos de vídeo estão disponíveis e corrigimos alguns erros com perda de conteúdo ao usar blocos não suportados.
-</pt-BR>
 <ru-RU>
-12.9:
-* Пользователи с неиспользованной ещё возможностью зарегистрировать домен теперь могут сделать это прямо из приложения.
-* Редактор комментариев при редактировании можно развернуть на весь экран.
-* Улучшения в редакторе блоков: доступны блоки видео, исправлена проблема с возможной потерей данных при использовании неподдерживаемых блоков.
+13.1:
+* Можно переключаться между мобильной и полной версией из предпросмотра сайта или списка страниц.
+* Исправлена проблема из-за которой некоторые пользователи не могли подключить службы социальных сетей.
 </ru-RU>
 <sv-SE>
-12.9:
-* Kunder som inte utnyttjat sin fulla domänkredit kan registrera domäner i appen.
-* Du kan expandera kommentarsredigeraren så att den upptar hela skärmen, för mer utrymmen när du redigerar.
-* Några förbättringar i blockredigeraren: Nu finns videoblock, och några problem som kunde leda till förlorat innehåll vid användning av block utan stöd har nu lösts.
+13.1:
+* I förhandsvisningen för en webbplats och en sida kan man nu växla mellan webbplatsens utseende på dator och mobilversionen.
+* Vi har rättat ett fel som gjorde att vissa användare inte kunde ansluta mediatjänster från sina sociala nätverk.
 </sv-SE>
 <tr-TR>
-12.9:
-* Sahipsiz alan adı kredisi olan müşteriler, alan adlarını uygulamaya kaydedebilir.
-* Düzenleme sırasında daha fazla yer açmak için yorum düzenleyiciyi tam ekrana genişletebilirsiniz.
-* Blok düzenleyicinin birkaç geliştirmesi var: Video blokları var ve desteklenmeyen blokları kullanırken içerik kaybına neden olan bazı sorunlar çözüldü.
+13.1:
+* Site ve Sayfa önizlemesinde, artık sitenin masaüstü ve mobil sürümü arasında geçiş yapabilirsiniz.
+* Sosyal medya hizmetlerine bağlanamayan bazı kullanıcıları etkileyen bir hata düzeltildi.
 </tr-TR>
 <zh-CN>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements:Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1：
+* 现在，在“站点”和“页面”预览中，您可以在站点的桌面和移动设备版本之间切换。
+* 我们修复了某些用户无法连接到其社交媒体服务的问题。
 </zh-CN>
 <zh-TW>
-12.9:
-* Customers with unclaimed domain credits can register domains in the app.
-* You can expand the Comment Editor to Full Screen for more space while editing.
-* The Block editor has a few improvements:Video blocks are available, and a some issues that led to content loss when using unsupported blocks have been resolved.
+13.1：
+* 在「網站和網頁」預覽中，您現在可以在網站的桌面和行動版本之間切換。
+* 我們已修正導致部分使用者無法連結至社交媒體服務的錯誤。
 </zh-TW>

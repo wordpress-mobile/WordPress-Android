@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,13 +18,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.OldStatsActivity
-import org.wordpress.android.ui.stats.OldStatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
+import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
@@ -33,7 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam.SITE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseParam
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
@@ -82,15 +82,28 @@ class StatsViewModel
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
-        val launchedFrom = intent.getSerializableExtra(OldStatsActivity.ARG_LAUNCHED_FROM)
+        val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
         val launchedFromWidget = launchedFrom == StatsLaunchedFrom.STATS_WIDGET
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         start(localSiteId, launchedFromWidget, initialTimeFrame, initialSelectedPeriod, restart)
     }
 
+    fun onSaveInstanceState(outState: Bundle) {
+        selectedDateProvider.onSaveInstanceState(outState)
+    }
+
+    fun onRestoreInstanceState(savedState: Bundle?) {
+        if (savedState != null) {
+            selectedDateProvider.onRestoreInstanceState(savedState)
+        } else {
+            selectedDateProvider.clear()
+            statsSiteProvider.reset()
+        }
+    }
+
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
-        return when (intent.getSerializableExtra(OldStatsActivity.ARG_DESIRED_TIMEFRAME)) {
+        return when (intent.getSerializableExtra(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> INSIGHTS
             DAY -> DAYS
             WEEK -> WEEKS
@@ -163,7 +176,7 @@ class StatsViewModel
 
     fun onSiteChanged() {
         loadData {
-            listUseCases.values.forEach { it.onParamChanged(SITE) }
+            listUseCases.values.forEach { it.onParamChanged(UseCaseParam.Site) }
         }
     }
 
@@ -186,13 +199,12 @@ class StatsViewModel
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null
-        selectedDateProvider.clear()
-        statsSiteProvider.reset()
     }
 
     data class DateSelectorUiModel(
         val isVisible: Boolean = false,
         val date: String? = null,
+        val timeZone: String? = null,
         val enableSelectPrevious: Boolean = false,
         val enableSelectNext: Boolean = false
     )

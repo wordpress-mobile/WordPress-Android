@@ -9,13 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_detail_fragment.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -79,25 +78,13 @@ class StatsDetailFragment : DaggerFragment() {
         })
 
         viewModel.selectedDateChanged.observe(this, Observer { event ->
-            if (event?.getContentIfNotHandled() != null) {
-                viewModel.onDateChanged()
+            if (event != null) {
+                viewModel.onDateChanged(event.selectedSection)
             }
         })
 
         viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
-            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
-            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
-                date_selection_toolbar.visibility = dateSelectorVisibility
-            }
-            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
-            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (previousDateButton.isEnabled != enablePreviousButton) {
-                previousDateButton.isEnabled = enablePreviousButton
-            }
-            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (nextDateButton.isEnabled != enableNextButton) {
-                nextDateButton.isEnabled = enableNextButton
-            }
+            drawDateSelector(dateSelectorUiModel)
         })
     }
 }

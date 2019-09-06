@@ -17,7 +17,7 @@
         android:lines="1"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@color/neutral_70"
+        android:textColor="?attr/wpColorText"
         tools:text="Suggestion"
         android:layout_toStartOf="@+id/image_delete"/>
 

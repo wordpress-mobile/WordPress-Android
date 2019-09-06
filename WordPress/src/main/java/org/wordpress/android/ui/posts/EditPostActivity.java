@@ -162,6 +162,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -553,7 +554,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
@@ -1555,13 +1556,24 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        if ((TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost)
-            || AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl())) {
+        if (AppPrefs.isGutenbergInfoPopupDisplayed(mSite.getUrl())) {
+            return;
+        }
+
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
+
+        if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
+                    BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
+            showPopup = true;
+        }
+
+        if (showPopup) {
             showGutenbergInformativeDialog();
         }
     }
@@ -3834,93 +3846,129 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onTrackableEvent(TrackableEvent event) {
+    public void onTrackableEvent(TrackableEvent event) throws IllegalArgumentException {
+        AnalyticsTracker.Stat currentStat = null;
         switch (event) {
             case BOLD_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
+                currentStat = Stat.EDITOR_TAPPED_BOLD;
                 break;
             case BLOCKQUOTE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+                currentStat = Stat.EDITOR_TAPPED_BLOCKQUOTE;
                 break;
             case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE);
+                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE;
                 AppPrefs.setAztecEditorToolbarExpanded(false);
                 break;
             case ELLIPSIS_EXPAND_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND);
+                currentStat = Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND;
                 AppPrefs.setAztecEditorToolbarExpanded(true);
                 break;
             case HEADING_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING);
+                currentStat = Stat.EDITOR_TAPPED_HEADING;
                 break;
             case HEADING_1_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_1);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_1;
                 break;
             case HEADING_2_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_2);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_2;
                 break;
             case HEADING_3_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_3);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_3;
                 break;
             case HEADING_4_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_4);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_4;
                 break;
             case HEADING_5_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_5);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_5;
                 break;
             case HEADING_6_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING_6);
+                currentStat = Stat.EDITOR_TAPPED_HEADING_6;
                 break;
             case HORIZONTAL_RULE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HORIZONTAL_RULE);
+                currentStat = Stat.EDITOR_TAPPED_HORIZONTAL_RULE;
+                break;
+            case FORMAT_ALIGN_LEFT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_LEFT);
+                break;
+            case FORMAT_ALIGN_CENTER_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_CENTER);
+                break;
+            case FORMAT_ALIGN_RIGHT_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ALIGN_RIGHT);
                 break;
             case HTML_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+                currentStat = Stat.EDITOR_TAPPED_HTML;
                 hidePhotoPicker();
                 break;
             case IMAGE_EDITED:
-                AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
+                currentStat = Stat.EDITOR_EDITED_IMAGE;
                 break;
             case ITALIC_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
+                currentStat = Stat.EDITOR_TAPPED_ITALIC;
                 break;
             case LINK_ADDED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_ADDED);
+                currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 hidePhotoPicker();
                 break;
             case LINK_REMOVED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_REMOVED);
+                currentStat = Stat.EDITOR_TAPPED_LINK_REMOVED;
                 break;
             case LIST_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST);
+                currentStat = Stat.EDITOR_TAPPED_LIST;
                 break;
             case LIST_ORDERED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_ORDERED);
+                currentStat = Stat.EDITOR_TAPPED_LIST_ORDERED;
                 break;
             case LIST_UNORDERED_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_UNORDERED);
+                currentStat = Stat.EDITOR_TAPPED_LIST_UNORDERED;
                 break;
             case MEDIA_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
+                currentStat = Stat.EDITOR_TAPPED_IMAGE;
                 break;
             case NEXT_PAGE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_NEXT_PAGE);
+                currentStat = Stat.EDITOR_TAPPED_NEXT_PAGE;
                 break;
             case PARAGRAPH_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_PARAGRAPH);
+                currentStat = Stat.EDITOR_TAPPED_PARAGRAPH;
                 break;
             case PREFORMAT_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_PREFORMAT);
+                currentStat = Stat.EDITOR_TAPPED_PREFORMAT;
                 break;
             case READ_MORE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_READ_MORE);
+                currentStat = Stat.EDITOR_TAPPED_READ_MORE;
                 break;
             case STRIKETHROUGH_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
+                currentStat = Stat.EDITOR_TAPPED_STRIKETHROUGH;
                 break;
             case UNDERLINE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
+                currentStat = Stat.EDITOR_TAPPED_UNDERLINE;
                 break;
+            case REDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_REDO);
+                break;
+            case UNDO_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDO);
+                break;
+            default:
+                AppLog.w(T.EDITOR, "onTrackableEvent event not being tracked in EditPostActivity: " + event.name());
+                break;
+        }
+
+        if (currentStat != null) {
+            Map<String, String> properties = new HashMap<>();
+            String editorName = null;
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                editorName = "gutenberg";
+            } else if (mEditorFragment instanceof AztecEditorFragment) {
+                editorName = "aztec";
+            }
+            if (editorName == null) {
+                throw new IllegalArgumentException("Unexpected Editor Fragment - got "
+                                                   + mEditorFragment.getClass().getName()
+                                                   + " but expected GutenbergEditorFragment or AztecEditorFragment");
+            }
+            properties.put("editor", editorName);
+            AnalyticsTracker.track(currentStat, properties);
         }
     }
 
@@ -4050,5 +4098,23 @@ public class EditPostActivity extends AppCompatActivity implements
     // External Access to the Image Loader
     public AztecImageLoader getAztecImageLoader() {
         return mAztecImageLoader;
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu
+        // Editor fragments are messing with window focus, which causes keyboard events to get ignored
+
+        // this fixes issue with GB editor
+        View editorFragmentView = mEditorFragment.getView();
+        if (editorFragmentView != null) {
+            editorFragmentView.requestFocus();
+        }
+
+        // this fixes issue with Aztec editor
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment) mEditorFragment).requestContentAreaFocus();
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 }

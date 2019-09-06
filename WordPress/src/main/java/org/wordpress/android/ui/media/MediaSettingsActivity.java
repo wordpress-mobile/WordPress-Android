@@ -86,6 +86,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -323,6 +324,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                     return true;
                 }
             });
+            ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
         }
     }
 

@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -47,7 +48,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
@@ -91,12 +91,12 @@ public class SitePickerActivity extends AppCompatActivity
     private MenuItem mMenuSearch;
     private SearchView mSearchView;
     private int mCurrentLocalId;
-    private boolean mDidUserSelectSite;
     private Debouncer mDebouncer = new Debouncer();
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject StatsStore mStatsStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -133,14 +133,6 @@ public class SitePickerActivity extends AppCompatActivity
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
         outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        if (mDidUserSelectSite) {
-            overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_left);
-        }
     }
 
     @Override
@@ -227,11 +219,11 @@ public class SitePickerActivity extends AppCompatActivity
             case RequestCodes.CREATE_SITE:
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                    SiteUtils.enableBlockEditor(mDispatcher, mSiteStore, newSiteLocalID);
+                    SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                     // Mark the site to show the GB popup at first editor run
                     SiteModel newSiteModel = mSiteStore.getSiteByLocalId(newSiteLocalID);
                     if (newSiteModel != null) {
-                        AppPrefs.setShowGutenbergInfoPopup(newSiteModel.getUrl(), true);
+                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(newSiteModel.getUrl(), true);
                     }
                 }
                 break;
@@ -400,7 +392,7 @@ public class SitePickerActivity extends AppCompatActivity
                 }
                 siteModel.setIsVisible(false);
                 // Remove stats data for hidden sites
-                StatsTable.deleteStatsForBlog(this, siteRecord.getLocalId());
+                mStatsStore.deleteSiteData(siteModel);
             } else {
                 siteModel.setIsVisible(true);
             }
@@ -547,7 +539,6 @@ public class SitePickerActivity extends AppCompatActivity
             hideSoftKeyboard();
             AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
-            mDidUserSelectSite = true;
             // If the site is hidden, make sure to make it visible
             if (siteRecord.isHidden()) {
                 siteRecord.setHidden(false);
