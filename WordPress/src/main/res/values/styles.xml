@@ -3,7 +3,7 @@
 
     <style name="WordPress" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Material theme -->
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">?attr/wpColorPrimary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">?attr/wpColorAccent</item>
         <item name="colorControlActivated">@color/primary_30</item>
@@ -18,6 +18,7 @@
         <item name="wpColorError">@color/error_50</item>
         <item name="wpColorAccent">@color/accent_50</item>
         <item name="wpColorAccentLight">@color/accent_30</item>
+        <item name="wpColorPrimary">@color/primary</item>
 
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
@@ -172,7 +173,7 @@
         <item name="android:textColorHint">?attr/wpColorTextTetriary</item>
         <!-- Header color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/neutral</item>
-        <item name="colorControlActivated">@color/primary_50</item>
+        <item name="colorControlActivated">?attr/wpColorPrimary</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
@@ -220,13 +221,13 @@
     </style>
 
     <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/primary_50</item>
+        <item name="android:textColor">?attr/wpColorPrimary</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
     <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/neutral_0</item>
-        <item name="android:textColor">@color/primary_50</item>
+        <item name="android:textColor">?attr/wpColorPrimary</item>
     </style>
 
     <!-- NUX Styles -->
@@ -607,7 +608,7 @@
     <style name="PostSettingsSectionHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/primary_50</item>
+        <item name="android:textColor">?attr/wpColorPrimary</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
@@ -667,7 +668,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/primary_50</item>
+        <item name="android:textColor">?attr/wpColorPrimary</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -841,7 +842,7 @@
     </style>
 
     <style name="LinearProgress" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/primary_50</item>
+        <item name="colorAccent">?attr/wpColorPrimary</item>
     </style>
 
     <!--Post List Skeleton-->

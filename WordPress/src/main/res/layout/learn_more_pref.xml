@@ -48,7 +48,7 @@
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_width="wrap_content"
-        android:textColor="@color/primary"
+        android:textColor="?attr/wpColorPrimary"
         android:visibility="gone"
         tools:text="@string/learn_more"
         tools:visibility="visible"

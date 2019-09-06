@@ -18,7 +18,7 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
-        android:background="@color/primary"
+        android:background="?attr/wpColorPrimary"
         android:elevation="@dimen/tabs_elevation"
         android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content"

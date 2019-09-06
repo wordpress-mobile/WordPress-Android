@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/primary"
+        app:tabIndicatorColor="?attr/wpColorPrimary"
         app:tabMode="scrollable"
         app:tabPaddingEnd="@dimen/margin_extra_large"
         app:tabPaddingStart="@dimen/margin_extra_large"
-        app:tabSelectedTextColor="@color/primary"
+        app:tabSelectedTextColor="?attr/wpColorPrimary"
         app:tabTextColor="?attr/wpColorTextSubtle"
         app:theme="@style/Base.Widget.Design.TabLayout"/>
 

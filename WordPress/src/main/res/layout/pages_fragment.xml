@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="start"
-                android:background="@color/primary"
+                android:background="?attr/wpColorPrimary"
                 app:tabContentStart="72dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@android:color/white"

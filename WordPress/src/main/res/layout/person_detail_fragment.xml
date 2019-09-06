@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:id="@+id/person_details"
-        android:background="@color/primary"
+        android:background="?attr/wpColorPrimary"
         android:elevation="@dimen/card_elevation"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

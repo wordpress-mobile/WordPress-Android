@@ -80,7 +80,7 @@
                         android:padding="8dp"
                         android:text="@string/change_photo"
                         android:textAllCaps="true"
-                        android:textColor="@color/primary_50"
+                        android:textColor="?attr/wpColorPrimary"
                         android:textSize="10sp"
                         tools:ignore="SmallSp"
                         tools:text="Change photo"/>

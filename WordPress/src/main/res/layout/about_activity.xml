@@ -5,7 +5,7 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="?attr/wpColorPrimary"
     android:fillViewport="true">
 
     <com.google.android.material.appbar.AppBarLayout

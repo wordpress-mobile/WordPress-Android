@@ -25,7 +25,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
-            android:background="@color/primary"
+            android:background="?attr/wpColorPrimary"
             android:layout_height="@dimen/toolbar_height"
             android:layout_width="match_parent"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -35,7 +35,7 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
-            android:background="@color/primary"
+            android:background="?attr/wpColorPrimary"
             android:layout_gravity="start"
             android:layout_height="@dimen/tab_height"
             android:layout_width="match_parent"

@@ -107,7 +107,7 @@
     </style>
 
     <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/primary_50</item>
+        <item name="android:textColor">?attr/wpColorPrimary</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 

@@ -54,7 +54,7 @@
     </style>
 
     <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">?attr/wpColorPrimary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/primary_40</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>
@@ -63,7 +63,7 @@
     </style>
 
     <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">?attr/wpColorPrimary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/primary_40</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>

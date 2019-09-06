@@ -54,7 +54,7 @@
             android:singleLine="true"
             android:text="@string/blogusername"
             android:textColor="#666666"
-            android:textColorLink="@color/primary_50"
+            android:textColorLink="?attr/wpColorPrimary"
             android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

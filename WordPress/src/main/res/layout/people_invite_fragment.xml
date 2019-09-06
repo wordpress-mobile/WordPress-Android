@@ -131,7 +131,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textColor="?attr/wpColorTextSubtle"
-                android:drawableTint="@color/primary_50"
+                android:drawableTint="?attr/wpColorPrimary"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role"
                 android:layout_marginStart="1dp"
