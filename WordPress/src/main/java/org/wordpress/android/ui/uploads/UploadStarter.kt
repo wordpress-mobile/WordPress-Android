@@ -10,7 +10,6 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -18,7 +17,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
@@ -38,7 +36,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Automatically uploads local drafts.
+ * Automatically remote-auto-save or upload all local modifications to posts.
  *
  * Auto-uploads happen when the app is placed in the foreground or when the internet connection is restored. In
  * addition to this, call sites can also request an immediate execution by calling [checkConnectionAndUpload].
@@ -54,7 +52,6 @@ class UploadStarter @Inject constructor(
     private val context: Context,
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
-    private val pageStore: PageStore,
     private val siteStore: SiteStore,
     private val uploadActionUseCase: UploadActionUseCase,
     private val tracker: AnalyticsTrackerWrapper,
@@ -148,12 +145,10 @@ class UploadStarter @Inject constructor(
     private suspend fun upload(site: SiteModel) = coroutineScope {
         try {
             mutex.lock()
-            val posts = async { postStore.getPostsWithLocalChanges(site) }
-            val pages = async { pageStore.getPagesWithLocalChanges(site) }
+            val posts = postStore.getPostsWithLocalChanges(site)
 
-            val postsAndPages = posts.await() + pages.await()
-
-            postsAndPages
+            // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
+            posts
                     .asSequence()
                     .filter {
                         val action = uploadActionUseCase.getAutoUploadAction(it, site)
