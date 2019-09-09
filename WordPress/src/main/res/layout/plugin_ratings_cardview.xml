@@ -4,7 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/PluginCardView"
-    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardBackgroundColor="?attr/wpColorSurface"
     card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
     <RelativeLayout

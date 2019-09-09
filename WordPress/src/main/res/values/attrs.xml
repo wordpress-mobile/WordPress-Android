@@ -21,6 +21,7 @@
     <attr name="wpColorWarningLight" format="reference|color" />
 
     <attr name="wpColorBasicBackground" format="reference|color" />
+    <attr name="wpColorSurface" format="reference|color" />
     <attr name="wpColorDivider" format="reference|color" />
     <attr name="wpColorAppBar" format="reference|color" />
 

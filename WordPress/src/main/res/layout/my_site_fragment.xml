@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
-                    app:cardBackgroundColor="@android:color/white"
+                    app:cardBackgroundColor="?attr/wpColorSurface"
                     app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/gray_5"
@@ -199,7 +199,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
-                    android:background="@android:color/white"
+                    android:background="?attr/wpColorSurface"
                     android:paddingEnd="@dimen/content_margin"
                     android:paddingStart="@dimen/content_margin">
 
@@ -318,7 +318,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
-                    android:background="@android:color/white"
+                    android:background="?attr/wpColorSurface"
                     android:orientation="vertical"
                     android:visibility="gone">
 

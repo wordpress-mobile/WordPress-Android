@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/post_list_content_margin_compact"
     android:layout_marginEnd="@dimen/post_list_content_margin_compact"
-    android:background="@android:color/white">
+    android:background="?attr/wpColorSurface">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"

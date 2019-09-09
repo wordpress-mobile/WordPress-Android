@@ -27,6 +27,7 @@
         <item name="wpColorAppBar">@color/primary_50</item>
 
         <item name="wpColorBasicBackground">@color/neutral_0</item>
+        <item name="wpColorSurface">@android:color/white</item>
         <item name="wpColorDivider">@color/gray_5</item>
 
         <item name="android:windowBackground">?attr/wpColorBasicBackground</item>
@@ -302,7 +303,7 @@
         <item name="elevation">@dimen/card_elevation</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:backgroundTint">?attr/wpColorSurface</item>
         <item name="android:tint">@color/neutral_60</item>
     </style>
 
@@ -319,7 +320,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
         <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">?attr/wpColorSurface</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 

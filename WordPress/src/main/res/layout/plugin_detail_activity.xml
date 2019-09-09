@@ -72,7 +72,7 @@
 
             <androidx.cardview.widget.CardView
                 style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardBackgroundColor="?attr/wpColorSurface"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
@@ -220,7 +220,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/plugin_card_site"
                 style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardBackgroundColor="?attr/wpColorSurface"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
@@ -259,7 +259,7 @@
 
             <androidx.cardview.widget.CardView
                 style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardBackgroundColor="?attr/wpColorSurface"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
@@ -318,7 +318,7 @@
             <androidx.cardview.widget.CardView
                 style="@style/PluginCardView"
                 android:id="@+id/plugin_wp_org_details_container"
-                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardBackgroundColor="?attr/wpColorSurface"
                 card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">

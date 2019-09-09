@@ -29,7 +29,7 @@
 
     <RelativeLayout
         android:id="@+id/quota_bar"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"

@@ -22,7 +22,7 @@
                 android:id="@+id/card_view"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="?attr/wpColorSurface"
                 app:cardCornerRadius="@dimen/default_cardview_radius" >
 
                 <LinearLayout
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_width="match_parent"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="?attr/wpColorSurface"
                 app:cardCornerRadius="@dimen/default_cardview_radius" >
 
                 <RelativeLayout

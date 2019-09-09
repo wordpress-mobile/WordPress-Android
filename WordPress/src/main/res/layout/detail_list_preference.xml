@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@android:color/white"
+    android:background="?attr/wpColorSurface"
     android:paddingStart="@dimen/dlp_padding_start"
     android:paddingEnd="@dimen/dlp_padding_end"
     android:paddingTop="@dimen/dlp_padding_top"

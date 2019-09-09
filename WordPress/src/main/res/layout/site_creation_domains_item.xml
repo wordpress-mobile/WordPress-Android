@@ -5,7 +5,7 @@
                                                    android:id="@+id/container"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="wrap_content"
-                                                   android:background="@android:color/white"
+                                                   android:background="?attr/wpColorSurface"
                                                    android:foreground="?selectableItemBackground"
                                                    android:minHeight="@dimen/one_line_list_item_height"
                                                    android:paddingStart="@dimen/margin_large"

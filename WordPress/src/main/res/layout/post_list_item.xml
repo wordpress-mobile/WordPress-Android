@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/post_list_content_margin_standard"
     android:layout_marginEnd="@dimen/post_list_content_margin_standard"
-    android:background="@android:color/white">
+    android:background="?attr/wpColorSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"

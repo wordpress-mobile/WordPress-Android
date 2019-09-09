@@ -9,6 +9,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:textColor="?attr/wpColorText"
             android:id="@+id/text_title"
             style="@style/Base.TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"
@@ -31,13 +32,13 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_extra_large"
+            android:gravity="start"
             android:hint="@string/site_settings_format_hint_custom"
             android:imeOptions="flagNoExtractUi"
-            android:textSize="@dimen/text_sz_medium"
+            android:inputType="text"
             android:paddingStart="@dimen/margin_small"
             android:textAlignment="viewStart"
-            android:gravity="start"
-            android:inputType="text"/>
+            android:textSize="@dimen/text_sz_medium" />
 
         <TextView
             android:id="@+id/text_help"

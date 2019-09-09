@@ -22,7 +22,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background"
+                android:background="?attr/wpColorSurface"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large">
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
                 android:animateLayoutChanges="true"
-                android:background="@color/background"
+                android:background="?attr/wpColorSurface"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
@@ -293,7 +293,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:clipToPadding="false"
         android:padding="@dimen/margin_large">
 

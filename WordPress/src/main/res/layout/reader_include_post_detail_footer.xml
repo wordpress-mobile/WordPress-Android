@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_post_detail_footer"
-    android:background="@android:color/white"
+    android:background="?attr/wpColorSurface"
     android:layout_height="wrap_content"
     android:layout_width="match_parent" >
 

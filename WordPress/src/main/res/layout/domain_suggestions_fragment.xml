@@ -5,7 +5,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
-                android:background="@android:color/white">
+                android:background="?attr/wpColorSurface">
 
     <LinearLayout
         android:id="@+id/introduction_container"
@@ -53,7 +53,7 @@
                 android:id="@+id/suggestion_progress_bar"
                 android:layout_width="@dimen/progress_spinner_small"
                 android:layout_height="@dimen/progress_spinner_small"
-                android:background="@android:color/white"
+                android:background="?attr/wpColorSurface"
                 tools:visibility="gone"/>
         </FrameLayout>
 
@@ -69,9 +69,10 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="@dimen/margin_extra_extra_small"
+            android:textColor="?attr/wpColorText"
             android:textColorHint="?attr/wpColorTextTetriary"
             android:textSize="@dimen/text_sz_medium"
-            tools:ignore="Autofill,RtlSymmetry"/>
+            tools:ignore="Autofill,RtlSymmetry" />
     </LinearLayout>
 
     <View
@@ -125,7 +126,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:clipToPadding="false"
         android:padding="@dimen/margin_large">
 

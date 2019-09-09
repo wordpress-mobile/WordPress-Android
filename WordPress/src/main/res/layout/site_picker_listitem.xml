@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
             android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
-            android:background="@android:color/white"
+            android:background="?attr/wpColorSurface"
             android:gravity="center_vertical"
             android:padding="1dp"
             android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"

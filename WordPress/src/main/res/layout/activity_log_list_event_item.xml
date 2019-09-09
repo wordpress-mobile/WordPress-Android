@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_content_container"
-    android:background="@android:color/white"
+    android:background="?attr/wpColorSurface"
     android:clickable="true"
     android:focusable="true"
     android:layout_height="wrap_content"

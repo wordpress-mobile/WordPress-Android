@@ -53,7 +53,7 @@
     <!-- Stats Refresh -->
 
     <style name="StatsBlock">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">?attr/wpColorSurface</item>
     </style>
 
     <style name="StatsLoadingBlock" parent="StatsBlock">

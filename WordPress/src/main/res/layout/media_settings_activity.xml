@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="?attr/wpColorSurface"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -226,7 +226,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card1"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="?attr/wpColorSurface"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
@@ -340,7 +340,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card2"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="?attr/wpColorSurface"
                 app:cardCornerRadius="@dimen/default_cardview_radius"
                 app:cardElevation="@dimen/card_elevation">
 
