@@ -5,12 +5,15 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+
+import java.util.ArrayList;
 
 public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
@@ -121,6 +124,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void appendMediaFile(int mediaId, final String mediaUrl, final boolean isVideo) {
         mWPAndroidGlueCode.appendMediaFile(mediaId, mediaUrl, isVideo);
+    }
+
+    public void appendMediaFiles(ArrayList<Media> mediaList) {
+        mWPAndroidGlueCode.appendMediaFiles(mediaList);
     }
 
     public void showDevOptionsDialog() {

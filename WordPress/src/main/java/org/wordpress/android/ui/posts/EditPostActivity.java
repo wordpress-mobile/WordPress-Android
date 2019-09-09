@@ -2401,7 +2401,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, List<Long> mediaIdList) {
-        ArrayList<Map<String, MediaFile>> mediaList = new ArrayList<>();
+        ArrayMap<String, MediaFile> mediaMap = new ArrayMap<>();
         for (Long mediaId : mediaIdList) {
             MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
             if (media == null) {
@@ -2412,11 +2412,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-            ArrayMap<String, MediaFile> mediaMap = new ArrayMap<>();
+
             mediaMap.put(urlToUse, mediaFile);
-            mediaList.add(mediaMap);
         }
-        mEditorFragment.appendMediaFiles(mediaList);
+        mEditorFragment.appendMediaFiles(mediaMap);
         return true;
     }
 
@@ -3251,7 +3250,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
-            if (mAllowMultipleSelection) {
+            // if mAllowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
+            if (mShowGutenbergEditor && mAllowMultipleSelection) {
                 addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, ids);
                 mAllowMultipleSelection = false;
             } else {

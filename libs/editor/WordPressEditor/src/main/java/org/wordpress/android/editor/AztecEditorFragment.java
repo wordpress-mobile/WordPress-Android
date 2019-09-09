@@ -1099,7 +1099,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    @Override public void appendMediaFiles(ArrayList<Map<String, MediaFile>> mediaList) {}
+    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) {}
 
     private Drawable getLoadingMediaErrorPlaceholder(String msg) {
         if (TextUtils.isEmpty(msg)) {

@@ -40,6 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
@@ -677,7 +678,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void appendMediaFiles(ArrayList<Map<String, MediaFile>> mediaList) {
+    public void appendMediaFiles(Map<String, MediaFile> mediaList) {
         if (getActivity() == null) {
             // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
             // Activity may have already be gone.
@@ -685,9 +686,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null!");
             return;
         }
-        String mediaUrl = (String) mediaList.get(0).keySet().toArray()[0];
+        ArrayList<Media> rnMediaList = new ArrayList<>();
+        for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+            rnMediaList.add(
+                new Media(
+                    Integer.valueOf(mediaEntry.getValue().getMediaId()),
+                    mediaEntry.getKey(),
+                    mediaEntry.getValue().getMimeType()
+                )
+            );
+        }
+        String mediaUrl = rnMediaList.get(0).getMediaUrl();
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-//            getGutenbergContainerFragment().appendMediaFile(mediaList);
+            getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
         } else {
 //            getGutenbergContainerFragment().appendUploadMediaFile(mediaList);
 //            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
