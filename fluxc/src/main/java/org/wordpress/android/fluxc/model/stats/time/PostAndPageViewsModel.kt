@@ -12,6 +12,7 @@ data class PostAndPageViewsModel(val views: List<ViewsModel>, val hasMore: Boole
     enum class ViewsType {
         POST,
         PAGE,
-        HOMEPAGE
+        HOMEPAGE,
+        OTHER
     }
 }

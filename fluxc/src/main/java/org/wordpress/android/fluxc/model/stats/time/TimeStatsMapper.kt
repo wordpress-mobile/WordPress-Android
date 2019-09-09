@@ -33,17 +33,16 @@ class TimeStatsMapper
             } else {
                 return@let it
             }
-        }.mapNotNull { item ->
+        }.map { item ->
             val type = when (item.type) {
                 "post" -> ViewsType.POST
                 "page" -> ViewsType.PAGE
                 "homepage" -> ViewsType.HOMEPAGE
                 else -> {
-                    AppLog.e(STATS, "PostAndPageViewsResponse.type: Unexpected view type: ${item.type}")
-                    null
+                    ViewsType.OTHER
                 }
             }
-            type?.let {
+            type.let {
                 if (item.id == null || item.title == null || item.href == null) {
                     AppLog.e(STATS, "PostAndPageViewsResponse.type: Non-nullable fields are null - $item")
                 }
