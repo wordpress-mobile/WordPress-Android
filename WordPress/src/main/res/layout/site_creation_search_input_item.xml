@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/clear_all_layout"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:drawablePadding="@dimen/site_creation_verticals_search_input_text_padding"
         android:imeOptions="actionSearch"
         android:importantForAutofill="noExcludeDescendants"
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         tools:visibility="invisible">
 
         <ProgressBar

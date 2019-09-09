@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
-                android:background="@android:color/white"
+                android:background="?attr/wpColorSurface"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large">
 
@@ -115,7 +115,7 @@
                 android:paddingBottom="@dimen/margin_large"
                 android:textColor="?attr/wpColorText"
                 android:textColorLink="@color/link_reader"
-                android:background="@android:color/white"
+                android:background="?attr/wpColorSurface"
                 android:textIsSelectable="false"
                 android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"

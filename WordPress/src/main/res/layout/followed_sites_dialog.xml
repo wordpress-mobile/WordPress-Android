@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:animateLayoutChanges="true"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"

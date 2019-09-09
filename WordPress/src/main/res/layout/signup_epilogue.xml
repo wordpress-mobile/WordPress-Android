@@ -183,7 +183,7 @@
 
     <RelativeLayout
         android:id="@+id/bottom_buttons"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:clipToPadding="false"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"

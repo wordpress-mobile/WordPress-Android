@@ -17,7 +17,7 @@
     </TextView>
 
     <RelativeLayout
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:paddingEnd="@dimen/margin_extra_large"
@@ -37,7 +37,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"
-            android:background="@android:color/white"
+            android:background="?attr/wpColorSurface"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/username_changer_hint"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
 
         <ProgressBar
             android:id="@+id/progress"
-            android:background="@android:color/white"
+            android:background="?attr/wpColorSurface"
             android:layout_centerVertical="true"
             android:layout_height="@dimen/progress_spinner_small"
             android:layout_width="@dimen/progress_spinner_small"
@@ -71,7 +71,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/suggestions"
-        android:background="@android:color/white"
+        android:background="?attr/wpColorSurface"
         android:layout_height="fill_parent"
         android:layout_width="match_parent"
         android:scrollbars="vertical" >
