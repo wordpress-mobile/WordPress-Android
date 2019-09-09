@@ -50,12 +50,12 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
 
-    val activeFragment: Fragment?
-        get() = navAdapter.getFragment(currentPosition)
-
-    var currentPosition: Int
+    private var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
         set(position) = updateCurrentPosition(position)
+
+    val activeFragment: Fragment?
+        get() = navAdapter.getFragment(currentPosition)
 
     var currentSelectedPage: PageType
         get() = getPageForItemId(selectedItemId)
@@ -163,13 +163,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun getPageForItemId(@IdRes itemId: Int): PageType {
-        return when (itemId) {
-            R.id.nav_sites -> MY_SITE
-            R.id.nav_reader -> READER
-            R.id.nav_write -> NEW_POST
-            R.id.nav_me -> ME
-            else -> NOTIFS
-        }
+        return getPageType(getPositionForItemId(itemId))
     }
 
     @IdRes
@@ -234,7 +228,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
     }
 
-    fun getTitleForPosition(position: Int): CharSequence {
+    private fun getTitleForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.my_site_section_screen_title
             READER -> R.string.reader_screen_title
@@ -246,17 +240,10 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     fun getTitleForPageType(pageType: PageType): CharSequence {
-        @StringRes val idRes: Int = when (pageType) {
-            MY_SITE -> R.string.my_site_section_screen_title
-            READER -> R.string.reader_screen_title
-            NEW_POST -> R.string.write_post
-            ME -> R.string.me_section_screen_title
-            else -> R.string.notifications_screen_title
-        }
-        return context.getString(idRes)
+        return getTitleForPosition(getPosition(pageType))
     }
 
-    fun getContentDescriptionForPosition(position: Int): CharSequence {
+    private fun getContentDescriptionForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.tabbar_accessibility_label_my_site
             READER -> R.string.tabbar_accessibility_label_reader
@@ -268,14 +255,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     fun getContentDescriptionForPageType(pageType: PageType): CharSequence {
-        @StringRes val idRes: Int = when (pageType) {
-            MY_SITE -> R.string.tabbar_accessibility_label_my_site
-            READER -> R.string.tabbar_accessibility_label_reader
-            NEW_POST -> R.string.tabbar_accessibility_label_write
-            ME -> R.string.tabbar_accessibility_label_me
-            else -> R.string.tabbar_accessibility_label_notifications
-        }
-        return context.getString(idRes)
+        return getContentDescriptionForPosition(getPosition(pageType))
     }
 
     private fun getTagForPosition(position: Int): String {
@@ -303,8 +283,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         val txtTitle = getTitleViewForPosition(position)
         txtTitle?.visibility = if (show) View.VISIBLE else View.GONE
     }
-
-    fun getFragment(position: Int) = navAdapter.getFragment(position)
 
     fun getFragment(pageType: PageType) = navAdapter.getFragment(getPosition(pageType))
 
@@ -380,6 +358,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     companion object {
         private val defaultPages = listOf(MY_SITE, READER, NEW_POST, ME, NOTIFS)
+        // TODO: rename "pagesWithoutMe" when removing also the NEW_POST in the IA Project
         private val pagesWithoutMe = listOf(MY_SITE, READER, NEW_POST, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
@@ -407,6 +386,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             return pages().indexOf(pageType)
         }
 
+        @JvmStatic
         fun getPageType(position: Int): PageType {
             return pages()[position]
         }

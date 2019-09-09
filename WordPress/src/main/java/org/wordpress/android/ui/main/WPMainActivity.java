@@ -633,7 +633,7 @@ public class WPMainActivity extends AppCompatActivity implements
     // user switched pages in the bottom navbar
     @Override
     public void onPageChanged(int position) {
-        PageType pageType = WPMainNavigationView.Companion.getPageType(position);
+        PageType pageType = WPMainNavigationView.getPageType(position);
         updateTitle(pageType);
         trackLastVisiblePage(pageType, true);
         if (getMySiteFragment() != null) {
