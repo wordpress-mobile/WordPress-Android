@@ -15,7 +15,6 @@ class MeActivity : AppCompatActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
-            it.setTitle(R.string.me_section_screen_title)
         }
     }
 

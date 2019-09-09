@@ -1121,10 +1121,6 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     /**
      * We can't just use fluxc OnSiteChanged event, as the order of events is not guaranteed -> getSelectedSite()
      * method might return an out of date SiteModel, if the OnSiteChanged event handler in the WPMainActivity wasn't
