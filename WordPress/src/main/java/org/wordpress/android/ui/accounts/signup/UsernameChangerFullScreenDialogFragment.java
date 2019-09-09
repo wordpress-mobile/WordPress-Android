@@ -133,7 +133,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
             mShouldWatchText = true;
             mUsernameSelected = mUsername;
             mUsernameSelectedIndex = 0;
-            getUsernameSuggestions(getUsernameQueryFromDisplayName());
+            mUsernameSuggestionInput = getUsernameQueryFromDisplayName();
+            getUsernameSuggestions(mUsernameSuggestionInput);
         }
 
         mHeaderView = getView().findViewById(R.id.header);

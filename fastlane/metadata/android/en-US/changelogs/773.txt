@@ -1,3 +1,0 @@
-13.1:
-* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.
-* We fixed a bug affecting some users who couldn’t connect their social media services.
