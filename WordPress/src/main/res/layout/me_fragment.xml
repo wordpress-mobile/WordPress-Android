@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_main"/>
@@ -25,8 +24,7 @@
                 android:layout_marginBottom="@dimen/margin_large"
                 android:layout_marginEnd="@dimen/content_margin"
                 android:layout_marginStart="@dimen/content_margin"
-                android:layout_marginTop="@dimen/margin_large"
-                app:cardBackgroundColor="?attr/wpColorSurface">
+                android:layout_marginTop="@dimen/margin_large">
 
                 <RelativeLayout
                     android:layout_width="match_parent"

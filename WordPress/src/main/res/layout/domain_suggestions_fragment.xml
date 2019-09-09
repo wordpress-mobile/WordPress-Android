@@ -69,7 +69,6 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="@dimen/margin_extra_extra_small"
-            android:textColor="?attr/wpColorText"
             android:textColorHint="?attr/wpColorTextTetriary"
             android:textSize="@dimen/text_sz_medium"
             tools:ignore="Autofill,RtlSymmetry" />

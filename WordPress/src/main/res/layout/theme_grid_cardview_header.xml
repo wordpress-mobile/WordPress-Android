@@ -11,7 +11,6 @@
         android:layout_marginBottom="@dimen/default_cardview_radius"
         card_view:cardCornerRadius="@dimen/default_cardview_radius"
         card_view:cardElevation="@dimen/card_elevation"
-        card_view:cardBackgroundColor="?attr/wpColorSurface"
         android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginStart="@dimen/theme_browser_cardview_margin_large">
 

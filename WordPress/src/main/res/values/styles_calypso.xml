@@ -64,7 +64,6 @@
 
     <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">?attr/wpColorPrimary</item>
-        <item name="android:background">?attr/wpColorSurface</item>
         <item name="colorPrimaryDark">?attr/wpColorPrimaryDark</item>
         <item name="colorAccent">?attr/wpColorPrimaryLight</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>

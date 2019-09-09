@@ -9,7 +9,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:textColor="?attr/wpColorText"
             android:id="@+id/text_title"
             style="@style/Base.TextAppearance.AppCompat.Title"
             android:layout_width="match_parent"

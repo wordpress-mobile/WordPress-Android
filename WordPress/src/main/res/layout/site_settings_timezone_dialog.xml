@@ -23,8 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/site_settings_timezone_title"
-            android:textColor="?attr/wpColorText" />
+            android:text="@string/site_settings_timezone_title" />
 
         <TextView
             style="@style/Base.TextAppearance.AppCompat.Small"
