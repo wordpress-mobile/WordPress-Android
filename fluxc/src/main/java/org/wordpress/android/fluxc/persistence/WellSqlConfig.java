@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 84;
+        return 85;
     }
 
     @Override
@@ -595,6 +595,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 83:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 84:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE AccountModel ADD USERNAME_CAN_BE_CHANGED boolean");
                 oldVersion++;
         }
@@ -933,6 +937,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 case 82:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderModel ADD COLUMN DATE_PAID TEXT NOT NULL DEFAULT '';");
+                    break;
+                case 83:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCOrderStatusModel ADD STATUS_COUNT INTEGER");
                     break;
             }
         }
