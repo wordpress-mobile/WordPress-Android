@@ -1233,7 +1233,11 @@ public class MySiteFragment extends Fragment implements
 
     private void toggleDomainRegistrationCtaVisibility() {
         if (mIsDomainCreditAvailable) {
-            mDomainRegistrationCta.setVisibility(View.VISIBLE);
+            // we nest this check because of some weirdness with ui state and race conditions
+            if (mDomainRegistrationCta.getVisibility() != View.VISIBLE) {
+                AnalyticsTracker.track(Stat.DOMAIN_CREDIT_PROMPT_SHOWN);
+                mDomainRegistrationCta.setVisibility(View.VISIBLE);
+            }
         } else {
             mDomainRegistrationCta.setVisibility(View.GONE);
         }

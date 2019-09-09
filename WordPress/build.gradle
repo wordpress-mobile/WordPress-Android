@@ -81,10 +81,10 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.2-rc-1"
+                versionName "13.2"
             }
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
-            versionCode 774
+            versionCode 776
         }
 
         zalpha { // alpha version - enable experimental features
