@@ -696,7 +696,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 )
             );
         }
-        String mediaUrl = rnMediaList.get(0).getMediaUrl();
+        String mediaUrl = rnMediaList.get(0).getUrl();
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
         } else {
