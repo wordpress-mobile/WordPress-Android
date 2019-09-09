@@ -9,6 +9,10 @@
         <item name="colorControlActivated">@color/primary_30</item>
         <item name="colorControlHighlight">@color/neutral_10</item>
 
+        <item name="wpColorText">@color/neutral_70</item>
+        <item name="wpColorTextSubtle">@color/neutral</item>
+        <item name="wpColorError">@color/error</item>
+
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
@@ -41,7 +45,7 @@
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
-    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar"/>
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.WordPress.Widget" parent="Theme.AppCompat">
@@ -73,7 +77,7 @@
     </style>
 
     <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
     </style>
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
@@ -145,7 +149,7 @@
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
 
-    <style name="MediaSettings"/>
+    <style name="MediaSettings" />
 
     <style name="MediaSettings.Activity" parent="WordPress">
         <item name="windowActionBar">false</item>
@@ -177,14 +181,14 @@
     <style name="MediaSettings.Label">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="MediaSettings.Value">
         <item name="android:layout_marginStart">@dimen/media_settings_margin</item>
         <item name="android:layout_marginEnd">@dimen/media_settings_margin</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -201,7 +205,7 @@
 
     <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@android:color/white</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
@@ -257,7 +261,7 @@
     </style>
 
     <style name="WordPress.EmptyList">
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginEnd">16dp</item>
@@ -288,7 +292,7 @@
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/gray_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
@@ -335,7 +339,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -364,7 +368,7 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
@@ -416,7 +420,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">start</item>
@@ -448,14 +452,14 @@
     <style name="MyProfileLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
     <style name="MyProfileText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -504,7 +508,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -555,7 +559,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -625,7 +629,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/neutral_50_neutral_20_selector</item>
-        <item name="android:textColorHint">@color/neutral</item>
+        <item name="android:textColorHint">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -640,7 +644,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -649,7 +653,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">@color/neutral_50</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -685,7 +689,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -721,7 +725,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_alignParentStart">true</item>
@@ -762,7 +766,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
@@ -784,7 +788,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -800,13 +804,13 @@
         <item name="android:layout_marginStart">@dimen/actionable_empty_view_text_margin_horizontal</item>
         <item name="android:maxWidth">@dimen/actionable_empty_view_text_maximum_width</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/neutral</item>
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
     <style name="ActionableEmptyStateSubtitle" parent="@style/ActionableEmptyStateTitle">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -824,7 +828,7 @@
 
     <style name="PageListTopLevelItemTextStyle">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:maxLines">1</item>
         <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
@@ -889,7 +893,7 @@
     <style name="DomainRegistrationFormTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
@@ -898,7 +902,7 @@
 
     <style name="DomainRegistrationFormSubTitle">
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:textColor">@color/neutral_70</item>
+        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>

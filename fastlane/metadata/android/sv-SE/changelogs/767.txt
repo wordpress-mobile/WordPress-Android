@@ -1,4 +1,0 @@
-13.0:
-* Förbättringar i blockredigeraren: redigeraren aktiveras automatiskt när du öppnar ett inlägg som använder block (om du inte stängde av detta i version 12.9). Du kan ocks[ aktivera detta för vissa webbplatser.
-* Tillgänglighetsförbättringar: nu kan skärmläsare läsa mer av informationen i statistikvyn.
-* Allmänna användbarhetsförbättringar: inloggning går snabbare, färgerna stämmer bättre överens mellan olika vyer och några felrättningar har satt stopp för ett antal situationer med programkrascher.

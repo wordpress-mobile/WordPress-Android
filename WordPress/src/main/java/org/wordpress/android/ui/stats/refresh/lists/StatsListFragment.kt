@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
@@ -161,6 +162,18 @@ class StatsListFragment : DaggerFragment() {
                         recyclerView.visibility = View.GONE
                         statsEmptyView.visibility = View.VISIBLE
                         statsErrorView.visibility = View.GONE
+                        statsEmptyView.title.setText(it.title)
+                        if (it.subtitle != null) {
+                            statsEmptyView.subtitle.setText(it.subtitle)
+                        } else {
+                            statsEmptyView.subtitle.text = ""
+                        }
+                        if (it.image != null) {
+                            statsEmptyView.image.setImageResource(it.image)
+                        } else {
+                            statsEmptyView.image.setImageDrawable(null)
+                        }
+                        statsEmptyView.button.setVisible(it.showButton)
                     }
                 }
             }
@@ -177,8 +190,8 @@ class StatsListFragment : DaggerFragment() {
         })
 
         viewModel.selectedDate.observe(this, Observer { event ->
-            if (event?.getContentIfNotHandled() != null) {
-                viewModel.onDateChanged()
+            if (event != null) {
+                viewModel.onDateChanged(event.selectedSection)
             }
         })
 

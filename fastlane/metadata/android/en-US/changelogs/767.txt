@@ -1,4 +1,0 @@
-13.0:
-* Block editor improvements: the editor is auto-enabled when you open a block post (unless you opted out in v12.9), or you can enable it on a per-site basis.
-* Accessibility improvements: screen readers can now read more of the stats screen.
-* General usability improvements: logging in is speedier, colors are more consistent across screens, and bug fixes put an end to some crashes.

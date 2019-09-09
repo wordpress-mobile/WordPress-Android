@@ -157,7 +157,8 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
             mShouldWatchText = true;
             mUsernameSelected = mUsername;
             mUsernameSelectedIndex = 0;
-            getUsernameSuggestions(getUsernameQueryFromDisplayName());
+            mUsernameSuggestionInput = getUsernameQueryFromDisplayName();
+            getUsernameSuggestions(mUsernameSuggestionInput);
         }
 
         mHeaderView = getView().findViewById(R.id.header);

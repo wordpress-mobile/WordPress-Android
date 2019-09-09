@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.stats.insights.CommentsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -31,11 +32,12 @@ private const val BLOCK_ITEM_COUNT = 6
 class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val contentDescriptionHelper: ContentDescriptionHelper
-) : BaseStatsUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
+) : BaseStatsUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, backgroundDispatcher, 0) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
         val fetchMode = LimitMode.Top(BLOCK_ITEM_COUNT)
         val response = commentsStore.fetchComments(statsSiteProvider.siteModel, fetchMode, forced)

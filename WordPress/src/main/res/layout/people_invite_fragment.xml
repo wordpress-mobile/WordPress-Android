@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/invite_names_title"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:labelFor="@+id/invite_usernames"
             android:textSize="@dimen/text_sz_large" />
 
@@ -59,7 +59,7 @@
                     android:paddingBottom="0dp"
                     android:paddingTop="@dimen/margin_large"
                     android:singleLine="true"
-                    android:textColor="@color/neutral_70"
+                    android:textColor="?attr/wpColorText"
                     android:textColorHint="#AAAAAA"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="sdfwefef"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="italic"
                 android:text="@string/invite_message_usernames_limit"/>
@@ -106,7 +106,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:text="@string/role"
-                    android:textColor="@color/neutral_70"
+                    android:textColor="?attr/wpColorText"
                     android:labelFor="@+id/role"
                     android:textSize="@dimen/text_sz_large"
                     tools:text="@string/role" />
@@ -130,7 +130,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="@color/neutral"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:drawableTint="@color/primary_50"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role"
@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/invite_message_title"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:labelFor="@+id/message"
             android:textSize="@dimen/text_sz_large" />
 
@@ -185,7 +185,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/invite_message_info"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_small"
             android:textStyle="italic" />
     </LinearLayout>
