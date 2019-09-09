@@ -604,8 +604,7 @@ public class ActivityLauncher {
 
     public static void viewMeActivity(Context context) {
         Intent intent = new Intent(context, MeActivity.class);
-        // TODO: evaluate tracking
-        // AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
         context.startActivity(intent);
     }
 
