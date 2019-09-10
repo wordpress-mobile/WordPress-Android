@@ -1162,7 +1162,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 launchPictureLibrary(allowMultipleSelection);
                 break;
             case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary();
+                launchVideoLibrary(allowMultipleSelection);
                 break;
             case WP_MEDIA:
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
@@ -1625,9 +1625,8 @@ public class EditPostActivity extends AppCompatActivity implements
         WPMediaUtils.launchPictureLibrary(this, allowMultipleSelection);
     }
 
-    private void launchVideoLibrary() {
-        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
-        WPMediaUtils.launchVideoLibrary(this, !mShowGutenbergEditor);
+    private void launchVideoLibrary(boolean allowMultipleSelection) {
+        WPMediaUtils.launchVideoLibrary(this, allowMultipleSelection);
     }
 
     private void launchVideoCamera() {
@@ -3550,8 +3549,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddVideoClicked() {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, true);
+    public void onAddVideoClicked(boolean allowMultipleSelectio) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelectio);
     }
 
     @Override
