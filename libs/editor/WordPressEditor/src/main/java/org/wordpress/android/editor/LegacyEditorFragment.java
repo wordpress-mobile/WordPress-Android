@@ -1148,7 +1148,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                      mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd());
     }
 
-    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) {}
+    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) { }
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
