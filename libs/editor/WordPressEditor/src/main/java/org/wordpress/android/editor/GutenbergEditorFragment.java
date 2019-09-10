@@ -683,25 +683,44 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
             // Activity may have already be gone.
             // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
-            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null!");
+            AppLog.d(T.MEDIA, "appendMediaFiles() called but Activity is null!");
             return;
         }
+
         ArrayList<Media> rnMediaList = new ArrayList<>();
-        for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-            rnMediaList.add(
-                new Media(
-                    Integer.valueOf(mediaEntry.getValue().getMediaId()),
-                    mediaEntry.getKey(),
-                    mediaEntry.getValue().getMimeType()
-                )
-            );
+
+        // Get media URL of first of media first to check if it is network or local one.
+        String mediaUrl = "";
+        Object[] mediaUrls = mediaList.keySet().toArray();
+        if (mediaUrls != null && mediaUrls.length > 0) {
+            mediaUrl = (String) mediaUrls[0];
         }
-        String mediaUrl = rnMediaList.get(0).getUrl();
+
         if (URLUtil.isNetworkUrl(mediaUrl)) {
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                rnMediaList.add(
+                        new Media(
+                                Integer.valueOf(mediaEntry.getValue().getMediaId()),
+                                mediaEntry.getKey(),
+                                mediaEntry.getValue().getMimeType()
+                        )
+                );
+            }
             getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
         } else {
-//            getGutenbergContainerFragment().appendUploadMediaFile(mediaList);
-//            mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                rnMediaList.add(
+                        new Media(
+                                mediaEntry.getValue().getId(),
+                                "file://" + mediaEntry.getKey(),
+                                mediaEntry.getValue().getMimeType()
+                        )
+                );
+            }
+            getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
+            for (Media media : rnMediaList) {
+                mUploadingMediaProgressMax.put(String.valueOf(media.getId()), 0f);
+            }
         }
     }
 

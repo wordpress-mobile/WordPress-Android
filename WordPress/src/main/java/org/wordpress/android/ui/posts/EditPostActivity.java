@@ -1622,7 +1622,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary(boolean allowMultipleSelection) {
-        // don't allow multiple selection for Gutenberg, as we're on a single image block for now
         WPMediaUtils.launchPictureLibrary(this, allowMultipleSelection);
     }
 
@@ -2836,7 +2835,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void addMediaList(@NonNull List<Uri> uriList, boolean isNew) {
         // fetch any shared media first - must be done on the main thread
         List<Uri> fetchedUriList = fetchMediaList(uriList);
-        mAddMediaListThread = new AddMediaListThread(fetchedUriList, isNew);
+        mAddMediaListThread = new AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection);
         mAddMediaListThread.start();
     }
 
@@ -2859,10 +2858,20 @@ public class EditPostActivity extends AppCompatActivity implements
         private final boolean mIsNew;
         private ProgressDialog mProgressDialog;
         private boolean mDidAnyFail;
+        private int mFinishedUploads = 0;
+        private boolean mAllowMultipleSelection = false;
+        private Map<String, MediaFile> mediaMap = new ArrayMap<>();
 
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
             this.mUriList.addAll(uriList);
             this.mIsNew = isNew;
+            showOverlay(false);
+        }
+
+        AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew, boolean allowMultipleSelection) {
+            this.mUriList.addAll(uriList);
+            this.mIsNew = isNew;
+            this.mAllowMultipleSelection = allowMultipleSelection;
             showOverlay(false);
         }
 
@@ -2975,24 +2984,49 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         private void postProcessMedia(final Uri mediaUri, final String path, final boolean isVideo) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isModernEditor()) {
-                        addMediaVisualEditor(mediaUri, path);
-                    } else {
-                        addMediaLegacyEditor(mediaUri, isVideo);
-                    }
+            if (mAllowMultipleSelection) {
+                MediaFile mediaFile = getMediaFile(mediaUri);
+                if (mediaFile != null) {
+                    mediaMap.put(path, mediaFile);
                 }
-            });
+                mFinishedUploads++;
+                if (mUriList.size() != mFinishedUploads) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mEditorFragment.appendMediaFiles(mediaMap);
+                        }
+                    });
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isModernEditor()) {
+                            addMediaVisualEditor(mediaUri, path);
+                        } else {
+                            addMediaLegacyEditor(mediaUri, isVideo);
+                        }
+                    }
+                });
+            }
         }
     }
 
     private void addMediaVisualEditor(Uri uri, String path) {
+        MediaFile mediaFile = getMediaFile(uri);
+        if (mediaFile != null) {
+            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
+        }
+    }
+
+    private MediaFile getMediaFile(Uri uri) {
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         if (media != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
+            return mediaFile;
+        } else {
+            return null;
         }
     }
 
