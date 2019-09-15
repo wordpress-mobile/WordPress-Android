@@ -11,19 +11,21 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_132"
+msgid ""
+"13.2:\n"
+"* Access your most commonly used actions more quickly from the redesigned My Sites screen.\n"
+"* Have you encountered issues connecting to LinkedIn? We fixed that, so: network away!\n"
+"* The Blog Post screen now shows the author of each post.\n"
+"* Data files for WordPress.com sites are available for download from Stats.\n"
+"* Tweak your Notifications settings right from the Notifications List.\n"
+msgstr ""
+
 msgctxt "release_note_131"
 msgid ""
 "13.1:\n"
 "* In Site and Page preview, you can now switch between the desktop and mobile versions of the site.\n"
 "* We fixed a bug affecting some users who couldn’t connect their social media services.\n"
-msgstr ""
-
-msgctxt "release_note_130"
-msgid ""
-"13.0:\n"
-"* Block editor improvements: the editor is auto-enabled when you open a block post (unless you opted out in v12.9), or you can enable it on a per-site basis.\n"
-"* Accessibility improvements: screen readers can now read more of the stats screen.\n"
-"* General usability improvements: logging in is speedier, colors are more consistent across screens, and bug fixes put an end to some crashes.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

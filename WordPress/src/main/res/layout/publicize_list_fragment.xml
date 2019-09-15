@@ -75,11 +75,12 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/manage_card"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_width="match_parent"
                 app:cardBackgroundColor="@android:color/white"
-                app:cardCornerRadius="@dimen/default_cardview_radius" >
+                app:cardCornerRadius="@dimen/default_cardview_radius">
 
                 <RelativeLayout
                     android:id="@+id/sharing_module"
