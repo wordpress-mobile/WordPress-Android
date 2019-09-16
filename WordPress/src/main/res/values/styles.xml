@@ -1038,4 +1038,8 @@
         <item name="android:textColor">@color/login_footnote_text_color</item>
     </style>
 
+    <style name="LoginEpilogueSitesList">
+        <item name="colorControlHighlight">@android:color/transparent</item>
+    </style>
+
 </resources>
