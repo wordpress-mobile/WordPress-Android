@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
@@ -19,11 +20,12 @@ class UiModelMapper
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
     ): UiModel {
-        if (useCaseModels.isNotEmpty()) {
-            val allFailing = useCaseModels.fold(true) { acc, useCaseModel ->
+        val insightUseCaseModels = useCaseModels.filter { it.type is InsightType }
+        if (insightUseCaseModels.isNotEmpty()) {
+            val allFailing = insightUseCaseModels.fold(true) { acc, useCaseModel ->
                 acc && useCaseModel.state == ERROR
             }
-            val allFailingWithoutData = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
+            val allFailingWithoutData = insightUseCaseModels.fold(true) { acc, useCaseModel ->
                 acc && useCaseModel.state == ERROR && useCaseModel.data == null
             }
             return if (!allFailing && !allFailingWithoutData) {
