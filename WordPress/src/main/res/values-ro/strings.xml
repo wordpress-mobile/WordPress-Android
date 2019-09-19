@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-18 07:59:07+0000
+Translation-Revision-Date: 2019-09-05 11:17:07+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
@@ -1800,7 +1800,7 @@ Language: ro
     <string name="reader_title_blog_preview">Sit Cititor</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest sit, această eroare poate să însemne că cineva încearcă să se substituie sitului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>
-    <string name="forgot_password">Ți-ai pierdut parola?</string>
+    <string name="forgot_password">Ai uitat parola?</string>
     <string name="help">Ajutor</string>
     <string name="username_or_password_incorrect">Numele de utilizator sau parola introduse de tine sunt incorecte</string>
     <string name="email_invalid">Introdu o adresă de email validă</string>

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-07-31 22:06:37+0000
+Translation-Revision-Date: 2019-08-27 19:14:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+    <string name="web_preview_desktop">Desktop</string>
+    <string name="web_preview_default">Default</string>
+    <string name="close_dialog_button_desc">Close Dialogue</string>
+    <string name="preview_type_desc">Select preview type</string>
+    <string name="share_desc">Share</string>
+    <string name="navigate_back_desc">Go back</string>
+    <string name="navigate_forward_desc">Go forward</string>
+    <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
+    <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
+    <string name="notification_post_has_been_published">\"%s\" has been published</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Scheduled post: 1 hour reminder</string>
+    <string name="notification_scheduled_post">Scheduled post</string>
+    <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
+    <string name="post_notification_when_published">When published</string>
+    <string name="post_notification_ten_minutes_before">10 minutes before</string>
+    <string name="post_notification_one_hour_before">1 hour before</string>
+    <string name="post_notification_off">Off</string>
+    <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_notification">Notification</string>
+    <string name="post_settings_time_and_date">Time and Date</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
@@ -653,6 +676,7 @@ Language: en_CA
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="notification_settings_switch_desc">Notifications</string>
+    <string name="open_external_link_desc">Open external link</string>
     <string name="show_more_desc">show more</string>
     <string name="reader_photo_view_desc">photo</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
