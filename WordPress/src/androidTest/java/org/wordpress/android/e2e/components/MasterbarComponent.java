@@ -17,8 +17,4 @@ public class MasterbarComponent {
         clickOn(R.id.quick_action_posts_button);
         return this;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 08af53e32d62b1f12e4ddc0cda6f29025481acd7
 }
