@@ -129,4 +129,17 @@ workflows:
       - test
       - lint
       - Installable Build
+<<<<<<< HEAD
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
       - connected-tests
+=======
+      - connected-tests
+>>>>>>> cb0d7f8008bc2a900d84b150185906cae74a0252
