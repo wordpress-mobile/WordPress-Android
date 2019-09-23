@@ -153,17 +153,17 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun getPositionForItemId(@IdRes itemId: Int): Int {
-        return when (itemId) {
-            R.id.nav_sites -> getPosition(MY_SITE)
-            R.id.nav_reader -> getPosition(READER)
-            R.id.nav_write -> getPosition(NEW_POST)
-            R.id.nav_me -> getPosition(ME)
-            else -> getPosition(NOTIFS)
-        }
+        return getPosition(getPageForItemId(itemId))
     }
 
     private fun getPageForItemId(@IdRes itemId: Int): PageType {
-        return getPageType(getPositionForItemId(itemId))
+        return when (itemId) {
+            R.id.nav_sites -> MY_SITE
+            R.id.nav_reader -> READER
+            R.id.nav_write -> NEW_POST
+            R.id.nav_me -> ME
+            else -> NOTIFS
+        }
     }
 
     @IdRes
