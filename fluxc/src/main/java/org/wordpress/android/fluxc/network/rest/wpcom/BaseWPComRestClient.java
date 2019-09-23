@@ -62,7 +62,7 @@ public abstract class BaseWPComRestClient {
         };
     }
 
-    protected Request add(WPComGsonRequest request) {
+    public Request add(WPComGsonRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return add(request, true);
     }
