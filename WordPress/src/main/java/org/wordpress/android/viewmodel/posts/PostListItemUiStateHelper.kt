@@ -229,12 +229,12 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                     PRIVATE -> labels.add(UiStringRes(R.string.post_waiting_for_connection_private))
                     PENDING -> labels.add(UiStringRes(R.string.post_waiting_for_connection_pending))
                     SCHEDULED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_scheduled))
+                    DRAFT -> labels.add(UiStringRes(R.string.post_waiting_for_connection_draft))
                     TRASHED -> AppLog.e(
                             POSTS,
                             "Developer error: This state shouldn't happen. Trashed post is in " +
                                     "UploadWaitingForConnection state."
                     )
-                    DRAFT -> labels.add(UiStringRes(R.string.local_changes))
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
@@ -341,8 +341,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
         val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
-                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload)) &&
-                postStatus != DRAFT
+                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
         val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))

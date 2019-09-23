@@ -451,7 +451,7 @@ public class UploadUtils {
                 case UNKNOWN:
                     return R.string.post_waiting_for_connection_publish;
                 case DRAFT:
-                    return R.string.error_publish_no_network;
+                    return R.string.post_waiting_for_connection_draft;
                 case PRIVATE:
                     return R.string.post_waiting_for_connection_private;
                 case PENDING:
@@ -495,6 +495,8 @@ public class UploadUtils {
                 messageRes = R.string.post_waiting_for_connection_scheduled_cancel;
                 break;
             case DRAFT:
+                messageRes = R.string.post_waiting_for_connection_draft_cancel;
+                break;
             case TRASHED:
                 AppLog.e(T.POSTS,
                         "This code should be unreachable. Canceling pending auto-upload on Trashed and Draft posts "
