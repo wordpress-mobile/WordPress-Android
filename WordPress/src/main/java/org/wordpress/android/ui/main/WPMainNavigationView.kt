@@ -168,7 +168,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     @IdRes
     private fun getItemIdForPosition(position: Int): Int {
-        return when (pages().getOrNull(position)) {
+        return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.id.nav_sites
             READER -> R.id.nav_reader
             NEW_POST -> R.id.nav_write
@@ -219,7 +219,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
-        return when (pages().getOrNull(position)) {
+        return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.drawable.ic_my_sites_white_24dp
             READER -> R.drawable.ic_reader_white_24dp
             NEW_POST -> R.drawable.ic_create_white_24dp
@@ -259,7 +259,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun getTagForPosition(position: Int): String {
-        return when (pages().getOrNull(position)) {
+        return when (getPageTypeOrNull(position)) {
             MY_SITE -> TAG_MY_SITE
             READER -> TAG_READER
             ME -> TAG_ME
@@ -380,6 +380,10 @@ class WPMainNavigationView @JvmOverloads constructor(
             } else {
                 defaultPages
             }
+        }
+
+        private fun getPageTypeOrNull(position: Int): PageType? {
+            return pages().getOrNull(position)
         }
 
         fun getPosition(pageType: PageType): Int {
