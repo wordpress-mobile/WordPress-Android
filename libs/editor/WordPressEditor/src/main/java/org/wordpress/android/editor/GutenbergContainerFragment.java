@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -41,9 +42,10 @@ public class GutenbergContainerFragment extends Fragment {
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
                                   OnReattachQueryListener onReattachQueryListener,
                                   OnEditorMountListener onEditorMountListener,
+                                  OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener) {
         mWPAndroidGlueCode.attachToContainer(viewGroup, onMediaLibraryButtonListener, onReattachQueryListener,
-                onEditorMountListener, onAuthHeaderRequestedListener);
+                onEditorMountListener, onEditorAutosaveListener, onAuthHeaderRequestedListener);
     }
 
     @Override
