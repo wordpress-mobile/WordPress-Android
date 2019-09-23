@@ -1,6 +1,6 @@
 {
     "scenarioName": "auth",
-    "requiredScenarioState": "logged-in",
+    "requiredScenarioState": "signed-up",
     "request": {
         "method": "GET",
         "urlPath": "/magic-link"
@@ -9,7 +9,7 @@
         "status": 302,
         "headers": {
             "Content-Type": "text/html;charset=utf-8",
-            "Location": "{{request.query.scheme}}://magic-login?token=valid_token"
+            "Location": "{{request.query.scheme}}://magic-login?token=valid_token&new_user=1"
         }
     }
 }

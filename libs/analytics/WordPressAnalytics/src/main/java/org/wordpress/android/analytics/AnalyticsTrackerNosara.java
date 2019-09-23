@@ -946,6 +946,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_ACCOUNT_SETTINGS:
                 return "account_settings_opened";
+            case ACCOUNT_SETTINGS_CHANGE_USERNAME_SUCCEEDED:
+                return "account_settings_change_username_succeeded";
+            case ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED:
+                return "account_settings_change_username_failed";
+            case ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED:
+                return "account_settings_change_username_suggestions_failed";
             case OPENED_APP_SETTINGS:
                 return "app_settings_opened";
             case OPENED_MY_PROFILE:
