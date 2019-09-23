@@ -513,10 +513,21 @@ public class ActivityLauncher {
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
-        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId());
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
+    }
+
+    public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post,
+                                               boolean loadAutoSaveRevision) {
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(),
+                loadAutoSaveRevision);
     }
 
     public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId) {
+        editPostOrPageForResult(intent, activity, site, postLocalId, false);
+    }
+
+    public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId,
+                                               boolean loadAutoSaveRevision) {
         if (site == null) {
             return;
         }
@@ -526,6 +537,8 @@ public class ActivityLauncher {
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, postLocalId);
+        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

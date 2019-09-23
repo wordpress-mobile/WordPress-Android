@@ -10,7 +10,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 sealed class PostListAction {
-    class EditPost(val site: SiteModel, val post: PostModel) : PostListAction()
+    class EditPost(val site: SiteModel, val post: PostModel, val loadAutoSaveRevision: Boolean) : PostListAction()
     class NewPost(val site: SiteModel, val isPromo: Boolean = false) : PostListAction()
     class PreviewPost(
         val site: SiteModel,
@@ -42,7 +42,7 @@ fun handlePostListAction(
 ) {
     when (action) {
         is PostListAction.EditPost -> {
-            ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post)
+            ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post, action.loadAutoSaveRevision)
         }
         is PostListAction.NewPost -> {
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo)

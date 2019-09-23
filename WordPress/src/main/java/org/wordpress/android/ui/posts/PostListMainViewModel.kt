@@ -19,7 +19,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_AC
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
-import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
@@ -364,11 +363,7 @@ class PostListMainViewModel @Inject constructor(
     private fun editRestoredAutoSavePost(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
-            post.title = post.autoSaveTitle ?: post.title
-            post.content = post.autoSaveContent ?: post.content
-            post.excerpt = post.autoSaveExcerpt ?: post.excerpt
-            dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
-            _postListAction.postValue(PostListAction.EditPost(site, post))
+            _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = true))
         } else {
             _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
         }
@@ -377,7 +372,7 @@ class PostListMainViewModel @Inject constructor(
     private fun editLocalPost(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
-            _postListAction.postValue(PostListAction.EditPost(site, post))
+            _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
         } else {
             _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
         }

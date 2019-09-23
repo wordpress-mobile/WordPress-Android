@@ -192,7 +192,7 @@ class PostActionHandler(
             // post itself when they finish (since we're about to edit it again)
             UploadService.cancelQueuedPostUpload(post)
         }
-        triggerPostListAction.invoke(PostListAction.EditPost(site, post))
+        triggerPostListAction.invoke(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
 
     fun deletePost(localPostId: Int) {
