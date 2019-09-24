@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
-import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
@@ -39,7 +38,6 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -1087,12 +1085,6 @@ public class UploadService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostChanged(OnPostChanged event) {
         if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
-            if (event.isError() && event.error.type == PostErrorType.UNSUPPORTED_ACTION) {
-                CrashLoggingUtils
-                        .log("RemoteAutoSavePost failed with UNSUPPORTED_ACTION error. This shouldn't happen. We "
-                             + "have tried to invoke remoteAutoSave on an unsupported site (eg. self-hosted).");
-            }
-
             PostModel post =
                     mPostStore.getPostByLocalPostId(((RemoteAutoSavePost) event.causeOfChange).getLocalPostId());
             stopServiceIfUploadsComplete(event.isError(), post);
