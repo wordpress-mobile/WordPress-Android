@@ -374,7 +374,7 @@ public class UploadStore extends Store {
     }
 
     private void handleRemoteAutoSavedPost(@NonNull RemoteAutoSavePostPayload payload) {
-        if (payload.error.type == PostErrorType.UNSUPPORTED_ACTION) {
+        if (payload.error != null && payload.error.type == PostErrorType.UNSUPPORTED_ACTION) {
             // The remote-auto-save is not supported -> lets just delete the post from the queue
             UploadSqlUtils.deletePostUploadModelWithLocalId(payload.localPostId);
         } else {
