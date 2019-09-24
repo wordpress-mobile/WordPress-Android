@@ -75,7 +75,8 @@ class UploadStarterConcurrentTest {
             connectionStatus = mock(),
             uploadServiceFacade = uploadServiceFacade,
             uploadActionUseCase = UploadActionUseCase(mock(), createMockedPostUtilsWrapper(), uploadServiceFacade),
-            tracker = mock()
+            tracker = mock(),
+            dispatcher = mock()
     )
 
     private companion object Fixtures {

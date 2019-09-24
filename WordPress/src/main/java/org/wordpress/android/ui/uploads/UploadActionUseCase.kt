@@ -13,7 +13,7 @@ import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Inject
 
-const val MAXIMUM_AUTO_UPLOAD_RETRIES = 10
+const val MAXIMUM_AUTO_UPLOAD_RETRIES = 3
 private const val TWO_DAYS_IN_MILLIS = 1000 * 60 * 60 * 24 * 2
 
 @Reusable
@@ -44,7 +44,7 @@ class UploadActionUseCase @Inject constructor(
         }
 
         // Do not auto-upload post which we already tried to upload certain number of times
-        if (uploadStore.getNumberOfPostUploadErrorsOrCancellations(post) >= MAXIMUM_AUTO_UPLOAD_RETRIES) {
+        if (uploadStore.getNumberOfPostAutoUploadAttempts(post) >= MAXIMUM_AUTO_UPLOAD_RETRIES) {
             return DO_NOTHING
         }
 
@@ -65,7 +65,7 @@ class UploadActionUseCase @Inject constructor(
 
     fun getUploadAction(post: PostModel): UploadAction {
         return when {
-            post.changesConfirmedContentHashcode == post.contentHashcode() ->
+            uploadWillPushChanges(post) ->
                 // We are sure we can push the post as the user has explicitly confirmed the changes
                 UPLOAD
             post.isLocalDraft ->
@@ -74,4 +74,13 @@ class UploadActionUseCase @Inject constructor(
             else -> REMOTE_AUTO_SAVE
         }
     }
+
+    fun isEligibleForAutoUpload(site: SiteModel, post: PostModel): Boolean {
+        return when (getAutoUploadAction(post, site)) {
+            UPLOAD -> true
+            UPLOAD_AS_DRAFT, REMOTE_AUTO_SAVE, DO_NOTHING -> false
+        }
+    }
+
+    fun uploadWillPushChanges(post: PostModel) = post.changesConfirmedContentHashcode == post.contentHashcode()
 }

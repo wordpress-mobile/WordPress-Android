@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argWhere
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.doReturn
@@ -21,10 +22,14 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.UploadAction
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -257,7 +262,7 @@ class UploadStarterTest {
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = createMockedUploadServiceFacade()
 
-        // This UploadStore.getNumberOfPostUploadErrorsOrCancellations mocked method will always return that
+        // This UploadStore.getNumberOfAutoUploadAttempts mocked method will always return that
         // any post was cancelled 1000 times. The auto upload should not be started.
         val starter = createUploadStarter(
                 connectionStatus, uploadServiceFacade,
@@ -420,6 +425,25 @@ class UploadStarterTest {
         )
     }
 
+    @Test
+    fun `verify number of auto upload attempts count is incremented when upload invoked`() = test {
+        // Given
+        val siteModel = createSiteModel()
+        val postModel = createDraftPostModel()
+        defaultSetup(siteModel, postModel)
+        val dispatcher: Dispatcher = mock()
+
+        // When
+        createUploadStarter(dispatcher = dispatcher).queueUploadFromSite(siteModel)
+
+        // Then
+        argumentCaptor<Action<PostModel>>().apply {
+            verify(dispatcher, times(1)).dispatch(capture())
+            Assertions.assertThat(allValues[0].payload).isEqualTo(postModel)
+            Assertions.assertThat(allValues[0].type).isEqualTo(UploadAction.INCREMENT_NUMBER_OF_AUTO_UPLOAD_ATTEMPTS)
+        }
+    }
+
     private fun defaultSetup(siteModel: SiteModel, postModel: PostModel) = test {
         whenever(postStore.getPostsWithLocalChanges(any())).thenReturn(listOf(postModel))
     }
@@ -429,7 +453,8 @@ class UploadStarterTest {
         connectionStatus: LiveData<ConnectionStatus> = createConnectionStatusLiveData(null),
         uploadServiceFacade: UploadServiceFacade = this.uploadServiceFacade,
         postUtilsWrapper: PostUtilsWrapper = createMockedPostUtilsWrapper(),
-        uploadStore: UploadStore = createMockedUploadStore(0)
+        uploadStore: UploadStore = createMockedUploadStore(0),
+        dispatcher: Dispatcher = mock()
     ) = UploadStarter(
             context = mock(),
             postStore = postStore,
@@ -440,7 +465,8 @@ class UploadStarterTest {
             connectionStatus = connectionStatus,
             uploadServiceFacade = uploadServiceFacade,
             uploadActionUseCase = UploadActionUseCase(uploadStore, postUtilsWrapper, uploadServiceFacade),
-            tracker = mock()
+            tracker = mock(),
+            dispatcher = dispatcher
     )
 
     private companion object Fixtures {
@@ -459,8 +485,8 @@ class UploadStarterTest {
             on { isPostInConflictWithRemote(any()) } doReturn false
         }
 
-        fun createMockedUploadStore(numberOfPostErrors: Int) = mock<UploadStore> {
-            on { getNumberOfPostUploadErrorsOrCancellations(any()) } doReturn numberOfPostErrors
+        fun createMockedUploadStore(numberOfAutoUploadAttempts: Int) = mock<UploadStore> {
+            on { getNumberOfPostAutoUploadAttempts(any()) } doReturn numberOfAutoUploadAttempts
         }
 
         fun createMockedUploadServiceFacade() = mock<UploadServiceFacade> {

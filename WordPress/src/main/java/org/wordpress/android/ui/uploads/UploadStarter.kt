@@ -14,6 +14,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -48,6 +50,7 @@ class UploadStarter @Inject constructor(
      * The Application context
      */
     private val context: Context,
+    private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val siteStore: SiteStore,
     private val uploadActionUseCase: UploadActionUseCase,
@@ -144,7 +147,6 @@ class UploadStarter @Inject constructor(
             mutex.lock()
             val posts = postStore.getPostsWithLocalChanges(site)
 
-            // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
             posts
                     .asSequence()
                     .filter {
@@ -159,11 +161,10 @@ class UploadStarter @Inject constructor(
                     .toList()
                     .forEach { post ->
                         AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
+                        dispatcher.dispatch(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(post))
                         uploadServiceFacade.uploadPost(
                                 context = context,
                                 post = post,
-                                // TODO Should we track analytics in certain cases ?!? We don't know if it's
-                                //  firstTimePublish since we don't have the original status of the post
                                 trackAnalytics = false
                         )
                     }
