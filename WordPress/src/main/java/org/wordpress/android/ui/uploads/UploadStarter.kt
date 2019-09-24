@@ -147,7 +147,6 @@ class UploadStarter @Inject constructor(
             mutex.lock()
             val posts = postStore.getPostsWithLocalChanges(site)
 
-            // TODO Set Retry = false when autosaving or perhaps check `getNumberOfPostUploadErrorsOrCancellations != 0`
             posts
                     .asSequence()
                     .filter {
@@ -166,8 +165,6 @@ class UploadStarter @Inject constructor(
                         uploadServiceFacade.uploadPost(
                                 context = context,
                                 post = post,
-                                // TODO Should we track analytics in certain cases ?!? We don't know if it's
-                                //  firstTimePublish since we don't have the original status of the post
                                 trackAnalytics = false
                         )
                     }
