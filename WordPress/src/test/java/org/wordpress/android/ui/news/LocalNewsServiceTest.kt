@@ -15,6 +15,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.models.news.LocalNewsItem
 import org.wordpress.android.models.news.NewsItem
+import org.wordpress.android.viewmodel.ContextProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class LocalNewsServiceTest {
@@ -23,6 +24,7 @@ class LocalNewsServiceTest {
     val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var observer: Observer<NewsItem>
+    @Mock private lateinit var contextProvider: ContextProvider
     @Mock private lateinit var context: Context
 
     private lateinit var newsItem: NewsItem
@@ -32,7 +34,8 @@ class LocalNewsServiceTest {
 
     @Before
     fun setUp() {
-        localNewsService = LocalNewsService(context)
+        localNewsService = LocalNewsService(contextProvider)
+        whenever(contextProvider.getContext()).thenReturn(context)
         whenever(context.getString(any())).thenReturn(dummyString)
         newsItem = NewsItem(dummyString, dummyString, dummyString, dummyString, LocalNewsItem.version)
     }
