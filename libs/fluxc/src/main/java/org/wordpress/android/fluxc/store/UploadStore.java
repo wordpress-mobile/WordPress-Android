@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -373,7 +374,12 @@ public class UploadStore extends Store {
     }
 
     private void handleRemoteAutoSavedPost(@NonNull RemoteAutoSavePostPayload payload) {
-        handlePostUploadedOrAutoSaved(payload.localPostId, payload.error);
+        if (payload.error != null && payload.error.type == PostErrorType.UNSUPPORTED_ACTION) {
+            // The remote-auto-save is not supported -> lets just delete the post from the queue
+            UploadSqlUtils.deletePostUploadModelWithLocalId(payload.localPostId);
+        } else {
+            handlePostUploadedOrAutoSaved(payload.localPostId, payload.error);
+        }
     }
 
     private void handlePostUploaded(@NonNull RemotePostPayload payload) {
