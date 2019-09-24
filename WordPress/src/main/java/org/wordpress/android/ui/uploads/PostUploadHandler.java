@@ -655,7 +655,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
             SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
-            mPostUploadNotifier.updateNotificationSuccessForPost(post, site, false);
             finishUpload();
         }
     }
