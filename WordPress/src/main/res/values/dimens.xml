@@ -42,8 +42,6 @@
     <dimen name="default_dialog_width">280dp</dimen>
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
-    <dimen name="post_editor_content_side_margin">20dp</dimen>
-
     <dimen name="default_cardview_radius">2dp</dimen>
     <dimen name="default_cardview_elevation">2dp</dimen>
 
@@ -430,5 +428,8 @@
     <dimen name="web_preview_navbar_height">72dp</dimen>
     <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
     <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
+
+    <!--settings username changer-->
+    <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
 </resources>
