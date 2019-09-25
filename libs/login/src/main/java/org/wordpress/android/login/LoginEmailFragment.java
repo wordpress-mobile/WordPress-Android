@@ -52,9 +52,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dagger.android.support.AndroidSupportInjection;
-
 import static android.app.Activity.RESULT_OK;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
@@ -280,12 +280,25 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mHideLoginWithSiteOption = args.getBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, false);
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(LoginEmailFragment.this)
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @Override
