@@ -107,14 +107,14 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
-        // TODO the meta object can be quite large and it partially beats the purpose of this approach where we fetch
-        //  minimal number of data from which we can determine whether the local version of the post is in sync with
-        //  the remote version. Ideally we'd fetch just "meta.data.autosave.modified", not the whole meta object.
         String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta"));
         Map<String, String> params =
                 createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
                         listDescriptor.getAuthor(), fields, listDescriptor.getOrder().getValue(),
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
+
+        // We want to fetch only the minimal data required in order to save users' data
+        params.put("meta_fields", "autosave.modified");
 
         final boolean loadedMore = offset > 0;
 
