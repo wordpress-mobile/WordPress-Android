@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -371,6 +372,16 @@ public class MySiteFragment extends Fragment implements
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
         mToolbar.setTitle(mToolbarTitle);
+        if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+            mToolbar.inflateMenu(R.menu.my_site_menu);
+            mToolbar.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.me_item) {
+                    ActivityLauncher.viewMeActivity(getActivity());
+                    return true;
+                }
+                return false;
+            });
+        }
 
         return rootView;
     }

@@ -83,6 +83,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "13.2"
             }
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             versionCode 776
         }
 
@@ -90,11 +91,13 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
         }
     }
 
