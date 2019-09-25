@@ -18,7 +18,6 @@
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
-    <string name="post_content">Content (tap to add text and media)</string>
     <string name="max_thumbnail_px_size">Maximum Image Size</string>
     <string name="image_quality">Image Quality</string>
     <string name="max_video_resolution">Maximum Video Size</string>
@@ -223,7 +222,6 @@
     <!-- link view -->
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
-    <string name="create_a_link">Create a link</string>
     <string name="link_open_new_window">Open link in a new window/tab</string>
 
     <!-- page view -->
@@ -315,10 +313,6 @@
     <string name="page_scheduled">Page scheduled</string>
     <string name="post_updated">Post updated</string>
     <string name="page_updated">Page updated</string>
-    <string name="caption">Caption (optional)</string>
-    <string name="horizontal_alignment">Horizontal alignment</string>
-    <string name="width">Width</string>
-    <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
@@ -1205,10 +1199,6 @@
     <string name="editor_uploading_post">Your post is uploading</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
-    <string name="visual_editor_enabled">Visual Editor enabled</string>
-    <string name="visual_editor_disabled">Visual Editor disabled</string>
-    <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
-        automatically disabled.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
@@ -2115,13 +2105,7 @@
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
-    <string name="uploading">Uploading…</string>
-    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
     <string name="add_media_progress">Adding media</string>
-
-    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
-    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
-    <string name="alert_error_adding_media">An error occurred while inserting media</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 
@@ -2129,24 +2113,8 @@
     <string name="image_settings_save_toast">Changes saved</string>
 
     <string name="image_caption">Caption</string>
-    <string name="image_alt_text">Alt text</string>
     <string name="image_link_to">Link to</string>
     <string name="image_width">Width</string>
-
-    <!-- Editor: Accessibility - format bar button descriptions -->
-    <string name="format_bar_description_media">Media</string>
-    <string name="format_bar_description_ol">Ordered List</string>
-    <string name="format_bar_description_ul">Unordered List</string>
-    <string name="format_bar_description_quote">Block Quote</string>
-    <string name="format_bar_description_bold">Bold</string>
-    <string name="format_bar_description_italic">Italic</string>
-    <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_underline">Underline</string>
-    <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_more">Read More</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="visual_editor">Visual editor</string>
-    <string name="image_thumbnail">Image thumbnail</string>
 
     <!-- Editor: Errors -->
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode

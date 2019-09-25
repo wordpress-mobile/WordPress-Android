@@ -119,8 +119,6 @@ public class WordPressDB {
                 PeopleTable.createTables(mDb);
             case 45:
             case 46:
-                AppPrefs.setVisualEditorAvailable(true);
-                AppPrefs.setVisualEditorEnabled(true);
             case 47:
                 PeopleTable.reset(mDb);
             case 48:
@@ -151,7 +149,6 @@ public class WordPressDB {
                 mDb.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
             case 59:
                 // Enable Aztec for all users
-                AppPrefs.setVisualEditorEnabled(false);
                 AppPrefs.setAztecEditorEnabled(true);
             case 60:
                 // add Start of Week site setting as part of #betterjetpackxp
