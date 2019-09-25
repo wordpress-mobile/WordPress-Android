@@ -30,8 +30,7 @@ enum class PostListButtonType constructor(
             R.drawable.ic_trash_white_24dp,
             R.attr.wpColorTextSubtle
     ),
-    // TODO: The color needs to be an attribute (address in the merge PR)
-    BUTTON_CANCEL_PENDING_AUTO_UPLOAD(14, R.string.cancel, R.drawable.ic_undo_white_24dp, R.color.warning_dark);
+    BUTTON_CANCEL_PENDING_AUTO_UPLOAD(14, R.string.cancel, R.drawable.ic_undo_white_24dp, R.attr.wpColorWarningDark);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }
