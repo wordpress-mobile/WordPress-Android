@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Editor Example</string>
     <string name="title_activity_example">Editor Example</string>
-    <string name="starting_legacy_editor">Starting legacy editor</string>
-    <string name="starting_new_editor">Starting new editor</string>
+    <string name="starting_gutenberg_editor">Starting Gutenberg editor</string>
+    <string name="starting_aztec_editor">Starting Aztec editor</string>
     <string name="example_post_visual_title">I\'m editing a post!</string>
     <string name="example_post_title_placeholder">Post title</string>
     <string name="example_post_content_placeholder">Share your story here…</string>

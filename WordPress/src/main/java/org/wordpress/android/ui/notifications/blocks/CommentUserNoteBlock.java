@@ -17,6 +17,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -121,8 +122,13 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
         mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
 
-        noteBlockHolder.mCommentTextView
-                .setText(getCommentTextOfNotification(noteBlockHolder));
+        Spannable spannable = getCommentTextOfNotification(noteBlockHolder);
+        NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
+        for (NoteBlockClickableSpan span : spans) {
+            span.enableColors(view.getContext());
+        }
+
+        noteBlockHolder.mCommentTextView.setText(spannable);
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -250,7 +256,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalTextColor = context.getResources().getColor(R.color.neutral_70);
+        mNormalTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
         mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
         mAgoTextColor = context.getResources().getColor(R.color.neutral);
         mUnapprovedTextColor = context.getResources().getColor(R.color.warning_60);

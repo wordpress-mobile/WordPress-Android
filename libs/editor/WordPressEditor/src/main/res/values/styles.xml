@@ -16,13 +16,6 @@
         <item name="colorPrimaryDark">@color/status_bar</item>
     </style>
 
-    <style name="LegacyToggleButton">
-        <item name="android:minWidth">@dimen/legacy_format_bar_height</item>
-        <item name="android:minHeight">@dimen/legacy_format_bar_height</item>
-        <item name="android:textOn">""</item>
-        <item name="android:textOff">""</item>
-    </style>
-
     <style name="FormatBarButton">
         <item name="android:minWidth">@dimen/format_bar_height</item>
         <item name="android:minHeight">@dimen/format_bar_height</item>

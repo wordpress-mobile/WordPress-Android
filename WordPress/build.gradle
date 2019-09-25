@@ -53,9 +53,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-187"
+            versionName "alpha-188"
         }
-        versionCode 772
+        versionCode 775
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -81,20 +81,23 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.1-rc-2"
+                versionName "13.2"
             }
-            versionCode 771
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
+            versionCode 776
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
         }
     }
 

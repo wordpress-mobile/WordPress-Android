@@ -26,7 +26,6 @@ import kotlinx.android.synthetic.main.domain_registration_details_fragment.*
 import org.apache.commons.lang3.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.DomainContactModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SupportedDomainCountry
@@ -46,13 +45,11 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel
+import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel.DomainContactFormModel
 import javax.inject.Inject
 
 class DomainRegistrationDetailsFragment : Fragment() {
     companion object {
-        private const val PHONE_NUMBER_PREFIX = "+"
-        private const val PHONE_NUMBER_CONNECTING_CHARACTER = "."
-
         private const val EXTRA_DOMAIN_PRODUCT_DETAILS = "EXTRA_DOMAIN_PRODUCT_DETAILS"
         const val TAG = "DOMAIN_REGISTRATION_DETAILS"
 
@@ -139,7 +136,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         ).forEach {
             it.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
-                    viewModel.onDomainContactDetailsChanged(contactFormToDomainContactModel())
+                    viewModel.onDomainContactDetailsChanged(getDomainContactFormModel())
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -192,10 +189,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     }
                 })
 
-        viewModel.domainContactDetails.observe(this, Observer<DomainContactModel> { domainContactModel ->
-            val currentModel = contactFormToDomainContactModel()
-            if (currentModel != domainContactModel) {
-                populateContactForm(domainContactModel!!)
+        viewModel.domainContactForm.observe(this, Observer<DomainContactFormModel> { domainContactFormModel ->
+            val currentModel = getDomainContactFormModel()
+            if (currentModel != domainContactFormModel) {
+                populateContactForm(domainContactFormModel!!)
             }
         })
 
@@ -257,31 +254,17 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 })
     }
 
-    private fun populateContactForm(domainContactInformation: DomainContactModel) {
-        first_name_input.setText(domainContactInformation.firstName)
-        last_name_input.setText(domainContactInformation.lastName)
-        organization_input.setText(domainContactInformation.organization)
-        email_input.setText(domainContactInformation.email)
-
-        if (!TextUtils.isEmpty(domainContactInformation.phone)) {
-            val phoneParts = domainContactInformation.phone!!.split(PHONE_NUMBER_CONNECTING_CHARACTER)
-            if (phoneParts.size == 2) {
-                var countryCode = phoneParts[0]
-                if (countryCode.startsWith(PHONE_NUMBER_PREFIX)) {
-                    countryCode = countryCode.drop(1)
-                }
-
-                val phoneNumber = phoneParts[1]
-
-                country_code_input.setText(countryCode)
-                phone_number_input.setText(phoneNumber)
-            }
-        }
-
-        address_first_line_input.setText(domainContactInformation.addressLine1)
-        address_second_line_input.setText(domainContactInformation.addressLine2)
-        city_input.setText(domainContactInformation.city)
-        postal_code_input.setText(domainContactInformation.postalCode)
+    private fun populateContactForm(domainContactFormModel: DomainContactFormModel) {
+        first_name_input.setText(domainContactFormModel.firstName)
+        last_name_input.setText(domainContactFormModel.lastName)
+        organization_input.setText(domainContactFormModel.organization)
+        email_input.setText(domainContactFormModel.email)
+        country_code_input.setText(domainContactFormModel.phoneNumberPrefix)
+        phone_number_input.setText(domainContactFormModel.phoneNumber)
+        address_first_line_input.setText(domainContactFormModel.addressLine1)
+        address_second_line_input.setText(domainContactFormModel.addressLine2)
+        city_input.setText(domainContactFormModel.city)
+        postal_code_input.setText(domainContactFormModel.postalCode)
     }
 
     // local validation
@@ -296,6 +279,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
         var fieldToFocusOn: TextInputEditText? = null
 
         requiredFields.forEach {
+            clearEmptyFieldError(it)
+
             if (TextUtils.isEmpty(it.text)) {
                 if (fieldToFocusOn == null) {
                     fieldToFocusOn = it
@@ -320,18 +305,19 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
     }
 
-    private fun showFieldError(editText: EditText, errorMessage: String) {
+    private fun clearEmptyFieldError(editText: EditText) {
+        val parent = editText.parent.parent
+        if (parent is TextInputLayout) {
+            showFieldError(editText, null)
+        }
+    }
+
+    private fun showFieldError(editText: EditText, errorMessage: String?) {
         editText.error = errorMessage
     }
 
-    private fun contactFormToDomainContactModel(): DomainContactModel {
-        val combinedPhoneNumber = getString(
-                R.string.domain_registration_phone_number_format,
-                country_code_input.text,
-                phone_number_input.text
-        )
-
-        return DomainContactModel(
+    private fun getDomainContactFormModel(): DomainContactFormModel {
+        return DomainContactFormModel(
                 first_name_input.text.toString(),
                 last_name_input.text.toString(),
                 StringUtils.notNullStr(organization_input.text.toString()),
@@ -342,8 +328,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 null, // state code will be added in ViewModel
                 null, // country code will be added in ViewModel
                 email_input.text.toString(),
-                combinedPhoneNumber,
-                null
+                country_code_input.text.toString(),
+                phone_number_input.text.toString()
         )
     }
 

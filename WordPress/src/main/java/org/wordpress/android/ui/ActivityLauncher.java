@@ -10,8 +10,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
@@ -41,6 +39,7 @@ import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -73,6 +72,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -119,11 +119,7 @@ public class ActivityLauncher {
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_left,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
+        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     public static void showPhotoPickerForResult(Activity activity,
@@ -304,9 +300,9 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
-                                            int localSiteId) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, SelectedDate selectedDate,
+                                            StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, selectedDate, localSiteId);
     }
 
     public static void viewInsightsManagement(Context context, int localSiteId) {
@@ -652,6 +648,12 @@ public class ActivityLauncher {
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        context.startActivity(intent);
+    }
+
+    public static void viewMeActivity(Context context) {
+        Intent intent = new Intent(context, MeActivity.class);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
         context.startActivity(intent);
     }
 

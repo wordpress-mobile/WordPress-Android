@@ -33,6 +33,7 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 private const val MIN_WIDTH = 250
+private const val ICON_MAX_DIMENSION = 100
 
 class WidgetUtils
 @Inject constructor(val imageManager: ImageManager) {
@@ -62,7 +63,15 @@ class WidgetUtils
         views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
         GlobalScope.launch(Dispatchers.Main) {
             val awt = AppWidgetTarget(context, R.id.widget_site_icon, views, appWidgetId)
-            imageManager.load(awt, context, ICON, siteModel?.iconUrl ?: "", FIT_START)
+            imageManager.load(
+                    awt,
+                    context,
+                    ICON,
+                    siteModel?.iconUrl ?: "",
+                    FIT_START,
+                    ICON_MAX_DIMENSION,
+                    ICON_MAX_DIMENSION
+            )
         }
     }
 
@@ -144,6 +153,7 @@ class WidgetUtils
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )
         views.setRemoteAdapter(R.id.widget_content, listIntent)
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 

@@ -355,10 +355,6 @@ public class UploadService extends Service {
         context.startService(intent);
     }
 
-    public static void setLegacyMode(boolean enabled) {
-        PostUploadHandler.setLegacyMode(enabled);
-    }
-
     public static void uploadMedia(Context context, @NonNull MediaModel media) {
         ArrayList<MediaModel> list = new ArrayList<>();
         list.add(media);

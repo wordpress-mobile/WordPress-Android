@@ -65,7 +65,7 @@
             android:drawablePadding="@dimen/margin_medium"
             android:drawableEnd="@drawable/ic_external_grey_min_24dp"
             android:padding="@dimen/margin_extra_large"
-            android:textColor="@color/neutral_50"
+            android:textColor="?attr/wpColorTextSubtle"
             tools:text="text_excerpt_footer"/>
     </RelativeLayout>
 

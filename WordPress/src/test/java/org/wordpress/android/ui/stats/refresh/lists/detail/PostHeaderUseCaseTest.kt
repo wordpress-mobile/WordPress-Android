@@ -2,12 +2,14 @@ package org.wordpress.android.ui.stats.refresh.lists.detail
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -25,10 +27,12 @@ class PostHeaderUseCaseTest : BaseUnitTest() {
     private val postTitle: String = "Post title"
     private val postId: Long = 1L
     private val postUrl: String = "post_url.com"
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostHeaderUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 statsPostProvider,
                 tracker
         )

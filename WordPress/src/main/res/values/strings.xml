@@ -18,7 +18,6 @@
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
-    <string name="post_content">Content (tap to add text and media)</string>
     <string name="max_thumbnail_px_size">Maximum Image Size</string>
     <string name="image_quality">Image Quality</string>
     <string name="max_video_resolution">Maximum Video Size</string>
@@ -223,7 +222,6 @@
     <!-- link view -->
     <string name="link_enter_url">URL</string>
     <string name="link_enter_url_text">Link text (optional)</string>
-    <string name="create_a_link">Create a link</string>
     <string name="link_open_new_window">Open link in a new window/tab</string>
 
     <!-- page view -->
@@ -325,10 +323,6 @@
     <string name="page_scheduled">Page scheduled</string>
     <string name="post_updated">Post updated</string>
     <string name="page_updated">Page updated</string>
-    <string name="caption">Caption (optional)</string>
-    <string name="horizontal_alignment">Horizontal alignment</string>
-    <string name="width">Width</string>
-    <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
@@ -549,6 +543,7 @@
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_advanced_header">Advanced</string>
     <string name="site_settings_traffic_header">Traffic</string>
+    <string name="site_settings_performance">Performance</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -621,11 +616,26 @@
     <string name="file_size_in_terabytes">%s TB</string>
 
     <!-- Speed up your site -->
-    <string name="site_settings_speed_up_your_site">Speed up your site</string>
-    <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimize your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
-    <string name="site_settings_lazy_load_images">"Lazy-load" images</string>
-    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
+    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen.</string>
+
+    <!-- Site accelerator -->
+    <string name="site_settings_site_accelerator">Site Accelerator</string>
+    <string name="site_settings_site_accelerator_on">On</string>
+    <string name="site_settings_site_accelerator_off">Off</string>
+    <string name="site_settings_lazy_load_images">Lazy load images</string>
+    <string name="site_settings_faster_images">Faster images</string>
+    <string name="site_settings_faster_static_files">Faster static files</string>
+    <string name="site_settings_site_accelerator_summary">Load pages faster by allowing Jetpack to optimize your images and static files (like CSS and JavaScript).</string>
+    <!-- Media performance -->
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_ad_free_video_hosting">Ad-free Video Hosting</string>
+    <!-- Jetpack search -->
+    <string name="site_settings_jetpack_search">Jetpack Search</string>
+    <string name="site_settings_improved_search">Improved Search</string>
+    <string name="site_settings_improved_search_summary">Replace WordPress build-in search with an improved search experience</string>
+
+    <string name="site_settings_more">More</string>
+    <string name="site_settings_performance_and_speed">Performance and Speed</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
@@ -724,6 +734,7 @@
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
+    <string name="site_settings_jetpack_performance_settings_hint">View and change your Jetpack performance settings</string>
     <string name="site_settings_allow_comments_hint">Allow readers to post comments</string>
     <string name="site_settings_send_pingbacks_hint">Attempt to notify any blogs linked to from the article</string>
     <string name="site_settings_receive_pingbacks_hint">Allow link notifications from other blogs</string>
@@ -943,7 +954,7 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
-    <string name="stats_view_follower_totals">Followers Totals</string>
+    <string name="stats_view_follower_totals">Follower Totals</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_seconds_ago">seconds ago</string>
@@ -1201,10 +1212,6 @@
     <string name="editor_uploading_post">Your post is uploading</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
-    <string name="visual_editor_enabled">Visual Editor enabled</string>
-    <string name="visual_editor_disabled">Visual Editor disabled</string>
-    <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
-        automatically disabled.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
@@ -2014,8 +2021,6 @@
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
-
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
@@ -2134,13 +2139,7 @@
     <string name="discard">Discard</string>
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
-    <string name="uploading">Uploading…</string>
-    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
     <string name="add_media_progress">Adding media</string>
-
-    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
-    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
-    <string name="alert_error_adding_media">An error occurred while inserting media</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 
@@ -2148,24 +2147,8 @@
     <string name="image_settings_save_toast">Changes saved</string>
 
     <string name="image_caption">Caption</string>
-    <string name="image_alt_text">Alt text</string>
     <string name="image_link_to">Link to</string>
     <string name="image_width">Width</string>
-
-    <!-- Editor: Accessibility - format bar button descriptions -->
-    <string name="format_bar_description_media">Media</string>
-    <string name="format_bar_description_ol">Ordered List</string>
-    <string name="format_bar_description_ul">Unordered List</string>
-    <string name="format_bar_description_quote">Block Quote</string>
-    <string name="format_bar_description_bold">Bold</string>
-    <string name="format_bar_description_italic">Italic</string>
-    <string name="format_bar_description_link">Link</string>
-    <string name="format_bar_description_underline">Underline</string>
-    <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_more">Read More</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="visual_editor">Visual editor</string>
-    <string name="image_thumbnail">Image thumbnail</string>
 
     <!-- Editor: Errors -->
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
@@ -2336,6 +2319,14 @@
     <string name="username_changer_header">Your current username is %1$s%2$s%3$s. With few exceptions, others will only ever see your display name, %4$s%5$s%6$s.</string>
     <string name="username_changer_hint">Type to get more suggestions</string>
     <string name="username_changer_title">Change username</string>
+
+    <string name="settings_username_changer_header">You are about to change your username, which is currently %1$s%2$s%3$s.You will not be able to change your username back.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Careful!</string>
+    <string name="settings_username_changer_confirm_dialog_content">You are changing your username to %1$s%2$s%3$s. Changing your username will also affect your Gravatar profile and Intense Debate profile addresses. Confirm your new username to continue.</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Change Username</string>
+    <string name="settings_username_changer_progress_dialog">Saving username…</string>
+    <string name="settings_username_changer_toast_content">Your new username is %1$s</string>
+    <string name="settings_username_changer_snackbar_cancel">This action can\'t be canceled. Username might have been already updated.</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 

@@ -1,16 +1,19 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.isNull
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -29,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -41,20 +45,22 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var overviewMapper: OverviewMapper
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var site: SiteModel
     @Mock lateinit var columns: Columns
     @Mock lateinit var title: ValueItem
     @Mock lateinit var barChartItem: BarChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
     private lateinit var useCase: OverviewUseCase
+    private val site = SiteModel()
+    private val siteId = 1L
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
     private val limitMode = Top(15)
     private val statsGranularity = DAYS
     private val model = VisitsAndViewsModel(modelPeriod, listOf(periodData))
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        whenever(selectedDateProvider.granularSelectedDateChanged(statsGranularity)).thenReturn(MutableLiveData())
         useCase = OverviewUseCase(
                 statsGranularity,
                 store,
@@ -63,9 +69,12 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 overviewMapper,
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 analyticsTrackerWrapper,
+                statsWidgetUpdaters,
                 resourceProvider
         )
+        site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(overviewMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
@@ -92,6 +101,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
             assertThat(this[1]).isEqualTo(barChartItem)
             assertThat(this[2]).isEqualTo(columns)
         }
+        verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
     }
 
     @Test

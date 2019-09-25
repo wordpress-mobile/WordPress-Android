@@ -1,4 +1,0 @@
-13.0:
-* Verbesserungen am Block-Editor: Der Editor wird automatisch aktiviert, wenn du einen Blockbeitrag öffnest (wenn du dies nicht in Version 12.9 deaktiviert hast), oder du kannst ihn für jede einzelne Website aktivieren.
-* Verbesserungen der Bedienungshilfen: Screenreader können jetzt mehr Inhalte des Statistikbildschirms erkennen.
-* Allgemeine Verbesserungen der Benutzerfreundlichkeit: Die Anmeldung funktioniert schneller, die Farben sind konsistenter auf allen Bildschirmen und Fehlerbehebungen beseitigen die Ursachen einiger Abstürze.
