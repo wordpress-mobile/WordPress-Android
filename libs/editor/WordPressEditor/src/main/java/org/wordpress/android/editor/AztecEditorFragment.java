@@ -649,9 +649,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            return "";
+            throw new EditorFragmentNotAddedException();
         }
 
         // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
@@ -950,9 +950,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getContent(CharSequence originalContent) {
+    public CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            return "";
+            throw new EditorFragmentNotAddedException();
         }
 
         if (mContent.getVisibility() == View.VISIBLE) {
@@ -1153,11 +1153,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void removeMedia(String mediaId) {
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
-    }
-
-    @Override
-    public Spanned getSpannedContent() {
-        return null;
     }
 
     @Override

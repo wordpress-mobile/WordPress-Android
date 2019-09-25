@@ -8,11 +8,6 @@
 
     <color name="image_options_label">@color/wp_grey</color>
 
-    <color name="legacy_format_bar_background">#eeeeee</color>
-    <color name="legacy_format_bar_button_selected">#00aadc</color>
-    <color name="legacy_placeholder_content_text">#21759B</color>
-    <color name="legacy_pressed_wordpress">#CC78C8E6</color>
-
     <color name="sourceview_placeholder_text">@color/wp_grey</color>
     <color name="sourceview_separator">@color/wp_grey_lighten_30</color>
 
