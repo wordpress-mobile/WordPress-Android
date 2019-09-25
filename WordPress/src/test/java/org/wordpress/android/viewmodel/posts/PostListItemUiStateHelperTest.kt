@@ -372,7 +372,7 @@ class PostListItemUiStateHelperTest {
         )
 
         assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
-        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
 
@@ -793,7 +793,7 @@ class PostListItemUiStateHelperTest {
         )
 
         assertThat((state.data.statuses[0] as UiStringRes).stringRes)
-                .isEqualTo(R.string.local_changes)
+                .isEqualTo(R.string.post_waiting_for_connection_draft)
     }
 
     fun `date and author label contains both date and authorDisplayName`() {
