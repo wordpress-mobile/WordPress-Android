@@ -1,4 +1,6 @@
 {
+    "scenarioName": "auth",
+    "requiredScenarioState": "logged-in",
     "request": {
         "method": "GET",
         "urlPath": "/magic-link"

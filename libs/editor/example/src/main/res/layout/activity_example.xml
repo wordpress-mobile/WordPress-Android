@@ -7,8 +7,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Editor - Post 1"
-        android:id="@+id/new_editor_post_1"
+        android:text="Aztec Editor - Post 1"
+        android:id="@+id/aztec_editor_post_1"
         android:layout_alignParentTop="true"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"/>
@@ -16,29 +16,29 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Editor - Empty Post"
-        android:id="@+id/new_editor_post_empty"
+        android:text="Aztec Editor - Empty Post"
+        android:id="@+id/aztec_editor_post_empty"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/new_editor_post_1"/>
+        android:layout_below="@id/aztec_editor_post_1"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Legacy Editor - Post 1 - Local Draft"
-        android:id="@+id/legacy_editor_post_1_local"
+        android:text="Gutenberg Editor - Post 1 - Local Draft"
+        android:id="@+id/gutenberg_editor_post_1_local"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/new_editor_post_empty"/>
+        android:layout_below="@id/aztec_editor_post_empty"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Legacy Editor - Post 1 - Remote"
-        android:id="@+id/legacy_editor_post_1_remote"
+        android:text="Gutenberg Editor - Post 1 - Remote"
+        android:id="@+id/gutenberg_editor_post_1_remote"
         android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/legacy_editor_post_1_local"/>
+        android:layout_below="@id/gutenberg_editor_post_1_local"/>
 
 
 </RelativeLayout>

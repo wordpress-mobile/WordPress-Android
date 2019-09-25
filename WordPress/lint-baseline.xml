@@ -512,57 +512,6 @@
     <issue
         id="ObsoleteSdkInt"
         severity="Error"
-        message="Unnecessary; SDK_INT is never &lt; 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (Build.VERSION.SDK_INT &lt; 17) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/EditorFragment.java"
-            line="571"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is always >= 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/EditorFragment.java"
-            line="913"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is never &lt; 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (Build.VERSION.SDK_INT &lt;= 19) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/EditorWebView.java"
-            line="23"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
         message="Unnecessary; SDK_INT is always >= 21"
         category="Performance"
         priority="6"
@@ -793,22 +742,6 @@
         <location
             file="../WordPress/src/main/java/org/wordpress/android/ui/posts/EditPostSettingsFragment.java"
             line="928"
-            column="19"/>
-    </issue>
-
-    <issue
-        id="StaticFieldLeak"
-        severity="Error"
-        message="This AsyncTask class should be static or leaks might occur (org.wordpress.android.editor.LegacyEditorFragment.AddMediaFileTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
-        errorLine1="    private class AddMediaFileTask extends AsyncTask&lt;Void, Void, WPEditImageSpan> {"
-        errorLine2="                  ~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/LegacyEditorFragment.java"
-            line="1059"
             column="19"/>
     </issue>
 
@@ -1855,22 +1788,6 @@
         summary="Overdraw: Painting regions more than once"
         explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
         errorLine1="    android:background=&quot;@android:color/white&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/res/layout/fragment_edit_post_content.xml"
-            line="6"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        severity="Warning"
-        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        category="Performance"
-        priority="3"
-        summary="Overdraw: Painting regions more than once"
-        explanation="If you set a background drawable on a root view, then you should use a custom theme where the theme background is null. Otherwise, the theme background will be painted first, only to have your custom background completely cover it; this is called &quot;overdraw&quot;.&#xA;&#xA;NOTE: This detector relies on figuring out which layouts are associated with which activities based on scanning the Java code, and it&apos;s currently doing that using an inexact pattern matching algorithm. Therefore, it can incorrectly conclude which activity the layout is associated with and then wrongly complain that a background-theme is hidden.&#xA;&#xA;If you want your custom background on multiple pages, then you should consider making a custom theme with your custom background and just using that theme instead of a root element background.&#xA;&#xA;Of course it&apos;s possible that your custom drawable is translucent and you want it to be mixed with the background. However, you will get better performance if you pre-mix the background with your drawable and use that resulting image or color as a custom theme background instead."
-        errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="../WordPress/src/main/res/layout/gutenberg_warning_dialog.xml"
@@ -2756,29 +2673,6 @@
         explanation="Using `showAsAction=&quot;always&quot;` in menu XML, or `MenuItem.SHOW_AS_ACTION_ALWAYS` in Java code is usually a deviation from the user interface style guide.Use `ifRoom` or the corresponding `MenuItem.SHOW_AS_ACTION_IF_ROOM` instead.&#xA;&#xA;If `always` is used sparingly there are usually no problems and behavior is roughly equivalent to `ifRoom` but with preference over other `ifRoom` items. Using it more than twice in the same menu is a bad idea.&#xA;&#xA;This check looks for menu XML files that contain more than two `always` actions, or some `always` actions and no `ifRoom` actions. In Java code, it looks for projects that contain references to `MenuItem.SHOW_AS_ACTION_ALWAYS` and no references to `MenuItem.SHOW_AS_ACTION_IF_ROOM`."
         url="http://developer.android.com/design/patterns/actionbar.html"
         urls="http://developer.android.com/design/patterns/actionbar.html"
-        errorLine1="        app:showAsAction=&quot;always&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../WordPress/src/main/res/menu/edit_post_legacy.xml"
-            line="7"
-            column="9"/>
-        <location
-            file="../WordPress/src/main/res/menu/edit_post_legacy.xml"
-            line="11"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AlwaysShowAction"
-        severity="Warning"
-        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
-        category="Usability"
-        priority="3"
-        summary="Usage of `showAsAction=always`"
-        explanation="Using `showAsAction=&quot;always&quot;` in menu XML, or `MenuItem.SHOW_AS_ACTION_ALWAYS` in Java code is usually a deviation from the user interface style guide.Use `ifRoom` or the corresponding `MenuItem.SHOW_AS_ACTION_IF_ROOM` instead.&#xA;&#xA;If `always` is used sparingly there are usually no problems and behavior is roughly equivalent to `ifRoom` but with preference over other `ifRoom` items. Using it more than twice in the same menu is a bad idea.&#xA;&#xA;This check looks for menu XML files that contain more than two `always` actions, or some `always` actions and no `ifRoom` actions. In Java code, it looks for projects that contain references to `MenuItem.SHOW_AS_ACTION_ALWAYS` and no references to `MenuItem.SHOW_AS_ACTION_IF_ROOM`."
-        url="http://developer.android.com/design/patterns/actionbar.html"
-        urls="http://developer.android.com/design/patterns/actionbar.html"
         errorLine1="        app:showAsAction=&quot;always&quot; />"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
@@ -2892,86 +2786,6 @@
         <location
             file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/widgets/CustomSwipeRefreshLayout.java"
             line="21"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="ClickableViewAccessibility"
-        severity="Error"
-        message="Custom view ``EditTextWithKeyBackListener`` has `setOnTouchListener` called on it but does not override `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
-        errorLine1="        mSourceViewTitle.setOnTouchListener(this);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/EditorFragment.java"
-            line="359"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ClickableViewAccessibility"
-        severity="Error"
-        message="Custom view ``EditTextWithKeyBackListener`` has `setOnTouchListener` called on it but does not override `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
-        errorLine1="        mSourceViewContent.setOnTouchListener(this);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/EditorFragment.java"
-            line="360"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ClickableViewAccessibility"
-        severity="Error"
-        message="`EditorFragment#onTouch` should call `View#performClick` when a click is detected"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
-        errorLine1="    public boolean onTouch(View view, MotionEvent event) {"
-        errorLine2="                   ~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/EditorFragment.java"
-            line="797"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="ClickableViewAccessibility"
-        severity="Error"
-        message="Custom view ``WPEditText`` has `setOnTouchListener` called on it but does not override `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
-        errorLine1="        mContentEditText.setOnTouchListener(this);"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/LegacyEditorFragment.java"
-            line="218"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ClickableViewAccessibility"
-        severity="Error"
-        message="`LegacyEditorFragment#onTouch` should call `View#performClick` when a click is detected"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
-        errorLine1="    public boolean onTouch(View v, MotionEvent event) {"
-        errorLine2="                   ~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/java/org/wordpress/android/editor/LegacyEditorFragment.java"
-            line="674"
             column="20"/>
     </issue>
 
@@ -3197,38 +3011,6 @@
             file="../WordPress/src/main/res/layout/domain_removal_preference.xml"
             line="15"
             column="9"/>
-    </issue>
-
-    <issue
-        id="RtlSymmetry"
-        severity="Error"
-        message="When you define `paddingLeft` you should probably also define `paddingRight` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
-        errorLine1="            android:paddingLeft=&quot;16dp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/res/layout/fragment_edit_post_content.xml"
-            line="69"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="RtlSymmetry"
-        severity="Error"
-        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        category="Internationalization:Bidirectional Text"
-        priority="6"
-        summary="Padding and margin symmetry"
-        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
-        errorLine1="            android:paddingStart=&quot;16dp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/res/layout/fragment_edit_post_content.xml"
-            line="70"
-            column="13"/>
     </issue>
 
     <issue
@@ -3557,40 +3339,6 @@
         <location
             file="../libs/editor/WordPressEditor/src/main/res/layout/dialog_image_options.xml"
             line="172"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        severity="Error"
-        message="Redundant attribute `paddingLeft`; already defining `paddingStart` with `targetSdkVersion` 26"
-        category="Internationalization:Bidirectional Text"
-        priority="5"
-        summary="Using left/right instead of start/end attributes"
-        explanation="Using `Gravity#LEFT` and `Gravity#RIGHT` can lead to problems when a layout is rendered in locales where text flows from right to left. Use `Gravity#START` and `Gravity#END` instead. Similarly, in XML `gravity` and `layout_gravity` attributes, use `start` rather than `left`.&#xA;&#xA;For XML attributes such as paddingLeft and `layout_marginLeft`, use `paddingStart` and `layout_marginStart`. **NOTE**: If your `minSdkVersion` is less than 17, you should add **both** the older left/right attributes **as well as** the new start/right attributes. On older platforms, where RTL is not supported and the start/right attributes are unknown and therefore ignored, you need the older left/right attributes. There is a separate lint check which catches that type of error.&#xA;&#xA;(Note: For `Gravity#LEFT` and `Gravity#START`, you can use these constants even when targeting older platforms, because the `start` bitmask is a superset of the `left` bitmask. Therefore, you can use `gravity=&quot;start&quot;` rather than `gravity=&quot;left|start&quot;`.)"
-        errorLine1="            android:paddingLeft=&quot;16dp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/res/layout/fragment_edit_post_content.xml"
-            line="69"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        severity="Error"
-        message="Redundant attribute `drawableLeft`; already defining `drawableStart` with `targetSdkVersion` 26"
-        category="Internationalization:Bidirectional Text"
-        priority="5"
-        summary="Using left/right instead of start/end attributes"
-        explanation="Using `Gravity#LEFT` and `Gravity#RIGHT` can lead to problems when a layout is rendered in locales where text flows from right to left. Use `Gravity#START` and `Gravity#END` instead. Similarly, in XML `gravity` and `layout_gravity` attributes, use `start` rather than `left`.&#xA;&#xA;For XML attributes such as paddingLeft and `layout_marginLeft`, use `paddingStart` and `layout_marginStart`. **NOTE**: If your `minSdkVersion` is less than 17, you should add **both** the older left/right attributes **as well as** the new start/right attributes. On older platforms, where RTL is not supported and the start/right attributes are unknown and therefore ignored, you need the older left/right attributes. There is a separate lint check which catches that type of error.&#xA;&#xA;(Note: For `Gravity#LEFT` and `Gravity#START`, you can use these constants even when targeting older platforms, because the `start` bitmask is a superset of the `left` bitmask. Therefore, you can use `gravity=&quot;start&quot;` rather than `gravity=&quot;left|start&quot;`.)"
-        errorLine1="            android:drawableLeft=&quot;@drawable/ic_post_settings&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/editor/WordPressEditor/src/main/res/layout/fragment_edit_post_content.xml"
-            line="72"
             column="13"/>
     </issue>
 

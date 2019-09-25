@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtilsKt;
@@ -157,7 +158,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mDataLoadedListener = dataLoadedListener;
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
-        mTextColorNormal = context.getResources().getColor(R.color.neutral_70);
+        mTextColorNormal = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
         mTextColorHidden = context.getResources().getColor(R.color.neutral_30);
 
         mSelectedItemBackground =

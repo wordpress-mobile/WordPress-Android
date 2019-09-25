@@ -64,11 +64,10 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -268,33 +267,29 @@ public class EditPostSettingsFragment extends Fragment {
 
         final CardView featuredImageCardView = rootView.findViewById(R.id.post_featured_image_card_view);
 
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            OnClickListener showContextMenuListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    view.showContextMenu();
-                }
-            };
+        OnClickListener showContextMenuListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.showContextMenu();
+            }
+        };
 
-            mFeaturedImageView.setOnClickListener(showContextMenuListener);
-            mLocalFeaturedImageView.setOnClickListener(showContextMenuListener);
-            mFeaturedImageRetryOverlay.setOnClickListener(showContextMenuListener);
-            mFeaturedImageProgressOverlay.setOnClickListener(showContextMenuListener);
+        mFeaturedImageView.setOnClickListener(showContextMenuListener);
+        mLocalFeaturedImageView.setOnClickListener(showContextMenuListener);
+        mFeaturedImageRetryOverlay.setOnClickListener(showContextMenuListener);
+        mFeaturedImageProgressOverlay.setOnClickListener(showContextMenuListener);
 
-            registerForContextMenu(mFeaturedImageView);
-            registerForContextMenu(mLocalFeaturedImageView);
-            registerForContextMenu(mFeaturedImageRetryOverlay);
-            registerForContextMenu(mFeaturedImageProgressOverlay);
+        registerForContextMenu(mFeaturedImageView);
+        registerForContextMenu(mLocalFeaturedImageView);
+        registerForContextMenu(mFeaturedImageRetryOverlay);
+        registerForContextMenu(mFeaturedImageProgressOverlay);
 
-            mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    launchFeaturedMediaPicker();
-                }
-            });
-        } else {
-            featuredImageCardView.setVisibility(View.GONE);
-        }
+        mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchFeaturedMediaPicker();
+            }
+        });
 
         mExcerptContainer = rootView.findViewById(R.id.post_excerpt_container);
         mExcerptContainer.setOnClickListener(new View.OnClickListener() {

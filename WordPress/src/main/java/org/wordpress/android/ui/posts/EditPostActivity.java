@@ -17,11 +17,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Editable;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.CharacterStyle;
-import android.text.style.SuggestionSpan;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -51,29 +48,23 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
-import org.wordpress.android.editor.EditorFragment;
-import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentNotAddedException;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
-import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
-import org.wordpress.android.editor.EditorWebViewCompatibility;
-import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
-import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -168,8 +159,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
-import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
-import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
@@ -203,7 +192,6 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorDragAndDropListener,
         EditorFragmentListener,
         MediaToolbarAction.MediaToolbarButtonClickListener,
-        EditorWebViewCompatibility.ReflectionFailureListener,
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
@@ -274,7 +262,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private Handler mHandler;
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
-    private boolean mShowNewEditor;
     private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
 
@@ -400,10 +387,6 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
-    private boolean isModernEditor() {
-        return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
-    }
-
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -481,7 +464,6 @@ public class EditPostActivity extends AppCompatActivity implements
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -1228,12 +1210,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (isModernEditor()) {
-            inflater.inflate(R.menu.edit_post, menu);
-        } else {
-            inflater.inflate(R.menu.edit_post_legacy, menu);
-        }
-
+        inflater.inflate(R.menu.edit_post, menu);
         return true;
     }
 
@@ -1712,10 +1689,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(org.wordpress.android.editor.R.string.dialog_button_ok));
 
         gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
+        AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl());
     }
 
     private void setGutenbergEnabledIfNeeded() {
-        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopup(mSite.getUrl());
+        if (AppPrefs.isGutenbergInfoPopupDisplayed(mSite.getUrl())) {
+            return;
+        }
+
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
 
         if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
@@ -1831,17 +1813,12 @@ public class EditPostActivity extends AppCompatActivity implements
         // Update post object from fragment fields
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
-            if (isModernEditor()) {
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                                (String) mEditorFragment.getContent(mPost.getContent()));
-            } else {
-                // TODO: Remove when legacy editor is dropped
-                postTitleOrContentChanged = updatePostContent(isAutosave);
-            }
+            postTitleOrContentChanged =
+                    updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                            (String) mEditorFragment.getContent(mPost.getContent()));
         }
 
-        // only makes sense to change the publish date and locallychanged date if the Post was actaully changed
+        // only makes sense to change the publish date and locally changed date if the Post was actually changed
         if (postTitleOrContentChanged) {
             PostUtils.updatePublishDateIfShouldBePublishedImmediately(mPost);
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
@@ -2098,7 +2075,6 @@ public class EditPostActivity extends AppCompatActivity implements
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-            UploadService.setLegacyMode(!isModernEditor());
             UploadService.uploadPost(EditPostActivity.this, mPost, mIsFirstTimePublish);
 
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
@@ -2129,10 +2105,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (isModernEditor()) {
-                    // Update the post object directly, without re-fetching the fields from the EditorFragment
-                    updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
-                }
+
+                // Update the post object directly, without re-fetching the fields from the EditorFragment
+                updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
 
                 savePostToDb();
 
@@ -2418,21 +2393,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /**
-     * Disable visual editor mode and log the exception if we get a Reflection failure when the webview is being
-     * initialized.
-     */
-    @Override
-    public void onReflectionFailure(ReflectionException e) {
-        CrashLoggingUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
-        // Disable visual editor and show an error message
-        AppPrefs.setVisualEditorEnabled(false);
-        ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
-        // Restart the activity (will start the legacy editor)
-        finish();
-        startActivity(getIntent());
-    }
-
-    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
@@ -2447,7 +2407,6 @@ public class EditPostActivity extends AppCompatActivity implements
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case PAGE_CONTENT:
-                    // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
@@ -2455,14 +2414,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug);
-                    } else if (mShowAztecEditor) {
-                        return AztecEditorFragment.newInstance("", "",
-                                                               AppPrefs.isAztecEditorToolbarExpanded());
-                    } else if (mShowNewEditor) {
-                        EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
-                        return new EditorFragment();
                     } else {
-                        return new LegacyEditorFragment();
+                        // If gutenberg editor is not selected, default to Aztec.
+                        return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                     }
                 case PAGE_SETTINGS:
                     return EditPostSettingsFragment.newInstance();
@@ -2627,18 +2581,11 @@ public class EditPostActivity extends AppCompatActivity implements
             if ((!TextUtils.isEmpty(mPost.getContent()) || mEditorFragment instanceof GutenbergEditorFragment)
                 && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (mPost.isLocalDraft() && !isModernEditor()) {
-                    // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
-                    // Load local post content in the background, as it may take time to generate images
-                    new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                                                mPost.getContent().replaceAll("\uFFFC", ""));
-                } else {
-                    // TODO: Might be able to drop .replaceAll() when legacy editor is removed
-                    String content = mPost.getContent().replaceAll("\uFFFC", "");
-                    // Prepare eventual legacy editor local draft for the new editor
-                    content = migrateLegacyDraft(content);
-                    mEditorFragment.setContent(content);
-                }
+                // TODO: Might be able to drop .replaceAll() when legacy editor is removed
+                String content = mPost.getContent().replaceAll("\uFFFC", "");
+                // Prepare eventual legacy editor local draft for the new editor
+                content = migrateLegacyDraft(content);
+                mEditorFragment.setContent(content);
             }
             if (!TextUtils.isEmpty(mPost.getTitle())) {
                 mEditorFragment.setTitle(mPost.getTitle());
@@ -2648,8 +2595,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
-            mEditorFragment.setLocalDraft(mPost.isLocalDraft());
-
             mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
         }
 
@@ -2687,12 +2632,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            if (mEditorFragment instanceof LegacyEditorFragment) {
-                mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, mPost,
-                                                           getMaximumThumbnailWidthForEditor()));
-            } else {
-                mEditorFragment.setContent(text);
-            }
+            mEditorFragment.setContent(text);
 
             // update PostModel
             mPost.setContent(text);
@@ -2733,105 +2673,6 @@ public class EditPostActivity extends AppCompatActivity implements
             addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
         }
         savePostAsync(null);
-    }
-
-    // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
-
-    /**
-     * Updates post object with content of this fragment
-     */
-    public boolean updatePostContent(boolean isAutoSave) throws EditorFragmentNotAddedException {
-        if (mPost == null) {
-            return false;
-        }
-        String title = StringUtils.notNullStr((String) mEditorFragment.getTitle());
-        SpannableStringBuilder postContent;
-        if (mEditorFragment.getSpannedContent() != null) {
-            // needed by the legacy editor to save local drafts
-            try {
-                postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
-            } catch (RuntimeException e) {
-                // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
-                // See https://code.google.com/p/android/issues/detail?id=5164
-                postContent = new SpannableStringBuilder(
-                        StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
-            }
-        } else {
-            postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent(null)));
-        }
-
-        String content;
-        if (mPost.isLocalDraft()) {
-            // remove suggestion spans, they cause craziness in WPHtml.toHTML().
-            CharacterStyle[] characterStyles = postContent.getSpans(0, postContent.length(), CharacterStyle.class);
-            for (CharacterStyle characterStyle : characterStyles) {
-                if (characterStyle instanceof SuggestionSpan) {
-                    postContent.removeSpan(characterStyle);
-                }
-            }
-            content = WPHtml.toHtml(postContent);
-            // replace duplicate <p> tags so there's not duplicates, trac #86
-            content = content.replace("<p><p>", "<p>");
-            content = content.replace("</p></p>", "</p>");
-            content = content.replace("<br><br>", "<br>");
-            // sometimes the editor creates extra tags
-            content = content.replace("</strong><strong>", "").replace("</em><em>", "").replace("</u><u>", "")
-                             .replace("</strike><strike>", "").replace("</blockquote><blockquote>", "");
-        } else {
-            if (!isAutoSave) {
-                // Add gallery shortcode
-                MediaGalleryImageSpan[] gallerySpans = postContent.getSpans(0, postContent.length(),
-                                                                            MediaGalleryImageSpan.class);
-                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                    int start = postContent.getSpanStart(gallerySpan);
-                    postContent.removeSpan(gallerySpan);
-                    postContent.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
-                }
-            }
-
-            WPImageSpan[] imageSpans = postContent.getSpans(0, postContent.length(), WPImageSpan.class);
-            if (imageSpans.length != 0) {
-                for (WPImageSpan wpIS : imageSpans) {
-                    MediaFile mediaFile = wpIS.getMediaFile();
-                    if (mediaFile == null) {
-                        continue;
-                    }
-
-                    if (mediaFile.getMediaId() != null) {
-                        updateMediaFileOnServer(mediaFile);
-                    } else {
-                        mediaFile.setFileName(wpIS.getImageSource().toString());
-                        mediaFile.setFilePath(wpIS.getImageSource().toString());
-                    }
-
-                    int tagStart = postContent.getSpanStart(wpIS);
-                    if (!isAutoSave) {
-                        postContent.removeSpan(wpIS);
-
-                        // network image has a mediaId
-                        if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
-                            postContent.insert(tagStart, WPHtml.getContent(wpIS));
-                        } else {
-                            // local image for upload
-                            postContent.insert(tagStart,
-                                               "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
-                        }
-                    }
-                }
-            }
-            content = postContent.toString();
-        }
-
-        boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
-        boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
-        boolean statusChanged = mPostSnapshotWhenEditorOpened != null
-                                && mPost.getStatus() != mPostSnapshotWhenEditorOpened.getStatus();
-
-        if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
-            mPost.setIsLocallyChanged(true);
-        }
-
-        return titleChanged || contentChanged;
     }
 
     /**
@@ -3071,23 +2912,13 @@ public class EditPostActivity extends AppCompatActivity implements
             Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo);
             if (optimizedMedia != null) {
                 mediaUri = optimizedMedia;
-            } else if (isModernEditor()) {
+            } else {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!mSite.isWPCom()) {
                     // If it's not wpcom we must rotate the picture locally
                     Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
                     if (rotatedMedia != null) {
                         mediaUri = rotatedMedia;
-                    }
-                } else {
-                    // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
-                    // All the other editors read EXIF data
-                    if (mShowNewEditor) {
-                        Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
-                        if (rotatedMedia != null) {
-                            // The uri variable should remain the same since wpcom rotates the picture server side
-                            path = MediaUtils.getRealPathFromURI(activity, rotatedMedia);
-                        }
                     }
                 }
             }
@@ -3106,11 +2937,7 @@ public class EditPostActivity extends AppCompatActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (isModernEditor()) {
-                        addMediaVisualEditor(mediaUri, path);
-                    } else {
-                        addMediaLegacyEditor(mediaUri, isVideo);
-                    }
+                    addMediaVisualEditor(mediaUri, path);
                 }
             });
         }
@@ -3275,9 +3102,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
                         }
 
-                        if (isModernEditor()) {
-                            startUploadService(mediaModels);
-                        }
+                        startUploadService(mediaModels);
 
                         for (MediaModel mediaModel : mediaModels) {
                             mediaModel.setLocalPostId(mPost.getId());
@@ -3604,11 +3429,6 @@ public class EditPostActivity extends AppCompatActivity implements
      */
 
     @Override
-    public void onSettingsClicked() {
-        mViewPager.setCurrentItem(PAGE_SETTINGS);
-    }
-
-    @Override
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
@@ -3858,12 +3678,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFeaturedImageChanged(long mediaId) {
-        mPost.setFeaturedImageId(mediaId);
-        mEditPostSettingsFragment.updateFeaturedImage(mediaId);
-    }
-
-    @Override
     public void onVideoPressInfoRequested(final String videoId) {
         String videoUrl = mMediaStore.
                                              getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
@@ -3946,25 +3760,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void onEditorFinalTouchesBeforeShowing() {
         refreshEditorContent();
-        // Set the error listener
-        if (mEditorFragment instanceof EditorFragment) {
-            mEditorFragment.setDebugModeEnabled(BuildConfig.DEBUG);
-            ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
-                @Override
-                public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
-                    CrashLoggingUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                                                  T.EDITOR,
-                                                  String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber,
-                                                                message));
-                }
-
-                @Override
-                public void onJavaScriptAlert(String url, String message) {
-                    // no op
-                }
-            });
-        }
-
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
             List<MediaModel> failedMedia = mMediaStore.getMediaForPostWithState(mPost, MediaUploadState.FAILED);
@@ -3986,10 +3781,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
-    }
-
-    @Override
-    public void saveMediaFile(MediaFile mediaFile) {
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.wordpress.android.support;
 
 import android.app.Activity;
+import android.view.InputDevice;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -8,7 +10,12 @@ import android.view.ViewParent;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.GeneralClickAction;
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Tap;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -25,13 +32,13 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -73,38 +80,72 @@ public class WPSupportUtils {
     public static void scrollToThenClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
         onView(withId(elementID))
-                .perform(scrollTo())
-                .perform(click());
+                .perform(scrollTo());
+        clickOn(elementID);
     }
 
     public static void scrollToThenClickOn(ViewInteraction element) {
         waitForElementToBeDisplayed(element);
-        element.perform(scrollTo())
-                .perform(click());
+        element.perform(scrollTo());
+        clickOn(element);
     }
 
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
         clickOn(onView(withId(elementID)));
+        idleFor(500); // allow for transitions
     }
 
     public static void clickOn(ViewInteraction viewInteraction) {
         waitForElementToBeDisplayed(viewInteraction);
-        viewInteraction.perform(click());
-        idleFor(500);   // allow for transitions
+        idleFor(2000); // allow for transitions
+        viewInteraction.perform(click(closeSoftKeyboard())); // attempt to close the soft keyboard as the rollback
+        idleFor(500); // allow for transitions
     }
 
     /**
-     * Uses UIAutomator to click on an element using the resource ID in the cases of flakiness in Espresso click
-     * performing a long click
-     * @param resourceID - String resource ID
+     * Returns an action that performs a single click on the view.
+     *
+     * If the click takes longer than the 'long press' duration
+     * (which is possible because of
+     * https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/espresso/core/src/main/
+     * java/android/support/test/espresso/action/GeneralClickAction.java#75)
+     * the provided rollback action is invoked on the view and a click is attempted again.
+     *
+     * In our case it triggers a toast so the rollback action will be
+     *
      */
-    public static void clickOn(String resourceID) {
+    public static ViewAction click(ViewAction rollbackAction) {
+        checkNotNull(rollbackAction);
+        return new GeneralClickAction(Tap.SINGLE,
+                GeneralLocation.CENTER,
+                Press.PINPOINT,
+                InputDevice.SOURCE_MOUSE,
+                MotionEvent.ACTION_DOWN,
+                rollbackAction);
+    }
+
+
+
+    private static boolean isResourceId(String text) {
+        return text.startsWith("id");
+    }
+
+    /**
+     * Uses UIAutomator to click on an element using either the resource ID or text in
+     * the cases of flakiness in Espresso click performing a long click
+     * @param locator - String resource ID(preceded with 'id/') or text
+     */
+    public static void clickOn(String locator) {
         try {
-            UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
-                    "org.wordpress.android:id/" + resourceID)).click();
+            if (isResourceId(locator)) {
+                UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().resourceId(
+                        "org.wordpress.android:" + locator)).click();
+            } else {
+                UiDevice.getInstance(getInstrumentation()).findObject(new UiSelector().text(locator)).click();
+            }
         } catch (UiObjectNotFoundException e) {
-            System.out.println("Could not find button with Resource ID:" + resourceID + " to click");
+            System.out.println("Could not find button with Resource ID:" + locator + " to click");
         }
     }
 
@@ -126,7 +167,7 @@ public class WPSupportUtils {
                 )
         );
         waitForElementToBeDisplayed(childElement);
-        childElement.perform(click());
+        clickOn(childElement);
     }
 
     public static void clickOnSpinnerItemAtIndex(int index) {
@@ -137,7 +178,7 @@ public class WPSupportUtils {
                 )
         );
         waitForElementToBeDisplayed(spinnerItem);
-        spinnerItem.perform(click());
+        clickOn(spinnerItem);
     }
 
     public static void populateTextField(Integer elementID, String text) {
@@ -165,7 +206,7 @@ public class WPSupportUtils {
                         childAtPosition(withClassName(is("android.widget.RelativeLayout")), 0)
                      )
                                           );
-        postTitle.perform(scrollTo(), click());
+        scrollToThenClickOn(postTitle);
         moveCaretToEndAndDisplayIn(postTitle);
     }
 
@@ -214,12 +255,12 @@ public class WPSupportUtils {
     }
 
     public static void selectItemWithTitleInTabLayout(String string, Integer elementID) {
-        onView(
+        clickOn(onView(
                 allOf(
                         withText(string),
                         isDescendantOfA(withId(R.id.tabLayout))
                      )
-              ).perform(click());
+              ));
     }
 
     // WAITERS

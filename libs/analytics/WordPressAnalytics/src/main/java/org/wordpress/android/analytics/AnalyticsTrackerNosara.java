@@ -444,6 +444,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 predefinedEventProperties.put("source", "opening_reader_post");
                 break;
+            case QUICK_ACTION_STATS_TAPPED:
+                predefinedEventProperties.put("button", "stats");
+                break;
+            case QUICK_ACTION_PAGES_TAPPED:
+                predefinedEventProperties.put("button", "pages");
+                break;
+            case QUICK_ACTION_POSTS_TAPPED:
+                predefinedEventProperties.put("button", "posts");
+                break;
+            case QUICK_ACTION_MEDIA_TAPPED:
+                predefinedEventProperties.put("button", "media");
+                break;
         }
 
         final String user;
@@ -934,6 +946,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_ACCOUNT_SETTINGS:
                 return "account_settings_opened";
+            case ACCOUNT_SETTINGS_CHANGE_USERNAME_SUCCEEDED:
+                return "account_settings_change_username_succeeded";
+            case ACCOUNT_SETTINGS_CHANGE_USERNAME_FAILED:
+                return "account_settings_change_username_failed";
+            case ACCOUNT_SETTINGS_CHANGE_USERNAME_SUGGESTIONS_FAILED:
+                return "account_settings_change_username_suggestions_failed";
             case OPENED_APP_SETTINGS:
                 return "app_settings_opened";
             case OPENED_MY_PROFILE:
@@ -1659,6 +1677,15 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_redemption_tapped";
             case DOMAIN_CREDIT_REDEMPTION_SUCCESS:
                 return "domain_credit_redemption_success";
+            case DOMAIN_CREDIT_SUGGESTION_QUERIED:
+                return "domain_credit_suggestion_queried";
+            case DOMAIN_CREDIT_NAME_SELECTED:
+                return "domain_credit_name_selected";
+            case QUICK_ACTION_STATS_TAPPED:
+            case QUICK_ACTION_PAGES_TAPPED:
+            case QUICK_ACTION_POSTS_TAPPED:
+            case QUICK_ACTION_MEDIA_TAPPED:
+                return "quick_action_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
                 return "auto_upload_post_invoked";
             case UNPUBLISHED_REVISION_DIALOG_SHOWN:

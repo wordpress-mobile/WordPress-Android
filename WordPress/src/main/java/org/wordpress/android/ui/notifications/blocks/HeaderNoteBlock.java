@@ -59,6 +59,10 @@ public class HeaderNoteBlock extends NoteBlock {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
 
         Spannable spannable = mNotificationsUtilsWrapper.getSpannableContentForRanges(mHeadersList.get(0));
+        NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
+        for (NoteBlockClickableSpan span : spans) {
+            span.enableColors(view.getContext());
+        }
         noteBlockHolder.mNameTextView.setText(spannable);
         if (mImageType == ImageType.AVATAR_WITH_BACKGROUND) {
             mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());

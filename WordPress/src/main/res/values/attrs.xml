@@ -3,6 +3,11 @@
 
     <attr name="longClickHint" format="string" />
 
+    <!-- Semantic colors -->
+    <attr name="wpColorText" format="reference|color" />
+    <attr name="wpColorTextSubtle" format="reference|color" />
+    <attr name="wpColorError" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />
@@ -10,6 +15,11 @@
         <attr name="longClickHint" />
         <attr name="dialogMessage" format="string" />
         <attr name="iconTint" format="color" />
+        <attr name="switchThumbTint" format="integer" />
+        <attr name="switchTrackTint" format="integer" />
+        <attr name="preferenceTextColor" format="color" />
+        <attr name="backgroundColorChecked" format="color" />
+        <attr name="backgroundColorUnchecked" format="color" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->

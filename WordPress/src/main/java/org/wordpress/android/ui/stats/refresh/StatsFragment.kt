@@ -55,12 +55,13 @@ class StatsFragment : DaggerFragment() {
 
         val nonNullActivity = checkNotNull(activity)
 
-        initializeViewModels(nonNullActivity, savedInstanceState == null)
+        initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
         initializeViews(nonNullActivity)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(WordPress.LOCAL_SITE_ID, activity?.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0)
+        viewModel.onSaveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 
@@ -75,8 +76,14 @@ class StatsFragment : DaggerFragment() {
         }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
+    private fun initializeViewModels(
+        activity: FragmentActivity,
+        isFirstStart: Boolean,
+        savedInstanceState: Bundle?
+    ) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewModel::class.java)
+
+        viewModel.onRestoreInstanceState(savedInstanceState)
 
         setupObservers(activity)
 

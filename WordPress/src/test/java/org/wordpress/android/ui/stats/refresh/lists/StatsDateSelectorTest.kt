@@ -16,7 +16,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 class StatsDateSelectorTest : BaseUnitTest() {
@@ -32,13 +31,13 @@ class StatsDateSelectorTest : BaseUnitTest() {
     private val siteTimeZone = "GMT"
     private val site = SiteModel()
 
-    private val dateProviderSelectedDate = MutableLiveData<Event<SectionChange>>()
+    private val dateProviderSelectedDate = MutableLiveData<SectionChange>()
 
     private lateinit var dateSelector: StatsDateSelector
 
     @Before
     fun setUp() {
-        dateProviderSelectedDate.value = Event(SectionChange(statsSection))
+        dateProviderSelectedDate.value = SectionChange(statsSection)
         whenever(selectedDateProvider.granularSelectedDateChanged(statsSection)).thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(

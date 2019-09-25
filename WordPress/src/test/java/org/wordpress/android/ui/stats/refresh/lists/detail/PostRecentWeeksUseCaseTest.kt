@@ -6,12 +6,14 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel.Day
@@ -57,10 +59,12 @@ class PostRecentWeeksUseCaseTest : BaseUnitTest() {
     val firstDay = Day("2019-03-18", 50)
     val lastDay = Day("2019-03-24", 100)
     private val week = Week(listOf(firstDay, lastDay), 75, 150)
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         useCase = PostRecentWeeksUseCase(
                 Dispatchers.Unconfined,
+                TEST_DISPATCHER,
                 statsSiteProvider,
                 statsPostProvider,
                 store,

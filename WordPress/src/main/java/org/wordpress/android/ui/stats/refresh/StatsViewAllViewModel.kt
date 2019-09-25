@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.map
@@ -58,8 +59,11 @@ class StatsViewAllViewModel(
 
     val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
 
-    fun start() {
+    fun start(startDate: SelectedDate?) {
         launch {
+            startDate?.let {
+                dateSelector.start(startDate)
+            }
             loadData(refresh = false, forced = false)
             dateSelector.updateDateSelector()
         }
@@ -121,5 +125,9 @@ class StatsViewAllViewModel(
         loadData {
             loadData(refresh = true, forced = true)
         }
+    }
+
+    fun getSelectedDate(): SelectedDate {
+        return dateSelector.getSelectedDate()
     }
 }
