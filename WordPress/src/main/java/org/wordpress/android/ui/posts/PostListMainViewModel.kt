@@ -45,6 +45,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -74,6 +75,7 @@ class PostListMainViewModel @Inject constructor(
     private val prefs: AppPrefsWrapper,
     private val postListEventListenerFactory: PostListEventListener.Factory,
     private val previewStateHelper: PreviewStateHelper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -145,7 +147,8 @@ class PostListMainViewModel @Inject constructor(
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
                 showDialog = { _dialogAction.postValue(it) },
-                checkNetworkConnection = this::checkNetworkConnection
+                checkNetworkConnection = this::checkNetworkConnection,
+                analyticsTracker = analyticsTracker
         )
     }
 
