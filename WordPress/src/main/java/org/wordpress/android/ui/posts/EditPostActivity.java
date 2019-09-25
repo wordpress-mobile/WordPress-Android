@@ -2820,7 +2820,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mediaMap.put(path, mediaFile);
                 }
                 mFinishedUploads++;
-                if (mUriList.size() != mFinishedUploads) {
+                if (mUriList.size() == mFinishedUploads) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
