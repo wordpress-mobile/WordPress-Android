@@ -2832,7 +2832,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                            addMediaVisualEditor(mediaUri, path);
+                        addMediaVisualEditor(mediaUri, path);
                     }
                 });
             }
