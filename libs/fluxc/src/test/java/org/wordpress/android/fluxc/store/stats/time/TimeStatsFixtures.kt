@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.stats.DATE
 import org.wordpress.android.fluxc.store.stats.POST_COUNT
 
 const val DAY_GRANULARITY = "day"
+const val TYPE = "post"
 const val TOTAL_VIEWS = 100
 const val POST_ID = 1L
 const val POST_TITLE = "ABCD"
@@ -41,7 +42,7 @@ const val POST_VIEWS = 10
 val DAY_POST_VIEW_RESPONSE = PostViewsResponse(
         POST_ID,
         POST_TITLE,
-        DAY_GRANULARITY,
+        TYPE,
         POST_URL,
         POST_VIEWS
 )
