@@ -71,6 +71,9 @@ class UploadActionUseCase @Inject constructor(
             post.isLocalDraft ->
                 // Local draft can always be uploaded as DRAFT as it doesn't exist on the server yet
                 UPLOAD_AS_DRAFT
+            !post.isLocallyChanged ->
+                // the post isn't local draft and isn't locally changed -> there is nothing new to upload
+                DO_NOTHING
             else -> REMOTE_AUTO_SAVE
         }
     }
