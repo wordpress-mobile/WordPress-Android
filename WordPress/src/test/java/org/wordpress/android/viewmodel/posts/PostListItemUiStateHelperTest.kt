@@ -457,9 +457,9 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `label has error color on auto-save conflict`() {
+    fun `label has state info color on auto-save conflict`() {
         val state = createPostListItemUiState(hasAutoSave = true)
-        assertThat(state.data.statusesColor).isEqualTo(ERROR_COLOR)
+        assertThat(state.data.statusesColor).isEqualTo(STATE_INFO_COLOR)
     }
 
     @Test
