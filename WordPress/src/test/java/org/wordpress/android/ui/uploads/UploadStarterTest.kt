@@ -501,6 +501,7 @@ class UploadStarterTest {
             id = Random.nextInt()
             title = UUID.randomUUID().toString()
             status = postStatus.toString()
+            setIsLocallyChanged(true)
             dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
         }
 

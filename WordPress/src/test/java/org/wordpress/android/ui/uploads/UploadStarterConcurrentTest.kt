@@ -95,6 +95,7 @@ class UploadStarterConcurrentTest {
 
         fun createDraftPostModel() = PostModel().apply {
             status = PostStatus.DRAFT.toString()
+            setIsLocallyChanged(true)
             dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
         }
 
