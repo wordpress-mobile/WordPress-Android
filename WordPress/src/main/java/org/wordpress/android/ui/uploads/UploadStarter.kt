@@ -155,12 +155,15 @@ class UploadStarter @Inject constructor(
                             false
                         } else {
                             trackAutoUploadAction(action, it.status)
+                            AppLog.d(
+                                    AppLog.T.POSTS,
+                                    "UploadStarter for post title: ${it.title}, action: $action"
+                            )
                             true
                         }
                     }
                     .toList()
                     .forEach { post ->
-                        AppLog.d(AppLog.T.POSTS, "UploadStarter for post title: ${post.title}")
                         dispatcher.dispatch(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(post))
                         uploadServiceFacade.uploadPost(
                                 context = context,
