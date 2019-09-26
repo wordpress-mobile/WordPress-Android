@@ -12,7 +12,5 @@ class ContextProvider
         this.context = LocaleManager.setLocale(this.context)
     }
 
-    fun getContext(): Context {
-        return context
-    }
+    fun getContext(): Context = context
 }
