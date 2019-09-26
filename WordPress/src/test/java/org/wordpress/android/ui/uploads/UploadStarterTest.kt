@@ -62,24 +62,24 @@ class UploadStarterTest {
     private val sites = listOf(createSiteModel(), createSiteModel())
     private val sitesAndDraftPosts: Map<SiteModel, List<PostModel>> = mapOf(
             sites[0] to listOf(
-                    createDraftPostModel(DRAFT),
-                    createDraftPostModel(PUBLISHED),
-                    createDraftPostModel(SCHEDULED),
-                    createDraftPostModel(SCHEDULED),
-                    createDraftPostModel(PENDING),
-                    createDraftPostModel(PRIVATE),
-                    createDraftPostModel(PUBLISHED),
-                    createDraftPostModel(UNKNOWN)
+                    createLocallyChangedPostModel(DRAFT),
+                    createLocallyChangedPostModel(PUBLISHED),
+                    createLocallyChangedPostModel(SCHEDULED),
+                    createLocallyChangedPostModel(SCHEDULED),
+                    createLocallyChangedPostModel(PENDING),
+                    createLocallyChangedPostModel(PRIVATE),
+                    createLocallyChangedPostModel(PUBLISHED),
+                    createLocallyChangedPostModel(UNKNOWN)
             ),
             sites[1] to listOf(
-                    createDraftPostModel(DRAFT),
-                    createDraftPostModel(DRAFT),
-                    createDraftPostModel(PUBLISHED),
-                    createDraftPostModel(SCHEDULED),
-                    createDraftPostModel(PENDING),
-                    createDraftPostModel(PRIVATE),
-                    createDraftPostModel(PRIVATE),
-                    createDraftPostModel(UNKNOWN)
+                    createLocallyChangedPostModel(DRAFT),
+                    createLocallyChangedPostModel(DRAFT),
+                    createLocallyChangedPostModel(PUBLISHED),
+                    createLocallyChangedPostModel(SCHEDULED),
+                    createLocallyChangedPostModel(PENDING),
+                    createLocallyChangedPostModel(PRIVATE),
+                    createLocallyChangedPostModel(PRIVATE),
+                    createLocallyChangedPostModel(UNKNOWN)
             )
     )
     private val draftPosts = sitesAndDraftPosts.values.flatten()
@@ -285,7 +285,7 @@ class UploadStarterTest {
     fun `Do not invoke remote-auto-save on self-hosted sites`() = test {
         // Given
         val siteModel = createSiteModel(isWpCom = false)
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         // When
@@ -303,7 +303,7 @@ class UploadStarterTest {
     fun `Invoke remote-auto-save on wp-com sites`() = test {
         // Given
         val siteModel = createSiteModel(isWpCom = true)
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         // When
@@ -321,7 +321,7 @@ class UploadStarterTest {
     fun `Do not invoke remote auto save on posts older than 2 days`() = test {
         // Given
         val siteModel = createSiteModel()
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         val twoDaysInSeconds = 60 * 60 * 24 * 2
@@ -343,7 +343,7 @@ class UploadStarterTest {
     fun `Invoke remote auto save on a post changed 1,99days ago`() = test {
         // Given
         val siteModel = createSiteModel()
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         val twoDaysInSeconds = 60 * 60 * 24 * 2
@@ -365,7 +365,7 @@ class UploadStarterTest {
     fun `Do not auto-upload a post which is in conflict with remote`() = test {
         // Given
         val siteModel = createSiteModel()
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         val postUtilsWrapper = createMockedPostUtilsWrapper()
@@ -386,7 +386,7 @@ class UploadStarterTest {
     fun `Do not auto-upload a post which is being uploaded or pending upload`() = test {
         // Given
         val siteModel = createSiteModel()
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         whenever(uploadServiceFacade.isPostUploadingOrQueued(any())).thenReturn(true)
@@ -406,7 +406,7 @@ class UploadStarterTest {
     fun `Do not remote-auto-save a post which has already been remote-auto=saved`() = test {
         // Given
         val siteModel = createSiteModel()
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
 
         // Set autosaveModified to a newer date than dateLocallyChanged to indicate the changes were remotely-auto-saved
@@ -429,7 +429,7 @@ class UploadStarterTest {
     fun `verify number of auto upload attempts count is incremented when upload invoked`() = test {
         // Given
         val siteModel = createSiteModel()
-        val postModel = createDraftPostModel()
+        val postModel = createLocallyChangedPostModel()
         defaultSetup(siteModel, postModel)
         val dispatcher: Dispatcher = mock()
 
@@ -497,7 +497,7 @@ class UploadStarterTest {
             on { this.lifecycle } doReturn lifecycle
         }
 
-        fun createDraftPostModel(postStatus: PostStatus = DRAFT) = PostModel().apply {
+        fun createLocallyChangedPostModel(postStatus: PostStatus = DRAFT) = PostModel().apply {
             id = Random.nextInt()
             title = UUID.randomUUID().toString()
             status = postStatus.toString()
