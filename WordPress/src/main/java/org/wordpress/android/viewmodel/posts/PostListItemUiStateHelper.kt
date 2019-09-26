@@ -238,7 +238,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
-            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_conflict))
+            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
 
         // we want to show either single error/progress label or 0-n info labels.

@@ -495,7 +495,7 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `unhandled auto-save label shown for posts with existing auto-save`() {
         val state = createPostListItemUiState(hasAutoSave = true)
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_post_autosave_conflict))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_post_autosave_revision_available))
     }
 
     @Test

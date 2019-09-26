@@ -1428,7 +1428,7 @@
 
     <!-- Remote Post has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
-    <string name="local_post_autosave_conflict">Unhandled Auto Save</string>
+    <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving&#8230;</string>
