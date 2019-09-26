@@ -238,7 +238,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
-            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_conflict))
+            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
 
         // we want to show either single error/progress label or 0-n info labels.
@@ -309,12 +309,12 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         hasAutoSave: Boolean
     ): Int? {
         val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
-                hasUnhandledConflicts || hasAutoSave
+                hasUnhandledConflicts
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
         val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
                 isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
-                uploadUiState is UploadWaitingForConnection
+                uploadUiState is UploadWaitingForConnection || hasAutoSave
 
         return when {
             isError -> ERROR_COLOR
