@@ -31,9 +31,9 @@ wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key
 
-# Uncomment this and update the path to use a local copy of WordPressMocks
-# Note the path should be relative to the project root
-# wp.wordpress_mocks_path = ../WordPressMocks/WordPressMocks
+# Uncomment and edit the line below to use a local copy of WordPressMocks
+# You should specify a relative path to the root of your WordPressMocks repo
+# wp.wordpress_mocks_path = ../WordPressMocks
 
 # Optional: Needed for the end to end tests
 wp.e2e.wp_com_user.email=e2eflowtestingmobile@example.com
