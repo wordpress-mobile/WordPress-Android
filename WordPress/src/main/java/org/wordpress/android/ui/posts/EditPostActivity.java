@@ -1392,20 +1392,40 @@ public class EditPostActivity extends AppCompatActivity implements
                     });
                 }
             } else if (itemId == R.id.menu_switch_to_aztec) {
-                // let's finish this editing instance and start again, but not letting Gutenberg be used
-                mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
-                mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                savePostAndOptionallyFinish(true);
+                // The following boolean check should be always redundant but was added to manage
+                // an odd behaviour recorded with Android 8.0.0
+                // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
+                if (mShowGutenbergEditor) {
+                    // let's finish this editing instance and start again, but not letting Gutenberg be used
+                    mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+                    mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                    savePostAndOptionallyFinish(true);
+                } else {
+                    logWrongMenuState("Wrong state in menu_switch_to_aztec: menu should not be visible.");
+                }
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
-                // let's finish this editing instance and start again, but let GB be used
-                mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
-                mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                savePostAndOptionallyFinish(true);
+                // The following boolean check should be always redundant but was added to manage
+                // an odd behaviour recorded with Android 8.0.0
+                // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
+                if (shouldSwitchToGutenbergBeVisible(mPost, mEditorFragment, mSite)) {
+                    // let's finish this editing instance and start again, but let GB be used
+                    mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
+                    mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                    savePostAndOptionallyFinish(true);
+                } else {
+                    logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.");
+                }
             }
         }
         return false;
+    }
+
+    private void logWrongMenuState(String logMsg) {
+        AppLog.w(T.EDITOR, logMsg);
+        // Lets record this event in Sentry
+        CrashLoggingUtils.logException(new IllegalStateException(logMsg), T.EDITOR);
     }
 
     private void showEmptyPostErrorForSecondaryAction() {
