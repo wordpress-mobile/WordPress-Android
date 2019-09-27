@@ -192,11 +192,15 @@ class PostUploadNotifier {
     }
 
     void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
+        incrementUploadedPostCountFromForegroundNotification(post, false);
+    }
+
+    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post, boolean force) {
         // first we need to check that we only count this post once as "ended" (either successfully or with error)
         // for every error we get. We'll then try to increment the Post count as it's been cancelled/failed because the
         // related media was cancelled or has failed too (i.e. we can't upload a Post with failed media, therefore
         // it needs to be cancelled).
-        if (isPostAlreadyInPostCount(post)) {
+        if (!force && isPostAlreadyInPostCount(post)) {
             return;
         } else {
             addPostToPostCount(post);

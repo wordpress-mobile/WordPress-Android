@@ -187,7 +187,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         uploadNextPost();
     }
 
-    private class UploadPostTask extends AsyncTask<PostModel, Boolean, Boolean> {
+    private enum UploadPostTaskResult {
+        PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD
+    }
+
+    private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
         private Context mContext;
 
         private PostModel mPost;
@@ -201,25 +205,35 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         private boolean mHasImage, mHasVideo, mHasCategory;
 
         @Override
-        protected void onPostExecute(Boolean pushActionWasDispatched) {
-            if (!pushActionWasDispatched) {
-                // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
-                // will be handled in OnPostChanged instead of here
-                mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
-                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
-                finishUpload();
+        protected void onPostExecute(UploadPostTaskResult result) {
+            switch (result) {
+                case ERROR:
+                    mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
+                    mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
+                    finishUpload();
+                    break;
+                case NOTHING_TO_UPLOAD:
+                    // we need to force increment the uploaded count as we know the post was enqueued twice. If we
+                    // didn't force incremented it, the `PostUploadNotifier.isPostAlreadyInPostCount()` would return
+                    // true and we'd end up with a dangling upload notification.
+                    mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost, true);
+                    finishUpload();
+                    break;
+                case PUSH_POST_DISPATCHED:
+                    // will be handled in OnPostChanged
+                    break;
             }
         }
 
         @Override
-        protected Boolean doInBackground(PostModel... posts) {
+        protected UploadPostTaskResult doInBackground(PostModel... posts) {
             mContext = WordPress.getContext();
             mPost = posts[0];
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
                 mErrorMessage = mContext.getString(R.string.blog_not_found);
-                return false;
+                return UploadPostTaskResult.ERROR;
             }
 
             if (TextUtils.isEmpty(mPost.getStatus())) {
@@ -239,7 +253,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
-                return false;
+                return UploadPostTaskResult.ERROR;
             }
 
             if (mPost.getCategoryIdList().size() > 0) {
@@ -257,27 +271,29 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:
-                    AppLog.d(T.POSTS,
-                            "Invoking newPushPostAction. Post: " + mPost.getTitle() + " status: " + mPost.getStatus());
+                    AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
                     break;
                 case UPLOAD_AS_DRAFT:
                     mPost.setStatus(PostStatus.DRAFT.toString());
-                    AppLog.d(T.POSTS,
-                            "Invoking newPushPostAction - local draft. Post: " + mPost.getTitle() + " status: " + mPost
-                                    .getStatus());
+                    AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD_AS_DRAFT. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
                     break;
                 case REMOTE_AUTO_SAVE:
-                    AppLog.d(T.POSTS,
-                            "Invoking newRemoteAutoSavePostAction. Post: " + mPost.getTitle() + " status: " + mPost
-                                    .getStatus());
+                    AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
                     break;
                 case DO_NOTHING:
-                    throw new RuntimeException("UploadService started but getPostUploadAction() returned DO_NOTHING.");
+                    AppLog.d(T.POSTS, "PostUploadHandler - DO_NOTHING. Post: " + mPost.getTitle());
+                    // A single post might be enqueued twice for upload. It might cause some side-effects when the
+                    // post is a local draft.
+                    // The first upload request pushes the post to the server and sets `isLocalDraft` to `false`.
+                    // The second request would have invoked `Remote_auto_save` on a post which didn't contain any local
+                    // changes - they were uploaded during the first upload request.
+                    // This branch takes care of this situations and simply ignores the second request.
+                    return UploadPostTaskResult.NOTHING_TO_UPLOAD;
             }
-            return true;
+            return UploadPostTaskResult.PUSH_POST_DISPATCHED;
         }
 
         private boolean hasGallery() {

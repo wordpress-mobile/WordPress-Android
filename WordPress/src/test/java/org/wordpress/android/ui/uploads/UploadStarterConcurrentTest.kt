@@ -34,11 +34,11 @@ class UploadStarterConcurrentTest {
 
     private val site = createSiteModel()
     private val draftPosts = listOf(
-            createDraftPostModel(),
-            createDraftPostModel(),
-            createDraftPostModel(),
-            createDraftPostModel(),
-            createDraftPostModel()
+            createLocallyChangedPostModel(),
+            createLocallyChangedPostModel(),
+            createLocallyChangedPostModel(),
+            createLocallyChangedPostModel(),
+            createLocallyChangedPostModel()
     )
 
     private val postStore = mock<PostStore> {
@@ -93,8 +93,9 @@ class UploadStarterConcurrentTest {
             on { isPostInConflictWithRemote(any()) } doReturn false
         }
 
-        fun createDraftPostModel() = PostModel().apply {
+        fun createLocallyChangedPostModel() = PostModel().apply {
             status = PostStatus.DRAFT.toString()
+            setIsLocallyChanged(true)
             dateLocallyChanged = DateTimeUtils.iso8601FromTimestamp(Date().time / 1000)
         }
 

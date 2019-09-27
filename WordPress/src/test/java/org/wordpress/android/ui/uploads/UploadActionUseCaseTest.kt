@@ -49,7 +49,7 @@ class UploadActionUseCaseTest {
     }
 
     @Test
-    fun `uploadAction is REMOTE_AUTO_SAVE when changes not confirmed and isn't local draft`() {
+    fun `uploadAction is REMOTE_AUTO_SAVE when changes not confirmed and is not local draft`() {
         val uploadActionUseCase = createUploadActionUseCase()
 
         val post = createPostModel(changesConfirmed = false, isLocalDraft = false)
@@ -58,6 +58,18 @@ class UploadActionUseCaseTest {
 
         // Assert
         assertThat(action).isEqualTo(UploadAction.REMOTE_AUTO_SAVE)
+    }
+
+    @Test
+    fun `uploadAction is DO_NOTHING when the post does not contain any local changes and is not local draft`() {
+        val uploadActionUseCase = createUploadActionUseCase()
+
+        val post = createPostModel(isLocallyChanged = false, isLocalDraft = false)
+        // Act
+        val action = uploadActionUseCase.getUploadAction(post)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
     }
 
     @Test
