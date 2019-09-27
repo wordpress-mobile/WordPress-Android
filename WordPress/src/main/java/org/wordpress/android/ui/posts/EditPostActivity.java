@@ -1074,6 +1074,40 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private boolean shouldSwitchToGutenbergBeVisible(
+            PostModel post,
+            EditorFragmentAbstract editorFragment,
+            SiteModel site
+    ) {
+        // Some guard conditions
+        if (post == null) {
+            AppLog.w(T.EDITOR, "shouldSwitchToGutenbergBeVisible got a null post parameter.");
+            return false;
+        }
+
+        if (editorFragment == null) {
+            AppLog.w(T.EDITOR, "shouldSwitchToGutenbergBeVisible got a null editorFragment parameter.");
+            return false;
+        }
+
+        // Check whether the content has blocks.
+        boolean hasBlocks = false;
+        boolean isEmpty = false;
+        try {
+            final String content = (String) editorFragment.getContent(post.getContent());
+            hasBlocks = PostUtils.contentContainsGutenbergBlocks(content);
+            isEmpty = TextUtils.isEmpty(content);
+        } catch (EditorFragmentNotAddedException e) {
+            // legacy exception; just ignore.
+        }
+
+        // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
+        //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
+        //  is empty but the user hasn't enabled "Use Gutenberg for new posts" in Site Setting,
+        //  don't offer the switch.
+        return hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(site) && isEmpty);
+    }
+
     /*
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
@@ -1224,31 +1258,22 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem switchToAztecMenuItem = menu.findItem(R.id.menu_switch_to_aztec);
         MenuItem switchToGutenbergMenuItem = menu.findItem(R.id.menu_switch_to_gutenberg);
 
-        if (mShowGutenbergEditor) {
-            // we're showing Gutenberg so, just offer the Aztec switch
-            switchToAztecMenuItem.setVisible(true);
-            switchToGutenbergMenuItem.setVisible(false);
-        } else {
-            // we're showing Aztec so, hide the "Switch to Aztec" menu
-            switchToAztecMenuItem.setVisible(false);
+        // The following null checks should basically be redundant but were added to manage
+        // an odd behaviour recorded with Android 8.0.0
+        // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
+        if (switchToAztecMenuItem != null && switchToGutenbergMenuItem != null) {
+            if (mShowGutenbergEditor) {
+                // we're showing Gutenberg so, just offer the Aztec switch
+                switchToAztecMenuItem.setVisible(true);
+                switchToGutenbergMenuItem.setVisible(false);
+            } else {
+                // we're showing Aztec so, hide the "Switch to Aztec" menu
+                switchToAztecMenuItem.setVisible(false);
 
-            // Check whether the content has blocks.
-            boolean hasBlocks = false;
-            boolean isEmpty = false;
-            try {
-                final String content = (String) mEditorFragment.getContent(mPost.getContent());
-                hasBlocks = PostUtils.contentContainsGutenbergBlocks(content);
-                isEmpty = TextUtils.isEmpty(content);
-            } catch (EditorFragmentNotAddedException e) {
-                // legacy exception; just ignore.
+                switchToGutenbergMenuItem.setVisible(
+                        shouldSwitchToGutenbergBeVisible(mPost, mEditorFragment, mSite)
+                );
             }
-
-            // if content has blocks or empty, offer the switch to Gutenberg. The block editor doesn't have good
-            //  "Classic Block" support yet so, don't offer a switch to it if content doesn't have blocks. If the post
-            //  is empty but the user hasn't enabled "Use Gutenberg for new posts" in Site Setting,
-            //  don't offer the switch.
-            switchToGutenbergMenuItem.setVisible(
-                    hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(mSite) && isEmpty));
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1367,20 +1392,40 @@ public class EditPostActivity extends AppCompatActivity implements
                     });
                 }
             } else if (itemId == R.id.menu_switch_to_aztec) {
-                // let's finish this editing instance and start again, but not letting Gutenberg be used
-                mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
-                mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                savePostAndOptionallyFinish(true);
+                // The following boolean check should be always redundant but was added to manage
+                // an odd behaviour recorded with Android 8.0.0
+                // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
+                if (mShowGutenbergEditor) {
+                    // let's finish this editing instance and start again, but not letting Gutenberg be used
+                    mRestartEditorOption = RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG;
+                    mPostEditorAnalyticsSession.switchEditor(Editor.CLASSIC);
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                    savePostAndOptionallyFinish(true);
+                } else {
+                    logWrongMenuState("Wrong state in menu_switch_to_aztec: menu should not be visible.");
+                }
             } else if (itemId == R.id.menu_switch_to_gutenberg) {
-                // let's finish this editing instance and start again, but let GB be used
-                mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
-                mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-                savePostAndOptionallyFinish(true);
+                // The following boolean check should be always redundant but was added to manage
+                // an odd behaviour recorded with Android 8.0.0
+                // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
+                if (shouldSwitchToGutenbergBeVisible(mPost, mEditorFragment, mSite)) {
+                    // let's finish this editing instance and start again, but let GB be used
+                    mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG;
+                    mPostEditorAnalyticsSession.switchEditor(Editor.GUTENBERG);
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+                    savePostAndOptionallyFinish(true);
+                } else {
+                    logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.");
+                }
             }
         }
         return false;
+    }
+
+    private void logWrongMenuState(String logMsg) {
+        AppLog.w(T.EDITOR, logMsg);
+        // Lets record this event in Sentry
+        CrashLoggingUtils.logException(new IllegalStateException(logMsg), T.EDITOR);
     }
 
     private void showEmptyPostErrorForSecondaryAction() {
