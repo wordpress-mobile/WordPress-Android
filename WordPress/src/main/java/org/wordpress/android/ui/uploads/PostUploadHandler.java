@@ -213,7 +213,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     finishUpload();
                     break;
                 case NOTHING_TO_UPLOAD:
-                    mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
+                    // we need to force increment the uploaded count as we know the post was enqueued twice. If we
+                    // didn't force incremented it, the `PostUploadNotifier.isPostAlreadyInPostCount()` would return
+                    // true and we'd end up with a dangling upload notification.
+                    mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost, true);
                     finishUpload();
                     break;
                 case PUSH_POST_DISPATCHED:
@@ -268,24 +271,20 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:
-                    AppLog.d(T.POSTS,
-                            "Invoking newPushPostAction. Post: " + mPost.getTitle() + " status: " + mPost.getStatus());
+                    AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
                     break;
                 case UPLOAD_AS_DRAFT:
                     mPost.setStatus(PostStatus.DRAFT.toString());
-                    AppLog.d(T.POSTS,
-                            "Invoking newPushPostAction - local draft. Post: " + mPost.getTitle() + " status: " + mPost
-                                    .getStatus());
+                    AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD_AS_DRAFT. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
                     break;
                 case REMOTE_AUTO_SAVE:
-                    AppLog.d(T.POSTS,
-                            "Invoking newRemoteAutoSavePostAction. Post: " + mPost.getTitle() + " status: " + mPost
-                                    .getStatus());
+                    AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
                     break;
                 case DO_NOTHING:
+                    AppLog.d(T.POSTS, "PostUploadHandler - DO_NOTHING. Post: " + mPost.getTitle());
                     // A single post might be enqueued twice for upload. It might cause some side-effects when the
                     // post is a local draft.
                     // The first upload request pushes the post to the server and sets `isLocalDraft` to `false`.
