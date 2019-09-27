@@ -21,8 +21,6 @@ import kotlin.test.assertNull
 class PostSqlUtilsTest {
     private val postSqlUtils = PostSqlUtils()
 
-    private lateinit var site: SiteModel
-
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
@@ -30,9 +28,6 @@ class PostSqlUtilsTest {
         val config = WellSqlConfig(appContext)
         WellSql.init(config)
         config.reset()
-
-        site = SiteModel()
-        site.id = 100
     }
 
     @Test
@@ -41,6 +36,8 @@ class PostSqlUtilsTest {
         val revisionId = 999L
         val modifiedDate = "test date"
         val previewUrl = "test url"
+
+        val site = createSite()
 
         var post = PostModel()
         post.localSiteId = site.id
@@ -70,10 +67,12 @@ class PostSqlUtilsTest {
     @Test
     fun `insertOrUpdatePost deletes posts with duplicate REMOTE_POST_ID`() {
         // Given
-        val localPost = createPost(localId = 900, remoteId = 8571)
+        val site = createSite()
+
+        val localPost = createPost(localSiteId = site.id, localId = 900, remoteId = 8571)
         postSqlUtils.insertPostForResult(localPost)
 
-        val postFromFetch = createPost(localId = 100_00, remoteId = localPost.remotePostId)
+        val postFromFetch = createPost(localSiteId = site.id, localId = 100_00, remoteId = localPost.remotePostId)
         postSqlUtils.insertPostForResult(postFromFetch)
 
         // When
@@ -95,10 +94,14 @@ class PostSqlUtilsTest {
         assertThat(postsWithSameRemotePostId).hasSize(1)
     }
 
-    private fun createPost(localId: Int, remoteId: Long) = PostModel().apply {
+    private fun createPost(localSiteId: Int, localId: Int, remoteId: Long) = PostModel().apply {
         id = localId
         remotePostId = remoteId
 
-        localSiteId = site.id
+        this.localSiteId = localSiteId
+    }
+
+    private fun createSite() = SiteModel().apply {
+        id = 100
     }
 }
