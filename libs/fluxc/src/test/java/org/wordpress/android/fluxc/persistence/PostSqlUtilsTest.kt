@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.yarolegovich.wellsql.WellSql
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -8,6 +9,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel
@@ -18,6 +21,8 @@ import kotlin.test.assertNull
 class PostSqlUtilsTest {
     private val postSqlUtils = PostSqlUtils()
 
+    private lateinit var site: SiteModel
+
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
@@ -25,18 +30,18 @@ class PostSqlUtilsTest {
         val config = WellSqlConfig(appContext)
         WellSql.init(config)
         config.reset()
+
+        site = SiteModel()
+        site.id = 100
     }
 
     @Test
     fun `post autoSave fields get updated`() {
-        val localSiteId = 100
         val remotePostId = 200L
         val revisionId = 999L
         val modifiedDate = "test date"
         val previewUrl = "test url"
 
-        val site = SiteModel()
-        site.id = localSiteId
         var post = PostModel()
         post.localSiteId = site.id
         post.remotePostId = remotePostId
@@ -60,5 +65,40 @@ class PostSqlUtilsTest {
         assertEquals(modifiedDate, postsForSite.first().autoSaveModified)
         assertEquals(modifiedDate, postsForSite.first().remoteAutoSaveModified)
         assertEquals(previewUrl, postsForSite.first().autoSavePreviewUrl)
+    }
+
+    @Test
+    fun `insertOrUpdatePost deletes posts with duplicate REMOTE_POST_ID`() {
+        // Given
+        val localPost = createPost(localId = 900, remoteId = 8571)
+        postSqlUtils.insertPostForResult(localPost)
+
+        val postFromFetch = createPost(localId = 100_00, remoteId = localPost.remotePostId)
+        postSqlUtils.insertPostForResult(postFromFetch)
+
+        // When
+        val updatedRowsCount = postSqlUtils.insertOrUpdatePost(localPost, true)
+
+        // Then
+        // 2 row changes. First is the deleted row, second is the overwrite
+        assertThat(updatedRowsCount).isEqualTo(2)
+
+        // The postFromFetch should not exist anymore
+        assertThat(postSqlUtils.getPostsByLocalOrRemotePostIds(listOf(LocalId(postFromFetch.id)), site.id)).isEmpty()
+
+        // The localPost should still exist
+        assertThat(postSqlUtils.getPostsByLocalOrRemotePostIds(listOf(LocalId(localPost.id)), site.id)).hasSize(1)
+
+        // There is only one post with the remote id
+        val postsWithSameRemotePostId =
+                postSqlUtils.getPostsByLocalOrRemotePostIds(listOf(RemoteId(localPost.remotePostId)), site.id)
+        assertThat(postsWithSameRemotePostId).hasSize(1)
+    }
+
+    private fun createPost(localId: Int, remoteId: Long) = PostModel().apply {
+        id = localId
+        remotePostId = remoteId
+
+        localSiteId = site.id
     }
 }
