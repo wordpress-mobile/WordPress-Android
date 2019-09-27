@@ -145,26 +145,27 @@ class UploadStarter @Inject constructor(
     private suspend fun upload(site: SiteModel) = coroutineScope {
         try {
             mutex.lock()
-            val posts = postStore.getPostsWithLocalChanges(site)
-
-            posts
+            postStore.getPostsWithLocalChanges(site)
                     .asSequence()
-                    .filter {
-                        val action = uploadActionUseCase.getAutoUploadAction(it, site)
-                        if (action == DO_NOTHING) {
-                            false
-                        } else {
-                            trackAutoUploadAction(action, it.status)
-                            AppLog.d(
-                                    AppLog.T.POSTS,
-                                    "UploadStarter for post title: ${it.title}, action: $action"
-                            )
-                            true
-                        }
+                    .map { post ->
+                        val action = uploadActionUseCase.getAutoUploadAction(post, site)
+                        Pair(post, action)
+                    }
+                    .filter { (_, action) ->
+                        action != DO_NOTHING
                     }
                     .toList()
-                    .forEach { post ->
-                        dispatcher.dispatch(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(post))
+                    .forEach { (post, action) ->
+                        trackAutoUploadAction(action, post.status)
+                        AppLog.d(
+                                AppLog.T.POSTS,
+                                "UploadStarter for post title: ${post.title}, action: $action"
+                        )
+                        dispatcher.dispatch(
+                                UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
+                                        post
+                                )
+                        )
                         uploadServiceFacade.uploadPost(
                                 context = context,
                                 post = post,
