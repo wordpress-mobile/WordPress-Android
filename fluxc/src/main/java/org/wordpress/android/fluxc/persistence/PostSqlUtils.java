@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveMod
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.inject.Inject;
 
@@ -60,27 +61,38 @@ public class PostSqlUtils {
                     .endGroup()
                     .endGroup().endWhere().getAsModel();
         }
-
+        int numberOfDeletedRows = 0;
         if (postResult.isEmpty()) {
             // insert
             WellSql.insert(post).asSingleTransaction(true).execute();
             return 1;
         } else {
             if (postResult.size() > 1) {
-                // We've ended up with a duplicate entry, probably due to a push/fetch race condition
-                // One matches based on local ID (this is the one we're trying to update with a remote post ID)
-                // The other matches based on local site ID + remote post ID, and we got it from a fetch
-                // Just remove the entry without a remote post ID (the one matching the current post's local ID)
-                return WellSql.delete(PostModel.class).whereId(post.getId());
+                // We've ended up with a duplicate entry, probably due to a push/fetch race
+                // condition. One matches based on local ID (this is the one we're trying to
+                // update with a remote post ID). The other matches based on local site ID +
+                // remote post ID, and we got it from a fetch. Just remove the duplicated
+                // entry we got from the fetch as the chance the client app is already using it is
+                // lower (it was most probably fetched a few ms ago).
+                ListIterator<PostModel> postModelListIterator = postResult.listIterator();
+                while (postModelListIterator.hasNext()) {
+                    PostModel item = postModelListIterator.next();
+                    if (item.getId() != post.getId()) {
+                        WellSql.delete(PostModel.class).whereId(item.getId());
+                        postModelListIterator.remove();
+                        numberOfDeletedRows++;
+                    }
+                }
             }
             // Update only if local changes for this post don't exist
             if (overwriteLocalChanges || !postResult.get(0).isLocallyChanged()) {
                 int oldId = postResult.get(0).getId();
                 return WellSql.update(PostModel.class).whereId(oldId)
-                        .put(post, new UpdateAllExceptId<>(PostModel.class)).execute();
+                              .put(post, new UpdateAllExceptId<>(PostModel.class)).execute()
+                       + numberOfDeletedRows;
             }
         }
-        return 0;
+        return numberOfDeletedRows;
     }
 
     public int insertOrUpdatePostKeepingLocalChanges(PostModel post) {
