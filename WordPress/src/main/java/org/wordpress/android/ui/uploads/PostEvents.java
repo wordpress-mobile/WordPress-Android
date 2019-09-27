@@ -36,4 +36,14 @@ public class PostEvents {
             this.postId = postId;
         }
     }
+
+    public static class PostPreviewingInEditor {
+        public final int localSiteId;
+        public final int postId;
+
+        public PostPreviewingInEditor(int localSiteId, int postId) {
+            this.localSiteId = localSiteId;
+            this.postId = postId;
+        }
+    }
 }

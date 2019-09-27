@@ -732,22 +732,6 @@
     <issue
         id="StaticFieldLeak"
         severity="Error"
-        message="This AsyncTask class should be static or leaks might occur (org.wordpress.android.ui.posts.EditPostPreviewFragment.LoadPostPreviewTask)"
-        category="Performance"
-        priority="6"
-        summary="Static Field Leaks"
-        explanation="A static field will leak contexts.&#xA;&#xA;Non-static inner classes have an implicit reference to their outer class. If that outer class is for example a `Fragment` or `Activity`, then this reference means that the long-running handler/loader/task will hold a reference to the activity which prevents it from getting garbage collected.&#xA;&#xA;Similarly, direct field references to activities and fragments from these longer running instances can cause leaks.&#xA;&#xA;ViewModel classes should never point to Views or non-application Contexts."
-        errorLine1="    private class LoadPostPreviewTask extends AsyncTask&lt;Void, Void, Spanned> {"
-        errorLine2="                  ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../WordPress/src/main/java/org/wordpress/android/ui/posts/EditPostPreviewFragment.java"
-            line="104"
-            column="19"/>
-    </issue>
-
-    <issue
-        id="StaticFieldLeak"
-        severity="Error"
         message="This AsyncTask class should be static or leaks might occur (org.wordpress.android.ui.posts.EditPostSettingsFragment.FetchAndSetAddressAsyncTask)"
         category="Performance"
         priority="6"
