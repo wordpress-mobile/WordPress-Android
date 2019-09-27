@@ -68,6 +68,15 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private long mParentId;
     @Column private String mParentTitle;
 
+    // Unpublished revision data
+    @Column private long mAutoSaveRevisionId;
+    @Column private String mAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private String mRemoteAutoSaveModified; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
+    @Column private String mAutoSavePreviewUrl;
+    @Column private String mAutoSaveTitle;
+    @Column private String mAutoSaveContent;
+    @Column private String mAutoSaveExcerpt;
+
     // Local only
     @Column private boolean mIsLocalDraft;
     @Column private boolean mIsLocallyChanged;
@@ -353,6 +362,66 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mIsLocallyChanged = isLocallyChanged;
     }
 
+    public boolean hasUnpublishedRevision() {
+        return mAutoSaveRevisionId > 0;
+    }
+
+    public long getAutoSaveRevisionId() {
+        return mAutoSaveRevisionId;
+    }
+
+    public void setAutoSaveRevisionId(long autoSaveRevisionId) {
+        mAutoSaveRevisionId = autoSaveRevisionId;
+    }
+
+    public String getAutoSaveModified() {
+        return mAutoSaveModified;
+    }
+
+    public void setAutoSaveModified(String autoSaveModified) {
+        mAutoSaveModified = autoSaveModified;
+    }
+
+    public String getRemoteAutoSaveModified() {
+        return mRemoteAutoSaveModified;
+    }
+
+    public void setRemoteAutoSaveModified(String remoteAutoSaveModified) {
+        mRemoteAutoSaveModified = remoteAutoSaveModified;
+    }
+
+    public String getAutoSavePreviewUrl() {
+        return mAutoSavePreviewUrl;
+    }
+
+    public void setAutoSavePreviewUrl(String autoSavePreviewUrl) {
+        mAutoSavePreviewUrl = autoSavePreviewUrl;
+    }
+
+    public String getAutoSaveTitle() {
+        return mAutoSaveTitle;
+    }
+
+    public void setAutoSaveTitle(String autoSaveTitle) {
+        mAutoSaveTitle = autoSaveTitle;
+    }
+
+    public String getAutoSaveContent() {
+        return mAutoSaveContent;
+    }
+
+    public void setAutoSaveContent(String autoSaveContent) {
+        mAutoSaveContent = autoSaveContent;
+    }
+
+    public String getAutoSaveExcerpt() {
+        return mAutoSaveExcerpt;
+    }
+
+    public void setAutoSaveExcerpt(String autoSaveExcerpt) {
+        mAutoSaveExcerpt = autoSaveExcerpt;
+    }
+
     @Deprecated
     public long getLastKnownRemoteFeaturedImageId() {
         return mLastKnownRemoteFeaturedImageId;
@@ -414,6 +483,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
                 && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
                 && getParentId() == otherPost.getParentId()
+                && getAutoSaveRevisionId() == otherPost.getAutoSaveRevisionId()
                 && StringUtils.equals(getTitle(), otherPost.getTitle())
                 && StringUtils.equals(getContent(), otherPost.getContent())
                 && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
@@ -428,7 +498,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
                 && StringUtils.equals(getSlug(), otherPost.getSlug())
                 && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
                 && StringUtils.equals(getAuthorDisplayName(), otherPost.getAuthorDisplayName())
-                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged())
+                && StringUtils.equals(getAutoSaveModified(), otherPost.getAutoSaveModified())
+                && StringUtils.equals(getAutoSavePreviewUrl(), otherPost.getAutoSavePreviewUrl());
     }
 
     /**
