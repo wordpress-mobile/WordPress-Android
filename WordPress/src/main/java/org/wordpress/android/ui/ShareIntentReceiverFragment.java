@@ -24,6 +24,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -173,15 +174,17 @@ public class ShareIntentReceiverFragment extends Fragment {
                                     mBottomButtonsContainer.setBackgroundResource(android.R.color.white);
                                     mShareMediaBtn.setTextColor(getResources().getColor(R.color.primary_50));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
-                                                                       R.style.WordPress_Button_Grey,
-                                                                       R.attr.colorButtonNormal);
+                                            R.style.WordPress_Button_Grey,
+                                            R.attr.colorButtonNormal);
                                 } else {
                                     mBottomButtonsShadow.setVisibility(View.GONE);
                                     mBottomButtonsContainer.setBackground(null);
-                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.neutral_70));
+                                    mShareMediaBtn.setTextColor(
+                                            ContextExtensionsKt
+                                                    .getColorFromAttribute(getContext(), R.attr.wpColorText));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
-                                                                       R.style.WordPress_Button,
-                                                                       R.attr.colorButtonNormal);
+                                            R.style.WordPress_Button,
+                                            R.attr.colorButtonNormal);
                                 }
                             }
                         });

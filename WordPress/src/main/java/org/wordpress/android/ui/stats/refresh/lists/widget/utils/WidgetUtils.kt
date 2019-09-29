@@ -153,6 +153,7 @@ class WidgetUtils
                 listIntent.toUri(Intent.URI_INTENT_SCHEME)
         )
         views.setRemoteAdapter(R.id.widget_content, listIntent)
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_content)
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 

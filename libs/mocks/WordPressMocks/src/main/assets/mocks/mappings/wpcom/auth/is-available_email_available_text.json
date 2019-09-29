@@ -1,8 +1,11 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/is-available/email/",
+        "urlPattern": "/is-available/email(/)?($|\\?.*)",
         "queryParameters": {
+            "format": {
+                "absent": true
+            },
             "q": {
                 "matches": "^e2eflowsignuptestingmobile@example.com$"
             }

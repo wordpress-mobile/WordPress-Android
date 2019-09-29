@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.screenshots;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -15,7 +15,6 @@ import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.image.ImageType;
 
 import tools.fastlane.screengrab.Screengrab;
@@ -49,9 +48,6 @@ public class WPScreenshotTest extends BaseTest {
     public void wPScreenshotTest() {
         mActivityTestRule.launchActivity(null);
         Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
-        
-        // Never show the Gutenberg dialog when opening a post
-        AppPrefs.setGutenbergInformativeDialogDisabled(true);
 
         // Enable Demo Mode
         mDemoModeEnabler.enable();

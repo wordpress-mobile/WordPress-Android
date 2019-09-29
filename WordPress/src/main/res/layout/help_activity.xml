@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/support_contact_email"
-                android:textColor="@color/neutral_70"
+                android:textColor="?attr/wpColorText"
                 android:textSize="@dimen/text_sz_large"/>
 
             <TextView

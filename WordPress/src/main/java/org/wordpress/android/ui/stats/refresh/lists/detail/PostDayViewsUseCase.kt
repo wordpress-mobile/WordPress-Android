@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.stats.PostDetailStatsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.PostDetailType
 import org.wordpress.android.fluxc.store.stats.PostDetailStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostDayViewsUseCase.UiState
@@ -24,6 +25,7 @@ import javax.inject.Named
 class PostDayViewsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val postDayViewsMapper: PostDayViewsMapper,
     private val statsDateFormatter: StatsDateFormatter,
     private val selectedDateProvider: SelectedDateProvider,
@@ -34,14 +36,10 @@ class PostDayViewsUseCase
 ) : BaseStatsUseCase<PostDetailStatsModel, UiState>(
         PostDetailType.POST_OVERVIEW,
         mainDispatcher,
-        UiState()
+        backgroundDispatcher,
+        UiState(),
+        uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(DETAIL))
 ) {
-    init {
-        uiState.addSource(selectedDateProvider.granularSelectedDateChanged(DETAIL)) {
-            onUiState()
-        }
-    }
-
     override suspend fun loadCachedData(): PostDetailStatsModel? {
         return statsPostProvider.postId?.let { postId ->
             postDetailStore.getPostDetail(

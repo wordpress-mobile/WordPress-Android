@@ -1,5 +1,17 @@
+13.4
+-----
+ 
 13.3
 -----
+* Added ability to change the username via Account Settings
+* Add Jetpack performance settings
+* Sort more than 100 published pages chronologically like Calypso
+* Significant performance improvements to Stats
+* Block Editor: Add rich text styling to video captions
+* Block Editor: Prevent keyboard dismissal when switching between caption and text block
+* Block Editor: Blocks that would be replaced are now hidden when add block bottom sheet displays
+* Block Editor: Tapping on empty editor area now always inserts new block at end of post
+* Block Editor: Automatically saves post locally after 2 seconds of inactivity
  
 13.2
 -----
@@ -8,7 +20,6 @@
 * Moved Notifications settings to Notifications List.
 * Redesigned My Site screen to make most commonly used actions easily accessible.
 * File downloads in Stats for WP.com sites
-
 
 13.1
 -----

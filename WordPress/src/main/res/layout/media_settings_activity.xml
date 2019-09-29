@@ -391,7 +391,7 @@
                             android:paddingTop="@dimen/margin_small"
                             android:text="@string/copy"
                             android:textAllCaps="true"
-                            android:textColor="@color/neutral_70"
+                            android:textColor="?attr/wpColorText"
                             android:textSize="@dimen/text_sz_medium"
                             android:paddingEnd="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"/></RelativeLayout></LinearLayout>

@@ -1,6 +1,7 @@
 orbs:
-  android: wordpress-mobile/android@0.0.27
-  bundle-install: toshimaru/bundle-install@0.1.1
+  android: wordpress-mobile/android@0.0.32
+  git: wordpress-mobile/git@0.0.32
+  bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@2.5.0
 
 commands:
@@ -17,7 +18,7 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -30,7 +31,7 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -54,12 +55,13 @@ jobs:
       - android/save-gradle-cache
       - android/save-lint-results
   Installable Build:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
-      - bundle-install/bundle-install
+      - git/shallow-checkout
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
@@ -78,6 +80,7 @@ jobs:
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
             ./gradlew --stacktrace assembleVanillaRelease -PversionName="$VERSION_NAME"
+      - android/save-gradle-cache
       - run:
           name: Prepare APK
           command: |
@@ -91,7 +94,7 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - checkout
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -111,15 +114,13 @@ jobs:
           timeout: 10m
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
-      - slack/status:
-          fail_only: 'true'
-          failure_message: ':red_circle: WordPress Android end to end tests have failed!\nSee https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670'
   strings-check:
     docker:
       - image: circleci/ruby:2.3
     steps:
-      - checkout
-      - bundle-install/bundle-install
+      - git/shallow-checkout
+      - bundle-install/bundle-install:
+          cache_key_prefix: strings-check
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
@@ -131,13 +132,4 @@ workflows:
       - test
       - lint
       - Installable Build
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - develop
-    jobs:
       - connected-tests

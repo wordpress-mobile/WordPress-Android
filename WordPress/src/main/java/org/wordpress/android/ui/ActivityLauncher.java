@@ -10,8 +10,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
@@ -72,6 +70,7 @@ import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -118,11 +117,7 @@ public class ActivityLauncher {
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_left,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
+        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
     public static void showPhotoPickerForResult(Activity activity,
@@ -303,9 +298,9 @@ public class ActivityLauncher {
         StatsViewAllActivity.startForInsights(context, statsType, localSiteId);
     }
 
-    public static void viewAllGranularStats(Context context, StatsGranularity granularity, StatsViewType statsType,
-                                            int localSiteId) {
-        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, localSiteId);
+    public static void viewAllGranularStats(Context context, StatsGranularity granularity, SelectedDate selectedDate,
+                                            StatsViewType statsType, int localSiteId) {
+        StatsViewAllActivity.startForGranularStats(context, statsType, granularity, selectedDate, localSiteId);
     }
 
     public static void viewInsightsManagement(Context context, int localSiteId) {
