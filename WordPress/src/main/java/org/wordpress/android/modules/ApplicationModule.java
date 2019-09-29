@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
 import org.wordpress.android.util.wizard.WizardManager;
+import org.wordpress.android.viewmodel.ContextProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -40,8 +41,8 @@ public abstract class ApplicationModule {
     abstract Context bindContext(Application application);
 
     @Provides
-    public static NewsService provideLocalNewsService(Context context) {
-        return new LocalNewsService(context);
+    public static NewsService provideLocalNewsService(ContextProvider contextProvider) {
+        return new LocalNewsService(contextProvider);
     }
 
     @ContributesAndroidInjector

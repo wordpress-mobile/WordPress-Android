@@ -90,6 +90,7 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -168,6 +169,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject ShortcutUtils mShortcutUtils;
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject UploadActionUseCase mUploadActionUseCase;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -758,10 +760,12 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (site != null && post != null) {
                     UploadUtils.handleEditPostResultSnackbars(
                             this,
+                            mDispatcher,
                             findViewById(R.id.coordinator),
                             data,
                             post,
                             site,
+                            mUploadActionUseCase.getUploadAction(post),
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

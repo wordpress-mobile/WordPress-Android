@@ -1686,6 +1686,14 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_ACTION_POSTS_TAPPED:
             case QUICK_ACTION_MEDIA_TAPPED:
                 return "quick_action_tapped";
+            case AUTO_UPLOAD_POST_INVOKED:
+                return "auto_upload_post_invoked";
+            case UNPUBLISHED_REVISION_DIALOG_SHOWN:
+                return "unpublished_revision_dialog_shown";
+            case UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED:
+                return "unpublished_revision_dialog_load_local_version_clicked";
+            case UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED:
+                return "unpublished_revision_dialog_load_unpublished_version_clicked";
         }
         return null;
     }

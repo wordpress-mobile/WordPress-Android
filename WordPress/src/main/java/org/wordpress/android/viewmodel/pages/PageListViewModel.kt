@@ -123,7 +123,9 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onItemTapped(pageItem: Page) {
-        pagesViewModel.onItemTapped(pageItem)
+        if (pageItem.tapActionEnabled) {
+            pagesViewModel.onItemTapped(pageItem)
+        }
     }
 
     fun onEmptyListNewPageButtonTapped() {
