@@ -117,7 +117,6 @@ import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsC
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
-import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -196,7 +195,6 @@ public class EditPostActivity extends AppCompatActivity implements
         EditPostSettingsFragment.EditPostActivityHook,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
-        PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback {
@@ -1958,11 +1956,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-
-    @Override
-    public void onNeutralClicked(@NonNull String instanceTag) {
-    }
-
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
@@ -1984,10 +1977,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
-    }
-
-    @Override
-    public void onLinkClicked(@NonNull String instanceTag) {
     }
 
     /*
