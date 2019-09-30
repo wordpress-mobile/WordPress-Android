@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.test
+import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
@@ -21,8 +22,9 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenErrorUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenNotAvailableUiState
 
 @RunWith(MockitoJUnitRunner::class)
 class WPWebViewViewModelTest {
@@ -44,27 +46,27 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `progress shown on start`() = test {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 
     @Test
     fun `error shown on start when internet access not available`() = test {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
     fun `error shown on error failure`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         viewModel.onReceivedError()
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 
     @Test
-    fun `show content on UrlLoaded and enable prview mode switch`() {
-        viewModel.start()
+    fun `show content on UrlLoaded and enable preview mode switch`() {
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         viewModel.onUrlLoaded()
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewContentUiState::class.java)
         assertThat(viewModel.previewModeSelector.value!!.isEnabled).isTrue()
@@ -72,14 +74,14 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `show progress screen on retry clicked`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         viewModel.loadIfNecessary()
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
     }
 
     @Test
     fun `initially navigation is not enabled and preview mode is set to default and disabled`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
         assertThat(viewModel.navbarUiState.value!!.forwardNavigationEnabled).isFalse()
@@ -93,7 +95,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `clicking on nav buttons navigates back and forward`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         // navigate forward
         var forwardNavigationWasCalled = false
@@ -119,7 +121,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `toggling nav buttons enabled state enables and disables them`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         var isForwardButtonEnabled = false
         var isBackButtonEnabled = false
@@ -151,7 +153,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `clicking on share button starts sharing`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         var shareWasCalled = false
         viewModel.share.observeForever {
@@ -165,7 +167,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `clicking on external browser button opens page in external browser`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         var externalBrowserOpened = false
         viewModel.openExternalBrowser.observeForever {
@@ -179,7 +181,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `clicking on preview mode button toggles preview mode selector`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
         viewModel.previewModeSelector.observeForever {
@@ -200,7 +202,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `selected preview mode is reflected in preview mode selector`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
         viewModel.previewModeSelector.observeForever {
@@ -221,7 +223,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `selecting preview mode triggers progress indicator`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         viewModel.selectPreviewMode(DESKTOP)
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenProgressUiState::class.java)
@@ -232,7 +234,7 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `selecting a preview mode changes it if it's not already selected`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         val selectedPreviewModes: ArrayList<PreviewMode> = ArrayList()
         viewModel.previewMode.observeForever {
@@ -254,19 +256,31 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `selecting desktop preview mode shows hint label`() {
-        viewModel.start()
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
-        var isDektopPreviewModeHintVisible = false
+        var isDesktopPreviewModeHintVisible = false
         viewModel.navbarUiState.observeForever {
-            isDektopPreviewModeHintVisible = it.desktopPreviewHintVisible
+            isDesktopPreviewModeHintVisible = it.desktopPreviewHintVisible
         }
 
-        assertThat(isDektopPreviewModeHintVisible).isFalse()
+        assertThat(isDesktopPreviewModeHintVisible).isFalse()
 
         viewModel.selectPreviewMode(DESKTOP)
-        assertThat(isDektopPreviewModeHintVisible).isTrue()
+        assertThat(isDesktopPreviewModeHintVisible).isTrue()
 
         viewModel.selectPreviewMode(DEFAULT)
-        assertThat(isDektopPreviewModeHintVisible).isFalse()
+        assertThat(isDesktopPreviewModeHintVisible).isFalse()
+    }
+
+    @Test
+    fun `preview not available actionable shown when asked`() = test {
+        viewModel.start(WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE)
+        assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenNotAvailableUiState::class.java)
+    }
+
+    @Test
+    fun `network not available actionable shown when asked`() = test {
+        viewModel.start(WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK)
+        assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
     }
 }

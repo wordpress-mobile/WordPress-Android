@@ -23,7 +23,8 @@ sealed class PageItem(open val type: Type) {
         open var indent: Int,
         open var imageUrl: String?,
         open val actions: Set<Action>,
-        open var actionsEnabled: Boolean
+        open var actionsEnabled: Boolean,
+        open val tapActionEnabled: Boolean
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -42,7 +43,8 @@ sealed class PageItem(open val type: Type) {
             indent = indent,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
-            actionsEnabled = actionsEnabled
+            actionsEnabled = actionsEnabled,
+            tapActionEnabled = true
     )
 
     data class DraftPage(
@@ -60,7 +62,8 @@ sealed class PageItem(open val type: Type) {
             indent = 0,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH),
-            actionsEnabled = actionsEnabled
+            actionsEnabled = actionsEnabled,
+            tapActionEnabled = true
     )
 
     data class ScheduledPage(
@@ -78,7 +81,8 @@ sealed class PageItem(open val type: Type) {
             indent = 0,
             imageUrl = imageUrl,
             actions = setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH),
-            actionsEnabled = actionsEnabled
+            actionsEnabled = actionsEnabled,
+            tapActionEnabled = true
     )
 
     data class TrashedPage(
@@ -94,8 +98,9 @@ sealed class PageItem(open val type: Type) {
             labels = emptyList(),
             indent = 0,
             imageUrl = imageUrl,
-            actions = setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY),
-            actionsEnabled = actionsEnabled
+            actions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY),
+            actionsEnabled = actionsEnabled,
+            tapActionEnabled = false
     )
 
     data class ParentPage(

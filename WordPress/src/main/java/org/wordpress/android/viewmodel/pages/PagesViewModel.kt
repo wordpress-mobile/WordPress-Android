@@ -11,18 +11,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -35,9 +39,13 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.posts.PostInfoType
+import org.wordpress.android.ui.posts.PostListRemotePreviewState
+import org.wordpress.android.ui.posts.PreviewStateHelper
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -57,6 +65,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
@@ -73,11 +82,12 @@ private const val PAGE_UPLOAD_TIMEOUT = 5000L
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
+    private val postStore: PostStore,
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
-    private val uploadStarter: UploadStarter,
     private val eventBusWrapper: EventBusWrapper,
+    private val previewStateHelper: PreviewStateHelper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -105,8 +115,14 @@ class PagesViewModel
     private val _editPage = SingleLiveEvent<PageModel?>()
     val editPage: LiveData<PageModel?> = _editPage
 
-    private val _previewPage = SingleLiveEvent<PageModel?>()
-    val previewPage: LiveData<PageModel?> = _previewPage
+    private val _previewPage = SingleLiveEvent<PostModel?>()
+    val previewPage: LiveData<PostModel?> = _previewPage
+
+    private val _browsePreview = SingleLiveEvent<BrowsePreview?>()
+    val browsePreview: LiveData<BrowsePreview?> = _browsePreview
+
+    private val _previewState = SingleLiveEvent<PostListRemotePreviewState>()
+    val previewState = _previewState as LiveData<PostListRemotePreviewState>
 
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
@@ -146,6 +162,11 @@ class PagesViewModel
     private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PUBLISHED
 
+    data class BrowsePreview(
+        val post: PostModel,
+        val previewType: RemotePreviewType
+    )
+
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
@@ -154,8 +175,6 @@ class PagesViewModel
             eventBusWrapper.register(this)
 
             loadPagesAsync()
-
-            uploadStarter.queueUploadFromSite(site)
         }
     }
 
@@ -239,7 +258,7 @@ class PagesViewModel
             PUBLISHED -> "published"
             DRAFTS -> "drafts"
             SCHEDULED -> "scheduled"
-            PageListType.TRASHED -> "binned"
+            TRASHED -> "binned"
         }
         val properties = mutableMapOf("tab_name" to tab as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_TAB_PRESSED, site, properties)
@@ -247,7 +266,7 @@ class PagesViewModel
 
     fun checkIfNewPageButtonShouldBeVisible() {
         val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
-        val hasNoExceptions = !currentPageType.pageStatuses.contains(TRASHED) &&
+        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
                 _isSearchExpanded.value != true
         _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
     }
@@ -280,6 +299,23 @@ class PagesViewModel
         } else {
             scrollToPageId = remotePageId
         }
+    }
+
+    fun updatePreviewAndDialogState(newState: PostListRemotePreviewState, postInfo: PostInfoType) {
+        // We need only transitions, so...
+        if (_previewState.value == newState) return
+
+        // update the state
+        val prevState = _previewState.value
+        _previewState.postValue(newState)
+
+        // take care of exit actions on state transition
+        previewStateHelper.managePreviewStateTransitions(
+                newState,
+                prevState,
+                postInfo,
+                this::handleRemotePreview
+        )
     }
 
     private suspend fun groupedSearch(
@@ -329,8 +365,8 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> deletePage(page)
         }
@@ -352,10 +388,11 @@ class PagesViewModel
     }
 
     private fun previewPage(page: Page) {
-        performIfNetworkAvailable {
+        launch(defaultDispatcher) {
             trackMenuSelectionEvent(VIEW_PAGE)
-
-            _previewPage.postValue(pageMap[page.id])
+            val pageModel = pageMap[page.id]
+            val post = if (pageModel != null) postStore.getPostByLocalPostId(pageModel.pageId) else null
+            _previewPage.postValue(post)
         }
     }
 
@@ -421,8 +458,6 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        uploadStarter.queueUploadFromSite(site)
-
         launch {
             reloadPages(FETCHING)
         }
@@ -525,16 +560,16 @@ class PagesViewModel
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
         performIfNetworkAvailable {
-            if (status == DRAFT) {
+            if (status == PageStatus.DRAFT) {
                 trackMenuSelectionEvent(MOVE_TO_DRAFT)
-            } else if (status == TRASHED) {
+            } else if (status == PageStatus.TRASHED) {
                 trackMenuSelectionEvent(MOVE_TO_TRASH)
             }
 
             pageMap[remoteId]?.let { page ->
                 val oldStatus = page.status
 
-                val action = if (status != TRASHED || remoteId > 0) {
+                val action = if (status != PageStatus.TRASHED || remoteId > 0) {
                     PageAction(remoteId, UPLOAD) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
@@ -617,6 +652,34 @@ class PagesViewModel
         _searchPages.postValue(null)
     }
 
+    private fun handleRemotePreview(localPostId: Int, remotePreviewType: RemotePreviewType) {
+        launch(defaultDispatcher) {
+            val post = postStore.getPostByLocalPostId(localPostId)
+            _browsePreview.postValue(BrowsePreview(post, remotePreviewType))
+        }
+    }
+
+    private fun handleRemoteAutoSave(post: PostModel, isError: Boolean) {
+        if (isError || hasRemoteAutoSavePreviewError()) {
+            updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.remote_preview_operation_error))
+        } else {
+            updatePreviewAndDialogState(
+                    PostListRemotePreviewState.PREVIEWING,
+                    PostInfoType.PostInfo(
+                            post = post,
+                            hasError = isError
+                    )
+            )
+        }
+    }
+
+    private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
+            _previewState.value != PostListRemotePreviewState.NONE
+
+    private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
+            _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onPostUploaded(event: OnPostUploaded) {
@@ -628,6 +691,26 @@ class PagesViewModel
         pageUpdateContinuations[id]?.let { cont ->
             pageUpdateContinuations.remove(id)
             cont.resume(Unit)
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = BACKGROUND)
+    fun onPostChanged(event: OnPostChanged) {
+        when (event.causeOfChange) {
+            // Fetched post list event will be handled by OnListChanged
+            is CauseOfOnPostChanged.RemoteAutoSavePost -> {
+                val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
+                if (event.isError) {
+                    AppLog.d(
+                            T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
+                            event.error.type + " - " + event.error.message
+                    )
+                }
+                if (isRemotePreviewingFromPostsList()) {
+                    handleRemoteAutoSave(post, event.isError)
+                }
+            }
         }
     }
 

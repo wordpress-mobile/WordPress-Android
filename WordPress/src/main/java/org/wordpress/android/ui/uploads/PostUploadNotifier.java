@@ -192,11 +192,15 @@ class PostUploadNotifier {
     }
 
     void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post) {
+        incrementUploadedPostCountFromForegroundNotification(post, false);
+    }
+
+    void incrementUploadedPostCountFromForegroundNotification(@NonNull PostModel post, boolean force) {
         // first we need to check that we only count this post once as "ended" (either successfully or with error)
         // for every error we get. We'll then try to increment the Post count as it's been cancelled/failed because the
         // related media was cancelled or has failed too (i.e. we can't upload a Post with failed media, therefore
         // it needs to be cancelled).
-        if (isPostAlreadyInPostCount(post)) {
+        if (!force && isPostAlreadyInPostCount(post)) {
             return;
         } else {
             addPostToPostCount(post);
@@ -350,8 +354,7 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
-                                                                            isFirstTimePublish, true, false);
+            Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post, isFirstTimePublish);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                                                                    PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(R.drawable.ic_posts_white_24dp, mContext.getString(R.string.button_publish),
@@ -495,9 +498,8 @@ class PostUploadNotifier {
 
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
-            Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
-                                                                            PostUtils.isFirstTimePublish(post), false,
-                                                                            true);
+            Intent publishIntent = UploadService.getRetryUploadServiceIntent(mContext, post,
+                                                                            PostUtils.isFirstTimePublish(post));
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                                                                          PendingIntent.FLAG_CANCEL_CURRENT);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),

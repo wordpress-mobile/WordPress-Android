@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import java.util.Date
@@ -43,6 +45,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val labels = itemView.findViewById<TextView>(R.id.labels)
         private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
+        private val pageLayout = itemView.findViewById<ViewGroup>(R.id.page_layout)
+        private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
+                android.R.attr.selectableItemBackground
+        )
 
         companion object {
             const val FEATURED_IMAGE_THUMBNAIL_SIZE_DP = 40
@@ -74,7 +80,16 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 pageMore.visibility =
                         if (page.actions.isNotEmpty() && page.actionsEnabled) View.VISIBLE else View.INVISIBLE
 
+                setBackground(page.tapActionEnabled)
                 showFeaturedImage(page.imageUrl)
+            }
+        }
+
+        private fun setBackground(tapActionEnabled: Boolean) {
+            if (tapActionEnabled) {
+                pageLayout.background = selectableBackground
+            } else {
+                pageLayout.background = null
             }
         }
 
