@@ -1700,10 +1700,8 @@ public class EditPostActivity extends AppCompatActivity implements
             case PUBLISH_NOW:
                 showPublishConfirmationDialogAndPublishPost();
                 return;
-            case SCHEDULE:
-                uploadPost(false);
-                return;
             // In other cases, we'll upload the post without changing its status
+            case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
             case SAVE:
                 uploadPost(false);
