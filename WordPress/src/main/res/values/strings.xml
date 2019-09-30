@@ -259,15 +259,15 @@
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
     <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
-    <string name="post_waiting_for_connection_publish">Post will be published next time you device is online</string>
-    <string name="post_waiting_for_connection_pending">Post will be submitted for review next time your device is online</string>
-    <string name="post_waiting_for_connection_scheduled">Post will be scheduled next time your device is online</string>
-    <string name="post_waiting_for_connection_private">Private post will be published next time your device is online</string>
-    <string name="post_waiting_for_connection_draft">Draft will be saved to the server next time your device is online</string>
+    <string name="post_waiting_for_connection_publish">Post will be published when your device is back online</string>
+    <string name="post_waiting_for_connection_pending">Post will be submitted for review when your device is back online</string>
+    <string name="post_waiting_for_connection_scheduled">Post will be scheduled when your device is back online</string>
+    <string name="post_waiting_for_connection_private">Private post will be published when your device is back online</string>
+    <string name="post_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
     <string name="post_waiting_for_connection_publish_cancel">Changes will not be published</string>
     <string name="post_waiting_for_connection_pending_cancel">Changes will not be submitted</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Changes will not be scheduled</string>
-    <string name="post_waiting_for_connection_draft_cancel">Changes will not be saved to the server</string>
+    <string name="post_waiting_for_connection_draft_cancel">We won\'t save the latest changes to your draft.</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
