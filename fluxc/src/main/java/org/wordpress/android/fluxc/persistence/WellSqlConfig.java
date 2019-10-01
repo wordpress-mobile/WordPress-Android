@@ -600,6 +600,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 84:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE AccountModel ADD USERNAME_CAN_BE_CHANGED boolean");
+                oldVersion++;
             case 85:
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
                 db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
