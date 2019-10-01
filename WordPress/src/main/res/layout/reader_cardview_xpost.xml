@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="?attr/wpColorTextTetriary"
+                android:textColor="?attr/wpColorTextTertiary"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 android:fontFamily="serif"

@@ -69,7 +69,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="@dimen/margin_extra_extra_small"
-            android:textColorHint="?attr/wpColorTextTetriary"
+            android:textColorHint="?attr/wpColorTextTertiary"
             android:textSize="@dimen/text_sz_medium"
             tools:ignore="Autofill,RtlSymmetry" />
     </LinearLayout>

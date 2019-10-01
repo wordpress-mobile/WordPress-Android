@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:textColor="?attr/wpColorTextTetriary"
+        android:textColor="?attr/wpColorTextTertiary"
         android:textSize="@dimen/text_sz_medium"
         tools:text="01" />
 

@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="?attr/wpColorTextTetriary"
+            android:textColor="?attr/wpColorTextTertiary"
             android:textSize="@dimen/text_sz_small"
             tools:text="plugin_author" />
     </LinearLayout>

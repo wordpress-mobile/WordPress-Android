@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="?attr/wpColorTextTetriary"
+                android:textColor="?attr/wpColorTextTertiary"
                 tools:text="Rewind in progress" >
             </org.wordpress.android.widgets.WPTextView>
 

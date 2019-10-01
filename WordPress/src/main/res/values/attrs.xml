@@ -6,7 +6,7 @@
     <!-- Semantic colors -->
     <attr name="wpColorText" format="reference|color" />
     <attr name="wpColorTextSubtle" format="reference|color" />
-    <attr name="wpColorTextTetriary" format="reference|color" />
+    <attr name="wpColorTextTertiary" format="reference|color" />
     <attr name="wpColorTextQuaternary" format="reference|color" />
     <attr name="wpColorTextInverted" format="reference|color" />
 

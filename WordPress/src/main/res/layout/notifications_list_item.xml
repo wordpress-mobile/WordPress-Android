@@ -80,7 +80,7 @@
                 android:layout_marginTop="@dimen/margin_extra_small"
                 android:layout_width="wrap_content"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/wpColorTextTetriary"
+                android:textColor="?attr/wpColorTextTertiary"
                 android:textSize="@dimen/text_sz_larger" >
             </org.wordpress.android.widgets.NoticonTextView>
 

@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large"
         android:textSize="@dimen/text_sz_small"
-        android:textColor="?attr/wpColorTextTetriary" />
+        android:textColor="?attr/wpColorTextTertiary" />
 
     <View
         android:background="?attr/wpColorDivider"

@@ -50,7 +50,7 @@
                 android:drawablePadding="@dimen/margin_small"
                 android:drawableStart="@drawable/bg_oval_primary_50_plus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="?attr/wpColorTextTetriary"
+                android:textColor="?attr/wpColorTextTertiary"
                 android:visibility="gone"
                 tools:text="3"
                 tools:visibility="visible">
@@ -65,7 +65,7 @@
                 android:drawablePadding="@dimen/margin_small"
                 android:drawableStart="@drawable/bg_oval_error_50_minus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="?attr/wpColorTextTetriary"
+                android:textColor="?attr/wpColorTextTertiary"
                 android:visibility="gone"
                 tools:text="1"
                 tools:visibility="visible">

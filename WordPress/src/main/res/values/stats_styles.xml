@@ -15,7 +15,7 @@
 
     <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">?attr/wpColorTextTetriary</item>
+        <item name="android:textColor">?attr/wpColorTextTertiary</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 

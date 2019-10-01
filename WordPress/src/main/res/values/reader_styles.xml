@@ -62,7 +62,7 @@
     <!-- EditTexts -->
     <style name="ReaderEditText" parent="android:Widget.EditText">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColorHint">?attr/wpColorTextTetriary</item>
+        <item name="android:textColorHint">?attr/wpColorTextTertiary</item>
     </style>
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@android:color/transparent</item>
@@ -71,7 +71,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/max_length_reader_topic_name</item>
-        <item name="android:textColorHint">?attr/wpColorTextTetriary</item>
+        <item name="android:textColorHint">?attr/wpColorTextTertiary</item>
     </style>
 
     <!-- images -->

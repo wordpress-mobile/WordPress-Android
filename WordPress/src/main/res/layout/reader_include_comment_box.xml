@@ -55,7 +55,7 @@
             android:minLines="2"
             android:paddingBottom="@dimen/margin_extra_small"
             android:paddingTop="@dimen/margin_extra_small"
-            android:textColorHint="?attr/wpColorTextTetriary"
+            android:textColorHint="?attr/wpColorTextTertiary"
             android:textSize="@dimen/text_sz_large" />
 
         <ImageView

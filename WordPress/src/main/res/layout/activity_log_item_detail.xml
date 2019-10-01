@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="?attr/wpColorTextTetriary"
+                android:textColor="?attr/wpColorTextTertiary"
                 tools:text="Plugin autoupdated"/>
 
             <LinearLayout

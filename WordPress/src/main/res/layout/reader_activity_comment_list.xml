@@ -10,7 +10,7 @@
         style="@style/ReaderTextView.EmptyList"
         android:layout_above="@+id/layout_bottom"
         android:text="@string/reader_empty_comments"
-        android:textColor="?attr/wpColorTextTetriary"
+        android:textColor="?attr/wpColorTextTertiary"
         android:visibility="gone"
         app:fixWidowWords="true"
         tools:visibility="visible" />

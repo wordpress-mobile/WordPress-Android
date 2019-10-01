@@ -154,7 +154,7 @@
                                 android:id="@+id/plugin_version_bottom"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:textColor="?attr/wpColorTextTetriary"
+                                android:textColor="?attr/wpColorTextTertiary"
                                 tools:text="plugin_version_bottom"
                                 style="@style/PluginCardViewSecondaryText" />
                         </LinearLayout>
