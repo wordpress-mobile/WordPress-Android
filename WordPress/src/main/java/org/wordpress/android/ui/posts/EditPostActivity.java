@@ -339,11 +339,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         public static PostLoadingState fromInt(int value) {
-            if (value < 0 || value >= values().length) {
-                throw new IllegalArgumentException("PostLoadingState wrong value " + value);
-            }
-
-            PostLoadingState state = NONE;
+            PostLoadingState state = null;
 
             for (PostLoadingState item : values()) {
                 if (item.mValue == value) {
@@ -352,6 +348,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
 
+            if (state == null) {
+                throw new IllegalArgumentException("PostLoadingState wrong value " + value);
+            }
             return state;
         }
     }
