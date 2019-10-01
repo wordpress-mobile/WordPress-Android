@@ -217,6 +217,7 @@ class PostListMainViewModel @Inject constructor(
         postListEventListenerFactory.createAndStartListening(
                 lifecycle = lifecycle,
                 dispatcher = dispatcher,
+                bgDispatcher = bgDispatcher,
                 postStore = postStore,
                 site = site,
                 postActionHandler = postActionHandler,
