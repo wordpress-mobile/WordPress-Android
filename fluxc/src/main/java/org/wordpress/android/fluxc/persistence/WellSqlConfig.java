@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 85;
+        return 88;
     }
 
     @Override
@@ -600,6 +600,22 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 84:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE AccountModel ADD USERNAME_CAN_BE_CHANGED boolean");
+            case 85:
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD REMOTE_AUTO_SAVE_MODIFIED TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_PREVIEW_URL TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_TITLE TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_CONTENT TEXT");
+                db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_EXCERPT TEXT");
+                oldVersion++;
+            case 86:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_AUTO_UPLOAD_ATTEMPTS INTEGER");
+                oldVersion++;
+            case 87:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
                 oldVersion++;
         }
         db.setTransactionSuccessful();
@@ -648,6 +664,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
 
+    @SuppressWarnings({"MethodLength"})
     private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
         if (mActiveAddOns.contains(addOnName)) {
             switch (oldDbVersion) {
@@ -941,6 +958,17 @@ public class WellSqlConfig extends DefaultWellConfig {
                 case 83:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderStatusModel ADD STATUS_COUNT INTEGER");
+                    break;
+                case 87:
+                    AppLog.d(T.DB,
+                            "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCRefunds");
+                    db.execSQL("CREATE TABLE WCRefunds ("
+                               + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "ORDER_ID INTEGER,"
+                               + "REFUND_ID INTEGER,"
+                               + "DATA TEXT NOT NULL)");
                     break;
             }
         }
