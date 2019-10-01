@@ -35,18 +35,25 @@ import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.NothingToUpload
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadQueued
+import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadWaitingForConnection
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingMedia
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateHelper.PostUploadUiState.UploadingPost
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
-import java.lang.Math.max
 import javax.inject.Inject
 
 private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
@@ -63,6 +70,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         post: PostModel,
         uploadStatus: PostListItemUploadStatus,
         unhandledConflicts: Boolean,
+        hasAutoSave: Boolean,
         capabilitiesToPublish: Boolean,
         statsSupported: Boolean,
         featuredImageUrl: String?,
@@ -71,7 +79,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
-        val uploadUiState = createUploadUiState(uploadStatus, postStatus)
+        val uploadUiState = createUploadUiState(uploadStatus, post)
 
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
@@ -96,18 +104,27 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 isLocalDraft = post.isLocalDraft,
                 isLocallyChanged = post.isLocallyChanged,
                 uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts
+                hasUnhandledConflicts = unhandledConflicts,
+                hasAutoSave = hasAutoSave
         )
         val statusesColor = getStatusesColor(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
                 isLocallyChanged = post.isLocallyChanged,
                 uploadUiState = uploadUiState,
-                hasUnhandledConflicts = unhandledConflicts
+                hasUnhandledConflicts = unhandledConflicts,
+                hasAutoSave = hasAutoSave
         )
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
-            onAction.invoke(post, BUTTON_EDIT, POST_LIST_ITEM_SELECTED)
+            when (postStatus) {
+                TRASHED -> {}
+                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
+                        post,
+                        BUTTON_EDIT,
+                        POST_LIST_ITEM_SELECTED
+                )
+            }
         }
         val itemUiData = PostListItemUiStateData(
                 remotePostId = remotePostId,
@@ -126,7 +143,8 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 showOverlay = shouldShowOverlay(
                         uploadUiState = uploadUiState,
                         performingCriticalAction = performingCriticalAction
-                )
+                ),
+                disableRippleEffect = postStatus == PostStatus.TRASHED
         )
 
         return PostListItemUiState(
@@ -190,12 +208,13 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean
+        hasUnhandledConflicts: Boolean,
+        hasAutoSave: Boolean
     ): List<UiString> {
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is PostUploadUiState.UploadFailed -> {
-                getErrorLabel(uploadUiState.error, postStatus)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
             }
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.post_uploading_draft))
@@ -204,7 +223,22 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             }
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
+            uploadUiState is UploadWaitingForConnection -> {
+                when (uploadUiState.postStatus) {
+                    UNKNOWN, PUBLISHED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_publish))
+                    PRIVATE -> labels.add(UiStringRes(R.string.post_waiting_for_connection_private))
+                    PENDING -> labels.add(UiStringRes(R.string.post_waiting_for_connection_pending))
+                    SCHEDULED -> labels.add(UiStringRes(R.string.post_waiting_for_connection_scheduled))
+                    DRAFT -> labels.add(UiStringRes(R.string.post_waiting_for_connection_draft))
+                    TRASHED -> AppLog.e(
+                            POSTS,
+                            "Developer error: This state shouldn't happen. Trashed post is in " +
+                                    "UploadWaitingForConnection state."
+                    )
+                }
+            }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
+            hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
 
         // we want to show either single error/progress label or 0-n info labels.
@@ -225,17 +259,14 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         return labels
     }
 
-    private fun getErrorLabel(uploadError: UploadError, postStatus: PostStatus): UiString? {
+    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
         return when {
-            uploadError.mediaError != null -> when (postStatus) {
-                PRIVATE, PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
-                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
-                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
-                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
-            }
-            uploadError.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+            uploadUiState.error.mediaError != null -> getMediaUploadErrorMessage(uploadUiState, postStatus)
+            uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
+                    postStatus,
                     false,
-                    uploadError.postError
+                    uploadUiState.error.postError,
+                    uploadUiState.isEligibleForAutoUpload
             )
             else -> {
                 val errorMsg = "MediaError and postError are both null."
@@ -249,17 +280,41 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
     }
 
+    private fun getMediaUploadErrorMessage(uploadUiState: UploadFailed, postStatus: PostStatus): UiStringRes {
+        return when {
+            uploadUiState.isEligibleForAutoUpload -> when (postStatus) {
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_retrying_private)
+                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
+                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_generic_error_retrying)
+            }
+            uploadUiState.retryWillPushChanges -> when (postStatus) {
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_private)
+                SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
+                PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
+                DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
+            }
+            else -> UiStringRes(R.string.error_media_recover_post)
+        }
+    }
+
     @ColorRes private fun getStatusesColor(
         postStatus: PostStatus,
         isLocalDraft: Boolean,
         isLocallyChanged: Boolean,
         uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean
+        hasUnhandledConflicts: Boolean,
+        hasAutoSave: Boolean
     ): Int? {
-        val isError = uploadUiState is PostUploadUiState.UploadFailed || hasUnhandledConflicts
+        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
+                hasUnhandledConflicts
         val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
                 uploadUiState is UploadQueued
-        val isStateInfo = isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING
+        val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
+                isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
+                uploadUiState is UploadWaitingForConnection || hasAutoSave
 
         return when {
             isError -> ERROR_COLOR
@@ -285,7 +340,9 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         statsSupported: Boolean
     ): List<PostListButtonType> {
         val canRetryUpload = uploadUiState is PostUploadUiState.UploadFailed
-        val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload) &&
+        val canCancelPendingAutoUpload = (uploadUiState is UploadWaitingForConnection ||
+                (uploadUiState is PostUploadUiState.UploadFailed && uploadUiState.isEligibleForAutoUpload))
+        val canPublishPost = (canRetryUpload || uploadUiState is NothingToUpload || !canCancelPendingAutoUpload) &&
                 (isLocallyChanged || isLocalDraft || postStatus == DRAFT ||
                         (siteHasCapabilitiesToPublish && postStatus == PENDING))
 
@@ -293,11 +350,18 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
                 postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
-        val canShowViewButton = !canRetryUpload
+        val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
-        buttonTypes.add(BUTTON_EDIT)
+        if (postStatus != TRASHED) {
+            buttonTypes.add(BUTTON_EDIT)
+        }
+
+        if (canCancelPendingAutoUpload) {
+            buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
+        }
+
         if (canShowPublishButton) {
             buttonTypes.add(
                     if (canRetryUpload) {
@@ -323,16 +387,16 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
         }
 
         when {
-            isLocalDraft -> buttonTypes.add(PostListButtonType.BUTTON_DELETE)
+            isLocalDraft -> buttonTypes.add(BUTTON_DELETE)
             postStatus == TRASHED -> {
-                buttonTypes.add(PostListButtonType.BUTTON_DELETE)
-                buttonTypes.add(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(BUTTON_MOVE_TO_DRAFT)
+                buttonTypes.add(BUTTON_DELETE_PERMANENTLY)
             }
-            postStatus != TRASHED -> buttonTypes.add(PostListButtonType.BUTTON_TRASH)
+            postStatus != TRASHED -> buttonTypes.add(BUTTON_TRASH)
         }
 
         if (canShowStats) {
-            buttonTypes.add(PostListButtonType.BUTTON_STATS)
+            buttonTypes.add(BUTTON_STATS)
         }
 
         return buttonTypes
@@ -349,7 +413,7 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
             val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
                     .map(createSinglePostListItem)
             val itemsUnderMore = buttonTypes.subList(
-                    max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
+                    kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
                     buttonTypes.size
             )
                     .map(createSinglePostListItem)
@@ -373,23 +437,35 @@ class PostListItemUiStateHelper @Inject constructor(private val appPrefsWrapper:
     private sealed class PostUploadUiState {
         data class UploadingMedia(val progress: Int) : PostUploadUiState()
         data class UploadingPost(val isDraft: Boolean) : PostUploadUiState()
-        data class UploadFailed(val error: UploadError) : PostUploadUiState()
+        data class UploadFailed(
+            val error: UploadError,
+            val isEligibleForAutoUpload: Boolean,
+            val retryWillPushChanges: Boolean
+        ) : PostUploadUiState()
+
+        data class UploadWaitingForConnection(val postStatus: PostStatus) : PostUploadUiState()
         object UploadQueued : PostUploadUiState()
         object NothingToUpload : PostUploadUiState()
     }
 
     private fun createUploadUiState(
         uploadStatus: PostListItemUploadStatus,
-        postStatus: PostStatus
+        post: PostModel
     ): PostUploadUiState {
+        val postStatus = PostStatus.fromPost(post)
         return when {
             uploadStatus.hasInProgressMediaUpload -> UploadingMedia(uploadStatus.mediaUploadProgress)
             uploadStatus.isUploading -> UploadingPost(postStatus == DRAFT)
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
-            uploadStatus.uploadError != null -> PostUploadUiState.UploadFailed(uploadStatus.uploadError)
+            uploadStatus.uploadError != null -> UploadFailed(
+                    uploadStatus.uploadError,
+                    uploadStatus.isEligibleForAutoUpload,
+                    uploadStatus.uploadWillPushChanges
+            )
             uploadStatus.hasPendingMediaUpload ||
                     uploadStatus.isQueued ||
                     uploadStatus.isUploadingOrQueued -> UploadQueued
+            uploadStatus.isEligibleForAutoUpload -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
         }
     }
