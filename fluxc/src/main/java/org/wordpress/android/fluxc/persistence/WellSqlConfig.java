@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 87;
+        return 88;
     }
 
     @Override
@@ -613,6 +613,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_AUTO_UPLOAD_ATTEMPTS INTEGER");
                 oldVersion++;
+            case 87:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -954,6 +958,17 @@ public class WellSqlConfig extends DefaultWellConfig {
                 case 83:
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("ALTER TABLE WCOrderStatusModel ADD STATUS_COUNT INTEGER");
+                    break;
+                case 87:
+                    AppLog.d(T.DB,
+                            "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("DROP TABLE IF EXISTS WCRefunds");
+                    db.execSQL("CREATE TABLE WCRefunds ("
+                               + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               + "LOCAL_SITE_ID INTEGER,"
+                               + "ORDER_ID INTEGER,"
+                               + "REFUND_ID INTEGER,"
+                               + "DATA TEXT NOT NULL)");
                     break;
             }
         }
