@@ -54,7 +54,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="99 days ago "/>
+            tools:text="99 days ago • Eulah Kuvalis"/>
 
         <ImageView
             android:id="@+id/image_featured"
@@ -104,12 +104,14 @@
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
             android:textColor="@color/warning_50"
+            android:maxLines="3"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@+id/date_and_author"
             app:layout_constraintBottom_toTopOf="@+id/upload_progress"
-            tools:text="Private · Local Changes"/>
+            tools:text="Facere molestiae est maxime. Laborum nihil voluptatem qui est aut ut. Nisi eveniet id sit voluptatem. Id doloribus itaque sequi eum molestias id repellendus."/>
 
         <ProgressBar
             android:id="@+id/upload_progress"
