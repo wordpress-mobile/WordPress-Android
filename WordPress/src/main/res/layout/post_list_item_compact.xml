@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/posts_list_compact_row_height"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/posts_list_compact_row_height"
     android:layout_marginEnd="@dimen/post_list_content_margin_compact"
     android:layout_marginStart="@dimen/post_list_content_margin_compact"
     android:background="@color/white">
