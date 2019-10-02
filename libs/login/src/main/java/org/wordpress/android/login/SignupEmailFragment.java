@@ -155,9 +155,11 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     @Override
     public void onStop() {
         super.onStop();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            if (mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
         }
     }
 
