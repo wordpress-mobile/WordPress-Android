@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AppLog;
@@ -547,5 +549,12 @@ public class PostUtils {
         AppLog.d(T.POSTS, "User explicitly confirmed changes. Post title: " + post.getTitle());
         // the changes were explicitly confirmed by the user
         post.setChangesConfirmedContentHashcode(post.contentHashcode());
+    }
+
+    public static boolean isPostCurrentlyBeingEdited(PostModel post) {
+        PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        return flag != null && post != null
+               && post.getLocalSiteId() == flag.localSiteId
+               && post.getId() == flag.postId;
     }
 }
