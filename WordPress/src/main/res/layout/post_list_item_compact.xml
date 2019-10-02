@@ -106,6 +106,7 @@
             android:textColor="@color/warning_50"
             android:maxLines="3"
             android:ellipsize="end"
+            android:layout_marginTop="@dimen/margin_extra_small"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintHorizontal_bias="0"
