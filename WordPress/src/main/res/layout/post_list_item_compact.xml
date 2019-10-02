@@ -6,7 +6,6 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/posts_list_compact_row_height"
     android:layout_marginEnd="@dimen/post_list_content_margin_compact"
     android:layout_marginStart="@dimen/post_list_content_margin_compact"
     android:background="@color/white">
@@ -15,6 +14,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:minHeight="@dimen/posts_list_compact_row_height"
         android:background="?selectableItemBackground">
 
         <org.wordpress.android.widgets.WPTextView
