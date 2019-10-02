@@ -39,6 +39,7 @@ import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -53,8 +54,9 @@ import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostPreviewActivity;
+import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
@@ -472,7 +474,8 @@ public class ActivityLauncher {
             } else if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
                 // Show self-hosted sites as authenticated since we should have the username & password
                 WPWebViewActivity
-                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true);
+                        .openUrlByUsingBlogCredentials(context, site, null, siteUrl, new String[]{}, false, true,
+                                false);
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
@@ -488,24 +491,6 @@ public class ActivityLauncher {
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
         openUrlExternal(context, site.getAdminUrl());
-    }
-
-    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post) {
-        if (post == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
-        intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
-    }
-
-    public static void viewPagePreview(@NonNull Fragment fragment, @NonNull PageModel page) {
-        Intent intent = new Intent(fragment.getContext(), PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
-        intent.putExtra(WordPress.SITE, page.getSite());
-        fragment.startActivity(intent);
     }
 
     public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
@@ -524,10 +509,21 @@ public class ActivityLauncher {
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
-        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId());
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
+    }
+
+    public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post,
+                                               boolean loadAutoSaveRevision) {
+        editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(),
+                loadAutoSaveRevision);
     }
 
     public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId) {
+        editPostOrPageForResult(intent, activity, site, postLocalId, false);
+    }
+
+    public static void editPostOrPageForResult(Intent intent, Activity activity, SiteModel site, int postLocalId,
+                                               boolean loadAutoSaveRevision) {
         if (site == null) {
             return;
         }
@@ -537,6 +533,8 @@ public class ActivityLauncher {
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, postLocalId);
+        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -571,33 +569,91 @@ public class ActivityLauncher {
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
     public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
+        browsePostOrPageEx(context, site, post, RemotePreviewType.NOT_A_REMOTE_PREVIEW);
+    }
+
+    public static void previewPostOrPageForResult(
+            Activity activity,
+            SiteModel site,
+            PostModel post,
+            RemotePreviewType remotePreviewType
+    ) {
+        browsePostOrPageEx(activity, site, post, remotePreviewType);
+    }
+
+    private static void browsePostOrPageEx(
+            Context context,
+            SiteModel site,
+            PostModel post,
+            RemotePreviewType remotePreviewType) {
         if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
             return;
         }
 
-        // always add the preview parameter to avoid bumping stats when viewing posts
-        String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+        if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                        && TextUtils.isEmpty(post.getAutoSavePreviewUrl())) {
+            return;
+        }
+
+        String url = PostUtils.getPreviewUrlForPost(remotePreviewType, post);
+
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
+        boolean startPreviewForResult = remotePreviewType != RemotePreviewType.NOT_A_REMOTE_PREVIEW;
+
         if (site.isWPCom()) {
-            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject, true);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(
+                    context,
+                    url,
+                    shareableUrl,
+                    shareSubject,
+                    true,
+                    startPreviewForResult);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity
-                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce(), true);
+                    .openJetpackBlogPostPreview(
+                            context,
+                            url,
+                            shareableUrl,
+                            shareSubject,
+                            site.getFrameNonce(),
+                            true,
+                            startPreviewForResult);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
             // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
             // permalink structure settings.
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
-            WPWebViewActivity
-                    .openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()}, true, true);
+            WPWebViewActivity.openUrlByUsingBlogCredentials(
+                    context,
+                    site,
+                    post,
+                    url,
+                    new String[]{post.getLink()},
+                    true,
+                    true,
+                    startPreviewForResult);
         }
+    }
+
+    public static void showActionableEmptyView(
+            Context context,
+            WPWebViewUsageCategory actionableState,
+            String postTitle
+    ) {
+        WPWebViewActivity.openActionableEmptyViewDirectly(context, actionableState, postTitle);
     }
 
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        context.startActivity(intent);
+    }
+
+    public static void viewMeActivity(Context context) {
+        Intent intent = new Intent(context, MeActivity.class);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_ACCESSED);
         context.startActivity(intent);
     }
 

@@ -91,6 +91,10 @@
 
         <!-- Account activities -->
         <activity
+            android:name=".ui.main.MeActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/me_section_screen_title" />
+        <activity
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
@@ -228,10 +232,6 @@
             android:name=".ui.pages.PageParentActivity"
             android:theme="@style/Calypso.NoActionBar"
             android:label="@string/set_parent" />
-        <activity
-            android:name=".ui.posts.PostPreviewActivity"
-            android:label="@string/preview_post"
-            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme" />

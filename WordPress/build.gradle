@@ -53,9 +53,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-188"
+            versionName "alpha-189"
         }
-        versionCode 775
+        versionCode 778
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -81,20 +81,23 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.2"
+                versionName "13.3-rc-1"
             }
-            versionCode 776
+            versionCode 777
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
         }
     }
 
@@ -231,7 +234,7 @@ dependencies {
     }
     androidTestImplementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
 
-    androidTestImplementation project(path:':libs:mocks:WordPressMocks')
+    androidTestImplementation project(path:':WordPressMocks')
 
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.0'

@@ -39,10 +39,13 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -65,11 +68,14 @@ class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val accountStore: AccountStore,
+    uploadActionUseCase: UploadActionUseCase,
     uploadStore: UploadStore,
     mediaStore: MediaStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val prefs: AppPrefsWrapper,
     private val postListEventListenerFactory: PostListEventListener.Factory,
+    private val previewStateHelper: PreviewStateHelper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -101,6 +107,9 @@ class PostListMainViewModel @Inject constructor(
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
 
+    private val _previewState = SingleLiveEvent<PostListRemotePreviewState>()
+    val previewState = _previewState as LiveData<PostListRemotePreviewState>
+
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
 
@@ -125,7 +134,10 @@ class PostListMainViewModel @Inject constructor(
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
 
-    private val uploadStatusTracker = PostListUploadStatusTracker(uploadStore = uploadStore)
+    private val uploadStatusTracker = PostListUploadStatusTracker(
+            uploadStore = uploadStore,
+            uploadActionUseCase = uploadActionUseCase
+    )
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
     private val postFetcher by lazy {
@@ -135,7 +147,8 @@ class PostListMainViewModel @Inject constructor(
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
                 showDialog = { _dialogAction.postValue(it) },
-                checkNetworkConnection = this::checkNetworkConnection
+                checkNetworkConnection = this::checkNetworkConnection,
+                analyticsTracker = analyticsTracker
         )
     }
 
@@ -158,12 +171,14 @@ class PostListMainViewModel @Inject constructor(
                 postStore = postStore,
                 postListDialogHelper = postListDialogHelper,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+                hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
-                showToast = { _toastMessage.postValue(it) }
+                showToast = { _toastMessage.postValue(it) },
+                triggerPreviewStateUpdate = this::updatePreviewAndDialogState
         )
     }
 
@@ -184,7 +199,7 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState) {
         this.site = site
 
         if (isSearchExpanded.value == true) {
@@ -202,6 +217,7 @@ class PostListMainViewModel @Inject constructor(
         postListEventListenerFactory.createAndStartListening(
                 lifecycle = lifecycle,
                 dispatcher = dispatcher,
+                bgDispatcher = bgDispatcher,
                 postStore = postStore,
                 site = site,
                 postActionHandler = postActionHandler,
@@ -217,7 +233,10 @@ class PostListMainViewModel @Inject constructor(
                 invalidateFeaturedMedia = {
                     featuredImageTracker.invalidateFeaturedMedia(it)
                     invalidateAllLists()
-                }
+                },
+                triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
+                isRemotePreviewingFromPostsList = this::isRemotePreviewingFromPostsList,
+                hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
         )
 
         _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
@@ -229,6 +248,8 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
+        _previewState.value = _previewState.value ?: initPreviewState
+
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
         uploadStarter.queueUploadFromSite(site)
@@ -253,6 +274,7 @@ class PostListMainViewModel @Inject constructor(
                 postActionHandler = postActionHandler,
                 getUploadStatus = uploadStatusTracker::getUploadStatus,
                 doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
+                hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 postFetcher = postFetcher,
                 getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
@@ -342,6 +364,24 @@ class PostListMainViewModel @Inject constructor(
         postActionHandler.handleEditPostResult(data)
     }
 
+    private fun editRestoredAutoSavePost(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = true))
+        } else {
+            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+        }
+    }
+
+    private fun editLocalPost(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
+        } else {
+            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+        }
+    }
+
     // BasicFragmentDialog Events
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -350,21 +390,24 @@ class PostListMainViewModel @Inject constructor(
                 trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
                 deletePost = postActionHandler::deletePost,
                 publishPost = postActionHandler::publishPost,
-                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion
+                updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
+                editRestoredAutoSavePost = this::editRestoredAutoSavePost
         )
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         postListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
+                editLocalPost = this::editLocalPost
         )
     }
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
                 instanceTag = instanceTag,
-                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+                updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
+                editLocalPost = this::editLocalPost
         )
     }
 
@@ -409,6 +452,12 @@ class PostListMainViewModel @Inject constructor(
         dispatcher.dispatch(ListActionBuilder.newListRequiresRefreshAction(listTypeIdentifier))
     }
 
+    private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
+            _previewState.value != PostListRemotePreviewState.NONE
+
+    private fun hasRemoteAutoSavePreviewError() = _previewState.value != null &&
+            _previewState.value == PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR
+
     private fun checkNetworkConnection(): Boolean =
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 true
@@ -416,6 +465,32 @@ class PostListMainViewModel @Inject constructor(
                 _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
                 false
             }
+
+    fun handleRemotePreviewClosing() {
+        updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
+    }
+
+    private fun updatePreviewAndDialogState(newState: PostListRemotePreviewState, postInfo: PostInfoType) {
+        // We need only transitions, so...
+        if (_previewState.value == newState) return
+
+        AppLog.d(
+                AppLog.T.POSTS,
+                "Posts list preview state machine: transition from ${_previewState.value} to $newState"
+        )
+
+        // update the state
+        val prevState = _previewState.value
+        _previewState.postValue(newState)
+
+        // take care of exit actions on state transition
+        previewStateHelper.managePreviewStateTransitions(
+                newState,
+                prevState,
+                postInfo,
+                postActionHandler::handleRemotePreview
+        )
+    }
 
     fun toggleViewLayout() {
         val currentLayoutType = viewLayoutType.value ?: PostListViewLayoutType.defaultValue
