@@ -819,18 +819,18 @@ class WellSqlConfig : DefaultWellConfig {
         val db = WellSql.giveMeWritableDb()
         mTables.forEach { clazz ->
             val table = getTable(clazz)
-            db.execSQL("DROP TABLE IF EXISTS " + table.tableName)
+            db.execSQL("DROP TABLE IF EXISTS ${table.tableName}")
             db.execSQL(table.createStatement())
         }
     }
 
     private fun migrate(version: Int, script: () -> Unit) {
-        AppLog.d(T.DB, "Migrating to version " + (version + 1))
+        AppLog.d(T.DB, "Migrating to version ${version + 1}")
         script()
     }
 
     private fun migrateAddOn(@AddOn name: String, version: Int, script: () -> Unit) {
-        AppLog.d(T.DB, "Migrating addon " + name + " to version " + (version + 1))
+        AppLog.d(T.DB, "Migrating addon $name to version ${version + 1}")
         if (mActiveAddOns.contains(name)) {
             script()
         }
