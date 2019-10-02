@@ -11,6 +11,7 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.REMOTE_AUTO_SAVE
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD_AS_DRAFT
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -109,8 +110,19 @@ class RemotePreviewLogicHelper @Inject constructor(
                     )
                     return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
                 }
-                helperFunctions.startUploading(true, updatedPost)
-                PreviewLogicOperationResult.GENERATING_PREVIEW
+
+                return if (UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post)) {
+                    activityLauncherWrapper.previewPostOrPageForResult(
+                            activity,
+                            site,
+                            updatedPost,
+                            RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                    )
+                    PreviewLogicOperationResult.OPENING_PREVIEW
+                } else {
+                    helperFunctions.startUploading(true, updatedPost)
+                    PreviewLogicOperationResult.GENERATING_PREVIEW
+                }
             }
             else -> {
                 // If we don't need upload or auto save the post (eg. post not modified), open the preview directly.
