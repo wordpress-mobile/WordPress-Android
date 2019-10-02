@@ -49,7 +49,7 @@
             android:maxLines="1"
             android:textColor="?attr/wpColorTextSubtle"
             android:textSize="@dimen/text_sz_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/statuses_label"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,15 +102,13 @@
             android:id="@+id/statuses_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
             android:textAlignment="textStart"
             android:textColor="@color/warning_50"
-            app:layout_constraintBottom_toBottomOf="@+id/date_and_author"
-            app:layout_constraintEnd_toStartOf="@+id/image_featured"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@+id/date_and_author"
-            app:layout_constraintTop_toTopOf="@+id/date_and_author"
+            app:layout_constraintTop_toBottomOf="@+id/date_and_author"
+            app:layout_constraintBottom_toTopOf="@+id/upload_progress"
             tools:text="Private · Local Changes"/>
 
         <ProgressBar
