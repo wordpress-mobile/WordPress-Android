@@ -1217,10 +1217,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 launchVideoCamera();
                 break;
             case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary(allowMultipleSelection);
+                launchPictureLibrary();
                 break;
             case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary(allowMultipleSelection);
+                launchVideoLibrary();
                 break;
             case WP_MEDIA:
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
@@ -1789,12 +1789,12 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void launchPictureLibrary(boolean allowMultipleSelection) {
-        WPMediaUtils.launchPictureLibrary(this, allowMultipleSelection);
+    private void launchPictureLibrary() {
+        WPMediaUtils.launchPictureLibrary(this, mAllowMultipleSelection);
     }
 
-    private void launchVideoLibrary(boolean allowMultipleSelection) {
-        WPMediaUtils.launchVideoLibrary(this, allowMultipleSelection);
+    private void launchVideoLibrary() {
+        WPMediaUtils.launchVideoLibrary(this, mAllowMultipleSelection);
     }
 
     private void launchVideoCamera() {
@@ -2523,23 +2523,22 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
-    private boolean addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, List<Long> mediaIdList) {
+    private void addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, List<Long> mediaIdList) {
         ArrayMap<String, MediaFile> mediaMap = new ArrayMap<>();
         for (Long mediaId : mediaIdList) {
             MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
             if (media == null) {
                 AppLog.w(T.MEDIA, "Cannot add null media to post");
-                return false;
+            } else {
+                trackAddMediaEvent(source, media);
+
+                MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+                String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+
+                mediaMap.put(urlToUse, mediaFile);
             }
-            trackAddMediaEvent(source, media);
-
-            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
-
-            mediaMap.put(urlToUse, mediaFile);
         }
         mEditorFragment.appendMediaFiles(mediaMap);
-        return true;
     }
 
     private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
