@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
@@ -12,6 +13,8 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+
+import java.util.ArrayList;
 
 public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
@@ -125,12 +128,20 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.appendMediaFile(mediaId, mediaUrl, isVideo);
     }
 
+    public void appendMediaFiles(ArrayList<Media> mediaList) {
+        mWPAndroidGlueCode.appendMediaFiles(mediaList);
+    }
+
     public void showDevOptionsDialog() {
         mWPAndroidGlueCode.showDevOptionsDialog();
     }
 
     public void appendUploadMediaFile(final int mediaId, final String mediaUri, final boolean isVideo) {
         mWPAndroidGlueCode.appendUploadMediaFile(mediaId, mediaUri, isVideo);
+    }
+
+    public void appendUploadMediaFiles(ArrayList<Media> mediaList) {
+        mWPAndroidGlueCode.appendUploadMediaFiles(mediaList);
     }
 
     public void mediaFileUploadProgress(final int mediaId, final float progress) {
