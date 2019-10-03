@@ -32,7 +32,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.text.BreakIterator;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -497,13 +497,20 @@ public class PostUtils {
      */
     public static String getFormattedDateForLastModified(Context context, long timeSinceLastModified) {
         Date date = new Date(timeSinceLastModified);
-        SimpleDateFormat sdf =
-                new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", LocaleManager.getSafeLocale(context));
+
+        DateFormat dateFormat = DateFormat.getDateInstance(
+                DateFormat.MEDIUM,
+                LocaleManager.getSafeLocale(context));
+        DateFormat timeFormat = DateFormat.getTimeInstance(
+                DateFormat.SHORT,
+                LocaleManager.getSafeLocale(context));
+
 
         // The timezone on the website is at GMT
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        return sdf.format(date);
+        return dateFormat.format(date) + " @ " + timeFormat.format(date);
     }
 
     public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostModel post) {
