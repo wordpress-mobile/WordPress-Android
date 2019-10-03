@@ -60,6 +60,11 @@ class UploadActionUseCase @Inject constructor(
             return DO_NOTHING
         }
 
+        // Do not auto-upload post which is being edited
+        if (postUtilsWrapper.isPostCurrentlyBeingEdited(post)) {
+            return DO_NOTHING
+        }
+
         return action
     }
 

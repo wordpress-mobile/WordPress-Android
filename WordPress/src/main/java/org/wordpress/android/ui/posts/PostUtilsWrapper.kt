@@ -16,4 +16,6 @@ class PostUtilsWrapper @Inject constructor() {
     fun isPublishable(post: PostModel) = PostUtils.isPublishable(post)
 
     fun isPostInConflictWithRemote(post: PostModel) = PostUtils.isPostInConflictWithRemote(post)
+
+    fun isPostCurrentlyBeingEdited(post: PostModel) = PostUtils.isPostCurrentlyBeingEdited(post)
 }
