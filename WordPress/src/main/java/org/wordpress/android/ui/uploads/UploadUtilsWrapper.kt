@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.uploads
 
 import dagger.Reusable
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 
@@ -12,7 +13,8 @@ import javax.inject.Inject
  */
 @Reusable
 class UploadUtilsWrapper @Inject constructor() {
-    fun userCanPublish(site: SiteModel): Boolean {
-        return UploadUtils.userCanPublish(site)
-    }
+    fun userCanPublish(site: SiteModel): Boolean = UploadUtils.userCanPublish(site)
+
+    fun postLocalChangesAlreadyRemoteAutoSaved(post: PostModel): Boolean =
+            UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post)
 }

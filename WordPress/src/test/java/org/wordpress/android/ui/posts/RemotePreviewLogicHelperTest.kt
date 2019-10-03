@@ -21,6 +21,7 @@ import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewHelperFunctions
 import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -44,6 +45,9 @@ class RemotePreviewLogicHelperTest {
     @Mock
     private lateinit var postUtilsWrapper: PostUtilsWrapper
 
+    @Mock
+    private lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+
     private var uploadActionUseCase = UploadActionUseCase(mock(), mock(), mock())
 
     private lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
@@ -54,7 +58,8 @@ class RemotePreviewLogicHelperTest {
                 networkUtilsWrapper,
                 activityLauncherWrapper,
                 postUtilsWrapper,
-                uploadActionUseCase
+                uploadActionUseCase,
+                uploadUtilsWrapper
         )
 
         doReturn(true).whenever(site).isUsingWpComRestApi
@@ -224,6 +229,26 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
+    fun `launch remote preview with no uploading for a post with local changes which were remotely autosaved`() {
+        // Given
+        doReturn(true).whenever(post).isLocallyChanged
+        doReturn(true).whenever(uploadUtilsWrapper).postLocalChangesAlreadyRemoteAutoSaved(post)
+
+        // When
+        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
+
+        // Then
+        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
+        verify(helperFunctions, never()).startUploading(any(), any())
+        verify(activityLauncherWrapper, times(1)).previewPostOrPageForResult(
+                activity,
+                site,
+                post,
+                RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+        )
+    }
+
+    @Test
     fun `remote auto save a post with local changes for preview`() {
         // Given
 
@@ -304,6 +329,4 @@ class RemotePreviewLogicHelperTest {
         assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.OPENING_PREVIEW)
         verify(helperFunctions, never()).startUploading(false, post)
     }
-
-    // TODO ADD UNIT TESTS
 }

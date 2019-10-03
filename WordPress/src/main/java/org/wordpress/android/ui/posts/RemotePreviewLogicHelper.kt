@@ -11,7 +11,7 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.REMOTE_AUTO_SAVE
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.UPLOAD_AS_DRAFT
-import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -20,7 +20,8 @@ class RemotePreviewLogicHelper @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLauncherWrapper: ActivityLauncherWrapper,
     private val postUtilsWrapper: PostUtilsWrapper,
-    private val uploadActionUseCase: UploadActionUseCase
+    private val uploadActionUseCase: UploadActionUseCase,
+    private val uploadUtilsWrapper: UploadUtilsWrapper
 ) {
     enum class RemotePreviewType {
         NOT_A_REMOTE_PREVIEW,
@@ -111,7 +112,7 @@ class RemotePreviewLogicHelper @Inject constructor(
                     return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
                 }
 
-                return if (UploadUtils.postLocalChangesAlreadyRemoteAutoSaved(post)) {
+                return if (uploadUtilsWrapper.postLocalChangesAlreadyRemoteAutoSaved(post)) {
                     activityLauncherWrapper.previewPostOrPageForResult(
                             activity,
                             site,
