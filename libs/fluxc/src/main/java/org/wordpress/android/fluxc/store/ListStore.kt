@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.BoundaryCallback
+import com.yarolegovich.wellsql.WellSql
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -226,11 +227,13 @@ class ListStore @Inject constructor(
         val newState = when {
             payload.isError -> ListState.ERROR
             payload.canLoadMore -> ListState.CAN_LOAD_MORE
-            else -> ListState.FETCHED
+            else -> FETCHED
         }
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
 
         if (!payload.isError) {
+            val db = WellSql.giveMeWritableDb()
+            db.beginTransaction()
             if (!payload.loadedMore) {
                 deleteListItems(payload.listDescriptor)
             }
@@ -243,6 +246,8 @@ class ListStore @Inject constructor(
                 listItemModel.remoteItemId = remoteItemId
                 return@map listItemModel
             })
+            db.setTransactionSuccessful()
+            db.endTransaction()
         }
         val causeOfChange = if (payload.isError) {
             CauseOfListChange.ERROR
