@@ -106,7 +106,7 @@ public class GutenbergContainerFragment extends Fragment {
     public void toggleHtmlMode() {
         mHtmlModeEnabled = !mHtmlModeEnabled;
 
-        mWPAndroidGlueCode.toggleEditorMode();
+        mWPAndroidGlueCode.toggleEditorMode(mHtmlModeEnabled);
     }
 
     /**
