@@ -53,17 +53,16 @@
                 tools:src="@drawable/bg_oval_neutral_30_user_32dp" >
             </ImageView>
 
-            <org.wordpress.android.widgets.NoticonTextView
+            <ImageView
                 android:id="@+id/note_icon"
-                android:background="@drawable/bg_oval_primary_40_stroke_notification_unread"
-                android:gravity="center"
+                android:layout_width="@dimen/note_icon_sz"
                 android:layout_height="@dimen/note_icon_sz"
+                android:padding="4dp"
                 android:layout_marginStart="@dimen/notifications_note_icon_margin"
                 android:layout_marginTop="@dimen/notifications_note_icon_margin"
-                android:layout_width="@dimen/note_icon_sz"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" >
-            </org.wordpress.android.widgets.NoticonTextView>
+                android:background="@drawable/bg_oval_primary_40_stroke_notification_unread"
+                android:contentDescription="@string/icon"
+                android:gravity="center"></ImageView>
 
         </FrameLayout>
 
