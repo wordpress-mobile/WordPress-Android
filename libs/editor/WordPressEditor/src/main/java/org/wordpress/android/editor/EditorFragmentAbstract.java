@@ -37,8 +37,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // This was required since Aztec Visual->HTML can slightly change the content of the HTML. See #692 for details.
     public abstract void removeAllFailedMediaUploads();
     public abstract void removeMedia(String mediaId);
-    public abstract void setTitlePlaceholder(CharSequence text);
-    public abstract void setContentPlaceholder(CharSequence text);
     public abstract boolean showSavingProgressDialogIfNeeded();
     public abstract boolean hideSavingProgressDialog();
 

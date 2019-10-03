@@ -2591,11 +2591,6 @@ public class EditPostActivity extends AppCompatActivity implements
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
 
-        // Set up the placeholder text
-        mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
-        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder
-                                                              : R.string.editor_post_title_placeholder));
-
         // Set post title and content
         if (mPost != null) {
             // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized

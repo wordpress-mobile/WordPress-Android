@@ -1156,14 +1156,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void setTitlePlaceholder(CharSequence placeholderText) {
-    }
-
-    @Override
-    public void setContentPlaceholder(CharSequence placeholderText) {
-    }
-
-    @Override
     public boolean showSavingProgressDialogIfNeeded() {
         return false;
     }
