@@ -214,7 +214,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         IMAGE_EDITED,
         ITALIC_BUTTON_TAPPED,
         LINK_ADDED_BUTTON_TAPPED,
-        LINK_REMOVED_BUTTON_TAPPED,
         LIST_BUTTON_TAPPED,
         LIST_ORDERED_BUTTON_TAPPED,
         LIST_UNORDERED_BUTTON_TAPPED,

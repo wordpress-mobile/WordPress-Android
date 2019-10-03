@@ -3869,9 +3869,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 hidePhotoPicker();
                 break;
-            case LINK_REMOVED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LINK_REMOVED;
-                break;
             case LIST_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LIST;
                 break;
