@@ -16,7 +16,6 @@ import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class EditorFragmentAbstract extends Fragment {
@@ -29,7 +28,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
-    public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean isUploadingMedia();
@@ -173,11 +171,11 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
         void onAddMediaClicked();
-        void onAddMediaImageClicked(boolean allowMultipleSelection);
-        void onAddMediaVideoClicked(boolean allowMultipleSelection);
-        void onAddPhotoClicked(boolean allowMultipleSelection);
+        void onAddMediaImageClicked();
+        void onAddMediaVideoClicked();
+        void onAddPhotoClicked();
         void onCapturePhotoClicked();
-        void onAddVideoClicked(boolean allowMultipleSelection);
+        void onAddVideoClicked();
         void onCaptureVideoClicked();
         boolean onMediaRetryClicked(String mediaId);
         void onMediaRetryAllClicked(Set<String> mediaIdSet);
