@@ -609,7 +609,7 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (site.isJetpackConnected()) {
+        } else if (site.isJetpackConnected() && !TextUtils.isEmpty(site.getFrameNonce())) {
             WPWebViewActivity
                     .openJetpackBlogPostPreview(
                             context,
