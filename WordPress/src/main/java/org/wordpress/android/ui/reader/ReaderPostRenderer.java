@@ -253,7 +253,7 @@ public class ReaderPostRenderer {
      */
     private boolean shouldAddFeaturedImage() {
         return mPost.hasFeaturedImage()
-               && !mPost.getText().contains("<img")
+               && !mPost.getText().startsWith("<img")
                && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
