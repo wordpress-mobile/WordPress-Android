@@ -259,14 +259,14 @@
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
     <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
-    <string name="post_waiting_for_connection_publish">Post will be published when your device is back online</string>
-    <string name="post_waiting_for_connection_pending">Post will be submitted for review when your device is back online</string>
-    <string name="post_waiting_for_connection_scheduled">Post will be scheduled when your device is back online</string>
-    <string name="post_waiting_for_connection_private">Private post will be published when your device is back online</string>
+    <string name="post_waiting_for_connection_publish">We\'ll publish the post when your device is back online.</string>
+    <string name="post_waiting_for_connection_pending">We\'ll submit your post for review when your device is back online.</string>
+    <string name="post_waiting_for_connection_scheduled">We\'ll schedule your post when your device is back online.</string>
+    <string name="post_waiting_for_connection_private">We\'ll publish your private post when your device is back online.</string>
     <string name="post_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
-    <string name="post_waiting_for_connection_publish_cancel">Changes will not be published</string>
-    <string name="post_waiting_for_connection_pending_cancel">Changes will not be submitted</string>
-    <string name="post_waiting_for_connection_scheduled_cancel">Changes will not be scheduled</string>
+    <string name="post_waiting_for_connection_publish_cancel"> We won\'t publish these changes.</string>
+    <string name="post_waiting_for_connection_pending_cancel">We won\'t submit these changes for review. </string>
+    <string name="post_waiting_for_connection_scheduled_cancel">We won\'t schedule these changes.</string>
     <string name="post_waiting_for_connection_draft_cancel">We won\'t save the latest changes to your draft.</string>
 
     <!-- buttons on post cards -->
@@ -1503,8 +1503,8 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
-    <string name="error_generic_error">Couldn\'t perform operation</string>
-    <string name="error_generic_error_retrying">Couldn\'t perform operation. We\'ll try again later</string>
+    <string name="error_generic_error">We couldn\'t complete this action.</string>
+    <string name="error_generic_error_retrying">We couldn\'t complete this action, but we\'ll try again later. </string>
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
 
@@ -1513,24 +1513,24 @@
     <string name="error_unknown_page">Could not find the page on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
 
-    <string name="error_media_recover_post">Couldn\'t upload media</string>
-    <string name="error_media_recover_post_not_published">Couldn\'t upload media. Post not published</string>
-    <string name="error_media_recover_post_not_published_private">Couldn\'t upload media. Private post not published</string>
-    <string name="error_media_recover_post_not_scheduled">Couldn\'t upload media. Post not scheduled</string>
-    <string name="error_media_recover_post_not_submitted">Couldn\'t upload media. Post not submitted</string>
+    <string name="error_media_recover_post">We couldn\'t upload this media.</string>
+    <string name="error_media_recover_post_not_published">We couldn\'t upload this media, and didn\'t publish the post.</string>
+    <string name="error_media_recover_post_not_published_private">We couldn\'t upload this media, and didn\'t publish this private post.</string>
+    <string name="error_media_recover_post_not_scheduled">We couldn\'t upload this media, and didn\'t schedule this post.</string>
+    <string name="error_media_recover_post_not_submitted">We couldn\'t upload this media, and didn\'t submit this post for review. </string>
     <string name="error_media_recover_post_not_published_retrying" translatable="false">@string/error_post_not_published_retrying</string>
     <string name="error_media_recover_post_not_published_retrying_private" translatable="false">@string/error_post_not_published_retrying_private</string>
     <string name="error_media_recover_post_not_scheduled_retrying" translatable="false">@string/error_post_not_scheduled_retrying</string>
     <string name="error_media_recover_post_not_submitted_retrying" translatable="false">@string/error_post_not_submitted_retrying</string>
 
-    <string name="error_post_not_published">Couldn\'t perform operation. Post not published</string>
-    <string name="error_post_not_published_private">Couldn\'t perform operation. Private post not published</string>
-    <string name="error_post_not_scheduled">Couldn\'t perform operation. Post not scheduled</string>
-    <string name="error_post_not_submitted">Couldn\'t perform operation. Post not submitted</string>
-    <string name="error_post_not_published_retrying">Post couldn\'t be published. We\'ll try again later</string>
-    <string name="error_post_not_published_retrying_private">Private post couldn\'t be published. We\'ll try again later</string>
-    <string name="error_post_not_scheduled_retrying">Post couldn\'t be scheduled. We\'ll try again later</string>
-    <string name="error_post_not_submitted_retrying">Post couldn\'t be submitted. We\'ll try again later</string>
+    <string name="error_post_not_published">We couldn\'t complete this action, and didn\'t publish this post.</string>
+    <string name="error_post_not_published_private">We couldn\'t complete this action, and didn\'t publish this private post.</string>
+    <string name="error_post_not_scheduled">We couldn\'t complete this action, and didn\'t schedule this post.</string>
+    <string name="error_post_not_submitted">We couldn\'t complete this action, and didn\'t submit this post for review.</string>
+    <string name="error_post_not_published_retrying">We couldn\'t publish this post, but we\'ll try again later.</string>
+    <string name="error_post_not_published_retrying_private">We couldn\'t publish this private post, but we\'ll try again later.</string>
+    <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
+    <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="error_load_comment">Couldn\'t load the comment</string>
