@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -1369,6 +1370,14 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public boolean onImageUrlClick(String imageUrl, View view, int x, int y) {
         return showPhotoViewer(imageUrl, view, x, y);
+    }
+
+    @Override
+    public boolean onFileDownloadClick(String fileUrl) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(fileUrl));
+        startActivity(i);
+        return true;
     }
 
     private ActionBar getActionBar() {
