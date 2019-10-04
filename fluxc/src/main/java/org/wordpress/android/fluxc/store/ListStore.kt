@@ -234,20 +234,24 @@ class ListStore @Inject constructor(
         if (!payload.isError) {
             val db = WellSql.giveMeWritableDb()
             db.beginTransaction()
-            if (!payload.loadedMore) {
-                deleteListItems(payload.listDescriptor)
+            try {
+                if (!payload.loadedMore) {
+                    deleteListItems(payload.listDescriptor)
+                }
+                val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
+                    "The `ListModel` can never be `null` here since either a new list is inserted or existing one " +
+                            "updated"
+                }
+                listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
+                    val listItemModel = ListItemModel()
+                    listItemModel.listId = listModel.id
+                    listItemModel.remoteItemId = remoteItemId
+                    return@map listItemModel
+                })
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
             }
-            val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
-                "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
-            }
-            listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
-                val listItemModel = ListItemModel()
-                listItemModel.listId = listModel.id
-                listItemModel.remoteItemId = remoteItemId
-                return@map listItemModel
-            })
-            db.setTransactionSuccessful()
-            db.endTransaction()
         }
         val causeOfChange = if (payload.isError) {
             CauseOfListChange.ERROR
@@ -458,7 +462,7 @@ class ListStore @Inject constructor(
     class ListError(
         val type: ListErrorType,
         val message: String? = null
-    ) : Store.OnChangedError
+    ) : OnChangedError
 
     enum class ListErrorType {
         GENERIC_ERROR,
