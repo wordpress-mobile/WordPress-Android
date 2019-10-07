@@ -811,6 +811,21 @@
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_strip_image_location">Remove location from media</string>
+    <string name="app_theme">App Theme</string>
+    <string name="app_theme_dialog_title">Chose theme</string>
+    <string name="app_theme_light">Light</string>
+    <string name="app_theme_dark">Dark</string>
+    <string name="app_theme_default">Set by Battery Saver</string>
+    <string-array name="app_theme_entries">
+        <item>@string/app_theme_light</item>
+        <item>@string/app_theme_dark</item>
+        <item>@string/app_theme_default</item>
+    </string-array>
+    <string-array name="app_theme_entry_values" translatable="false">
+        <item>light</item>
+        <item>dark</item>
+        <item>default</item>
+    </string-array>
 
     <!-- stats -->
     <string name="stats">Stats</string>
