@@ -1,6 +1,14 @@
 13.4
 -----
- 
+* Add Remote Preview support for posts and pages.
+* Post List: Trashed post must now be restored before edit or preview.
+* Post List: Unhandled conflict with auto saves are now detected and visible. On post opening, the app will let you choose which version you prefer.
+* Fixed: Clicking on "Publish" on a private post sometimes published the post as public
+* Post List: Unsaved changes are automatically backed up on all devices. On post opening, the app will let you choose which version you prefer.
+* Clicking on "Publish" on a private post sometimes published the post as public
+* Fixed a bunch of upload related issues
+* Block editor: Fix a link editing issue, where trying to add a empty link at the start of another link would remove the existing link.
+
 13.3
 -----
 * Added ability to change the username via Account Settings

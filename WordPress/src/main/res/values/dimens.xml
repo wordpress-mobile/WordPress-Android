@@ -42,8 +42,6 @@
     <dimen name="default_dialog_width">280dp</dimen>
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
-    <dimen name="post_editor_content_side_margin">20dp</dimen>
-
     <dimen name="default_cardview_radius">2dp</dimen>
     <dimen name="default_cardview_elevation">2dp</dimen>
 
@@ -343,7 +341,6 @@
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
-    <dimen name="snackbar_message_margin_bottom">18dp</dimen>
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
     <dimen name="jetpack_remote_install_container_padding">30dp</dimen>

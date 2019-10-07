@@ -84,6 +84,10 @@ class PostConflictResolver(
         return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
     }
 
+    fun hasUnhandledAutoSave(post: PostModel): Boolean {
+        return PostUtils.hasAutoSave(post)
+    }
+
     fun onPostSuccessfullyUpdated() {
         originalPostCopyForConflictUndo?.id?.let {
             val updatedPost = getPostByLocalPostId.invoke(it)

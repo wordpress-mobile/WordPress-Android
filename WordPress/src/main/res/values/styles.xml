@@ -12,6 +12,8 @@
         <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorError">@color/error</item>
 
+        <item name="wpColorWarningDark">@color/warning_50</item>
+
         <item name="android:windowBackground">@color/background_default</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>

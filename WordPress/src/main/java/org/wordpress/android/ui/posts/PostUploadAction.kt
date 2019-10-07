@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 
@@ -35,21 +36,33 @@ sealed class PostUploadAction {
         val message: String?
     ) : PostUploadAction()
 
+    class PostRemotePreviewSnackbarError(
+        val messageResId: Int
+    ) : PostUploadAction()
+
     /**
      * Cancel all post and media uploads related to this post
      */
     class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
 }
 
-fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAttachView: View) {
+fun handleUploadAction(
+    action: PostUploadAction,
+    activity: Activity,
+    dispatcher: Dispatcher,
+    snackbarAttachView: View,
+    uploadActionUseCase: UploadActionUseCase
+) {
     when (action) {
         is PostUploadAction.EditPostResult -> {
             UploadUtils.handleEditPostResultSnackbars(
                     activity,
+                    dispatcher,
                     snackbarAttachView,
                     action.data,
                     action.post,
-                    action.site
+                    action.site,
+                    uploadActionUseCase.getUploadAction(action.post)
             ) {
                 action.publishAction()
             }
@@ -81,6 +94,12 @@ fun handleUploadAction(action: PostUploadAction, activity: Activity, snackbarAtt
                     action.mediaList,
                     action.site,
                     action.message
+            )
+        }
+        is PostUploadAction.PostRemotePreviewSnackbarError -> {
+            UploadUtils.showSnackbarError(
+                    snackbarAttachView,
+                    snackbarAttachView.resources.getString(action.messageResId)
             )
         }
         is PostUploadAction.CancelPostAndMediaUpload -> {
