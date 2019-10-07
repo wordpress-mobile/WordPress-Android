@@ -3547,8 +3547,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddVideoClicked(boolean allowMultipleSelectio) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelectio);
+    public void onAddVideoClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelection);
+    }
+
     @Override
     public void onAddMediaClicked(boolean allowMultipleSelection) {
         mAllowMultipleSelection = allowMultipleSelection;
