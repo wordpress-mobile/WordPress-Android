@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-20 02:54:11+0000
+Translation-Revision-Date: 2019-09-10 00:55:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="notification_settings_moved_notices">“通知设置”现在可以显示在“通知”选项卡中。</string>
+    <string name="stats_file_downloads_value_label">下载</string>
+    <string name="stats_file_downloads_title_label">文件</string>
+    <string name="stats_file_downloads">文件下载</string>
+    <string name="stats_data_not_recorded_for_period">系统未记录 2019 年 6 月 28 日之前的文件下载统计数据。</string>
+    <string name="stats_site_negative_utc">站点时区 (UTC - %s)</string>
+    <string name="stats_site_positive_utc">站点时区 (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">站点时区 (UTC)</string>
     <string name="web_preview_desktop">桌面</string>
     <string name="web_preview_default">默认</string>
     <string name="close_dialog_button_desc">关闭对话框</string>
@@ -66,7 +74,6 @@ Language: zh_CN
     <string name="site_settings_update_password_message">要将应用程序重新连接到您的自托管站点，请在此处输入站点的新密码。</string>
     <string name="site_settings_password_updated">密码已更新</string>
     <string name="site_settings_password_dialog_title">更新密码</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在注册域名…</string>
     <string name="domain_registration_state_picker_dialog_title">选择州/省/自治区/直辖市</string>
     <string name="domain_registration_country_picker_dialog_title">选择国家/地区</string>
@@ -113,7 +120,6 @@ Language: zh_CN
     <string name="stats_insights_management_title">仅查看相关性较大的统计信息。在下面添加和管理您的见解。</string>
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度站点统计信息</string>
-    <string name="stats_view_follower_totals">粉丝总数</string>
     <string name="register_domain">注册域</string>
     <string name="jetpack_installed_message">安装 Jetpack 后，我们只需进行设置即可。这只需要一分钟时间。</string>
     <string name="stats_menu_remove">从见解中删除</string>
@@ -775,11 +781,6 @@ Language: zh_CN
     <string name="my_site_add_new_site">添加新站点</string>
     <string name="my_site_create_new_site">为您的业务、杂志或个人博客创建新站点；或连接现有的 WordPress 站点。</string>
     <string name="notifications_jetpack_connection_setup_info">要在您的设备上接收来自 WordPress 站点的有用通知，您需要安装 Jetpack 插件。是否希望设置 Jetpack？</string>
-    <string name="site_settings_lazy_load_images_summary">通过仅加载在屏幕上可见的图片来提升站点加载速度。新图片将在即将滚动进入视野之前加载。这样可以防止查看者一次性下载页面中的所有图片，甚至包括那些他们看不到的图片。</string>
-    <string name="site_settings_lazy_load_images">“延迟加载”图片</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 将优化您的图片，并通过距离访客最近的服务器位置提供。使用我们的全球内容交付网络将大大提升您站点的加载速度。</string>
-    <string name="site_settings_serve_images_from_our_servers">通过服务器提供图片</string>
-    <string name="site_settings_speed_up_your_site">加快站点加载速度</string>
     <string name="stats_jetpack_connection_setup">安装 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切换文本</string>
     <string name="plugin_info_your_version">您的 WordPress 版本</string>
