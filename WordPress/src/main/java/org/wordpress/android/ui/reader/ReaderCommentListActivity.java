@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -147,17 +148,18 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
             ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
-            if (content != null) {
+            LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+            if (content != null && layoutManager != null) {
                 if (content.isSmooth()) {
-                    RecyclerView.SmoothScroller scrollerSnappedToStart = new LinearSmoothScroller(this) {
+                    RecyclerView.SmoothScroller smoothScrollerToTop = new LinearSmoothScroller(this) {
                         @Override protected int getVerticalSnapPreference() {
                             return LinearSmoothScroller.SNAP_TO_START;
                         }
                     };
-                    scrollerSnappedToStart.setTargetPosition(content.getPosition());
-                    mRecyclerView.getLayoutManager().startSmoothScroll(scrollerSnappedToStart);
+                    smoothScrollerToTop.setTargetPosition(content.getPosition());
+                    layoutManager.startSmoothScroll(smoothScrollerToTop);
                 } else {
-                    mRecyclerView.scrollToPosition(content.getPosition());
+                    ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
                 }
             }
         });
