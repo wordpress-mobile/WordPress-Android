@@ -101,6 +101,7 @@ import javax.inject.Inject;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+import static org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderPostDetailFragment extends Fragment
@@ -1387,7 +1388,7 @@ public class ReaderPostDetailFragment extends Fragment
         FragmentActivity activity = getActivity();
         if (activity != null
             && fileUrl != null
-            && PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE)) {
+            && PermissionUtils.checkAndRequestStoragePermission(this, READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE)) {
             downloadFile(fileUrl, activity);
             return true;
         } else {
@@ -1401,7 +1402,7 @@ public class ReaderPostDetailFragment extends Fragment
                                            @NonNull int[] grantResults) {
         FragmentActivity activity = getActivity();
         if (activity != null
-            && requestCode == WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
+            && requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
             downloadFile(mFileForDownload, activity);
             mFileForDownload = null;
