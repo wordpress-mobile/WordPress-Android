@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -14,6 +15,9 @@ import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.BuildCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -50,8 +54,12 @@ import javax.inject.Inject;
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final int LANGUAGE_CHANGED = 1000;
+    public static final String LIGHT_MODE = "light";
+    public static final String DARK_MODE = "dark";
+    public static final String DEFAULT_MODE = "default";
 
     private DetailListPreference mLanguagePreference;
+    private ListPreference mAppThemePreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -102,6 +110,9 @@ public class AppSettingsFragment extends PreferenceFragment
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
 
+        mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
+        mAppThemePreference.setOnPreferenceChangeListener(this);
+
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
@@ -139,19 +150,19 @@ public class AppSettingsFragment extends PreferenceFragment
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
-                                     String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
-                                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
+                getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         setDetailListPreferenceValue(mImageQualityPref,
-                                     String.valueOf(AppPrefs.getImageOptimizeQuality()),
-                                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                String.valueOf(AppPrefs.getImageOptimizeQuality()),
+                getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
 
         mOptimizedVideo.setChecked(AppPrefs.isVideoOptimize());
         setDetailListPreferenceValue(mVideoWidthPref,
-                                     String.valueOf(AppPrefs.getVideoOptimizeWidth()),
-                                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                String.valueOf(AppPrefs.getVideoOptimizeWidth()),
+                getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                                     String.valueOf(AppPrefs.getVideoOptimizeQuality()),
-                                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                String.valueOf(AppPrefs.getVideoOptimizeQuality()),
+                getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
@@ -230,8 +241,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
         if (mAccountStore.hasAccessToken()) {
-        SwitchPreference tracksOptOutPreference =
-                (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
+            SwitchPreference tracksOptOutPreference =
+                    (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
             tracksOptOutPreference.setChecked(!mAccountStore.getAccount().getTracksOptOut());
         }
     }
@@ -272,13 +283,13 @@ public class AppSettingsFragment extends PreferenceFragment
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setImageOptimizeMaxSize(newWidth);
             setDetailListPreferenceValue(mImageMaxSizePref,
-                                         newValue.toString(),
-                                         getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                    newValue.toString(),
+                    getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
-                                         newValue.toString(),
-                                         getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                    newValue.toString(),
+                    getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
@@ -286,17 +297,39 @@ public class AppSettingsFragment extends PreferenceFragment
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
-                                         newValue.toString(),
-                                         getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                    newValue.toString(),
+                    getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                                         newValue.toString(),
-                                         getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                    newValue.toString(),
+                    getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
+        } else if (preference == mAppThemePreference) {
+            changeTheme((String) newValue);
         }
         return true;
+    }
+
+    private void changeTheme(String newTheme) {
+        switch (newTheme) {
+            case LIGHT_MODE:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+
+            case DARK_MODE:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+
+            default:
+                if (BuildCompat.isAtLeastQ()) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+                }
+                break;
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
