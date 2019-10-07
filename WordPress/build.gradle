@@ -182,13 +182,16 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
 
+    implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.automattic:rest:1.0.7'
+    implementation ('com.automattic:rest:1.0.7') {
+        exclude group: 'com.mcxiaoke.volley'
+    }
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
@@ -260,7 +263,9 @@ dependencies {
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     implementation project(path:':libs:utils:WordPressUtils')
-    implementation project(path:':libs:networking:WordPressNetworking')
+    implementation (project(path:':libs:networking:WordPressNetworking')) {
+        exclude group: "com.android.volley"
+    }
     implementation project(path:':libs:analytics:WordPressAnalytics')
     implementation project(path:':libs:editor:WordPressEditor')
     implementation (project(path:':libs:login:WordPressLoginFlow')) {

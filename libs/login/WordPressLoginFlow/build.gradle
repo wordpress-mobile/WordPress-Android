@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.5.1'
     }
 }
 
@@ -32,7 +32,7 @@ android {
 
 dependencies {
     implementation ('org.wordpress:utils:1.20.3') {
-        exclude group: "com.mcxiaoke.volley"
+        exclude group: "com.android.volley"
     }
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
