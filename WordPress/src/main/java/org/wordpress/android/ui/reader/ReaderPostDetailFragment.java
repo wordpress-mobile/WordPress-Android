@@ -85,6 +85,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -111,7 +112,6 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderWebViewUrlClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface {
     private static final String BOOKMARKS_SAVED_LOCALLY_DIALOG = "bookmarks_saved_locally_dialog";
-    private static final int FILE_DOWNLOAD_PERMISSION_REQUEST_CODE = 123;
     private long mPostId;
     private long mBlogId;
     private DirectOperation mDirectOperation;
@@ -1387,7 +1387,7 @@ public class ReaderPostDetailFragment extends Fragment
         FragmentActivity activity = getActivity();
         if (activity != null
             && fileUrl != null
-            && PermissionUtils.checkAndRequestStoragePermission(this, FILE_DOWNLOAD_PERMISSION_REQUEST_CODE)) {
+            && PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE)) {
             downloadFile(fileUrl, activity);
             return true;
         } else {
@@ -1401,7 +1401,7 @@ public class ReaderPostDetailFragment extends Fragment
                                            @NonNull int[] grantResults) {
         FragmentActivity activity = getActivity();
         if (activity != null
-            && requestCode == FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
+            && requestCode == WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
             downloadFile(mFileForDownload, activity);
             mFileForDownload = null;
