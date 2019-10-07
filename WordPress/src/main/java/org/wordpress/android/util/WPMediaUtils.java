@@ -220,6 +220,11 @@ public class WPMediaUtils {
                                         RequestCodes.VIDEO_LIBRARY);
     }
 
+    public static void launchMediaLibrary(Activity activity, boolean multiSelect) {
+        activity.startActivityForResult(prepareMediaLibraryIntent(activity, multiSelect),
+                RequestCodes.MEDIA_LIBRARY);
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");

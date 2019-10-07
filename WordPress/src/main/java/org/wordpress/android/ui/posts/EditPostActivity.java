@@ -3128,6 +3128,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                     }
                     break;
+                case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
                     advertiseImageOptimisationAndAddMedia(data);
                     break;
