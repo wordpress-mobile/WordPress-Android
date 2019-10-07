@@ -3548,6 +3548,10 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAddVideoClicked(boolean allowMultipleSelectio) {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelectio);
+    @Override
+    public void onAddMediaClicked(boolean allowMultipleSelection) {
+        mAllowMultipleSelection = allowMultipleSelection;
+        WPMediaUtils.launchMediaLibrary(this, mAllowMultipleSelection);
     }
 
     @Override
