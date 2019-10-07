@@ -113,7 +113,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         return builder.create()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (activity !is BasicDialogPositiveClickInterface) {
             throw RuntimeException("Hosting activity must implement BasicDialogPositiveClickInterface")
@@ -123,7 +123,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         }
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         val activity = activity
         if (activity != null && activity is BasicDialogOnDismissByOutsideTouchInterface) {
             // Only handle the event if it wasn't triggered by a button

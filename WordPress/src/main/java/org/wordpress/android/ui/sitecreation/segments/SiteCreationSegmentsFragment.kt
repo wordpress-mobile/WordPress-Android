@@ -42,7 +42,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var segmentsScreenListener: SegmentsScreenListener
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")

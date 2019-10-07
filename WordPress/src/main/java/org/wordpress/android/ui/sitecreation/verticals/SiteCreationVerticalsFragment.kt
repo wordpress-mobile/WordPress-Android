@@ -51,7 +51,7 @@ class SiteCreationVerticalsFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is VerticalsScreenListener) {
             throw IllegalStateException("Parent activity must implement VerticalsScreenListener.")
