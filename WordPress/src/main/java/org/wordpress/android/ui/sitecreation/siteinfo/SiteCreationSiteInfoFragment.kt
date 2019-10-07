@@ -41,7 +41,7 @@ class SiteCreationSiteInfoFragment : SiteCreationBaseFormFragment() {
     private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var siteInfoScreenListener: SiteInfoScreenListener
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is OnSkipClickedListener) {
             throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")

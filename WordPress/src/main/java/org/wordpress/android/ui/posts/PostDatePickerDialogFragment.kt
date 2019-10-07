@@ -51,7 +51,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
         return datePickerDialog
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         (activity!!.applicationContext as WordPress).component().inject(this)
     }
