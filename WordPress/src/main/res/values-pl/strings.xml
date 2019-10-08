@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-16 14:49:29+0000
+Translation-Revision-Date: 2019-09-14 17:32:00+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="notification_settings_moved_notices">Ustawienia powiadomień znajdziesz w zakładce Powiadomienia.</string>
+    <string name="stats_file_downloads_value_label">Pobrań</string>
+    <string name="stats_file_downloads_title_label">Plik</string>
+    <string name="stats_file_downloads">Pobrania plików</string>
+    <string name="stats_data_not_recorded_for_period">Statystyki ilości pobrań nie były rejestrowane przed 28 czerwca 2019.</string>
+    <string name="stats_site_negative_utc">Ustaw strefę czasową (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Ustaw strefę czasową (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Ustaw strefę czasową (UTC)</string>
     <string name="web_preview_desktop">Komputer</string>
     <string name="web_preview_default">Domyślnie</string>
     <string name="close_dialog_button_desc">Zamknij okno dialogowe </string>
@@ -107,7 +115,6 @@ Language: pl
     <string name="site_settings_update_password_message">Aby ponownie połączyć aplikację do witryny z własnym hostingiem, wprowadź nowe hasło witryny. </string>
     <string name="site_settings_password_updated">Hasło zaktualizowane</string>
     <string name="site_settings_password_dialog_title">Zaktualizuj hasło</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Rejestrowanie nazwy domeny…</string>
     <string name="domain_registration_state_picker_dialog_title">Wybierz stan</string>
     <string name="domain_registration_country_picker_dialog_title">Wybierz kraj</string>
@@ -847,11 +854,6 @@ Language: pl
     <string name="my_site_add_new_site">Dodaj nową witrynę</string>
     <string name="my_site_create_new_site">Stwórz nową witrynę dla swojej firmy, magazynu czy własnego bloga; lub połącz istniejącą instalację WordPressa.</string>
     <string name="notifications_jetpack_connection_setup_info">Aby uzyskać pomocne powiadomienia na swoim urządzeniu ze swojej WordPressowej witryny, będziesz musiał zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
-    <string name="site_settings_lazy_load_images_summary">Przyspiesz działanie swojej witryny ładując tylko obrazki widoczne na ekranie. Nowe obrazki załadują się tuż zanim przewiniesz stronę do fragmentu w którym się znajdują. Zapobiega to ładowaniu wszystkich obrazków za jednym razem, nawet tych, których oglądający nie widzą.</string>
-    <string name="site_settings_lazy_load_images">Wczytuj tylko widoczne na stronie obrazki</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack zoptymalizuje twoje obrazki i poda je z serwera najbliżej ulokowanego do twoich oglądających. Korzystając z naszej sieci dostarczającej globalne treści przyspieszysz ładowanie swojej witryny.</string>
-    <string name="site_settings_serve_images_from_our_servers">Podaj obrazki z naszych serwerów</string>
-    <string name="site_settings_speed_up_your_site">Przyspiesz swoją witrynę</string>
     <string name="stats_jetpack_connection_setup">Zainstaluj Jetpacka</string>
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>

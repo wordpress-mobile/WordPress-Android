@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-22 00:54:12+0000
+Translation-Revision-Date: 2019-10-02 02:54:46+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">이 작업은 취소할 수 없습니다. 사용자명이 이미 업데이트된 것 같습니다.</string>
+    <string name="settings_username_changer_toast_content">새 사용자명은 %1$s입니다.</string>
+    <string name="settings_username_changer_progress_dialog">사용자명 저장 중…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">사용자명 변경</string>
+    <string name="settings_username_changer_confirm_dialog_content">사용자명을 %1$s%2$s%3$s(으)로 변경하고 있습니다. 사용자명을 변경하면 그라바타 프로필 및 인텐스 디베이트 프로필 주소도 변경됩니다. 계속하려면 새 사용자명을 확인하세요.</string>
+    <string name="settings_username_changer_confirm_dialog_title">조심하세요!</string>
+    <string name="settings_username_changer_header">사용자명(%1$s%2$s%3$s)이 변경됩니다. 사용자명은 다시 바꿀 수 없습니다.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">젯팩 성능 설정 보기 및 변경</string>
+    <string name="site_settings_performance_and_speed">성능과 속도</string>
+    <string name="site_settings_more">더 보기</string>
+    <string name="site_settings_improved_search_summary">워드프레스의 내장된 검색을 향상된 검색 환경(베타)으로 바꾸기</string>
+    <string name="site_settings_improved_search">향상된 검색</string>
+    <string name="site_settings_jetpack_search">젯팩 검색</string>
+    <string name="site_settings_ad_free_video_hosting">광고 없는 비디오 호스팅</string>
+    <string name="site_settings_media">미디어</string>
+    <string name="site_settings_site_accelerator_summary">젯팩이 이미지 및 정적 파일(예: CSS 및 JavaScript)을 최적화할 수 있도록 허용하여 페이지를 더 빠르게 로드합니다.</string>
+    <string name="site_settings_faster_static_files">더 빠른 정적 파일</string>
+    <string name="site_settings_faster_images">더 빠른 이미지</string>
+    <string name="site_settings_site_accelerator_off">끔</string>
+    <string name="site_settings_site_accelerator_on">켬</string>
+    <string name="site_settings_site_accelerator">사이트 가속기</string>
+    <string name="site_settings_lazy_load_images_summary">화면에 보이는 이미지만 로드하여 사이트 속도를 개선하세요.</string>
+    <string name="site_settings_performance">성능</string>
+    <string name="notification_settings_moved_notices">이제 알림 탭에서 알림 설정을 찾을 수 있습니다.</string>
+    <string name="stats_file_downloads_value_label">다운로드</string>
+    <string name="stats_file_downloads_title_label">파일</string>
+    <string name="stats_file_downloads">파일 다운로드</string>
+    <string name="stats_data_not_recorded_for_period">2019년 6월 28일 이전에는 파일 다운로드 통계가 기록되지 않았습니다.</string>
+    <string name="stats_site_negative_utc">사이트 시간대(UTC - %s)</string>
+    <string name="stats_site_positive_utc">사이트 시간대(UTC + %s)</string>
+    <string name="stats_site_neutral_utc">사이트 시간대(UTC)</string>
     <string name="web_preview_desktop">데스크톱</string>
     <string name="web_preview_default">기본</string>
     <string name="close_dialog_button_desc">대화상자 닫기</string>
@@ -107,7 +138,6 @@ Language: ko_KR
     <string name="site_settings_update_password_message">앱을 자체 호스팅된 사이트에 다시 연결하려면 여기에 사이트의 새 비밀번호를 입력하세요.</string>
     <string name="site_settings_password_updated">비밀번호가 업데이트됨</string>
     <string name="site_settings_password_dialog_title">비밀번호 업데이트</string>
-    <string name="domain_registration_phone_number_format">+%s %s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">도메인 네임 등록 중…</string>
     <string name="domain_registration_state_picker_dialog_title">주 선택</string>
     <string name="domain_registration_country_picker_dialog_title">국가 선택</string>
@@ -246,6 +276,8 @@ Language: ko_KR
     <string name="plans_loading_error_no_plans_subtitle">현재는 요금제를 로드할 수 없습니다. 나중에 다시 시도하세요.</string>
     <string name="plans_loading_error_no_plans_title">요금제를 로드할 수 없음</string>
     <string name="plans_loading_error_network_title">연결 없음</string>
+    <string name="menu_switch_to_gutenberg_editor">블록 편집기로 전환</string>
+    <string name="menu_switch_to_aztec_editor">구 버전 편집기로 전환</string>
     <string name="stats_loading_block_error">데이터 로드 중에 문제가 발생했습니다. 페이지를 새로 고치고 다시 시도하세요.</string>
     <string name="stats_loading_error">데이터가 로드되지 않음</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
@@ -674,6 +706,7 @@ Language: ko_KR
     <string name="fab_add_tag_desc">태그 작성</string>
     <string name="navigate_up_desc">위로 탐색</string>
     <string name="notification_settings_switch_desc">알림</string>
+    <string name="open_external_link_desc">외부 링크 열기</string>
     <string name="show_more_desc">더 보기</string>
     <string name="reader_photo_view_desc">사진</string>
     <string name="reader_list_item_suggestion_remove_desc">삭제</string>
@@ -844,11 +877,7 @@ Language: ko_KR
     <string name="my_site_add_new_site">새 사이트 추가</string>
     <string name="my_site_create_new_site">비즈니스, 잡지 또는 개인 블로그를 위한 새 사이트를 만들거나 기존 워드프레스 설치에 연결하세요.</string>
     <string name="notifications_jetpack_connection_setup_info">워드프레스 사이트로부터 장치에 유용한 알림을 가져오려면 젯팩 플러그인을 설치해야 합니다. 젯팩을 설치하시겠어요?</string>
-    <string name="site_settings_lazy_load_images_summary">화면에 보이는 이미지만 로드하여 사이트 속도를 개선하세요. 새 이미지는 스크롤하여 보기 바로 전에 로드됩니다. 이렇게 하면 방문자가 페이지 내의 보이지 않는 이미지까지 모두 한 번에 다운로드하지 않아도 됩니다.</string>
     <string name="site_settings_lazy_load_images">이미지 \"느리게 로드\"</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">젯팩은 회원님의 이미지를 최적화하며 방문자에게 가장 가까운 서버 위치에서 이미지를 제공합니다. 글로벌 콘텐츠 제공 네트워크를 사용하면 사이트의 로드 속도가 향상됩니다.</string>
-    <string name="site_settings_serve_images_from_our_servers">서버에서 이미지 제공</string>
-    <string name="site_settings_speed_up_your_site">사이트 속도 향상</string>
     <string name="stats_jetpack_connection_setup">젯팩 설정</string>
     <string name="plugin_chevron_icon_content_description">텍스트 토글</string>
     <string name="plugin_info_your_version">현재 워드프레스 버전</string>
@@ -1061,6 +1090,7 @@ Language: ko_KR
     <string name="login_site_address_help_title">내 사이트 주소는 무엇인가요?</string>
     <string name="login_site_address_help">사이트 주소를 찾는 데 도움이 필요하세요?</string>
     <string name="login_site_address">사이트 주소</string>
+    <string name="enter_site_address">연결하려는 워드프레스 사이트의 주소를 입력하세요.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">워드프레스닷컴에 이미 로그인되어 있습니다.</string>
     <string name="login_continue">계속</string>

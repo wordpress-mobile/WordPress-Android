@@ -668,11 +668,6 @@ Language: es_CL
     <string name="my_site_add_new_site">Añadir nuevo sitio</string>
     <string name="my_site_create_new_site">Crea un nuevo sitio para tu negocio, revista o blog personal; o conecta una instalación existente de WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">Para obtener notificaciones útiles en tu dispositivo desde tu sitio de WordPress, tendrás que instalar el plugin Jetpack. ¿Deseas configurar Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio cargando sólo las imágenes que están visibles en la pantalla. Las nuevas imágenes se cargarán justo antes de desplazarse a la vista. Esto impide a los espectadores tener que descargar todas las imágenes de una página de una sola vez, incluso las que no pueden ver.</string>
-    <string name="site_settings_lazy_load_images">Imágenes “Lazy-load\"</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimizará tus imágenes y las servirá desde la ubicación del servidor más cercana a tus visitantes. Usará nuestra red global de despacho de contenido, aumentando así la velocidad de carga de tu sitio.</string>
-    <string name="site_settings_serve_images_from_our_servers">Sirve las imágenes desde nuestros servidores</string>
-    <string name="site_settings_speed_up_your_site">Acelera tu sitio</string>
     <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Tu Versión de WordPress</string>

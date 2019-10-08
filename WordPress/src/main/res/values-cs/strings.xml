@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-20 12:47:08+0000
+Translation-Revision-Date: 2019-09-30 11:24:58+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>
@@ -574,11 +573,7 @@ Language: cs_CZ
     <string name="my_site_add_new_site">Přidat novou stránku</string>
     <string name="my_site_create_new_site">Vytvořte nový web pro svůj podnik, časopis nebo osobní blog; nebo připojite existující stránky běžící na WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">Chcete-li získat užitečná oznámení v zařízení z vašeho webu WordPress, musíte nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Zlepšete rychlost vašeho webu pouze načtením obrázků viditelných na obrazovce. Nové obrázky se načtou těsně předtím, než se projdou do zobrazení. To zabraňuje divákům, aby museli stahovat všechny snímky na stránce najednou, dokonce i ty, které nevidí.</string>
     <string name="site_settings_lazy_load_images">Postupné načítání obrázků \"Lazy-load\"</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a načítá je z nejbližších serverů. Pomocí naší globální sítě serverů pro doručování obsahu se zvýší rychlost načítání vašeho webu.</string>
-    <string name="site_settings_serve_images_from_our_servers">Načítejte obrázky z našich serverů</string>
-    <string name="site_settings_speed_up_your_site">Zrychlete svůj web</string>
     <string name="stats_jetpack_connection_setup">Instalovat Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Přepnout text</string>
     <string name="plugin_info_your_version">Verze WordPressu</string>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-21 00:54:44+0000
+Translation-Revision-Date: 2019-10-03 00:54:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">לא ניתן לבטל את הפעולה. ייתכן ששם המשתמש כבר עודכן.</string>
+    <string name="settings_username_changer_toast_content">שם המשתמש החדש שלך הוא %1$s</string>
+    <string name="settings_username_changer_progress_dialog">שומר את שם המשתמש…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">החלפת שם משתמש</string>
+    <string name="settings_username_changer_confirm_dialog_content">שם המשתמש שלך יוחלף אל %1$s%2$s%3$s. שינוי שם המשתמש שלך ישפיע גם על כתובת הפרופיל שלך ב-Gravatar וב-Intense Debate. יש לאשר את שם המשתמש החדש שלך כדי להמשיך.</string>
+    <string name="settings_username_changer_confirm_dialog_title">זהירות!</string>
+    <string name="settings_username_changer_header">שם המשתמש שלך, שכרגע הוא %1$s%2$s%3$s, עומד להשתנות. לא תהיה לך אפשרות לשנות את שם המשתמש בחזרה.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">להציג ולשנות את הגדרות הביצועים שלך ב-Jetpack</string>
+    <string name="site_settings_performance_and_speed">ביצועים ומהירות</string>
+    <string name="site_settings_more">עוד</string>
+    <string name="site_settings_improved_search_summary">החלפה בין החיפוש המובנה של WordPress לחוויית החיפוש המשופרת</string>
+    <string name="site_settings_improved_search">חיפוש משופר</string>
+    <string name="site_settings_jetpack_search">חיפוש Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">אחסון סרטוני וידאו נטול פרסומות</string>
+    <string name="site_settings_media">מדיה</string>
+    <string name="site_settings_site_accelerator_summary">ניתן לטעון תמונות מהר יותר עם JetpacK כדי לשפר את התצוגה של התמונות והקבצים הסטטיים (כגון CSS ו-JavaScript).</string>
+    <string name="site_settings_faster_static_files">טעינה מהירה יותר של קבצים סטטיים</string>
+    <string name="site_settings_faster_images">טעינה מהירה יותר של תמונות</string>
+    <string name="site_settings_site_accelerator_off">מופסק</string>
+    <string name="site_settings_site_accelerator_on">מופעל</string>
+    <string name="site_settings_site_accelerator">מאיץ האתרים</string>
+    <string name="site_settings_lazy_load_images_summary">שיפור המהירות באתר שלך על ידי טעינה של התמונות הנראות על המסך בלבד.</string>
+    <string name="site_settings_performance">ביצועים</string>
+    <string name="notification_settings_moved_notices">כעת ניתן למצוא את ההגדרות של ההודעות בלשונית \'הודעות\'.</string>
+    <string name="stats_file_downloads_value_label">הורדות</string>
+    <string name="stats_file_downloads_title_label">קובץ</string>
+    <string name="stats_file_downloads">הורדות קבצים</string>
+    <string name="stats_data_not_recorded_for_period">נתונים סטטיסטיים של הורדת קבצים לא נרשמו לפני 28 ביוני 2019.</string>
+    <string name="stats_site_negative_utc">אזור הזמן של האתר (UTC - %s‎)</string>
+    <string name="stats_site_positive_utc">אזור הזמן של האתר (UTC + %s‎)</string>
+    <string name="stats_site_neutral_utc">אזור הזמן של האתר (UTC)</string>
     <string name="web_preview_desktop">Desktop</string>
     <string name="web_preview_default">ברירת מחדל</string>
     <string name="close_dialog_button_desc">Close Dialog</string>
@@ -107,7 +138,6 @@ Language: he_IL
     <string name="site_settings_update_password_message">כדי להתחבר מחדש את האפליקציה לאתר באחסון עצמי, יש להזין את הסיסמה החדשה של האתר כאן.</string>
     <string name="site_settings_password_updated">הסיסמה עודכנה</string>
     <string name="site_settings_password_dialog_title">לעדכן את הסיסמה</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">רושם את שם הדומיין…</string>
     <string name="domain_registration_state_picker_dialog_title">בחירת מדינה</string>
     <string name="domain_registration_country_picker_dialog_title">בחירת ארץ</string>
@@ -154,7 +184,6 @@ Language: he_IL
     <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
     <string name="stats_insights_social">רשתות חברתיות</string>
     <string name="stats_insights_annual_site_stats">נתונים סטטיסטיים שנתיים של האתר</string>
-    <string name="stats_view_follower_totals">נתונים כוללים של עוקבים</string>
     <string name="register_domain">רישום דומיין</string>
     <string name="jetpack_installed_message">כעת, לאחר ההתקנה של Jetpack, צריך להגדיר את החשבון. התהליך יארך כדקה.</string>
     <string name="stats_menu_remove">הסרה מהתובנות</string>
@@ -827,11 +856,6 @@ Language: he_IL
     <string name="my_site_add_new_site">הוספת אתר חדש</string>
     <string name="my_site_create_new_site">יצירה של אתר חדש לעסק שלך, מגזין, או בלוג אישי; או חיבור אתר WordPress קיים.</string>
     <string name="notifications_jetpack_connection_setup_info">כדי לקבל הודעות מועילות למכשיר מהאתר שלך ב-WordPress, עליך להתקין את התוסף של Jetpack. רוצה להתקין את Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">שיפור המהירות באתר שלך על ידי טעינה של התמונות הנראות על המסך בלבד. תמונות חדשות ייטענו רגע לפני הצגתן בגלילה. כך נמנע מצופים להוריד את כל התמונות בעמוד בבת אחת, גם כאלו שהם לא יכולים לראות.</string>
-    <string name="site_settings_lazy_load_images">\'טעינה עצלה\' של תמונות</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ימטב את התמונות שלך ויציג אותן ממיקום השרת הקרוב ביותר למבקרים שלך. שימוש ברשת שליחת התוכן העולמית שלנו ישפר את מהירות הטעינה של האתר שלך.</string>
-    <string name="site_settings_serve_images_from_our_servers">הצגת תמונות מהשרתים שלנו</string>
-    <string name="site_settings_speed_up_your_site">הגברת המהירות של האתר שלך</string>
     <string name="stats_jetpack_connection_setup">התקנת Jetpack</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>
