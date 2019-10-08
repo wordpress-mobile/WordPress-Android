@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-21 01:54:09+0000
+Translation-Revision-Date: 2019-10-03 00:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">此動作無法取消。使用者名稱可能已更新。</string>
+    <string name="settings_username_changer_toast_content">你的新使用者名稱為 %1$s</string>
+    <string name="settings_username_changer_progress_dialog">正在儲存使用者名稱…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">變更使用者名稱</string>
+    <string name="settings_username_changer_confirm_dialog_content">你正將使用者名稱變更為 %1$s%2$s%3$s。一旦變更使用者名稱，你的 Gravatar 個人檔案和 Intense Debate 個人檔案網址也會受到影響。請確認你的新使用者名稱以繼續操作。</string>
+    <string name="settings_username_changer_confirm_dialog_title">請小心！</string>
+    <string name="settings_username_changer_header">你即將變更你的使用者名稱 (目前為 %1$s%2$s%3$s)。一旦變更使用者名稱就無法復原。</string>
+    <string name="site_settings_jetpack_performance_settings_hint">檢視及變更你的 Jetpack 效能設定</string>
+    <string name="site_settings_performance_and_speed">效能和速度</string>
+    <string name="site_settings_more">更多</string>
+    <string name="site_settings_improved_search_summary">以改良的搜尋體驗取代 WordPress 內建搜尋工具</string>
+    <string name="site_settings_improved_search">改良的搜尋功能</string>
+    <string name="site_settings_jetpack_search">Jetpack 搜尋</string>
+    <string name="site_settings_ad_free_video_hosting">無廣告視訊託管</string>
+    <string name="site_settings_media">媒體</string>
+    <string name="site_settings_site_accelerator_summary">讓 Jetpack 最佳化你的圖片和靜態檔案 (例如 CSS 和 JavaScript)，藉此加快載入頁面的速度。</string>
+    <string name="site_settings_faster_static_files">更快載入靜態檔案</string>
+    <string name="site_settings_faster_images">更快載入圖片</string>
+    <string name="site_settings_site_accelerator_off">關閉</string>
+    <string name="site_settings_site_accelerator_on">開啟</string>
+    <string name="site_settings_site_accelerator">網站加速器</string>
+    <string name="site_settings_lazy_load_images_summary">僅載入畫面中可見的圖片，藉此提升網站速度。</string>
+    <string name="site_settings_performance">效能</string>
+    <string name="notification_settings_moved_notices">現在可以在「通知」索引標籤中找到通知設定。</string>
+    <string name="stats_file_downloads_value_label">下載</string>
+    <string name="stats_file_downloads_title_label">檔案</string>
+    <string name="stats_file_downloads">檔案下載</string>
+    <string name="stats_data_not_recorded_for_period">系統並未統計 2019 年 6 月 28 日之前的檔案下載統計資料。</string>
+    <string name="stats_site_negative_utc">網站時區 (UTC - %s)</string>
+    <string name="stats_site_positive_utc">網站時區 (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">網站時區 (UTC)</string>
     <string name="web_preview_desktop">桌上型電腦</string>
     <string name="web_preview_default">預設</string>
     <string name="close_dialog_button_desc">關閉對話框</string>
@@ -107,7 +138,6 @@ Language: zh_TW
     <string name="site_settings_update_password_message">若要將應用程式重新連結至你的自助託管網站，請在這裡輸入網站的新密碼。</string>
     <string name="site_settings_password_updated">密碼已更新</string>
     <string name="site_settings_password_dialog_title">更新密碼</string>
-    <string name="domain_registration_phone_number_format">+%s。%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在註冊網域名稱…</string>
     <string name="domain_registration_state_picker_dialog_title">選取州/省</string>
     <string name="domain_registration_country_picker_dialog_title">選取國家</string>
@@ -154,7 +184,6 @@ Language: zh_TW
     <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>
     <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度網站統計</string>
-    <string name="stats_view_follower_totals">關注者總數</string>
     <string name="register_domain">註冊網域</string>
     <string name="jetpack_installed_message">現在 Jetpack 已安裝完成，我們只需要協助你完成設定即可。這只需要一分鐘左右。</string>
     <string name="stats_menu_remove">從洞察報告中移除</string>
@@ -821,11 +850,6 @@ Language: zh_TW
     <string name="my_site_add_new_site">新增網站</string>
     <string name="my_site_create_new_site">為你的公司、雜誌或個人網誌建立新網站；或連結既有的 WordPress 安裝。</string>
     <string name="notifications_jetpack_connection_setup_info">若要在裝置上獲得來自你 WordPress 網站的實用通知，必須安裝 Jetpack 外掛程式。是否要設定 Jetpack？</string>
-    <string name="site_settings_lazy_load_images_summary">只載入畫面上可見的圖片，藉此提升網站速度。新圖片會在其捲動進入畫面的前一刻載入。這可避免瀏覽者必須一次下載頁面中的所有圖片，包括他們看不見的圖片。</string>
-    <string name="site_settings_lazy_load_images">「延遲載入」圖片</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 會最佳化你的圖片，並從與訪客距離最近的伺服器提供圖片。使用我們的全球內容傳遞網路可大幅提升網站的載入速度。</string>
-    <string name="site_settings_serve_images_from_our_servers">由我們的伺服器提供圖片</string>
-    <string name="site_settings_speed_up_your_site">加快網站的速度</string>
     <string name="stats_jetpack_connection_setup">安裝 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切換文字</string>
     <string name="plugin_info_your_version">你的 WordPress 版本</string>

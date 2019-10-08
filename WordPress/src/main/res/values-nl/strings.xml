@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-20 01:54:10+0000
+Translation-Revision-Date: 2019-10-01 14:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Deze actie kan niet geannuleerd worden. De gebruikersnaam is mogelijk al bijgewerkt.</string>
+    <string name="settings_username_changer_toast_content">Jouw nieuwe gebruikersnaam is %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Gebruikersnaam wordt opgeslagen…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Gebruikersnaam wijzigen</string>
+    <string name="settings_username_changer_confirm_dialog_content">Je wijzigt je gebruikersnaam naar %1$s%2$s%3$s. Als je je gebruikersnaam wijzigt, heeft dat ook invloed op je Gravatar-profiel en de Intense Debate-profieladressen. Bevestig je nieuwe gebruikersnaam om door te gaan.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Voorzichtig!</string>
+    <string name="settings_username_changer_header">Je staat op het punt om je huidige gebruikersnaam, %1$s%2$s%3$s, te wijzigen. Je kunt deze wijziging niet meer terugdraaien.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Bekijk je instellingen van Jetpack-prestaties en wijzig ze</string>
+    <string name="site_settings_performance_and_speed">Prestaties en snelheid</string>
+    <string name="site_settings_more">Meer</string>
+    <string name="site_settings_improved_search_summary">Vervang de standaard zoekfunctie van WordPress door een verbeterde zoekfunctie</string>
+    <string name="site_settings_improved_search">Verbeterde zoekfunctie</string>
+    <string name="site_settings_jetpack_search">Jetpack Search</string>
+    <string name="site_settings_ad_free_video_hosting">Videohosting zonder advertenties</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Laad pagina\'s sneller door Jetpack je afbeeldingen en statische bestanden (zoals CSS en JavaScript) te laten optimaliseren.</string>
+    <string name="site_settings_faster_static_files">Snellere statische bestanden</string>
+    <string name="site_settings_faster_images">Snellere afbeeldingen</string>
+    <string name="site_settings_site_accelerator_off">Uit</string>
+    <string name="site_settings_site_accelerator_on">Aan</string>
+    <string name="site_settings_site_accelerator">Siteversneller</string>
+    <string name="site_settings_lazy_load_images_summary">Versnel je site door alleen afbeeldingen te laden die zichtbaar zijn op het scherm.</string>
+    <string name="site_settings_performance">Prestatie</string>
+    <string name="notification_settings_moved_notices">Je vindt de instellingen voor meldingen nu op het tabblad Meldingen.</string>
+    <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_file_downloads_title_label">Bestand</string>
+    <string name="stats_file_downloads">Bestandsdownloads</string>
+    <string name="stats_data_not_recorded_for_period">De statistieken voor bestandsdownloads zijn niet geregistreerd vóór 28 juni 2019.</string>
+    <string name="stats_site_negative_utc">Tijdzone site (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Tijdzone site (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Tijdzone site (UTC)</string>
     <string name="web_preview_desktop">Desktop</string>
     <string name="web_preview_default">Standaard</string>
     <string name="close_dialog_button_desc">Dialoogvenster sluiten</string>
@@ -79,7 +110,6 @@ Language: nl
     <string name="site_settings_update_password_message">Om de app opnieuw te koppelen aan je zelf-gehoste site, voer je hier het nieuwe wachtwoord van de site in.</string>
     <string name="site_settings_password_updated">Wachtwoord bijgewerkt</string>
     <string name="site_settings_password_dialog_title">Wachtwoord bijwerken</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Domeinnaam wordt geregistreerd…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecteer provincie</string>
     <string name="domain_registration_country_picker_dialog_title">Selecteer land</string>
@@ -126,7 +156,6 @@ Language: nl
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
-    <string name="stats_view_follower_totals">Aantal volgers</string>
     <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
     <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
@@ -721,8 +750,6 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor jouw bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
-    <string name="site_settings_lazy_load_images">\"Lazy-load\" afbeeldingen</string>
-    <string name="site_settings_speed_up_your_site">Versnel je site</string>
     <string name="stats_jetpack_connection_setup">Jetpack installeren</string>
     <string name="plugin_chevron_icon_content_description">Tekst in-/uitschakelen</string>
     <string name="plugin_info_your_version">Jouw WordPress versie</string>

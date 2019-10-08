@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-15 00:00:44+0000
+Translation-Revision-Date: 2019-10-02 21:21:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Denne handlingen kan ikke avbrytes. Brukernavnet kan allerede være oppdatert.</string>
+    <string name="settings_username_changer_toast_content">Ditt nye brukernavn er %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Lagrer brukernavn…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Endre brukernavn</string>
+    <string name="settings_username_changer_confirm_dialog_content">Du endrer ditt brukernavn til %1$s%2$s%3$s. Endring av brukernavn vil også påvirke din Gravatar-profil og din Intense Debate-profil. Bekreft ditt nye brukernavn og fortsett.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Forsiktig!</string>
+    <string name="settings_username_changer_header">Du er i ferd med å endre ditt brukernavn, som nå er %1$s%2$s%3$s.Du vil ikke kunne endre tilbake ditt brukernavn.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Se og endre dine ytelsesinnstillinger i Jetpack.</string>
+    <string name="site_settings_performance_and_speed">Ytelse og hastighet</string>
+    <string name="site_settings_more">Mer</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_off">Av</string>
+    <string name="site_settings_site_accelerator_on">På</string>
+    <string name="site_settings_performance">Ytelse</string>
+    <string name="stats_file_downloads_value_label">Nedlastinger</string>
+    <string name="stats_file_downloads_title_label">Fil</string>
+    <string name="stats_file_downloads">Filnedlastinger</string>
+    <string name="stats_data_not_recorded_for_period">Filnedlastinger ble ikke registrert før 28. juni 2019.</string>
+    <string name="stats_site_negative_utc">Tidssone for nettstedet (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Tidssone for nettstedet (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Tidssone for nettstedet (UTC)</string>
     <string name="web_preview_desktop">Skrivebord</string>
     <string name="web_preview_default">Standard</string>
     <string name="close_dialog_button_desc">Lukk dialog</string>
@@ -98,7 +119,6 @@ Language: nb_NO
     <string name="site_settings_update_password_message">For å koble appen til ditt selvbetjente nettsted på nytt, oppgi nettstedets nye passord her.</string>
     <string name="site_settings_password_updated">Passord oppdatert</string>
     <string name="site_settings_password_dialog_title">Oppdater passord</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerer domenenavn…</string>
     <string name="domain_registration_state_picker_dialog_title">Velg delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Velg land</string>
@@ -144,7 +164,7 @@ Language: nb_NO
     <string name="stats_insights_management_title">Se bare den mest relevante statistikken. Legg til og organiser innsikter nedenfor.</string>
     <string name="stats_insights_social">Sosialt</string>
     <string name="stats_insights_annual_site_stats">Årlig nettstedsstatistikk</string>
-    <string name="stats_view_follower_totals">Følgere totalt</string>
+    <string name="stats_view_follower_totals">Følger-totaler</string>
     <string name="domain_suggestions_fetch_error">Domeneforslag kunne ikke lastes</string>
     <string name="domain_suggestions_search_hint">Skriv inn et nøkkelord for flere detaljer</string>
     <string name="domains_suggestions_empty_list">Ingen forslag funnet</string>
@@ -810,9 +830,7 @@ Language: nb_NO
     <string name="my_site_add_new_site">Legg til nytt nettsted</string>
     <string name="my_site_create_new_site">Lag et nytt nettsted for din virksomhet, magasin eller personlig blogg, eller koble til en eksisterende installasjon av WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">For å få nyttige varsler fra ditt nettsted på din enhet trenger du å installere utvidelsen Jetpack. Ønsker du å sette opp Jetpack?</string>
-    <string name="site_settings_lazy_load_images">\"Lat lasting\" av bilder</string>
-    <string name="site_settings_serve_images_from_our_servers">Lever bilder fra våre servere</string>
-    <string name="site_settings_speed_up_your_site">Få fart på ditt nettsted</string>
+    <string name="site_settings_lazy_load_images">Sen lasting av bilder</string>
     <string name="stats_jetpack_connection_setup">Installer Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Veksle tekst</string>
     <string name="plugin_info_your_version">Din WordPress-versjon</string>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-22 13:09:27+0000
+Translation-Revision-Date: 2019-09-30 12:49:51+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Bu işlem iptal edilemez. Kullanıcı adı zaten güncellenmiş olabilir.</string>
+    <string name="settings_username_changer_toast_content">Yeni kullanıcı adınız %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Kullanıcı adı kaydediliyor…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Kullanıcı adını değiştir</string>
+    <string name="settings_username_changer_confirm_dialog_content">Kullanıcı adınızı %1$s%2$s%3$s olarak değiştiriyorsunuz. Kullanıcı adınızı değiştirmek Gravatar profilinizi ve Intense Debate profil adreslerinizi de etkiler.\nDevam etmek için yeni kullanıcı adınızı onaylayın.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Dikkatli olun!</string>
+    <string name="settings_username_changer_header">Şu anda %1$s%2$s%3$s olan kullanıcı adınızı değiştirmek üzeresiniz. Kullanıcı adınızı geri döndüremezsiniz.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Jetpack performans ayarlarınızı görüntüleyin ve değiştirin</string>
+    <string name="site_settings_performance_and_speed">Performans ve hız</string>
+    <string name="site_settings_more">Daha fazla</string>
+    <string name="site_settings_improved_search_summary">WordPress yerleşik aramasını gelişmiş bir arama deneyimiyle değiştirin</string>
+    <string name="site_settings_improved_search">İyileştirilmiş arama</string>
+    <string name="site_settings_jetpack_search">Jetpack araması</string>
+    <string name="site_settings_ad_free_video_hosting">Reklamsız video barındırma</string>
+    <string name="site_settings_media">Ortam</string>
+    <string name="site_settings_site_accelerator_summary">Jetpack\'in görsellerinizi ve statik dosyalarınızı (CSS ve JavaScript gibi) optimize etmesine izin vererek sayfaları daha hızlı yükleyin.</string>
+    <string name="site_settings_faster_static_files">Hızlı statik dosyalar</string>
+    <string name="site_settings_faster_images">Hızlı görseller</string>
+    <string name="site_settings_site_accelerator_off">Kapalı</string>
+    <string name="site_settings_site_accelerator_on">Açık</string>
+    <string name="site_settings_site_accelerator">Site hızlandırıcısı</string>
+    <string name="site_settings_lazy_load_images_summary">Yalnızca ekranda görünen görselleri yükleyerek sitenizin hızını artırın.</string>
+    <string name="site_settings_performance">Performans</string>
+    <string name="notification_settings_moved_notices">Bildirim Ayarları artık Bildirimler sekmesinde bulunabilir.</string>
+    <string name="stats_file_downloads_value_label">İndirmeler</string>
+    <string name="stats_file_downloads_title_label">Dosya</string>
+    <string name="stats_file_downloads">İndirilebilir dosyalar</string>
+    <string name="stats_data_not_recorded_for_period">28 Haziran 2019\'dan önceki dosya indirme istatistikleri kaydedilmemiştir.</string>
+    <string name="stats_site_negative_utc">Site saat dilimi (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Site saat dilimi (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Site saat dilimi (UTC)</string>
     <string name="web_preview_desktop">Masaüstü</string>
     <string name="web_preview_default">Varsayılan</string>
     <string name="close_dialog_button_desc">İletişim Kutusunu Kapat</string>
@@ -107,7 +138,6 @@ Language: tr
     <string name="site_settings_update_password_message">Uygulamayı kendi barındırdığınız sitenize yeniden bağlamak için sitenin yeni parolasını buraya girin.</string>
     <string name="site_settings_password_updated">Parola güncellendi</string>
     <string name="site_settings_password_dialog_title">Parolayı güncelle</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Alan adı kaydediliyor…</string>
     <string name="domain_registration_state_picker_dialog_title">Eyalet seçin</string>
     <string name="domain_registration_country_picker_dialog_title">Ülke seçin</string>
@@ -154,7 +184,7 @@ Language: tr
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. İçgörülerinizi aşağıya ekleyin ve düzenleyin.</string>
     <string name="stats_insights_social">Sosyal</string>
     <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
-    <string name="stats_view_follower_totals">Toplam Takipçi Sayısı</string>
+    <string name="stats_view_follower_totals">Toplam takipçi</string>
     <string name="domain_suggestions_fetch_error">Alan adı önerileri yüklenemedi</string>
     <string name="domain_suggestions_search_hint">Daha fazla fikir edinmek için anahtar sözcük girin</string>
     <string name="domains_suggestions_empty_list">Hiçir öneri bulunamadı</string>
@@ -847,11 +877,7 @@ Language: tr
     <string name="my_site_add_new_site">Yeni bir site ekle</string>
     <string name="my_site_create_new_site">İşiniz, derginiz ya da kişisel blogunuz için bir site oluşturun; veya mevcut bir WordPress kurulumuna bağlanın.</string>
     <string name="notifications_jetpack_connection_setup_info">Cihazınıza WordPress sitesinden faydalı bildirimler almak için, Jetpack eklentisini yüklemelisiniz. Jetpack’i kurmak istiyor musunuz?</string>
-    <string name="site_settings_lazy_load_images_summary">Yalnızca ekranda görünen resimleri yükleyerek sitenizin hızını artırın. Yeni resimler görünümde kaydırmalarının hemen öncesinde yüklenir. Bu, sitenizi görüntüleyenlerin, göremedikleri dahil, bir sayfadaki tüm resimleri tek seferde indirmek zorunda kalmalarını önler.</string>
-    <string name="site_settings_lazy_load_images">\"Geç yüklenen\" resimler</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack resimlerinizi optimize eder ve bunları ziyaretçilerinize en yakın sunucu konumundan sunar. Global içerik sağlama ağımızı kullanmak sitenizin yüklenme hızını artıracak.</string>
-    <string name="site_settings_serve_images_from_our_servers">Resimleri sunucularımızdan sunun</string>
-    <string name="site_settings_speed_up_your_site">Sitenizi hızlandırın</string>
+    <string name="site_settings_lazy_load_images">\"Geç yüklenen\" görseller</string>
     <string name="stats_jetpack_connection_setup">Jetpack\'i Kur</string>
     <string name="plugin_chevron_icon_content_description">Değiştir metni</string>
     <string name="plugin_info_your_version">WordPress sürümünüz</string>

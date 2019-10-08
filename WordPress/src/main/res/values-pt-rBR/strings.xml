@@ -1,11 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-06 20:58:37+0000
+Translation-Revision-Date: 2019-10-02 17:25:47+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Esta ação não pode ser cancelada. Talvez o nome de usuário já tenha sido atualizado.</string>
+    <string name="settings_username_changer_toast_content">Seu novo nome de usuário é %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Salvando nome de usuário…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Alterar nome de usuário</string>
+    <string name="settings_username_changer_confirm_dialog_content">Você está alterando o seu nome de usuário para %1$s%2$s%3$s. Mudar seu nome de usuário também afetará o endereço de seus perfis no Gravatar e Intense Debate. \nConfirme seu novo nome de usuário para continuar.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Cuidado!</string>
+    <string name="settings_username_changer_header">Você está prestes a alterar o seu nome de usuário, que atualmente é %1$s%2$s%3$s. Você não poderá alterar o seu nome de usuário de volta.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Ver e alterar as configurações de desempenho do Jetpack</string>
+    <string name="site_settings_performance_and_speed">Desempenho e velocidade</string>
+    <string name="site_settings_more">Mais</string>
+    <string name="site_settings_improved_search_summary">Substitua a pesquisa do WordPress por uma experiência de pesquisa aprimorada</string>
+    <string name="site_settings_improved_search">Pesquisa melhorada</string>
+    <string name="site_settings_jetpack_search">Pesquisa do Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">Armazenamento de vídeos sem anúncios</string>
+    <string name="site_settings_media">Mídia</string>
+    <string name="site_settings_site_accelerator_summary">Carregue páginas mais rapidamente permitindo que o Jetpack otimize suas imagens e arquivos estáticos (como CSS e JavaScript).</string>
+    <string name="site_settings_faster_static_files">Arquivos estáticos mais rápidos</string>
+    <string name="site_settings_faster_images">Imagens mais rápidas</string>
+    <string name="site_settings_site_accelerator_off">Desligado</string>
+    <string name="site_settings_site_accelerator_on">Ligado</string>
+    <string name="site_settings_site_accelerator">Acelerador de site</string>
+    <string name="site_settings_lazy_load_images_summary">Aumente a velocidade de seu site ao carregar as imagens apenas quando forem exibidas na tela.</string>
+    <string name="site_settings_performance">Desempenho</string>
+    <string name="notification_settings_moved_notices">As configurações de notificações agora se encontram na aba de notificações.</string>
+    <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_file_downloads_title_label">Arquivo</string>
+    <string name="stats_file_downloads">Downloads de arquivos</string>
+    <string name="stats_data_not_recorded_for_period">Estatísticas de download de arquivos não eram salvas antes do dia 28 de Junho de 2019.</string>
+    <string name="stats_site_negative_utc">Fuso horário do site (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Fuso horário do site (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Fuso horário do site (UTC)</string>
+    <string name="web_preview_desktop">Computador</string>
+    <string name="web_preview_default">Padrão</string>
+    <string name="close_dialog_button_desc">Fechar janela</string>
+    <string name="preview_type_desc">Selecione o tipo de visualização</string>
+    <string name="share_desc">Compartilhar</string>
+    <string name="navigate_back_desc">Voltar</string>
+    <string name="navigate_forward_desc">Avançar</string>
+    <string name="calendar_scheduled_post_description">\"%s\" agendado para publicação em \"%s\" em seu aplicativo do WordPress\n %s</string>
+    <string name="calendar_scheduled_post_title">Post do WordPress agendado: \"%s\"</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" será publicado em 10 minutos</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" será publicado em uma hora</string>
+    <string name="notification_post_has_been_published">\"%s\" foi publicado</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Post agendado: lembrete de 10 minutos</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Post agendado: lembrete de uma hora</string>
+    <string name="notification_scheduled_post">Post agendado</string>
+    <string name="post_notification_error">Não é possível criar uma notificação quando a data de publicação está no passado.</string>
+    <string name="post_notification_when_published">Publicado em</string>
+    <string name="post_notification_ten_minutes_before">10 minutos atrás</string>
+    <string name="post_notification_one_hour_before">Uma hora atrás</string>
+    <string name="post_notification_off">Desativado</string>
+    <string name="post_settings_add_to_calendar">Adicionar ao calendário</string>
+    <string name="post_settings_notification">Notificação</string>
+    <string name="post_settings_time_and_date">Horário e data</string>
     <string name="login_need_help_finding_connected_email">Precisa de ajuda para encontrar o e-mail com que se conectou?</string>
     <string name="enter_wordpress_site">O site neste endereço não é um site do WordPress. Para que possamos nos conectar a ele, o site precisa ter o WordPress instalado.</string>
     <string name="login_invalid_site_url">Digite o endereço completo do site, tal como exemplo.com.</string>
@@ -84,7 +138,6 @@ Language: pt_BR
     <string name="site_settings_update_password_message">Para reconectar o aplicativo ao seu site auto-hospedado, digite a nova senha do site aqui.</string>
     <string name="site_settings_password_updated">Senha atualizada</string>
     <string name="site_settings_password_dialog_title">Atualizar senha</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando o domínio…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecionar o estado</string>
     <string name="domain_registration_country_picker_dialog_title">Selecionar país</string>
@@ -653,6 +706,7 @@ Language: pt_BR
     <string name="fab_add_tag_desc">Criar tag</string>
     <string name="navigate_up_desc">navegar acima</string>
     <string name="notification_settings_switch_desc">Notificações</string>
+    <string name="open_external_link_desc">Abrir link externo</string>
     <string name="show_more_desc">mostrar mais</string>
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">excluir</string>
@@ -823,11 +877,7 @@ Language: pt_BR
     <string name="my_site_add_new_site">Adicionar site</string>
     <string name="my_site_create_new_site">Crie um novo site para seu negócio, revista, blog pessoal ou conecte-se a uma instalação WordPress já existente.</string>
     <string name="notifications_jetpack_connection_setup_info">Para receber úteis notificações do seu site WordPress no seu dispositivo, é necessário instalar o plugin Jetpack. Você gostaria de configurar o Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Aumente a velocidade do seu site carregando somente as imagens visíveis na tela. Novas imagens serão carregadas apenas momentos antes que o usuário role a tela e elas precisem ser exibidas. Isso previne que os usuários tenham que baixar todas as imagens da página de uma só vez, mesmo aquelas que eles não verão.</string>
     <string name="site_settings_lazy_load_images">Carregamento assíncrono de imagens</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">O Jetpack otimizará as suas imagens e as entregará a partir de um servidor localizado mais perto dos seus visitantes. Usando redes globais de entrega de conteúdo (CDNs) você aumentará a velocidade de carregamento do seu site.</string>
-    <string name="site_settings_serve_images_from_our_servers">Servir imagens pelos nossos servidores</string>
-    <string name="site_settings_speed_up_your_site">Acelere seu site</string>
     <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Versão do seu WordPress</string>

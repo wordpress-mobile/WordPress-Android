@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-15 08:26:18+0000
+Translation-Revision-Date: 2019-09-30 05:29:14+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Esta acción no puede cancelarse. Es posible que el nombre de usuario ya haya sido actualizado.</string>
+    <string name="settings_username_changer_toast_content">Tu nuevo nombre de usuario es %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Guardando el nombre de usuario…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Cambiar el nombre de usuario</string>
+    <string name="settings_username_changer_confirm_dialog_content">Estás cambiando tu nombre de usuario a %1$s%2$s%3$s. Cambiar tu nombre de usuario también afectará a tu perfil de Gravatar y a las direcciones de perfil de Intense Debate. Para continuar, confirma tu nuevo nombre de usuario.</string>
+    <string name="settings_username_changer_confirm_dialog_title">¡Cuidado!</string>
+    <string name="settings_username_changer_header">Estás a punto de cambiar tu nombre de usuario, que actualmente es %1$s%2$s%3$s. No podrás volver a recuperar tu nombre de usuario.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Ver y cambiar los ajustes de rendimiento de Jetpack</string>
+    <string name="site_settings_performance_and_speed">Rendimiento y velocidad</string>
+    <string name="site_settings_more">Más</string>
+    <string name="site_settings_improved_search_summary">Reemplaza la búsqueda integrada en WordPress con una experiencia mejorada de búsqueda</string>
+    <string name="site_settings_improved_search">Búsqueda mejorada</string>
+    <string name="site_settings_jetpack_search">Búsqueda de Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">Alojamiento de vídeo sin anuncios</string>
+    <string name="site_settings_media">Medios</string>
+    <string name="site_settings_site_accelerator_summary">Carga las páginas más rápido al permitir a Jetpack optimizar tus imágenes y archivos estáticos (como CSS y JavaScript).</string>
+    <string name="site_settings_faster_static_files">Archivos estáticos más rápidos</string>
+    <string name="site_settings_faster_images">Imágenes más rápidas</string>
+    <string name="site_settings_site_accelerator_off">Desactivado</string>
+    <string name="site_settings_site_accelerator_on">Activado</string>
+    <string name="site_settings_site_accelerator">Acelerador de sitios</string>
+    <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio al cargar solo las imágenes visibles en la pantalla.</string>
+    <string name="site_settings_performance">Rendimiento</string>
+    <string name="notification_settings_moved_notices">Los ajustes de los avisos pueden encontrarse ahora en la pestaña de Avisos.</string>
+    <string name="stats_file_downloads_value_label">Descargas</string>
+    <string name="stats_file_downloads_title_label">Archivo</string>
+    <string name="stats_file_downloads">Descargas de archivos</string>
+    <string name="stats_data_not_recorded_for_period">Las estadísticas de descarga de archivos no se registraron antes del 28 de Junio de 2019.</string>
+    <string name="stats_site_negative_utc">Zona horaria del sitio (UTC -%s)</string>
+    <string name="stats_site_positive_utc">Zona horaria del sitio (UTC +%s)</string>
+    <string name="stats_site_neutral_utc">Zona horaria del sitio (UTC)</string>
     <string name="web_preview_desktop">Escritorio</string>
     <string name="web_preview_default">Por defecto</string>
     <string name="close_dialog_button_desc">Cerrar el diálogo</string>
@@ -107,7 +138,6 @@ Language: es
     <string name="site_settings_update_password_message">Para volver a conectar la aplicación a tu sitio alojado, introduce aquí la nueva contraseña del sitio.</string>
     <string name="site_settings_password_updated">Contraseña actualizada</string>
     <string name="site_settings_password_dialog_title">Actualizar contraseña</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando el nombre de dominio…</string>
     <string name="domain_registration_state_picker_dialog_title">Selecciona la provincia</string>
     <string name="domain_registration_country_picker_dialog_title">Selecciona el país</string>
@@ -154,7 +184,7 @@ Language: es
     <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
-    <string name="stats_view_follower_totals">Total de seguidores</string>
+    <string name="stats_view_follower_totals">Seguidores totales</string>
     <string name="domain_suggestions_fetch_error">No se pudieron cargar las sugerencias de dominios</string>
     <string name="domain_suggestions_search_hint">Teclea una palabra clave para más ideas</string>
     <string name="domains_suggestions_empty_list">No se han encontrado sugerencias</string>
@@ -847,11 +877,7 @@ Language: es
     <string name="my_site_add_new_site">Añadir nuevo sitio</string>
     <string name="my_site_create_new_site">Crea un nuevo sitio para tu negocio, revista o blog personal; o conecta con una instalación de WordPress existente.</string>
     <string name="notifications_jetpack_connection_setup_info">Para obtener avisos útiles en tu dispositivo desde tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio simplemente cargando las imágenes visibles en la pantalla. Las nuevas imágenes se cargarán justo antes de que navegues para verlas. Esto evita que los navegadores tengan que descargar las imágenes de una página todas a la vez, incluso las que no se ven.</string>
-    <string name="site_settings_lazy_load_images">«Carga diferida» de imágenes</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimizará tus imágenes y las servirá desde la ubicación del servidor más cercana a tus visitantes. Usar nuestra red global de entregad de contenidos impulsará la velocidad de carga de tu sitio.</string>
-    <string name="site_settings_serve_images_from_our_servers">Sirve imágenes desde nuestros servidores</string>
-    <string name="site_settings_speed_up_your_site">Acelera tu sitio</string>
+    <string name="site_settings_lazy_load_images">Carga diferida de imágenes</string>
     <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Tu versión de WordPress</string>
