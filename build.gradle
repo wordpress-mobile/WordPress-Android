@@ -97,8 +97,8 @@ subprojects {
 buildScan {
     // Always run Gradle scan on CI builds
     if (System.getenv('CI')) {
-        licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-        licenseAgree = 'yes'
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
         tag 'CI'
         publishAlways()
     }
