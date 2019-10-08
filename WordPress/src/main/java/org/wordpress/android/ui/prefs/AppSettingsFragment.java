@@ -111,7 +111,13 @@ public class AppSettingsFragment extends PreferenceFragment
         mLanguagePreference.setOnPreferenceChangeListener(this);
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
-        mAppThemePreference.setOnPreferenceChangeListener(this);
+        if (!BuildConfig.DARK_MODE_AVAILABLE) {
+            PreferenceScreen preferenceScreen =
+                    (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+            preferenceScreen.removePreference(mAppThemePreference);
+        } else {
+            mAppThemePreference.setOnPreferenceChangeListener(this);
+        }
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
