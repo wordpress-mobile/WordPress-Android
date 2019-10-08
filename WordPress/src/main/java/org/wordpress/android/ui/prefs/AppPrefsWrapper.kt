@@ -46,6 +46,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getPostsListViewLayoutType()
         set(value) = AppPrefs.setPostsListViewLayoutType(value)
 
+    var systemNotificationsEnabled: Boolean
+        get() = AppPrefs.getSystemNotificationsEnabled()
+        set(value) = AppPrefs.setSystemNotificationsEnabled(value)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
