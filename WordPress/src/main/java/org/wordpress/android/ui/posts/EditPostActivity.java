@@ -3017,7 +3017,8 @@ public class EditPostActivity extends AppCompatActivity implements
                         mViewPager.setCurrentItem(PAGE_CONTENT);
 
                         mRevision = data.getParcelableExtra(KEY_REVISION);
-                        new Handler().postDelayed(this::loadRevision, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
+                        new Handler().postDelayed(this::loadRevision,
+                                getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
                     break;
             }
