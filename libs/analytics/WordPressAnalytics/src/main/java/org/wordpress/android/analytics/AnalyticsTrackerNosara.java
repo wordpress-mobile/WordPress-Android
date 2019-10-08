@@ -881,6 +881,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "followed_blog_notifications_settings_comments_off";
             case FOLLOWED_BLOG_NOTIFICATIONS_SETTINGS_COMMENTS_ON:
                 return "followed_blog_notifications_settings_comments_on";
+            case NOTIFICATIONS_DISABLED:
+                return "notifications_disabled";
+            case NOTIFICATIONS_ENABLED:
+                return "notifications_enabled";
             case NOTIFICATIONS_ACCESSED:
                 return "notifications_accessed";
             case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
