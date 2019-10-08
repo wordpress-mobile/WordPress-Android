@@ -1,3 +1,4 @@
+13.3:
 * Your stats have just become a lot more responsive.
 * You can now change your username in Account Settings.
 * Tweaking your Jetpack performance settings? Do it directly from the app!

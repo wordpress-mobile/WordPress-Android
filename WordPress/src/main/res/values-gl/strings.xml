@@ -26,7 +26,6 @@ Language: gl_ES
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
-    <string name="stats_view_follower_totals">Total de seguidores</string>
     <string name="domain_suggestions_fetch_error">Non se puideron cargar as suxerencias de dominios</string>
     <string name="domain_suggestions_search_hint">Teclea unha palabra clave para máis ideas</string>
     <string name="domains_suggestions_empty_list">Non se encontraron suxerencias</string>

@@ -1,3 +1,0 @@
-13.1:
-* Nell'anteprima del sito e della pagina è ora possibile passare dalla versione desktop a quella mobile del sito e viceversa.
-* Abbiamo corretto un bug che riguardava alcuni utenti che non potevano connettersi ai loro servizi di social media.

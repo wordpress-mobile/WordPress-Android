@@ -1,7 +1,5 @@
 13.4
 -----
- 
-----
 * Add Remote Preview support for posts and pages.
 * Post List: Trashed post must now be restored before edit or preview.
 * Post List: Unhandled conflict with auto saves are now detected and visible. On post opening, the app will let you choose which version you prefer.

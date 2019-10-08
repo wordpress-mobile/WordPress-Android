@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-16 13:03:27+0000
+Translation-Revision-Date: 2019-10-01 14:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Diese Aktion kann nicht abgebrochen werden. Der Benutzername wurde möglicherweise bereits aktualisiert.</string>
+    <string name="settings_username_changer_toast_content">Dein neuer Benutzername lautet %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Benutzername wird gespeichert…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Benutzernamen ändern</string>
+    <string name="settings_username_changer_confirm_dialog_content">Du änderst gerade deinen Benutzernamen in %1$s%2$s%3$s. Die Änderung deines Benutzernamens wirkt sich auch auf dein Gravatar-Profil und deine Intense Debate-Profiladressen aus. Bestätige deinen neuen Benutzernamen, um fortzufahren.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Vorsicht!</string>
+    <string name="settings_username_changer_header">Du bist dabei, deinen aktuellen Benutzernamen %1$s%2$s%3$s zu ändern. Du wirst ihn nicht wieder zurückändern können.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Einstellungen für deine Jetpack-Performance anzeigen und ändern</string>
+    <string name="site_settings_performance_and_speed">Performance und Geschwindigkeit</string>
+    <string name="site_settings_more">Mehr</string>
+    <string name="site_settings_improved_search_summary">Ersetze die integrierte WordPress-Suche durch eine verbesserte Suchfunktion</string>
+    <string name="site_settings_improved_search">Verbesserte Suche</string>
+    <string name="site_settings_jetpack_search">Jetpack Suche</string>
+    <string name="site_settings_ad_free_video_hosting">Werbefreies Videohosting</string>
+    <string name="site_settings_media">Medien</string>
+    <string name="site_settings_site_accelerator_summary">Lade Seiten schneller, indem du Jetpack erlaubst, deine Bild- und statischen Dateien wie CSS und JavaScript zu optimieren.</string>
+    <string name="site_settings_faster_static_files">Schnellere statische Dateien</string>
+    <string name="site_settings_faster_images">Schnellere Bilder</string>
+    <string name="site_settings_site_accelerator_off">Aus</string>
+    <string name="site_settings_site_accelerator_on">Ein</string>
+    <string name="site_settings_site_accelerator">Website-Beschleuniger</string>
+    <string name="site_settings_lazy_load_images_summary">Verbessere die Ladezeit deiner Website, indem du nur die auf dem Bildschirm sichtbaren Bilder lädst.</string>
+    <string name="site_settings_performance">Performance</string>
+    <string name="notification_settings_moved_notices">Benachrichtigungseinstellungen sind jetzt auf dem Tab „Benachrichtigungen“ zu finden.</string>
+    <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_file_downloads_title_label">Datei</string>
+    <string name="stats_file_downloads">Heruntergeladene Dateien</string>
+    <string name="stats_data_not_recorded_for_period">Datei-Download-Statistiken wurden erst ab dem 28. Juni 2019 aufgezeichnet.</string>
+    <string name="stats_site_negative_utc">Zeitzone der Website (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Zeitzone der Website (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Zeitzone der Website (UTC)</string>
     <string name="web_preview_desktop">Desktop</string>
     <string name="web_preview_default">Standard</string>
     <string name="close_dialog_button_desc">Dialog schließen</string>
@@ -107,7 +138,6 @@ Language: de
     <string name="site_settings_update_password_message">Um die App wieder mit deiner selbst gehosteten Website zu verbinden, gib hier das neue Passwort der Website ein.</string>
     <string name="site_settings_password_updated">Passwort aktualisiert</string>
     <string name="site_settings_password_dialog_title">Passwort aktualisieren</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Domainname wird registriert …</string>
     <string name="domain_registration_state_picker_dialog_title">Bundesstaat auswählen</string>
     <string name="domain_registration_country_picker_dialog_title">Land wählen</string>
@@ -847,11 +877,7 @@ Language: de
     <string name="my_site_add_new_site">Neue Website hinzufügen</string>
     <string name="my_site_create_new_site">Erstelle eine neue Website für dein Geschäft, dein Magazin oder deinen persönlichen Blog oder verbinde eine vorhandene WordPress-Installation.</string>
     <string name="notifications_jetpack_connection_setup_info">Wenn du hilfreiche Benachrichtigungen deiner WordPress-Website auf deinem Gerät erhalten möchtest, musst du das Jetpack-Plugin installieren. Möchtest du Jetpack einrichten?</string>
-    <string name="site_settings_lazy_load_images_summary">Verbessere die Ladezeit deiner Website, indem du nur die auf dem Bildschirm sichtbaren Bilder lädst. Neue Bilder werden erst kurz bevor sie beim Scrollen erscheinen geladen. So müssen die Besucher nicht alle Bilder auf einmal herunterladen, zumal sie diese noch gar nicht sehen würden.</string>
     <string name="site_settings_lazy_load_images">Verzögertes Laden von Bildern</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimiert deine Bilder und stellt sie über den Server-Standort bereit, der am nächsten an deinen Website-Besuchern liegt. Unser globales Netzwerk für Content-Auslieferung verkürzt die Ladezeiten deiner Website.</string>
-    <string name="site_settings_serve_images_from_our_servers">Bereitstellen von Bildern über unsere Server</string>
-    <string name="site_settings_speed_up_your_site">Erhöhe die Geschwindigkeit deiner Website</string>
     <string name="stats_jetpack_connection_setup">Jetpack installieren</string>
     <string name="plugin_chevron_icon_content_description">Text umschalten</string>
     <string name="plugin_info_your_version">Deine WordPress Version</string>
