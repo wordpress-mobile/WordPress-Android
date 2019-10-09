@@ -72,7 +72,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.27.0'
     testImplementation 'androidx.arch.core:core-testing:2.0.1'
-    testImplementation 'org.robolectric:robolectric:3.6.1'
+    testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'org.assertj:assertj-core:3.11.1'
 }
 
