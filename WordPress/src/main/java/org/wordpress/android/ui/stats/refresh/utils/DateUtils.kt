@@ -7,12 +7,14 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 class DateUtils @Inject constructor(
     private val contextProvider: ContextProvider,
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
+    @ExperimentalStdlibApi
     fun getWeekDay(dayOfTheWeek: Int): String {
         val c = Calendar.getInstance()
         c.firstDayOfWeek = Calendar.MONDAY
@@ -28,7 +30,7 @@ class DateUtils @Inject constructor(
         }
 
         val formatter = SimpleDateFormat("EEEE", localeManagerWrapper.getLocale())
-        return formatter.format(c.time).capitalize()
+        return formatter.format(c.time).capitalize(Locale.ROOT)
     }
 
     fun getHour(hour: Int): String {
