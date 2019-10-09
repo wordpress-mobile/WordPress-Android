@@ -114,6 +114,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -876,14 +877,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private enum PrimaryAction {
-        SUBMIT_FOR_REVIEW,
-        PUBLISH_NOW,
-        SCHEDULE,
-        UPDATE,
-        SAVE
-    }
-
     private enum SecondaryAction {
         SAVE_AS_DRAFT,
         SAVE,
@@ -891,54 +884,12 @@ public class EditPostActivity extends AppCompatActivity implements
         NONE
     }
 
-    private PrimaryAction getPrimaryAction() {
-        if (!UploadUtils.userCanPublish(mSite)) {
-            // User doesn't have publishing permissions
-            switch (PostStatus.fromPost(mPost)) {
-                case SCHEDULED:
-                case DRAFT:
-                case PENDING:
-                case PRIVATE:
-                case PUBLISHED:
-                case UNKNOWN:
-                    return PrimaryAction.SUBMIT_FOR_REVIEW;
-                case TRASHED:
-                    return PrimaryAction.SAVE;
-            }
-        }
-
-        switch (PostStatus.fromPost(mPost)) {
-            case SCHEDULED:
-                return PrimaryAction.SCHEDULE;
-            case DRAFT:
-                return PrimaryAction.PUBLISH_NOW;
-            case PENDING:
-            case TRASHED:
-                return PrimaryAction.SAVE;
-            case PRIVATE:
-            case PUBLISHED:
-            case UNKNOWN:
-                return PrimaryAction.UPDATE;
-        }
-        throw new IllegalStateException(
-                "Switch in getPrimaryAction is missing a required case or the case is missing \"return\" keyword ");
+    private PrimaryEditorAction getPrimaryAction() {
+        return PrimaryEditorAction.getPrimaryAction(PostStatus.fromPost(mPost), UploadUtils.userCanPublish(mSite));
     }
 
     private String getPrimaryActionText() {
-        switch (getPrimaryAction()) {
-            case SUBMIT_FOR_REVIEW:
-                return getString(R.string.submit_for_review);
-            case PUBLISH_NOW:
-                return getString(R.string.button_publish);
-            case SCHEDULE:
-                return getString(R.string.schedule_verb);
-            case UPDATE:
-                return getString(R.string.update_verb);
-            case SAVE:
-                return getString(R.string.save);
-        }
-        throw new IllegalStateException(
-                "Switch in getPrimaryActionText is missing a required case or the case is missing \"return\" keyword ");
+        return getString(getPrimaryAction().getTitleResource());
     }
 
     private SecondaryAction getSecondaryAction() {
