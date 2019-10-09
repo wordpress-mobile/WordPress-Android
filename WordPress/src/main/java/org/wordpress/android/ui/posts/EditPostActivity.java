@@ -1309,7 +1309,7 @@ public class EditPostActivity extends AppCompatActivity implements
         hidePhotoPicker();
 
         if (itemId == R.id.menu_primary_action) {
-            primaryAction();
+            performPrimaryAction();
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
@@ -1556,7 +1556,7 @@ public class EditPostActivity extends AppCompatActivity implements
         publishConfirmationDialog.show(getSupportFragmentManager(), identifier);
     }
 
-    private void primaryAction() {
+    private void performPrimaryAction() {
         switch (getPrimaryAction()) {
             case UPDATE:
                 showUpdateConfirmationDialogAndUploadPost();

@@ -36,4 +36,3 @@ enum class PrimaryEditorAction(@StringRes val titleResource: Int) {
         }
     }
 }
-
