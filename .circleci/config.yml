@@ -24,6 +24,7 @@ jobs:
       - run:
           name: Test
           command: ./gradlew --stacktrace testVanillaRelease
+          no_output_timeout: 30m
       - android/save-gradle-cache
       - android/save-test-results
   lint:
