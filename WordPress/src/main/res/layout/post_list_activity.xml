@@ -15,6 +15,7 @@
         android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
+            android:elevation="0dp"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -25,6 +26,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <RelativeLayout
+            android:elevation="@dimen/appbar_elevation"
             android:id="@+id/tabContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height">
@@ -37,6 +39,7 @@
                 android:layout_alignStart="@+id/post_list_tab_layout_fading_edge"
                 android:layout_gravity="start"
                 android:clipToPadding="false"
+                android:elevation="0dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"

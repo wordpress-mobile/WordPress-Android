@@ -144,13 +144,13 @@
     </style>
 
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="titleTextColor">?attr/colorOnPrimarySurface</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
         <item name="android:background">@color/primary_50</item>
     </style>
 
-    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
+    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:background">@color/primary_50</item>
-        <item name="android:textAppearance">@color/primary_50</item>
+        <item name="android:elevation">@dimen/appbar_elevation</item>
     </style>
 
     <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
