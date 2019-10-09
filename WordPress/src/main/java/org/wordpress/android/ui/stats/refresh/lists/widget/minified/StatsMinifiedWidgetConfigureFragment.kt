@@ -93,13 +93,19 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(requireFragmentManager(), "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(
+                        requireFragmentManager(),
+                        "stats_view_mode_selection_fragment"
+                )
             }
         })
 
         dataTypeSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetDataTypeSelectionDialogFragment().show(requireFragmentManager(), "stats_data_type_selection_fragment")
+                StatsWidgetDataTypeSelectionDialogFragment().show(
+                        requireFragmentManager(),
+                        "stats_data_type_selection_fragment"
+                )
             }
         })
 
