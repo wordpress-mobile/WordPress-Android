@@ -1,6 +1,6 @@
 orbs:
   android: wordpress-mobile/android@0.0.32
-  git: wordpress-mobile/git@0.0.33
+  git: wordpress-mobile/git@0.0.32
   bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@2.5.0
 
