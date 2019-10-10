@@ -63,6 +63,34 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("alter table SiteModel add UNMAPPED_URL text")
                 }
                 7 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE IF NOT EXISTS MediaModel (" +
+                                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "MEDIA_ID INTEGER," +
+                                "POST_ID INTEGER," +
+                                "AUTHOR_ID INTEGER," +
+                                "GUID TEXT," +
+                                "UPLOAD_DATE TEXT," +
+                                "URL TEXT," +
+                                "THUMBNAIL_URL TEXT," +
+                                "FILE_NAME TEXT," +
+                                "FILE_PATH TEXT," +
+                                "FILE_EXTENSION TEXT," +
+                                "MIME_TYPE TEXT," +
+                                "TITLE TEXT," +
+                                "CAPTION TEXT," +
+                                "DESCRIPTION TEXT," +
+                                "ALT TEXT," +
+                                "WIDTH INTEGER," +
+                                "HEIGHT INTEGER," +
+                                "LENGTH INTEGER," +
+                                "VIDEO_PRESS_GUID TEXT," +
+                                "VIDEO_PRESS_PROCESSING_DONE INTEGER," +
+                                "BLOG_ID INTEGER," +
+                                "HORIZONTAL_ALIGNMENT INTEGER," +
+                                "VERTICAL_ALIGNMENT INTEGER," +
+                                "FEATURED INTEGER," +
+                                "FEATURED_IN_POST INTEGER)")
                     db.execSQL("alter table MediaModel add LOCAL_POST_ID integer")
                 }
                 8 -> migrate(version) {
