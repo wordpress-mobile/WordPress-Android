@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -114,6 +115,8 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
+import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -876,118 +879,21 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private enum PrimaryAction {
-        SUBMIT_FOR_REVIEW,
-        PUBLISH_NOW,
-        SCHEDULE,
-        UPDATE,
-        SAVE
-    }
-
-    private enum SecondaryAction {
-        SAVE_AS_DRAFT,
-        SAVE,
-        PUBLISH_NOW,
-        NONE
-    }
-
-    private PrimaryAction getPrimaryAction() {
-        if (!UploadUtils.userCanPublish(mSite)) {
-            // User doesn't have publishing permissions
-            switch (PostStatus.fromPost(mPost)) {
-                case SCHEDULED:
-                case DRAFT:
-                case PENDING:
-                case PRIVATE:
-                case PUBLISHED:
-                case UNKNOWN:
-                    return PrimaryAction.SUBMIT_FOR_REVIEW;
-                case TRASHED:
-                    return PrimaryAction.SAVE;
-            }
-        }
-
-        switch (PostStatus.fromPost(mPost)) {
-            case SCHEDULED:
-                return PrimaryAction.SCHEDULE;
-            case DRAFT:
-                return PrimaryAction.PUBLISH_NOW;
-            case PENDING:
-            case TRASHED:
-                return PrimaryAction.SAVE;
-            case PRIVATE:
-            case PUBLISHED:
-            case UNKNOWN:
-                return PrimaryAction.UPDATE;
-        }
-        throw new IllegalStateException(
-                "Switch in getPrimaryAction is missing a required case or the case is missing \"return\" keyword ");
+    private PrimaryEditorAction getPrimaryAction() {
+        return PrimaryEditorAction.getPrimaryAction(PostStatus.fromPost(mPost), UploadUtils.userCanPublish(mSite));
     }
 
     private String getPrimaryActionText() {
-        switch (getPrimaryAction()) {
-            case SUBMIT_FOR_REVIEW:
-                return getString(R.string.submit_for_review);
-            case PUBLISH_NOW:
-                return getString(R.string.button_publish);
-            case SCHEDULE:
-                return getString(R.string.schedule_verb);
-            case UPDATE:
-                return getString(R.string.update_verb);
-            case SAVE:
-                return getString(R.string.save);
-        }
-        throw new IllegalStateException(
-                "Switch in getPrimaryActionText is missing a required case or the case is missing \"return\" keyword ");
+        return getString(getPrimaryAction().getTitleResource());
     }
 
-    private SecondaryAction getSecondaryAction() {
-        if (!UploadUtils.userCanPublish(mSite)) {
-            // User doesn't have publishing permissions
-            switch (PostStatus.fromPost(mPost)) {
-                case SCHEDULED:
-                case DRAFT:
-                case PENDING:
-                case PRIVATE:
-                case PUBLISHED:
-                case UNKNOWN:
-                    return SecondaryAction.NONE;
-                case TRASHED:
-                    return SecondaryAction.SAVE_AS_DRAFT;
-            }
-        }
-
-        switch (PostStatus.fromPost(mPost)) {
-            case DRAFT:
-                return SecondaryAction.SAVE;
-            case PENDING:
-            case SCHEDULED:
-                return SecondaryAction.PUBLISH_NOW;
-            case PRIVATE:
-            case PUBLISHED:
-                return SecondaryAction.NONE;
-            case TRASHED:
-            case UNKNOWN:
-                return SecondaryAction.SAVE_AS_DRAFT;
-        }
-        throw new IllegalStateException(
-                "Switch in getSecondaryAction is missing a required case or the case is missing \"return\" keyword ");
+    private SecondaryEditorAction getSecondaryAction() {
+        return SecondaryEditorAction.getSecondaryAction(PostStatus.fromPost(mPost), UploadUtils.userCanPublish(mSite));
     }
 
-    private String getSecondaryActionText() {
-        switch (getSecondaryAction()) {
-            case SAVE_AS_DRAFT:
-                return getString(R.string.menu_save_as_draft);
-            case SAVE:
-                return getString(R.string.save);
-            case PUBLISH_NOW:
-                return getString(R.string.menu_publish_now);
-            case NONE:
-                throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
-        }
-        throw new IllegalStateException(
-                "Switch in getSecondaryActionText is missing a required case or the case is missing \"return\" "
-                + "keyword ");
+    private @Nullable String getSecondaryActionText() {
+        @StringRes Integer titleResource = getSecondaryAction().getTitleResource();
+        return titleResource != null ? getString(titleResource) : null;
     }
 
     private boolean isPhotoPickerShowing() {
@@ -1232,17 +1138,8 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
 
         if (secondaryAction != null && mPost != null) {
-            switch (getSecondaryAction()) {
-                case SAVE_AS_DRAFT:
-                case SAVE:
-                case PUBLISH_NOW:
-                    secondaryAction.setVisible(showMenuItems);
-                    secondaryAction.setTitle(getSecondaryActionText());
-                    break;
-                case NONE:
-                    secondaryAction.setVisible(false);
-                    break;
-            }
+            secondaryAction.setVisible(showMenuItems && getSecondaryAction().isVisible());
+            secondaryAction.setTitle(getSecondaryActionText());
         }
 
         if (previewMenuItem != null) {
@@ -1412,7 +1309,7 @@ public class EditPostActivity extends AppCompatActivity implements
         hidePhotoPicker();
 
         if (itemId == R.id.menu_primary_action) {
-            primaryAction();
+            performPrimaryAction();
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
@@ -1447,7 +1344,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_secondary_action) {
-                return secondaryAction();
+                return performSecondaryAction();
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
@@ -1502,7 +1399,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void showEmptyPostErrorForSecondaryAction() {
         String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
-        if (getSecondaryAction() == SecondaryAction.SAVE_AS_DRAFT || getSecondaryAction() == SecondaryAction.SAVE) {
+        if (getSecondaryAction() == SecondaryEditorAction.SAVE_AS_DRAFT
+            || getSecondaryAction() == SecondaryEditorAction.SAVE) {
             message = getString(R.string.error_save_empty_draft);
         }
         ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
@@ -1517,7 +1415,7 @@ public class EditPostActivity extends AppCompatActivity implements
         savePostAndOptionallyFinish(false);
     }
 
-    private boolean secondaryAction() {
+    private boolean performSecondaryAction() {
         if (UploadService.hasInProgressMediaUploadsForPost(mPost)) {
             ToastUtils.showToast(EditPostActivity.this,
                     getString(R.string.editor_toast_uploading_please_wait), Duration.SHORT);
@@ -1658,7 +1556,7 @@ public class EditPostActivity extends AppCompatActivity implements
         publishConfirmationDialog.show(getSupportFragmentManager(), identifier);
     }
 
-    private void primaryAction() {
+    private void performPrimaryAction() {
         switch (getPrimaryAction()) {
             case UPDATE:
                 showUpdateConfirmationDialogAndUploadPost();
