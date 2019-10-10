@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.preference.PreferenceManager
@@ -14,18 +13,18 @@ import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
-class WellSqlConfig : DefaultWellConfig {
+open class WellSqlConfig : DefaultWellConfig {
     companion object {
         const val ADDON_WOOCOMMERCE = "WC"
     }
 
+    constructor(context: Context) : super(context)
+    constructor(context: Context, @AddOn vararg addOns: String) : super(context, mutableSetOf(*addOns))
+
     @Retention(SOURCE)
     @StringDef(ADDON_WOOCOMMERCE)
     @Target(VALUE_PARAMETER)
-    annotation class AddOn {}
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, @AddOn vararg addOns: String): super(context, mutableSetOf(*addOns))
+    annotation class AddOn
 
     override fun getDbVersion(): Int {
         return 88
@@ -865,7 +864,7 @@ class WellSqlConfig : DefaultWellConfig {
     /**
      * Drop and create all tables
      */
-    fun reset() {
+    open fun reset() {
         val db = WellSql.giveMeWritableDb()
         mTables.forEach { clazz ->
             val table = getTable(clazz)
