@@ -429,6 +429,35 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE," +
                                 "UNIQUE(LIST_ID, REMOTE_ITEM_ID) ON CONFLICT IGNORE)"
                     )
+                    db.execSQL(
+                            "CREATE TABLE IF NOT EXISTS PostModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "SITE_ID INTEGER," +
+                                "POST_ID INTEGER," +
+                                "TITLE TEXT," +
+                                "DATE_CREATED INTEGER," +
+                                "DATE_CREATED_GMT INTEGER," +
+                                "CATEGORIES TEXT," +
+                                "CUSTOM_FIELDS TEXT," +
+                                "DESCRIPTION TEXT," +
+                                "LINK TEXT," +
+                                "ALLOW_COMMENTS INTEGER," +
+                                "ALLOW_PINGS INTEGER," +
+                                "EXCERPT TEXT," +
+                                "KEYWORDS TEXT," +
+                                "MORE_TEXT TEXT," +
+                                "PERMA_LINK TEXT," +
+                                "STATUS TEXT," +
+                                "USER_ID INTEGER," +
+                                "PASSWORD TEXT," +
+                                "THUMBNAIL TEXT," +
+                                "POST_FORMAT TEXT," +
+                                "SLUG TEXT," +
+                                "LATITUDE REAL," +
+                                "LONGITUDE REAL," +
+                                "IS_PAGE INTEGER," +
+                                "PAGE_PARENT_ID TEXT," +
+                                "PAGE_PARENT_TITLE TEXT)"
+                    )
                     db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT")
                 }
                 44 -> migrate(version) {
