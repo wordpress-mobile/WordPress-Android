@@ -3552,7 +3552,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddMediaClicked(boolean allowMultipleSelection) {
+    public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
         mAllowMultipleSelection = allowMultipleSelection;
         WPMediaUtils.launchMediaLibrary(this, mAllowMultipleSelection);
     }
