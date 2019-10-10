@@ -145,6 +145,7 @@ class ZendeskHelper(
             zendeskNeedsToBeEnabledError
         }
         requireIdentity(context, selectedSite) {
+            AnalyticsTracker.track(Stat.SUPPORT_NEW_REQUEST_VIEWED)
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
@@ -165,6 +166,7 @@ class ZendeskHelper(
             zendeskNeedsToBeEnabledError
         }
         requireIdentity(context, selectedSite) {
+            AnalyticsTracker.track(Stat.SUPPORT_TICKET_LIST_VIEWED)
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }

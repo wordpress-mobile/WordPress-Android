@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -18,16 +19,22 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.text.BreakIterator;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -217,6 +224,8 @@ public class PostUtils {
                                     && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
                                     && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
                                     && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
+                                    && oldPost.getChangesConfirmedContentHashcode() == newPost
+                .getChangesConfirmedContentHashcode()
         );
     }
 
@@ -447,6 +456,17 @@ public class PostUtils {
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
     }
 
+    public static boolean hasAutoSave(PostModel post) {
+        // TODO: would be great to check if title, content and excerpt are different,
+        // but we currently don't have them when we fetch the post list
+
+        // Ignore auto-saves in case the post is locally changed.
+        // This might be changed in the future to show a better conflict UX.
+        return !post.isLocallyChanged()
+               // has auto-save
+               && post.hasUnpublishedRevision();
+    }
+
     public static String getConflictedPostCustomStringForDialog(PostModel post) {
         Context context = WordPress.getContext();
         String firstPart = context.getString(R.string.dialog_confirm_load_remote_post_body);
@@ -459,17 +479,89 @@ public class PostUtils {
         return firstPart + secondPart;
     }
 
+    public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
+        Context context = WordPress.getContext();
+        String firstPart = context.getString(R.string.dialog_confirm_autosave_body_first_part);
+
+        String lastModified =
+                TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();
+        String secondPart =
+                String.format(context.getString(R.string.dialog_confirm_autosave_body_second_part),
+                        getFormattedDateForLastModified(
+                                context, DateTimeUtils.timestampFromIso8601Millis(lastModified)),
+                        getFormattedDateForLastModified(
+                                context, DateTimeUtils.timestampFromIso8601Millis(post.getAutoSaveModified())));
+        return new UiStringText(firstPart + secondPart);
+    }
+
     /**
      * E.g. Jul 2, 2013 @ 21:57
      */
     public static String getFormattedDateForLastModified(Context context, long timeSinceLastModified) {
         Date date = new Date(timeSinceLastModified);
-        SimpleDateFormat sdf =
-                new SimpleDateFormat("MMM d, yyyy '@' hh:mm a", LocaleManager.getSafeLocale(context));
+
+        DateFormat dateFormat = DateFormat.getDateInstance(
+                DateFormat.MEDIUM,
+                LocaleManager.getSafeLocale(context));
+        DateFormat timeFormat = DateFormat.getTimeInstance(
+                DateFormat.SHORT,
+                LocaleManager.getSafeLocale(context));
+
 
         // The timezone on the website is at GMT
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        return sdf.format(date);
+        return dateFormat.format(date) + " @ " + timeFormat.format(date);
+    }
+
+    public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostModel post) {
+        String previewUrl;
+
+        switch (remotePreviewType) {
+            case NOT_A_REMOTE_PREVIEW:
+            case REMOTE_PREVIEW:
+                // always add the preview parameter to avoid bumping stats when viewing posts
+                previewUrl = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+                break;
+            case REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE:
+                previewUrl = post.getAutoSavePreviewUrl();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Cannot get a Preview URL for " + remotePreviewType + " Preview type."
+                );
+        }
+
+        return previewUrl;
+    }
+
+    public static void preparePostForPublish(PostModel post, SiteModel site) {
+        PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
+        post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
+        // We need to update the post status and mark the post as locally changed. If we didn't mark it as locally
+        // changed the UploadStarter wouldn't upload the post if the only change the user did was clicking on Publish
+        // button.
+        if (UploadUtils.userCanPublish(site)) {
+            if (PostStatus.fromPost(post) != PostStatus.PRIVATE) {
+                post.setStatus(PostStatus.PUBLISHED.toString());
+            }
+        } else {
+            post.setStatus(PostStatus.PENDING.toString());
+        }
+        if (!post.isLocalDraft()) {
+            post.setIsLocallyChanged(true);
+        }
+        AppLog.d(T.POSTS, "User explicitly confirmed changes. Post title: " + post.getTitle());
+        // the changes were explicitly confirmed by the user
+        post.setChangesConfirmedContentHashcode(post.contentHashcode());
+    }
+
+    public static boolean isPostCurrentlyBeingEdited(PostModel post) {
+        PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        return flag != null && post != null
+               && post.getLocalSiteId() == flag.localSiteId
+               && post.getId() == flag.postId;
     }
 }

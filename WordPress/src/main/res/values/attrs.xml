@@ -8,6 +8,8 @@
     <attr name="wpColorTextSubtle" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
 
+    <attr name="wpColorWarningDark" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />
@@ -105,6 +107,8 @@
             <enum name="submit" value="10" />
             <enum name="retry" value="11" />
             <enum name="moveToDraft" value="12" />
+            <enum name="deletePermanently" value="13"/>
+            <enum name="cancelPendingAutoUpload" value="14"/>
         </attr>
     </declare-styleable>
 

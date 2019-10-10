@@ -5,6 +5,20 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.widgets.PostListButtonType
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MORE
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 
 fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat) {
     val properties = HashMap<String, Any?>()
@@ -13,22 +27,24 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
     }
 
     properties["action"] = when (buttonType) {
-        PostListButtonType.BUTTON_EDIT -> {
+        BUTTON_EDIT -> {
             properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils
                     .contentContainsGutenbergBlocks(postData.content)
             "edit"
         }
-        PostListButtonType.BUTTON_RETRY -> "retry"
-        PostListButtonType.BUTTON_SUBMIT -> "submit"
-        PostListButtonType.BUTTON_VIEW -> "view"
-        PostListButtonType.BUTTON_PREVIEW -> "preview"
-        PostListButtonType.BUTTON_STATS -> "stats"
-        PostListButtonType.BUTTON_TRASH -> "trash"
-        PostListButtonType.BUTTON_DELETE -> "delete"
-        PostListButtonType.BUTTON_PUBLISH -> "publish"
-        PostListButtonType.BUTTON_SYNC -> "sync"
-        PostListButtonType.BUTTON_MORE -> "more"
-        PostListButtonType.BUTTON_MOVE_TO_DRAFT -> "move_to_draft"
+        BUTTON_RETRY -> "retry"
+        BUTTON_SUBMIT -> "submit"
+        BUTTON_VIEW -> "view"
+        BUTTON_PREVIEW -> "preview"
+        BUTTON_STATS -> "stats"
+        BUTTON_TRASH -> "trash"
+        BUTTON_DELETE,
+        BUTTON_DELETE_PERMANENTLY -> "delete"
+        BUTTON_PUBLISH -> "publish"
+        BUTTON_SYNC -> "sync"
+        BUTTON_MORE -> "more"
+        BUTTON_MOVE_TO_DRAFT -> "move_to_draft"
+        BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> "cancel_pending_auto_upload"
     }
 
     AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)

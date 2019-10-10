@@ -15,9 +15,33 @@ sealed class PostListItemType {
         val onSelected: () -> Unit
     ) : PostListItemType()
 
-    class LoadingItem(val localOrRemoteId: LocalOrRemoteId) : PostListItemType()
+    class LoadingItem(val localOrRemoteId: LocalOrRemoteId, val options: LoadingItemOptions) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
 }
+
+sealed class LoadingItemOptions(
+    val showEditButton: Boolean,
+    val showViewButton: Boolean,
+    val showMoreButton: Boolean,
+    val showMoveToDraftButton: Boolean,
+    val showDeletePermanentlyButton: Boolean
+)
+
+object LoadingItemDefaultPost : LoadingItemOptions(
+        showEditButton = true,
+        showViewButton = true,
+        showMoreButton = true,
+        showMoveToDraftButton = false,
+        showDeletePermanentlyButton = false
+)
+
+object LoadingItemTrashedPost : LoadingItemOptions(
+        showEditButton = false,
+        showViewButton = false,
+        showMoreButton = false,
+        showMoveToDraftButton = true,
+        showDeletePermanentlyButton = true
+)
 
 data class PostListItemUiStateData(
     val remotePostId: RemotePostId,
@@ -30,7 +54,8 @@ data class PostListItemUiStateData(
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
     val progressBarState: PostListItemProgressBar,
-    val showOverlay: Boolean
+    val showOverlay: Boolean,
+    val disableRippleEffect: Boolean
 )
 
 sealed class PostListItemProgressBar(val visibility: Boolean) {
