@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-21 00:54:44+0000
+Translation-Revision-Date: 2019-10-01 15:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Tindakan ini tidak dapat dibatalkan. Nama pengguna mungkin telah diperbarui.</string>
+    <string name="settings_username_changer_toast_content">Nama pengguna baru Anda adalah %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Menyimpan nama pengguna…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Mengubah Nama Pengguna</string>
+    <string name="settings_username_changer_confirm_dialog_content">Anda mengubah nama pengguna menjadi %1$s%2$s%3$s. Mengubah nama pengguna juga akan memengaruhi profil Gravatar dan alamat profil Intense Debate. Konfirmasikan nama pengguna Anda untuk melanjutkan.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Hati-hati!</string>
+    <string name="settings_username_changer_header">Anda akan mengubah nama pengguna, yang saat ini adalah %1$s%2$s%3$s.Anda tidak akan dapat menggunakan yang lama.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Melihat dan mengubah pengaturan performa Jetpack Anda</string>
+    <string name="site_settings_performance_and_speed">Performa dan Kecepatan</string>
+    <string name="site_settings_more">Lainnya</string>
+    <string name="site_settings_improved_search_summary">Mengganti pencarian bawaan WordPress dengan pengalaman pencarian yang disempurnakan</string>
+    <string name="site_settings_improved_search">Pencarian yang Disempurnakan</string>
+    <string name="site_settings_jetpack_search">Pencarian Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">Hosting Video Bebas Iklan</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Memuat halaman lebih cepat dengan mengizinkan Jetpack mengoptimalkan gambar dan file statis Anda (seperti CSS dan JavaScript).</string>
+    <string name="site_settings_faster_static_files">File statis lebih cepat</string>
+    <string name="site_settings_faster_images">Gambar lebih cepat</string>
+    <string name="site_settings_site_accelerator_off">Nonaktif</string>
+    <string name="site_settings_site_accelerator_on">Aktif</string>
+    <string name="site_settings_site_accelerator">Akselerator Situs</string>
+    <string name="site_settings_lazy_load_images_summary">Menyempurnakan kecepatan situs Anda dengan hanya memuat gambar yang terlihat pada layar.</string>
+    <string name="site_settings_performance">Performa</string>
+    <string name="notification_settings_moved_notices">Pengaturan Pemberitahuan kini ada di tab Pemberitahuan.</string>
+    <string name="stats_file_downloads_value_label">Unduhan</string>
+    <string name="stats_file_downloads_title_label">File</string>
+    <string name="stats_file_downloads">Unduhan file</string>
+    <string name="stats_data_not_recorded_for_period">Statistik unduhan file tidak dicatat sebelum 28 Juni 2019.</string>
+    <string name="stats_site_negative_utc">Zona waktu situs (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Zona waktu situs (UTC+ %s)</string>
+    <string name="stats_site_neutral_utc">Zona waktu situs (UTC)</string>
     <string name="web_preview_desktop">Desktop</string>
     <string name="web_preview_default">Asal</string>
     <string name="close_dialog_button_desc">Tutup Dialog</string>
@@ -107,7 +138,6 @@ Language: id
     <string name="site_settings_update_password_message">Untuk menghubungkan kembali aplikasi ke situs Anda yang di-hosting sendiri, masukkan kata sandi situs yang baru di sini.</string>
     <string name="site_settings_password_updated">Kata sandi diperbarui</string>
     <string name="site_settings_password_dialog_title">Perbarui kata sandi</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Mendaftarkan nama domain…</string>
     <string name="domain_registration_state_picker_dialog_title">Pilih Provinsi</string>
     <string name="domain_registration_country_picker_dialog_title">Pilih Negara</string>
@@ -154,7 +184,6 @@ Language: id
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
     <string name="stats_insights_social">Sosial</string>
     <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
-    <string name="stats_view_follower_totals">Total Pengikut</string>
     <string name="register_domain">Daftarkan Domain</string>
     <string name="jetpack_installed_message">Sekarang Jetpack telah terinstal, kami hanya perlu Anda menyiapkannya. Ini hanya memerlukan waktu satu menit.</string>
     <string name="stats_menu_remove">Hapus dari wawasan</string>
@@ -818,11 +847,6 @@ Language: id
     <string name="my_site_add_new_site">Tambah situs baru</string>
     <string name="my_site_create_new_site">Buat situs baru untuk bisnis, majalah, atau blog personal Anda; atau hubungkan akun WordPress yang sudah ada.</string>
     <string name="notifications_jetpack_connection_setup_info">Untuk mendapatkan pemberitahuan yang bermanfaat di perangkat dari situs WordPress, Anda perlu menginstal plugin Jetpack. Apakah Anda ingin menyiapkan Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Menyempurnakan kecepatan situs Anda dengan hanya memuat gambar yang terlihat pada layar. Gambar baru akan dimuat sebelum mereka menggulir ke tampilan Dengan fitur ini, pengunjung tidak perlu mengunduh semua gambar pada halaman sekaligus, bahkan gambar yang tidak dapat mereka lihat.</string>
-    <string name="site_settings_lazy_load_images">\"Lazy-load” gambar</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack akan mengoptimalkan gambar Anda dan menyajikannya dari lokasi server yang terdekat dengan pengunjung situs. Dengan menggunakan jaringan pengiriman konten global, kami akan meningkatkan kecepatan pemuatan situs Anda.</string>
-    <string name="site_settings_serve_images_from_our_servers">Sajikan gambar dari server kami</string>
-    <string name="site_settings_speed_up_your_site">Tingkatkan kecepatan situs Anda</string>
     <string name="plugin_chevron_icon_content_description">Teks pengalih</string>
     <string name="plugin_info_requires_version">Memerlukan Versi WordPress</string>
     <string name="plugin_info_lastupdated">Pembaruan Terakhir</string>

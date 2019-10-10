@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-09-05 11:17:07+0000
+Translation-Revision-Date: 2019-09-30 06:29:27+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Această acțiune nu poate fi anulată. Probabil numele de utilizator a fost deja actualizat.</string>
+    <string name="settings_username_changer_toast_content">Noul tău nume de utilizator este %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Salvez numele de utilizator…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Schimbă numele de utilizator</string>
+    <string name="settings_username_changer_confirm_dialog_content">Îți schimbi numele de utilizator în %1$s%2$s%3$s. Schimbarea numelui de utilizator îți va afecta, de asemenea, profilul Gravatar și adresele profilului IntenseDebate. Pentru a continua, confirmă noul nume de utilizator.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Atenție!</string>
+    <string name="settings_username_changer_header">Ești pe cale să-ți schimbi numele de utilizator, care în prezent este %1$s%2$s%3$s. Nu vei putea să-l schimbi înapoi.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Vizualizează și modifică setările de performanță Jetpack</string>
+    <string name="site_settings_performance_and_speed">Performanță și viteză</string>
+    <string name="site_settings_more">Mai multe</string>
+    <string name="site_settings_improved_search_summary">Înlocuiește căutarea nativă din WordPress cu o experiență de căutare îmbunătățită</string>
+    <string name="site_settings_improved_search">Căutare îmbunătățită</string>
+    <string name="site_settings_jetpack_search">Căutare Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">Găzduire video fără reclame</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Încarci imaginile mai repede dacă îi permiți lui Jetpack să-ți optimizeze imaginile și fișierele statice (cum ar fi fișiere CSS și JavaScript).</string>
+    <string name="site_settings_faster_static_files">Fișiere statice mai rapide</string>
+    <string name="site_settings_faster_images">Imagini mai rapide</string>
+    <string name="site_settings_site_accelerator_off">Oprit</string>
+    <string name="site_settings_site_accelerator_on">Pornit</string>
+    <string name="site_settings_site_accelerator">Accelerator de situri</string>
+    <string name="site_settings_lazy_load_images_summary">Îți îmbunătățește viteza sitului prin încărcarea imaginilor numai când trebuie să apară pe ecran.</string>
+    <string name="site_settings_performance">Performanță</string>
+    <string name="notification_settings_moved_notices">Setările pentru notificări pot fi găsite acum în fila Notificări.</string>
+    <string name="stats_file_downloads_value_label">Descărcări</string>
+    <string name="stats_file_downloads_title_label">Fișier</string>
+    <string name="stats_file_downloads">Descărcări de fișiere</string>
+    <string name="stats_data_not_recorded_for_period">Statistica descărcărilor de fișiere nu era înregistrată înainte de 28 iunie 2019.</string>
+    <string name="stats_site_negative_utc">Fus orar sit (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Fus orar sit (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Fus orar sit (UTC)</string>
     <string name="web_preview_desktop">Desktop</string>
     <string name="web_preview_default">Implicită</string>
     <string name="close_dialog_button_desc">Închide dialogul</string>
@@ -107,7 +138,6 @@ Language: ro
     <string name="site_settings_update_password_message">Pentru a reconecta aplicația la situl tău auto-găzduit, introdu aici noua parolă pentru sit.</string>
     <string name="site_settings_password_updated">Parolă actualizată</string>
     <string name="site_settings_password_dialog_title">Actualizează parola</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Înregistrez numele de domeniu…</string>
     <string name="domain_registration_state_picker_dialog_title">Selectează județul (provincia, statul)</string>
     <string name="domain_registration_country_picker_dialog_title">Selectează țara</string>
@@ -847,11 +877,7 @@ Language: ro
     <string name="my_site_add_new_site">Adaugă sit nou</string>
     <string name="my_site_create_new_site">Creează un sit nou pentru afacerea, revista ta sau blogul personal; sau conectează o instalare WordPress existentă.</string>
     <string name="notifications_jetpack_connection_setup_info">Pentru a primi notificări utile pe dispozitivul tău de la situl propriu WordPress, va trebui să instalezi modulul Jetpack. Vrei să inițializezi Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Îți îmbunătățește viteza sitului încărcând numai imaginile vizibile pe ecran. Imaginile noi se vor încărca chiar înainte de a fi derulate într-o vizualizare. Astfel, vizitatorii nu trebuie să descarce toate imaginile dintr-o pagină deodată, adică și pe cele pe care nu le pot vedea.</string>
-    <string name="site_settings_lazy_load_images">Imagini „încărcate lent”</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack îți va optimiza imaginile și le va servi vizitatorilor de la un server situat în apropierea lor. Folosirea rețelei noastre globale de livrare a conținutului îți va crește viteza de încărcare a sitului.</string>
-    <string name="site_settings_serve_images_from_our_servers">Servim imagini de pe serverele noastre</string>
-    <string name="site_settings_speed_up_your_site">Accelerează-ți situl</string>
+    <string name="site_settings_lazy_load_images">Imagini încărcate lent</string>
     <string name="stats_jetpack_connection_setup">Instalează Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Comută textul</string>
     <string name="plugin_info_your_version">Versiunea ta WordPress</string>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-15 07:20:57+0000
+Translation-Revision-Date: 2019-09-30 05:59:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Åtgärden går inte att avbryta. Användarnamnet kanske redan är uppdaterat.</string>
+    <string name="settings_username_changer_toast_content">Ditt nya användarnamn är %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Sparar användarnamnet…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Ändra användarnamnet…</string>
+    <string name="settings_username_changer_confirm_dialog_content">Du ändrar nu ditt användarnamn till %1$s%2$s%3$s. Ändringen av användarnamn påverkar även profiladressen för Gravatar och Intense Debate. Bekräfta ditt nya användarnamn för att fortsätta.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Försiktigt!</string>
+    <string name="settings_username_changer_header">Du är på väg att ändra ditt nuvarande användarnamn, som är %1$s%2$s%3$s. Du kommer inte att kunna ändra tillbaka till samma användarnamn.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Visa och ändra dina prestandainställningar för Jetpack.</string>
+    <string name="site_settings_performance_and_speed">Prestanda och hastighet</string>
+    <string name="site_settings_more">Mer</string>
+    <string name="site_settings_improved_search_summary">Ersätter WordPress inbyggda sökfunktion med en förbättrad sökupplevelse</string>
+    <string name="site_settings_improved_search">förbättrad sökfunktion</string>
+    <string name="site_settings_jetpack_search">Jetpack Sök</string>
+    <string name="site_settings_ad_free_video_hosting">Videodistribution utan annonser</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Ladda sidor snabbare genom att låta Jetpack optimera dina bilder och dina statiska filer (såsom CSS och JavaScript).</string>
+    <string name="site_settings_faster_static_files">Snabbare statiska filer</string>
+    <string name="site_settings_faster_images">Snabbare bilder</string>
+    <string name="site_settings_site_accelerator_off">Av</string>
+    <string name="site_settings_site_accelerator_on">På</string>
+    <string name="site_settings_site_accelerator">Webbplatsaccelerator</string>
+    <string name="site_settings_lazy_load_images_summary">Förbättra din webbplats hastighet genom att bara läsa in bilder när de syns på skärmen.</string>
+    <string name="site_settings_performance">Prestanda</string>
+    <string name="notification_settings_moved_notices">Inställningar för aviseringar finns nu under fliken Aviseringar.</string>
+    <string name="stats_file_downloads_value_label">Nedladdningar</string>
+    <string name="stats_file_downloads_title_label">Fil</string>
+    <string name="stats_file_downloads">Filhämtningar</string>
+    <string name="stats_data_not_recorded_for_period">Staistik för filhämtningar registrerades inte före 28 juni 2019.</string>
+    <string name="stats_site_negative_utc">Tidszon för webbplatsen (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Tidszon för webbplatsen (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Tidszon för webbplatsen (UTC)</string>
     <string name="web_preview_desktop">Stationär dator</string>
     <string name="web_preview_default">Standard</string>
     <string name="close_dialog_button_desc">Stäng dialogruta</string>
@@ -107,7 +138,6 @@ Language: sv_SE
     <string name="site_settings_update_password_message">För att återansluta appen till din webbplats som körs på extern server behöver du skriva in webbplatsens nya lösenord här.</string>
     <string name="site_settings_password_updated">Lösenord uppdaterat</string>
     <string name="site_settings_password_dialog_title">Uppdatera lösenord</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerar domännamn…</string>
     <string name="domain_registration_state_picker_dialog_title">Välj delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Välj land</string>
@@ -154,7 +184,7 @@ Language: sv_SE
     <string name="stats_insights_management_title">Visa endast den mest relevanta statistiken. Lägg till och organisera dina insikter nedan.</string>
     <string name="stats_insights_social">Socialt</string>
     <string name="stats_insights_annual_site_stats">Årlig webbplatsstatistik</string>
-    <string name="stats_view_follower_totals">Totalt antal följare</string>
+    <string name="stats_view_follower_totals">Totala antal följare</string>
     <string name="domain_suggestions_fetch_error">Det gick inte att ladda in förslag på domäner</string>
     <string name="domain_suggestions_search_hint">Skriv in ett nyckelord för fler idéer</string>
     <string name="domains_suggestions_empty_list">Inga förslag hittades</string>
@@ -611,9 +641,9 @@ Language: sv_SE
     <string name="my_site_icon_dialog_title">Webbplatsikon</string>
     <string name="reader_followed_blog_notifications_this">denna webbplats</string>
     <string name="reader_followed_blog_notifications_action">Aktivera</string>
-    <string name="reader_followed_blog_notifications">Aktivera notiser för %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Slå på webbplatsnotiser</string>
-    <string name="reader_btn_notifications_off">Stäng av webbplatsnotiser</string>
+    <string name="reader_followed_blog_notifications">Aktivera aviseringar för %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_on">Slå på webbplatsaviseringar</string>
+    <string name="reader_btn_notifications_off">Stäng av webbplatsaviseringar</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
     <string name="rewind">Spola tillbaka</string>
     <string name="activity_log_event">Händelse</string>
@@ -646,17 +676,17 @@ Language: sv_SE
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Installera</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Installationen av det första tillägget på din webbplats kan ta upp till 1 minut. Under denna tid kan du inte ändra något på webbplatsen.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Installera tillägget</string>
-    <string name="notification_settings_followed_dialog_title">Notiser</string>
+    <string name="notification_settings_followed_dialog_title">Aviseringar</string>
     <string name="notification_settings_followed_dialog_email_comments">Skicka kommentarer till mig via e-post</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">En gång i veckan</string>
     <string name="notification_settings_followed_dialog_email_posts_instantly">Omedelbart</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Dagligen</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Nya inlägg</string>
-    <string name="notification_settings_followed_dialog_notification_posts_description">Få notiser om nya inlägg från denna webbplats</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Få aviseringar om nya inlägg från denna webbplats</string>
     <string name="notification_settings_followed_dialog_email_posts_switch">Skicka mig nya inlägg via e-post</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Alla webbplatser jag följer</string>
     <string name="notification_settings_category_followed_sites">Följda webbplatser</string>
-    <string name="content_description_person_reading_device_notification">Person som läser en mobil enhet med notiser</string>
+    <string name="content_description_person_reading_device_notification">Person som läser en mobil enhet med hjälp av aviseringar</string>
     <string name="content_description_people_looking_charts">Personers som studerar diagram och tabeller</string>
     <string name="comment_title">%s om %s</string>
     <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
@@ -675,7 +705,7 @@ Language: sv_SE
     <string name="fab_create_desc">skapa</string>
     <string name="fab_add_tag_desc">Skapa etikett</string>
     <string name="navigate_up_desc">uppåt</string>
-    <string name="notification_settings_switch_desc">Notiser</string>
+    <string name="notification_settings_switch_desc">Aviseringar</string>
     <string name="open_external_link_desc">Öppna extern länk</string>
     <string name="show_more_desc">visa mer</string>
     <string name="reader_photo_view_desc">foto</string>
@@ -728,7 +758,7 @@ Language: sv_SE
     <string name="comment_liked_talkback">Kommentaren har gillats</string>
     <string name="comment_unapproved_talkback">Kommentaren har avvisats</string>
     <string name="comment_approved_talkback">Kommentaren har godkänts</string>
-    <string name="notif_detail_screen_title">Notisinformation %s</string>
+    <string name="notif_detail_screen_title">Aviseringsinformation %s</string>
     <string name="edit_photo_screen_title">Redigera foto</string>
     <string name="share_intent_screen_title">Välj webbplats</string>
     <string name="signup_epilogue_screen_title">Nytt konto</string>
@@ -737,11 +767,11 @@ Language: sv_SE
     <string name="person_detail_screen_title">Personinformation</string>
     <string name="media_settings_screen_title">Filinformation</string>
     <string name="publicize_buttons_screen_title">Delningsknappar</string>
-    <string name="notifications_screen_title">Notiser</string>
+    <string name="notifications_screen_title">Aviseringar</string>
     <string name="reader_screen_title">Läsare</string>
     <string name="me_section_screen_title">Jag</string>
     <string name="my_site_section_screen_title">Min webbplats</string>
-    <string name="notif_settings_screen_title">Notisinställningar</string>
+    <string name="notif_settings_screen_title">Aviseringsinställningar</string>
     <string name="help_screen_title">Hjälp och support</string>
     <string name="license_screen_title">Licens</string>
     <string name="release_notes_screen_title">Release-uppgifter</string>
@@ -796,7 +826,7 @@ Language: sv_SE
     <string name="author_name_blog_name">%s, %s</string>
     <string name="latitude_longitude">%f, %f</string>
     <string name="site_creation_domain_finish_button">Skapa webbplats</string>
-    <string name="notification_site_creation_created">Knacka för att fortsätta.</string>
+    <string name="notification_site_creation_created">Tryck för att fortsätta.</string>
     <string name="notification_site_creation_title_success">Webbplats skapad!</string>
     <string name="google_error_timeout">Det tog för lång tid för Google att svara. Du kan behöva vänta tills du har en stabilare internetuppkoppling.</string>
     <string name="username_changer_title">Ändra användarnamn</string>
@@ -846,12 +876,8 @@ Language: sv_SE
     <string name="site_settings_like_header">Gilla</string>
     <string name="my_site_add_new_site">Lägg till ny webbplats</string>
     <string name="my_site_create_new_site">Skapa en ny webbplats för ditt företag, tidskrift eller personliga blogg; eller anslut en befintlig installation av WordPress.</string>
-    <string name="notifications_jetpack_connection_setup_info">För att få hjälpsamma notifieringar till din telefon från din WordPress-webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Öka hastigheten på din webbplats genom att bara ladda bilder som är synliga på skärmen. Fler bilder kommer att laddas precis innan de rullas in på sidan. Detta gör att besökare inte behöver ladda ned alla bilder på en sida på samma gång, inklusive bilder som de ändå inte kan se.</string>
-    <string name="site_settings_lazy_load_images">Ladda bilder efterhand (”Lazy-load”)</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack kommer att optimera dina bilder och leverera dem från den server som finns närmast dina besökare. Användningen av vårt globala nätverk för innehållsdistribution får din webbplats att laddas snabbare.</string>
-    <string name="site_settings_serve_images_from_our_servers">Leverera bilder från våra servrar</string>
-    <string name="site_settings_speed_up_your_site">Snabba upp din webbplats</string>
+    <string name="notifications_jetpack_connection_setup_info">För att få hjälpsamma aviseringar till din telefon från din WordPress-webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
+    <string name="site_settings_lazy_load_images">Uppskjuten inläsning av bilder (lazy-load)</string>
     <string name="stats_jetpack_connection_setup">Installera Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Text på/av</string>
     <string name="plugin_info_your_version">Din WordPress-version</string>
@@ -978,7 +1004,7 @@ Language: sv_SE
     <string name="jetpack_prevent_brute_force_title">Blockera obehöriga inloggningsförsök</string>
     <string name="jetpack_prevent_brute_force_category_title">Skydd mot brute force-attacker</string>
     <string name="jetpack_send_wp_notifications_title">Skicka push-meddelanden</string>
-    <string name="jetpack_send_email_notifications_title">Skicka notifieringar via e-post</string>
+    <string name="jetpack_send_email_notifications_title">Skicka aviseringar via e-post</string>
     <string name="jetpack_monitor_uptime_title">Övervaka drifttiden för din webbplats</string>
     <string name="jetpack_security_setting_title">Säkerhet</string>
     <string name="jetpack_site_settings_category_title">Jetpack-inställningar</string>
@@ -1016,10 +1042,10 @@ Language: sv_SE
     <string name="notification_settings_category_other">Övrigt</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Alla mina webbplatser</string>
     <string name="notification_settings_category_your_sites">Dina webbplatser</string>
-    <string name="notification_settings_master_off_message">Om du stänger av notifieringar i inställningarna kommer detta att inaktivera alla notifieringar, oavsett typ, från denna app. Du kan finjustera vilka notifieringar du vill ta emot efter att du åter aktiverat notifieringar i inställningarna.</string>
-    <string name="notification_settings_master_off_title">Aktivera notifieringar för att få notifieringar på denna enhet.</string>
-    <string name="notification_settings_master_hint_off">Aktivera notifieringar</string>
-    <string name="notification_settings_master_hint_on">Inaktivera notifieringar</string>
+    <string name="notification_settings_master_off_message">Om du stänger av aviseringar i inställningarna kommer detta att inaktivera alla aviseringar, oavsett typ, från denna app. Du kan finjustera vilka aviseringar du vill ta emot efter att du åter aktiverat aviseringar i inställningarna.</string>
+    <string name="notification_settings_master_off_title">Aktivera aviseringar för att få aviseringar på denna enhet.</string>
+    <string name="notification_settings_master_hint_off">Aktivera aviseringar</string>
+    <string name="notification_settings_master_hint_on">Inaktivera aviseringar</string>
     <string name="notification_settings_master_status_off">Av</string>
     <string name="notification_settings_master_status_on">På</string>
     <string name="max_video_resolution">Maximal videostorlek</string>
@@ -1081,7 +1107,7 @@ Language: sv_SE
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
     <string name="login_promo_text_jetpack">Hantera din Jetpack-förstärkta webbplats när som helst – WordPress finns i din ficka.</string>
-    <string name="login_promo_text_notifications">Dina notifieringar följer alltid med dig – ha koll på kommentarer och gillanden i realtid.</string>
+    <string name="login_promo_text_notifications">Du har alltid dina aviseringar med dig – ha full koll på kommentarer och gillanden i realtid.</string>
     <string name="login_promo_text_anytime">Håll koll på dina favoritwebbplatser och delta i diskussion där och när det passar dig.</string>
     <string name="login_promo_text_realtime">Se hur läsare från hela världen läser och interagerar med din webbplats – i direktsändning.</string>
     <string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
@@ -1194,7 +1220,7 @@ Language: sv_SE
     <string name="connections_description">Anslut de sociala nätverk du gillar mest för att automatiskt dela nya inlägg med dina vänner.</string>
     <string name="connections_label">Kopplingar</string>
     <string name="sharing">Delning</string>
-    <string name="tabbar_accessibility_label_notifications">Notifieringar. Hantera dina notifieringar.</string>
+    <string name="tabbar_accessibility_label_notifications">Aviseringar. Hantera dina aviseringar.</string>
     <string name="tabbar_accessibility_label_reader">Läsare. Följ innehåll från andra webbplatser.</string>
     <string name="tabbar_accessibility_label_me">Jag. Se och redigera din profil.</string>
     <string name="tabbar_accessibility_label_my_site">Min webbplats. Se och hantera din webbplats, inklusive statistik.</string>
@@ -1294,7 +1320,7 @@ Language: sv_SE
     <string name="error_notif_q_action_approve">Kunde inte godkänna kommentaren. Försök igen senare.</string>
     <string name="error_notif_q_action_like">Kunde inte gilla kommentaren. Försök igen senare.</string>
     <string name="notifications_label_new_notifications_subtitle">Tryck för att visa dem</string>
-    <string name="notifications_label_new_notifications">Nya notiser</string>
+    <string name="notifications_label_new_notifications">Nya aviseringar</string>
     <string name="comment_q_action_replying">Svarar…</string>
     <string name="comment_q_action_approving">Godkänner…</string>
     <string name="comment_q_action_liking">Gillar…</string>
@@ -1331,7 +1357,7 @@ Language: sv_SE
     <string name="people_dropdown_item_team">Team</string>
     <string name="invite_message_usernames_limit">Bjud in upp till 10 e-postadresser eller användare på WordPress.com. De som behöver ett användarnamn får instruktioner skickade till dem.</string>
     <string name="viewer_remove_confirmation_message">Om du tar bort denna läsare kommer hen inte kunna besöka denna webbplats.\n\nÄr du säker på att du vill ta bort denna läsare?</string>
-    <string name="follower_remove_confirmation_message">Om följaren tas bort kommer hen inte längre få notiser från denna webbplats såvida de inte följer webbplatsen på nytt.\n\nVill du fortfarande ta bort denna följare?</string>
+    <string name="follower_remove_confirmation_message">Om följaren tas bort kommer han/hon inte längre få aviseringar från denna webbplats såvida han/hon inte följer webbplatsen på nytt.\n\nVill du fortfarande ta bort denna följare?</string>
     <string name="follower_subscribed_since">Sedan %1$s</string>
     <string name="error_remove_viewer">Kunde inte ta bort läsare</string>
     <string name="error_remove_follower">Kunde inte ta bort följare</string>
@@ -1553,7 +1579,7 @@ Language: sv_SE
     <string name="site_settings_threading_hint">Tillåt staplade kommentarer till ett visst djup</string>
     <string name="site_settings_sort_by_hint">Avgör i vilken ordning kommentarer visas</string>
     <string name="site_settings_close_after_hint">Tillåt inte kommentarer efter den angivna tiden</string>
-    <string name="site_settings_receive_pingbacks_hint">Tillåt länknotiser från andra bloggar</string>
+    <string name="site_settings_receive_pingbacks_hint">Tillåt aviseringar om länkar från andra bloggar</string>
     <string name="site_settings_send_pingbacks_hint">Försök meddela alla bloggar som länkats i inlägget</string>
     <string name="site_settings_allow_comments_hint">Tillåt att läsare publicerar kommentarer</string>
     <string name="site_settings_discussion_hint">Visa och ändra dina webbplatsers diskussionsinställningar</string>
@@ -1660,16 +1686,16 @@ Language: sv_SE
     <string name="reader_title_post_detail">Läsare-inlägg</string>
     <string name="local_draft_explainer">Det här inlägget är ett lokalt utkast som inte har publicerats</string>
     <string name="local_changes_explainer">Det här inlägget har lokala ändringar som inte har publicerats</string>
-    <string name="notifications_push_summary">Inställningar för notiser som visas på din enhet.</string>
-    <string name="notifications_email_summary">Inställningar för notiser som skickas till den e-post som är knutet till ditt konto.</string>
-    <string name="notifications_tab_summary">Inställningar för notiser som visas under fliken Notiser.</string>
-    <string name="notifications_disabled">App-notiser har inaktiverats. Tryck här för att aktivera dem i Inställningar.</string>
-    <string name="notification_types">Notistyper</string>
-    <string name="error_loading_notifications">Det gick inte att läsa in notisinställningar</string>
+    <string name="notifications_push_summary">Inställningar för aviseringar som visas på din enhet.</string>
+    <string name="notifications_email_summary">Inställningar för aviseringar som skickas till den e-postadress som är knuten till ditt konto.</string>
+    <string name="notifications_tab_summary">Inställningar för aviseringar som visas under fliken Aviseringar.</string>
+    <string name="notifications_disabled">App-aviseringar är inaktiverade. Tryck här för att aktivera dem under Inställningar.</string>
+    <string name="notification_types">Aviseringstyper</string>
+    <string name="error_loading_notifications">Det gick inte att läsa in aviseringsinställningar</string>
     <string name="comment_likes">Gillar för kommentarer</string>
     <string name="email">E-post</string>
-    <string name="notifications_tab">Fliken Notiser</string>
-    <string name="app_notifications">App-notiser</string>
+    <string name="notifications_tab">Fliken Aviseringar</string>
+    <string name="app_notifications">App-aviseringar</string>
     <string name="notification_settings_item_other_account_emails_summary">Viktiga e-postmeddelanden om ditt konto kommer vi alltid att sända, men du vill kan du dessutom få en del hjälpsamma ytterligare saker.</string>
     <string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
     <string name="connectionbar_no_connection">Ingen anslutning</string>
@@ -1725,7 +1751,7 @@ Language: sv_SE
     <string name="stats_view_search_terms">Söktermer</string>
     <string name="stats_view_authors">Författare</string>
     <string name="stats_search_terms_unknown_search_terms">Okända söktermer</string>
-    <string name="error_notification_open">Kunde inte öppna notis</string>
+    <string name="error_notification_open">Kunde inte öppna aviseringen</string>
     <string name="publisher">Publicerat av:</string>
     <string name="reader_empty_posts_request_failed">Kunde inte hämta inlägg</string>
     <string name="reader_page_recommended_blogs">Webbplatser du kanske gillar</string>
@@ -1814,7 +1840,7 @@ Language: sv_SE
     <string name="error_refresh_pages">Sidorna kunde inte uppdateras just nu</string>
     <string name="error_refresh_posts">Inläggen kunde inte uppdateras just nu</string>
     <string name="error_deleting_post">Ett fel uppstod när inlägget skulle raderas</string>
-    <string name="notifications_empty_list">Inga notifieringar</string>
+    <string name="notifications_empty_list">Inga aviseringar</string>
     <string name="sdcard_message">Ett SD-kort är nödvändigt för att ladda upp media</string>
     <string name="cat_name_required">Kategorinamn måste anges</string>
     <string name="adding_cat_success">Kategorin tillagd</string>
@@ -1836,7 +1862,7 @@ Language: sv_SE
     <string name="privacy_policy">Integritetspolicy</string>
     <string name="new_media">Ny media</string>
     <string name="new_post">Nytt inlägg</string>
-    <string name="notifications_empty_all">Inga notiser … ännu.</string>
+    <string name="notifications_empty_all">Inga aviseringar … ännu.</string>
     <string name="http_authorization_required">Autentisering krävs</string>
     <string name="invalid_site_url_message">Kontrollera att webbplatsens URL är giltig</string>
     <string name="open_source_licenses">Öppen källkodslicens</string>
@@ -1939,7 +1965,7 @@ Language: sv_SE
     <string name="discard">Kasta bort</string>
     <string name="manage">Hantera</string>
     <string name="more_notifications">och %d mer.</string>
-    <string name="new_notifications">%d nya notifieringar</string>
+    <string name="new_notifications">%d nya aviseringar</string>
     <string name="follows">Följer</string>
     <string name="note_reply_successful">Svar publicerat</string>
     <string name="sign_in">Logga in</string>
@@ -1989,7 +2015,7 @@ Language: sv_SE
     <string name="none">Ingen</string>
     <string name="no">Nej</string>
     <string name="yes">Ja</string>
-    <string name="notification_settings">Notisinställningar</string>
+    <string name="notification_settings">Aviseringsinställningar</string>
     <string name="reply">Svara</string>
     <string name="on">om</string>
     <string name="preview">Förhandsgranska</string>

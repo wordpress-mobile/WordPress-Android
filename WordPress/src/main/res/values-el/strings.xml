@@ -6,7 +6,6 @@ Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="post_list_drafts">Προσχέδια</string>
     <string name="post_list_published">Δημοσιευμένα</string>
     <string name="post_list_author_everyone">Όλοι</string>
@@ -322,7 +321,6 @@ Language: el_GR
     <string name="plugin_install">Εγκατάσταση</string>
     <string name="site_settings_like_header">Like</string>
     <string name="my_site_add_new_site">Προσθήκη ιστότοπου</string>
-    <string name="site_settings_speed_up_your_site">Αυξήστε την ταχύτητα του δικτυακού σας τόπου</string>
     <string name="stats_jetpack_connection_setup">Εγκατάσταση Jetpack</string>
     <string name="plugin_info_requires_version">Απαιτεί WordPress Έκδοση</string>
     <string name="plugin_info_lastupdated">Τελευταία Ενημέρωση</string>

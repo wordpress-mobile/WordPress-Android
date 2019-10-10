@@ -1,5 +1,6 @@
-* Access your most commonly used actions more quickly from the redesigned My Sites screen.
-* Have you encountered issues connecting to LinkedIn? We fixed that, so: network away!
-* The Blog Post screen now shows the author of each post.
-* Data files for WordPress.com sites are available for download from Stats.
-* Tweak your Notifications settings right from the Notifications List.
+* Add Remote Preview support for posts and pages.
+* Trashed posts must now be restoreded before editing or previewing them.
+* It's now easier to see and resolve post conflicts.
+* Fixed: Clicking on "Publish" on a private post sometimes published the post as public
+* Unsaved changes to posts and pages are automatically backed up on all devices.
+* Fixed an issue editing links

@@ -1,6 +1,0 @@
-13.2:
-* Access your most commonly used actions more quickly from the redesigned My Sites screen.
-* Have you encountered issues connecting to LinkedIn? We fixed that, so: network away!
-* The Blog Post screen now shows the author of each post.
-* Data files for WordPress.com sites are available for download from Stats.
-* Tweak your Notifications settings right from the Notifications List.

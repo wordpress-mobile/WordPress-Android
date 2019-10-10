@@ -1,3 +1,0 @@
-13.1:
-* Auf der Vorschau für Websites und Seiten kannst du jetzt zwischen der mobilen und der Desktopversion der Website wechseln.
-* Wir haben einen Fehler behoben, der einige Benutzer betraf, die keine Verbindung zu ihren Social-Media-Diensten herstellen konnten.

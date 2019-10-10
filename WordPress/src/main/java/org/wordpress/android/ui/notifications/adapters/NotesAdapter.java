@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.NoticonUtils;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -28,7 +29,6 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
-import org.wordpress.android.widgets.NoticonTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +48,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
     @Inject protected ImageManager mImageManager;
     @Inject protected NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+    @Inject protected NoticonUtils mNoticonUtils;
 
     public enum FILTERS {
         FILTER_ALL,
@@ -292,8 +293,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         boolean isUnread = note.isUnread();
 
-        String noticonCharacter = note.getNoticonCharacter();
-        noteViewHolder.mNoteIcon.setText(noticonCharacter);
+        int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
+        mImageManager.load(noteViewHolder.mNoteIcon, gridicon);
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.bg_oval_warning_stroke_white);
         } else if (isUnread) {
@@ -312,10 +313,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1) {
             mOnLoadMoreListener.onLoadMore(note.getTimestamp());
         }
-    }
-
-    public int getPositionForNote(String noteId) {
-        return getPositionForNoteInArray(noteId, mFilteredNotes);
     }
 
     private int getPositionForNoteUnfiltered(String noteId) {
@@ -363,7 +360,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
         private final ImageView mImgAvatar;
-        private final NoticonTextView mNoteIcon;
+        private final ImageView mNoteIcon;
 
         NoteViewHolder(View view) {
             super(view);

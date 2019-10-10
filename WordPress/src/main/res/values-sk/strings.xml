@@ -547,11 +547,6 @@ Language: sk
     <string name="my_site_add_new_site">Pridať novú webovú stránku</string>
     <string name="my_site_create_new_site">Vytvorte novú webovú stránku pre vašu firmu, magazín alebo osobný blog, alebo pripojte existujúcu WordPress inštaláciu.</string>
     <string name="notifications_jetpack_connection_setup_info">Ak chcete získať užitočné upozornenia vo vašom zariadení z webovej stránky WordPress, musíte nainštalovať plugin Jetpack. Chcete nastaviť Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Zlepšite rýchlosť vašich webových stránok tým, že načítate iba obrázky viditeľné na obrazovke. Nové obrázky sa načítajú tesne predtým, než prejdú do zobrazenia. Toto nastavenie zabraňuje tomu, aby si návštevníci museli stiahnuť všetky obrázky na stránke naraz, dokonca aj tie, ktoré nevidia.</string>
-    <string name="site_settings_lazy_load_images">\"Lenivo-nahrávané\" obrázky</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a ponúka ich zo serverovej lokality, ktorá je najbližšie k vašim návštevníkom. Použitie našej globálnej doručovacej siete zvýši rýchlosť načítavania vašich webových stránok.</string>
-    <string name="site_settings_serve_images_from_our_servers">Ponúkať obrázky z našich severov</string>
-    <string name="site_settings_speed_up_your_site">Zrýchlite svoje webové stránky</string>
     <string name="stats_jetpack_connection_setup">Nainštalovať Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Prepnúť text</string>
     <string name="plugin_info_your_version">Vaša WordPress verzia</string>
