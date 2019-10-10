@@ -259,7 +259,7 @@ public class ReaderActivityLauncher {
 
     public static void openPost(Context context, ReaderPost post) {
         String url = post.getUrl();
-        if (WPUrlUtils.isWordPressCom(url) || post.isWP()) {
+        if (WPUrlUtils.isWordPressCom(url) || (post.isWP() && !post.isJetpack)) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
