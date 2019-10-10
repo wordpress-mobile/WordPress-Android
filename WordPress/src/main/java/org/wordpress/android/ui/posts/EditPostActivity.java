@@ -115,6 +115,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
@@ -294,57 +295,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsPage;
     private boolean mHasSetPostContent;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
-
-
-    private enum PostLoadingState {
-        NONE(0, ProgressDialogUiState.HiddenProgressDialog.INSTANCE),
-        LOADING_REVISION(3, new ProgressDialogUiState.VisibleProgressDialog(
-                new UiStringRes(R.string.history_loading_revision),
-                false,
-                true)),
-        UPLOADING_FOR_PREVIEW(4, new ProgressDialogUiState.VisibleProgressDialog(
-                new UiStringRes(R.string.post_preview_saving_draft),
-                false,
-                true)),
-        REMOTE_AUTO_SAVING_FOR_PREVIEW(5, new ProgressDialogUiState.VisibleProgressDialog(
-                new UiStringRes(R.string.post_preview_remote_auto_saving_post),
-                false,
-                true)),
-        PREVIEWING(6, ProgressDialogUiState.HiddenProgressDialog.INSTANCE),
-        REMOTE_AUTO_SAVE_PREVIEW_ERROR(7, ProgressDialogUiState.HiddenProgressDialog.INSTANCE);
-
-        PostLoadingState(int value, ProgressDialogUiState dialogUiState) {
-            mValue = value;
-            mDialogUiState = dialogUiState;
-        }
-
-        private final int mValue;
-        private final ProgressDialogUiState mDialogUiState;
-
-        public int getValue() {
-            return mValue;
-        }
-
-        public ProgressDialogUiState getProgressDialogUiState() {
-            return mDialogUiState;
-        }
-
-        public static PostLoadingState fromInt(int value) {
-            PostLoadingState state = null;
-
-            for (PostLoadingState item : values()) {
-                if (item.mValue == value) {
-                    state = item;
-                    break;
-                }
-            }
-
-            if (state == null) {
-                throw new IllegalArgumentException("PostLoadingState wrong value " + value);
-            }
-            return state;
-        }
-    }
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
