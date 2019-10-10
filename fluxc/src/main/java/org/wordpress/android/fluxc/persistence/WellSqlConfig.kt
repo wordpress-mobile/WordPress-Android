@@ -290,6 +290,8 @@ class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 35 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("CREATE TABLE WCOrderStatsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                            + "LOCAL_SITE_ID INTEGER,UNIT TEXT NOT NULL,FIELDS TEXT NOT NULL,DATA TEXT NOT NULL)")
                 }
                 36 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS RewindStatus")
