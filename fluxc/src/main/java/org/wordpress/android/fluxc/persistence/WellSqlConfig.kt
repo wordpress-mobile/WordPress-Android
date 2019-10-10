@@ -41,8 +41,8 @@ open class WellSqlConfig : DefaultWellConfig {
     override fun onUpgrade(db: SQLiteDatabase, helper: WellTableManager, oldVersion: Int, newVersion: Int) {
         AppLog.d(T.DB, "Upgrading database from version $oldVersion to $newVersion")
 
-        db.beginTransaction()
         for (version in oldVersion..newVersion) {
+            db.beginTransaction()
             when (version) {
                 1 -> migrate(version) {
                     db.execSQL("alter table SiteModel add ICON_URL text")
@@ -887,9 +887,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
             }
+            db.setTransactionSuccessful()
+            db.endTransaction()
         }
-        db.setTransactionSuccessful()
-        db.endTransaction()
     }
 
     override fun onConfigure(db: SQLiteDatabase, helper: WellTableManager?) {
