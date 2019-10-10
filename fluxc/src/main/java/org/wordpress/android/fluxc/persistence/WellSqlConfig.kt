@@ -387,15 +387,16 @@ class WellSqlConfig : DefaultWellConfig {
                                     + "BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,JSON TEXT NOT NULL)"
                     )
                 }
-                45 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCOrderNoteModel ADD IS_SYSTEM_NOTE INTEGER")
-
+                45 -> {
+                    migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                        db.execSQL("ALTER TABLE WCOrderNoteModel ADD IS_SYSTEM_NOTE INTEGER")
+                    }
                     migrate(version) {
                         db.execSQL(
-                                "CREATE TABLE NotificationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                        + "REMOTE_NOTE_ID INTEGER,LOCAL_SITE_ID INTEGER,NOTE_HASH INTEGER,TYPE TEXT,"
-                                        + "SUBTYPE TEXT,READ INTEGER,ICON TEXT,NOTICON TEXT,TIMESTAMP TEXT,URL TEXT,"
-                                        + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)"
+                            "CREATE TABLE NotificationModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                    + "REMOTE_NOTE_ID INTEGER,LOCAL_SITE_ID INTEGER,NOTE_HASH INTEGER,TYPE TEXT,"
+                                    + "SUBTYPE TEXT,READ INTEGER,ICON TEXT,NOTICON TEXT,TIMESTAMP TEXT,URL TEXT,"
+                                    + "TITLE TEXT,FORMATTABLE_BODY TEXT,FORMATTABLE_SUBJECT TEXT,FORMATTABLE_META TEXT)"
                         )
                     }
                 }
@@ -549,65 +550,66 @@ class WellSqlConfig : DefaultWellConfig {
                                     + "REQUESTED_ITEMS INTEGER)"
                     )
                 }
-                61 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("DROP TABLE IF EXISTS WCProductModel")
-                    db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                            + "LOCAL_SITE_ID INTEGER,"
-                            + "REMOTE_PRODUCT_ID INTEGER,"
-                            + "NAME TEXT NOT NULL,"
-                            + "SLUG TEXT NOT NULL,"
-                            + "PERMALINK TEXT NOT NULL,"
-                            + "DATE_CREATED TEXT NOT NULL,"
-                            + "DATE_MODIFIED TEXT NOT NULL,"
-                            + "TYPE TEXT NOT NULL,"
-                            + "STATUS TEXT NOT NULL,"
-                            + "FEATURED INTEGER,"
-                            + "CATALOG_VISIBILITY TEXT NOT NULL,"
-                            + "DESCRIPTION TEXT NOT NULL,"
-                            + "SHORT_DESCRIPTION TEXT NOT NULL,"
-                            + "SKU TEXT NOT NULL,"
-                            + "PRICE TEXT NOT NULL,"
-                            + "REGULAR_PRICE TEXT NOT NULL,"
-                            + "SALE_PRICE TEXT NOT NULL,"
-                            + "ON_SALE INTEGER,"
-                            + "TOTAL_SALES INTEGER,"
-                            + "VIRTUAL INTEGER,"
-                            + "DOWNLOADABLE INTEGER,"
-                            + "DOWNLOAD_LIMIT INTEGER,"
-                            + "DOWNLOAD_EXPIRY INTEGER,"
-                            + "DOWNLOADS TEXT NOT NULL,"
-                            + "EXTERNAL_URL TEXT NOT NULL,"
-                            + "TAX_STATUS TEXT NOT NULL,"
-                            + "TAX_CLASS TEXT NOT NULL,"
-                            + "MANAGE_STOCK INTEGER,"
-                            + "STOCK_QUANTITY INTEGER,"
-                            + "STOCK_STATUS TEXT NOT NULL,"
-                            + "BACKORDERS TEXT NOT NULL,"
-                            + "BACKORDERS_ALLOWED INTEGER,"
-                            + "BACKORDERED INTEGER,"
-                            + "SOLD_INDIVIDUALLY INTEGER,"
-                            + "WEIGHT TEXT NOT NULL,"
-                            + "LENGTH TEXT NOT NULL,"
-                            + "WIDTH TEXT NOT NULL,"
-                            + "HEIGHT TEXT NOT NULL,"
-                            + "SHIPPING_REQUIRED INTEGER,"
-                            + "SHIPPING_TAXABLE INTEGER,"
-                            + "SHIPPING_CLASS TEXT NOT NULL,"
-                            + "SHIPPING_CLASS_ID INTEGER,"
-                            + "REVIEWS_ALLOWED INTEGER,"
-                            + "AVERAGE_RATING TEXT NOT NULL,"
-                            + "RATING_COUNT INTEGER,"
-                            + "PARENT_ID INTEGER,"
-                            + "PURCHASE_NOTE TEXT NOT NULL,"
-                            + "CATEGORIES TEXT NOT NULL,"
-                            + "TAGS TEXT NOT NULL,"
-                            + "IMAGES TEXT NOT NULL,"
-                            + "ATTRIBUTES TEXT NOT NULL,"
-                            + "RELATED_IDS TEXT NOT NULL,"
-                            + "CROSS_SELL_IDS TEXT NOT NULL,"
-                            + "UPSELL_IDS TEXT NOT NULL,"
-                            + "VARIATIONS TEXT NOT NULL)")
-
+                61 -> {
+                    migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                        db.execSQL("DROP TABLE IF EXISTS WCProductModel")
+                        db.execSQL("CREATE TABLE WCProductModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                + "LOCAL_SITE_ID INTEGER,"
+                                + "REMOTE_PRODUCT_ID INTEGER,"
+                                + "NAME TEXT NOT NULL,"
+                                + "SLUG TEXT NOT NULL,"
+                                + "PERMALINK TEXT NOT NULL,"
+                                + "DATE_CREATED TEXT NOT NULL,"
+                                + "DATE_MODIFIED TEXT NOT NULL,"
+                                + "TYPE TEXT NOT NULL,"
+                                + "STATUS TEXT NOT NULL,"
+                                + "FEATURED INTEGER,"
+                                + "CATALOG_VISIBILITY TEXT NOT NULL,"
+                                + "DESCRIPTION TEXT NOT NULL,"
+                                + "SHORT_DESCRIPTION TEXT NOT NULL,"
+                                + "SKU TEXT NOT NULL,"
+                                + "PRICE TEXT NOT NULL,"
+                                + "REGULAR_PRICE TEXT NOT NULL,"
+                                + "SALE_PRICE TEXT NOT NULL,"
+                                + "ON_SALE INTEGER,"
+                                + "TOTAL_SALES INTEGER,"
+                                + "VIRTUAL INTEGER,"
+                                + "DOWNLOADABLE INTEGER,"
+                                + "DOWNLOAD_LIMIT INTEGER,"
+                                + "DOWNLOAD_EXPIRY INTEGER,"
+                                + "DOWNLOADS TEXT NOT NULL,"
+                                + "EXTERNAL_URL TEXT NOT NULL,"
+                                + "TAX_STATUS TEXT NOT NULL,"
+                                + "TAX_CLASS TEXT NOT NULL,"
+                                + "MANAGE_STOCK INTEGER,"
+                                + "STOCK_QUANTITY INTEGER,"
+                                + "STOCK_STATUS TEXT NOT NULL,"
+                                + "BACKORDERS TEXT NOT NULL,"
+                                + "BACKORDERS_ALLOWED INTEGER,"
+                                + "BACKORDERED INTEGER,"
+                                + "SOLD_INDIVIDUALLY INTEGER,"
+                                + "WEIGHT TEXT NOT NULL,"
+                                + "LENGTH TEXT NOT NULL,"
+                                + "WIDTH TEXT NOT NULL,"
+                                + "HEIGHT TEXT NOT NULL,"
+                                + "SHIPPING_REQUIRED INTEGER,"
+                                + "SHIPPING_TAXABLE INTEGER,"
+                                + "SHIPPING_CLASS TEXT NOT NULL,"
+                                + "SHIPPING_CLASS_ID INTEGER,"
+                                + "REVIEWS_ALLOWED INTEGER,"
+                                + "AVERAGE_RATING TEXT NOT NULL,"
+                                + "RATING_COUNT INTEGER,"
+                                + "PARENT_ID INTEGER,"
+                                + "PURCHASE_NOTE TEXT NOT NULL,"
+                                + "CATEGORIES TEXT NOT NULL,"
+                                + "TAGS TEXT NOT NULL,"
+                                + "IMAGES TEXT NOT NULL,"
+                                + "ATTRIBUTES TEXT NOT NULL,"
+                                + "RELATED_IDS TEXT NOT NULL,"
+                                + "CROSS_SELL_IDS TEXT NOT NULL,"
+                                + "UPSELL_IDS TEXT NOT NULL,"
+                                + "VARIATIONS TEXT NOT NULL)")
+                    }
                     migrate(version) {
                         db.execSQL("DROP TABLE StatsRequest")
                         db.execSQL(
