@@ -90,7 +90,8 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "HORIZONTAL_ALIGNMENT INTEGER," +
                                 "VERTICAL_ALIGNMENT INTEGER," +
                                 "FEATURED INTEGER," +
-                                "FEATURED_IN_POST INTEGER)")
+                                "FEATURED_IN_POST INTEGER)"
+                    )
                     db.execSQL("alter table MediaModel add LOCAL_POST_ID integer")
                 }
                 8 -> migrate(version) {
@@ -156,6 +157,16 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("alter table SiteModel add JETPACK_VERSION text")
                 }
                 19 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE IF NOT EXISTS TermModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER," +
+                                "REMOTE_TERM_ID INTEGER," +
+                                "TAXONOMY TEXT," +
+                                "NAME TEXT," +
+                                "SLUG TEXT," +
+                                "DESCRIPTION TEXT," +
+                                "PARENT_REMOTE_ID INTEGER)"
+                    )
                     db.execSQL("alter table TermModel add POST_COUNT integer")
                 }
                 20 -> migrate(version) {
