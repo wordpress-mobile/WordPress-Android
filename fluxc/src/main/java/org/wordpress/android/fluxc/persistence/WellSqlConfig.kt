@@ -848,9 +848,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
             }
-            db.setTransactionSuccessful()
-            db.endTransaction()
         }
+        db.setTransactionSuccessful()
+        db.endTransaction()
     }
 
     override fun onConfigure(db: SQLiteDatabase, helper: WellTableManager?) {
