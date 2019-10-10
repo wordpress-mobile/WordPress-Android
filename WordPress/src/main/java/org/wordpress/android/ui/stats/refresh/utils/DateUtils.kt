@@ -7,7 +7,6 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 class DateUtils @Inject constructor(
@@ -30,7 +29,7 @@ class DateUtils @Inject constructor(
         }
 
         val formatter = SimpleDateFormat("EEEE", localeManagerWrapper.getLocale())
-        return formatter.format(c.time).capitalize(Locale.ROOT)
+        return formatter.format(c.time).capitalize(localeManagerWrapper.getLocale())
     }
 
     fun getHour(hour: Int): String {
