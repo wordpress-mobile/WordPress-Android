@@ -20,7 +20,7 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.utils.currentLocale
+import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
