@@ -2862,6 +2862,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void setFeaturedImageId(final long mediaId) {
         mPost.setFeaturedImageId(mediaId);
+        mPost.setIsLocallyChanged(true);
         savePostAsync(() -> EditPostActivity.this.runOnUiThread(() -> {
             if (mEditPostSettingsFragment != null) {
                 mEditPostSettingsFragment.updateFeaturedImage(mediaId);
