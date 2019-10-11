@@ -45,22 +45,22 @@ open class WellSqlConfig : DefaultWellConfig {
         for (version in oldVersion..newVersion) {
             when (version) {
                 1 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add ICON_URL text")
+                    db.execSQL("ALTER TABLE SiteModel ADD ICON_URL TEXT")
                 }
                 2 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add FRAME_NONCE text")
+                    db.execSQL("ALTER TABLE SiteModel ADD FRAME_NONCE TEXT")
                 }
                 3 -> migrate(version) {
-                    db.execSQL("alter table AccountModel add EMAIL_VERIFIED boolean")
+                    db.execSQL("ALTER TABLE AccountModel ADD EMAIL_VERIFIED BOOLEAN")
                 }
                 4 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add ORIGIN integer")
+                    db.execSQL("ALTER TABLE SiteModel ADD ORIGIN INTEGER")
                 }
                 5 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add HAS_FREE_PLAN boolean")
+                    db.execSQL("ALTER TABLE SiteModel ADD HAS_FREE_PLAN BOOLEAN")
                 }
                 6 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add UNMAPPED_URL text")
+                    db.execSQL("ALTER TABLE SiteModel ADD UNMAPPED_URL TEXT")
                 }
                 7 -> migrate(version) {
                     db.execSQL(
@@ -92,18 +92,18 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "FEATURED INTEGER," +
                                 "FEATURED_IN_POST INTEGER)"
                     )
-                    db.execSQL("alter table MediaModel add LOCAL_POST_ID integer")
+                    db.execSQL("ALTER TABLE MediaModel ADD LOCAL_POST_ID INTEGER")
                 }
                 8 -> migrate(version) {
-                    db.execSQL("alter table MediaModel add FILE_URL_MEDIUM_SIZE text")
-                    db.execSQL("alter table MediaModel add FILE_URL_MEDIUM_LARGE_SIZE text")
-                    db.execSQL("alter table MediaModel add FILE_URL_LARGE_SIZE text")
+                    db.execSQL("ALTER TABLE MediaModel ADD FILE_URL_MEDIUM_SIZE TEXT")
+                    db.execSQL("ALTER TABLE MediaModel ADD FILE_URL_MEDIUM_LARGE_SIZE TEXT")
+                    db.execSQL("ALTER TABLE MediaModel ADD FILE_URL_LARGE_SIZE TEXT")
                 }
                 9 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add MAX_UPLOAD_SIZE integer")
+                    db.execSQL("ALTER TABLE SiteModel ADD MAX_UPLOAD_SIZE INTEGER")
                 }
                 10 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add MEMORY_LIMIT integer")
+                    db.execSQL("ALTER TABLE SiteModel ADD MEMORY_LIMIT INTEGER")
                 }
                 11 -> migrate(version) {
                     db.execSQL(
@@ -146,15 +146,15 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 16 -> migrate(version) {
-                    db.execSQL("alter table ThemeModel add FREE integer")
-                    db.execSQL("alter table ThemeModel add PRICE_TEXT integer")
+                    db.execSQL("ALTER TABLE ThemeModel ADD FREE INTEGER")
+                    db.execSQL("ALTER TABLE ThemeModel ADD PRICE_TEXT INTEGER")
                 }
                 17 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add EMAIL text")
-                    db.execSQL("alter table SiteModel add DISPLAY_NAME text")
+                    db.execSQL("ALTER TABLE SiteModel ADD EMAIL TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD DISPLAY_NAME TEXT")
                 }
                 18 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add JETPACK_VERSION text")
+                    db.execSQL("ALTER TABLE SiteModel ADD JETPACK_VERSION TEXT")
                 }
                 19 -> migrate(version) {
                     db.execSQL(
@@ -167,33 +167,33 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "DESCRIPTION TEXT," +
                                 "PARENT_REMOTE_ID INTEGER)"
                     )
-                    db.execSQL("alter table TermModel add POST_COUNT integer")
+                    db.execSQL("ALTER TABLE TermModel ADD POST_COUNT INTEGER")
                 }
                 20 -> migrate(version) {
-                    db.execSQL("alter table PluginModel rename to SitePluginModel")
-                    db.execSQL("alter table PluginInfoModel rename to WPOrgPluginModel")
+                    db.execSQL("ALTER TABLE PluginModel rename to SitePluginModel")
+                    db.execSQL("ALTER TABLE PluginInfoModel rename to WPOrgPluginModel")
                 }
                 21 -> migrate(version) {
-                    db.execSQL("alter table SitePluginModel add SETTINGS_URL text")
-                    db.execSQL("alter table WPOrgPluginModel add AUTHOR_AS_HTML TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add BANNER TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add DESCRIPTION_AS_HTML TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add FAQ_AS_HTML TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add HOMEPAGE_URL TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add INSTALLATION_INSTRUCTIONS_AS_HTML TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add LAST_UPDATED TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add REQUIRED_WORD_PRESS_VERSION TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add WHATS_NEW_AS_HTML TEXT")
-                    db.execSQL("alter table WPOrgPluginModel add DOWNLOAD_COUNT INTEGER")
-                    db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS INTEGER")
-                    db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_ONE INTEGER")
-                    db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_TWO INTEGER")
-                    db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_THREE INTEGER")
-                    db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FOUR INTEGER")
-                    db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FIVE INTEGER")
+                    db.execSQL("ALTER TABLE SitePluginModel ADD SETTINGS_URL TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD AUTHOR_AS_HTML TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD BANNER TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD DESCRIPTION_AS_HTML TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD FAQ_AS_HTML TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD HOMEPAGE_URL TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD INSTALLATION_INSTRUCTIONS_AS_HTML TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD LAST_UPDATED TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD REQUIRED_WORD_PRESS_VERSION TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD WHATS_NEW_AS_HTML TEXT")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD DOWNLOAD_COUNT INTEGER")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD NUMBER_OF_RATINGS INTEGER")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD NUMBER_OF_RATINGS_OF_ONE INTEGER")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD NUMBER_OF_RATINGS_OF_TWO INTEGER")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD NUMBER_OF_RATINGS_OF_THREE INTEGER")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD NUMBER_OF_RATINGS_OF_FOUR INTEGER")
+                    db.execSQL("ALTER TABLE WPOrgPluginModel ADD NUMBER_OF_RATINGS_OF_FIVE INTEGER")
                 }
                 22 -> migrate(version) {
-                    db.execSQL("alter table ThemeModel add MOBILE_FRIENDLY_CATEGORY_SLUG text")
+                    db.execSQL("ALTER TABLE ThemeModel ADD MOBILE_FRIENDLY_CATEGORY_SLUG TEXT")
                 }
                 23 -> migrate(version) {
                     db.execSQL(
@@ -229,17 +229,17 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 25 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add SPACE_AVAILABLE INTEGER")
-                    db.execSQL("alter table SiteModel add SPACE_ALLOWED INTEGER")
-                    db.execSQL("alter table SiteModel add SPACE_USED INTEGER")
-                    db.execSQL("alter table SiteModel add SPACE_PERCENT_USED REAL")
+                    db.execSQL("ALTER TABLE SiteModel ADD SPACE_AVAILABLE INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD SPACE_ALLOWED INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD SPACE_USED INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD SPACE_PERCENT_USED REAL")
                 }
                 26 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_WP_COM_STORE INTEGER")
                     db.execSQL("ALTER TABLE SiteModel ADD HAS_WOO_COMMERCE INTEGER")
                 }
                 27 -> migrate(version) {
-                    db.execSQL("alter table AccountModel add TRACKS_OPT_OUT boolean")
+                    db.execSQL("ALTER TABLE AccountModel ADD TRACKS_OPT_OUT BOOLEAN")
                 }
                 28 -> migrate(version) {
                     db.execSQL(
@@ -805,8 +805,8 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 74 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add WEB_EDITOR TEXT")
-                    db.execSQL("alter table SiteModel add MOBILE_EDITOR TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD WEB_EDITOR TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD MOBILE_EDITOR TEXT")
                 }
                 75 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL(
@@ -827,8 +827,8 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 77 -> migrate(version) {
-                    db.execSQL("alter table PostModel add AUTHOR_ID INTEGER")
-                    db.execSQL("alter table PostModel add AUTHOR_DISPLAY_NAME TEXT")
+                    db.execSQL("ALTER TABLE PostModel ADD AUTHOR_ID INTEGER")
+                    db.execSQL("ALTER TABLE PostModel ADD AUTHOR_DISPLAY_NAME TEXT")
                 }
                 78 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL(
@@ -846,7 +846,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 79 -> migrate(version) {
-                    db.execSQL("alter table PostModel add CHANGES_CONFIRMED_CONTENT_HASHCODE INTEGER")
+                    db.execSQL("ALTER TABLE PostModel ADD CHANGES_CONFIRMED_CONTENT_HASHCODE INTEGER")
                 }
                 80 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL(
@@ -890,7 +890,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCOrderStatusModel ADD STATUS_COUNT INTEGER")
                 }
                 84 -> migrate(version) {
-                    db.execSQL("ALTER TABLE AccountModel ADD USERNAME_CAN_BE_CHANGED boolean")
+                    db.execSQL("ALTER TABLE AccountModel ADD USERNAME_CAN_BE_CHANGED BOOLEAN")
                 }
                 85 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD AUTO_SAVE_REVISION_ID INTEGER")
