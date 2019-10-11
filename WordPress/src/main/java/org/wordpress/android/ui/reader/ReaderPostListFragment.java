@@ -630,7 +630,7 @@ public class ReaderPostListFragment extends Fragment
             }
 
             @Override
-            public void onLoadData() {
+            public void onLoadData(boolean forced) {
                 if (!isAdded()) {
                     return;
                 }
@@ -646,14 +646,16 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.setRefreshing(false);
                     mFirstLoad = false;
                 } else {
+                    UpdateAction updateAction = forced ? UpdateAction.REQUEST_NEWER
+                            : UpdateAction.REQUEST_REFRESH;
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                             // fall through to TAG_PREVIEW
                         case TAG_PREVIEW:
-                            updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_NEWER);
+                            updatePostsWithTag(getCurrentTag(), updateAction);
                             break;
                         case BLOG_PREVIEW:
-                            updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                            updatePostsInCurrentBlogOrFeed(updateAction);
                             break;
                         case SEARCH_RESULTS:
                             // no-op
