@@ -20,7 +20,7 @@ class FollowedBlogsProvider
         } else {
             readerBlogTable.getFollowedBlogs()
         }
-        val result = allFollowedBlogs.map { readerBlog ->
+        return allFollowedBlogs.map { readerBlog ->
             val match = subscriptions.find { subscription ->
                 subscription.blogId == readerBlog.blogId.toString() ||
                         subscription.feedId == readerBlog.feedId.toString() ||
@@ -46,7 +46,6 @@ class FollowedBlogsProvider
                 )
             }
         }
-        return result
     }
 
     private fun getSiteNameOrHostFromSubscription(
