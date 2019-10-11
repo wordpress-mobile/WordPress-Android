@@ -38,6 +38,7 @@ open class WellSqlConfig : DefaultWellConfig {
         mTables.forEach { table -> helper.createTable(table) }
     }
 
+    @Suppress("CheckStyle")
     override fun onUpgrade(db: SQLiteDatabase, helper: WellTableManager, oldVersion: Int, newVersion: Int) {
         AppLog.d(T.DB, "Upgrading database from version $oldVersion to $newVersion")
 
@@ -1005,6 +1006,7 @@ open class WellSqlConfig : DefaultWellConfig {
         db.endTransaction()
     }
 
+    @Suppress("CheckStyle")
     override fun onConfigure(db: SQLiteDatabase, helper: WellTableManager?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             db.setForeignKeyConstraintsEnabled(true)
@@ -1016,6 +1018,7 @@ open class WellSqlConfig : DefaultWellConfig {
     /**
      * Drop and create all tables
      */
+    @Suppress("CheckStyle")
     open fun reset() {
         val db = WellSql.giveMeWritableDb()
         mTables.forEach { clazz ->
