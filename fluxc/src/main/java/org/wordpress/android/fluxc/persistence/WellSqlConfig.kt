@@ -45,27 +45,121 @@ open class WellSqlConfig : DefaultWellConfig {
         for (version in oldVersion..newVersion) {
             when (version) {
                 1 -> migrate(version) {
-                    db.execSQL("ALTER TABLE SiteModel ADD ICON_URL TEXT")
-                }
-                2 -> migrate(version) {
-                    db.execSQL("ALTER TABLE SiteModel ADD FRAME_NONCE TEXT")
-                }
-                3 -> migrate(version) {
-                    db.execSQL("ALTER TABLE AccountModel ADD EMAIL_VERIFIED BOOLEAN")
-                }
-                4 -> migrate(version) {
-                    db.execSQL("ALTER TABLE SiteModel ADD ORIGIN INTEGER")
-                }
-                5 -> migrate(version) {
-                    db.execSQL("ALTER TABLE SiteModel ADD HAS_FREE_PLAN BOOLEAN")
-                }
-                6 -> migrate(version) {
-                    db.execSQL("ALTER TABLE SiteModel ADD UNMAPPED_URL TEXT")
-                }
-                7 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS SiteModel")
                     db.execSQL(
-                            "CREATE TABLE IF NOT EXISTS MediaModel (" +
+                            "CREATE TABLE SiteModel (" +
                                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "SITE_ID INTEGER," +
+                                "URL TEXT," +
+                                "ADMIN_URL TEXT," +
+                                "LOGIN_URL TEXT," +
+                                "NAME TEXT," +
+                                "DESCRIPTION TEXT," +
+                                "IS_WPCOM INTEGER," +
+                                "IS_FEATURED_IMAGE_SUPPORTED INTEGER," +
+                                "DEFAULT_COMMENT_STATUS TEXT," +
+                                "TIMEZONE TEXT," +
+                                "SELF_HOSTED_SITE_ID INTEGER," +
+                                "USERNAME TEXT," +
+                                "PASSWORD TEXT," +
+                                "XMLRPC_URL TEXT," +
+                                "SOFTWARE_VERSION TEXT," +
+                                "IS_SELF_HOSTED_ADMIN INTEGER," +
+                                "IS_JETPACK_INSTALLED INTEGER," +
+                                "IS_JETPACK_CONNECTED INTEGER," +
+                                "IS_AUTOMATED_TRANSFER INTEGER," +
+                                "IS_VISIBLE INTEGER," +
+                                "IS_PRIVATE INTEGER," +
+                                "IS_VIDEO_PRESS_SUPPORTED INTEGER," +
+                                "PLAN_ID INTEGER," +
+                                "PLAN_SHORT_NAME TEXT," +
+                                "ICON_URL TEXT," +
+                                "HAS_CAPABILITY_EDIT_PAGES INTEGER," +
+                                "HAS_CAPABILITY_EDIT_POSTS INTEGER," +
+                                "HAS_CAPABILITY_EDIT_OTHERS_POSTS INTEGER," +
+                                "HAS_CAPABILITY_EDIT_OTHERS_PAGES INTEGER," +
+                                "HAS_CAPABILITY_DELETE_POSTS INTEGER," +
+                                "HAS_CAPABILITY_DELETE_OTHERS_POSTS INTEGER," +
+                                "HAS_CAPABILITY_EDIT_THEME_OPTIONS INTEGER," +
+                                "HAS_CAPABILITY_EDIT_USERS INTEGER," +
+                                "HAS_CAPABILITY_LIST_USERS INTEGER," +
+                                "HAS_CAPABILITY_MANAGE_CATEGORIES INTEGER," +
+                                "HAS_CAPABILITY_MANAGE_OPTIONS INTEGER," +
+                                "HAS_CAPABILITY_ACTIVATE_WORDADS INTEGER," +
+                                "HAS_CAPABILITY_PROMOTE_USERS INTEGER," +
+                                "HAS_CAPABILITY_PUBLISH_POSTS INTEGER," +
+                                "HAS_CAPABILITY_UPLOAD_FILES INTEGER," +
+                                "HAS_CAPABILITY_DELETE_USER INTEGER," +
+                                "HAS_CAPABILITY_REMOVE_USERS INTEGER," +
+                                "HAS_CAPABILITY_VIEW_STATS INTEGER," +
+                                "UNIQUE (SITE_ID, URL))"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS AccountModel")
+                    db.execSQL(
+                            "CREATE TABLE AccountModel (" +
+                                "_id INTEGER PRIMARY KEY," +
+                                "USER_NAME TEXT," +
+                                "USER_ID INTEGER," +
+                                "DISPLAY_NAME TEXT," +
+                                "PROFILE_URL TEXT," +
+                                "AVATAR_URL TEXT," +
+                                "EMAIL TEXT," +
+                                "PRIMARY_SITE_ID INTEGER," +
+                                "SITE_COUNT INTEGER," +
+                                "VISIBLE_SITE_COUNT INTEGER," +
+                                "HAS_UNSEEN_NOTES INTEGER," +
+                                "FIRST_NAME TEXT," +
+                                "LAST_NAME TEXT," +
+                                "ABOUT_ME TEXT," +
+                                "DATE TEXT," +
+                                "NEW_EMAIL TEXT," +
+                                "PENDING_EMAIL_CHANGE INTEGER," +
+                                "WEB_ADDRESS TEXT)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS HTTPAuthModel")
+                    db.execSQL(
+                            "CREATE TABLE HTTPAuthModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,ROOT_URL TEXT," +
+                                    "REALM TEXT,USERNAME TEXT,PASSWORD TEXT,UNIQUE (ROOT_URL))"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS PostFormatModel")
+                    db.execSQL(
+                            "CREATE TABLE PostFormatModel (SITE_ID INTEGER,SLUG TEXT,DISPLAY_NAME TEXT," +
+                                "_id INTEGER PRIMARY KEY AUTOINCREMENT)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS PostModel")
+                    db.execSQL(
+                            "CREATE TABLE PostModel (" +
+                                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER," +
+                                "REMOTE_SITE_ID INTEGER," +
+                                "REMOTE_POST_ID INTEGER," +
+                                "TITLE TEXT,CONTENT TEXT," +
+                                "DATE_CREATED TEXT," +
+                                "CATEGORY_IDS TEXT," +
+                                "CUSTOM_FIELDS TEXT," +
+                                "LINK TEXT,EXCERPT TEXT," +
+                                "TAG_NAMES TEXT," +
+                                "STATUS TEXT," +
+                                "PASSWORD TEXT," +
+                                "FEATURED_IMAGE_ID INTEGER," +
+                                "POST_FORMAT TEXT,SLUG TEXT," +
+                                "LATITUDE REAL," +
+                                "LONGITUDE REAL," +
+                                "IS_PAGE INTEGER,PARENT_ID INTEGER," +
+                                "PARENT_TITLE TEXT," +
+                                "IS_LOCAL_DRAFT INTEGER," +
+                                "IS_LOCALLY_CHANGED INTEGER," +
+                                "DATE_LOCALLY_CHANGED TEXT," +
+                                "LAST_KNOWN_REMOTE_FEATURED_IMAGE_ID INTEGER," +
+                                "HAS_CAPABILITY_PUBLISH_POST INTEGER," +
+                                "HAS_CAPABILITY_EDIT_POST INTEGER," +
+                                "HAS_CAPABILITY_DELETE_POST INTEGER)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS MediaModel")
+                    db.execSQL(
+                            "CREATE TABLE MediaModel (" +
+                                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER," +
                                 "MEDIA_ID INTEGER," +
                                 "POST_ID INTEGER," +
                                 "AUTHOR_ID INTEGER," +
@@ -86,12 +180,41 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "LENGTH INTEGER," +
                                 "VIDEO_PRESS_GUID TEXT," +
                                 "VIDEO_PRESS_PROCESSING_DONE INTEGER," +
-                                "BLOG_ID INTEGER," +
+                                "UPLOAD_STATE TEXT," +
                                 "HORIZONTAL_ALIGNMENT INTEGER," +
                                 "VERTICAL_ALIGNMENT INTEGER," +
                                 "FEATURED INTEGER," +
                                 "FEATURED_IN_POST INTEGER)"
                     )
+                    db.execSQL("DROP TABLE IF EXISTS TermModel")
+                    db.execSQL(
+                            "CREATE TABLE TermModel (" +
+                                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER," +
+                                "REMOTE_TERM_ID INTEGER," +
+                                "TAXONOMY TEXT," +
+                                "NAME TEXT," +
+                                "SLUG TEXT," +
+                                "DESCRIPTION TEXT," +
+                                "PARENT_REMOTE_ID INTEGER)"
+                    )
+                }
+                2 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD FRAME_NONCE TEXT")
+                }
+                3 -> migrate(version) {
+                    db.execSQL("ALTER TABLE AccountModel ADD EMAIL_VERIFIED BOOLEAN")
+                }
+                4 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD ORIGIN INTEGER")
+                }
+                5 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD HAS_FREE_PLAN BOOLEAN")
+                }
+                6 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD UNMAPPED_URL TEXT")
+                }
+                7 -> migrate(version) {
                     db.execSQL("ALTER TABLE MediaModel ADD LOCAL_POST_ID INTEGER")
                 }
                 8 -> migrate(version) {
@@ -157,16 +280,6 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD JETPACK_VERSION TEXT")
                 }
                 19 -> migrate(version) {
-                    db.execSQL(
-                            "CREATE TABLE IF NOT EXISTS TermModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                                "LOCAL_SITE_ID INTEGER," +
-                                "REMOTE_TERM_ID INTEGER," +
-                                "TAXONOMY TEXT," +
-                                "NAME TEXT," +
-                                "SLUG TEXT," +
-                                "DESCRIPTION TEXT," +
-                                "PARENT_REMOTE_ID INTEGER)"
-                    )
                     db.execSQL("ALTER TABLE TermModel ADD POST_COUNT INTEGER")
                 }
                 20 -> migrate(version) {
@@ -428,35 +541,6 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                 "FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE," +
                                 "UNIQUE(LIST_ID, REMOTE_ITEM_ID) ON CONFLICT IGNORE)"
-                    )
-                    db.execSQL(
-                            "CREATE TABLE IF NOT EXISTS PostModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                                "SITE_ID INTEGER," +
-                                "POST_ID INTEGER," +
-                                "TITLE TEXT," +
-                                "DATE_CREATED INTEGER," +
-                                "DATE_CREATED_GMT INTEGER," +
-                                "CATEGORIES TEXT," +
-                                "CUSTOM_FIELDS TEXT," +
-                                "DESCRIPTION TEXT," +
-                                "LINK TEXT," +
-                                "ALLOW_COMMENTS INTEGER," +
-                                "ALLOW_PINGS INTEGER," +
-                                "EXCERPT TEXT," +
-                                "KEYWORDS TEXT," +
-                                "MORE_TEXT TEXT," +
-                                "PERMA_LINK TEXT," +
-                                "STATUS TEXT," +
-                                "USER_ID INTEGER," +
-                                "PASSWORD TEXT," +
-                                "THUMBNAIL TEXT," +
-                                "POST_FORMAT TEXT," +
-                                "SLUG TEXT," +
-                                "LATITUDE REAL," +
-                                "LONGITUDE REAL," +
-                                "IS_PAGE INTEGER," +
-                                "PAGE_PARENT_ID TEXT," +
-                                "PAGE_PARENT_TITLE TEXT)"
                     )
                     db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT")
                 }
