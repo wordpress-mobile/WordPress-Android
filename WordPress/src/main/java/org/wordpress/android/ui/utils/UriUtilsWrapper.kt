@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class UriUtilsWrapper
 @Inject constructor() {
-    fun getHost(url: String) = UrlUtils.getHost(url)
+    fun getHost(url: String): String = UrlUtils.getHost(url)
 }

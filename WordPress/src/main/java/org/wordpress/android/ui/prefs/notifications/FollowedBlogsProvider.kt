@@ -22,16 +22,14 @@ class FollowedBlogsProvider
         }
         val result = allFollowedBlogs.map { readerBlog ->
             val match = subscriptions.find { subscription ->
-                subscription.blogId == readerBlog.blogId.toString()
-                        || subscription.feedId == readerBlog.feedId.toString()
-                        || getHostFromSubscriptionUrl(subscription.url) == getHostFromSubscriptionUrl(
-                        readerBlog.url
-                )
+                subscription.blogId == readerBlog.blogId.toString() ||
+                        subscription.feedId == readerBlog.feedId.toString() ||
+                        uriUtils.getHost(subscription.url) == uriUtils.getHost(readerBlog.url)
             }
             if (match != null) {
                 PreferenceModel(
                         getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
-                        getHostFromSubscriptionUrl(readerBlog.url),
+                        uriUtils.getHost(readerBlog.url),
                         readerBlog.blogId.toString(),
                         ClickHandler(
                                 match.shouldNotifyPosts,
@@ -43,7 +41,7 @@ class FollowedBlogsProvider
             } else {
                 PreferenceModel(
                         getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
-                        getHostFromSubscriptionUrl(readerBlog.url),
+                        uriUtils.getHost(readerBlog.url),
                         readerBlog.blogId.toString()
                 )
             }
@@ -59,17 +57,13 @@ class FollowedBlogsProvider
 
         if (name != null) {
             if (name.trim { it <= ' ' }.isEmpty()) {
-                name = getHostFromSubscriptionUrl(blogUrl)
+                name = uriUtils.getHost(blogUrl)
             }
         } else {
-            name = getHostFromSubscriptionUrl(blogUrl)
+            name = uriUtils.getHost(blogUrl)
         }
 
         return name
-    }
-
-    private fun getHostFromSubscriptionUrl(url: String): String {
-        return uriUtils.getHost(url)
     }
 
     data class PreferenceModel(
