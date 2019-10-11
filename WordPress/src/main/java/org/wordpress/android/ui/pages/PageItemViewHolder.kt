@@ -24,6 +24,7 @@ import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -70,7 +71,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 val date = if (page.date == Date(0)) Date() else page.date
                 time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
-                        .capitalize(parent.context.currentLocale)
+                        .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
 
                 if (page.labels.isNotEmpty()) {
                     labels.text = page.labels.map { parent.context.getString(it) }.sorted()

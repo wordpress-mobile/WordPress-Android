@@ -4,6 +4,7 @@ import android.text.format.DateFormat
 import android.text.format.DateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -29,7 +30,7 @@ class DateUtils @Inject constructor(
         }
 
         val formatter = SimpleDateFormat("EEEE", localeManagerWrapper.getLocale())
-        return formatter.format(c.time).capitalize(localeManagerWrapper.getLocale())
+        return formatter.format(c.time).capitalizeWithLocaleWithoutLint(localeManagerWrapper.getLocale())
     }
 
     fun getHour(hour: Int): String {
