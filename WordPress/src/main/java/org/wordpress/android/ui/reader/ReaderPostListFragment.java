@@ -646,8 +646,8 @@ public class ReaderPostListFragment extends Fragment
                     mRecyclerView.setRefreshing(false);
                     mFirstLoad = false;
                 } else {
-                    UpdateAction updateAction = forced ? UpdateAction.REQUEST_NEWER
-                            : UpdateAction.REQUEST_REFRESH;
+                    UpdateAction updateAction = forced ? UpdateAction.REQUEST_REFRESH
+                            : UpdateAction.REQUEST_NEWER;
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                             // fall through to TAG_PREVIEW
@@ -1822,7 +1822,8 @@ public class ReaderPostListFragment extends Fragment
             && !isPostAdapterEmpty()
             && (!isAdded() || !mRecyclerView.isFirstItemVisible())) {
             showNewPostsBar();
-        } else if (event.getResult().isNewOrChanged()) {
+        } else if (event.getResult().isNewOrChanged()
+                   || event.getAction() == UpdateAction.REQUEST_REFRESH) {
             refreshPosts();
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
