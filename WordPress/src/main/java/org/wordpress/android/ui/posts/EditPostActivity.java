@@ -286,7 +286,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditorMediaUploadListener mEditorMediaUploadListener;
-    private EditorPhotoPicker mEditorPhotoPicker = new EditorPhotoPicker<>(this);
+    private EditorPhotoPicker mEditorPhotoPicker;
 
     private ProgressDialog mProgressDialog;
 
@@ -397,6 +397,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
+        mEditorPhotoPicker = new EditorPhotoPicker<>(this, mShowAztecEditor);
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -809,7 +810,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         mHtmlModeMenuStateOn = savedInstanceState.getBoolean(STATE_KEY_HTML_MODE_ON);
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
-            mEditorPhotoPicker.showPhotoPicker(mSite, mShowAztecEditor, mEditorFragment);
+            mEditorPhotoPicker.showPhotoPicker(mSite, mEditorFragment);
         }
     }
 
@@ -3097,7 +3098,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
          } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
-            mEditorPhotoPicker.showPhotoPicker(mSite, mShowAztecEditor, mEditorFragment);
+            mEditorPhotoPicker.showPhotoPicker(mSite, mEditorFragment);
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);

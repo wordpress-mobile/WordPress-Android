@@ -20,7 +20,10 @@ import org.wordpress.android.util.DisplayUtils
 private const val PHOTO_PICKER_TAG = "photo_picker"
 
 // TODO: We shouldn't have a reference to the activity
-class EditorPhotoPicker<T>(private val activity: T) where T : AppCompatActivity, T: PhotoPickerListener {
+class EditorPhotoPicker<T>(
+    private val activity: T,
+    private val showAztecEditor: Boolean
+) where T : AppCompatActivity, T : PhotoPickerListener {
     private var mPhotoPickerContainer: View? = null
     private var mPhotoPickerFragment: PhotoPickerFragment? = null
     private var mPhotoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
@@ -28,7 +31,7 @@ class EditorPhotoPicker<T>(private val activity: T) where T : AppCompatActivity,
     /*
      * loads the photo picker fragment, which is hidden until the user taps the media icon
      */
-    private fun initPhotoPicker(site: SiteModel, showAztecEditor: Boolean) {
+    private fun initPhotoPicker(site: SiteModel) {
         mPhotoPickerContainer = activity.findViewById(R.id.photo_fragment_container)
 
         // size the picker before creating the fragment to avoid having it load media now
@@ -58,12 +61,12 @@ class EditorPhotoPicker<T>(private val activity: T) where T : AppCompatActivity,
     /*
      * user has requested to show the photo picker
      */
-    fun showPhotoPicker(site: SiteModel, showAztecEditor: Boolean, mEditorFragment: Any) {
+    fun showPhotoPicker(site: SiteModel, mEditorFragment: Any) {
         val isAlreadyShowing = isPhotoPickerShowing()
 
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
-            initPhotoPicker(site, showAztecEditor)
+            initPhotoPicker(site)
         }
 
         // hide soft keyboard
