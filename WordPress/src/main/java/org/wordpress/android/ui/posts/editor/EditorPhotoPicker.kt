@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView.Orientation
 import org.wordpress.android.R
-import org.wordpress.android.editor.AztecEditorFragment
 import org.wordpress.android.editor.MediaToolbarAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -19,9 +18,15 @@ import org.wordpress.android.util.DisplayUtils
 
 private const val PHOTO_PICKER_TAG = "photo_picker"
 
+interface EditorPhotoPickerListener {
+    fun onPhotoPickerShown()
+    fun onPhotoPickerHidden()
+}
+
 // TODO: We shouldn't have a reference to the activity
 class EditorPhotoPicker<T>(
     private val activity: T,
+    private val editorPhotoPickerListener: EditorPhotoPickerListener,
     private val showAztecEditor: Boolean
 ) : MediaToolbarAction.MediaToolbarButtonClickListener where T : AppCompatActivity, T : PhotoPickerListener {
     private var photoPickerContainer: View? = null
@@ -37,7 +42,8 @@ class EditorPhotoPicker<T>(
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker()
 
-        photoPickerFragment = activity.supportFragmentManager.findFragmentByTag(PHOTO_PICKER_TAG) as PhotoPickerFragment
+        photoPickerFragment = activity.supportFragmentManager.findFragmentByTag(PHOTO_PICKER_TAG)
+                as? PhotoPickerFragment
         if (photoPickerFragment == null) {
             val mediaBrowserType = if (showAztecEditor) {
                 MediaBrowserType.AZTEC_EDITOR_PICKER
@@ -63,7 +69,7 @@ class EditorPhotoPicker<T>(
     /*
      * user has requested to show the photo picker
      */
-    fun showPhotoPicker(site: SiteModel, editorFragment: Any) {
+    fun showPhotoPicker(site: SiteModel) {
         val isAlreadyShowing = isPhotoPickerShowing()
 
         // make sure we initialized the photo picker
@@ -84,10 +90,10 @@ class EditorPhotoPicker<T>(
         // animate in the editor overlay
         showOverlay(true)
 
-        (editorFragment as? AztecEditorFragment)?.enableMediaMode(true)
+        editorPhotoPickerListener.onPhotoPickerShown()
     }
 
-    fun hidePhotoPicker(editorFragment: Any) {
+    fun hidePhotoPicker() {
         if (isPhotoPickerShowing()) {
             photoPickerFragment?.finishActionMode()
             photoPickerFragment?.setPhotoPickerListener(null)
@@ -96,7 +102,7 @@ class EditorPhotoPicker<T>(
 
         hideOverlay()
 
-        (editorFragment as? AztecEditorFragment)?.enableMediaMode(false)
+        editorPhotoPickerListener.onPhotoPickerHidden()
     }
 
     /*

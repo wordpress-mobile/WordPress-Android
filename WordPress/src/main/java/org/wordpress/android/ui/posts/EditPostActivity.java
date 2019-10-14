@@ -116,6 +116,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
+import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
@@ -188,6 +189,7 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentListener,
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
+        EditorPhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
@@ -396,7 +398,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-        mEditorPhotoPicker = new EditorPhotoPicker<>(this, mShowAztecEditor);
+        mEditorPhotoPicker = new EditorPhotoPicker<>(this, this, mShowAztecEditor);
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -549,13 +551,13 @@ public class EditPostActivity extends AppCompatActivity implements
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
-                    mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+                    mEditorPhotoPicker.hidePhotoPicker();
                 } else if (position == PAGE_PUBLISH_SETTINGS) {
                     setTitle(R.string.publish_date);
-                    mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+                    mEditorPhotoPicker.hidePhotoPicker();
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
-                    mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+                    mEditorPhotoPicker.hidePhotoPicker();
                 }
             }
         });
@@ -809,7 +811,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         mHtmlModeMenuStateOn = savedInstanceState.getBoolean(STATE_KEY_HTML_MODE_ON);
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
-            mEditorPhotoPicker.showPhotoPicker(mSite, mEditorFragment);
+            mEditorPhotoPicker.showPhotoPicker(mSite);
         }
     }
 
@@ -871,12 +873,26 @@ public class EditPostActivity extends AppCompatActivity implements
         return hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(site) && isEmpty);
     }
 
+    @Override
+    public void onPhotoPickerShown() {
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment) mEditorFragment).enableMediaMode(true);
+        }
+    }
+
+    @Override
+    public void onPhotoPickerHidden() {
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment) mEditorFragment).enableMediaMode(false);
+        }
+    }
+
     /*
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
-        mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+        mEditorPhotoPicker.hidePhotoPicker();
 
         if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
             boolean hasSelectedPicture = false;
@@ -901,7 +917,7 @@ public class EditPostActivity extends AppCompatActivity implements
      */
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
-        mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+        mEditorPhotoPicker.hidePhotoPicker();
         mAllowMultipleSelection = allowMultipleSelection;
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
@@ -1055,7 +1071,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
-            mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+            mEditorPhotoPicker.hidePhotoPicker();
         } else {
             mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
             savePostAndOptionallyFinish(true);
@@ -1119,7 +1135,7 @@ public class EditPostActivity extends AppCompatActivity implements
             return handleBackPressed();
         }
 
-        mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+        mEditorPhotoPicker.hidePhotoPicker();
 
         if (itemId == R.id.menu_primary_action) {
             performPrimaryAction();
@@ -3090,9 +3106,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onAddMediaClicked() {
         if (mEditorPhotoPicker.isPhotoPickerShowing()) {
-            mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+            mEditorPhotoPicker.hidePhotoPicker();
          } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
-            mEditorPhotoPicker.showPhotoPicker(mSite, mEditorFragment);
+            mEditorPhotoPicker.showPhotoPicker(mSite);
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
@@ -3493,7 +3509,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case HTML_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_HTML;
-                mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+                mEditorPhotoPicker.hidePhotoPicker();
                 break;
             case IMAGE_EDITED:
                 currentStat = Stat.EDITOR_EDITED_IMAGE;
@@ -3503,7 +3519,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 break;
             case LINK_ADDED_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
-                mEditorPhotoPicker.hidePhotoPicker(mEditorFragment);
+                mEditorPhotoPicker.hidePhotoPicker();
                 break;
             case LINK_REMOVED_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LINK_REMOVED;
