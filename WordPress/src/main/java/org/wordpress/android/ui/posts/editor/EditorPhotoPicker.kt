@@ -23,7 +23,7 @@ private const val PHOTO_PICKER_TAG = "photo_picker"
 class EditorPhotoPicker<T>(
     private val activity: T,
     private val showAztecEditor: Boolean
-) where T : AppCompatActivity, T : PhotoPickerListener {
+) : MediaToolbarAction.MediaToolbarButtonClickListener where T : AppCompatActivity, T : PhotoPickerListener {
     private var photoPickerContainer: View? = null
     private var photoPickerFragment: PhotoPickerFragment? = null
     private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
@@ -143,7 +143,7 @@ class EditorPhotoPicker<T>(
         overlay.visibility = View.GONE
     }
 
-    fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {
+    override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {
         if (action == null || !isPhotoPickerShowing()) {
             return
         }

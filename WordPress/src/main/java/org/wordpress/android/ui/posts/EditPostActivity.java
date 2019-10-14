@@ -186,7 +186,6 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorImageSettingsListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
-        MediaToolbarAction.MediaToolbarButtonClickListener,
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
@@ -896,11 +895,6 @@ public class EditPostActivity extends AppCompatActivity implements
         addMediaList(uriList, false);
     }
 
-    @Override
-    public void onMediaToolbarButtonClicked(MediaToolbarAction action) {
-        mEditorPhotoPicker.onMediaToolbarButtonClicked(action);
-    }
-
     /*
      * called by PhotoPickerFragment when user clicks an icon to launch the camera, native
      * picker, or WP media picker
@@ -1556,7 +1550,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment) mEditorFragment;
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
-            aztecEditorFragment.setMediaToolbarButtonClickListener(EditPostActivity.this);
+            aztecEditorFragment.setMediaToolbarButtonClickListener(mEditorPhotoPicker);
 
             // Here we should set the max width for media, but the default size is already OK. No need
             // to customize it further
