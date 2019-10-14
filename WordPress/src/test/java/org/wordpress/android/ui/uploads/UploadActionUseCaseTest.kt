@@ -493,6 +493,24 @@ class UploadActionUseCaseTest {
         assertThat(action).isEqualTo(UploadAction.UPLOAD)
     }
 
+    @Test
+    fun `autoUploadAction is DO_NOTHING when the post is currently being edited`() {
+        // Arrange
+        val uploadActionUseCase = createUploadActionUseCase(
+                postUtilsWrapper = createdMockedPostUtilsWrapper(
+                        isPostBeingEdited = true
+                )
+        )
+
+        val post = createPostModel()
+        val siteModel: SiteModel = createSiteModel()
+        // Act
+        val action = uploadActionUseCase.getAutoUploadAction(post, siteModel)
+
+        // Assert
+        assertThat(action).isEqualTo(UploadAction.DO_NOTHING)
+    }
+
     private companion object Fixtures {
         private fun createUploadActionUseCase(
             uploadStore: UploadStore = createdMockedUploadStore(),
@@ -508,11 +526,13 @@ class UploadActionUseCaseTest {
 
         private fun createdMockedPostUtilsWrapper(
             isPublishable: Boolean = true,
-            isInConflict: Boolean = false
+            isInConflict: Boolean = false,
+            isPostBeingEdited: Boolean = false
         ): PostUtilsWrapper {
             val postUtilsWrapper: PostUtilsWrapper = mock()
             whenever(postUtilsWrapper.isPublishable(any())).thenReturn(isPublishable)
             whenever(postUtilsWrapper.isPostInConflictWithRemote(any())).thenReturn(isInConflict)
+            whenever(postUtilsWrapper.isPostCurrentlyBeingEdited(any())).thenReturn(isPostBeingEdited)
             return postUtilsWrapper
         }
 

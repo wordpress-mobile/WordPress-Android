@@ -1,10 +1,14 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -76,6 +82,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -91,7 +98,9 @@ import java.util.EnumSet;
 
 import javax.inject.Inject;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+import static org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class ReaderPostDetailFragment extends Fragment
@@ -145,6 +154,8 @@ public class ReaderPostDetailFragment extends Fragment
 
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
+
+    private String mFileForDownload = null;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -1369,6 +1380,44 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public boolean onImageUrlClick(String imageUrl, View view, int x, int y) {
         return showPhotoViewer(imageUrl, view, x, y);
+    }
+
+    @Override
+    public boolean onFileDownloadClick(String fileUrl) {
+        FragmentActivity activity = getActivity();
+        if (activity != null
+            && fileUrl != null
+            && PermissionUtils.checkAndRequestStoragePermission(this, READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE)) {
+            downloadFile(fileUrl, activity);
+            return true;
+        } else {
+            mFileForDownload = fileUrl;
+            return false;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        FragmentActivity activity = getActivity();
+        if (activity != null
+            && requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
+            && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            downloadFile(mFileForDownload, activity);
+            mFileForDownload = null;
+        } else {
+            mFileForDownload = null;
+        }
+    }
+
+    private void downloadFile(String fileUrl, FragmentActivity activity) {
+        DownloadManager.Request r = new DownloadManager.Request(Uri.parse(fileUrl));
+        String fileName = URLUtil.guessUrl(fileUrl);
+        r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+        r.allowScanningByMediaScanner();
+        r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        DownloadManager dm = (DownloadManager) activity.getSystemService(DOWNLOAD_SERVICE);
+        dm.enqueue(r);
     }
 
     private ActionBar getActionBar() {

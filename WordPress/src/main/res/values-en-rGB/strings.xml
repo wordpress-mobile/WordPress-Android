@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-15 08:59:57+0000
+Translation-Revision-Date: 2019-10-02 20:26:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">This action can\'t be cancelled. Username might have been already updated.</string>
+    <string name="settings_username_changer_toast_content">Your new username is %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Saving username…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Change Username</string>
+    <string name="settings_username_changer_confirm_dialog_content">You are changing your username to %1$s%2$s%3$s. Changing your username will also affect your Gravatar profile and Intense Debate profile addresses. Confirm your new username to continue.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Careful!</string>
+    <string name="settings_username_changer_header">You are about to change your username, which is currently %1$s%2$s%3$s. You will not be able to change your username back.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">View and change your Jetpack performance settings</string>
+    <string name="site_settings_performance_and_speed">Performance and Speed</string>
+    <string name="site_settings_more">More</string>
+    <string name="site_settings_improved_search_summary">Replace WordPress built-in search with an improved search experience</string>
+    <string name="site_settings_improved_search">Improved Search</string>
+    <string name="site_settings_jetpack_search">Jetpack Search</string>
+    <string name="site_settings_ad_free_video_hosting">Ad-free Video Hosting</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Load pages faster by allowing Jetpack to optimise your images and static files (like CSS and JavaScript).</string>
+    <string name="site_settings_faster_static_files">Faster static files</string>
+    <string name="site_settings_faster_images">Faster images</string>
+    <string name="site_settings_site_accelerator_off">Off</string>
+    <string name="site_settings_site_accelerator_on">On</string>
+    <string name="site_settings_site_accelerator">Site Accelerator</string>
+    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen.</string>
+    <string name="site_settings_performance">Performance</string>
+    <string name="notification_settings_moved_notices">Notification settings can now be found in the notifications tab.</string>
+    <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_file_downloads_title_label">File</string>
+    <string name="stats_file_downloads">File downloads</string>
+    <string name="stats_data_not_recorded_for_period">File download stats were not recorded before 28 June 2019.</string>
+    <string name="stats_site_negative_utc">Site time zone (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Site time zone (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Site time zone (UTC)</string>
     <string name="web_preview_desktop">Desktop</string>
     <string name="web_preview_default">Default</string>
     <string name="close_dialog_button_desc">Close Dialogue</string>
@@ -107,7 +138,6 @@ Language: en_GB
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_password_dialog_title">Update password</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
@@ -154,7 +184,7 @@ Language: en_GB
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
-    <string name="stats_view_follower_totals">Followers Totals</string>
+    <string name="stats_view_follower_totals">Follower totals</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
@@ -847,11 +877,7 @@ Language: en_GB
     <string name="my_site_add_new_site">Add new site</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
-    <string name="site_settings_lazy_load_images">\"Lazy-load\" images</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimise your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
-    <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
-    <string name="site_settings_speed_up_your_site">Speed up your site</string>
+    <string name="site_settings_lazy_load_images">Lazy load images</string>
     <string name="stats_jetpack_connection_setup">Install Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
     <string name="plugin_info_your_version">Your WordPress Version</string>

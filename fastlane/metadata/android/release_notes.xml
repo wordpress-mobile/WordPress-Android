@@ -1,8 +1,136 @@
+<ar>
+13.3:
+* أصبحت الإحصائيات الخاصة بك أكثر استجابة بكثير.
+* يمكنك الآن تغيير اسم المستخدم الخاص بك في إعدادات الحساب.
+* تودّ التغيير والتبديل في إعدادات الأداء Jetpack الخاص بك؟ قم بذلك مباشرة من التطبيق!
+* إذا كنت ناشرًا كثير النشر ولديك أكثر من 100 صفحة على موقعك، فسوف ندرجها زمنياً للوصول إليها بشكل أسرع.
+* لقد أضفنا العديد من الترقيات إلى محرر المكوّنات (Block Editor)، مثل تصميم النص الغني في التسميات التوضيحية للفيديو وإضافات مكوّن أكثر سهولة، وحفظ المحتوى التلقائي بعد ثانيتين من عدم النشاط.
+</ar>
+<de-DE>
+13.3:
+* Deine Statistiken sind jetzt noch reaktionsfähiger.
+* Du kannst jetzt deinen Benutzernamen in den Kontoeinstellungen ändern.
+* Du möchtest die Einstellungen deiner Jetpack-Performance optimieren? Jetzt kannst du das direkt in der App tun!
+* Wenn du ein produktiver Publisher mit mehr als 100 Seiten auf deiner Website bist, listen wir sie für schnelleren Zugriff chronologisch auf.
+* Wir haben dem Block-Editor viele Upgrades hinzugefügt, wie Rich Text-Stile in Videountertiteln, intuitivere Blockfunktionen und die automatische Inhaltsspeicherung nach 2 Sekunden Inaktivität.
+</de-DE>
 <en-US>
-13.2:
-* Access your most commonly used actions more quickly from the redesigned My Sites screen.
-* Have you encountered issues connecting to LinkedIn? We fixed that, so: network away!
-* The Blog Post screen now shows the author of each post.
-* Data files for WordPress.com sites are available for download from Stats.
-* Tweak your Notifications settings right from the Notifications List.
+13.3:
+* Your stats have just become a lot more responsive.
+* You can now change your username in Account Settings.
+* Tweaking your Jetpack performance settings? Do it directly from the app!
+* If you’re a prolific publisher with more than 100 pages on your site, we’ll list them chronologically for faster access.
+* We’ve added many upgrades to the Block Editor, like rich-text styling in video captions, more intuitive block additions, and automatic content saves after two seconds of inactivity.
 </en-US>
+<es-ES>
+13.3:
+* Tus estadísticas se han vuelto mucho más adaptables.
+* Ahora puedes cambiar tu nombre de usuario en los ajustes de la cuenta.
+* ¿Retocando los ajustes de rendimiento de Jetpack? ¡Hazlo directamente desde la aplicación!
+* Si eres un editor prolífico con más de 100 páginas en tu sitio, las listaremos cronológicamente para un acceso más rápido.
+* Hemos añadido muchas actualizaciones al editor de bloques, como el estilo de texto enriquecido en los títulos de los vídeos, adiciones de bloques más intuitivas y guardado automático del contenido tras dos segundos de inactividad.
+</es-ES>
+<fr-CA>
+13.3 :
+* Vos statistiques ont considérablement gagné en fluidité.
+* Vous pouvez désormais modifier votre nom d'utilisateur dans les paramètres de votre compte.
+* Vous souhaitez modifier vos paramètres de performances Jetpack ? Faites-le directement dans l'application !
+* Si vous êtes prolifique et que vous avez publié plus de 100 pages sur votre site, nous les listerons par ordre chronologique pour permettre d'y accéder plus rapidement.
+* Nous avons ajouté de nombreuses mises à niveau à l'éditeur de blocs : notamment des styles de texte enrichi pour les légendes vidéo, des fonctionnalités de bloc plus intuitives et l'enregistrement automatique du contenu après deux secondes d'inactivité.
+</fr-CA>
+<fr-FR>
+13.3 :
+* Vos statistiques ont considérablement gagné en fluidité.
+* Vous pouvez désormais modifier votre nom d'utilisateur dans les paramètres de votre compte.
+* Vous souhaitez modifier vos paramètres de performances Jetpack ? Faites-le directement dans l'application !
+* Si vous êtes prolifique et que vous avez publié plus de 100 pages sur votre site, nous les listerons par ordre chronologique pour permettre d'y accéder plus rapidement.
+* Nous avons ajouté de nombreuses mises à niveau à l'éditeur de blocs : notamment des styles de texte enrichi pour les légendes vidéo, des fonctionnalités de bloc plus intuitives et l'enregistrement automatique du contenu après deux secondes d'inactivité.
+</fr-FR>
+<iw-IL>
+13.3:
+* הנתונים הסטטיסטיים שלך עכשיו ריספונסיביים יותר.
+* כעת אפשר לשנות את שם המשתמש בהגדרות החשבון.
+* רוצה לשנות את הגדרות הביצועים של Jetpack? אפשר לבצע את הפעולה ישירות באפליקציה!
+* אם פרסמת מעל 100 עמודים של תוכן באתר שלך, אנחנו נציג אותם ברשימה בסדר כרונולוגי כדי לאפשר לך גישה מהירה יותר.
+* הוספנו שדרוגים לעורך הבלוקים, כגון סגנון של טקסט עשיר בכיתוב לווידאו, תוספות אינטואיטיביות יותר לבלוקים ושמירה אוטומטית של תכון אחרי שתי שניות של חוסר פעילות.
+</iw-IL>
+<id>
+13.3:
+* Statistik Anda kini menjadi jauh lebih responsif.
+* Sekarang Anda dapat mengubah nama pengguna di Pengaturan Akun.
+* Ingin menyesuaikan pengaturan performa Jetpack? Lakukan langsung dari aplikasi!
+* Jika Anda adalah penerbit yang giat dengan lebih dari 100 halaman di situs, kami akan mencantumkannya secara kronologis demi akses yang lebih cepat.
+* Kami telah menambahkan banyak peningkatan untuk Penyunting Blok, seperti pengaturan gaya kaya teks dalam keterangan video, penambahan blok yang lebih intuitif, dan penyimpanan konten otomatis setelah tidak aktif selama dua detik.
+</id>
+<it-IT>
+13.3:
+* Ora le tue statistiche sono più responsive.
+* Ora puoi modificare il tuo nome utente nelle Impostazioni account.
+* Desideri modificare le impostazioni delle prestazioni di Jetpack? Fallo dall'app!
+* Se hai oltre di 100 pagine sul sito, le elencheremo in ordine cronologico per un accesso più rapido.
+* Abbiamo aggiunto molti aggiornamenti all'editor dei blocchi, come RTF nei sottotitoli, aggiunte ai blocchi più intuitive e salvataggi automatici del contenuto dopo due secondi di inattività.
+</it-IT>
+<ja-JP>
+13.3:
+* 統計のレスポンシブを増加しました。
+* 「アカウント設定」でユーザー名を変更できるようになりました。
+* Jetpack のパフォーマンスの設定をアプリから直接カスタマイズできるようになりました。
+* 100を超えるページがあるサイトの場合、素早くページにアクセスできるように作成順で一覧表示するようにしました。
+* ブロックエディターに、リッチテキストによる動画のキャプション、より直感的なブロックの追加、操作しない状態が2秒続く場合のコンテンツの自動保存など、多くのアップグレードが追加されました。
+</ja-JP>
+<ko-KR>
+13.3:
+* 통계 반응이 더 빨라졌습니다.
+* 이제 계정 설정에서 사용자명을 변경할 수 있습니다.
+* 젯팩 성능 설정을 수정하시겠어요? 앱에서 직접 수정해 보세요!
+* 사이트에 100페이지가 넘는 많은 글을 게시하는 경우 더 빠르게 액세스할 수 있도록 글이 시간 순서대로 나열됩니다.
+* 비디오 캡션의 리치 텍스트 스타일링, 보다 직관적인 블록 추가 및 2초 동안 활동이 없는 경우 자동으로 콘텐츠 저장과 같은 다양한 업그레이드가 블록 편집기에 추가되었습니다.
+</ko-KR>
+<nl-NL>
+13.3:
+* Je statistieken zijn een stuk overzichtelijker geworden.
+* Je kunt nu je gebruikersnaam in de Accountinstellingen wijzigen.
+* Wil je de instellingen voor Jetpack-prestaties aanpassen? Doe dit nu direct vanuit de app!
+* Als je een actieve schrijver bent met meer dan 100 pagina's op je site vermelden wij ze chronologisch, zodat je ze sneller kunt openen.
+* We hebben veel upgrades toegevoegd aan de blok-editor, zoals rich-text in ondertitelingen, meer intuïtieve bloktoevoegingen en het automatisch opslaan van content na twee seconden inactiviteit.
+</nl-NL>
+<pt-BR>
+13.3:
+* Suas estatísticas estão mais responsivas.
+* Agora você pode mudar o nome de usuário em Configurações da conta.
+* Ajustando suas configurações de desempenho do Jetpack? Faça direto pelo aplicativo!
+* Caso você tenha mais de 100 páginas em seu site, elas serão exibidas em ordem cronológica para facilitar o acesso.
+* Adicionamos várias melhorias ao editor de blocos como edição de texto em legendas de vídeos, adição de blocos mais intuitiva e salvamento automático de conteúdo após 2 segundos de inatividade.
+</pt-BR>
+<ru-RU>
+13.3:
+* Экран статистики более адаптивен.
+* Вы можете сменить имя пользователя в настройках учетной записи.
+* Настройки производительности Jetpack можно сделать прямо из приложения!
+* Если вы являетесь плодовитым издателем с более чем 100 страницами на вашем сайте, мы перечислим их в хронологическом порядке для более быстрого доступа.
+* Множество обновлений для редактора блоков, например стилизация rich text в подписях для видео, более интуитивное добавление блоков, автоматическое сохранение содержимого после 2 секунд неактивности.
+</ru-RU>
+<sv-SE>
+13.3:
+* Statistiksidan är mycket responsivare.
+* Nu kan du ändra ditt användarnamn under kontoinställningarna.
+* Vill du justera prestandainställningarna för Jetpack? Gör det direkt i appen!
+* Om du är en aktiv publicist med fler än 100 sidor listar vi dem i kronologisk ordning för snabbare åtkomst.
+* Vi har förbättrat många saker i blockredigeraren, såsom textformatering i beskrivningstexter för video, tillägg av mer intuitiva block, samt autosparande av innehållet efter två sekunders inaktivitet.
+</sv-SE>
+<tr-TR>
+13.3:
+* İstatistikleriniz çok daha duyarlı hale geldi.
+* Artık kullanıcı adınızı hesap ayarlarından değiştirebilirsiniz.
+* Jetpack performans ayarlarınızı değiştirmek? Doğrudan uygulamadan yapın!
+* Sitenizde 100'den fazla sayfa bulunan üretken bir yayıncıysanız, daha hızlı erişim için kronolojik olarak listeleyeceğiz.
+* Video başlıklarındaki zengin metin stili, daha sezgisel blok eklemeleri ve iki saniye kullanılmadığında otomatik içerik tasarrufu gibi, Blok düzenleyiciye birçok yükseltme ekledik.
+</tr-TR>
+<zh-TW>
+13.3：
+* 你的統計資料已具備更靈敏的回應能力。
+* 你現在可在「帳號設定」中變更你的使用者名稱。
+* 想修改你的 Jetpack 效能設定嗎？直接從應用程式操作就行了！
+* 如果你是多產的文章作者且網站擁有超過 100 個頁面，我們會依時間順序排列文章，讓使用者能夠更快存取。
+* 我們已對區塊編輯器進行許多更新，例如視訊字幕可使用 Rich Text 樣式、更直覺化的區塊新增項目，以及閒置兩秒後自動儲存內容。
+</zh-TW>

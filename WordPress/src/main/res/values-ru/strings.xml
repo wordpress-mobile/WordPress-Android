@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-14 22:49:47+0000
+Translation-Revision-Date: 2019-09-30 06:34:29+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">Это действие не может быть отменено. Имя пользователя могло уже обновиться.</string>
+    <string name="settings_username_changer_toast_content">Ваше новое имя пользователя - %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Сохраняем имя пользователя…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Сменить имя пользователя</string>
+    <string name="settings_username_changer_confirm_dialog_content">Вы собираетесь сменить имя пользователя на %1$s%2$s%3$s. Это изменение также затронет адреса профилей Gravatar и IntenseDebate. Подтвердите новое имя пользователя для продолжения.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Осторожно!</string>
+    <string name="settings_username_changer_header">Вы собираетесь изменить имя пользователя (сейчас - %1$s%2$s%3$s). Вы не сможете потом сменить его назад.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Просмотрите и измените настройки производительности Jetpack</string>
+    <string name="site_settings_performance_and_speed">Производительность и скорость</string>
+    <string name="site_settings_more">Больше настроек</string>
+    <string name="site_settings_improved_search_summary">Замена встроенного поиска WordPress на улучшенный</string>
+    <string name="site_settings_improved_search">Улучшенный поиск</string>
+    <string name="site_settings_jetpack_search">Поиск Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">Видеохостинг без рекламы</string>
+    <string name="site_settings_media">Медиафайлы</string>
+    <string name="site_settings_site_accelerator_summary">Страницы будут загружаться быстрее, если вы разрешите Jetpack оптимизировать изображения и статические файлы (например CSS и JavaScript).</string>
+    <string name="site_settings_faster_static_files">Быстрая загрузка статических файлов</string>
+    <string name="site_settings_faster_images">Быстрая загрузка изображений</string>
+    <string name="site_settings_site_accelerator_off">Выкл.</string>
+    <string name="site_settings_site_accelerator_on">Вкл.</string>
+    <string name="site_settings_site_accelerator">Ускоритель сайта</string>
+    <string name="site_settings_lazy_load_images_summary">Загрузка изображений в момент появления на экране поможет ускорить работу сайта.</string>
+    <string name="site_settings_performance">Производительность</string>
+    <string name="notification_settings_moved_notices">Вы можете найти настройки уведомлений на вкладке уведомлений.</string>
+    <string name="stats_file_downloads_value_label">Загрузки</string>
+    <string name="stats_file_downloads_title_label">Файл</string>
+    <string name="stats_file_downloads">Скачанные файлы</string>
+    <string name="stats_data_not_recorded_for_period">Счетчики загрузки файлов не учитывались до 28 июня 2019 года.</string>
+    <string name="stats_site_negative_utc">Часовой пояс сайта (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Часовой пояс сайта (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Часовой пояс сайта (UTC)</string>
     <string name="web_preview_desktop">Полная версия</string>
     <string name="web_preview_default">По умолчанию</string>
     <string name="close_dialog_button_desc">Закрыть диалог</string>
@@ -107,7 +138,6 @@ Language: ru
     <string name="site_settings_update_password_message">Для переподключения приложения к вашему сайту, введите новый пароль тут.</string>
     <string name="site_settings_password_updated">Пароль обновлен</string>
     <string name="site_settings_password_dialog_title">Обновить пароль</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Регистрация доменного имени…</string>
     <string name="domain_registration_state_picker_dialog_title">Выберите округ/область</string>
     <string name="domain_registration_country_picker_dialog_title">Выберите страну</string>
@@ -154,7 +184,7 @@ Language: ru
     <string name="stats_insights_management_title">Смотрите только нужную статистику, добавьте и отсортируйте данные ниже.</string>
     <string name="stats_insights_social">Социальные</string>
     <string name="stats_insights_annual_site_stats">Данные по сайту за год</string>
-    <string name="stats_view_follower_totals">Всего подписчиков</string>
+    <string name="stats_view_follower_totals">Статистика подписок</string>
     <string name="domain_suggestions_fetch_error">Предложения по доменам не могут быть загружены</string>
     <string name="domain_suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
     <string name="domains_suggestions_empty_list">Нет предложений</string>
@@ -847,11 +877,7 @@ Language: ru
     <string name="my_site_add_new_site">Добавить новый сайт</string>
     <string name="my_site_create_new_site">Создайте новый сайт для бизнеса, журнал или персональный блог; или подключите имеющуюся установку WordPress.</string>
     <string name="notifications_jetpack_connection_setup_info">Для получения полезных уведомлений на ваше устройство с сайта вам требуется плагин Jetpack. Хотите установить Jetpack?</string>
-    <string name="site_settings_lazy_load_images_summary">Улучшите скорость загрузки сайта загружая только видимые на экране изображения. Новые изображения будут загружаться перед их попаданием в область видимости. Таким образом посетителям не надо загружать все изображения сразу, включая пока невидимые для них.</string>
     <string name="site_settings_lazy_load_images">\"Ленивая загрузка\" изображений</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack оптимизирует изображения и отдает их посетителям с ближайшего к ним сервера. Использование нашей глобальной CDN повысит скорость загрузки вашего сайта.</string>
-    <string name="site_settings_serve_images_from_our_servers">Отдавать изображения с наших серверов</string>
-    <string name="site_settings_speed_up_your_site">Ускорить ваш сайт</string>
     <string name="stats_jetpack_connection_setup">Установить Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Включить/Выключить текст</string>
     <string name="plugin_info_your_version">Ваша версия WordPress</string>

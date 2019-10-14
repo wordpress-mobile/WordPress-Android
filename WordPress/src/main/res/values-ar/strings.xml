@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-08-15 03:16:54+0000
+Translation-Revision-Date: 2019-10-06 00:38:05+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="settings_username_changer_snackbar_cancel">لا يمكن إلغاء هذا الإجراء. اسم المستخدم قد تم تحديثه بالفعل.</string>
+    <string name="settings_username_changer_toast_content">اسم المستخدم الخاص بك هو %1$s</string>
+    <string name="settings_username_changer_progress_dialog">جاري حفظ اسم المستخدم…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">تغيير اسم المستخدم</string>
+    <string name="settings_username_changer_confirm_dialog_content">أنت تقوم بتغيير اسم المستخدم الخاص بك إلى %1$s%2$s%3$s. سيؤثر تغيير اسم المستخدم الخاص بك أيضًا على ملفك الشخصي على Gravatar وعلى عناوين الملفات الشخصية عبر النقاشات. تأكيد اسم المستخدم الجديد للمتابعة.</string>
+    <string name="settings_username_changer_confirm_dialog_title">كن حذرًا!</string>
+    <string name="settings_username_changer_header">أنت على وشك تغيير اسم المستخدم الخاص بك، والذي هو حاليًا %1$s%2$s%3$s. لن تتمكن من تغيير اسم المستخدم الخاص بك مرة أخرى.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">عرض وتغيير إعدادات أداء Jetpack الخاص بك</string>
+    <string name="site_settings_performance_and_speed">الأداء والسرعة</string>
+    <string name="site_settings_more">المزيد</string>
+    <string name="site_settings_improved_search_summary">استبدل البحث المدمج في ووردبريس بتجربة بحث محسّنة</string>
+    <string name="site_settings_improved_search">البحث المحسّن</string>
+    <string name="site_settings_jetpack_search">البحث في Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">استضافة الفيديو بدون إعلانات</string>
+    <string name="site_settings_media">الوسائط</string>
+    <string name="site_settings_site_accelerator_summary">تحميل الصفحات بشكل أسرع عن طريق السماح لـ Jetpack بتحسين الصور والملفات الثابتة (مثل CSS و JavaScript).</string>
+    <string name="site_settings_faster_static_files">ملفات ثابتة أسرع</string>
+    <string name="site_settings_faster_images">صور أسرع</string>
+    <string name="site_settings_site_accelerator_off">معطّل</string>
+    <string name="site_settings_site_accelerator_on">مفعل</string>
+    <string name="site_settings_site_accelerator">مُسرِّع الموقع</string>
+    <string name="site_settings_lazy_load_images_summary">حسِّن سرعة موقعك من خلال تحميل الصور المرئية فقط على الشاشة.</string>
+    <string name="site_settings_performance">الأداء</string>
+    <string name="notification_settings_moved_notices">يمكن الآن العثور على إعدادات التنبيهات ضمن علامة تبويب \"التنبيهات\".</string>
+    <string name="stats_file_downloads_value_label">التنزيلات</string>
+    <string name="stats_file_downloads_title_label">ملف</string>
+    <string name="stats_file_downloads">تنزيلات الملفات</string>
+    <string name="stats_data_not_recorded_for_period">لم تُسجَّل إحصاءات تنزيل الملف قبل الثامن والعشرين من يونيو 2019.</string>
+    <string name="stats_site_negative_utc">المنطقة الزمنية في الموقع (UTC - %s)</string>
+    <string name="stats_site_positive_utc">المنطقة الزمنية في الموقع (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">المنطقة الزمنية في الموقع (UTC)</string>
     <string name="web_preview_desktop">سطح المكتب</string>
     <string name="web_preview_default">افتراضي</string>
     <string name="close_dialog_button_desc">إغلاق النافذة</string>
@@ -107,7 +138,6 @@ Language: ar
     <string name="site_settings_update_password_message">لإعادة اتصال التطبيق بموقعك المستضاف ذاتيًا، أدخل كلمة المرور الجديد للموقع من هنا.</string>
     <string name="site_settings_password_updated">تمّ تحديث كلمة المرور</string>
     <string name="site_settings_password_dialog_title">تحديث كلمة المرور</string>
-    <string name="domain_registration_phone_number_format">+%s.%s</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">جاري تسجيل اسم النطاق…</string>
     <string name="domain_registration_state_picker_dialog_title">تحديد الولاية</string>
     <string name="domain_registration_country_picker_dialog_title">تحديد الدولة</string>
@@ -195,10 +225,10 @@ Language: ar
     <string name="plugin_install_custom_domain_required_dialog_message">لتنصيب الإضافات، لا بد من أن يكون لديك نطاق مخصص مرتبط بموقعك.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">تنصيب الإضافة</string>
     <string name="new_site_creation_preview_subtitle">ستتمكن من تخصيص شكل ومظهر الموقع الخاص بك لاحقًا</string>
-    <string name="publish_on">تاريخ النشر: %s</string>
+    <string name="publish_on">النشر في: %s</string>
     <string name="schedule_for">جدولة ليوم: %s</string>
-    <string name="published_on">تمّ النشر في: %s</string>
-    <string name="scheduled_for">مجدولة ليوم: %s</string>
+    <string name="published_on">نُشر في: %s</string>
+    <string name="scheduled_for">تمّت الجدولة ليوم: %s</string>
     <string name="stats_detail_recent_weeks">الأسابيع الأخيرة</string>
     <string name="stats_detail_average_views_per_day">معدل المشاهدات لكل يوم</string>
     <string name="stats_months_and_years_views_label">المشاهدات</string>
@@ -847,11 +877,7 @@ Language: ar
     <string name="my_site_add_new_site">إضافة موقع جديد</string>
     <string name="my_site_create_new_site">أنشئ موقعًا جديدًا لأعمالك أو مجلتك أو مدونتك الشخصية؛ أو اتصل بموقع ووردبريس الموجود.</string>
     <string name="notifications_jetpack_connection_setup_info">للحصول على إشعارات مساعدة على جهازك من موقع ووردبريس الخاص بك، سيتعين عليك تنصيب إضافة Jetpack. هل ترغب في إعداد Jetpack؟</string>
-    <string name="site_settings_lazy_load_images_summary">يمكنك تحسين سرعة موقعك من خلال تحميل الصور التي تظهر على الشاشة فقط. سيتم تحميل الصور الجديدة قبل تمريرها إلى طريقة العرض فقط. هذا يمنع المشاهدين من اللجوء إلى تنزيل جميع الصور على إحدى الصفحات مرة واحدة، حتى الصور التي لا يمكنهم رؤيتها.</string>
     <string name="site_settings_lazy_load_images">صور \"بطيئة التحميل\"</string>
-    <string name="site_settings_serve_images_from_our_servers_summary">سيُحسّن Jetpack صورك ويوفِّرها من موقع الخادم الأقرب إلى زائريك. سيؤدي استخدام شبكة توصيل المحتوى العالمية إلى تعزيز سرعة التحميل في موقعك.</string>
-    <string name="site_settings_serve_images_from_our_servers">الحصول على الصور من خوادمنا</string>
-    <string name="site_settings_speed_up_your_site">زيادة سرعة موقعك</string>
     <string name="stats_jetpack_connection_setup">تثبيت Jetpack</string>
     <string name="plugin_chevron_icon_content_description">التبديل بين النصوص</string>
     <string name="plugin_info_your_version">إصدار ووردبريس الخاص بك</string>
@@ -1554,7 +1580,7 @@ Language: ar
     <string name="site_settings_sort_by_hint">يحدد الترتيب الذي تُعرض به التعليقات</string>
     <string name="site_settings_close_after_hint">إيقاف التعليقات بعد وقت محدد</string>
     <string name="site_settings_receive_pingbacks_hint">السماح بتنبيهات الروابط من المدونات الأخرى</string>
-    <string name="site_settings_send_pingbacks_hint">محاولة التنبيه بوجود أي مدونات مرتبطة بالمقالة</string>
+    <string name="site_settings_send_pingbacks_hint">محاولة تنبيه المدوَّنات المشار إليها في المقالة</string>
     <string name="site_settings_allow_comments_hint">السماح للقرّاء بنشر التعليقات</string>
     <string name="site_settings_discussion_hint">عرض إعدادات المناقشة على موقعك وتغييرها</string>
     <string name="site_settings_more_hint">عرض جميع إعدادات المناقشة المتوفرة</string>

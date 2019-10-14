@@ -732,7 +732,8 @@ public class UploadService extends Service {
             return false;
         }
 
-        if (PostUploadHandler.isPostUploadingOrQueued(postToCancel) && !isPostCurrentlyBeingEdited(postToCancel)) {
+        if (PostUploadHandler.isPostUploadingOrQueued(postToCancel) && !PostUtils
+                .isPostCurrentlyBeingEdited(postToCancel)) {
             // post is not being edited and is currently queued, update the count on the foreground notification
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(postToCancel);
         }
@@ -970,7 +971,7 @@ public class UploadService extends Service {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
-            if (isPostCurrentlyBeingEdited(postModel)) {
+            if (PostUtils.isPostCurrentlyBeingEdited(postModel)) {
                 // don't touch a Post that is being currently open in the Editor.
                 break;
             }
@@ -1052,16 +1053,6 @@ public class UploadService extends Service {
         }
 
         return failedStandAloneMedia;
-    }
-
-    private boolean isPostCurrentlyBeingEdited(PostModel post) {
-        PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
-        if (flag != null && post != null
-            && post.getLocalSiteId() == flag.localSiteId
-            && post.getId() == flag.postId) {
-            return true;
-        }
-        return false;
     }
 
     /**

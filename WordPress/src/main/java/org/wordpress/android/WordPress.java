@@ -72,6 +72,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -148,6 +149,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject UploadStarter mUploadStarter;
     @Inject StatsWidgetUpdaters mStatsWidgetUpdaters;
     @Inject StatsStore mStatsStore;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -309,6 +311,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
         // It will upload local draft or published posts with local changes to the server.
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+
+        mSystemNotificationsTracker.checkSystemNotificationsState();
     }
 
     protected void initWorkManager() {
