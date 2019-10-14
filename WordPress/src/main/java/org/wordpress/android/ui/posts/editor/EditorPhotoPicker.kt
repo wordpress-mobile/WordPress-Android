@@ -23,7 +23,12 @@ interface EditorPhotoPickerListener {
     fun onPhotoPickerHidden()
 }
 
-// TODO: We shouldn't have a reference to the activity
+/**
+ * This class is extracted from EditPostActivity as part of a huge refactor. Although some effort was made to improve
+ * the code, it still contains the full logic from EditPostActivity to make the refactor less error-prone. As such,
+ * it is heavily coupled with the `EditPostActivity` and contains logic and dependencies it shouldn't and in dire need
+ * of further refactoring.
+ */
 class EditorPhotoPicker(
     private val activity: AppCompatActivity,
     private val photoPickerListener: PhotoPickerListener,
@@ -85,7 +90,6 @@ class EditorPhotoPicker(
         if (!isAlreadyShowing) {
             AniUtils.animateBottomBar(photoPickerContainer, true, AniUtils.Duration.MEDIUM)
             photoPickerFragment?.refresh()
-            // TODO: Why do we need this?
             photoPickerFragment?.setPhotoPickerListener(photoPickerListener)
         }
 
