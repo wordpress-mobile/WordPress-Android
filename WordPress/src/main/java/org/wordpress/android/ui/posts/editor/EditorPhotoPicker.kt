@@ -24,11 +24,12 @@ interface EditorPhotoPickerListener {
 }
 
 // TODO: We shouldn't have a reference to the activity
-class EditorPhotoPicker<T>(
-    private val activity: T,
+class EditorPhotoPicker(
+    private val activity: AppCompatActivity,
+    private val photoPickerListener: PhotoPickerListener,
     private val editorPhotoPickerListener: EditorPhotoPickerListener,
     private val showAztecEditor: Boolean
-) : MediaToolbarAction.MediaToolbarButtonClickListener where T : AppCompatActivity, T : PhotoPickerListener {
+) : MediaToolbarAction.MediaToolbarButtonClickListener {
     private var photoPickerContainer: View? = null
     private var photoPickerFragment: PhotoPickerFragment? = null
     private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
@@ -49,7 +50,7 @@ class EditorPhotoPicker<T>(
                 MediaBrowserType.AZTEC_EDITOR_PICKER
             } else MediaBrowserType.EDITOR_PICKER
             photoPickerFragment = PhotoPickerFragment.newInstance(
-                    activity,
+                    photoPickerListener,
                     mediaBrowserType,
                     site
             )
@@ -84,7 +85,8 @@ class EditorPhotoPicker<T>(
         if (!isAlreadyShowing) {
             AniUtils.animateBottomBar(photoPickerContainer, true, AniUtils.Duration.MEDIUM)
             photoPickerFragment?.refresh()
-            photoPickerFragment?.setPhotoPickerListener(activity)
+            // TODO: Why do we need this?
+            photoPickerFragment?.setPhotoPickerListener(photoPickerListener)
         }
 
         // animate in the editor overlay

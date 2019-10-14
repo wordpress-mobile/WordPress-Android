@@ -64,7 +64,6 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
-import org.wordpress.android.editor.MediaToolbarAction;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -398,7 +397,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-        mEditorPhotoPicker = new EditorPhotoPicker<>(this, this, mShowAztecEditor);
+        mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
