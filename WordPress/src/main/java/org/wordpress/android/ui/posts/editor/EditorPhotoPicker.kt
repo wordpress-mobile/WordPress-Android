@@ -24,29 +24,31 @@ class EditorPhotoPicker<T>(
     private val activity: T,
     private val showAztecEditor: Boolean
 ) where T : AppCompatActivity, T : PhotoPickerListener {
-    private var mPhotoPickerContainer: View? = null
-    private var mPhotoPickerFragment: PhotoPickerFragment? = null
-    private var mPhotoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
+    private var photoPickerContainer: View? = null
+    private var photoPickerFragment: PhotoPickerFragment? = null
+    private var photoPickerOrientation = Configuration.ORIENTATION_UNDEFINED
 
     /*
      * loads the photo picker fragment, which is hidden until the user taps the media icon
      */
     private fun initPhotoPicker(site: SiteModel) {
-        mPhotoPickerContainer = activity.findViewById(R.id.photo_fragment_container)
+        photoPickerContainer = activity.findViewById(R.id.photo_fragment_container)
 
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker()
 
-        mPhotoPickerFragment = activity.supportFragmentManager.findFragmentByTag(PHOTO_PICKER_TAG) as PhotoPickerFragment
-        if (mPhotoPickerFragment == null) {
-            val mediaBrowserType = if (showAztecEditor) MediaBrowserType.AZTEC_EDITOR_PICKER else MediaBrowserType.EDITOR_PICKER
-            mPhotoPickerFragment = PhotoPickerFragment.newInstance(
+        photoPickerFragment = activity.supportFragmentManager.findFragmentByTag(PHOTO_PICKER_TAG) as PhotoPickerFragment
+        if (photoPickerFragment == null) {
+            val mediaBrowserType = if (showAztecEditor) {
+                MediaBrowserType.AZTEC_EDITOR_PICKER
+            } else MediaBrowserType.EDITOR_PICKER
+            photoPickerFragment = PhotoPickerFragment.newInstance(
                     activity,
                     mediaBrowserType,
                     site
             )
         }
-        mPhotoPickerFragment?.let { photoPickerFragment ->
+        photoPickerFragment?.let { photoPickerFragment ->
             activity.supportFragmentManager
                     .beginTransaction()
                     .add(R.id.photo_fragment_container, photoPickerFragment, PHOTO_PICKER_TAG)
@@ -55,17 +57,17 @@ class EditorPhotoPicker<T>(
     }
 
     fun isPhotoPickerShowing(): Boolean {
-        return mPhotoPickerContainer != null && mPhotoPickerContainer?.visibility == View.VISIBLE
+        return photoPickerContainer != null && photoPickerContainer?.visibility == View.VISIBLE
     }
 
     /*
      * user has requested to show the photo picker
      */
-    fun showPhotoPicker(site: SiteModel, mEditorFragment: Any) {
+    fun showPhotoPicker(site: SiteModel, editorFragment: Any) {
         val isAlreadyShowing = isPhotoPickerShowing()
 
         // make sure we initialized the photo picker
-        if (mPhotoPickerFragment == null) {
+        if (photoPickerFragment == null) {
             initPhotoPicker(site)
         }
 
@@ -74,27 +76,27 @@ class EditorPhotoPicker<T>(
 
         // slide in the photo picker
         if (!isAlreadyShowing) {
-            AniUtils.animateBottomBar(mPhotoPickerContainer, true, AniUtils.Duration.MEDIUM)
-            mPhotoPickerFragment?.refresh()
-            mPhotoPickerFragment?.setPhotoPickerListener(activity)
+            AniUtils.animateBottomBar(photoPickerContainer, true, AniUtils.Duration.MEDIUM)
+            photoPickerFragment?.refresh()
+            photoPickerFragment?.setPhotoPickerListener(activity)
         }
 
         // animate in the editor overlay
         showOverlay(true)
 
-        (mEditorFragment as? AztecEditorFragment)?.enableMediaMode(true)
+        (editorFragment as? AztecEditorFragment)?.enableMediaMode(true)
     }
 
-    fun hidePhotoPicker(mEditorFragment: Any) {
+    fun hidePhotoPicker(editorFragment: Any) {
         if (isPhotoPickerShowing()) {
-            mPhotoPickerFragment?.finishActionMode()
-            mPhotoPickerFragment?.setPhotoPickerListener(null)
-            AniUtils.animateBottomBar(mPhotoPickerContainer, false)
+            photoPickerFragment?.finishActionMode()
+            photoPickerFragment?.setPhotoPickerListener(null)
+            AniUtils.animateBottomBar(photoPickerContainer, false)
         }
 
         hideOverlay()
 
-        (mEditorFragment as? AztecEditorFragment)?.enableMediaMode(false)
+        (editorFragment as? AztecEditorFragment)?.enableMediaMode(false)
     }
 
     /*
@@ -102,26 +104,26 @@ class EditorPhotoPicker<T>(
      * height in portrait
      */
     private fun resizePhotoPicker() {
-        if (mPhotoPickerContainer == null) {
+        if (photoPickerContainer == null) {
             return
         }
 
         val updatePickerContainerHeight = { newHeight: Int ->
-            mPhotoPickerContainer?.let {
+            photoPickerContainer?.let {
                 it.layoutParams.height = newHeight
             }
         }
 
         if (DisplayUtils.isLandscape(activity)) {
-            mPhotoPickerOrientation = Configuration.ORIENTATION_LANDSCAPE
+            photoPickerOrientation = Configuration.ORIENTATION_LANDSCAPE
             updatePickerContainerHeight(ViewGroup.LayoutParams.MATCH_PARENT)
         } else {
-            mPhotoPickerOrientation = Configuration.ORIENTATION_PORTRAIT
+            photoPickerOrientation = Configuration.ORIENTATION_PORTRAIT
             val displayHeight = DisplayUtils.getDisplayPixelHeight(activity)
             updatePickerContainerHeight((displayHeight * 0.5f).toInt())
         }
 
-        mPhotoPickerFragment?.reload()
+        photoPickerFragment?.reload()
     }
 
     /*
@@ -146,7 +148,7 @@ class EditorPhotoPicker<T>(
             return
         }
 
-        mPhotoPickerFragment?.let { photoPickerFragment ->
+        photoPickerFragment?.let { photoPickerFragment ->
             when (action) {
                 MediaToolbarAction.CAMERA -> photoPickerFragment.showCameraPopupMenu(
                         activity.findViewById(action.buttonId)
@@ -161,7 +163,7 @@ class EditorPhotoPicker<T>(
 
     fun onOrientationChanged(@Orientation newOrientation: Int) {
         // resize the photo picker if the user rotated the device
-        if (newOrientation != mPhotoPickerOrientation) {
+        if (newOrientation != photoPickerOrientation) {
             resizePhotoPicker()
         }
     }
