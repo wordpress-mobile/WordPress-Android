@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
@@ -15,7 +15,7 @@ enum class PostLoadingState(
     LOADING_REVISION(
             value = 3,
             progressDialogUiState = ProgressDialogUiState.VisibleProgressDialog(
-                    UiStringRes(string.history_loading_revision),
+                    UiStringRes(R.string.history_loading_revision),
                     cancelable = false,
                     indeterminate = true
             )
@@ -23,7 +23,7 @@ enum class PostLoadingState(
     UPLOADING_FOR_PREVIEW(
             value = 4,
             progressDialogUiState = ProgressDialogUiState.VisibleProgressDialog(
-                    UiStringRes(string.post_preview_saving_draft),
+                    UiStringRes(R.string.post_preview_saving_draft),
                     cancelable = false,
                     indeterminate = true
             )
@@ -31,7 +31,7 @@ enum class PostLoadingState(
     REMOTE_AUTO_SAVING_FOR_PREVIEW(
             value = 5,
             progressDialogUiState = ProgressDialogUiState.VisibleProgressDialog(
-                    UiStringRes(string.post_preview_remote_auto_saving_post),
+                    UiStringRes(R.string.post_preview_remote_auto_saving_post),
                     cancelable = false,
                     indeterminate = true
             )
