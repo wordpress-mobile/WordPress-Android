@@ -89,9 +89,6 @@ class EditorPhotoPicker(
             photoPickerFragment?.setPhotoPickerListener(photoPickerListener)
         }
 
-        // animate in the editor overlay
-        showOverlay(true)
-
         editorPhotoPickerListener.onPhotoPickerShown()
     }
 
@@ -101,9 +98,6 @@ class EditorPhotoPicker(
             photoPickerFragment?.setPhotoPickerListener(null)
             AniUtils.animateBottomBar(photoPickerContainer, false)
         }
-
-        hideOverlay()
-
         editorPhotoPickerListener.onPhotoPickerHidden()
     }
 
@@ -132,23 +126,6 @@ class EditorPhotoPicker(
         }
 
         photoPickerFragment?.reload()
-    }
-
-    /*
-     * shows/hides the overlay which appears atop the editor, which effectively disables it
-     */
-    fun showOverlay(animate: Boolean) {
-        val overlay = activity.findViewById<View>(R.id.view_overlay)
-        if (animate) {
-            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM)
-        } else {
-            overlay.visibility = View.VISIBLE
-        }
-    }
-
-    fun hideOverlay() {
-        val overlay = activity.findViewById<View>(R.id.view_overlay)
-        overlay.visibility = View.GONE
     }
 
     override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {

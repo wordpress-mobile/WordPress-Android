@@ -129,6 +129,7 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -872,8 +873,28 @@ public class EditPostActivity extends AppCompatActivity implements
         return hasBlocks || (SiteUtils.isBlockEditorDefaultForNewPost(site) && isEmpty);
     }
 
+    /*
+     * shows/hides the overlay which appears atop the editor, which effectively disables it
+     */
+    private void showOverlay(boolean animate) {
+        View overlay = findViewById(R.id.view_overlay);
+        if (animate) {
+            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
+        } else {
+            overlay.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideOverlay() {
+        View overlay = findViewById(R.id.view_overlay);
+        overlay.setVisibility(View.GONE);
+    }
+
     @Override
     public void onPhotoPickerShown() {
+        // animate in the editor overlay
+        showOverlay(true);
+
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).enableMediaMode(true);
         }
@@ -881,6 +902,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onPhotoPickerHidden() {
+        hideOverlay();
+
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).enableMediaMode(false);
         }
@@ -2530,14 +2553,14 @@ public class EditPostActivity extends AppCompatActivity implements
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
             this.mUriList.addAll(uriList);
             this.mIsNew = isNew;
-            mEditorPhotoPicker.showOverlay(false);
+            showOverlay(false);
         }
 
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew, boolean allowMultipleSelection) {
             this.mUriList.addAll(uriList);
             this.mIsNew = isNew;
             this.mAllowMultipleSelection = allowMultipleSelection;
-            mEditorPhotoPicker.showOverlay(false);
+            showOverlay(false);
         }
 
         private void showProgressDialog(final boolean show) {
@@ -2586,7 +2609,7 @@ public class EditPostActivity extends AppCompatActivity implements
             runOnUiThread(() -> {
                 if (!isInterrupted()) {
                     savePostAsync(null);
-                    mEditorPhotoPicker.hideOverlay();
+                    hideOverlay();
                     if (mDidAnyFail) {
                         ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error,
                                              Duration.SHORT);
