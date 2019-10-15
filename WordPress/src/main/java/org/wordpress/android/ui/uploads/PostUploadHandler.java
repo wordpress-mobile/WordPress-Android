@@ -20,14 +20,17 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -64,8 +67,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     private static PostModel sCurrentUploadingPost = null;
     private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
 
-    private static boolean sUseLegacyMode;
-
     private PostUploadNotifier mPostUploadNotifier;
     private UploadPostTask mCurrentTask = null;
 
@@ -73,8 +74,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
+    @Inject UploadActionUseCase mUploadActionUseCase;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -127,10 +130,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         synchronized (sFirstPublishPosts) {
             sFirstPublishPosts.remove(post.getId());
         }
-    }
-
-    static void setLegacyMode(boolean enabled) {
-        sUseLegacyMode = enabled;
     }
 
     static boolean isPostUploadingOrQueued(PostModel post) {
@@ -188,7 +187,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         uploadNextPost();
     }
 
-    private class UploadPostTask extends AsyncTask<PostModel, Boolean, Boolean> {
+    private enum UploadPostTaskResult {
+        PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD
+    }
+
+    private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
         private Context mContext;
 
         private PostModel mPost;
@@ -202,25 +205,35 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         private boolean mHasImage, mHasVideo, mHasCategory;
 
         @Override
-        protected void onPostExecute(Boolean pushActionWasDispatched) {
-            if (!pushActionWasDispatched) {
-                // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
-                // will be handled in OnPostChanged instead of here
-                mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
-                mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
-                finishUpload();
+        protected void onPostExecute(UploadPostTaskResult result) {
+            switch (result) {
+                case ERROR:
+                    mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost);
+                    mPostUploadNotifier.updateNotificationErrorForPost(mPost, mSite, mErrorMessage, 0);
+                    finishUpload();
+                    break;
+                case NOTHING_TO_UPLOAD:
+                    // we need to force increment the uploaded count as we know the post was enqueued twice. If we
+                    // didn't force incremented it, the `PostUploadNotifier.isPostAlreadyInPostCount()` would return
+                    // true and we'd end up with a dangling upload notification.
+                    mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(mPost, true);
+                    finishUpload();
+                    break;
+                case PUSH_POST_DISPATCHED:
+                    // will be handled in OnPostChanged
+                    break;
             }
         }
 
         @Override
-        protected Boolean doInBackground(PostModel... posts) {
+        protected UploadPostTaskResult doInBackground(PostModel... posts) {
             mContext = WordPress.getContext();
             mPost = posts[0];
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
                 mErrorMessage = mContext.getString(R.string.blog_not_found);
-                return false;
+                return UploadPostTaskResult.ERROR;
             }
 
             if (TextUtils.isEmpty(mPost.getStatus())) {
@@ -240,16 +253,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
-                return false;
+                return UploadPostTaskResult.ERROR;
             }
 
             if (mPost.getCategoryIdList().size() > 0) {
                 mHasCategory = true;
-            }
-
-            // Support for legacy editor - images are identified as featured as they're being uploaded with the post
-            if (sUseLegacyMode && mFeaturedImageID != -1) {
-                mPost.setFeaturedImageId(mFeaturedImageID);
             }
 
             // Track analytics only if the post is newly published
@@ -260,9 +268,32 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             EventBus.getDefault().post(new PostUploadStarted(mPost));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
 
-            return true;
+            switch (mUploadActionUseCase.getUploadAction(mPost)) {
+                case UPLOAD:
+                    AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());
+                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+                    break;
+                case UPLOAD_AS_DRAFT:
+                    mPost.setStatus(PostStatus.DRAFT.toString());
+                    AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD_AS_DRAFT. Post: " + mPost.getTitle());
+                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+                    break;
+                case REMOTE_AUTO_SAVE:
+                    AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
+                    mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
+                    break;
+                case DO_NOTHING:
+                    AppLog.d(T.POSTS, "PostUploadHandler - DO_NOTHING. Post: " + mPost.getTitle());
+                    // A single post might be enqueued twice for upload. It might cause some side-effects when the
+                    // post is a local draft.
+                    // The first upload request pushes the post to the server and sets `isLocalDraft` to `false`.
+                    // The second request would have invoked `Remote_auto_save` on a post which didn't contain any local
+                    // changes - they were uploaded during the first upload request.
+                    // This branch takes care of this situations and simply ignores the second request.
+                    return UploadPostTaskResult.NOTHING_TO_UPLOAD;
+            }
+            return UploadPostTaskResult.PUSH_POST_DISPATCHED;
         }
 
         private boolean hasGallery() {
@@ -581,7 +612,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                               + event.error.message);
             Context context = WordPress.getContext();
             String errorMessage = mUiHelpers.getTextOfUiString(context,
-                    UploadUtils.getErrorMessageResIdFromPostError(event.post.isPage(), event.error));
+                    UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
+                            event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post)));
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
                     mMediaStore.getMediaForPost(event.post));
@@ -619,54 +651,15 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         finishUpload();
     }
 
-    /**
-     * Has priority 8 on OnMediaUploaded events, which is the second-highest (after the MediaUploadHandler).
-     */
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, priority = 8)
-    public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media == null) {
-            AppLog.w(T.POSTS, "PostUploadHandler > Received media event for null media, ignoring");
-            return;
-        }
-
-        if (sUseLegacyMode) {
-            handleMediaUploadCompletedLegacy(event);
-        }
-    }
-
-    private void handleMediaUploadCompletedLegacy(OnMediaUploaded event) {
-        // Event for unknown media, ignoring
-        if (sCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
-            AppLog.i(T.POSTS, "PostUploadHandler > Media event not recognized: " + event.media.getId() + ", ignoring");
-            return;
-        }
-
-        if (event.isError()) {
-            AppLog.w(T.POSTS, "PostUploadHandler > Media upload failed. " + event.error.type + ": "
-                              + event.error.message);
-            SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
-            Context context = WordPress.getContext();
-            String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
-            String notificationMessage =
-                    UploadUtils.getErrorMessage(context, sCurrentUploadingPost, errorMessage, true);
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(sCurrentUploadingPost);
-            mPostUploadNotifier.updateNotificationErrorForPost(sCurrentUploadingPost, site, notificationMessage, 0);
-            sFirstPublishPosts.remove(sCurrentUploadingPost.getId());
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
+    public void onPostChanged(OnPostChanged event) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
+            int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
+            PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
             finishUpload();
-            return;
-        }
-
-        if (event.canceled) {
-            // Not implemented
-            return;
-        }
-
-        if (event.completed) {
-            AppLog.i(T.POSTS, "PostUploadHandler > Media upload completed for post. Media id: " + event.media.getId()
-                              + ", post id: " + sCurrentUploadingPost.getId());
-            mMediaLatchMap.get(event.media.getId()).countDown();
-            mMediaLatchMap.remove(event.media.getId());
         }
     }
 }

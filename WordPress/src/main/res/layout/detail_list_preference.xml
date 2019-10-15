@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:gravity="start"
             android:textAlignment="viewStart"
             tools:text="Main Text" />
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_small"
-            android:textColor="@color/neutral"
+            android:textColor="?attr/wpColorTextSubtle"
             android:gravity="start"
             android:textAlignment="viewStart"
             tools:text="Detail Text" />

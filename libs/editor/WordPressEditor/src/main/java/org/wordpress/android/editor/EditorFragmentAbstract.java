@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spanned;
 import android.view.DragEvent;
 
 import androidx.fragment.app.Fragment;
@@ -12,21 +11,25 @@ import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class EditorFragmentAbstract extends Fragment {
+    public class EditorFragmentNotAddedException extends Exception {
+    }
+
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
+    public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean isUploadingMedia();
@@ -41,8 +44,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract boolean showSavingProgressDialogIfNeeded();
     public abstract boolean hideSavingProgressDialog();
 
-    // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
-    public abstract Spanned getSpannedContent();
 
     public enum MediaType {
         IMAGE, VIDEO;
@@ -64,7 +65,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected static final String ATTR_ALIGN = "align";
     protected static final String ATTR_ALT = "alt";
     protected static final String ATTR_CAPTION = "caption";
-    protected static final String ATTR_CONTENT = "content";
     protected static final String ATTR_DIMEN_HEIGHT = "height";
     protected static final String ATTR_DIMEN_WIDTH = "width";
     protected static final String ATTR_ID = "id";
@@ -77,7 +77,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected static final String ATTR_URL_LINK = "linkUrl";
     protected static final String EXTRA_ENABLED_AZTEC = "isAztecEnabled";
     protected static final String EXTRA_FEATURED = "isFeatured";
-    protected static final String EXTRA_HEADER = "headerMap";
     protected static final String EXTRA_IMAGE_FEATURED = "featuredImageSupported";
     protected static final String EXTRA_IMAGE_META = "imageMeta";
     protected static final String EXTRA_MAX_WIDTH = "maxWidth";
@@ -158,15 +157,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         return false;
     }
 
-    /**
-     * The editor may need to differentiate local draft and published articles
-     *
-     * @param isLocalDraft edited post is a local draft
-     */
-    public void setLocalDraft(boolean isLocalDraft) {
-        // Not unused in the new editor
-    }
-
     public static MediaType getEditorMimeType(MediaFile mediaFile) {
         if (mediaFile == null) {
             // default to image
@@ -182,24 +172,22 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public interface EditorFragmentListener {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
-        void onSettingsClicked();
         void onAddMediaClicked();
-        void onAddMediaImageClicked();
-        void onAddMediaVideoClicked();
-        void onAddPhotoClicked();
+        void onAddMediaImageClicked(boolean allowMultipleSelection);
+        void onAddMediaVideoClicked(boolean allowMultipleSelection);
+        void onAddLibraryMediaClicked(boolean allowMultipleSelection);
+        void onAddPhotoClicked(boolean allowMultipleSelection);
         void onCapturePhotoClicked();
-        void onAddVideoClicked();
+        void onAddVideoClicked(boolean allowMultipleSelection);
+        void onAddDeviceMediaClicked(boolean allowMultipleSelection);
         void onCaptureVideoClicked();
         boolean onMediaRetryClicked(String mediaId);
         void onMediaRetryAllClicked(Set<String> mediaIdSet);
         void onMediaUploadCancelClicked(String mediaId);
         void onMediaDeleted(String mediaId);
         void onUndoMediaCheck(String undoedContent);
-        void onFeaturedImageChanged(long mediaId);
         void onVideoPressInfoRequested(String videoId);
         String onAuthHeaderRequested(String url);
-        // TODO: remove saveMediaFile, it's currently needed for the legacy editor
-        void saveMediaFile(MediaFile mediaFile);
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
     }
@@ -225,6 +213,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
         HEADING_5_BUTTON_TAPPED,
         HEADING_6_BUTTON_TAPPED,
         HORIZONTAL_RULE_BUTTON_TAPPED,
+        FORMAT_ALIGN_LEFT_BUTTON_TAPPED,
+        FORMAT_ALIGN_CENTER_BUTTON_TAPPED,
+        FORMAT_ALIGN_RIGHT_BUTTON_TAPPED,
         HTML_BUTTON_TAPPED,
         IMAGE_EDITED,
         ITALIC_BUTTON_TAPPED,
@@ -239,6 +230,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         PREFORMAT_BUTTON_TAPPED,
         READ_MORE_BUTTON_TAPPED,
         STRIKETHROUGH_BUTTON_TAPPED,
-        UNDERLINE_BUTTON_TAPPED
+        UNDERLINE_BUTTON_TAPPED,
+        REDO_TAPPED,
+        UNDO_TAPPED
     }
 }

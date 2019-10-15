@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
@@ -43,6 +44,7 @@ private const val VIEW_ALL_ITEM_COUNT = 1000
 class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val tagsStore: TagsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
@@ -53,6 +55,7 @@ class TagsAndCategoriesUseCase
 ) : BaseStatsUseCase<TagsModel, TagsAndCategoriesUiState>(
         TAGS_AND_CATEGORIES,
         mainDispatcher,
+        backgroundDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
@@ -218,6 +221,7 @@ class TagsAndCategoriesUseCase
     class TagsAndCategoriesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val tagsStore: TagsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
@@ -228,6 +232,7 @@ class TagsAndCategoriesUseCase
         override fun build(useCaseMode: UseCaseMode) =
                 TagsAndCategoriesUseCase(
                         mainDispatcher,
+                        backgroundDispatcher,
                         tagsStore,
                         statsSiteProvider,
                         resourceProvider,

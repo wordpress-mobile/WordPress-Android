@@ -105,6 +105,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -506,6 +507,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
+    @Override
+    public void onUndo() {
+        if (!isAdded()) {
+            return;
+        }
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNDO_TAPPED);
+    }
+
+    @Override
+    public void onRedo() {
+        if (!isAdded()) {
+            return;
+        }
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.REDO_TAPPED);
+    }
+
     private ActionBar getActionBar() {
         if (!isAdded()) {
             return null;
@@ -633,9 +650,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            return "";
+            throw new EditorFragmentNotAddedException();
         }
 
         // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
@@ -674,9 +691,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_ORDERED_BUTTON_TAPPED);
         } else if (format.equals(AztecTextFormat.FORMAT_UNORDERED_LIST)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.LIST_UNORDERED_BUTTON_TAPPED);
-        } else if (format.equals(AztecTextFormat.FORMAT_BOLD)) {
+        } else if (format.equals(AztecTextFormat.FORMAT_BOLD)
+                   || format.equals(AztecTextFormat.FORMAT_STRONG)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
-        } else if (format.equals(AztecTextFormat.FORMAT_ITALIC)) {
+        } else if (format.equals(AztecTextFormat.FORMAT_ITALIC)
+                   || format.equals(AztecTextFormat.FORMAT_EMPHASIS)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
         } else if (format.equals(AztecTextFormat.FORMAT_STRIKETHROUGH)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
@@ -690,6 +709,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.READ_MORE_BUTTON_TAPPED);
         } else if (format.equals(CommentsTextFormat.FORMAT_PAGE)) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.NEXT_PAGE_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_HORIZONTAL_RULE)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HORIZONTAL_RULE_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ALIGN_LEFT)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.FORMAT_ALIGN_LEFT_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ALIGN_CENTER)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.FORMAT_ALIGN_CENTER_BUTTON_TAPPED);
+        } else if (format.equals(AztecTextFormat.FORMAT_ALIGN_RIGHT)) {
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.FORMAT_ALIGN_RIGHT_BUTTON_TAPPED);
+        } else {
+            AppLog.w(T.EDITOR, "Aztec ToolbarFormatButtonClick not tracked in Analytics: " + format.toString());
         }
     }
 
@@ -922,9 +951,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getContent(CharSequence originalContent) {
+    public CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            return "";
+            throw new EditorFragmentNotAddedException();
         }
 
         if (mContent.getVisibility() == View.VISIBLE) {
@@ -1070,6 +1099,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) { }
+
     private Drawable getLoadingMediaErrorPlaceholder(String msg) {
         if (TextUtils.isEmpty(msg)) {
             ToastUtils.showToast(getActivity(), R.string.error_media_load);
@@ -1125,11 +1156,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void removeMedia(String mediaId) {
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
-    }
-
-    @Override
-    public Spanned getSpannedContent() {
-        return null;
     }
 
     @Override

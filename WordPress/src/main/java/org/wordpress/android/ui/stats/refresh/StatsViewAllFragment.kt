@@ -31,8 +31,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -53,6 +55,7 @@ class StatsViewAllFragment : DaggerFragment() {
         const val SELECTED_TAB_KEY = "selected_tab_key"
         const val ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE"
         const val ARGS_TIMEFRAME = "ARGS_TIMEFRAME"
+        const val ARGS_SELECTED_DATE = "ARGS_SELECTED_DATE"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,7 +83,7 @@ class StatsViewAllFragment : DaggerFragment() {
             }
             outState.putInt(WordPress.LOCAL_SITE_ID, intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0))
         }
-
+        outState.putParcelable(ARGS_SELECTED_DATE, viewModel.getSelectedDate())
         super.onSaveInstanceState(outState)
     }
 
@@ -122,30 +125,34 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+        val nonNullIntent = checkNotNull(activity.intent)
         val type = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
         } else {
             savedInstanceState.getSerializable(ARGS_VIEW_TYPE) as StatsViewType
         }
 
         val granularity = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
             nonNullIntent.getSerializableExtra(ARGS_TIMEFRAME) as StatsGranularity?
         } else {
             savedInstanceState.getSerializable(ARGS_TIMEFRAME) as StatsGranularity?
         }
 
-        val nonNullIntent = checkNotNull(activity.intent)
         val siteId = savedInstanceState?.getInt(WordPress.LOCAL_SITE_ID, 0)
                 ?: nonNullIntent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
+
+        val selectedDate = if (savedInstanceState == null) {
+            nonNullIntent.getParcelableExtra(ARGS_SELECTED_DATE) as SelectedDate?
+        } else {
+            savedInstanceState.getParcelable(ARGS_SELECTED_DATE) as SelectedDate?
+        }
         setupObservers(activity)
 
-        viewModel.start()
+        viewModel.start(selectedDate)
     }
 
     private fun setupObservers(activity: FragmentActivity) {
@@ -198,19 +205,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
-            val dateSelectorVisibility = if (dateSelectorUiModel?.isVisible == true) View.VISIBLE else View.GONE
-            if (date_selection_toolbar.visibility != dateSelectorVisibility) {
-                date_selection_toolbar.visibility = dateSelectorVisibility
-            }
-            selectedDateTextView.text = dateSelectorUiModel?.date ?: ""
-            val enablePreviousButton = dateSelectorUiModel?.enableSelectPrevious == true
-            if (previousDateButton.isEnabled != enablePreviousButton) {
-                previousDateButton.isEnabled = enablePreviousButton
-            }
-            val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
-            if (nextDateButton.isEnabled != enableNextButton) {
-                nextDateButton.isEnabled = enableNextButton
-            }
+            drawDateSelector(dateSelectorUiModel)
         })
 
         viewModel.navigationTarget.observe(this, Observer { event ->
@@ -220,7 +215,7 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.selectedDate.observe(this, Observer { event ->
-            if (event?.getContentIfNotHandled() != null) {
+            if (event != null) {
                 viewModel.onDateChanged()
             }
         })

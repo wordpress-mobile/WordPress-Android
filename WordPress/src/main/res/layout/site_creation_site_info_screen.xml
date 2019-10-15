@@ -86,7 +86,7 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="@string/new_site_creation_tag_line_description"
-                android:textColor="@color/neutral_50"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="@dimen/text_sz_medium"
                 app:fixWidowWords="true"
                 app:layout_constraintEnd_toEndOf="parent"

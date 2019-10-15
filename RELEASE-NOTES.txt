@@ -1,9 +1,37 @@
+13.5
+-----
+ 
+13.4
+-----
+* Add Remote Preview support for posts and pages.
+* Post List: Trashed post must now be restored before edit or preview.
+* Post List: Unhandled conflict with auto saves are now detected and visible. On post opening, the app will let you choose which version you prefer.
+* Fixed: Clicking on "Publish" on a private post sometimes published the post as public
+* Post List: Unsaved changes are automatically backed up on all devices. On post opening, the app will let you choose which version you prefer.
+* Clicking on "Publish" on a private post sometimes published the post as public
+* Fixed a bunch of upload related issues
+* Block editor: Fix a link editing issue, where trying to add a empty link at the start of another link would remove the existing link.
+
+13.3
+-----
+* Added ability to change the username via Account Settings
+* Add Jetpack performance settings
+* Sort more than 100 published pages chronologically like Calypso
+* Significant performance improvements to Stats
+* Block Editor: Add rich text styling to video captions
+* Block Editor: Prevent keyboard dismissal when switching between caption and text block
+* Block Editor: Blocks that would be replaced are now hidden when add block bottom sheet displays
+* Block Editor: Tapping on empty editor area now always inserts new block at end of post
+* Block Editor: Automatically saves post locally after 2 seconds of inactivity
+ 
 13.2
 -----
 * Fix issue where establishing LinkedIn connection would always fail
 * Display author of each post on Blog Posts screen
+* Moved Notifications settings to Notifications List.
+* Redesigned My Site screen to make most commonly used actions easily accessible.
+* File downloads in Stats for WP.com sites
 
- 
 13.1
 -----
 * Added ability to switch between Desktop and Mobile versions of the content for Site and Page preview.

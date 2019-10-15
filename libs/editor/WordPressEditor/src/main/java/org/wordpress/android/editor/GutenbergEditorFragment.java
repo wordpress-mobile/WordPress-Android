@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.Spanned;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +39,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -219,25 +221,36 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryImageButtonClicked() {
+                    @Override public void onMediaLibraryImageButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddMediaImageClicked();
+                        mEditorFragmentListener.onAddMediaImageClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onMediaLibraryVideoButtonClicked() {
+                    public void onMediaLibraryVideoButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddMediaVideoClicked();
+                        mEditorFragmentListener.onAddMediaVideoClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onUploadPhotoButtonClicked() {
-                        mEditorFragmentListener.onAddPhotoClicked();
+                    public void onMediaLibraryMediaButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddLibraryMediaClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onUploadVideoButtonClicked() {
-                        mEditorFragmentListener.onAddVideoClicked();
+                    public void onUploadPhotoButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddPhotoClicked(allowMultipleSelection);
+                    }
+
+                    @Override
+                    public void onUploadVideoButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddVideoClicked(allowMultipleSelection);
+                    }
+
+                    @Override
+                    public void onUploadMediaButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddDeviceMediaClicked(allowMultipleSelection);
                     }
 
                     @Override
@@ -283,7 +296,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             }
                         });
                     }
-                }, new OnAuthHeaderRequestedListener() {
+                },
+                new OnEditorAutosaveListener() {
+                    @Override public void onEditorAutosave() {
+                        // FIXME the Editable field passed to postTextChanged is never used later, and also nullable,
+                        //  but in theory we should be able to pass either the content field or the title field.
+                        mTextWatcher.postTextChanged(null);
+                    }
+                },
+                new OnAuthHeaderRequestedListener() {
                     @Override public String onAuthHeaderRequested(String url) {
                         return mEditorFragmentListener.onAuthHeaderRequested(url);
                     }
@@ -529,6 +550,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                               getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
+    @Override
+    public void onUndo() {
+        // Analytics tracking is not available in GB mobile
+    }
+
+    @Override
+    public void onRedo() {
+        // Analytics tracking is not available in GB mobile
+    }
+
     private ActionBar getActionBar() {
         if (!isAdded()) {
             return null;
@@ -605,9 +636,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            return "";
+            throw new EditorFragmentNotAddedException();
         }
         return getGutenbergContainerFragment().getTitle(new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
@@ -627,7 +658,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      * where possible.
      */
     @Override
-    public CharSequence getContent(CharSequence originalContent) {
+    public CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException {
+        if (!isAdded()) {
+            throw new EditorFragmentNotAddedException();
+        }
         return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
@@ -666,6 +700,53 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void appendMediaFiles(Map<String, MediaFile> mediaList) {
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            // Activity may have already be gone.
+            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(T.MEDIA, "appendMediaFiles() called but Activity is null!");
+            return;
+        }
+
+        ArrayList<Media> rnMediaList = new ArrayList<>();
+
+        // Get media URL of first of media first to check if it is network or local one.
+        String mediaUrl = "";
+        Object[] mediaUrls = mediaList.keySet().toArray();
+        if (mediaUrls != null && mediaUrls.length > 0) {
+            mediaUrl = (String) mediaUrls[0];
+        }
+
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                rnMediaList.add(
+                        new Media(
+                                Integer.valueOf(mediaEntry.getValue().getMediaId()),
+                                mediaEntry.getKey(),
+                                mediaEntry.getValue().getMimeType()
+                        )
+                );
+            }
+            getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
+        } else {
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                rnMediaList.add(
+                        new Media(
+                                mediaEntry.getValue().getId(),
+                                "file://" + mediaEntry.getKey(),
+                                mediaEntry.getValue().getMimeType()
+                        )
+                );
+            }
+            getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
+            for (Media media : rnMediaList) {
+                mUploadingMediaProgressMax.put(String.valueOf(media.getId()), 0f);
+            }
+        }
+    }
+
+    @Override
     public void appendGallery(MediaGallery mediaGallery) {
     }
 
@@ -689,11 +770,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void removeMedia(String mediaId) {
-    }
-
-    @Override
-    public Spanned getSpannedContent() {
-        return null;
     }
 
     @Override

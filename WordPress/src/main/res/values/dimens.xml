@@ -42,8 +42,6 @@
     <dimen name="default_dialog_width">280dp</dimen>
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
-    <dimen name="post_editor_content_side_margin">20dp</dimen>
-
     <dimen name="default_cardview_radius">2dp</dimen>
     <dimen name="default_cardview_elevation">2dp</dimen>
 
@@ -86,6 +84,7 @@
     <dimen name="margin_filter_spinner">64dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
+    <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -137,6 +136,7 @@
     <dimen name="avatar_sz_login">100dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
+    <dimen name="my_site_blavatar_sz">64dp</dimen>
 
     <dimen name="reader_button_icon">24dp</dimen>
     <dimen name="reader_button_minimum_height">36dp</dimen>
@@ -221,8 +221,10 @@
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">20dp</dimen>
-    <dimen name="my_site_list_row_padding_left_switch">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
+    <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
+    <dimen name="my_site_blavatar_container_border_width">1dp</dimen>
+    <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -339,7 +341,6 @@
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
-    <dimen name="snackbar_message_margin_bottom">18dp</dimen>
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
     <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
@@ -426,5 +427,8 @@
     <dimen name="web_preview_navbar_height">72dp</dimen>
     <dimen name="web_preview_mode_popup_width">161sp</dimen> <!-- SP works better with popup list menu  -->
     <dimen name="web_preview_hint_label_corner_radius">6dp</dimen>
+
+    <!--settings username changer-->
+    <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
 </resources>

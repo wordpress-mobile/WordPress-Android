@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_width="match_parent"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_medium" >
         </com.google.android.material.textfield.TextInputEditText>
 
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:maxLength="@integer/max_length_support_name"
-            android:textColor="@color/neutral_70"
+            android:textColor="?attr/wpColorText"
             android:textSize="@dimen/text_sz_medium" >
         </com.google.android.material.textfield.TextInputEditText>
 

@@ -38,6 +38,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -65,6 +66,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ContextProvider mContextProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -317,6 +319,7 @@ public class AppSettingsFragment extends PreferenceFragment
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         WordPress.updateContextLocale();
         updateLanguagePreference(languageCode);
+        mContextProvider.refreshContext();
 
         // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.

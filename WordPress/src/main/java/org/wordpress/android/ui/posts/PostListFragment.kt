@@ -129,10 +129,12 @@ class PostListFragment : Fragment() {
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
 
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
-        viewModel.start(postListViewModelConnector,
+        viewModel.start(
+                postListViewModelConnector,
                 mainViewModel.authorSelectionUpdated.value!!,
                 photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height))
+                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
+        )
 
         initObservers()
     }

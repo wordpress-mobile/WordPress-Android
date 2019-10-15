@@ -220,6 +220,11 @@ public class WPMediaUtils {
                                         RequestCodes.VIDEO_LIBRARY);
     }
 
+    public static void launchMediaLibrary(Activity activity, boolean multiSelect) {
+        activity.startActivityForResult(prepareMediaLibraryIntent(activity, multiSelect),
+                RequestCodes.MEDIA_LIBRARY);
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
@@ -227,6 +232,16 @@ public class WPMediaUtils {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
+    }
+
+    private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_media));
     }
 
     public static void launchVideoCamera(Activity activity) {

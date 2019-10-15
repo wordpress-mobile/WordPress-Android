@@ -5,7 +5,6 @@
     <string name="fragment_tag_comment_detail" translatable="false" tools:ignore="UnusedResources">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
-    <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
     <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
     <string name="fragment_tag_publicize_detail" translatable="false">fragment_publicize_detail</string>
     <string name="fragment_tag_publicize_webview" translatable="false">fragment_publicize_webview</string>
@@ -92,9 +91,27 @@
     <string name="pref_key_change_password" translatable="false">pref_key_change_password</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
     <!-- Speed up your site -->
-    <string name="pref_key_speed_up_your_site_screen" translatable="false">wp_pref_speed_up_your_site_screen</string>
-    <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_serve_images_from_our_servers</string>
     <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
+    <string name="pref_key_lazy_load_images_nested" translatable="false">wp_pref_lazy_load_images_nested</string>
+    <!-- Jetpack performance settings -->
+    <string name="pref_key_jetpack_performance_settings" translatable="false">wp_pref_jetpack_performance_settings</string>
+    <string name="pref_key_site_accelerator" translatable="false">wp_pref_site_accelerator</string>
+    <string name="pref_key_site_accelerator_nested" translatable="false">wp_pref_site_accelerator_nested</string>
+    <string name="pref_key_site_accelerator_settings" translatable="false">wp_pref_site_accelerator_settings</string>
+    <string name="pref_key_site_accelerator_settings_nested" translatable="false">wp_pref_site_accelerator_settings_nested</string>
+    <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_key_serve_images_from_our_servers</string>
+    <string name="pref_key_serve_images_from_our_servers_nested" translatable="false">wp_pref_key_serve_images_from_our_servers_nested</string>
+    <string name="pref_key_serve_static_files_from_our_servers" translatable="false">wp_pref_key_serve_static_files_from_our_servers</string>
+    <string name="pref_key_serve_static_files_from_our_servers_nested" translatable="false">wp_pref_key_serve_static_files_from_our_servers_nested</string>
+    <string name="pref_key_ad_free_video_hosting" translatable="false">wp_pref_key_ad_free_video_hosting</string>
+    <string name="pref_key_ad_free_video_hosting_nested" translatable="false">wp_pref_key_ad_free_video_hosting_nested</string>
+    <string name="pref_key_jetpack_performance_media_settings" translatable="false">wp_pref_key_jetpack_performance_media_settings</string>
+    <string name="pref_key_jetpack_performance_and_speed_settings" translatable="false">wp_pref_key_jetpack_performance_and_speed_settings</string>
+    <!-- Jetpack search -->
+    <string name="pref_key_jetpack_search_settings" translatable="false">wp_pref_key_jetpack_search_settings</string>
+    <string name="pref_key_improved_search" translatable="false">wp_pref_key_improved_search</string>
+    <string name="pref_key_jetpack_performance_more_settings" translatable="false">wp_pref_key_jetpack_performance_more_settings</string>
+
     <!-- Media -->
     <string name="pref_key_site_quota" translatable="false">wp_pref_key_site_quota</string>
     <string name="pref_key_site_quota_space" translatable="false">wp_pref_key_site_quota_space</string>

@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.stats.insights.AllTimeInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -23,11 +25,13 @@ import javax.inject.Named
 class AllTimeStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val allTimeStore: AllTimeInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val popupMenuHandler: ItemPopupMenuHandler
-) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
+) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher, backgroundDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
 
     override fun buildEmptyItem(): List<BlockListItem> {
@@ -35,6 +39,7 @@ class AllTimeStatsUseCase
     }
 
     override suspend fun loadCachedData(): InsightsAllTimeModel? {
+        statsWidgetUpdaters.updateAllTimeWidget(statsSiteProvider.siteModel.siteId)
         return allTimeStore.getAllTimeInsights(statsSiteProvider.siteModel)
     }
 

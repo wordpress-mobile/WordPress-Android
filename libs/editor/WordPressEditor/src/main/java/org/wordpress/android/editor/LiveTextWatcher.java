@@ -21,4 +21,8 @@ public class LiveTextWatcher implements TextWatcher {
     public LiveData<Editable> getAfterTextChanged() {
         return mAfterTextChanged;
     }
+
+    public void postTextChanged(Editable s) {
+        mAfterTextChanged.postValue(s);
+    }
 }

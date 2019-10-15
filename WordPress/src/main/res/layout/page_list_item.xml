@@ -9,6 +9,7 @@
     android:background="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/page_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/two_line_list_item_height"
         android:background="?attr/selectableItemBackground">
@@ -64,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:textColor="@color/neutral_50"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/page_title"
                 app:layout_constraintTop_toBottomOf="@+id/page_title"
@@ -74,9 +75,8 @@
                 android:id="@+id/labels"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="3dp"
-                android:textColor="@color/warning_70"
+                android:textColor="?attr/wpColorTextSubtle"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/time_posted"
                 app:layout_constraintTop_toBottomOf="@+id/page_title"

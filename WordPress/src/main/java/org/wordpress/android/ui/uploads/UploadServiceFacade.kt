@@ -11,8 +11,8 @@ import javax.inject.Inject
  * contain any static methods.
  */
 class UploadServiceFacade @Inject constructor() {
-    fun uploadPost(context: Context, post: PostModel, trackAnalytics: Boolean, publish: Boolean, isRetry: Boolean) {
-        val intent = UploadService.getUploadPostServiceIntent(context, post, trackAnalytics, publish, isRetry)
+    fun uploadPost(context: Context, post: PostModel, trackAnalytics: Boolean) {
+        val intent = UploadService.getRetryUploadServiceIntent(context, post, trackAnalytics)
         context.startService(intent)
     }
 
