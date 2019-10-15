@@ -252,6 +252,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
                 predefinedEventProperties.put("source", "social");
                 break;
+            case SIGNUP_GOOGLE_BUTTON_TAPPED:
+                predefinedEventProperties.put("source", "google");
+                break;
             case READER_POST_SAVED_FROM_OTHER_POST_LIST:
                 predefinedEventProperties.put("source", "other_post_list");
                 break;
@@ -1247,7 +1250,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_EMAIL_EPILOGUE_VIEWED:
                 return "signup_epilogue_viewed";
             case SIGNUP_GOOGLE_BUTTON_TAPPED:
-                return "signup_google_button_tapped";
+                return "signup_social_button_tapped";
             case SIGNUP_TERMS_OF_SERVICE_TAPPED:
                 return "signup_terms_of_service_tapped";
             case SIGNUP_CANCELED:
