@@ -171,4 +171,17 @@
             <enum name="today" value="2"/>
         </attr>
     </declare-styleable>
+
+    <!--
+        Master Switch Toolbar View
+    -->
+    <declare-styleable name="PrefMasterSwitchToolbarView">
+        <attr name="masterTitleOn" format="reference" />
+        <attr name="masterTitleOff" format="reference" />
+        <attr name="masterContentDescription" format="reference" />
+        <attr name="masterHintOn" format="reference" />
+        <attr name="masterHintOff" format="reference" />
+        <attr name="prefKey" format="reference" />
+        <attr name="masterContentInsetStart" format="dimension" />
+    </declare-styleable>
 </resources>
