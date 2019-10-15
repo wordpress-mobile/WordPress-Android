@@ -67,7 +67,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha09'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.mcxiaoke.volley:library:1.0.18'
     implementation 'org.wordpress:utils:1.22'
