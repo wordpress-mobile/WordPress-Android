@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -63,7 +64,8 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
                 }
             });
 
-            ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post);
+            ReaderPostRenderer rendered =
+                    new ReaderPostRenderer((ReaderWebView) view, post, FeaturedImageUtils.Companion.getInstance());
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
         } else {
             // abort mission if no network is available
