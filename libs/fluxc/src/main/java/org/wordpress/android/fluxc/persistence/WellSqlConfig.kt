@@ -1028,6 +1028,20 @@ open class WellSqlConfig : DefaultWellConfig {
         }
     }
 
+    /**
+     * Recreates all the tables in this database - similar to the above but can be used from onDowngrade where we can't
+     * call giveMeWritableDb (attempting to do so results in "IllegalStateException: getDatabase called recursively")
+     */
+    fun reset(helper: WellTableManager) {
+        AppLog.d(T.DB, "resetting tables")
+        for (table in mTables) {
+            AppLog.d(T.DB, "dropping table " + table.simpleName)
+            helper.dropTable(table)
+            AppLog.d(T.DB, "creating table " + table.simpleName)
+            helper.createTable(table)
+        }
+    }
+
     private fun migrate(version: Int, script: () -> Unit) {
         AppLog.d(T.DB, "Migrating to version ${version + 1}")
         script()
