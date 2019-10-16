@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 88;
+        return 89;
     }
 
     @Override
@@ -617,6 +617,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 87:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
+            case 88:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add JETPACK_USER_EMAIL text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
