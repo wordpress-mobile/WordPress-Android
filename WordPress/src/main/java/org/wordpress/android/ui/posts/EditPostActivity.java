@@ -3,11 +3,9 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -80,8 +78,6 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
-import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -139,7 +135,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
@@ -166,10 +161,7 @@ import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.util.AztecLog;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -236,8 +228,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_PUBLISH_SETTINGS = 2;
     private static final int PAGE_HISTORY = 3;
 
-    private static final String PHOTO_PICKER_TAG = "photo_picker";
-    
     private static final int CHANGE_SAVE_DELAY = 500;
     public static final int MAX_UNSAVED_POSTS = 50;
     private AztecImageLoader mAztecImageLoader;
@@ -2612,16 +2602,6 @@ public class EditPostActivity extends AppCompatActivity implements
         ft.commitAllowingStateLoss();
     }
 
-    private void refreshBlogMedia() {
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            FetchMediaListPayload payload = new FetchMediaListPayload(
-                    mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
-            mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
-        } else {
-            ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);
-        }
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
@@ -2837,7 +2817,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            cancelMediaUpload(StringUtils.stringToInt(localMediaId), true);
+            mEditorMedia.cancelMediaUpload(StringUtils.stringToInt(localMediaId), true);
         } else {
             // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
@@ -2851,7 +2831,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (mShowAztecEditor && !mShowGutenbergEditor) {
                 setDeletedMediaIdOnUploadService(localMediaId);
                 // passing false here as we need to keep the media item in case the user wants to undo
-                cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
+                mEditorMedia.cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
             } else if (mShowGutenbergEditor) {
                 MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(localMediaId));
                 if (mediaModel == null) {
@@ -2874,14 +2854,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private void setDeletedMediaIdOnUploadService(String localMediaId) {
         mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds.add(localMediaId);
         UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds);
-    }
-
-    private void cancelMediaUpload(int localMediaId, boolean delete) {
-        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (mediaModel != null) {
-            CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
-            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-        }
     }
 
     /*
@@ -2963,7 +2935,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         mPendingVideoPressInfoRequests = new ArrayList<>();
                     }
                     mPendingVideoPressInfoRequests.add(videoId);
-                    refreshBlogMedia();
+                    mEditorMedia.refreshBlogMedia();
                 });
             }
         }

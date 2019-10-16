@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
 import org.wordpress.android.ui.uploads.UploadService
@@ -26,6 +28,7 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPMediaUtils
@@ -39,6 +42,7 @@ import java.util.ArrayList
 interface EditorMediaListener {
     // Temporary overlay functions
     fun showOverlayFromEditorMedia(animate: Boolean)
+
     fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
@@ -487,6 +491,26 @@ class EditorMedia(
         })
     }
 
+    fun cancelMediaUpload(localMediaId: Int, delete: Boolean) {
+        val mediaModel = mediaStore.getMediaWithLocalId(localMediaId)
+        if (mediaModel != null) {
+            val payload = CancelMediaPayload(site, mediaModel, delete)
+            dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
+        }
+    }
+
+    fun refreshBlogMedia() {
+        if (NetworkUtils.isNetworkAvailable(activity)) {
+            val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
+            dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
+        } else {
+            ToastUtils.showToast(
+                    activity,
+                    R.string.error_media_refresh_no_connection,
+                    Duration.SHORT
+            )
+        }
+    }
 }
 
 private val MediaModel.urlToUse
