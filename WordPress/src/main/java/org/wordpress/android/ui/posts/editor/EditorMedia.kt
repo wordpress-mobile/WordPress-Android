@@ -2,25 +2,34 @@ package org.wordpress.android.ui.posts.editor
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
 import android.util.ArrayMap
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.editor.EditorMediaUtils
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtils
+import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.ArrayList
 
 interface EditorMediaListener {
@@ -28,13 +37,18 @@ interface EditorMediaListener {
     fun hideOverlay(animate: Boolean)
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
+    fun startUploadService(media: MediaModel)
+    fun remotePostId(): Long
 }
 
 class EditorMedia(
     private val activity: AppCompatActivity,
     private val site: SiteModel,
     private val editorMediaListener: EditorMediaListener,
-    private val mediaStore: MediaStore
+    private val dispatcher: Dispatcher,
+    private val mediaStore: MediaStore,
+    private val localPostId: Int,
+    private val isLocalDraft: Boolean
 ) {
     private var mAddMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
@@ -349,6 +363,94 @@ class EditorMedia(
             }
         }
         editorMediaListener.appendMediaFiles(mediaMap)
+    }
+
+    /**
+     * Queues a media file for upload and starts the UploadService. Toasts will alert the user
+     * if there are issues with the file.
+     */
+    private fun queueFileForUpload(uri: Uri, mimeType: String?): MediaModel? {
+        return queueFileForUpload(uri, mimeType, MediaUploadState.QUEUED)
+    }
+
+    @Suppress("SameParameterValue")
+    private fun queueFileForUpload(
+        uri: Uri,
+        mimeType: String?,
+        startingState: MediaUploadState
+    ): MediaModel? {
+        val path = MediaUtils.getRealPathFromURI(activity, uri)
+
+        // Invalid file path
+        if (TextUtils.isEmpty(path)) {
+            ToastUtils.showToast(activity, R.string.editor_toast_invalid_path, Duration.SHORT)
+            return null
+        }
+
+        // File not found
+        val file = File(path)
+        if (!file.exists()) {
+            ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
+            return null
+        }
+
+        // we need to update media with the local post Id
+        val media = buildMediaModel(uri, mimeType, startingState)
+        if (media == null) {
+            ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
+            return null
+        }
+        media.localPostId = localPostId
+        dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
+
+        editorMediaListener.startUploadService(media)
+
+        return media
+    }
+
+    private fun buildMediaModel(
+        uri: Uri,
+        mimeType: String?,
+        startingState: MediaUploadState
+    ): MediaModel? {
+        val media = FluxCUtils.mediaModelFromLocalUri(
+                activity,
+                uri,
+                mimeType,
+                mediaStore,
+                site.id
+        ) ?: return null
+        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.mimeType)) {
+            val path = MediaUtils.getRealPathFromURI(activity, uri)
+            media.thumbnailUrl = getVideoThumbnail(path)
+        }
+
+        media.setUploadState(startingState)
+        if (!isLocalDraft) {
+            media.postId = editorMediaListener.remotePostId()
+        }
+
+        return media
+    }
+
+    private fun getVideoThumbnail(videoPath: String): String? {
+        var thumbnailPath: String? = null
+        try {
+            val outputFile = File.createTempFile("thumb", ".png", activity.cacheDir)
+            val outputStream = FileOutputStream(outputFile)
+            val thumb = ImageUtils.getVideoFrameFromVideo(
+                    videoPath,
+                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(this)
+            )
+            if (thumb != null) {
+                thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream)
+                thumbnailPath = outputFile.absolutePath
+            }
+        } catch (e: IOException) {
+            AppLog.i(T.MEDIA, "Can't create thumbnail for video: $videoPath")
+        }
+
+        return thumbnailPath
     }
 }
 
