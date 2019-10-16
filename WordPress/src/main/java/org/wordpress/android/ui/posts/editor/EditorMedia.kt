@@ -34,11 +34,12 @@ import java.util.ArrayList
 
 interface EditorMediaListener {
     fun showOverlay(animate: Boolean)
-    fun hideOverlay(animate: Boolean)
+    fun hideOverlay()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
     fun startUploadService(media: MediaModel)
     fun remotePostId(): Long
+    fun savePostAsync()
 }
 
 class EditorMedia(
@@ -242,7 +243,7 @@ class EditorMedia(
 
             activity.runOnUiThread {
                 if (!isInterrupted) {
-                    savePostAsync(null)
+                    editorMediaListener.savePostAsync()
                     editorMediaListener.hideOverlay()
                     if (mDidAnyFail) {
                         ToastUtils.showToast(activity, R.string.gallery_error, Duration.SHORT)
