@@ -86,6 +86,10 @@ jobs:
           command: |
             mkdir -p Artifacts
             mv WordPress/build/outputs/apk/vanilla/release/WordPress-vanilla-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+      - run:
+          name: Make comment
+          command: |
+            echo '{ "body" : "This is a test comment" }' > Artifacts/comment.json
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
