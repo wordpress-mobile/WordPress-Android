@@ -126,7 +126,10 @@ public class AppPrefs {
         // Widget settings
         STATS_WIDGET_SELECTED_SITE_ID,
         STATS_WIDGET_COLOR_MODE,
-        STATS_WIDGET_DATA_TYPE
+        STATS_WIDGET_DATA_TYPE,
+
+        // Master switch settings
+        SITE_NOTIFICATIONS_TAB_MASTER_ENABLED
     }
 
     /**
@@ -958,5 +961,23 @@ public class AppPrefs {
 
     public static boolean getSystemNotificationsEnabled() {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
+    }
+
+    public static boolean getMasterKeyEnabled(@NonNull String masterKey) {
+        return prefs().getBoolean(masterKey, true);
+    }
+
+    public static void setMasterKeyEnabled(boolean enabled, @NonNull String masterKey) {
+        prefs().edit().putBoolean(masterKey, enabled).apply();
+    }
+
+    @NonNull
+    public static String getSiteNotificationsTabMasterKey(long siteId) {
+        return DeletablePrefKey.SITE_NOTIFICATIONS_TAB_MASTER_ENABLED.name() + siteId;
+    }
+
+    public static void removeSiteMasterPrefKeys(long siteId) {
+        String siteNotificationsTabMasterKey = getSiteNotificationsTabMasterKey(siteId);
+        prefs().edit().remove(siteNotificationsTabMasterKey).apply();
     }
 }

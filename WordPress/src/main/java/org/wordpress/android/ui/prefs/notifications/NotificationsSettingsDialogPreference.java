@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.ActionBar;
+import android.app.ActionBar.LayoutParams;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -20,13 +23,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.Iterator;
 
 // A dialog preference that displays settings for a NotificationSettings Channel and Type
-public class NotificationsSettingsDialogPreference extends DialogPreference {
+public class NotificationsSettingsDialogPreference extends DialogPreference
+        implements MasterSwitchToolbarListener {
     private static final String SETTING_VALUE_ACHIEVEMENT = "achievement";
 
     private NotificationsSettings.Channel mChannel;
@@ -34,6 +40,17 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     private NotificationsSettings mSettings;
     private JSONObject mUpdatedJson = new JSONObject();
     private long mBlogId;
+
+    private ViewGroup mTitleViewGroup;
+
+    // view to display when master switch is on
+    private View mDisabledView;
+    // view to display when master switch is off
+    private LinearLayout mOptionsView;
+
+    private PrefMasterSwitchToolbarView mMasterSwitchToolbarView;
+    private String mMasterKey;
+    private boolean mIsMasterSwitchToggled;
 
     private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
 
@@ -53,9 +70,38 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         mOnNotificationsSettingsChangedListener = listener;
     }
 
+    private boolean isMasterSwitchEnabled() {
+        boolean masterSwitchEnabled = false;
+        switch (mChannel) {
+            case BLOGS:
+                if (mType == Type.TIMELINE) {
+                    masterSwitchEnabled = true;
+                }
+                break;
+            case OTHER:
+            case WPCOM:
+                break;
+        }
+
+        if (mMasterKey == null) {
+            findMasterKey();
+        }
+
+        return masterSwitchEnabled;
+    }
+
     @Override
     protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
+        setUpMasterSwitchToolbarView(view);
+    }
+
+    @Override
+    protected void onPrepareDialogBuilder(Builder builder) {
+        super.onPrepareDialogBuilder(builder);
+        if (isMasterSwitchEnabled()) {
+            builder.setCustomTitle(mTitleViewGroup);
+        }
     }
 
     @Override
@@ -74,8 +120,28 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         spacerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight));
         innerView.addView(spacerView);
 
+        mDisabledView = View.inflate(getContext(), R.layout.notifications_tab_disabled_text_layout, null);
+        mDisabledView.setLayoutParams(
+                new ViewGroup.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+            );
+
+        mOptionsView = new LinearLayout(getContext());
+        mOptionsView.setLayoutParams(
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        );
+        mOptionsView.setOrientation(LinearLayout.VERTICAL);
+
+        innerView.addView(mDisabledView);
+        innerView.addView(mOptionsView);
+
         outerView.addView(innerView);
-        configureLayoutForView(innerView);
+        configureLayoutForView(mOptionsView);
 
         return outerView;
     }
@@ -178,5 +244,53 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 );
             }
         }
+
+        if (positiveResult && isMasterSwitchEnabled() && mIsMasterSwitchToggled && mMasterKey != null) {
+            mMasterSwitchToolbarView.saveMasterKeyEnabled(mMasterKey);
+            mIsMasterSwitchToggled = false;
+        }
+    }
+
+    private void setUpMasterSwitchToolbarView(View view) {
+        if (isMasterSwitchEnabled() && mMasterKey != null) {
+            mTitleViewGroup = (ViewGroup) LayoutInflater.from(getContext())
+                                                        .inflate(R.layout.notifications_tab_title_layout,
+                                                                (ViewGroup) view, false);
+
+            mMasterSwitchToolbarView = mTitleViewGroup.findViewById(R.id.master_switch);
+            //  master key value saved on dialog close
+            mMasterSwitchToolbarView.setShouldSaveMasterKeyOnToggle(false);
+            mMasterSwitchToolbarView.setMasterSwitchToolbarListener(this);
+
+            mMasterSwitchToolbarView.setPrefKey(mMasterKey);
+
+            hideDisabledView(mMasterSwitchToolbarView.isMasterChecked());
+        }
+    }
+
+    private void findMasterKey() {
+        switch (mChannel) {
+            case BLOGS:
+                if (mType == Type.TIMELINE) {
+                    mMasterKey = AppPrefs.getSiteNotificationsTabMasterKey(mBlogId);
+                }
+                break;
+            case OTHER:
+            case WPCOM:
+                break;
+        }
+    }
+
+    @Override
+    public void onMasterSwitchCheckedChanged(
+            CompoundButton buttonView,
+            boolean isChecked) {
+        mIsMasterSwitchToggled = true;
+        hideDisabledView(isChecked);
+    }
+
+    private void hideDisabledView(boolean isMasterChecked) {
+        mDisabledView.setVisibility(isMasterChecked ? View.GONE : View.VISIBLE);
+        mOptionsView.setVisibility(isMasterChecked ? View.VISIBLE : View.GONE);
     }
 }

@@ -431,4 +431,7 @@
     <!--settings username changer-->
     <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
+    <!--preferences master switch -->
+    <dimen name="notifications_tab_dialog_toolbar_content_offset">24dp</dimen>
+
 </resources>

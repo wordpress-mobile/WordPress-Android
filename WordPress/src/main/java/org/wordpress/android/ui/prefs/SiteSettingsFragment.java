@@ -1995,6 +1995,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void handleSiteDeleted() {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
                                                     .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
+        AppPrefs.removeSiteMasterPrefKeys(mSite.getSiteId());
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
         mSite = null;

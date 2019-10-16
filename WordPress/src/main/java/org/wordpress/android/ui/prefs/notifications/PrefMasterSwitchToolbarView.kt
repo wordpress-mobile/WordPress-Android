@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.OnClickListener
@@ -14,8 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
-import androidx.preference.PreferenceManager
 import org.wordpress.android.R
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 
 /**
@@ -35,13 +34,14 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     private var mPrefKey: String? = null
     private var mMasterSwitch: SwitchCompat
     private var mMasterSwitchToolbarListener: MasterSwitchToolbarListener? = null
-    private var mSharedPreferences: SharedPreferences
     private var mToolbarSwitch: Toolbar
     private var mTitleOff: String? = null
     private var mTitleOn: String? = null
 
     val isMasterChecked: Boolean
         get() = mMasterSwitch.isChecked
+
+    var shouldSaveMasterKeyOnToggle: Boolean = true
 
     /**
      * Interface definition for callbacks to be invoked on interaction with master switch toolbar.
@@ -51,7 +51,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
          * Called when the checked state of master switch is changed.
          *
          * @param buttonView The master switch whose state has changed.
-         * @param isChecked  The new checked state of master switch.
+         * @param isChecked The new checked state of master switch.
          */
         fun onMasterSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean)
     }
@@ -65,8 +65,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         val menuItem = mToolbarSwitch.menu.findItem(R.id.master_switch)
         mMasterSwitch = menuItem.actionView as SwitchCompat
         mMasterSwitch.isChecked = true
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext())
 
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
@@ -139,7 +137,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         prefKey?.let {
             mPrefKey = it
 
-            val isMasterChecked = mSharedPreferences.getBoolean(it, true)
+            val isMasterChecked = AppPrefs.getMasterKeyEnabled(it)
             mMasterSwitch.isChecked = isMasterChecked
 
             mToolbarSwitch.title = if (isMasterChecked) {
@@ -199,11 +197,17 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         } else {
             mTitleOff
         }
-        mPrefKey?.let {
-            mSharedPreferences.edit().putBoolean(it, isChecked)
-                    .apply()
+
+        if (shouldSaveMasterKeyOnToggle) {
+            mPrefKey?.let {
+                saveMasterKeyEnabled(it)
+            }
         }
         mMasterSwitchToolbarListener?.onMasterSwitchCheckedChanged(buttonView, isChecked)
+    }
+
+    fun saveMasterKeyEnabled(masterKey: String) {
+        AppPrefs.setMasterKeyEnabled(isMasterChecked, masterKey)
     }
 
     fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {

@@ -1158,6 +1158,13 @@
     <string name="notification_settings_followed_dialog_email_comments">Email me new comments</string>
     <string name="notification_settings_followed_dialog_title">Notifications</string>
 
+    <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
+    <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
+    <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_master_hint_off">Enable notifications display on notifications tab for this site</string>
+    <string name="notifications_tab_dialog_master_off_title">To see notifications on notifications tab for this site, turn Notifications for this site on.</string>
+    <string name="notifications_tab_dialog_master_off_message">Turning Notifications for this site off will disable notifications display on notifications tab for this site. You can fine-tune which kind of notification you see after turning Notifications for this site on.</string>
+
     <string name="master_switch_default_title_on">On</string>
     <string name="master_switch_default_title_off">Off</string>
     <string name="master_switch_default_hint_on">Disable Preferences</string>
@@ -2384,6 +2391,7 @@
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">Open external link</string>
     <string name="notification_settings_switch_desc">Notifications</string>
+    <string name="notifications_tab_dialog_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="fab_create_desc">create</string>
