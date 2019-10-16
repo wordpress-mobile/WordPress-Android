@@ -21,7 +21,18 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import java.util.ArrayList
 
-class EditorMedia(private val activity: AppCompatActivity, private val site: SiteModel) {
+interface EditorMediaListener {
+    fun showOverlay(animate: Boolean)
+    fun hideOverlay(animate: Boolean)
+    fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
+    fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
+}
+
+class EditorMedia(
+    private val activity: AppCompatActivity,
+    private val site: SiteModel,
+    private val editorMediaListener: EditorMediaListener
+) {
     private var mAddMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
 
@@ -114,8 +125,7 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
     private fun fetchMediaList(uriList: List<Uri>): List<Uri> {
         var didAnyFail = false
         val fetchedUriList = ArrayList<Uri>()
-        for (i in uriList.indices) {
-            val mediaUri = uriList[i] ?: continue
+        for (mediaUri in uriList) {
             if (!MediaUtils.isInMediaStore(mediaUri)) {
                 // Do not download the file in async task. See
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
@@ -124,11 +134,11 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
                     fetchedUri = MediaUtils.downloadExternalMedia(activity, mediaUri)
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                    AppLog.e(AppLog.T.UTILS, "Can't download the image at: $mediaUri", e)
+                    AppLog.e(T.UTILS, "Can't download the image at: $mediaUri", e)
                     CrashLoggingUtils
                             .logException(
                                     e,
-                                    AppLog.T.MEDIA,
+                                    T.MEDIA,
                                     "Can't download the image at: " + mediaUri.toString()
                                             + " See issue #5823"
                             )
@@ -156,27 +166,19 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
      * processes a list of media in the background (optimizing, resizing, etc.) and adds them to
      * the editor one at a time
      */
-    private inner class AddMediaListThread : Thread {
-        private val mUriList = ArrayList<Uri>()
-        private val mIsNew: Boolean
+    private inner class AddMediaListThread(
+        private val uriList: List<Uri>,
+        private val isNew: Boolean,
+        private val allowMultipleSelection: Boolean = false
+    ) : Thread() {
         @Suppress("DEPRECATION")
         private var mProgressDialog: ProgressDialog? = null
         private var mDidAnyFail: Boolean = false
         private var mFinishedUploads = 0
-        private var mAllowMultipleSelection = false
         private val mediaMap = ArrayMap<String, MediaFile>()
 
-        internal constructor(uriList: List<Uri>, isNew: Boolean) {
-            this.mUriList.addAll(uriList)
-            this.mIsNew = isNew
-            showOverlay(false)
-        }
-
-        internal constructor(uriList: List<Uri>, isNew: Boolean, allowMultipleSelection: Boolean) {
-            this.mUriList.addAll(uriList)
-            this.mIsNew = isNew
-            this.mAllowMultipleSelection = allowMultipleSelection
-            showOverlay(false)
+        init {
+            editorMediaListener.showOverlay(false)
         }
 
         private fun showProgressDialog(show: Boolean) {
@@ -201,12 +203,12 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
             // adding multiple media items at once can take several seconds on slower devices, so we show a blocking
             // progress dialog in this situation - otherwise the user could accidentally back out of the process
             // before all items were added
-            val shouldShowProgress = mUriList.size > 2
+            val shouldShowProgress = uriList.size > 2
             if (shouldShowProgress) {
                 showProgressDialog(true)
             }
             try {
-                for (mediaUri in mUriList) {
+                for (mediaUri in uriList) {
                     if (isInterrupted) {
                         return
                     }
@@ -224,7 +226,7 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
             activity.runOnUiThread {
                 if (!isInterrupted) {
                     savePostAsync(null)
-                    hideOverlay()
+                    editorMediaListener.hideOverlay()
                     if (mDidAnyFail) {
                         ToastUtils.showToast(activity, R.string.gallery_error, Duration.SHORT)
                     }
@@ -232,22 +234,21 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
             }
         }
 
-        private fun processMedia(mediaUri: Uri?): Boolean {
-            var mediaUri: Uri? = mediaUri ?: return false
-
-            val path = MediaUtils.getRealPathFromURI(activity, mediaUri!!) ?: return false
+        private fun processMedia(mediaUri: Uri): Boolean {
+            val path = MediaUtils.getRealPathFromURI(activity, mediaUri) ?: return false
 
             val isVideo = MediaUtils.isVideo(mediaUri.toString())
             val optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo)
+            var updatedMediaUri: Uri = mediaUri
             if (optimizedMedia != null) {
-                mediaUri = optimizedMedia
+                updatedMediaUri = optimizedMedia
             } else {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!site.isWPCom) {
                     // If it's not wpcom we must rotate the picture locally
                     val rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo)
                     if (rotatedMedia != null) {
-                        mediaUri = rotatedMedia
+                        updatedMediaUri = rotatedMedia
                     }
                 }
             }
@@ -256,21 +257,20 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
                 return false
             }
 
-            trackAddMediaFromDeviceEvents(mIsNew, isVideo, mediaUri)
-            postProcessMedia(mediaUri, path)
+            trackAddMediaFromDeviceEvents(isNew, isVideo, updatedMediaUri)
+            postProcessMedia(updatedMediaUri, path)
 
             return true
         }
 
         private fun postProcessMedia(mediaUri: Uri, path: String) {
-            if (mAllowMultipleSelection) {
-                val mediaFile = getMediaFile(mediaUri)
-                if (mediaFile != null) {
-                    mediaMap[path] = mediaFile
+            if (allowMultipleSelection) {
+                getMediaFile(mediaUri)?.let {
+                    mediaMap[path] = it
                 }
                 mFinishedUploads++
-                if (mUriList.size == mFinishedUploads) {
-                    activity.runOnUiThread { mEditorFragment.appendMediaFiles(mediaMap) }
+                if (uriList.size == mFinishedUploads) {
+                    activity.runOnUiThread { editorMediaListener.appendMediaFiles(mediaMap) }
                 }
             } else {
                 activity.runOnUiThread { addMediaVisualEditor(mediaUri, path) }
@@ -281,7 +281,7 @@ class EditorMedia(private val activity: AppCompatActivity, private val site: Sit
     private fun addMediaVisualEditor(uri: Uri, path: String) {
         val mediaFile = getMediaFile(uri)
         if (mediaFile != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader)
+            editorMediaListener.appendMediaFile(mediaFile, path)
         }
     }
 
