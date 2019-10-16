@@ -3,12 +3,14 @@ package org.wordpress.android.ui.posts.editor
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
+import android.text.TextUtils
 import android.util.ArrayMap
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
@@ -31,7 +33,8 @@ interface EditorMediaListener {
 class EditorMedia(
     private val activity: AppCompatActivity,
     private val site: SiteModel,
-    private val editorMediaListener: EditorMediaListener
+    private val editorMediaListener: EditorMediaListener,
+    private val mediaStore: MediaStore
 ) {
     private var mAddMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
@@ -318,4 +321,36 @@ class EditorMedia(
             addMediaItemGroupOrSingleItem(data)
         }
     }
+
+    private fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaId: Long): Boolean {
+        val media = mediaStore.getSiteMediaWithId(site, mediaId)
+        if (media == null) {
+            AppLog.w(T.MEDIA, "Cannot add null media to post")
+            return false
+        }
+
+        trackAddMediaEvent(source, media)
+
+        val mediaFile = FluxCUtils.mediaFileFromMediaModel(media)
+        editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
+        return true
+    }
+
+    private fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaIdList: List<Long>) {
+        val mediaMap = ArrayMap<String, MediaFile>()
+        for (mediaId in mediaIdList) {
+            val media = mediaStore.getSiteMediaWithId(site, mediaId)
+            if (media == null) {
+                AppLog.w(T.MEDIA, "Cannot add null media to post")
+            } else {
+                trackAddMediaEvent(source, media)
+
+                mediaMap[media.urlToUse] = FluxCUtils.mediaFileFromMediaModel(media)
+            }
+        }
+        editorMediaListener.appendMediaFiles(mediaMap)
+    }
 }
+
+private val MediaModel.urlToUse
+    get() = if (url.isNullOrBlank()) filePath else url
