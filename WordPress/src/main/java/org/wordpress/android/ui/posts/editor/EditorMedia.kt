@@ -16,11 +16,15 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
+import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
+import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
@@ -38,11 +42,10 @@ interface EditorMediaListener {
     fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
-    fun startUploadServiceEditorMedia(media: MediaModel)
     fun isPostLocalDraft(): Boolean
     fun localPostId(): Int
     fun remotePostId(): Long
-    fun savePostAsync()
+    fun savePostAsyncFromEditorMedia(listener: AfterSavePostListener? = null)
 }
 
 class EditorMedia(
@@ -244,7 +247,7 @@ class EditorMedia(
 
             activity.runOnUiThread {
                 if (!isInterrupted) {
-                    editorMediaListener.savePostAsync()
+                    editorMediaListener.savePostAsyncFromEditorMedia()
                     editorMediaListener.hideOverlayFromEditorMedia()
                     if (mDidAnyFail) {
                         ToastUtils.showToast(activity, R.string.gallery_error, Duration.SHORT)
@@ -405,7 +408,7 @@ class EditorMedia(
         media.localPostId = editorMediaListener.localPostId()
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
 
-        editorMediaListener.startUploadServiceEditorMedia(media)
+        startUploadService(listOf(media))
 
         return media
     }
@@ -454,6 +457,36 @@ class EditorMedia(
 
         return thumbnailPath
     }
+
+    fun prepareMediaPost() {
+        val idsArray = activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)
+        ListUtils.fromLongArray(idsArray)?.forEach { id ->
+            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id)
+        }
+        editorMediaListener.savePostAsyncFromEditorMedia()
+    }
+
+    /**
+     * Start the [UploadService] to upload the given `mediaModels`.
+     *
+     * Only [MediaModel] objects that have `MediaUploadState.QUEUED` statuses will be uploaded. .
+     */
+    fun startUploadService(mediaModels: List<MediaModel>) {
+        // make sure we only pass items with the QUEUED state to the UploadService
+        val queuedMediaModels = mediaModels.filter { media ->
+            MediaUploadState.fromString(media.uploadState) == MediaUploadState.QUEUED
+        }
+
+        // before starting the service, we need to update the posts' contents so we are sure the service
+        // can retrieve it from there on
+        editorMediaListener.savePostAsyncFromEditorMedia(AfterSavePostListener {
+            UploadService.uploadMediaFromEditor(
+                    activity,
+                    ArrayList(queuedMediaModels)
+            )
+        })
+    }
+
 }
 
 private val MediaModel.urlToUse

@@ -169,6 +169,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1703,7 +1704,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private interface AfterSavePostListener {
+    // TODO: Don't make this public
+    public interface AfterSavePostListener {
         void onPostSave();
     }
 
@@ -2307,7 +2309,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
             } else if (NEW_MEDIA_POST.equals(action)) {
-                prepareMediaPost();
+                mEditorMedia.prepareMediaPost();
             }
         }
     }
@@ -2362,15 +2364,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorMedia.addMediaList(sharedUris, false);
             }
         }
-    }
-
-    private void prepareMediaPost() {
-        long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
-        ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
-        for (Long id : idsList) {
-            mEditorMedia.addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
-        }
-        savePostAsync(null);
     }
 
     /**
@@ -2518,7 +2511,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
                         }
 
-                        startUploadService(mediaModels);
+                        mEditorMedia.startUploadService(mediaModels);
 
                         for (MediaModel mediaModel : mediaModels) {
                             mediaModel.setLocalPostId(mPost.getId());
@@ -2686,34 +2679,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Starts the upload service to upload selected media.
-     */
-    private void startUploadService(MediaModel media) {
-        final ArrayList<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        startUploadService(mediaList);
-    }
-
-    /**
-     * Start the {@link UploadService} to upload the given {@code mediaModels}.
-     *
-     * Only {@link MediaModel} objects that have {@code MediaUploadState.QUEUED} statuses will be uploaded. .
-     */
-    private void startUploadService(@NonNull List<MediaModel> mediaModels) {
-        // make sure we only pass items with the QUEUED state to the UploadService
-        final ArrayList<MediaModel> queuedMediaModels = new ArrayList<>();
-        for (MediaModel media : mediaModels) {
-            if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
-                queuedMediaModels.add(media);
-            }
-        }
-
-        // before starting the service, we need to update the posts' contents so we are sure the service
-        // can retrieve it from there on
-        savePostAsync(() -> UploadService.uploadMediaFromEditor(EditPostActivity.this, queuedMediaModels));
-    }
-
     @Override
     public void onEditPostPublishedSettingsClick() {
         mViewPager.setCurrentItem(PAGE_PUBLISH_SETTINGS);
@@ -2819,7 +2784,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 mediaModel.setUploadState(MediaUploadState.QUEUED);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
             }
-            startUploadService(failedMediaList);
+            mEditorMedia.startUploadService(failedMediaList);
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
@@ -2862,7 +2827,7 @@ public class EditPostActivity extends AppCompatActivity implements
             UploadService.cancelFinalNotificationForMedia(this, mSite);
             media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-            startUploadService(media);
+            mEditorMedia.startUploadService(Collections.singletonList(media));
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
@@ -3408,9 +3373,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void savePostAsync() {
-        // TODO: This is temporarily passing the `null` directly because that's what we did before in AddMediaListThread
-        savePostAsync(null);
+    public void savePostAsyncFromEditorMedia(@Nullable AfterSavePostListener listener) {
+        savePostAsync(listener);
     }
 
     @Override
@@ -3421,10 +3385,5 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void hideOverlayFromEditorMedia() {
         hideOverlay();
-    }
-
-    @Override
-    public void startUploadServiceEditorMedia(@NonNull MediaModel media) {
-        startUploadService(media);
     }
 }
