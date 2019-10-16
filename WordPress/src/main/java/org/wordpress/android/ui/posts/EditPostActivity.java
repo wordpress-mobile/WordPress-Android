@@ -114,6 +114,9 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.editor.EditorMedia;
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingdMediaSource;
+import org.wordpress.android.ui.posts.editor.EditorMediaListener;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
@@ -190,6 +193,7 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditorPhotoPickerListener,
+        EditorMediaListener,
         EditPostSettingsFragment.EditPostActivityHook,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
@@ -237,11 +241,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final int MAX_UNSAVED_POSTS = 50;
     private AztecImageLoader mAztecImageLoader;
 
-    enum AddExistingdMediaSource {
-        WP_MEDIA_LIBRARY,
-        STOCK_PHOTO_LIBRARY
-    }
-
     enum RestartEditorOptions {
         NO_RESTART,
         RESTART_SUPPRESS_GUTENBERG,
@@ -288,6 +287,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditorMediaUploadListener mEditorMediaUploadListener;
     private EditorPhotoPicker mEditorPhotoPicker;
+    private EditorMedia mEditorMedia;
 
     private ProgressDialog mProgressDialog;
 
@@ -399,6 +399,9 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
+        // TODO: Make sure local id doesn't change and if it does make it a part of the media listener and same
+        // TODO: thing for isLocalDraft
+        mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore);
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -3780,5 +3783,53 @@ public class EditPostActivity extends AppCompatActivity implements
             ((AztecEditorFragment) mEditorFragment).requestContentAreaFocus();
         }
         return super.onMenuOpened(featureId, menu);
+    }
+
+    // EditorMediaListener
+
+    @Override
+    public void appendMediaFiles(@NotNull ArrayMap<String, MediaFile> mediaMap) {
+        mEditorFragment.appendMediaFiles(mediaMap);
+    }
+
+    @Override
+    public void appendMediaFile(@NotNull MediaFile mediaFile, @NotNull String imageUrl) {
+        mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
+    }
+
+    @Override
+    public boolean isPostLocalDraft() {
+        return mPost.isLocalDraft();
+    }
+
+    @Override
+    public int localPostId() {
+        return mPost.getId();
+    }
+
+    @Override
+    public long remotePostId() {
+        return mPost.getRemotePostId();
+    }
+
+    @Override
+    public void savePostAsync() {
+        // TODO: This is temporarily passing the `null` directly because that's what we did before in AddMediaListThread
+        savePostAsync(null);
+    }
+
+    @Override
+    public void showOverlayFromEditorMedia(boolean animate) {
+        showOverlay(animate);
+    }
+
+    @Override
+    public void hideOverlayFromEditorMedia() {
+        hideOverlay();
+    }
+
+    @Override
+    public void startUploadServiceEditorMedia(@NonNull MediaModel media) {
+        startUploadService(media);
     }
 }

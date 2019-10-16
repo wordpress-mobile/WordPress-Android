@@ -33,11 +33,14 @@ import java.io.IOException
 import java.util.ArrayList
 
 interface EditorMediaListener {
-    fun showOverlay(animate: Boolean)
-    fun hideOverlay()
+    // Temporary overlay functions
+    fun showOverlayFromEditorMedia(animate: Boolean)
+    fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
-    fun startUploadService(media: MediaModel)
+    fun startUploadServiceEditorMedia(media: MediaModel)
+    fun isPostLocalDraft(): Boolean
+    fun localPostId(): Int
     fun remotePostId(): Long
     fun savePostAsync()
 }
@@ -47,9 +50,7 @@ class EditorMedia(
     private val site: SiteModel,
     private val editorMediaListener: EditorMediaListener,
     private val dispatcher: Dispatcher,
-    private val mediaStore: MediaStore,
-    private val localPostId: Int,
-    private val isLocalDraft: Boolean
+    private val mediaStore: MediaStore
 ) {
     private var mAddMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
@@ -196,7 +197,7 @@ class EditorMedia(
         private val mediaMap = ArrayMap<String, MediaFile>()
 
         init {
-            editorMediaListener.showOverlay(false)
+            editorMediaListener.showOverlayFromEditorMedia(false)
         }
 
         private fun showProgressDialog(show: Boolean) {
@@ -244,7 +245,7 @@ class EditorMedia(
             activity.runOnUiThread {
                 if (!isInterrupted) {
                     editorMediaListener.savePostAsync()
-                    editorMediaListener.hideOverlay()
+                    editorMediaListener.hideOverlayFromEditorMedia()
                     if (mDidAnyFail) {
                         ToastUtils.showToast(activity, R.string.gallery_error, Duration.SHORT)
                     }
@@ -401,10 +402,10 @@ class EditorMedia(
             ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
             return null
         }
-        media.localPostId = localPostId
+        media.localPostId = editorMediaListener.localPostId()
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
 
-        editorMediaListener.startUploadService(media)
+        editorMediaListener.startUploadServiceEditorMedia(media)
 
         return media
     }
@@ -427,7 +428,7 @@ class EditorMedia(
         }
 
         media.setUploadState(startingState)
-        if (!isLocalDraft) {
+        if (!editorMediaListener.isPostLocalDraft()) {
             media.postId = editorMediaListener.remotePostId()
         }
 
@@ -441,7 +442,7 @@ class EditorMedia(
             val outputStream = FileOutputStream(outputFile)
             val thumb = ImageUtils.getVideoFrameFromVideo(
                     videoPath,
-                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(this)
+                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(activity)
             )
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream)
