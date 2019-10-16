@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 89
+        return 90
     }
 
     override fun getDbName(): String {
@@ -1000,8 +1000,11 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "DATA TEXT NOT NULL)"
                     )
                 }
-                88 -> migrate(version) {
-                    db.execSQL("alter table SiteModel add JETPACK_USER_EMAIL TEXT")
+                88 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCOrderNoteModel ADD AUTHOR TEXT")
+                }
+                89 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD JETPACK_USER_EMAIL TEXT")
                 }
             }
         }
