@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 88
+        return 89
     }
 
     override fun getDbName(): String {
@@ -999,6 +999,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "REFUND_ID INTEGER," +
                                 "DATA TEXT NOT NULL)"
                     )
+                }
+                88 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCOrderNoteModel ADD AUTHOR TEXT")
                 }
             }
         }
