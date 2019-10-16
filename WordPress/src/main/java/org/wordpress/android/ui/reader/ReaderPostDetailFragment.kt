@@ -362,7 +362,8 @@ class ReaderPostDetailFragment : Fragment(),
                 hasTrackedLocalRelatedPosts
         )
 
-        outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE,
+        outState.putSerializable(
+                ReaderConstants.ARG_POST_LIST_TYPE,
                 this.postListType
         )
 
@@ -468,8 +469,8 @@ class ReaderPostDetailFragment : Fragment(),
         if (event.isError) {
             AppLog.e(
                     T.API,
-                    ReaderPostDetailFragment::class.java.simpleName + ".onSubscriptionUpdated: "
-                            + event.error.type + " - " + event.error.message
+                    "${ReaderPostDetailFragment::class.java.simpleName}.onSubscriptionUpdated: " +
+                            "${event.error.type} - ${event.error.message}"
             )
         } else {
             dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
@@ -1120,10 +1121,10 @@ class ReaderPostDetailFragment : Fragment(),
             // "discover" Editor Pick posts should open the original (source) post
             if (post!!.isDiscoverPost) {
                 val discoverData = post!!.discoverData
-                if (discoverData != null
-                        && discoverData.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
-                        && discoverData.blogId != 0L
-                        && discoverData.postId != 0L) {
+                if (discoverData != null &&
+                        discoverData.discoverType == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK &&
+                        discoverData.blogId != 0L &&
+                        discoverData.postId != 0L) {
                     isFeed = false
                     blogId = discoverData.blogId
                     postId = discoverData.postId
@@ -1174,9 +1175,10 @@ class ReaderPostDetailFragment : Fragment(),
                         return
                     }
                     POST_LIKE -> {
+                        // Liking needs to be handled "later" after the post has been updated from the server so,
+                        // nothing special to do here
                     }
-                }// Liking needs to be handled "later" after the post has been updated from the server so,
-                // nothing special to do here
+                }
             }
 
             AnalyticsUtils.trackWithReaderPostDetails(
@@ -1358,9 +1360,7 @@ class ReaderPostDetailFragment : Fragment(),
 
     override fun onFileDownloadClick(fileUrl: String?): Boolean {
         val activity = activity
-        return if (activity != null
-                && fileUrl != null
-                && PermissionUtils.checkAndRequestStoragePermission(
+        return if (activity != null && fileUrl != null && PermissionUtils.checkAndRequestStoragePermission(
                         this,
                         READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
                 )) {
@@ -1372,19 +1372,15 @@ class ReaderPostDetailFragment : Fragment(),
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         val activity = activity
-        if (activity != null
-                && requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
-                && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (activity != null &&
+                requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &&
+                grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             downloadFile(fileForDownload, activity)
-            fileForDownload = null
-        } else {
-            fileForDownload = null
         }
+        fileForDownload = null
     }
 
     private fun downloadFile(fileUrl: String?, activity: FragmentActivity) {
@@ -1422,11 +1418,11 @@ class ReaderPostDetailFragment : Fragment(),
     }
 
     override fun onScrollDown(distanceY: Float) {
-        if (isToolbarShowing
-                && distanceY >= MIN_SCROLL_DISTANCE_Y
-                && scrollView.canScrollDown()
-                && scrollView.canScrollUp()
-                && scrollView.scrollY > toolbarHeight) {
+        if (isToolbarShowing &&
+                distanceY >= MIN_SCROLL_DISTANCE_Y &&
+                scrollView.canScrollDown() &&
+                scrollView.canScrollUp() &&
+                scrollView.scrollY > toolbarHeight) {
             showToolbar(false)
             showFooter(false)
         }
@@ -1465,9 +1461,9 @@ class ReaderPostDetailFragment : Fragment(),
         val post = this.post ?: return false
         return if (!accountStore.hasAccessToken()) {
             post.numReplies > 0
-        } else post.isWP
-                && !post.isDiscoverPost
-                && (post.isCommentsOpen || post.numReplies > 0)
+        } else {
+            post.isWP && !post.isDiscoverPost && (post.isCommentsOpen || post.numReplies > 0)
+        }
     }
 
     private fun canShowBookmarkButton(): Boolean {
