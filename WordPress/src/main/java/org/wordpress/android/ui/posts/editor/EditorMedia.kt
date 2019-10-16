@@ -67,7 +67,7 @@ class EditorMedia(
      * @param isVideo Whether is a video or not
      * @param uri The URI of the media on the device, or null
      */
-    private fun trackAddMediaFromDeviceEvents(isNew: Boolean, isVideo: Boolean, uri: Uri?) {
+    fun trackAddMediaFromDeviceEvents(isNew: Boolean, isVideo: Boolean, uri: Uri?) {
         if (uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!")
             return
@@ -113,7 +113,7 @@ class EditorMedia(
     }
 
     @Suppress("SameParameterValue")
-    private fun addMedia(mediaUri: Uri?, isNew: Boolean): Boolean {
+    fun addMedia(mediaUri: Uri?, isNew: Boolean): Boolean {
         mediaUri?.let {
             addMediaList(listOf(it), isNew)
             return true
@@ -121,14 +121,14 @@ class EditorMedia(
         return false
     }
 
-    private fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
+    fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
         mAddMediaListThread = AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection)
         mAddMediaListThread!!.start()
     }
 
-    private fun cancelAddMediaListThread() {
+    fun cancelAddMediaListThread() {
         if (mAddMediaListThread != null && !mAddMediaListThread!!.isInterrupted) {
             try {
                 mAddMediaListThread!!.interrupt()
@@ -314,7 +314,7 @@ class EditorMedia(
         }
     }
 
-    private fun addMediaItemGroupOrSingleItem(data: Intent) {
+    fun addMediaItemGroupOrSingleItem(data: Intent) {
         val clipData = data.clipData
         if (clipData != null) {
             val uriList = ArrayList<Uri>()
@@ -328,7 +328,7 @@ class EditorMedia(
         }
     }
 
-    private fun advertiseImageOptimisationAndAddMedia(data: Intent) {
+    fun advertiseImageOptimisationAndAddMedia(data: Intent) {
         if (WPMediaUtils.shouldAdvertiseImageOptimization(activity)) {
             WPMediaUtils.advertiseImageOptimization(
                     activity
@@ -338,7 +338,7 @@ class EditorMedia(
         }
     }
 
-    private fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaId: Long): Boolean {
+    fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaId: Long): Boolean {
         val media = mediaStore.getSiteMediaWithId(site, mediaId)
         if (media == null) {
             AppLog.w(T.MEDIA, "Cannot add null media to post")
@@ -352,7 +352,7 @@ class EditorMedia(
         return true
     }
 
-    private fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaIdList: List<Long>) {
+    fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaIdList: List<Long>) {
         val mediaMap = ArrayMap<String, MediaFile>()
         for (mediaId in mediaIdList) {
             val media = mediaStore.getSiteMediaWithId(site, mediaId)
@@ -376,7 +376,7 @@ class EditorMedia(
     }
 
     @Suppress("SameParameterValue")
-    private fun queueFileForUpload(
+    fun queueFileForUpload(
         uri: Uri,
         mimeType: String?,
         startingState: MediaUploadState
