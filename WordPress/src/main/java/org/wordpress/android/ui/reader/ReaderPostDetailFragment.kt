@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
@@ -1100,6 +1101,8 @@ class ReaderPostDetailFragment : Fragment(),
         ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
+    // This will be replaced in the following PR
+    @SuppressLint("StaticFieldLeak")
     private inner class ShowPostTask : AsyncTask<Void, Void, Boolean>() {
         override fun onPreExecute() {
             isPostTaskRunning = true
