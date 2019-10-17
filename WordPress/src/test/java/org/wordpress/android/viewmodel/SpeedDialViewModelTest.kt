@@ -14,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.main.SpeedDialAction
-import org.wordpress.android.ui.main.SpeedDialState
 import org.wordpress.android.ui.main.SpeedDialState.CLOSED
 import org.wordpress.android.ui.main.SpeedDialState.HIDDEN
 import org.wordpress.android.ui.main.SpeedDialUiState
