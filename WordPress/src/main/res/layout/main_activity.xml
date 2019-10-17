@@ -56,4 +56,24 @@
             app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>
 
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/speed_dial_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.leinardi.android.speeddial.SpeedDialView
+        android:id="@+id/speed_dial_fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:sdMainFabClosedSrc="@drawable/ic_create_white_24dp"
+        app:sdMainFabClosedIconColor="@color/white"
+        app:sdMainFabOpenedSrc="@drawable/ic_cross_white_24dp"
+        android:layout_above="@+id/bottom_container"
+        android:layout_alignParentEnd="true"
+        app:sdOverlayLayout="@id/speed_dial_overlay"
+        android:scrollbarSize="@dimen/sd_fab_mini_size"
+        app:sdUseReverseAnimationOnClose="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
 </RelativeLayout>

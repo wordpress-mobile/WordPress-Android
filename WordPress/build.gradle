@@ -84,20 +84,20 @@ android {
                 versionName "13.4-rc-1"
             }
             versionCode 782
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
+            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
+            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
+            buildConfigField "boolean", "INFORMATION_ARCHITECTURE_AVAILABLE", "true"
         }
     }
 
@@ -204,6 +204,12 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
+
+    // Speed Dial library
+    implementation("com.leinardi.android:speed-dial:3.1.1", {
+        exclude group: 'androidx.appcompat', module: 'appcompat'
+        exclude group: 'androidx.cardview', module: 'cardview'
+    })
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
