@@ -272,7 +272,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         switch (mChannel) {
             case BLOGS:
                 if (mType == Type.TIMELINE) {
-                    mMasterKey = AppPrefs.getSiteNotificationsTabMasterKey(mBlogId);
+                    mMasterKey = AppPrefs.getYourSiteNotificationsTabMasterKey(mBlogId);
                 }
                 break;
             case OTHER:

@@ -145,6 +145,13 @@ public class Note {
         return isLikeType() || isFollowType() || isReblogType();
     }
 
+    public Boolean isYourSiteTimelineType() {
+        return isCommentType()
+               || isCommentLikeType()
+               || isLikeType()
+               || isFollowType();
+    }
+
     /*
      * does user have permission to moderate/reply/spam this comment?
      */

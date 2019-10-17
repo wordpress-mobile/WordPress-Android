@@ -137,7 +137,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         prefKey?.let {
             mPrefKey = it
 
-            val isMasterChecked = AppPrefs.getMasterKeyEnabled(it)
+            val isMasterChecked = AppPrefs.getMasterSwitchKeyEnabled(it)
             mMasterSwitch.isChecked = isMasterChecked
 
             mToolbarSwitch.title = if (isMasterChecked) {
@@ -207,7 +207,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     }
 
     fun saveMasterKeyEnabled(masterKey: String) {
-        AppPrefs.setMasterKeyEnabled(isMasterChecked, masterKey)
+        AppPrefs.setMasterSwitchKeyEnabled(isMasterChecked, masterKey)
     }
 
     fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {

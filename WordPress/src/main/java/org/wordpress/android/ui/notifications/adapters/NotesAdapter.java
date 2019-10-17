@@ -25,6 +25,7 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -145,33 +146,44 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public static void buildFilteredNotesList(ArrayList<Note> filteredNotes, ArrayList<Note> notes, FILTERS filter) {
         filteredNotes.clear();
         if (notes.isEmpty() || filter == FILTERS.FILTER_ALL) {
-            filteredNotes.addAll(notes);
+            for (Note currentNote : notes) {
+                if (shouldDisplayNote(currentNote)) {
+                    filteredNotes.add(currentNote);
+                }
+            }
             return;
         }
         for (Note currentNote : notes) {
-            switch (filter) {
-                case FILTER_COMMENT:
-                    if (currentNote.isCommentType()) {
-                        filteredNotes.add(currentNote);
-                    }
-                    break;
-                case FILTER_FOLLOW:
-                    if (currentNote.isFollowType()) {
-                        filteredNotes.add(currentNote);
-                    }
-                    break;
-                case FILTER_UNREAD:
-                    if (currentNote.isUnread()) {
-                        filteredNotes.add(currentNote);
-                    }
-                    break;
-                case FILTER_LIKE:
-                    if (currentNote.isLikeType()) {
-                        filteredNotes.add(currentNote);
-                    }
-                    break;
+            if (shouldDisplayNote(currentNote)) {
+                switch (filter) {
+                    case FILTER_COMMENT:
+                        if (currentNote.isCommentType()) {
+                            filteredNotes.add(currentNote);
+                        }
+                        break;
+                    case FILTER_FOLLOW:
+                        if (currentNote.isFollowType()) {
+                            filteredNotes.add(currentNote);
+                        }
+                        break;
+                    case FILTER_UNREAD:
+                        if (currentNote.isUnread()) {
+                            filteredNotes.add(currentNote);
+                        }
+                        break;
+                    case FILTER_LIKE:
+                        if (currentNote.isLikeType()) {
+                            filteredNotes.add(currentNote);
+                        }
+                        break;
+                }
             }
         }
+    }
+
+    private static boolean shouldDisplayNote(Note currentNote) {
+        return AppPrefs.isYourSiteNotificationsTabMasterKeyEnabled(currentNote.getSiteId())
+               || !(currentNote.isYourSiteTimelineType());
     }
 
     private Note getNoteAtPosition(int position) {

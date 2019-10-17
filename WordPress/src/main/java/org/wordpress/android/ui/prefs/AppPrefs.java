@@ -129,7 +129,7 @@ public class AppPrefs {
         STATS_WIDGET_DATA_TYPE,
 
         // Master switch settings
-        SITE_NOTIFICATIONS_TAB_MASTER_ENABLED
+        YOUR_SITE_NOTIFICATIONS_TAB_MASTER_SWITCH_ENABLED
     }
 
     /**
@@ -285,6 +285,9 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         for (DeletablePrefKey key : DeletablePrefKey.values()) {
             editor.remove(key.name());
+            if (key.name().startsWith(DeletablePrefKey.YOUR_SITE_NOTIFICATIONS_TAB_MASTER_SWITCH_ENABLED.name())) {
+                editor.remove(key.name());
+            }
         }
         editor.apply();
     }
@@ -963,21 +966,26 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
     }
 
-    public static boolean getMasterKeyEnabled(@NonNull String masterKey) {
+    public static boolean getMasterSwitchKeyEnabled(@NonNull String masterKey) {
         return prefs().getBoolean(masterKey, true);
     }
 
-    public static void setMasterKeyEnabled(boolean enabled, @NonNull String masterKey) {
+    public static void setMasterSwitchKeyEnabled(boolean enabled, @NonNull String masterKey) {
         prefs().edit().putBoolean(masterKey, enabled).apply();
     }
 
     @NonNull
-    public static String getSiteNotificationsTabMasterKey(long siteId) {
-        return DeletablePrefKey.SITE_NOTIFICATIONS_TAB_MASTER_ENABLED.name() + siteId;
+    public static String getYourSiteNotificationsTabMasterKey(long siteId) {
+        return DeletablePrefKey.YOUR_SITE_NOTIFICATIONS_TAB_MASTER_SWITCH_ENABLED.name() + siteId;
     }
 
     public static void removeSiteMasterPrefKeys(long siteId) {
-        String siteNotificationsTabMasterKey = getSiteNotificationsTabMasterKey(siteId);
+        String siteNotificationsTabMasterKey = getYourSiteNotificationsTabMasterKey(siteId);
         prefs().edit().remove(siteNotificationsTabMasterKey).apply();
+    }
+
+    public static boolean isYourSiteNotificationsTabMasterKeyEnabled(long siteId) {
+        String siteMasterKey = getYourSiteNotificationsTabMasterKey(siteId);
+        return getMasterSwitchKeyEnabled(siteMasterKey);
     }
 }
