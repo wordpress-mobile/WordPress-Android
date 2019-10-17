@@ -204,6 +204,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
         if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             mBottomNav.getMenu().removeItem(R.id.nav_me);
+            mBottomNav.getMenu().removeItem(R.id.nav_write);
         }
         mBottomNav.init(getSupportFragmentManager(), this);
 

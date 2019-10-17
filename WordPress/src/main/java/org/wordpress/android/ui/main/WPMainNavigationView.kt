@@ -358,8 +358,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     companion object {
         private val defaultPages = listOf(MY_SITE, READER, NEW_POST, ME, NOTIFS)
-        // TODO: rename "pagesWithoutMe" when removing also the NEW_POST in the IA Project
-        private val pagesWithoutMe = listOf(MY_SITE, READER, NEW_POST, NOTIFS)
+        private val pages = listOf(MY_SITE, READER, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"
@@ -368,7 +367,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         private fun numPages(): Int {
             return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                pagesWithoutMe.size
+                pages.size
             } else {
                 defaultPages.size
             }
@@ -376,7 +375,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         private fun pages(): List<PageType> {
             return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
-                pagesWithoutMe
+                pages
             } else {
                 defaultPages
             }
