@@ -1763,6 +1763,9 @@
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
 
+    <string name="my_site_speed_dial_add_post">Add new post</string>
+    <string name="my_site_speed_dial_add_page">Add new page</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>

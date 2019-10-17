@@ -16,4 +16,7 @@
     <item type="id" name="bottom_nav_new_post_button" />
     <item type="id" name="media_grid_file_path_id" />
     <item type="id" name="post_menu_item_view_layout_type" />
+
+    <item name="fab_add_new_page" type="id" />
+    <item name="fab_add_new_post" type="id" />
 </resources>

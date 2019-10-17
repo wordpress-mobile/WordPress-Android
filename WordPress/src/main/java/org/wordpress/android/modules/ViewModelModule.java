@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.main.SpeedDialViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
@@ -257,6 +258,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderCommentListViewModel.class)
     abstract ViewModel readerCommentListViewModel(ReaderCommentListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SpeedDialViewModel.class)
+    abstract ViewModel speedDialerViewModel(SpeedDialViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

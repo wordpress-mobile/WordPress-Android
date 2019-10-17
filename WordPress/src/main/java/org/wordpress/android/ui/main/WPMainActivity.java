@@ -20,9 +20,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -160,6 +164,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private SiteModel mSelectedSite;
 
+    private SpeedDialViewModel mViewModel;
+    private SpeedDialView mSpeedDialView;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
@@ -170,6 +177,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -333,6 +341,8 @@ public class WPMainActivity extends AppCompatActivity implements
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
+
+        initSpeedDial();
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -357,6 +367,61 @@ public class WPMainActivity extends AppCompatActivity implements
                                    + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
+    }
+
+    private SpeedDialActionItem createSpeedDialActionItem(SpeedDialActionMenuItem speedDialAction) {
+        return new SpeedDialActionItem.Builder(speedDialAction.getId(), speedDialAction.getIconId())
+                .setFabImageTintColor(getResources().getColor(R.color.neutral_60))
+                .setFabBackgroundColor(getResources().getColor(R.color.white))
+                .setLabel(getResources().getString(speedDialAction.getLabelId()))
+                .setLabelColor(getResources().getColor(R.color.neutral_60))
+                .setLabelBackgroundColor(getResources().getColor(R.color.white))
+                .create();
+    }
+
+    private void initSpeedDial() {
+        mSpeedDialView = findViewById(R.id.speed_dial_fab_button);
+
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(SpeedDialViewModel.class);
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            // Setup Observers
+            mViewModel.getUiState().observe(this, speedDialUiState -> {
+                switch (speedDialUiState.getSpeedDialState()) {
+                    case CLOSED:
+                        mSpeedDialView.close();
+                        mSpeedDialView.show();
+                        break;
+                    case HIDDEN:
+                        mSpeedDialView.close();
+                        mSpeedDialView.hide();
+                        break;
+                }
+            });
+
+            mViewModel.getSpeedDialAction().observe(this, speedDialAction -> {
+                switch (speedDialAction) {
+                    case SD_ACTION_NEW_POST:
+                        handleNewPostAction();
+                        break;
+                    case SD_ACTION_NEW_PAGE:
+                        handleNewPageAction();
+                        break;
+                }
+            });
+        }
+
+        // Init speed dial menu
+        for (SpeedDialActionMenuItem speedDialAction : SpeedDialActionMenuItem.getDefaultActionsList()) {
+            mSpeedDialView.addActionItem(createSpeedDialActionItem(speedDialAction));
+        }
+
+        mSpeedDialView.setOnActionSelectedListener(actionItem -> {
+            mViewModel.onSpeedDialAction(actionItem.getId());
+            return true;
+        });
+
+        mViewModel.start(mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }
 
     private @Nullable String getAuthToken() {
@@ -394,7 +459,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     if (mSelectedSite == null) {
                         initSelectedSite();
                     }
-                    onNewPostButtonClicked();
+                    handleNewPostAction();
                     break;
             }
         } else {
@@ -647,11 +712,25 @@ public class WPMainActivity extends AppCompatActivity implements
                 getMySiteFragment().requestNextStepOfActiveQuickStartTask();
             }
         }
+
+        mViewModel.onPageChanged(pageType == PageType.MY_SITE ? SpeedDialState.CLOSED : SpeedDialState.HIDDEN);
     }
 
-    // user tapped the new post button in the bottom navbar
-    @Override
-    public void onNewPostButtonClicked() {
+    private void handleNewPageAction() {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
+            ActivityLauncher.addNewPageForResult(this, site);
+        }
+    }
+
+    private void handleNewPostAction() {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -669,6 +748,12 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false);
+    }
+
+    // user tapped the new post button in the bottom navbar
+    @Override
+    public void onNewPostButtonClicked() {
+        handleNewPostAction();
     }
 
     private void updateTitle() {
@@ -750,6 +835,8 @@ public class WPMainActivity extends AppCompatActivity implements
                 final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
+                boolean isPage = data.getBooleanExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
                 if (EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(data, WPMainActivity.this, site,
                             data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
@@ -758,7 +845,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     break;
                 }
 
-                if (site != null && post != null) {
+                if (!isPage && site != null && post != null) {
                     UploadUtils.handleEditPostResultSnackbars(
                             this,
                             mDispatcher,
