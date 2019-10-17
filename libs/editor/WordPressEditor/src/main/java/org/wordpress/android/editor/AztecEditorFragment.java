@@ -2347,4 +2347,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void setExternalLogger(AztecLog.ExternalLogger logger) {
         mContent.setExternalLogger(logger);
     }
+
+    public void disableHWAcceleration() {
+        getView().setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    }
 }
