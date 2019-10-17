@@ -60,7 +60,7 @@ class DownloadManagerWrapper
 
         val openAttachmentIntent = Intent(Intent.ACTION_VIEW)
         openAttachmentIntent.setDataAndType(attachmentUri, attachmentMimeType)
-        openAttachmentIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        openAttachmentIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(openAttachmentIntent)
     }
 
