@@ -39,6 +39,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -219,25 +221,36 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
                 new OnMediaLibraryButtonListener() {
-                    @Override public void onMediaLibraryImageButtonClicked() {
+                    @Override public void onMediaLibraryImageButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddMediaImageClicked();
+                        mEditorFragmentListener.onAddMediaImageClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onMediaLibraryVideoButtonClicked() {
+                    public void onMediaLibraryVideoButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddMediaVideoClicked();
+                        mEditorFragmentListener.onAddMediaVideoClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onUploadPhotoButtonClicked() {
-                        mEditorFragmentListener.onAddPhotoClicked();
+                    public void onMediaLibraryMediaButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddLibraryMediaClicked(allowMultipleSelection);
                     }
 
                     @Override
-                    public void onUploadVideoButtonClicked() {
-                        mEditorFragmentListener.onAddVideoClicked();
+                    public void onUploadPhotoButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddPhotoClicked(allowMultipleSelection);
+                    }
+
+                    @Override
+                    public void onUploadVideoButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddVideoClicked(allowMultipleSelection);
+                    }
+
+                    @Override
+                    public void onUploadMediaButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddDeviceMediaClicked(allowMultipleSelection);
                     }
 
                     @Override
@@ -683,6 +696,53 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     "file://" + mediaUrl,
                     mediaFile.isVideo());
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
+        }
+    }
+
+    @Override
+    public void appendMediaFiles(Map<String, MediaFile> mediaList) {
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            // Activity may have already be gone.
+            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(T.MEDIA, "appendMediaFiles() called but Activity is null!");
+            return;
+        }
+
+        ArrayList<Media> rnMediaList = new ArrayList<>();
+
+        // Get media URL of first of media first to check if it is network or local one.
+        String mediaUrl = "";
+        Object[] mediaUrls = mediaList.keySet().toArray();
+        if (mediaUrls != null && mediaUrls.length > 0) {
+            mediaUrl = (String) mediaUrls[0];
+        }
+
+        if (URLUtil.isNetworkUrl(mediaUrl)) {
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                rnMediaList.add(
+                        new Media(
+                                Integer.valueOf(mediaEntry.getValue().getMediaId()),
+                                mediaEntry.getKey(),
+                                mediaEntry.getValue().getMimeType()
+                        )
+                );
+            }
+            getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
+        } else {
+            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+                rnMediaList.add(
+                        new Media(
+                                mediaEntry.getValue().getId(),
+                                "file://" + mediaEntry.getKey(),
+                                mediaEntry.getValue().getMimeType()
+                        )
+                );
+            }
+            getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
+            for (Media media : rnMediaList) {
+                mUploadingMediaProgressMax.put(String.valueOf(media.getId()), 0f);
+            }
         }
     }
 

@@ -53,9 +53,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-190"
+            versionName "alpha-191"
         }
-        versionCode 780
+        versionCode 783
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -81,9 +81,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.3"
+                versionName "13.4-rc-1"
             }
-            versionCode 781
+            versionCode 782
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
@@ -91,13 +91,13 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "true"
+            buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
     }
 

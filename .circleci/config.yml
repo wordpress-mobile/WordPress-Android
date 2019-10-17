@@ -1,6 +1,6 @@
 orbs:
   android: wordpress-mobile/android@0.0.32
-  git: wordpress-mobile/git@0.0.32
+  git: wordpress-mobile/git@0.0.33
   bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@2.5.0
 
@@ -131,5 +131,11 @@ workflows:
       - strings-check
       - test
       - lint
-      - Installable Build
-      - connected-tests
+      - Installable Build:
+          filters:
+            branches:
+              ignore: /pull\/[0-9]+/
+      - connected-tests:
+          filters:
+            branches:
+              ignore: /pull\/[0-9]+/

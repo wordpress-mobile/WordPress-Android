@@ -105,6 +105,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -1097,6 +1098,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mContent.resetAttributedMediaSpan(localMediaIdPredicate);
         }
     }
+
+    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) { }
 
     private Drawable getLoadingMediaErrorPlaceholder(String msg) {
         if (TextUtils.isEmpty(msg)) {

@@ -191,7 +191,10 @@ public class AppPrefs {
         IS_GUTENBERG_WARNING_DIALOG_DISABLED,
 
         // used to indicate that user dont want to see the Gutenberg informative dialog anymore
-        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED
+        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED,
+
+        // indicates whether the system notifications are enabled for the app
+        SYSTEM_NOTIFICATIONS_ENABLED
     }
 
     private static SharedPreferences prefs() {
@@ -947,5 +950,13 @@ public class AppPrefs {
 
     @NonNull private static String getDatatTypeIdWidgetKey(int appWidgetId) {
         return DeletablePrefKey.STATS_WIDGET_DATA_TYPE.name() + appWidgetId;
+    }
+
+    public static void setSystemNotificationsEnabled(boolean enabled) {
+        setBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, enabled);
+    }
+
+    public static boolean getSystemNotificationsEnabled() {
+        return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
     }
 }
