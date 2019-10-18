@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -223,7 +224,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                 };
 
                 mEmailSnackbar = Snackbar
-                        .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
+                        .make(getView(), "", BaseTransientBottomBar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.button_discard), clickListener);
                 TextView textView =
                         mEmailSnackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);

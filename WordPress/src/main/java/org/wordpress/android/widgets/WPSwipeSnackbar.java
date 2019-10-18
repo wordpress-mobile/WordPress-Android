@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
@@ -62,7 +63,7 @@ public class WPSwipeSnackbar {
                 break;
         }
 
-        Snackbar snackbar = Snackbar.make(viewPager, text, Snackbar.LENGTH_LONG); // CHECKSTYLE IGNORE
+        Snackbar snackbar = Snackbar.make(viewPager, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
         centerSnackbarText(snackbar);
         snackbar.show();
 
