@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-11 20:44:00+0000
+Translation-Revision-Date: 2019-10-18 17:06:00+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
@@ -32,6 +32,18 @@ Language: pt_BR
     <string name="dialog_confirm_autosave_dont_restore_button">A versão deste aplicativo</string>
     <string name="dialog_confirm_autosave_restore_button">A versão de outro dispositivo</string>
     <string name="dialog_confirm_autosave_body_second_part">A partir deste aplicativo\nSalvo em %s\n\nA partir de outro dispositivo\nSalvo em %s\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Você fez alterações nesse post recentemente mas não as salvou. Escolha uma versão para carregar:\n</string>
+    <string name="dialog_confirm_autosave_title">Qual versão você gostaria de editar?</string>
+    <string name="button_delete_permanently">Excluir permanentemente</string>
+    <string name="post_waiting_for_connection_draft_cancel">Não salvaremos as últimas alterações em seu rascunho.</string>
+    <string name="post_waiting_for_connection_scheduled_cancel">Não agendaremos essas alterações.</string>
+    <string name="post_waiting_for_connection_pending_cancel">Não enviaremos essas alterações para revisão.</string>
+    <string name="post_waiting_for_connection_publish_cancel">Não publicaremos essas alterações.</string>
+    <string name="post_waiting_for_connection_draft">Salvaremos seu rascunho quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_private">Publicaremos seu post privado quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_scheduled">Agendaremos seu post quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_pending">Enviaremos seu post para revisão quando o dispositivo se conectar novamente.</string>
+    <string name="post_waiting_for_connection_publish">Publicaremos o post quando o dispositivo se conectar novamente.</string>
     <string name="settings_username_changer_snackbar_cancel">Esta ação não pode ser cancelada. Talvez o nome de usuário já tenha sido atualizado.</string>
     <string name="settings_username_changer_toast_content">Seu novo nome de usuário é %1$s</string>
     <string name="settings_username_changer_progress_dialog">Salvando nome de usuário…</string>
