@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -213,6 +214,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         mEmailPreference.setEnabled(!account.getPendingEmailChange());
     }
 
+    // BaseTransientBottomBar.LENGTH_LONG is pointing to Snackabr.LENGTH_LONG which confuses checkstyle
+    @SuppressLint("WrongConstant")
     private void showPendingEmailChangeSnackbar(String newEmail) {
         if (getView() != null) {
             if (mEmailSnackbar == null || !mEmailSnackbar.isShown()) {
