@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.util.DateTimeUtils
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
@@ -74,7 +75,7 @@ class PageStore @Inject constructor(
     }
 
     suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(coroutineContext) {
-        getPagesFromDb(site).filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
+        getPagesFromDb(site).filter { it.title.toLowerCase(Locale.ROOT).contains(searchQuery.toLowerCase(Locale.ROOT)) }
     }
 
     suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
