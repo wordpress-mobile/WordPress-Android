@@ -1,5 +1,6 @@
-* Your stats have just become a lot more responsive.
-* You can now change your username in Account Settings.
-* Tweaking your Jetpack performance settings? Do it directly from the app!
-* If you’re a prolific publisher with more than 100 pages on your site, we’ll list them chronologically for faster access.
-* We’ve added many upgrades to the Block Editor, like rich-text styling in video captions, more intuitive block additions, and automatic content saves after two seconds of inactivity.
+* Add Remote Preview support for posts and pages.
+* Trashed posts must now be restoreded before editing or previewing them.
+* It's now easier to see and resolve post conflicts.
+* Fixed: Clicking on "Publish" on a private post sometimes published the post as public
+* Unsaved changes to posts and pages are automatically backed up on all devices.
+* Fixed an issue editing links

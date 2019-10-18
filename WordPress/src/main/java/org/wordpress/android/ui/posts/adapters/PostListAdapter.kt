@@ -155,7 +155,10 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
             return true
         }
         if (oldItem is LoadingItem && newItem is LoadingItem) {
-            return oldItem.localOrRemoteId == newItem.localOrRemoteId
+            return when (oldItem.localOrRemoteId) {
+                is LocalId -> oldItem.localOrRemoteId.value == (newItem.localOrRemoteId as? LocalId)?.value
+                is RemoteId -> oldItem.localOrRemoteId.value == (newItem.localOrRemoteId as? RemoteId)?.value
+            }
         }
         if (oldItem is PostListItemUiState && newItem is PostListItemUiState) {
             return oldItem.data == newItem.data

@@ -245,7 +245,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ReaderPost post = getItem(position);
                     if (post != null) {
                         AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
-                        ReaderActivityLauncher.openUrl(view.getContext(), post.getUrl());
+                        ReaderActivityLauncher.openPost(view.getContext(), post);
                     }
                 }
             };
