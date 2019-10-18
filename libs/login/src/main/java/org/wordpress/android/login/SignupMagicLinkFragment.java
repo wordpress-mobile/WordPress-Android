@@ -40,6 +40,7 @@ public class SignupMagicLinkFragment extends Fragment {
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
+    private static final String SIGNUP_FLOW_NAME = "mobile-android";
 
     public static final String TAG = "signup_magic_link_fragment_tag";
 
@@ -198,6 +199,7 @@ public class SignupMagicLinkFragment extends Fragment {
             AuthEmailPayloadSource source = getAuthEmailPayloadSource();
             AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, true,
                     mIsJetpackConnect ? AuthEmailPayloadFlow.JETPACK : null, source);
+            authEmailPayload.signupFlowName = SIGNUP_FLOW_NAME;
             mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
         }
     }
