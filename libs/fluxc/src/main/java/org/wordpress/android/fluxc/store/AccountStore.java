@@ -80,6 +80,7 @@ public class AccountStore extends Store {
         public AuthEmailPayloadFlow flow;
         public AuthEmailPayloadSource source;
         public String emailOrUsername;
+        public String signupFlowName;
         public boolean isSignup;
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
