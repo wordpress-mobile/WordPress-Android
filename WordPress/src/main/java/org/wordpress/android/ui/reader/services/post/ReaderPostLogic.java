@@ -112,6 +112,7 @@ public class ReaderPostLogic {
                 beforeDate = ReaderPostTable.getGapMarkerDateForTag(tag);
                 break;
             case REQUEST_NEWER:
+            case REQUEST_REFRESH:
             default:
                 beforeDate = null;
                 break;
@@ -126,7 +127,7 @@ public class ReaderPostLogic {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 // remember when this tag was updated if newer posts were requested
-                if (updateAction == UpdateAction.REQUEST_NEWER) {
+                if (updateAction == UpdateAction.REQUEST_NEWER || updateAction == UpdateAction.REQUEST_REFRESH) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
                 handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
@@ -251,6 +252,9 @@ public class ReaderPostLogic {
                                 // before the one with the gap marker, then remove the existing gap marker
                                 ReaderPostTable.deletePostsBeforeGapMarkerForTag(tag);
                                 ReaderPostTable.removeGapMarkerForTag(tag);
+                                break;
+                            case REQUEST_REFRESH:
+                                ReaderPostTable.deletePostsWithTag(tag);
                                 break;
                             case REQUEST_OLDER:
                                 // no-op
