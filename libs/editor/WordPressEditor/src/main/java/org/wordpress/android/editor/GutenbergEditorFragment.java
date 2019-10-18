@@ -40,12 +40,16 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.WPAndroidGlue.Media;
+import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+
+import static org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.MEDIA_SOURCE_GIPHY_MEDIA;
+import static org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.MEDIA_SOURCE_STOCK_MEDIA;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -263,16 +267,35 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         checkAndRequestCameraAndStoragePermissions(CAPTURE_PHOTO_PERMISSION_REQUEST_CODE);
                     }
 
-                    @Override public void onRetryUploadForMediaClicked(int mediaId) {
+                    @Override
+                    public void onRetryUploadForMediaClicked(int mediaId) {
                         showRetryMediaUploadDialog(mediaId);
                     }
 
-                    @Override public void onCancelUploadForMediaClicked(int mediaId) {
+                    @Override
+                    public void onCancelUploadForMediaClicked(int mediaId) {
                         showCancelMediaUploadDialog(mediaId);
                     }
 
-                    @Override public void onCancelUploadForMediaDueToDeletedBlock(int mediaId) {
+                    @Override
+                    public void onCancelUploadForMediaDueToDeletedBlock(int mediaId) {
                         cancelMediaUploadForDeletedBlock(mediaId);
+                    }
+
+                    @Override
+                    public ArrayList<MediaOption> onGetOtherMediaImageOptions() {
+                        ArrayList<MediaOption> otherMediaImageOptions = initOtherMediaImageOptions();
+                        return otherMediaImageOptions;
+                    }
+
+                    @Override
+                    public void onOtherMediaStockMediaButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
+                    }
+
+                    @Override
+                    public void onOtherMediaGiphyMediaButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onAddGiphyMediaClicked(allowMultipleSelection);
                     }
                 },
                 new OnReattachQueryListener() {
@@ -337,6 +360,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    private ArrayList<MediaOption> initOtherMediaImageOptions() {
+        ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
+
+        String packageName = getActivity().getApplication().getPackageName();
+        int stockMediaResourceId = getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+        int giphyResourceId = getResources().getIdentifier("photo_picker_giphy", "string", packageName);
+
+        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_GIPHY_MEDIA,  getString(giphyResourceId)));
+
+        return otherMediaOptions;
     }
 
     @Override public void onResume() {

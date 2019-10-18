@@ -3330,6 +3330,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onAddStockMediaClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection);
+    }
+
+    @Override public void onAddGiphyMediaClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.GIPHY, allowMultipleSelection);
+    }
+
+    @Override
     public void onCaptureVideoClicked() {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO, false);
     }
