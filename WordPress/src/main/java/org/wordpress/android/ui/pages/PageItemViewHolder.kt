@@ -20,9 +20,11 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -54,6 +56,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             const val FEATURED_IMAGE_THUMBNAIL_SIZE_DP = 40
         }
 
+        @ExperimentalStdlibApi
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).let { page ->
                 val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * page.indent)
@@ -67,7 +70,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     page.title
 
                 val date = if (page.date == Date(0)) Date() else page.date
-                time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context).capitalize()
+                time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
+                        .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
 
                 if (page.labels.isNotEmpty()) {
                     labels.text = page.labels.map { parent.context.getString(it) }.sorted()
