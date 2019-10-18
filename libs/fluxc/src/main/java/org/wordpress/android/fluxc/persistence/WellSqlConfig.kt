@@ -990,7 +990,6 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE PostUploadModel ADD NUMBER_OF_AUTO_UPLOAD_ATTEMPTS INTEGER")
                 }
                 87 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("DROP TABLE IF EXISTS WCRefunds")
                     db.execSQL(
                             "CREATE TABLE WCRefunds (" +
                                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -1007,7 +1006,6 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD JETPACK_USER_EMAIL TEXT")
                 }
                 90 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("DROP TABLE IF EXISTS WCGateways")
                     db.execSQL(
                             "CREATE TABLE WCGateways (" +
                                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
