@@ -115,7 +115,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
     @Override
     protected void setupLabel(@NonNull TextView label) {
-        // no label in this screen
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            label.setText(getString(R.string.enter_credentials_for_site, mInputSiteAddress));
+        }
     }
 
     @Override
@@ -127,6 +129,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
         rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
+        rootView.findViewById(R.id.label).setVisibility(
+                (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) ? View.VISIBLE : View.GONE);
 
         if (mSiteIconUrl != null) {
             Glide.with(this)
