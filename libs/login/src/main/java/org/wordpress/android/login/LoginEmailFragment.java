@@ -187,8 +187,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 @Override
                 public void onClick(View view) {
                     if (mLoginListener != null) {
-                        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+                        LoginMode loginMode = mLoginListener.getLoginMode();
+                        if (loginMode == LoginMode.JETPACK_STATS) {
                             mLoginListener.loginViaWpcomUsernameInstead();
+                        } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
+                            // TODO: add logic to login via self hosted credentials
                         } else {
                             mLoginListener.loginViaSiteAddress();
                         }
@@ -201,9 +204,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         TextView siteLoginButtonText = rootView.findViewById(R.id.login_site_button_text);
 
         switch (mLoginListener.getLoginMode()) {
+            case WOO_LOGIN_MODE:
+                siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
+                siteLoginButtonText.setText(R.string.enter_site_credentials_instead);
+                break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
-            case WOO_LOGIN_MODE:
             case SHARE_INTENT:
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);
