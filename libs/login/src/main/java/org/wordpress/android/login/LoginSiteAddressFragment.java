@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked;
 import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -180,15 +181,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
 
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            // TODO: This is temporary code to test out sign in flow milestone 1 effectiveness. If we move
-            // forward with this flow, we will need to just call the XMLRPC discovery code and handle all the
-            // edge cases such as HTTP auth and self-signed SSL.
-            mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
-        } else {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
-        }
+        mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
 
         startProgress();
     }
@@ -305,6 +298,11 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             // Not a WordPress.com or Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
                 showError(R.string.enter_wpcom_or_jetpack_site);
+                endProgress();
+            } else if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE
+                       && event.error.type == SiteErrorType.UNKNOWN_SITE) {
+                // Site does not exist
+                showError(R.string.invalid_site_url_message);
                 endProgress();
             } else {
                 // Start the discovery process
