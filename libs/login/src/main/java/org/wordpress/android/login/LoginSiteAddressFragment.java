@@ -50,12 +50,14 @@ import dagger.android.support.AndroidSupportInjection;
 public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
+    private static final String KEY_HAS_JETPACK = "KEY_HAS_JETPACK";
 
     public static final String TAG = "login_site_address_fragment_tag";
 
     private WPLoginInputRow mSiteAddressInput;
 
     private String mRequestedSiteAddress;
+    private boolean mHasJetpack;
 
     private LoginSiteAddressValidator mLoginSiteAddressValidator;
 
@@ -138,6 +140,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         if (savedInstanceState != null) {
             mRequestedSiteAddress = savedInstanceState.getString(KEY_REQUESTED_SITE_ADDRESS);
+            mHasJetpack = savedInstanceState.getBoolean(KEY_HAS_JETPACK);
         } else {
             mAnalyticsListener.trackUrlFormViewed();
         }
@@ -165,6 +168,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_REQUESTED_SITE_ADDRESS, mRequestedSiteAddress);
+        outState.putBoolean(KEY_HAS_JETPACK, mHasJetpack);
     }
 
     @Override public void onDestroyView() {
@@ -305,10 +309,16 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 showError(R.string.invalid_site_url_message);
                 endProgress();
             } else {
+                mHasJetpack = false;
                 // Start the discovery process
                 mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
             }
         } else {
+            // Woo Login: verify if Jetpack is installed/active/connected
+            if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+                mHasJetpack = event.site.isJetpackInstalled() && event.site.isJetpackConnected();
+            }
+
             if (event.site.isJetpackInstalled() && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
                 // If Jetpack site, treat it as self-hosted and start the discovery process
                 // An exception is WPCOM_LOGIN_ONLY mode - in that case we're only interested in adding sites
@@ -318,6 +328,12 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             }
 
             endProgress();
+
+            // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
+            if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+                mLoginListener.gotConnectedSiteInfo(event.site.getUrl(), null, mHasJetpack);
+                return;
+            }
 
             // it's a wp.com site so, treat it as such.
             mLoginListener.gotWpcomSiteInfo(
@@ -360,6 +376,9 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
                     ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, true);
                     mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
+                } else if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+                    // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
+                    mLoginListener.gotConnectedSiteInfo(event.failedEndpoint, null, mHasJetpack);
                 } else {
                     mLoginListener.gotWpcomSiteInfo(event.failedEndpoint, null, null);
                 }
@@ -374,6 +393,13 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
+
+        // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            mLoginListener.gotConnectedSiteInfo(requestedSiteAddress, null, mHasJetpack);
+            return;
+        }
+
         mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint);
     }
 
