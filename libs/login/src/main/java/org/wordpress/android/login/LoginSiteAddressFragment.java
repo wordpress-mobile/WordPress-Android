@@ -317,6 +317,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             // Woo Login: verify if Jetpack is installed/active/connected
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
                 mHasJetpack = event.site.isJetpackInstalled() && event.site.isJetpackConnected();
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                return;
             }
 
             if (event.site.isJetpackInstalled() && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
@@ -328,12 +330,6 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             }
 
             endProgress();
-
-            // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
-            if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-                mLoginListener.gotConnectedSiteInfo(event.site.getUrl(), null, mHasJetpack);
-                return;
-            }
 
             // it's a wp.com site so, treat it as such.
             mLoginListener.gotWpcomSiteInfo(
@@ -396,7 +392,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
         if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            mLoginListener.gotConnectedSiteInfo(requestedSiteAddress, null, mHasJetpack);
+            mLoginListener.gotConnectedSiteInfo(requestedSiteAddress, event.xmlRpcEndpoint, mHasJetpack);
             return;
         }
 
