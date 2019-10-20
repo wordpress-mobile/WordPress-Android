@@ -68,8 +68,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
-    private static final String ARG_HIDE_LOGIN_BY_SITE_OPTION = "ARG_HIDE_LOGIN_BY_SITE_OPTION";
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
+    private static final String ARG_LOGIN_SITE_XMLRPC_URL = "ARG_LOGIN_SITE_XMLRPC_URL";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -83,14 +83,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
     protected boolean mIsDisplayingEmailHints;
-    protected boolean mHideLoginWithSiteOption;
     protected String mLoginSiteUrl;
+    protected String mLoginSiteXmlRpcUrl;
 
-    public static LoginEmailFragment newInstance(Boolean hideLoginWithSiteOption, String url) {
+    public static LoginEmailFragment newInstance(String url, String endpointAddress) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
-        args.putBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, hideLoginWithSiteOption);
         args.putString(ARG_LOGIN_SITE_URL, url);
+        args.putString(ARG_LOGIN_SITE_XMLRPC_URL, endpointAddress);
         fragment.setArguments(args);
         return fragment;
     }
@@ -180,25 +180,25 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         });
 
         LinearLayout siteLoginButton = rootView.findViewById(R.id.login_site_button);
-        if (mHideLoginWithSiteOption) {
-            siteLoginButton.setVisibility(View.GONE);
-        } else {
-            siteLoginButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mLoginListener != null) {
-                        LoginMode loginMode = mLoginListener.getLoginMode();
-                        if (loginMode == LoginMode.JETPACK_STATS) {
+        siteLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mLoginListener != null) {
+                    LoginMode loginMode = mLoginListener.getLoginMode();
+                    if (loginMode == LoginMode.JETPACK_STATS) {
+                        mLoginListener.loginViaWpcomUsernameInstead();
+                    } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
+                        if (mLoginSiteXmlRpcUrl == null || mLoginSiteXmlRpcUrl.isEmpty()) {
                             mLoginListener.loginViaWpcomUsernameInstead();
-                        } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
-                            // TODO: add logic to login via self hosted credentials
                         } else {
-                            mLoginListener.loginViaSiteAddress();
+                            mLoginListener.gotXmlRpcEndpoint(mLoginSiteUrl, mLoginSiteXmlRpcUrl);
                         }
+                    } else {
+                        mLoginListener.loginViaSiteAddress();
                     }
                 }
-            });
-        }
+            }
+        });
 
         ImageView siteLoginButtonIcon = rootView.findViewById(R.id.login_site_button_icon);
         TextView siteLoginButtonText = rootView.findViewById(R.id.login_site_button_text);
@@ -283,8 +283,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         Bundle args = getArguments();
         if (args != null) {
-            mHideLoginWithSiteOption = args.getBoolean(ARG_HIDE_LOGIN_BY_SITE_OPTION, false);
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
+            mLoginSiteXmlRpcUrl = args.getString(ARG_LOGIN_SITE_XMLRPC_URL, "");
         }
     }
 
