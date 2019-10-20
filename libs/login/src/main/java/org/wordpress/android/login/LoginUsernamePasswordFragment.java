@@ -55,6 +55,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
+    private static final String KEY_GET_SITE_OPTIONS_INITIATED = "KEY_GET_SITE_OPTIONS_INITIATED";
 
     private static final String ARG_INPUT_SITE_ADDRESS = "ARG_INPUT_SITE_ADDRESS";
     private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
@@ -78,6 +79,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     private String mRequestedUsername;
     private String mRequestedPassword;
     ArrayList<Integer> mOldSitesIDs;
+    private boolean mGetSiteOptionsInitiated;
 
     private String mInputSiteAddress;
     private String mInputSiteAddressWithoutSuffix;
@@ -237,6 +239,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
             mOldSitesIDs = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
+            mGetSiteOptionsInitiated = savedInstanceState.getBoolean(KEY_GET_SITE_OPTIONS_INITIATED);
         } else {
             mAnalyticsListener.trackUsernamePasswordFormViewed();
 
@@ -260,6 +263,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
         outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
+        outState.putBoolean(KEY_GET_SITE_OPTIONS_INITIATED, mGetSiteOptionsInitiated);
     }
 
     protected void next() {
@@ -372,6 +376,14 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             }
         }
 
+        return null;
+    }
+
+    private @Nullable SiteModel getLastAddedXMLRPCSite() {
+        List<SiteModel> selfhostedSites = mSiteStore.getSitesAccessedViaXMLRPC();
+        if (selfhostedSites != null && !selfhostedSites.isEmpty()) {
+            return selfhostedSites.get(selfhostedSites.size() - 1);
+        }
         return null;
     }
 
@@ -511,6 +523,29 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
                 showError(errorMessage);
             }
 
+            return;
+        }
+
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            SiteModel lastAddedXMLRPCSite = getLastAddedXMLRPCSite();
+            if (lastAddedXMLRPCSite != null) {
+                // the wp.getOptions endpoint is already called
+                // verify if jetpack user email is available.
+                // If not, redirect to jetpack required screen. Otherwise, initiate magic sign in
+                if (mGetSiteOptionsInitiated) {
+                    endProgress();
+                    mGetSiteOptionsInitiated = false;
+                    if (lastAddedXMLRPCSite.getJetpackUserEmail() == null) {
+                        // TODO: redirect to jetpack required screen
+                    } else {
+                        mLoginListener.gotWpcomEmail(lastAddedXMLRPCSite.getJetpackUserEmail());
+                    }
+                } else {
+                    // Initiate the wp.getOptions endpoint to fetch the jetpack user email
+                    mGetSiteOptionsInitiated = true;
+                    mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(lastAddedXMLRPCSite));
+                }
+            }
             return;
         }
 
