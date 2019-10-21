@@ -388,7 +388,7 @@ public class WPMainActivity extends AppCompatActivity implements
             // Setup Observers
             mViewModel.getUiState().observe(this, speedDialUiState -> {
                 switch (speedDialUiState.getSpeedDialState()) {
-                    case CLOSED:
+                    case VISIBLE:
                         mSpeedDialView.close();
                         mSpeedDialView.show();
                         break;
@@ -713,7 +713,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        mViewModel.onPageChanged(pageType == PageType.MY_SITE ? SpeedDialState.CLOSED : SpeedDialState.HIDDEN);
+        mViewModel.onPageChanged(pageType == PageType.MY_SITE ? SpeedDialState.VISIBLE : SpeedDialState.HIDDEN);
     }
 
     private void handleNewPageAction() {

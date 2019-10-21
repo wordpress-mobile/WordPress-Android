@@ -12,7 +12,7 @@ data class SpeedDialUiState(
 )
 
 enum class SpeedDialState {
-    CLOSED,
+    VISIBLE,
     HIDDEN
 }
 
