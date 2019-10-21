@@ -1,5 +1,4 @@
 #!/bin/sh
-exit 0
 
 SCRIPT_DIR=$(dirname "$0")
 LANG_FILE="${SCRIPT_DIR}/../tools/exported-language-codes.csv"
