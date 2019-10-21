@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.push.NotificationActionType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -200,7 +201,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // Call processing service when user taps on IGNORE - we should remember this decision for this post
         Intent ignoreIntent = new Intent(context, NotificationsProcessingService.class);
         ignoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                              NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE);
+                              NotificationActionType.ARG_ACTION_DRAFT_PENDING_IGNORE);
         ignoreIntent.putExtra(POST_ID_EXTRA, postId);
         ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
         PendingIntent ignorePendingIntent = PendingIntent
@@ -218,7 +219,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // Call processing service when notification is dismissed
         Intent notificationDeletedIntent = new Intent(context, NotificationsProcessingService.class);
         notificationDeletedIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                           NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
+                NotificationActionType.ARG_ACTION_DRAFT_PENDING_DISMISS);
         notificationDeletedIntent.putExtra(POST_ID_EXTRA, postId);
         notificationDeletedIntent.putExtra(IS_PAGE_EXTRA, isPage);
         PendingIntent dismissPendingIntent = PendingIntent

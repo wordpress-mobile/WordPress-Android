@@ -60,6 +60,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.push.NotificationActionType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -446,9 +447,9 @@ public class WPMainActivity extends AppCompatActivity implements
                             // we do this here instead of using the service in the background so we make sure
                             // the user opens the app by using an activity (and thus unlocks the screen if locked,
                             // for security).
-                            String actionType =
-                                    getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
-                            if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                            NotificationActionType actionType = (NotificationActionType) getIntent()
+                                    .getSerializableExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                            if (NotificationActionType.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
                                 // ping the push auth endpoint with the token, wp.com will take care of the rest!
                                 NotificationsUtils.sendTwoFactorAuthToken(token);
                             } else {

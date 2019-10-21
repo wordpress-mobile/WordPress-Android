@@ -531,7 +531,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             Intent commentReplyIntent = getCommentActionReplyIntent(context, noteId);
             commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
             commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                        NotificationsProcessingService.ARG_ACTION_REPLY);
+                                        NotificationActionType.ARG_ACTION_REPLY);
             if (noteId != null) {
                 commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
@@ -559,7 +559,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             Intent commentLikeIntent = getCommentActionIntent(context);
             commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                       NotificationsProcessingService.ARG_ACTION_LIKE);
+                    NotificationActionType.ARG_ACTION_LIKE);
             if (noteId != null) {
                 commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
@@ -577,7 +577,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             Intent commentApproveIntent = getCommentActionIntent(context);
             commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                          NotificationsProcessingService.ARG_ACTION_APPROVE);
+                    NotificationActionType.ARG_ACTION_APPROVE);
             if (noteId != null) {
                 commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
@@ -1007,7 +1007,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             Intent authApproveIntent = new Intent(context, WPMainActivity.class);
             authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
             authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                       NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+                    NotificationActionType.ARG_ACTION_AUTH_APPROVE);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
@@ -1028,7 +1028,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
             Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
             authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                      NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
+                                      NotificationActionType.ARG_ACTION_AUTH_IGNORE);
             PendingIntent authIgnorePendingIntent = PendingIntent.getService(context,
                                                                              AUTH_PUSH_REQUEST_CODE_IGNORE,
                                                                              authIgnoreIntent,

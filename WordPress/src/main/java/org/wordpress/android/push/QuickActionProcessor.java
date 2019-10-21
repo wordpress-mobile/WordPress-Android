@@ -44,6 +44,8 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPrope
 
 import java.util.HashMap;
 
+import static org.wordpress.android.push.NotificationActionType.ARG_ACTION_APPROVE;
+import static org.wordpress.android.push.NotificationActionType.ARG_ACTION_LIKE;
 import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
 
 class QuickActionProcessor {
@@ -52,7 +54,7 @@ class QuickActionProcessor {
     private SiteStore mSiteStore;
     private String mNoteId;
     private String mReplyText;
-    private String mActionType;
+    private NotificationActionType mActionType;
     private int mPushId;
     private Note mNote;
     private final int mTaskId;
@@ -77,7 +79,7 @@ class QuickActionProcessor {
         // now handle each action
         if (mActionType != null) {
             // check special cases for authorization push
-            if (mActionType.equals(NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE)) {
+            if (mActionType.equals(NotificationActionType.ARG_ACTION_AUTH_IGNORE)) {
                 // dismiss notifs
                 NativeNotificationsUtils.dismissNotification(
                         GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
@@ -92,7 +94,7 @@ class QuickActionProcessor {
             }
 
             // check notification dismissed pending intent
-            if (mActionType.equals(NotificationsProcessingService.ARG_ACTION_NOTIFICATION_DISMISS)) {
+            if (mActionType.equals(NotificationActionType.ARG_ACTION_NOTIFICATION_DISMISS)) {
                 int notificationId = mIntent.getIntExtra(NotificationsProcessingService.ARG_PUSH_ID, 0);
                 if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
                     GCMMessageService.clearNotifications();
@@ -110,7 +112,7 @@ class QuickActionProcessor {
             }
 
             // check special cases for pending draft notifications - ignore
-            if (mActionType.equals(NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE)) {
+            if (mActionType.equals(NotificationActionType.ARG_ACTION_DRAFT_PENDING_IGNORE)) {
                 // dismiss notif
                 int postId = mIntent.getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0);
                 if (postId != 0) {
@@ -124,13 +126,13 @@ class QuickActionProcessor {
             }
 
             // check special cases for pending draft notifications - dismiss
-            if (mActionType.equals(NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS)) {
+            if (mActionType.equals(NotificationActionType.ARG_ACTION_DRAFT_PENDING_DISMISS)) {
                 AnalyticsTracker.track(Stat.NOTIFICATION_PENDING_DRAFTS_DISMISSED);
                 return;
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(
-                    NotificationsProcessingService.ARG_ACTION_REPLY)) {
+                    NotificationActionType.ARG_ACTION_REPLY)) {
                 // we don't need showing the infinite progress bar in case of REPLY on Android N,
                 // because we've got inline-reply there with its own spinner to show progress
                 // no op
@@ -184,7 +186,8 @@ class QuickActionProcessor {
         }
         // get all needed data from intent
         mNoteId = mIntent.getStringExtra(NotificationsProcessingService.ARG_NOTE_ID);
-        mActionType = mIntent.getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+        mActionType =
+                (NotificationActionType) mIntent.getSerializableExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
         // default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
         // notif in active notifs map (there is only one notif if quick actions are available)
         mPushId = GCMMessageService.GROUP_NOTIFICATION_ID;
@@ -207,23 +210,25 @@ class QuickActionProcessor {
         getNoteFromBundleIfExists();
     }
 
-    private String getProcessingTitleForAction(String actionType) {
+    private String getProcessingTitleForAction(NotificationActionType actionType) {
         if (actionType != null) {
             switch (actionType) {
-                case NotificationsProcessingService.ARG_ACTION_LIKE:
+                case ARG_ACTION_LIKE:
                     return mNotificationsProcessingService.getString(R.string.comment_q_action_liking);
-                case NotificationsProcessingService.ARG_ACTION_APPROVE:
+                case ARG_ACTION_APPROVE:
                     return mNotificationsProcessingService.getString(R.string.comment_q_action_approving);
-                case NotificationsProcessingService.ARG_ACTION_REPLY:
+                case ARG_ACTION_REPLY:
                     return mNotificationsProcessingService.getString(R.string.comment_q_action_replying);
-                default:
-                    // default, generic "processing"
+                case ARG_ACTION_NOTIFICATION_DISMISS:
+                case ARG_ACTION_DRAFT_PENDING_DISMISS:
+                case ARG_ACTION_DRAFT_PENDING_IGNORE:
+                case ARG_ACTION_AUTH_APPROVE:
+                case ARG_ACTION_AUTH_IGNORE:
                     return mNotificationsProcessingService.getString(R.string.comment_q_action_processing);
             }
-        } else {
-            // default, generic "processing"
-            return mNotificationsProcessingService.getString(R.string.comment_q_action_processing);
         }
+        // default, generic "processing"
+        return mNotificationsProcessingService.getString(R.string.comment_q_action_processing);
     }
 
     private void obtainReplyTextFromRemoteInputBundle(Bundle bundle) {
@@ -254,17 +259,20 @@ class QuickActionProcessor {
         if (mNote != null) {
             if (mActionType != null) {
                 switch (mActionType) {
-                    case NotificationsProcessingService.ARG_ACTION_LIKE:
+                    case ARG_ACTION_LIKE:
                         likeComment();
                         break;
-                    case NotificationsProcessingService.ARG_ACTION_APPROVE:
+                    case ARG_ACTION_APPROVE:
                         approveComment();
                         break;
-                    case NotificationsProcessingService.ARG_ACTION_REPLY:
+                    case ARG_ACTION_REPLY:
                         replyToComment();
                         break;
-                    default:
-                        // no op
+                    case ARG_ACTION_NOTIFICATION_DISMISS:
+                    case ARG_ACTION_DRAFT_PENDING_DISMISS:
+                    case ARG_ACTION_DRAFT_PENDING_IGNORE:
+                    case ARG_ACTION_AUTH_APPROVE:
+                    case ARG_ACTION_AUTH_IGNORE:
                         requestFailed(null);
                         break;
                 }
@@ -281,15 +289,25 @@ class QuickActionProcessor {
     /*
      * called when action has been completed successfully
      */
-    public void requestCompleted(String actionType) {
+    public void requestCompleted(NotificationActionType actionType) {
         String successMessage = null;
         if (actionType != null) {
-            if (actionType.equals(NotificationsProcessingService.ARG_ACTION_LIKE)) {
-                successMessage = mNotificationsProcessingService.getString(R.string.comment_liked);
-            } else if (actionType.equals(NotificationsProcessingService.ARG_ACTION_APPROVE)) {
-                successMessage = mNotificationsProcessingService.getString(R.string.comment_moderated_approved);
-            } else if (actionType.equals(NotificationsProcessingService.ARG_ACTION_REPLY)) {
-                successMessage = mNotificationsProcessingService.getString(R.string.note_reply_successful);
+            switch (actionType) {
+                case ARG_ACTION_LIKE:
+                    successMessage = mNotificationsProcessingService.getString(R.string.comment_liked);
+                    break;
+                case ARG_ACTION_APPROVE:
+                    successMessage = mNotificationsProcessingService.getString(R.string.comment_moderated_approved);
+                    break;
+                case ARG_ACTION_REPLY:
+                    successMessage = mNotificationsProcessingService.getString(R.string.note_reply_successful);
+                    break;
+                case ARG_ACTION_NOTIFICATION_DISMISS:
+                case ARG_ACTION_DRAFT_PENDING_DISMISS:
+                case ARG_ACTION_DRAFT_PENDING_IGNORE:
+                case ARG_ACTION_AUTH_APPROVE:
+                case ARG_ACTION_AUTH_IGNORE:
+                    break;
             }
         } else {
             // show generic success message here
@@ -323,15 +341,25 @@ class QuickActionProcessor {
     /*
      * called when action failed
      */
-    public void requestFailed(String actionType) {
+    public void requestFailed(NotificationActionType actionType) {
         String errorMessage = null;
         if (actionType != null) {
-            if (actionType.equals(NotificationsProcessingService.ARG_ACTION_LIKE)) {
-                errorMessage = mNotificationsProcessingService.getString(R.string.error_notif_q_action_like);
-            } else if (actionType.equals(NotificationsProcessingService.ARG_ACTION_APPROVE)) {
-                errorMessage = mNotificationsProcessingService.getString(R.string.error_notif_q_action_approve);
-            } else if (actionType.equals(NotificationsProcessingService.ARG_ACTION_REPLY)) {
-                errorMessage = mNotificationsProcessingService.getString(R.string.error_notif_q_action_reply);
+            switch (actionType) {
+                case ARG_ACTION_LIKE:
+                    errorMessage = mNotificationsProcessingService.getString(R.string.error_notif_q_action_like);
+                    break;
+                case ARG_ACTION_APPROVE:
+                    errorMessage = mNotificationsProcessingService.getString(R.string.error_notif_q_action_approve);
+                    break;
+                case ARG_ACTION_REPLY:
+                    errorMessage = mNotificationsProcessingService.getString(R.string.error_notif_q_action_reply);
+                    break;
+                case ARG_ACTION_NOTIFICATION_DISMISS:
+                case ARG_ACTION_DRAFT_PENDING_DISMISS:
+                case ARG_ACTION_DRAFT_PENDING_IGNORE:
+                case ARG_ACTION_AUTH_APPROVE:
+                case ARG_ACTION_AUTH_IGNORE:
+                    break;
             }
         } else {
             // show generic error here
@@ -398,7 +426,7 @@ class QuickActionProcessor {
     // Like or unlike a comment via the REST API
     private void likeComment() {
         if (mNote == null) {
-            requestFailed(NotificationsProcessingService.ARG_ACTION_LIKE);
+            requestFailed(ARG_ACTION_LIKE);
             return;
         }
 
@@ -415,14 +443,14 @@ class QuickActionProcessor {
             mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
                     new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
         } else {
-            requestFailed(NotificationsProcessingService.ARG_ACTION_LIKE);
+            requestFailed(ARG_ACTION_LIKE);
             AppLog.e(T.NOTIFS, "Site with id: " + mNote.getSiteId() + " doesn't exist in the Site store");
         }
     }
 
     private void approveComment() {
         if (mNote == null) {
-            requestFailed(NotificationsProcessingService.ARG_ACTION_APPROVE);
+            requestFailed(ARG_ACTION_APPROVE);
             return;
         }
 
@@ -441,7 +469,7 @@ class QuickActionProcessor {
         if (site == null) {
             AppLog.e(T.NOTIFS, "Impossible to approve a comment on a site that is not in the App. SiteId: "
                                + mNote.getSiteId());
-            requestFailed(NotificationsProcessingService.ARG_ACTION_APPROVE);
+            requestFailed(ARG_ACTION_APPROVE);
             return;
         }
 
@@ -456,7 +484,7 @@ class QuickActionProcessor {
 
     private void replyToComment() {
         if (mNote == null) {
-            requestFailed(NotificationsProcessingService.ARG_ACTION_APPROVE);
+            requestFailed(ARG_ACTION_APPROVE);
             return;
         }
 
@@ -465,7 +493,7 @@ class QuickActionProcessor {
             if (site == null) {
                 AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App. SiteId: "
                                    + mNote.getSiteId());
-                requestFailed(NotificationsProcessingService.ARG_ACTION_APPROVE);
+                requestFailed(ARG_ACTION_APPROVE);
                 return;
             }
 

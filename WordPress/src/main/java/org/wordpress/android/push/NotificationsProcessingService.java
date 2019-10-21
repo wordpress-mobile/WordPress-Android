@@ -34,15 +34,7 @@ import javax.inject.Inject;
 
 public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_TYPE = "action_type";
-    public static final String ARG_ACTION_LIKE = "action_like";
-    public static final String ARG_ACTION_REPLY = "action_reply";
-    public static final String ARG_ACTION_APPROVE = "action_approve";
-    public static final String ARG_ACTION_AUTH_APPROVE = "action_auth_aprove";
-    public static final String ARG_ACTION_AUTH_IGNORE = "action_auth_ignore";
-    public static final String ARG_ACTION_DRAFT_PENDING_DISMISS = "action_draft_pending_dismiss";
-    public static final String ARG_ACTION_DRAFT_PENDING_IGNORE = "action_draft_pending_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
-    public static final String ARG_ACTION_NOTIFICATION_DISMISS = "action_dismiss";
     public static final String ARG_NOTE_ID = "note_id";
     public static final String ARG_PUSH_ID = "notificationId";
 
@@ -62,7 +54,7 @@ public class NotificationsProcessingService extends Service {
     * */
     public static void startServiceForLike(Context context, String noteId) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
-        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_LIKE);
+        intent.putExtra(ARG_ACTION_TYPE, NotificationActionType.ARG_ACTION_LIKE);
         intent.putExtra(ARG_NOTE_ID, noteId);
         context.startService(intent);
     }
@@ -72,7 +64,7 @@ public class NotificationsProcessingService extends Service {
     * */
     public static void startServiceForApprove(Context context, String noteId) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
-        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_APPROVE);
+        intent.putExtra(ARG_ACTION_TYPE, NotificationActionType.ARG_ACTION_APPROVE);
         intent.putExtra(ARG_NOTE_ID, noteId);
         context.startService(intent);
     }
@@ -82,7 +74,7 @@ public class NotificationsProcessingService extends Service {
     * */
     public static void startServiceForReply(Context context, String noteId, String replyToComment) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
-        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_REPLY);
+        intent.putExtra(ARG_ACTION_TYPE, NotificationActionType.ARG_ACTION_REPLY);
         intent.putExtra(ARG_NOTE_ID, noteId);
         intent.putExtra(ARG_ACTION_REPLY_TEXT, replyToComment);
         context.startService(intent);
@@ -90,9 +82,9 @@ public class NotificationsProcessingService extends Service {
 
     public static PendingIntent getPendingIntentForNotificationDismiss(Context context, int pushId) {
         Intent intent = new Intent(context, NotificationsProcessingService.class);
-        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_NOTIFICATION_DISMISS);
+        intent.putExtra(ARG_ACTION_TYPE, NotificationActionType.ARG_ACTION_NOTIFICATION_DISMISS);
         intent.putExtra(ARG_PUSH_ID, pushId);
-        intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
+        intent.addCategory(NotificationActionType.ARG_ACTION_NOTIFICATION_DISMISS.getValue());
         return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
@@ -173,9 +165,9 @@ public class NotificationsProcessingService extends Service {
                 for (Long oneEventCommentRemoteId : eventChangedCommentsRemoteIds) {
                     if (mActionedCommentsRemoteIds.contains(oneEventCommentRemoteId)) {
                         if (event.isError()) {
-                            mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
+                            mQuickActionProcessor.requestFailed(NotificationActionType.ARG_ACTION_APPROVE);
                         } else {
-                            mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
+                            mQuickActionProcessor.requestCompleted(NotificationActionType.ARG_ACTION_APPROVE);
                         }
                     }
                 }
@@ -187,15 +179,15 @@ public class NotificationsProcessingService extends Service {
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
             if (event.isError()) {
-                mQuickActionProcessor.requestFailed(ARG_ACTION_LIKE);
+                mQuickActionProcessor.requestFailed(NotificationActionType.ARG_ACTION_LIKE);
             } else {
-                mQuickActionProcessor.requestCompleted(ARG_ACTION_LIKE);
+                mQuickActionProcessor.requestCompleted(NotificationActionType.ARG_ACTION_LIKE);
             }
         } else if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
             if (event.isError()) {
-                mQuickActionProcessor.requestFailed(ARG_ACTION_REPLY);
+                mQuickActionProcessor.requestFailed(NotificationActionType.ARG_ACTION_REPLY);
             } else {
-                mQuickActionProcessor.requestCompleted(ARG_ACTION_REPLY);
+                mQuickActionProcessor.requestCompleted(NotificationActionType.ARG_ACTION_REPLY);
             }
         }
     }
