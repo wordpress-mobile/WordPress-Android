@@ -374,7 +374,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                     mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
                 } else if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
                     // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
-                    mLoginListener.gotXmlRpcEndpoint(event.failedEndpoint, null, mHasJetpack);
+                    mLoginListener.gotConnectedSiteInfo(event.failedEndpoint, null, null, mHasJetpack);
                 } else {
                     mLoginListener.gotWpcomSiteInfo(event.failedEndpoint, null, null);
                 }
@@ -392,7 +392,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
 
         // Woo login: if jetpack is not installed/active/connected, redirect to Jetpack required
         if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint, mHasJetpack);
+            mLoginListener.gotConnectedSiteInfo(requestedSiteAddress, null, event.xmlRpcEndpoint, mHasJetpack);
             return;
         }
 
@@ -462,6 +462,7 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 mLoginListener.gotConnectedSiteInfo(
                         event.info.url,
                         event.info.urlAfterRedirects,
+                        null,
                         hasJetpack);
             }
         }
