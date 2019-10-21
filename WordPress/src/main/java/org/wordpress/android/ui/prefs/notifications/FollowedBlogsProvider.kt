@@ -14,11 +14,30 @@ class FollowedBlogsProvider
 ) {
     fun getAllFollowedBlogs(query: String?): List<PreferenceModel> {
         val subscriptions = accountStore.subscriptions
+        if (subscriptions.isEmpty()) {
+            return listOf()
+        }
         val allFollowedBlogs = if (query != null) {
             readerBlogTable.getFollowedBlogs()
                     .filter { it.name.contains(query) || it.url.contains(query) }
         } else {
             readerBlogTable.getFollowedBlogs()
+        }
+        // Load subscriptions when blogs are not loaded yet
+        if (allFollowedBlogs.isEmpty()) {
+            return subscriptions.map { subscription ->
+                PreferenceModel(
+                        getSiteNameOrHostFromSubscription(subscription.blogName, subscription.url),
+                        uriUtils.getHost(subscription.url),
+                        subscription.blogId.toString(),
+                        ClickHandler(
+                                subscription.shouldNotifyPosts,
+                                subscription.shouldEmailPosts,
+                                subscription.emailPostsFrequency,
+                                subscription.shouldEmailComments
+                        )
+                )
+            }
         }
         return allFollowedBlogs.map { readerBlog ->
             val match = subscriptions.find { subscription ->
@@ -26,7 +45,8 @@ class FollowedBlogsProvider
                         subscription.feedId == readerBlog.feedId.toString() ||
                         uriUtils.getHost(subscription.url) == uriUtils.getHost(readerBlog.url)
             }
-            if (match != null) {
+            // We don't have notification settings for feeds
+            if (match != null && match.blogId != null && match.blogId != "false") {
                 PreferenceModel(
                         getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
                         uriUtils.getHost(readerBlog.url),

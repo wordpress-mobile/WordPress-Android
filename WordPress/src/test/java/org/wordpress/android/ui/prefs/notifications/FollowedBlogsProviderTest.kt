@@ -67,7 +67,7 @@ class FollowedBlogsProviderTest {
         val blogPost = setupBlogPost(readerBlogId, feedId = feedId)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
-                "false",
+                "2",
                 shouldNotifyPosts = false,
                 shouldEmailPosts = true,
                 shouldEmailComments = false,
@@ -88,11 +88,34 @@ class FollowedBlogsProviderTest {
     }
 
     @Test
+    fun `does not add click handler when feed id matches but blog id is missing`() {
+        val readerBlogId = 1L
+        val feedId = 10L
+        val blogPost = setupBlogPost(readerBlogId, feedId = feedId)
+        whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
+        val subscriptionModel = setupSubscriptionModel(
+                "false",
+                shouldNotifyPosts = false,
+                shouldEmailPosts = true,
+                shouldEmailComments = false,
+                feedId = feedId.toString()
+        )
+        whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
+
+        val result = followedBlogsProvider.getAllFollowedBlogs(null)
+
+        assertThat(result).hasSize(1)
+        result.first().assertModel(readerBlogId, blogName, urlHost)
+        assertThat(result.first().clickHandler).isNull()
+    }
+
+    @Test
     fun `maps followed blog and adds click handler when url host matches`() {
         val readerBlogId = 1L
         val blogPost = setupBlogPost(readerBlogId, blogUrl = url, blogUrlHost = urlHost)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPost))
         val subscriptionModel = setupSubscriptionModel(
+                readerBlogId = "2",
                 shouldNotifyPosts = false,
                 shouldEmailPosts = false,
                 shouldEmailComments = true,
@@ -134,6 +157,15 @@ class FollowedBlogsProviderTest {
     }
 
     @Test
+    fun `returns empty list when subscriptions are not loaded`() {
+        whenever(accountStore.subscriptions).thenReturn(listOf())
+
+        val result = followedBlogsProvider.getAllFollowedBlogs(null)
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
     fun `filters out items by query`() {
         val readerBlogId = 12345L
         val query = "query"
@@ -141,13 +173,45 @@ class FollowedBlogsProviderTest {
         val blogPostWithQuery = setupBlogPost(readerBlogId, blogNameWithQuery, url, urlHost)
         val blogPostWithoutQuery = setupBlogPost(readerBlogId, "title", url, urlHost)
         whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf(blogPostWithQuery, blogPostWithoutQuery))
-        whenever(accountStore.subscriptions).thenReturn(listOf())
+
+        val subscriptionModel = setupSubscriptionModel(
+                "false",
+                emailFrequency = emailFrequency,
+                subscriptionUrl = subscriptionUrl,
+                subscriptionUrlHost = subscriptionUrl
+        )
+        whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
 
         val result = followedBlogsProvider.getAllFollowedBlogs(query)
 
         assertThat(result).hasSize(1)
         result.first().assertModel(readerBlogId, blogNameWithQuery, urlHost)
         assertThat(result.first().clickHandler).isNull()
+    }
+
+    @Test
+    fun `shows subscriptions when reader sites are empty`() {
+        val readerBlogId = 12345L
+        whenever(readerBlogTable.getFollowedBlogs()).thenReturn(listOf())
+
+        val subscriptionModel = setupSubscriptionModel(
+                "$readerBlogId",
+                emailFrequency = emailFrequency,
+                subscriptionUrl = subscriptionUrl,
+                subscriptionUrlHost = subscriptionUrl
+        )
+        whenever(accountStore.subscriptions).thenReturn(listOf(subscriptionModel))
+
+        val result = followedBlogsProvider.getAllFollowedBlogs(null)
+
+        assertThat(result).hasSize(1)
+        result.first().assertModel(readerBlogId, subscriptionUrl, subscriptionUrl)
+        result.first().assertClickHandler(
+                shouldNotifyPosts = false,
+                shouldEmailPosts = false,
+                shouldEmailComments = false,
+                emailFrequency = emailFrequency
+        )
     }
 
     private fun setupSubscriptionModel(
