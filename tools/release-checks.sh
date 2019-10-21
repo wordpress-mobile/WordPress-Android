@@ -75,7 +75,7 @@ function printVersion() {
 }
 
 checkNewLanguages
-checkENStrings
+#checkENStrings
 printVersion
 # checkDeviceToTest
 # runConnectedTests
