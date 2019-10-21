@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-09 16:57:08+0000
+Translation-Revision-Date: 2019-10-20 03:50:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es_VE
 -->
 <resources>
+    <string name="error_post_not_submitted_retrying">No hemos podido enviar esta entrada a revisión, pero lo intentaremos de nuevo más tarde. </string>
+    <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
+    <string name="error_post_not_published_retrying_private">No hemos podido publicar esta entrada privada, pero lo intentaremos de nuevo más tarde.</string>
+    <string name="error_post_not_published_retrying">No hemos podido publicar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
+    <string name="error_post_not_submitted">No hemos podido completar esta acción y no se ha enviado esta entrada a revisión.</string>
+    <string name="error_post_not_scheduled">No hemos podido completar esta acción y no se ha programado esta entrada.</string>
+    <string name="error_post_not_published_private">No hemos podido completar esta acción y no se ha enviado esta entrada privada.</string>
+    <string name="error_post_not_published">No hemos podido completar esta acción y no se ha publicado esta entrada.</string>
+    <string name="error_media_recover_post_not_submitted">No hemos podido subir este medio y no se ha enviado esta entrada a revisión.</string>
+    <string name="error_media_recover_post_not_scheduled">No hemos podido subir este medio y no se ha programado esta entrada.</string>
+    <string name="error_media_recover_post_not_published_private">No hemos podido subir este medio y no se ha publicado esta entrada privada.</string>
+    <string name="error_media_recover_post_not_published">No hemos podido subir este medio y no se ha publicado la entrada.</string>
+    <string name="error_media_recover_post">No hemos podido subir este medio.</string>
+    <string name="error_generic_error_retrying">No hemos podido completar esta acción, pero lo intentaremos de nuevo más tarde. </string>
+    <string name="error_generic_error">No hemos podido completar esta acción.</string>
+    <string name="error_preview_empty_draft">No se puede previsualizar un borrador vacío</string>
+    <string name="error_preview_empty_page">No se puede previsualizar una página vacía</string>
+    <string name="error_preview_empty_post">No se puede previsualizar una entrada vacía</string>
+    <string name="preview_unavailable_self_hosted_sites">Vista previa no disponible</string>
+    <string name="remote_preview_operation_error">Error al intentar guardar la entrada antes de previsualizarla</string>
+    <string name="post_preview_remote_auto_saving_post">Generando la vista previa…</string>
+    <string name="post_preview_saving_draft">Guardando…</string>
+    <string name="local_post_autosave_revision_available">Has hecho cambios no guardados en esta entrada</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">La versión desde esta aplicación</string>
+    <string name="dialog_confirm_autosave_restore_button">La versión desde otro dispositivo</string>
+    <string name="dialog_confirm_autosave_body_second_part">Desde esta aplicación\nGuardado en %s\n\nDesde otro dispositivo\nGuardado en %s\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Recientemente has hecho cambios en esta entrada, pero no los has guardado. Elige una versión para cargar:\n\n</string>
+    <string name="dialog_confirm_autosave_title">¿Qué versión te gustaría editar?</string>
+    <string name="button_delete_permanently">Borrar permanentemente</string>
+    <string name="post_waiting_for_connection_draft_cancel">No guardaremos los últimos cambios en tu borrador.</string>
+    <string name="post_waiting_for_connection_scheduled_cancel">No programaremos estos cambios.</string>
+    <string name="post_waiting_for_connection_pending_cancel">No enviaremos estos cambios para revisión. </string>
+    <string name="post_waiting_for_connection_publish_cancel"> No publicaremos estos cambios.</string>
+    <string name="post_waiting_for_connection_draft">Guardaremos tu borrador cuando tu dispositivo vuelva a estar online</string>
+    <string name="post_waiting_for_connection_private">Publicaremos tu entrada privada cuando tu dispositivo vuelva a estar online.</string>
+    <string name="post_waiting_for_connection_scheduled">Programaremos tu entrada cuando tu dispositivo vuelva a estar online.</string>
+    <string name="post_waiting_for_connection_pending">Enviaremos tu entrada para revisión cuando tu dispositivo vuelva a estar online.</string>
+    <string name="post_waiting_for_connection_publish">Publicaremos la entrada cuando tu dispositivo vuelva a estar online.</string>
     <string name="settings_username_changer_snackbar_cancel">Esta acción no puede cancelarse. Es posible que el nombre de usuario ya haya sido actualizado.</string>
     <string name="settings_username_changer_toast_content">Tu nuevo nombre de usuario es %1$s</string>
     <string name="settings_username_changer_progress_dialog">Guardando el nombre de usuario…</string>
