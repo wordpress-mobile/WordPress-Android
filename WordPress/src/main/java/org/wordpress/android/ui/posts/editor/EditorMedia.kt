@@ -59,7 +59,7 @@ class EditorMedia(
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore
 ) {
-    private var mAddMediaListThread: AddMediaListThread? = null
+    private var addMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
 
     enum class AddExistingdMediaSource {
@@ -112,14 +112,9 @@ class EditorMedia(
             }
             AddExistingdMediaSource.STOCK_PHOTO_LIBRARY -> Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY
         }
-        AnalyticsUtils.trackWithSiteDetails(
-                stat,
-                site,
-                null
-        )
+        AnalyticsUtils.trackWithSiteDetails(stat, site, null)
     }
 
-    @Suppress("SameParameterValue")
     fun addMedia(mediaUri: Uri?, isNew: Boolean): Boolean {
         mediaUri?.let {
             addMediaList(listOf(it), isNew)
@@ -131,14 +126,14 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        mAddMediaListThread = AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection)
-        mAddMediaListThread!!.start()
+        addMediaListThread = AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection)
+        addMediaListThread!!.start()
     }
 
     fun cancelAddMediaListThread() {
-        if (mAddMediaListThread != null && !mAddMediaListThread!!.isInterrupted) {
+        if (addMediaListThread != null && !addMediaListThread!!.isInterrupted) {
             try {
-                mAddMediaListThread!!.interrupt()
+                addMediaListThread!!.interrupt()
             } catch (e: SecurityException) {
                 AppLog.e(T.MEDIA, e)
             }
@@ -198,9 +193,9 @@ class EditorMedia(
         private val allowMultipleSelection: Boolean = false
     ) : Thread() {
         @Suppress("DEPRECATION")
-        private var mProgressDialog: ProgressDialog? = null
-        private var mDidAnyFail: Boolean = false
-        private var mFinishedUploads = 0
+        private var progressDialog: ProgressDialog? = null
+        private var didAnyFail: Boolean = false
+        private var finishedUploads = 0
         private val mediaMap = ArrayMap<String, MediaFile>()
 
         init {
@@ -211,13 +206,13 @@ class EditorMedia(
             activity.runOnUiThread {
                 try {
                     if (show) {
-                        mProgressDialog = ProgressDialog(activity)
-                        mProgressDialog!!.setCancelable(false)
-                        mProgressDialog!!.isIndeterminate = true
-                        mProgressDialog!!.setMessage(activity.getString(R.string.add_media_progress))
-                        mProgressDialog!!.show()
-                    } else if (mProgressDialog != null && mProgressDialog!!.isShowing) {
-                        mProgressDialog!!.dismiss()
+                        progressDialog = ProgressDialog(activity)
+                        progressDialog!!.setCancelable(false)
+                        progressDialog!!.isIndeterminate = true
+                        progressDialog!!.setMessage(activity.getString(R.string.add_media_progress))
+                        progressDialog!!.show()
+                    } else if (progressDialog != null && progressDialog!!.isShowing) {
+                        progressDialog!!.dismiss()
                     }
                 } catch (e: IllegalArgumentException) {
                     AppLog.e(T.MEDIA, e)
@@ -239,7 +234,7 @@ class EditorMedia(
                         return
                     }
                     if (!processMedia(mediaUri)) {
-                        mDidAnyFail = true
+                        didAnyFail = true
                     }
                 }
             } finally {
@@ -253,7 +248,7 @@ class EditorMedia(
                 if (!isInterrupted) {
                     editorMediaListener.savePostAsyncFromEditorMedia()
                     editorMediaListener.hideOverlayFromEditorMedia()
-                    if (mDidAnyFail) {
+                    if (didAnyFail) {
                         ToastUtils.showToast(activity, R.string.gallery_error, Duration.SHORT)
                     }
                 }
@@ -294,8 +289,8 @@ class EditorMedia(
                 getMediaFile(mediaUri)?.let {
                     mediaMap[path] = it
                 }
-                mFinishedUploads++
-                if (uriList.size == mFinishedUploads) {
+                finishedUploads++
+                if (uriList.size == finishedUploads) {
                     activity.runOnUiThread { editorMediaListener.appendMediaFiles(mediaMap) }
                 }
             } else {
@@ -382,7 +377,6 @@ class EditorMedia(
         return queueFileForUpload(uri, mimeType, MediaUploadState.QUEUED)
     }
 
-    @Suppress("SameParameterValue")
     fun queueFileForUpload(
         uri: Uri,
         mimeType: String?,
