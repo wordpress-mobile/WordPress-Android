@@ -39,8 +39,9 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 
 import java.util.HashMap;
 
@@ -53,6 +54,8 @@ class QuickActionProcessor {
     private Dispatcher mDispatcher;
     private SiteStore mSiteStore;
     private NativeNotificationsUtils mNativeNotificationsUtils;
+    private AnalyticsTrackerWrapper mAnalyticsTracker;
+    private AnalyticsUtilsWrapper mAnalyticsUtils;
     private String mNoteId;
     private String mReplyText;
     private NotificationActionType mActionType;
@@ -66,12 +69,14 @@ class QuickActionProcessor {
                          Dispatcher dispatcher,
                          NativeNotificationsUtils nativeNotificationsUtils,
                          SiteStore siteStore,
+                         AnalyticsTrackerWrapper analyticsTracker,
                          Context ctx, Intent intent,
                          int taskId) {
         mNotificationsProcessingService = notificationsProcessingService;
         mDispatcher = dispatcher;
         mSiteStore = siteStore;
         mNativeNotificationsUtils = nativeNotificationsUtils;
+        mAnalyticsTracker = analyticsTracker;
         mContext = ctx;
         mIntent = intent;
         mTaskId = taskId;
@@ -93,7 +98,7 @@ class QuickActionProcessor {
                         GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
                 GCMMessageService.removeNotification(GCMMessageService.AUTH_PUSH_NOTIFICATION_ID);
 
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
+                mAnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
                 return;
             }
 
@@ -103,7 +108,7 @@ class QuickActionProcessor {
                 if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
                     GCMMessageService.clearNotifications();
                 } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION) {
-                    AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
+                    mAnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
                 } else {
                     GCMMessageService.removeNotification(notificationId);
                     // Dismiss the grouped notification if a user dismisses all notifications from a wear device
@@ -125,13 +130,13 @@ class QuickActionProcessor {
                             mContext
                     );
                 }
-                AnalyticsTracker.track(Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
+                mAnalyticsTracker.track(Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
                 return;
             }
 
             // check special cases for pending draft notifications - dismiss
             if (mActionType.equals(NotificationActionType.ARG_ACTION_DRAFT_PENDING_DISMISS)) {
-                AnalyticsTracker.track(Stat.NOTIFICATION_PENDING_DRAFTS_DISMISSED);
+                mAnalyticsTracker.track(Stat.NOTIFICATION_PENDING_DRAFTS_DISMISSED);
                 return;
             }
 
@@ -388,30 +393,6 @@ class QuickActionProcessor {
         mNotificationsProcessingService.stopSelf(mTaskId);
     }
 
-    private void requestFailedWithMessage(String errorMessage, boolean autoDismiss) {
-        if (errorMessage == null) {
-            // show generic error here
-            errorMessage = mNotificationsProcessingService.getString(R.string.error_generic);
-        }
-        resetOriginalNotification();
-        mNativeNotificationsUtils.showFinalMessageToUser(errorMessage,
-                GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
-
-        if (autoDismiss) {
-            // after 3 seconds, dismiss the error message notification
-            Handler handler = new Handler(mNotificationsProcessingService.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    // remove the error notification from the system bar
-                    mNativeNotificationsUtils.dismissNotification(
-                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
-                }
-            }, 3000); // show the success message for 3 seconds, then dismiss
-        }
-
-        mNotificationsProcessingService.stopSelf(mTaskId);
-    }
-
     private void keepRemoteCommentIdForPostProcessing(long remoteCommendId) {
         mNotificationsProcessingService.addActionedCommentsRemoteId(remoteCommendId);
     }
@@ -435,9 +416,9 @@ class QuickActionProcessor {
         }
 
         // Bump analytics
-        AnalyticsUtils.trackWithBlogPostDetails(
+        mAnalyticsUtils.trackWithBlogPostDetails(
                 Stat.NOTIFICATION_QUICK_ACTIONS_LIKED, mNote.getSiteId(), mNote.getPostId());
-        AnalyticsUtils.trackQuickActionTouched(
+        mAnalyticsUtils.trackQuickActionTouched(
                 QuickActionTrackPropertyValue.LIKE,
                 mSiteStore.getSiteBySiteId(mNote.getSiteId()),
                 mNote.buildComment());
@@ -459,9 +440,9 @@ class QuickActionProcessor {
         }
 
         // Bump analytics
-        AnalyticsUtils.trackWithBlogPostDetails(
+        mAnalyticsUtils.trackWithBlogPostDetails(
                 Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED, mNote.getSiteId(), mNote.getPostId());
-        AnalyticsUtils.trackQuickActionTouched(
+        mAnalyticsUtils.trackQuickActionTouched(
                 QuickActionTrackPropertyValue.APPROVE,
                 mSiteStore.getSiteBySiteId(mNote.getSiteId()),
                 mNote.buildComment());
@@ -514,8 +495,8 @@ class QuickActionProcessor {
                     .dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
 
             // Bump analytics
-            AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
-            AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
+            mAnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
+            mAnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
         } else {
             // cancel the current notification
             mNativeNotificationsUtils.dismissNotification(mPushId, mContext);
