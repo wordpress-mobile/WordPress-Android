@@ -6,7 +6,9 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.util.WPUrlUtils
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthenticationUtils
 @Inject constructor(
     private val accessToken: AccessToken,

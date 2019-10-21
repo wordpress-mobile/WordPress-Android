@@ -17,7 +17,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class DownloadManagerWrapper
 @Inject constructor(private val context: Context) {
     fun enqueue(request: Request): Long = downloadManager().enqueue(request)
