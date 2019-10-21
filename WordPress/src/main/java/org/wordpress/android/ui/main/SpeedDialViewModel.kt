@@ -11,6 +11,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.main.SpeedDialActionMenuItem.NEW_PAGE
+import org.wordpress.android.ui.main.SpeedDialActionMenuItem.NEW_POST
 import org.wordpress.android.ui.main.SpeedDialState.CLOSED
 import org.wordpress.android.ui.main.SpeedDialState.HIDDEN
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -59,6 +61,8 @@ class SpeedDialViewModel @Inject constructor(
                 speedDialFabState = fabNewState
         )
     }
+
+    fun getDefaultActionsList(): List<SpeedDialActionMenuItem> = listOf(NEW_POST, NEW_PAGE)
 
     private fun updateUiState(speedDialFabState: SpeedDialState? = null) {
         val currentState = requireNotNull(uiState.value) {

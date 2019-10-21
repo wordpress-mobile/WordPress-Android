@@ -34,9 +34,6 @@ enum class SpeedDialActionMenuItem(
     );
 
     companion object {
-        @JvmStatic
-        fun getDefaultActionsList(): List<SpeedDialActionMenuItem> = listOf(NEW_POST, NEW_PAGE)
-
         fun fromId(@IdRes id: Int): SpeedDialActionMenuItem = values().firstOrNull { it.id == id }
                     ?: throw IllegalArgumentException("SpeedDialAction wrong id $id")
     }

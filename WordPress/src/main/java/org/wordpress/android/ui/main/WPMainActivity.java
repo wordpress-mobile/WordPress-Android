@@ -412,7 +412,7 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         // Init speed dial menu
-        for (SpeedDialActionMenuItem speedDialAction : SpeedDialActionMenuItem.getDefaultActionsList()) {
+        for (SpeedDialActionMenuItem speedDialAction : mViewModel.getDefaultActionsList()) {
             mSpeedDialView.addActionItem(createSpeedDialActionItem(speedDialAction));
         }
 
