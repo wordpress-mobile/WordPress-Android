@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
@@ -9,12 +8,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.main.SpeedDialAction
-import org.wordpress.android.ui.main.SpeedDialState.CLOSED
+import org.wordpress.android.ui.main.SpeedDialState.VISIBLE
 import org.wordpress.android.ui.main.SpeedDialState.HIDDEN
 import org.wordpress.android.ui.main.SpeedDialUiState
 import org.wordpress.android.ui.main.SpeedDialViewModel
@@ -25,21 +23,18 @@ class SpeedDialViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var uiStateObserver: Observer<SpeedDialUiState>
-
     private lateinit var viewModel: SpeedDialViewModel
 
     @Before
     fun setUp() {
         viewModel = SpeedDialViewModel(TEST_DISPATCHER)
-        viewModel.uiState.observeForever(uiStateObserver)
         viewModel.start(true)
     }
 
     @Test
-    fun `speed dial visible and closed when asked`() {
-        viewModel.onPageChanged(CLOSED)
-        assertThat(viewModel.uiState.value).isEqualTo(SpeedDialUiState(speedDialState = CLOSED))
+    fun `speed dial visible when asked`() {
+        viewModel.onPageChanged(VISIBLE)
+        assertThat(viewModel.uiState.value).isEqualTo(SpeedDialUiState(speedDialState = VISIBLE))
     }
 
     @Test
