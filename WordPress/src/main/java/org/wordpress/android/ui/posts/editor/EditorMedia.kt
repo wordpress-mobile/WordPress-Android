@@ -62,7 +62,7 @@ class EditorMedia(
     private var addMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
 
-    enum class AddExistingdMediaSource {
+    enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
     }
@@ -103,14 +103,14 @@ class EditorMedia(
      * @param source where the media is being added from
      * @param media media being added
      */
-    private fun trackAddMediaEvent(source: AddExistingdMediaSource, media: MediaModel) {
+    private fun trackAddMediaEvent(source: AddExistingMediaSource, media: MediaModel) {
         val stat = when (source) {
-            AddExistingdMediaSource.WP_MEDIA_LIBRARY -> if (media.isVideo) {
+            AddExistingMediaSource.WP_MEDIA_LIBRARY -> if (media.isVideo) {
                 Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
             } else {
                 Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY
             }
-            AddExistingdMediaSource.STOCK_PHOTO_LIBRARY -> Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY
+            AddExistingMediaSource.STOCK_PHOTO_LIBRARY -> Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY
         }
         AnalyticsUtils.trackWithSiteDetails(stat, site, null)
     }
@@ -340,7 +340,7 @@ class EditorMedia(
         }
     }
 
-    fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaId: Long): Boolean {
+    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaId: Long): Boolean {
         val media = mediaStore.getSiteMediaWithId(site, mediaId)
         if (media == null) {
             AppLog.w(T.MEDIA, "Cannot add null media to post")
@@ -354,7 +354,7 @@ class EditorMedia(
         return true
     }
 
-    fun addExistingMediaToEditor(source: AddExistingdMediaSource, mediaIdList: List<Long>) {
+    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         val mediaMap = ArrayMap<String, MediaFile>()
         for (mediaId in mediaIdList) {
             val media = mediaStore.getSiteMediaWithId(site, mediaId)
@@ -459,7 +459,7 @@ class EditorMedia(
     fun prepareMediaPost() {
         val idsArray = activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)
         ListUtils.fromLongArray(idsArray)?.forEach { id ->
-            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id)
+            addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id)
         }
         editorMediaListener.savePostAsyncFromEditorMedia()
     }

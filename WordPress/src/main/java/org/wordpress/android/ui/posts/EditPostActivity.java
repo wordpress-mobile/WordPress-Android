@@ -111,7 +111,7 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.editor.EditorMedia;
-import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingdMediaSource;
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.EditorMediaListener;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
@@ -2488,7 +2488,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         long[] mediaIds =
                                 data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
                         for (long id : mediaIds) {
-                            mEditorMedia.addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
+                            mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, id);
                         }
                         savePostAsync(null);
                     }
@@ -2564,11 +2564,11 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             // if mAllowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
             if (mShowGutenbergEditor && mAllowMultipleSelection) {
-                mEditorMedia.addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, ids);
+                mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
                 mAllowMultipleSelection = false;
             } else {
                 for (Long id : ids) {
-                    mEditorMedia.addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+                    mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
                 }
             }
             savePostAsync(null);
@@ -2590,7 +2590,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case INDIVIDUALLY:
                     for (Long id : mediaIds) {
-                        mEditorMedia.addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+                        mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
                     }
                     savePostAsync(null);
                     break;
@@ -2972,7 +2972,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 shouldFinishInit = false;
                 mMediaInsertedOnCreation = true;
                 for (MediaModel media : mediaList) {
-                    mEditorMedia.addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, media.getMediaId());
+                    mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, media.getMediaId());
                 }
                 savePostAsync(() -> runOnUiThread(this::onEditorFinalTouchesBeforeShowing));
             }
