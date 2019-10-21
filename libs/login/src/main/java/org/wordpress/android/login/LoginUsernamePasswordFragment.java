@@ -154,7 +154,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         mUsernameInput = rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && mInputUsername == null) {
             mUsernameInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_USERNAME);
         }
         mUsernameInput.addTextChangedListener(this);
@@ -168,7 +168,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
         mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setText(mInputPassword);
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && mInputPassword == null) {
             mPasswordInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_PASSWORD);
         }
         mPasswordInput.addTextChangedListener(this);
@@ -535,8 +535,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
                 if (mGetSiteOptionsInitiated) {
                     endProgress();
                     mGetSiteOptionsInitiated = false;
-                    if (lastAddedXMLRPCSite.getJetpackUserEmail() == null) {
-                        // TODO: redirect to jetpack required screen
+                    String userEmail = lastAddedXMLRPCSite.getJetpackUserEmail();
+                    if (userEmail == null || userEmail.isEmpty()) {
+                        mLoginListener.helpNoJetpackScreen(lastAddedXMLRPCSite.getUrl(),
+                                lastAddedXMLRPCSite.getXmlRpcUrl(), lastAddedXMLRPCSite.getUsername(),
+                                lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl());
                     } else {
                         mLoginListener.gotWpcomEmail(lastAddedXMLRPCSite.getJetpackUserEmail());
                     }
