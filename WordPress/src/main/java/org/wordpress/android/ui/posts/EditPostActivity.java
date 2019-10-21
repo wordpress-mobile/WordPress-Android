@@ -2862,6 +2862,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void setFeaturedImageId(final long mediaId) {
         mPost.setFeaturedImageId(mediaId);
+        mPost.setIsLocallyChanged(true);
         savePostAsync(() -> EditPostActivity.this.runOnUiThread(() -> {
             if (mEditPostSettingsFragment != null) {
                 mEditPostSettingsFragment.updateFeaturedImage(mediaId);
@@ -2905,6 +2906,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                     }
                     break;
+                case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
                     advertiseImageOptimisationAndAddMedia(data);
                     break;
@@ -3297,6 +3299,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onAddLibraryMediaClicked(boolean allowMultipleSelection) {
+        mAllowMultipleSelection = allowMultipleSelection;
+        if (mAllowMultipleSelection) {
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+        } else {
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
+        }
+    }
+
+    @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO, allowMultipleSelection);
     }
@@ -3307,8 +3319,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddVideoClicked(boolean allowMultipleSelectio) {
-        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelectio);
+    public void onAddVideoClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO, allowMultipleSelection);
+    }
+
+    @Override
+    public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
+        mAllowMultipleSelection = allowMultipleSelection;
+        WPMediaUtils.launchMediaLibrary(this, mAllowMultipleSelection);
     }
 
     @Override

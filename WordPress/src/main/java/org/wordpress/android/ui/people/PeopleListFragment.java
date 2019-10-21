@@ -151,7 +151,7 @@ public class PeopleListFragment extends Fragment {
             }
 
             @Override
-            public void onLoadData() {
+            public void onLoadData(boolean forced) {
                 updatePeople(false);
             }
 

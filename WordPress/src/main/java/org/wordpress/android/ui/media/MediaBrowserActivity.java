@@ -657,7 +657,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mBrowserType.isBrowser() && !isLongClick
                 || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media);
-        } else if (mBrowserType.isSingleImagePicker() && !isLongClick) {
+        } else if ((mBrowserType.isSingleImagePicker() || mBrowserType.isSingleMediaPicker()) && !isLongClick) {
             // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
