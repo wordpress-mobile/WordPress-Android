@@ -5,7 +5,7 @@ buildscript {
     }
 
     ext {
-        aztecVersion = 'v1.3.33'
+        aztecVersion = '876ac04b4b55304cb81dab7b5025822e4ddec2f8'
     }
 
     dependencies {
