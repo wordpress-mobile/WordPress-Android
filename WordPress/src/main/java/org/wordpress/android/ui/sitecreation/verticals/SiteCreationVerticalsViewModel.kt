@@ -38,6 +38,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsView
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -263,7 +264,7 @@ class SiteCreationVerticalsViewModel @Inject constructor(
                 val onItemTapped = {
                     tracker.trackVerticalSelected(model.name, model.verticalId, model.isUserInputVertical)
                     _verticalSelected.value = if (model.isUserInputVertical) {
-                        model.name.toLowerCase()
+                        model.name.toLowerCase(Locale.ROOT)
                     } else {
                         model.verticalId
                     }

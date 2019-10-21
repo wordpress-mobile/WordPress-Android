@@ -181,7 +181,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                                     return;
                                 }
                                 if (mFilterListener != null) {
-                                    mFilterListener.onLoadData();
+                                    mFilterListener.onLoadData(true);
                                 }
                             }
                         });
@@ -245,7 +245,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                 if (mFilterListener != null) {
                     mFilterListener.onFilterSelected(position, selectedCriteria);
                     setRefreshing(true);
-                    mFilterListener.onLoadData();
+                    mFilterListener.onLoadData(false);
                 }
             }
 
@@ -568,7 +568,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * 2 - each time a screen refresh is requested
          * 3 - each time the user changes the filter spinner selection
          */
-        void onLoadData();
+        void onLoadData(boolean forced);
 
         /**
          * Called each time the user changes the Spinner selection (i.e. changes the criteria on which to filter
