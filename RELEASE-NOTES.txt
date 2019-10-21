@@ -1,5 +1,8 @@
 13.5
 -----
+ * Block Editor: Fix issue when multiple media selection adds only one image or video block.
+ * Block Editor: Add Link Target (Open in new tab) to Image Block.
+ * Block Editor: New block "Media & Text".
  
 13.4
 -----
