@@ -3,6 +3,7 @@ package org.wordpress.android.ui.utils
 import android.app.DownloadManager
 import android.app.DownloadManager.Query
 import android.app.DownloadManager.Request
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,8 @@ import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
 import androidx.core.content.FileProvider
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import java.io.File
 import javax.inject.Inject
 
@@ -61,7 +64,11 @@ class DownloadManagerWrapper
         val openAttachmentIntent = Intent(Intent.ACTION_VIEW)
         openAttachmentIntent.setDataAndType(attachmentUri, attachmentMimeType)
         openAttachmentIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
-        context.startActivity(openAttachmentIntent)
+        try {
+            context.startActivity(openAttachmentIntent)
+        } catch (e: ActivityNotFoundException) {
+            AppLog.e(T.READER, "No browser found on the device: ${e.message}")
+        }
     }
 
     private fun downloadManager() =
