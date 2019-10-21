@@ -976,7 +976,7 @@ public class AppPrefs {
             return;
         }
         String key = localSiteId + "-" + localPostId;
-        List<String> currentIds = getPostWithHWAccelerationOff();
+        List<String> currentIds = new ArrayList<>(getPostWithHWAccelerationOff());
         currentIds.add(key);
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
