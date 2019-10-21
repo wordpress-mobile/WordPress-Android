@@ -52,6 +52,7 @@ class QuickActionProcessor {
     private NotificationsProcessingService mNotificationsProcessingService;
     private Dispatcher mDispatcher;
     private SiteStore mSiteStore;
+    private NativeNotificationsUtils mNativeNotificationsUtils;
     private String mNoteId;
     private String mReplyText;
     private NotificationActionType mActionType;
@@ -61,13 +62,16 @@ class QuickActionProcessor {
     private final Context mContext;
     private final Intent mIntent;
 
-    QuickActionProcessor(NotificationsProcessingService notificationsProcessingService, Dispatcher dispatcher,
+    QuickActionProcessor(NotificationsProcessingService notificationsProcessingService,
+                         Dispatcher dispatcher,
+                         NativeNotificationsUtils nativeNotificationsUtils,
                          SiteStore siteStore,
                          Context ctx, Intent intent,
                          int taskId) {
         mNotificationsProcessingService = notificationsProcessingService;
         mDispatcher = dispatcher;
         mSiteStore = siteStore;
+        mNativeNotificationsUtils = nativeNotificationsUtils;
         mContext = ctx;
         mIntent = intent;
         mTaskId = taskId;
@@ -81,11 +85,11 @@ class QuickActionProcessor {
             // check special cases for authorization push
             if (mActionType.equals(NotificationActionType.ARG_ACTION_AUTH_IGNORE)) {
                 // dismiss notifs
-                NativeNotificationsUtils.dismissNotification(
+                mNativeNotificationsUtils.dismissNotification(
                         GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
-                NativeNotificationsUtils.dismissNotification(
+                mNativeNotificationsUtils.dismissNotification(
                         GCMMessageService.AUTH_PUSH_NOTIFICATION_ID, mContext);
-                NativeNotificationsUtils.dismissNotification(
+                mNativeNotificationsUtils.dismissNotification(
                         GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
                 GCMMessageService.removeNotification(GCMMessageService.AUTH_PUSH_NOTIFICATION_ID);
 
@@ -116,7 +120,7 @@ class QuickActionProcessor {
                 // dismiss notif
                 int postId = mIntent.getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0);
                 if (postId != 0) {
-                    NativeNotificationsUtils.dismissNotification(
+                    mNativeNotificationsUtils.dismissNotification(
                             PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                             mContext
                     );
@@ -137,7 +141,7 @@ class QuickActionProcessor {
                 // because we've got inline-reply there with its own spinner to show progress
                 // no op
             } else {
-                NativeNotificationsUtils.showIntermediateMessageToUser(
+                mNativeNotificationsUtils.showIntermediateMessageToUser(
                         getProcessingTitleForAction(mActionType), mContext);
             }
 
@@ -317,10 +321,10 @@ class QuickActionProcessor {
         NotificationsActions.markNoteAsRead(mNote);
 
         // dismiss any other pending result notification
-        NativeNotificationsUtils.dismissNotification(
+        mNativeNotificationsUtils.dismissNotification(
                 GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
         // update notification indicating the operation succeeded
-        NativeNotificationsUtils.showFinalMessageToUser(successMessage,
+        mNativeNotificationsUtils.showFinalMessageToUser(successMessage,
                 GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID,
                 mContext);
         // remove the original notification from the system bar
@@ -330,7 +334,7 @@ class QuickActionProcessor {
         Handler handler = new Handler(mNotificationsProcessingService.getMainLooper());
         handler.postDelayed(new Runnable() {
             public void run() {
-                NativeNotificationsUtils.dismissNotification(
+                mNativeNotificationsUtils.dismissNotification(
                         GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
             }
         }, 3000); // show the success message for 3 seconds, then dismiss
@@ -366,9 +370,9 @@ class QuickActionProcessor {
             errorMessage = mNotificationsProcessingService.getString(R.string.error_generic);
         }
         resetOriginalNotification();
-        NativeNotificationsUtils.dismissNotification(
+        mNativeNotificationsUtils.dismissNotification(
                 GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
-        NativeNotificationsUtils.showFinalMessageToUser(errorMessage,
+        mNativeNotificationsUtils.showFinalMessageToUser(errorMessage,
                 GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
         // after 3 seconds, dismiss the error message notification
@@ -376,7 +380,7 @@ class QuickActionProcessor {
         handler.postDelayed(new Runnable() {
             public void run() {
                 // remove the error notification from the system bar
-                NativeNotificationsUtils.dismissNotification(
+                mNativeNotificationsUtils.dismissNotification(
                         GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
             }
         }, 3000); // show the success message for 3 seconds, then dismiss
@@ -390,7 +394,7 @@ class QuickActionProcessor {
             errorMessage = mNotificationsProcessingService.getString(R.string.error_generic);
         }
         resetOriginalNotification();
-        NativeNotificationsUtils.showFinalMessageToUser(errorMessage,
+        mNativeNotificationsUtils.showFinalMessageToUser(errorMessage,
                 GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
         if (autoDismiss) {
@@ -399,7 +403,7 @@ class QuickActionProcessor {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     // remove the error notification from the system bar
-                    NativeNotificationsUtils.dismissNotification(
+                    mNativeNotificationsUtils.dismissNotification(
                             GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                 }
             }, 3000); // show the success message for 3 seconds, then dismiss
@@ -514,8 +518,8 @@ class QuickActionProcessor {
             AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
         } else {
             // cancel the current notification
-            NativeNotificationsUtils.dismissNotification(mPushId, mContext);
-            NativeNotificationsUtils.hideStatusBar(mContext);
+            mNativeNotificationsUtils.dismissNotification(mPushId, mContext);
+            mNativeNotificationsUtils.hideStatusBar(mContext);
             // and just trigger the Activity to allow the user to write a reply
             startReplyToCommentActivity();
         }

@@ -48,6 +48,7 @@ public class NotificationsProcessingService extends Service {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
+    @Inject NativeNotificationsUtils mNativeNotificationsUtils;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -120,7 +121,9 @@ public class NotificationsProcessingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Offload to a separate thread.
-        mQuickActionProcessor = new QuickActionProcessor(this, mDispatcher, mSiteStore, this, intent, startId);
+        mQuickActionProcessor =
+                new QuickActionProcessor(this, mDispatcher, mNativeNotificationsUtils, mSiteStore, this, intent,
+                        startId);
         new Thread(new Runnable() {
             public void run() {
                 mQuickActionProcessor.process();

@@ -29,6 +29,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -62,6 +63,7 @@ class PostsListActivity : AppCompatActivity(),
     @Inject internal lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
+    @Inject internal lateinit var nativeNotificationsUtils: NativeNotificationsUtils
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -225,7 +227,8 @@ class PostsListActivity : AppCompatActivity(),
                         this@PostsListActivity,
                         action,
                         remotePreviewLogicHelper,
-                        previewStateHelper
+                        previewStateHelper,
+                        nativeNotificationsUtils
                 )
             }
         })

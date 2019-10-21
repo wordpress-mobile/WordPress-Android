@@ -8,18 +8,24 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
 
+import javax.inject.Inject;
+
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
 public class NativeNotificationsUtils {
-    public static void showIntermediateMessageToUser(String message, Context context) {
+    @Inject
+    public NativeNotificationsUtils() {
+    }
+
+    public void showIntermediateMessageToUser(String message, Context context) {
         showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID, context);
     }
 
-    public static void showFinalMessageToUser(String message, int pushId, Context context) {
+    public void showFinalMessageToUser(String message, int pushId, Context context) {
         showMessageToUser(message, false, pushId, context);
     }
 
-    private static void showMessageToUser(String message, boolean intermediateMessage, int pushId, Context context) {
+    private void showMessageToUser(String message, boolean intermediateMessage, int pushId, Context context) {
         NotificationCompat.Builder builder = getBuilder(context,
                 context.getString(R.string.notification_channel_transient_id))
                 .setContentText(message).setTicker(message)
@@ -27,7 +33,7 @@ public class NativeNotificationsUtils {
         showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }
 
-    public static void showMessageToUserWithBuilder(NotificationCompat.Builder builder, String message,
+    public void showMessageToUserWithBuilder(NotificationCompat.Builder builder, String message,
                                                     boolean intermediateMessage, int pushId, Context context) {
         if (!intermediateMessage) {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
@@ -38,7 +44,7 @@ public class NativeNotificationsUtils {
         notificationManager.notify(pushId, builder.build());
     }
 
-    public static NotificationCompat.Builder getBuilder(Context context, String channelId) {
+    public NotificationCompat.Builder getBuilder(Context context, String channelId) {
         return new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                 .setColor(context.getResources().getColor(R.color.primary_50))
@@ -46,14 +52,14 @@ public class NativeNotificationsUtils {
                 .setAutoCancel(true);
     }
 
-    public static void dismissNotification(int pushId, Context context) {
+    public void dismissNotification(int pushId, Context context) {
         if (context != null) {
             final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.cancel(pushId);
         }
     }
 
-    public static void hideStatusBar(Context context) {
+    public void hideStatusBar(Context context) {
         Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         context.sendBroadcast(closeIntent);
     }

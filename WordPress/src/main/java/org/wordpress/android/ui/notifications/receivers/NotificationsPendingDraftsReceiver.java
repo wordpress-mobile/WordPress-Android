@@ -42,6 +42,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
+    @Inject NativeNotificationsUtils mNativeNotificationsUtils;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -159,7 +160,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
     private void buildNotificationWithIntent(Context context, PendingIntent intent, String message, int postId,
                                              boolean isPage) {
-        NotificationCompat.Builder builder = NativeNotificationsUtils.getBuilder(context,
+        NotificationCompat.Builder builder = mNativeNotificationsUtils.getBuilder(context,
                 context.getString(R.string.notification_channel_important_id));
         builder.setContentText(message)
                .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -172,7 +173,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         }
         addDismissActionForNotification(context, builder, postId, isPage);
 
-        NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
+        mNativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
                                                               PendingDraftsNotificationsUtils
                                                                       .makePendingDraftNotificationId(postId), context);
     }

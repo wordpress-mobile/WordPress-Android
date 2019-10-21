@@ -38,7 +38,8 @@ fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
-    previewStateHelper: PreviewStateHelper
+    previewStateHelper: PreviewStateHelper,
+    nativeNotificationsUtils: NativeNotificationsUtils
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -75,7 +76,7 @@ fun handlePostListAction(
             ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
         }
         is PostListAction.DismissPendingNotification -> {
-            NativeNotificationsUtils.dismissNotification(action.pushId, activity)
+            nativeNotificationsUtils.dismissNotification(action.pushId, activity)
         }
     }
 }

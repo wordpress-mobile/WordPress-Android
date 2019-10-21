@@ -171,6 +171,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject NativeNotificationsUtils mNativeNotificationsUtils;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -524,7 +525,7 @@ public class WPMainActivity extends AppCompatActivity implements
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
-        NativeNotificationsUtils
+        mNativeNotificationsUtils
                 .dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
 
         // if no specific post id passed, show the list
