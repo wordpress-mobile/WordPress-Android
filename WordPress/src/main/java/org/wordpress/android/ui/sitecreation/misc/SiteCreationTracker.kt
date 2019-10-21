@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -110,14 +111,14 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     }
 
     fun trackErrorShown(errorContext: String, errorType: SiteCreationErrorType, errorDescription: String? = null) {
-        trackErrorShown(errorContext, errorType.toString().toLowerCase(), errorDescription)
+        trackErrorShown(errorContext, errorType.toString().toLowerCase(Locale.ROOT), errorDescription)
     }
 
     fun trackErrorShown(errorContext: String, errorType: String, errorDescription: String? = null) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ERROR_SHOWN,
                 errorContext,
-                errorType.toLowerCase(),
+                errorType.toLowerCase(Locale.ROOT),
                 errorDescription ?: ""
         )
     }
