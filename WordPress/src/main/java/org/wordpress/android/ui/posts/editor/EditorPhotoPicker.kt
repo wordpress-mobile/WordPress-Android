@@ -54,17 +54,18 @@ class EditorPhotoPicker(
             val mediaBrowserType = if (showAztecEditor) {
                 MediaBrowserType.AZTEC_EDITOR_PICKER
             } else MediaBrowserType.EDITOR_PICKER
-            photoPickerFragment = PhotoPickerFragment.newInstance(
+
+            PhotoPickerFragment.newInstance(
                     photoPickerListener,
                     mediaBrowserType,
                     site
-            )
-        }
-        photoPickerFragment?.let { photoPickerFragment ->
-            activity.supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.photo_fragment_container, photoPickerFragment, PHOTO_PICKER_TAG)
-                    .commit()
+            ).let {
+                photoPickerFragment = it
+                activity.supportFragmentManager
+                        .beginTransaction()
+                        .add(R.id.photo_fragment_container, it, PHOTO_PICKER_TAG)
+                        .commit()
+            }
         }
     }
 
