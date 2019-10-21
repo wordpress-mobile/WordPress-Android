@@ -59,7 +59,8 @@
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout
         android:id="@+id/speed_dial_overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/black_translucent_40"/>
 
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/speed_dial_fab_button"
