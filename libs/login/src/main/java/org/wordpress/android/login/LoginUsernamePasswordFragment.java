@@ -379,14 +379,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         return null;
     }
 
-    private @Nullable SiteModel getLastAddedXMLRPCSite() {
-        List<SiteModel> selfhostedSites = mSiteStore.getSitesAccessedViaXMLRPC();
-        if (selfhostedSites != null && !selfhostedSites.isEmpty()) {
-            return selfhostedSites.get(selfhostedSites.size() - 1);
-        }
-        return null;
-    }
-
     @Override
     protected void endProgress() {
         super.endProgress();
@@ -527,7 +519,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         }
 
         if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            SiteModel lastAddedXMLRPCSite = getLastAddedXMLRPCSite();
+            SiteModel lastAddedXMLRPCSite = SiteUtils.getXMLRPCSiteByUrl(mSiteStore, mInputSiteAddress);
             if (lastAddedXMLRPCSite != null) {
                 // the wp.getOptions endpoint is already called
                 // verify if jetpack user email is available.
