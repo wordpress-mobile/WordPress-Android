@@ -107,7 +107,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         mToolbarSwitch.redirectContextClickToLongPressListener()
     }
 
-    private fun setToolbarTitleContentDescription(titleContentDescription: String?) {
+    fun setToolbarTitleContentDescription(titleContentDescription: String?) {
         titleContentDescription?.let {
             for (i in 0 until mToolbarSwitch.childCount) {
                 if (mToolbarSwitch.getChildAt(i) is TextView) {
@@ -131,22 +131,28 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
     /**
      * Sets pref key to be used for persistence in shared preferences
-     * Fetches last saved value and sets initial state of the master switch and toolbar
      */
     fun setPrefKey(prefKey: String?) {
         prefKey?.let {
             mPrefKey = it
 
             val isMasterChecked = AppPrefs.getMasterSwitchKeyEnabled(it)
-            mMasterSwitch.isChecked = isMasterChecked
-
-            mToolbarSwitch.title = if (isMasterChecked) {
-                mTitleOn
-            } else {
-                mTitleOff
-            }
-            mToolbarSwitch.visibility = View.VISIBLE
+            loadInitialState(isMasterChecked)
         }
+    }
+
+    /**
+     * Loads initial state of the master switch and toolbar
+     */
+    fun loadInitialState(checkMaster: Boolean) {
+        mMasterSwitch.isChecked = checkMaster
+
+        mToolbarSwitch.title = if (checkMaster) {
+            mTitleOn
+        } else {
+            mTitleOff
+        }
+        mToolbarSwitch.visibility = View.VISIBLE
     }
 
     fun setTitleOn(titleOn: String?) {

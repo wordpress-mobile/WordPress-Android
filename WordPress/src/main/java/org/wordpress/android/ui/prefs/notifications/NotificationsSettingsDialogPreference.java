@@ -23,7 +23,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
@@ -49,8 +48,9 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     private LinearLayout mOptionsView;
 
     private PrefMasterSwitchToolbarView mMasterSwitchToolbarView;
-    private String mMasterKey;
-    private boolean mIsMasterSwitchToggled;
+    private boolean mShouldDisplayMasterSwitch;
+
+    private String[] mSettingsArray = new String[0], mSettingsValues = new String[0];
 
     private OnNotificationsSettingsChangedListener mOnNotificationsSettingsChangedListener;
 
@@ -68,38 +68,21 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         mBlogId = blogId;
         mSettings = settings;
         mOnNotificationsSettingsChangedListener = listener;
-    }
-
-    private boolean isMasterSwitchEnabled() {
-        boolean masterSwitchEnabled = false;
-        switch (mChannel) {
-            case BLOGS:
-                if (mType == Type.TIMELINE) {
-                    masterSwitchEnabled = true;
-                }
-                break;
-            case OTHER:
-            case WPCOM:
-                break;
-        }
-
-        if (mMasterKey == null) {
-            findMasterKey();
-        }
-
-        return masterSwitchEnabled;
+        mShouldDisplayMasterSwitch = mSettings.shouldDisplayMasterSwitch(mChannel, mType);
     }
 
     @Override
     protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
-        setUpMasterSwitchToolbarView(view);
+        if (mShouldDisplayMasterSwitch) {
+            setupMasterSwitchToolbarView(view);
+        }
     }
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
         super.onPrepareDialogBuilder(builder);
-        if (isMasterSwitchEnabled()) {
+        if (mShouldDisplayMasterSwitch && mTitleViewGroup != null) {
             builder.setCustomTitle(mTitleViewGroup);
         }
     }
@@ -147,39 +130,33 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     }
 
     private View configureLayoutForView(LinearLayout view) {
-        JSONObject settingsJson = null;
-
-        String[] settingsArray = new String[0], settingsValues = new String[0], summaryArray = new String[0];
-        String typeString = mType.toString();
+        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
+        String[] summaryArray = new String[0];
 
         switch (mChannel) {
             case BLOGS:
-                settingsJson = JSONUtils.queryJSON(mSettings.getBlogSettings().get(mBlogId),
-                                                   typeString, new JSONObject());
-                settingsArray = getContext().getResources().getStringArray(R.array.notifications_blog_settings);
-                settingsValues = getContext().getResources().getStringArray(R.array.notifications_blog_settings_values);
+                mSettingsArray = getContext().getResources().getStringArray(R.array.notifications_blog_settings);
+                mSettingsValues = getContext().getResources()
+                                              .getStringArray(R.array.notifications_blog_settings_values);
                 break;
             case OTHER:
-                settingsJson = JSONUtils.queryJSON(mSettings.getOtherSettings(),
-                                                   typeString, new JSONObject());
-                settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
-                settingsValues =
+                mSettingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
+                mSettingsValues =
                         getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
                 break;
             case WPCOM:
-                settingsJson = mSettings.getWPComSettings();
-                settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
-                settingsValues =
+                mSettingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
+                mSettingsValues =
                         getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
                 summaryArray =
                         getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_summaries);
                 break;
         }
 
-        if (settingsJson != null && settingsArray.length == settingsValues.length) {
-            for (int i = 0; i < settingsArray.length; i++) {
-                String settingName = settingsArray[i];
-                String settingValue = settingsValues[i];
+        if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
+            for (int i = 0; i < mSettingsArray.length; i++) {
+                String settingName = mSettingsArray[i];
+                String settingValue = mSettingsValues[i];
 
                 // Skip a few settings for 'Email' section
                 if (mType == Type.EMAIL && settingValue.equals(SETTING_VALUE_ACHIEVEMENT)) {
@@ -244,53 +221,67 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 );
             }
         }
-
-        if (positiveResult && isMasterSwitchEnabled() && mIsMasterSwitchToggled && mMasterKey != null) {
-            mMasterSwitchToolbarView.saveMasterKeyEnabled(mMasterKey);
-            mIsMasterSwitchToggled = false;
-        }
     }
 
-    private void setUpMasterSwitchToolbarView(View view) {
-        if (isMasterSwitchEnabled() && mMasterKey != null) {
-            mTitleViewGroup = (ViewGroup) LayoutInflater.from(getContext())
-                                                        .inflate(R.layout.notifications_tab_title_layout,
-                                                                (ViewGroup) view, false);
+    private void setupMasterSwitchToolbarView(View view) {
+        mTitleViewGroup = (ViewGroup) LayoutInflater.from(getContext())
+                                                    .inflate(R.layout.notifications_tab_title_layout,
+                                                            (ViewGroup) view, false);
 
-            mMasterSwitchToolbarView = mTitleViewGroup.findViewById(R.id.master_switch);
-            //  master key value saved on dialog close
-            mMasterSwitchToolbarView.setShouldSaveMasterKeyOnToggle(false);
-            mMasterSwitchToolbarView.setMasterSwitchToolbarListener(this);
 
-            mMasterSwitchToolbarView.setPrefKey(mMasterKey);
+        mMasterSwitchToolbarView = mTitleViewGroup.findViewById(R.id.master_switch);
+        mMasterSwitchToolbarView.setShouldSaveMasterKeyOnToggle(false);
+        mMasterSwitchToolbarView.setMasterSwitchToolbarListener(this);
 
-            hideDisabledView(mMasterSwitchToolbarView.isMasterChecked());
-        }
-    }
+        // Master Switch initial state:
+        // On: If at least one of the settings options is on
+        // Off: If all settings options are off
+        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
+        boolean checkMasterSwitch = mSettings.isAtLeastOneSettingsEnabled(
+            settingsJson,
+            mSettingsArray,
+            mSettingsValues
+        );
+        mMasterSwitchToolbarView.loadInitialState(checkMasterSwitch);
 
-    private void findMasterKey() {
-        switch (mChannel) {
-            case BLOGS:
-                if (mType == Type.TIMELINE) {
-                    mMasterKey = AppPrefs.getYourSiteNotificationsTabMasterKey(mBlogId);
-                }
-                break;
-            case OTHER:
-            case WPCOM:
-                break;
-        }
+        hideDisabledView(mMasterSwitchToolbarView.isMasterChecked());
     }
 
     @Override
     public void onMasterSwitchCheckedChanged(
             CompoundButton buttonView,
             boolean isChecked) {
-        mIsMasterSwitchToggled = true;
+        checkSettingsSwitches(isChecked);
         hideDisabledView(isChecked);
     }
 
+    /**
+     * Hide view when Notifications Tab Settings are disabled by toggling the master switch off.
+     *
+     * @param isMasterChecked TRUE to hide disabled view, FALSE to show disabled view
+     */
     private void hideDisabledView(boolean isMasterChecked) {
         mDisabledView.setVisibility(isMasterChecked ? View.GONE : View.VISIBLE);
         mOptionsView.setVisibility(isMasterChecked ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Updates Notifications Tab settings switches state based on the master switch state
+     *
+     * @param isMasterChecked TRUE to switched on the settings switches.
+     *                        FALSE to switched off the settings switches.
+     */
+    private void checkSettingsSwitches(boolean isMasterChecked) {
+        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
+
+        if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
+            for (int i = 0; i < mSettingsArray.length; i++) {
+                String settingValue = mSettingsValues[i];
+                final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
+                if (toggleSwitch != null) {
+                    toggleSwitch.setChecked(isMasterChecked);
+                }
+            }
+        }
     }
 }
