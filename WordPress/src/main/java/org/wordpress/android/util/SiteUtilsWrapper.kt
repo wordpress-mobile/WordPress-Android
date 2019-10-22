@@ -13,5 +13,5 @@ import javax.inject.Inject
  */
 @Reusable
 class SiteUtilsWrapper @Inject constructor() {
-    fun isPhotonCapable(site: SiteModel):  Boolean = SiteUtils.isPhotonCapable(site)
+    fun isPhotonCapable(site: SiteModel): Boolean = SiteUtils.isPhotonCapable(site)
 }
