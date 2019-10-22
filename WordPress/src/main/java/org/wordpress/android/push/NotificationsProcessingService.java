@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -89,7 +90,7 @@ public class NotificationsProcessingService extends Service {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
-    @Inject NotificationsTracker mNotificationsTracker;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -166,7 +167,7 @@ public class NotificationsProcessingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Offload to a separate thread.
-        mQuickActionProcessor = new QuickActionProcessor(this, mNotificationsTracker, intent, startId);
+        mQuickActionProcessor = new QuickActionProcessor(this, mSystemNotificationsTracker, intent, startId);
         new Thread(new Runnable() {
             public void run() {
                 mQuickActionProcessor.process();
@@ -177,7 +178,7 @@ public class NotificationsProcessingService extends Service {
     }
 
     private class QuickActionProcessor {
-        private NotificationsTracker mNotificationsTracker;
+        private SystemNotificationsTracker mSystemNotificationsTracker;
         private String mNoteId;
         private String mReplyText;
         private String mActionType;
@@ -187,9 +188,9 @@ public class NotificationsProcessingService extends Service {
         private final Context mContext;
         private final Intent mIntent;
 
-        QuickActionProcessor(Context ctx, NotificationsTracker notificationsTracker, Intent intent, int taskId) {
+        QuickActionProcessor(Context ctx, SystemNotificationsTracker notificationsTracker, Intent intent, int taskId) {
             mContext = ctx;
-            mNotificationsTracker = notificationsTracker;
+            mSystemNotificationsTracker = notificationsTracker;
             mIntent = intent;
             mTaskId = taskId;
         }
@@ -217,7 +218,7 @@ public class NotificationsProcessingService extends Service {
                 // check notification dismissed pending intent
                 if (mActionType.equals(ARG_ACTION_NOTIFICATION_DISMISS)) {
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
-                    mNotificationsTracker.trackDismissedNotification(notificationId);
+                    mSystemNotificationsTracker.trackDismissedNotification(notificationId);
                     if (notificationId == NotificationPushId.GROUP_NOTIFICATION_ID.getValue()) {
                         GCMMessageService.clearNotifications();
                     } else if (notificationId == NotificationPushId.QUICK_START_REMINDER_NOTIFICATION.getValue()) {
