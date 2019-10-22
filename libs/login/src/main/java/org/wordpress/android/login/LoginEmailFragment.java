@@ -69,7 +69,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
-    private static final String ARG_LOGIN_SITE_XMLRPC_URL = "ARG_LOGIN_SITE_XMLRPC_URL";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -84,13 +83,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected boolean mHasDismissedEmailHints;
     protected boolean mIsDisplayingEmailHints;
     protected String mLoginSiteUrl;
-    protected String mLoginSiteXmlRpcUrl;
 
-    public static LoginEmailFragment newInstance(String url, String endpointAddress) {
+    public static LoginEmailFragment newInstance(String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_LOGIN_SITE_URL, url);
-        args.putString(ARG_LOGIN_SITE_XMLRPC_URL, endpointAddress);
         fragment.setArguments(args);
         return fragment;
     }
@@ -188,11 +185,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     if (loginMode == LoginMode.JETPACK_STATS) {
                         mLoginListener.loginViaWpcomUsernameInstead();
                     } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
-                        if (mLoginSiteXmlRpcUrl == null || mLoginSiteXmlRpcUrl.isEmpty()) {
-                            mLoginListener.loginViaWpcomUsernameInstead();
-                        } else {
-                            mLoginListener.gotXmlRpcEndpoint(mLoginSiteUrl, mLoginSiteXmlRpcUrl);
-                        }
+                        mLoginListener.gotXmlRpcEndpoint(mLoginSiteUrl, null);
                     } else {
                         mLoginListener.loginViaSiteAddress();
                     }
@@ -284,7 +277,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         Bundle args = getArguments();
         if (args != null) {
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
-            mLoginSiteXmlRpcUrl = args.getString(ARG_LOGIN_SITE_XMLRPC_URL, "");
         }
     }
 
