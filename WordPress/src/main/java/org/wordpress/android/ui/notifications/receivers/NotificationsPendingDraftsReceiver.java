@@ -168,7 +168,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         builder.setDeleteIntent(
                 NotificationsProcessingService.getPendingIntentForNotificationDismiss(
                         context,
-                        NotificationPushId.PENDING_DRAFT_NOTIFICATION
+                        NotificationPushId.PENDING_DRAFTS_NOTIFICATION_ID
                 )
         );
 

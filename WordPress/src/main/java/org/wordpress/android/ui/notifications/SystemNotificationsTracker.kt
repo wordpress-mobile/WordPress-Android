@@ -9,7 +9,6 @@ import org.wordpress.android.push.NotificationPushId.GROUP_NOTIFICATION_ID
 import org.wordpress.android.push.NotificationPushId.MEDIA_UPLOAD_ERROR
 import org.wordpress.android.push.NotificationPushId.MEDIA_UPLOAD_SUCCESS
 import org.wordpress.android.push.NotificationPushId.PENDING_DRAFTS_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.PENDING_DRAFT_NOTIFICATION
 import org.wordpress.android.push.NotificationPushId.POST_PUBLISHED_NOTIFICATION
 import org.wordpress.android.push.NotificationPushId.POST_UPLOAD_ERROR
 import org.wordpress.android.push.NotificationPushId.POST_UPLOAD_SUCCESS
@@ -53,19 +52,19 @@ class SystemNotificationsTracker
     fun trackDismissedNotification(pushId: Int) {
         val notificationTypeValue = when (NotificationPushId.fromValue(pushId)) {
             PUSH_NOTIFICATION_ID -> PUSH_NOTES_VALUE
-            AUTH_PUSH_NOTIFICATION_ID -> NOTIFICATION_TYPE_VALUE
+            AUTH_PUSH_NOTIFICATION_ID -> AUTHENTICATION_TYPE_VALUE
             GROUP_NOTIFICATION_ID -> GROUP_NOTES_TYPE_VALUE
             ACTIONS_RESULT_NOTIFICATION_ID -> ACTIONS_RESULT_TYPE_VALUE
             ACTIONS_PROGRESS_NOTIFICATION_ID -> ACTIONS_PROGRESS_TYPE_VALUE
-            QUICK_START_REMINDER_NOTIFICATION -> QUICK_START_TYPE_VALUE
+            QUICK_START_REMINDER_NOTIFICATION -> QUICK_START_REMINDER_TYPE_VALUE
             POST_UPLOAD_SUCCESS -> POST_UPLOAD_SUCCESS_TYPE_VALUE
             POST_UPLOAD_ERROR -> POST_UPLOAD_ERROR_TYPE_VALUE
             MEDIA_UPLOAD_SUCCESS -> MEDIA_UPLOAD_SUCCESS_TYPE_VALUE
             MEDIA_UPLOAD_ERROR -> MEDIA_UPLOAD_ERROR_TYPE_VALUE
             POST_PUBLISHED_NOTIFICATION -> POST_PUBLISHED_TYPE_VALUE
-            PENDING_DRAFT_NOTIFICATION -> PENDING_DRAFT_TYPE_VALUE
+            PENDING_DRAFTS_NOTIFICATION_ID -> PENDING_DRAFT_TYPE_VALUE
             ZENDESK_PUSH_NOTIFICATION_ID -> ZENDESK_MESSAGE_TYPE_VALUE
-            PENDING_DRAFTS_NOTIFICATION_ID, null -> return
+            null -> return
         }
         val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
         analyticsTracker.track(Stat.NOTIFICATION_DISMISSED, properties)
@@ -74,11 +73,11 @@ class SystemNotificationsTracker
     companion object {
         private const val NOTIFICATION_TYPE_KEY = "notification_type"
         private const val PUSH_NOTES_VALUE = "push_notes"
-        private const val NOTIFICATION_TYPE_VALUE = "authentication"
+        private const val AUTHENTICATION_TYPE_VALUE = "authentication"
         private const val GROUP_NOTES_TYPE_VALUE = "group_notes"
         private const val ACTIONS_RESULT_TYPE_VALUE = "actions_result"
         private const val ACTIONS_PROGRESS_TYPE_VALUE = "actions_progress"
-        private const val QUICK_START_TYPE_VALUE = "quick_start"
+        private const val QUICK_START_REMINDER_TYPE_VALUE = "quick_start_reminder"
         private const val POST_UPLOAD_SUCCESS_TYPE_VALUE = "post_upload_success"
         private const val POST_UPLOAD_ERROR_TYPE_VALUE = "post_upload_error"
         private const val MEDIA_UPLOAD_SUCCESS_TYPE_VALUE = "media_upload_success"
