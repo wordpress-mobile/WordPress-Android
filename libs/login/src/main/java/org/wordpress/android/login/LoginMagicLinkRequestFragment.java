@@ -5,14 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -143,28 +146,47 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
         mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
         ImageView avatarView = view.findViewById(R.id.gravatar);
-        Glide.with(this)
-                .load(GravatarUtils.gravatarFromEmail(mEmail,
-                        getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
-                .apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
-                .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target,
-                                                boolean b) {
-                        mAvatarProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
-                                                   DataSource dataSource, boolean b) {
-                        mAvatarProgressBar.setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .into(avatarView);
+        // Design changes added to the Woo Magic link sign-in
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            View avatarContainerView = view.findViewById(R.id.avatar_container);
+
+            LayoutParams lp = avatarContainerView.getLayoutParams();
+            lp.width = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
+            lp.height = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
+            avatarContainerView.setLayoutParams(lp);
+
+            mAvatarProgressBar.setVisibility(View.GONE);
+            avatarView.setImageResource(R.drawable.login_email_alert);
+
+            TextView labelTextView = view.findViewById(R.id.label);
+            labelTextView.setText(Html.fromHtml(String.format(getResources().getString(
+                    R.string.login_magic_links_label), "<b>", mEmail, "</b>")));
+        } else {
+            Glide.with(this)
+                 .load(GravatarUtils.gravatarFromEmail(mEmail,
+                         getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
+                 .apply(RequestOptions.circleCropTransform())
+                 .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
+                 .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
+                 .listener(new RequestListener<Drawable>() {
+                     @Override
+                     public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target,
+                                                 boolean b) {
+                         mAvatarProgressBar.setVisibility(View.GONE);
+                         return false;
+                     }
+
+                     @Override
+                     public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
+                                                    DataSource dataSource, boolean b) {
+                         mAvatarProgressBar.setVisibility(View.GONE);
+                         return false;
+                     }
+                 })
+                 .into(avatarView);
+        }
+
         return view;
     }
 
