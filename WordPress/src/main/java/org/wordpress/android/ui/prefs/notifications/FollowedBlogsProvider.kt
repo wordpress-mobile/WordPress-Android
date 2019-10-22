@@ -26,16 +26,21 @@ class FollowedBlogsProvider
         // Load subscriptions when blogs are not loaded yet
         if (allFollowedBlogs.isEmpty()) {
             return subscriptions.map { subscription ->
+                val clickHandler = if (subscription.blogId != null && subscription.blogId != "false") {
+                    ClickHandler(
+                            subscription.shouldNotifyPosts,
+                            subscription.shouldEmailPosts,
+                            subscription.emailPostsFrequency,
+                            subscription.shouldEmailComments
+                    )
+                } else {
+                    null
+                }
                 PreferenceModel(
                         getSiteNameOrHostFromSubscription(subscription.blogName, subscription.url),
                         uriUtils.getHost(subscription.url),
                         subscription.blogId.toString(),
-                        ClickHandler(
-                                subscription.shouldNotifyPosts,
-                                subscription.shouldEmailPosts,
-                                subscription.emailPostsFrequency,
-                                subscription.shouldEmailComments
-                        )
+                        clickHandler
                 )
             }
         }
@@ -46,25 +51,22 @@ class FollowedBlogsProvider
                         uriUtils.getHost(subscription.url) == uriUtils.getHost(readerBlog.url)
             }
             // We don't have notification settings for feeds
-            if (match != null && match.blogId != null && match.blogId != "false") {
-                PreferenceModel(
-                        getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
-                        uriUtils.getHost(readerBlog.url),
-                        readerBlog.blogId.toString(),
-                        ClickHandler(
-                                match.shouldNotifyPosts,
-                                match.shouldEmailPosts,
-                                match.emailPostsFrequency,
-                                match.shouldEmailComments
-                        )
+            val clickHandler = if (match != null && match.blogId != null && match.blogId != "false") {
+                ClickHandler(
+                        match.shouldNotifyPosts,
+                        match.shouldEmailPosts,
+                        match.emailPostsFrequency,
+                        match.shouldEmailComments
                 )
             } else {
-                PreferenceModel(
-                        getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
-                        uriUtils.getHost(readerBlog.url),
-                        readerBlog.blogId.toString()
-                )
+                null
             }
+            PreferenceModel(
+                    getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
+                    uriUtils.getHost(readerBlog.url),
+                    readerBlog.blogId.toString(),
+                    clickHandler
+            )
         }
     }
 
