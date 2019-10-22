@@ -58,7 +58,7 @@ class EditorMedia(
     private val mediaStore: MediaStore
 ) {
     private var addMediaListThread: AddMediaListThread? = null
-    private var mAllowMultipleSelection: Boolean = false
+    var allowMultipleSelection: Boolean = false
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri>? = null
@@ -133,7 +133,7 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection).let {
+        AddMediaListThread(fetchedUriList, isNew, allowMultipleSelection).let {
             addMediaListThread = it
             it.start()
         }

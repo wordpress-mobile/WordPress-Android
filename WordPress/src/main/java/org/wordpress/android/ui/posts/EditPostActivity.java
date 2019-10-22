@@ -244,7 +244,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mShowAztecEditor;
     private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
-    private boolean mAllowMultipleSelection;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
@@ -921,7 +920,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mAllowMultipleSelection = allowMultipleSelection;
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
@@ -1486,11 +1485,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, mAllowMultipleSelection);
+        WPMediaUtils.launchPictureLibrary(this, mEditorMedia.getAllowMultipleSelection());
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, mAllowMultipleSelection);
+        WPMediaUtils.launchVideoLibrary(this, mEditorMedia.getAllowMultipleSelection());
     }
 
     private void launchVideoCamera() {
@@ -2548,10 +2547,10 @@ public class EditPostActivity extends AppCompatActivity implements
         if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
-            // if mAllowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
-            if (mShowGutenbergEditor && mAllowMultipleSelection) {
+            // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
+            if (mShowGutenbergEditor && mEditorMedia.getAllowMultipleSelection()) {
                 mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
-                mAllowMultipleSelection = false;
+                mEditorMedia.setAllowMultipleSelection(false);
             } else {
                 for (Long id : ids) {
                     mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
@@ -2668,20 +2667,20 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddMediaImageClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
     @Override
     public void onAddMediaVideoClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
     public void onAddLibraryMediaClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
-        if (mAllowMultipleSelection) {
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        if (allowMultipleSelection) {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
@@ -2705,8 +2704,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
-        WPMediaUtils.launchMediaLibrary(this, mAllowMultipleSelection);
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
     }
 
     @Override
