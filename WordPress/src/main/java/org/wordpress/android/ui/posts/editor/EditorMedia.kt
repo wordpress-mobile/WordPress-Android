@@ -40,9 +40,7 @@ import java.io.IOException
 import java.util.ArrayList
 
 interface EditorMediaListener {
-    // Temporary overlay functions
     fun showOverlayFromEditorMedia(animate: Boolean)
-
     fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
@@ -61,6 +59,15 @@ class EditorMedia(
 ) {
     private var addMediaListThread: AddMediaListThread? = null
     private var mAllowMultipleSelection: Boolean = false
+
+    // for keeping the media uri while asking for permissions
+    var droppedMediaUris: ArrayList<Uri>? = null
+    val fetchMediaRunnable = Runnable {
+        droppedMediaUris?.let {
+            droppedMediaUris = null
+            addMediaList(it, false)
+        }
+    }
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
@@ -126,8 +133,10 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        addMediaListThread = AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection)
-        addMediaListThread!!.start()
+        AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection).let {
+            addMediaListThread = it
+            it.start()
+        }
     }
 
     fun cancelAddMediaListThread() {

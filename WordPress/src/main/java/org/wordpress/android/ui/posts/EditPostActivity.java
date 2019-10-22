@@ -309,20 +309,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private SiteModel mSite;
 
-    // for keeping the media uri while asking for permissions
-    private ArrayList<Uri> mDroppedMediaUris;
-
-    private Runnable mFetchMediaRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mDroppedMediaUris != null) {
-                final List<Uri> mediaUris = mDroppedMediaUris;
-                mDroppedMediaUris = null;
-                mEditorMedia.addMediaList(mediaUris, false);
-            }
-        }
-    };
-
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
                && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
@@ -453,7 +439,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         (PostEditorAnalyticsSession) extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
             }
         } else {
-            mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
+            mEditorMedia.setDroppedMediaUris(savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS));
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
@@ -792,7 +778,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         outState.putBoolean(STATE_KEY_GUTENBERG_IS_SHOWN, mShowGutenbergEditor);
 
-        outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
+        outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mEditorMedia.getDroppedMediaUris());
 
         if (mEditorFragment != null) {
             getSupportFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
@@ -1059,7 +1045,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                    runOnUiThread(mFetchMediaRunnable);
+                    runOnUiThread(mEditorMedia.getFetchMediaRunnable());
                     break;
             }
         }
@@ -2730,10 +2716,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
-        mDroppedMediaUris = mediaUris;
+        mEditorMedia.setDroppedMediaUris(mediaUris);
         if (PermissionUtils
                 .checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
-            runOnUiThread(mFetchMediaRunnable);
+            runOnUiThread(mEditorMedia.getFetchMediaRunnable());
         }
     }
 
