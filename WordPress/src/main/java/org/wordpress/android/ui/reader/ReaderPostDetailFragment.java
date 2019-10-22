@@ -3,12 +3,11 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -77,6 +75,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -99,7 +98,6 @@ import java.util.EnumSet;
 
 import javax.inject.Inject;
 
-import static android.content.Context.DOWNLOAD_SERVICE;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
@@ -161,6 +159,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject ReaderFileDownloadManager mReaderFileDownloadManager;
     @Inject FeaturedImageUtils mFeaturedImageUtils;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
@@ -433,6 +432,11 @@ public class ReaderPostDetailFragment extends Fragment
         super.onStart();
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.registerReceiver(mReaderFileDownloadManager,
+                    new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        }
     }
 
     @Override
@@ -440,6 +444,10 @@ public class ReaderPostDetailFragment extends Fragment
         super.onStop();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.unregisterReceiver(mReaderFileDownloadManager);
+        }
     }
 
     /*
@@ -1353,8 +1361,12 @@ public class ReaderPostDetailFragment extends Fragment
             return true;
         }
 
-        OpenUrlType openUrlType = shouldOpenExternal(url) ? OpenUrlType.EXTERNAL : OpenUrlType.INTERNAL;
-        ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
+        if (isFile(url)) {
+            onFileDownloadClick(url);
+        } else {
+            OpenUrlType openUrlType = shouldOpenExternal(url) ? OpenUrlType.EXTERNAL : OpenUrlType.INTERNAL;
+            ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
+        }
         return true;
     }
 
@@ -1370,12 +1382,17 @@ public class ReaderPostDetailFragment extends Fragment
         // if the mime type starts with "application" open it externally - this will either
         // open it in the associated app or the default browser (which will enable the user
         // to download it)
+        if (isFile(url)) return true;
+
+        // open all other urls using an AuthenticatedWebViewActivity
+        return false;
+    }
+
+    private boolean isFile(String url) {
         String mimeType = UrlUtils.getUrlMimeType(url);
         if (mimeType != null && mimeType.startsWith("application")) {
             return true;
         }
-
-        // open all other urls using an AuthenticatedWebViewActivity
         return false;
     }
 
@@ -1390,7 +1407,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity != null
             && fileUrl != null
             && PermissionUtils.checkAndRequestStoragePermission(this, READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE)) {
-            downloadFile(fileUrl, activity);
+            mReaderFileDownloadManager.downloadFile(fileUrl);
             return true;
         } else {
             mFileForDownload = fileUrl;
@@ -1405,21 +1422,11 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity != null
             && requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-            downloadFile(mFileForDownload, activity);
+            mReaderFileDownloadManager.downloadFile(mFileForDownload);
             mFileForDownload = null;
         } else {
             mFileForDownload = null;
         }
-    }
-
-    private void downloadFile(String fileUrl, FragmentActivity activity) {
-        DownloadManager.Request r = new DownloadManager.Request(Uri.parse(fileUrl));
-        String fileName = URLUtil.guessUrl(fileUrl);
-        r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-        r.allowScanningByMediaScanner();
-        r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        DownloadManager dm = (DownloadManager) activity.getSystemService(DOWNLOAD_SERVICE);
-        dm.enqueue(r);
     }
 
     private ActionBar getActionBar() {
