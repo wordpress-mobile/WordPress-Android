@@ -61,6 +61,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderBookmarkButton;
@@ -74,7 +75,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
-import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -158,8 +158,8 @@ public class ReaderPostDetailFragment extends Fragment
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
-    @Inject AuthenticationUtils mAuthenticationUtils;
     @Inject ReaderFileDownloadManager mReaderFileDownloadManager;
+    @Inject FeaturedImageUtils mFeaturedImageUtils;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
@@ -1224,7 +1224,7 @@ public class ReaderPostDetailFragment extends Fragment
             mScrollView.setVisibility(View.VISIBLE);
 
             // render the post in the webView
-            mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
+            mRenderer = new ReaderPostRenderer(mReaderWebView, mPost, mFeaturedImageUtils);
             mRenderer.beginRender();
 
             // if we're showing just the excerpt, also show a footer which links to the full post
