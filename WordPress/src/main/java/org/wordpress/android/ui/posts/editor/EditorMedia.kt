@@ -39,14 +39,14 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.ArrayList
 
+data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
+
 interface EditorMediaListener {
     fun showOverlayFromEditorMedia(animate: Boolean)
     fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
-    fun isPostLocalDraft(): Boolean
-    fun localPostId(): Int
-    fun remotePostId(): Long
+    fun editorMediaPostData(): EditorMediaPostData
     fun savePostAsyncFromEditorMedia(listener: AfterSavePostListener? = null)
 }
 
@@ -412,7 +412,7 @@ class EditorMedia(
             ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
             return null
         }
-        media.localPostId = editorMediaListener.localPostId()
+        media.localPostId = editorMediaListener.editorMediaPostData().localPostId
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
 
         startUploadService(listOf(media))
@@ -438,8 +438,10 @@ class EditorMedia(
         }
 
         media.setUploadState(startingState)
-        if (!editorMediaListener.isPostLocalDraft()) {
-            media.postId = editorMediaListener.remotePostId()
+        editorMediaListener.editorMediaPostData().let {
+            if (!it.isLocalDraft) {
+                media.postId = it.remotePostId
+            }
         }
 
         return media

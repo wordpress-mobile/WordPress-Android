@@ -113,6 +113,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.editor.EditorMedia;
 import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.EditorMediaListener;
+import org.wordpress.android.ui.posts.editor.EditorMediaPostData;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
@@ -375,8 +376,6 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        // TODO: Make sure local id doesn't change and if it does make it a part of the media listener and same
-        // TODO: thing for isLocalDraft
         mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore);
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
@@ -1679,7 +1678,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    // TODO: Don't make this public
     public interface AfterSavePostListener {
         void onPostSave();
     }
@@ -3315,18 +3313,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean isPostLocalDraft() {
-        return mPost.isLocalDraft();
-    }
-
-    @Override
-    public int localPostId() {
-        return mPost.getId();
-    }
-
-    @Override
-    public long remotePostId() {
-        return mPost.getRemotePostId();
+    public @NonNull EditorMediaPostData editorMediaPostData() {
+        return new EditorMediaPostData(mPost.getId(), mPost.getRemotePostId(), mPost.isLocalDraft());
     }
 
     @Override
