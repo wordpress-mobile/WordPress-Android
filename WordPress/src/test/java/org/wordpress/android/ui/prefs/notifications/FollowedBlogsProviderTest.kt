@@ -12,13 +12,13 @@ import org.wordpress.android.fluxc.model.SubscriptionModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel
-import org.wordpress.android.ui.utils.UriUtilsWrapper
+import org.wordpress.android.ui.utils.UrlUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class FollowedBlogsProviderTest {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var readerBlogTable: ReaderBlogTableWrapper
-    @Mock lateinit var uriUtils: UriUtilsWrapper
+    @Mock lateinit var urlUtils: UrlUtilsWrapper
     private lateinit var followedBlogsProvider: FollowedBlogsProvider
     private val blogName = "blog name"
     private val url = "http://blog.url.com/feed"
@@ -28,7 +28,7 @@ class FollowedBlogsProviderTest {
 
     @Before
     fun setUp() {
-        followedBlogsProvider = FollowedBlogsProvider(accountStore, readerBlogTable, uriUtils)
+        followedBlogsProvider = FollowedBlogsProvider(accountStore, readerBlogTable, urlUtils)
     }
 
     @Test
@@ -234,7 +234,7 @@ class FollowedBlogsProviderTest {
         feedId?.let {
             subscriptionModel.feedId = it
         }
-        whenever(uriUtils.getHost(subscriptionUrl)).thenReturn(subscriptionUrlHost)
+        whenever(urlUtils.getHost(subscriptionUrl)).thenReturn(subscriptionUrlHost)
         return subscriptionModel
     }
 
@@ -252,7 +252,7 @@ class FollowedBlogsProviderTest {
         feedId?.let {
             readerBlog.feedId = it
         }
-        whenever(uriUtils.getHost(blogUrl)).thenReturn(blogUrlHost)
+        whenever(urlUtils.getHost(blogUrl)).thenReturn(blogUrlHost)
         return readerBlog
     }
 

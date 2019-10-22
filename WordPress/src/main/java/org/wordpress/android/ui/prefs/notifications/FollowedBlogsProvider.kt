@@ -3,14 +3,14 @@ package org.wordpress.android.ui.prefs.notifications
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler
-import org.wordpress.android.ui.utils.UriUtilsWrapper
+import org.wordpress.android.ui.utils.UrlUtilsWrapper
 import javax.inject.Inject
 
 class FollowedBlogsProvider
 @Inject constructor(
     private val accountStore: AccountStore,
     private val readerBlogTable: ReaderBlogTableWrapper,
-    private val uriUtils: UriUtilsWrapper
+    private val urlUtils: UrlUtilsWrapper
 ) {
     fun getAllFollowedBlogs(query: String?): List<PreferenceModel> {
         val subscriptions = accountStore.subscriptions
@@ -38,7 +38,7 @@ class FollowedBlogsProvider
                 }
                 PreferenceModel(
                         getSiteNameOrHostFromSubscription(subscription.blogName, subscription.url),
-                        uriUtils.getHost(subscription.url),
+                        urlUtils.getHost(subscription.url),
                         subscription.blogId.toString(),
                         clickHandler
                 )
@@ -48,7 +48,7 @@ class FollowedBlogsProvider
             val match = subscriptions.find { subscription ->
                 subscription.blogId == readerBlog.blogId.toString() ||
                         subscription.feedId == readerBlog.feedId.toString() ||
-                        uriUtils.getHost(subscription.url) == uriUtils.getHost(readerBlog.url)
+                        urlUtils.getHost(subscription.url) == urlUtils.getHost(readerBlog.url)
             }
             // We don't have notification settings for feeds
             val clickHandler = if (match != null && match.blogId != null && match.blogId != "false") {
@@ -63,7 +63,7 @@ class FollowedBlogsProvider
             }
             PreferenceModel(
                     getSiteNameOrHostFromSubscription(readerBlog.name, readerBlog.url),
-                    uriUtils.getHost(readerBlog.url),
+                    urlUtils.getHost(readerBlog.url),
                     readerBlog.blogId.toString(),
                     clickHandler
             )
@@ -78,10 +78,10 @@ class FollowedBlogsProvider
 
         if (name != null) {
             if (name.trim { it <= ' ' }.isEmpty()) {
-                name = uriUtils.getHost(blogUrl)
+                name = urlUtils.getHost(blogUrl)
             }
         } else {
-            name = uriUtils.getHost(blogUrl)
+            name = urlUtils.getHost(blogUrl)
         }
 
         return name
