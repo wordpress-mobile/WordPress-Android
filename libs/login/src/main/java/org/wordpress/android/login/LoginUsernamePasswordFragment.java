@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -562,6 +563,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     endProgress();
                     mGetSiteOptionsInitiated = false;
                     String userEmail = lastAddedXMLRPCSite.getJetpackUserEmail();
+                    ActivityUtils.hideKeyboard(getActivity());
                     if (userEmail == null || userEmail.isEmpty()) {
                         mLoginListener.helpNoJetpackScreen(lastAddedXMLRPCSite.getUrl(),
                                 lastAddedXMLRPCSite.getXmlRpcUrl(), lastAddedXMLRPCSite.getUsername(),
