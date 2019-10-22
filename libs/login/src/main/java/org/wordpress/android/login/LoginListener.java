@@ -23,6 +23,7 @@ public interface LoginListener {
     void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
     void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
     void loginViaWpcomUsernameInstead();
+    void loginViaSiteCredentials(String inputSiteAddress);
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
     void addGoogleLoginFragment();

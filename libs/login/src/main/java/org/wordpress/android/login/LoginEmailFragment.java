@@ -185,7 +185,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     if (loginMode == LoginMode.JETPACK_STATS) {
                         mLoginListener.loginViaWpcomUsernameInstead();
                     } else if (loginMode == LoginMode.WOO_LOGIN_MODE) {
-                        mLoginListener.gotXmlRpcEndpoint(mLoginSiteUrl, null);
+                        mLoginListener.loginViaSiteCredentials(mLoginSiteUrl);
                     } else {
                         mLoginListener.loginViaSiteAddress();
                     }
