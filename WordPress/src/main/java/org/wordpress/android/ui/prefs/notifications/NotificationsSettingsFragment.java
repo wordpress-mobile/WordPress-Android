@@ -38,7 +38,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
@@ -53,13 +52,14 @@ import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
+import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
@@ -110,6 +110,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject FollowedBlogsProvider mFollowedBlogsProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -556,14 +557,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             return;
         }
 
-        List<SubscriptionModel> subscriptions;
+        List<PreferenceModel> models;
         String query = "";
 
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             query = mSearchView.getQuery().toString().trim();
-            subscriptions = mAccountStore.getSubscriptionsByNameOrUrlMatching(query);
+            models = mFollowedBlogsProvider.getAllFollowedBlogs(query);
         } else {
-            subscriptions = mAccountStore.getSubscriptions();
+            models = mFollowedBlogsProvider.getAllFollowedBlogs(null);
         }
 
         Context context = getActivity();
@@ -572,23 +573,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
         mSubscriptionCount = 0;
 
-        if (subscriptions.size() > 0) {
-            Collections.sort(subscriptions, new Comparator<SubscriptionModel>() {
-                @Override public int compare(SubscriptionModel o1, SubscriptionModel o2) {
-                    return getSiteNameOrHostFromSubscription(o1)
-                            .compareToIgnoreCase(getSiteNameOrHostFromSubscription(o2));
-                }
-            });
+        if (models.size() > 0) {
+            Collections.sort(models, (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
         }
 
-        for (final SubscriptionModel subscription : subscriptions) {
+        for (final PreferenceModel preferenceModel : models) {
             if (context == null) {
                 return;
-            }
-
-            // Subscriptions with a "false" blogId are for feeds and don't have notifications settings.
-            if (subscription.getBlogId().equalsIgnoreCase("false")) {
-                continue;
             }
 
             mSubscriptionCount++;
@@ -598,16 +589,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-            prefScreen.setTitle(getSiteNameOrHostFromSubscription(subscription));
-            prefScreen.setSummary(getHostFromSubscriptionUrl(subscription));
+            prefScreen.setTitle(preferenceModel.getTitle());
+            prefScreen.setSummary(preferenceModel.getSummary());
 
-            prefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override public boolean onPreferenceClick(Preference preference) {
-                    mNotificationUpdatedSite = subscription.getBlogId();
-                    mPreviousNotifyPosts = subscription.getShouldNotifyPosts();
-                    mPreviousEmailPosts = subscription.getShouldEmailPosts();
-                    mPreviousEmailPostsFrequency = subscription.getEmailPostsFrequency();
-                    mPreviousEmailComments = subscription.getShouldEmailComments();
+            ClickHandler clickHandler = preferenceModel.getClickHandler();
+            if (clickHandler != null) {
+                prefScreen.setOnPreferenceClickListener(preference -> {
+                    mNotificationUpdatedSite = preferenceModel.getBlogId();
+                    mPreviousNotifyPosts = clickHandler.getShouldNotifyPosts();
+                    mPreviousEmailPosts = clickHandler.getShouldEmailPosts();
+                    mPreviousEmailPostsFrequency = clickHandler.getEmailPostFrequency();
+                    mPreviousEmailComments = clickHandler.getShouldEmailComments();
                     NotificationSettingsFollowedDialog dialog = new NotificationSettingsFollowedDialog();
                     Bundle args = new Bundle();
                     args.putBoolean(NotificationSettingsFollowedDialog.ARG_NOTIFICATION_POSTS,
@@ -622,8 +614,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     dialog.setTargetFragment(NotificationsSettingsFragment.this, NOTIFICATION_SETTINGS);
                     dialog.show(getFragmentManager(), NotificationSettingsFollowedDialog.TAG);
                     return true;
-                }
-            });
+                });
+            } else {
+                prefScreen.setEnabled(false);
+            }
 
             blogsCategory.addPreference(prefScreen);
         }
@@ -641,24 +635,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         updateSearchMenuVisibility();
-    }
-
-    private String getSiteNameOrHostFromSubscription(SubscriptionModel subscription) {
-        String name = subscription.getBlogName();
-
-        if (name != null) {
-            if (name.trim().length() == 0) {
-                name = getHostFromSubscriptionUrl(subscription);
-            }
-        } else {
-            name = getHostFromSubscriptionUrl(subscription);
-        }
-
-        return name;
-    }
-
-    private String getHostFromSubscriptionUrl(SubscriptionModel subscription) {
-        return UrlUtils.getHost(subscription.getUrl());
     }
 
     private void appendViewAllSitesOption(Context context, String preference, boolean isFollowed) {
