@@ -8,7 +8,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
 
-import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
 public class NativeNotificationsUtils {
     public static void showIntermediateMessageToUser(String message, Context context) {

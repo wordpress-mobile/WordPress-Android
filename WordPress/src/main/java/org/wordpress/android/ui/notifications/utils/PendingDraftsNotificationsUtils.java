@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.util.DateTimeUtils;
 
 public class PendingDraftsNotificationsUtils {
     // Pending draft notification base request code for alarms
     private static final int BROADCAST_BASE_REQUEST_CODE = 181;
-    private static final int PENDING_DRAFTS_NOTIFICATION_ID = GCMMessageService.GENERIC_LOCAL_NOTIFICATION_ID + 1;
+    private static final int PENDING_DRAFTS_NOTIFICATION_ID = NotificationPushIds.GENERIC_LOCAL_NOTIFICATION_ID + 1;
 
     /*
      * Schedules alarms for draft posts to remind the user they have pending drafts

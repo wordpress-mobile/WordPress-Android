@@ -56,6 +56,10 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.push.NotificationPushIds.AUTH_PUSH_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.PUSH_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.ZENDESK_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
 public class GCMMessageService extends FirebaseMessagingService {
@@ -63,12 +67,6 @@ public class GCMMessageService extends FirebaseMessagingService {
     private static final NotificationHelper NOTIFICATION_HELPER = new NotificationHelper();
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
-    private static final int PUSH_NOTIFICATION_ID = 10000;
-    public static final int AUTH_PUSH_NOTIFICATION_ID = 20000;
-    public static final int GROUP_NOTIFICATION_ID = 30000;
-    public static final int ACTIONS_RESULT_NOTIFICATION_ID = 40000;
-    public static final int ACTIONS_PROGRESS_NOTIFICATION_ID = 50000;
-    public static final int GENERIC_LOCAL_NOTIFICATION_ID = 60000;
     private static final int AUTH_PUSH_REQUEST_CODE_APPROVE = 0;
     private static final int AUTH_PUSH_REQUEST_CODE_IGNORE = 1;
     private static final int AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG = 2;
@@ -94,9 +92,6 @@ public class GCMMessageService extends FirebaseMessagingService {
     private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
     private static final String PUSH_TYPE_TEST_NOTE = "push_test";
     private static final String PUSH_TYPE_ZENDESK = "zendesk";
-
-    // All Zendesk push notifications will show the same notification, so hopefully this will be a unique ID
-    private static final int ZENDESK_PUSH_NOTIFICATION_ID = 1999999999;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -246,7 +241,7 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         if (ACTIVE_NOTIFICATIONS_MAP.size() == 0) {
-            notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+            notificationManager.cancel(GROUP_NOTIFICATION_ID);
         }
     }
 
@@ -266,7 +261,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                 it.remove();
             }
         }
-        notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+        notificationManager.cancel(GROUP_NOTIFICATION_ID);
     }
 
     public static synchronized void remove2FANotification(Context context) {

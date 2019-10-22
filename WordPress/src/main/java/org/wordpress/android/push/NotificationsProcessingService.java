@@ -56,7 +56,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
+import static org.wordpress.android.push.NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,
@@ -198,12 +198,12 @@ public class NotificationsProcessingService extends Service {
                 if (mActionType.equals(ARG_ACTION_AUTH_IGNORE)) {
                     // dismiss notifs
                     NativeNotificationsUtils.dismissNotification(
-                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                            NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                     NativeNotificationsUtils.dismissNotification(
-                            GCMMessageService.AUTH_PUSH_NOTIFICATION_ID, mContext);
+                            NotificationPushIds.AUTH_PUSH_NOTIFICATION_ID, mContext);
                     NativeNotificationsUtils.dismissNotification(
-                            GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
-                    GCMMessageService.removeNotification(GCMMessageService.AUTH_PUSH_NOTIFICATION_ID);
+                            NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
+                    GCMMessageService.removeNotification(NotificationPushIds.AUTH_PUSH_NOTIFICATION_ID);
 
                     AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_IGNORED);
                     return;
@@ -212,7 +212,7 @@ public class NotificationsProcessingService extends Service {
                 // check notification dismissed pending intent
                 if (mActionType.equals(ARG_ACTION_NOTIFICATION_DISMISS)) {
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
-                    if (notificationId == GCMMessageService.GROUP_NOTIFICATION_ID) {
+                    if (notificationId == NotificationPushIds.GROUP_NOTIFICATION_ID) {
                         GCMMessageService.clearNotifications();
                     } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION) {
                         AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
@@ -221,7 +221,7 @@ public class NotificationsProcessingService extends Service {
                         // Dismiss the grouped notification if a user dismisses all notifications from a wear device
                         if (!GCMMessageService.hasNotifications()) {
                             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-                            notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+                            notificationManager.cancel(NotificationPushIds.GROUP_NOTIFICATION_ID);
                         }
                     }
                     return;
@@ -304,7 +304,7 @@ public class NotificationsProcessingService extends Service {
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
             // default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
             // notif in active notifs map (there is only one notif if quick actions are available)
-            mPushId = GCMMessageService.GROUP_NOTIFICATION_ID;
+            mPushId = NotificationPushIds.GROUP_NOTIFICATION_ID;
             if (mIntent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
                 mReplyText = mIntent.getStringExtra(ARG_ACTION_REPLY_TEXT);
             }
@@ -417,10 +417,10 @@ public class NotificationsProcessingService extends Service {
 
             // dismiss any other pending result notification
             NativeNotificationsUtils.dismissNotification(
-                    GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                    NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
             // update notification indicating the operation succeeded
             NativeNotificationsUtils.showFinalMessageToUser(successMessage,
-                                                            GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID,
+                                                            NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID,
                                                             mContext);
             // remove the original notification from the system bar
             GCMMessageService.removeNotificationWithNoteIdFromSystemBar(mContext, mNoteId);
@@ -430,7 +430,7 @@ public class NotificationsProcessingService extends Service {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     NativeNotificationsUtils.dismissNotification(
-                            GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
+                            NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
                 }
             }, 3000); // show the success message for 3 seconds, then dismiss
 
@@ -456,9 +456,9 @@ public class NotificationsProcessingService extends Service {
             }
             resetOriginalNotification();
             NativeNotificationsUtils.dismissNotification(
-                    GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
+                    NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID, mContext);
             NativeNotificationsUtils.showFinalMessageToUser(errorMessage,
-                                                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                    NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
             // after 3 seconds, dismiss the error message notification
             Handler handler = new Handler(getMainLooper());
@@ -466,7 +466,7 @@ public class NotificationsProcessingService extends Service {
                 public void run() {
                     // remove the error notification from the system bar
                     NativeNotificationsUtils.dismissNotification(
-                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                            NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                 }
             }, 3000); // show the success message for 3 seconds, then dismiss
 
@@ -480,7 +480,7 @@ public class NotificationsProcessingService extends Service {
             }
             resetOriginalNotification();
             NativeNotificationsUtils.showFinalMessageToUser(errorMessage,
-                                                            GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                    NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
 
             if (autoDismiss) {
                 // after 3 seconds, dismiss the error message notification
@@ -489,7 +489,7 @@ public class NotificationsProcessingService extends Service {
                     public void run() {
                         // remove the error notification from the system bar
                         NativeNotificationsUtils.dismissNotification(
-                                GCMMessageService.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                                NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                     }
                 }, 3000); // show the success message for 3 seconds, then dismiss
             }

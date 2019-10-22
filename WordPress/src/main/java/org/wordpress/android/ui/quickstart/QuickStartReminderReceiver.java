@@ -16,14 +16,13 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 import javax.inject.Inject;
-
-import static org.wordpress.android.ui.RequestCodes.QUICK_START_REMINDER_NOTIFICATION;
 
 public class QuickStartReminderReceiver extends BroadcastReceiver {
     public static final String ARG_QUICK_START_TASK_BATCH = "ARG_QUICK_START_TASK_BATCH";
@@ -59,8 +58,9 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                               | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction(Intent.ACTION_MAIN);
         resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        PendingIntent notificationContentIntent = PendingIntent.getActivity(context, QUICK_START_REMINDER_NOTIFICATION,
-                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notificationContentIntent =
+                PendingIntent.getActivity(context, NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION,
+                        resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context,
@@ -72,10 +72,11 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(notificationContentIntent)
                 .setDeleteIntent(NotificationsProcessingService
-                        .getPendingIntentForNotificationDismiss(context, QUICK_START_REMINDER_NOTIFICATION))
+                        .getPendingIntentForNotificationDismiss(context,
+                                NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION))
                 .build();
 
-        notificationManager.notify(QUICK_START_REMINDER_NOTIFICATION, notification);
+        notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION, notification);
         AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
     }
 }
