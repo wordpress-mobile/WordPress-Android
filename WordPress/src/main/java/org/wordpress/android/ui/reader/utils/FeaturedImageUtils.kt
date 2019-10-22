@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.utils
 
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import java.net.MalformedURLException
 import java.net.URL
 import javax.inject.Inject
@@ -25,6 +27,7 @@ class FeaturedImageUtils
                 else -> true
             }
         } catch (e: MalformedURLException) {
+            AppLog.e(T.READER, "Featured image URL is malformed so it's not shown")
             false
         }
     }
