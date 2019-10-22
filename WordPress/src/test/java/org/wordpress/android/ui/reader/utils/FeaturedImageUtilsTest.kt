@@ -10,7 +10,7 @@ import org.wordpress.android.models.ReaderPost
 class FeaturedImageUtilsTest {
     private val featuredImageUtils = FeaturedImageUtils()
     @Test
-    fun `shows exactly the same featured image`() {
+    fun `does not show the same featured image twice`() {
         val image = "https://wordpress.com/image.png"
         val readerPost = initReaderPost(image, image)
 
@@ -20,7 +20,7 @@ class FeaturedImageUtilsTest {
     }
 
     @Test
-    fun `shows featured image with size params`() {
+    fun `does not show featured image twice with only different with size params`() {
         val featuredImage = "https://i0.wp.com/www.subtraction.com/wp-content/uploads/2017/11/" +
                 "2017-11-06-iphone-x.png?quality=80&strip=info&w=1600"
         val bodyImage = "https://i0.wp.com/www.subtraction.com/wp-content/uploads/2017/11/" +
@@ -44,7 +44,7 @@ class FeaturedImageUtilsTest {
     }
 
     @Test
-    fun `does not show featured image with the same name`() {
+    fun `shows featured image with different name`() {
         val featuredImage = "https://wordpress.com/image.png"
         val bodyImage = "https://wordpress.com/image2.png"
         val readerPost = initReaderPost(bodyImage, featuredImage)
@@ -55,7 +55,7 @@ class FeaturedImageUtilsTest {
     }
 
     @Test
-    fun `does not show featured image with the same name from different host`() {
+    fun `shows featured image with the same name from different host`() {
         val featuredImage = "https://wordpress.com/image.png"
         val bodyImage = "https://wordpress2.com/image.png"
         val readerPost = initReaderPost(bodyImage, featuredImage)
