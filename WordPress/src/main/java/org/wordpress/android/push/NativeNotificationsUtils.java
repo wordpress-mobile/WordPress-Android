@@ -23,7 +23,13 @@ public class NativeNotificationsUtils {
         NotificationCompat.Builder builder = getBuilder(context,
                 context.getString(R.string.notification_channel_transient_id))
                 .setContentText(message).setTicker(message)
-                .setOnlyAlertOnce(true);
+                .setOnlyAlertOnce(true)
+                .setDeleteIntent(
+                        NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                                context,
+                                pushId
+                        )
+                );
         showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }
 

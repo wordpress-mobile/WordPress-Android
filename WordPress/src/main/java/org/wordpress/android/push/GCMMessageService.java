@@ -660,7 +660,13 @@ public class GCMMessageService extends FirebaseMessagingService {
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                    .setGroup(NOTIFICATION_GROUP_KEY);
+                    .setGroup(NOTIFICATION_GROUP_KEY)
+                    .setDeleteIntent(
+                            NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                                    context,
+                                    PUSH_NOTIFICATION_ID
+                            )
+                    );
         }
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
@@ -715,7 +721,12 @@ public class GCMMessageService extends FirebaseMessagingService {
                         .setTicker(message)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(subject)
-                        .setStyle(inboxStyle);
+                        .setStyle(inboxStyle).setDeleteIntent(
+                                NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                                        context,
+                                        NotificationPushIds.GROUP_NOTIFICATION_ID
+                                )
+                        );
 
                 showWPComNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             } else {
@@ -990,7 +1001,13 @@ public class GCMMessageService extends FirebaseMessagingService {
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setOnlyAlertOnce(true)
-                    .setPriority(NotificationCompat.PRIORITY_MAX);
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setDeleteIntent(
+                            NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                                    context,
+                                    NotificationPushIds.AUTH_PUSH_NOTIFICATION_ID
+                            )
+                    );
 
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,

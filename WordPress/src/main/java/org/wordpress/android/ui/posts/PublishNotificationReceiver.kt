@@ -7,6 +7,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.push.NotificationPushIds
+import org.wordpress.android.push.NotificationsProcessingService
 import javax.inject.Inject
 
 class PublishNotificationReceiver : BroadcastReceiver() {
@@ -24,6 +26,12 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                     .setContentText(uiModel.message)
                     .setAutoCancel(true)
                     .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
+                    .setDeleteIntent(
+                            NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                                    context,
+                                    NotificationPushIds.POST_PUBLISHED_NOTIFICATION
+                            )
+                    )
                     .build()
             NotificationManagerCompat.from(context).notify(notificationId, notificationCompat)
         }
