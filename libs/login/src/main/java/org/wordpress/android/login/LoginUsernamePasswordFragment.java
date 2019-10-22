@@ -49,8 +49,8 @@ import java.util.List;
 
 import dagger.android.support.AndroidSupportInjection;
 
-public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
-        OnEditorCommitListener {
+public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment implements TextWatcher,
+        OnEditorCommitListener, LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener {
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
@@ -300,13 +300,23 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         if (mIsWpcom) {
             AuthenticatePayload payload = new AuthenticatePayload(mRequestedUsername, mRequestedPassword);
             mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+        } else if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE
+                   && (mEndpointAddress == null || mEndpointAddress.isEmpty())) {
+            // mEndpointAddress will only be null/empty when redirecting from the Woo login flow
+            // initiate the discovery process before fetching the xmlrpc site
+            mLoginBaseDiscoveryListener = this;
+            initiateDiscovery();
         } else {
-            RefreshSitesXMLRPCPayload selfHostedPayload = new RefreshSitesXMLRPCPayload();
-            selfHostedPayload.username = mRequestedUsername;
-            selfHostedPayload.password = mRequestedPassword;
-            selfHostedPayload.url = mEndpointAddress;
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfHostedPayload));
+            refreshXmlRpcSites();
         }
+    }
+
+    private void refreshXmlRpcSites() {
+        RefreshSitesXMLRPCPayload selfHostedPayload = new RefreshSitesXMLRPCPayload();
+        selfHostedPayload.username = mRequestedUsername;
+        selfHostedPayload.password = mRequestedPassword;
+        selfHostedPayload.url = mEndpointAddress;
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfHostedPayload));
     }
 
     private String getCleanedUsername() {
@@ -330,6 +340,28 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         showError(null);
+    }
+
+    @Override
+    @NonNull public String getRequestedSiteAddress() {
+        return mInputSiteAddressWithoutSuffix;
+    }
+
+    @Override
+    public void showDiscoveryError(int messageId) {
+        // TODO: Add support to display discovery error messages
+    }
+
+    @Override
+    public void handleWpComDiscoveryError(String failedEndpoint) {
+        // Used only by wp-android as Woo already uses the Connect-Inf-url to check
+        // if site is a wp.com site
+    }
+
+    @Override
+    public void handleDiscoverySuccess(@NonNull String endpointAddress) {
+        mEndpointAddress = endpointAddress;
+        refreshXmlRpcSites();
     }
 
     private void showUsernameError(String errorMessage) {
