@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
 import android.net.Uri
+import com.google.android.material.snackbar.Snackbar
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -13,14 +13,15 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.StringUtils
-import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -36,6 +37,11 @@ const val EMPTY_LOCAL_POST_ID = -1
 internal class FeaturedImageHelper @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
+    private val uploadServiceFacade: UploadServiceFacade,
+    private val resourceProvider: ResourceProvider,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val fluxCUtilsWrapper: FluxCUtilsWrapper,
+    private val siteUtilsWrapper: SiteUtilsWrapper,
     private val dispatcher: Dispatcher
 ) {
     fun getFailedFeaturedImageUpload(post: PostModel): MediaModel? {
@@ -49,39 +55,34 @@ internal class FeaturedImageHelper @Inject constructor(
     }
 
     fun retryFeaturedImageUpload(
-        context: Context,
         site: SiteModel,
         post: PostModel
     ): MediaModel? {
         val mediaModel = getFailedFeaturedImageUpload(post)
         if (mediaModel != null) {
-            UploadService.cancelFinalNotification(context, post)
-            UploadService.cancelFinalNotificationForMedia(context, site)
+            uploadServiceFacade.cancelFinalNotification(post)
+            uploadServiceFacade.cancelFinalNotificationForMedia(site)
             mediaModel.setUploadState(MediaUploadState.QUEUED)
             dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
-            startUploadService(context, mediaModel)
+            startUploadService(mediaModel)
         }
         return mediaModel
     }
 
-    private fun startUploadService(context: Context, media: MediaModel) {
+    private fun startUploadService(media: MediaModel) {
         val mediaList = ArrayList<MediaModel>()
         mediaList.add(media)
-        UploadService.uploadMedia(context, mediaList)
+        uploadServiceFacade.uploadMedia(mediaList)
     }
 
     fun queueFeaturedImageForUpload(
-        context: Context,
         localPostId: Int,
         site: SiteModel,
         uri: Uri,
         mimeType: String?
-    ) {
-        val media = FluxCUtils.mediaModelFromLocalUri(context, uri, mimeType, mediaStore, site.id)
-        if (media == null) {
-            ToastUtils.showToast(context, R.string.file_not_found, ToastUtils.Duration.SHORT)
-            return
-        }
+    ): SnackbarMessageHolder? {
+        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)
+                ?: return SnackbarMessageHolder(R.string.file_not_found, duration = Snackbar.LENGTH_SHORT)
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId
         } else {
@@ -90,24 +91,25 @@ internal class FeaturedImageHelper @Inject constructor(
         media.markedLocallyAsFeatured = true
 
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
-        startUploadService(context, media)
+        startUploadService(media)
+        return null
     }
 
-    fun cancelFeaturedImageUpload(context: Context, site: SiteModel, post: PostModel, cancelFailedOnly: Boolean) {
+    fun cancelFeaturedImageUpload(site: SiteModel, post: PostModel, cancelFailedOnly: Boolean) {
         var mediaModel: MediaModel? = getFailedFeaturedImageUpload(post)
         if (!cancelFailedOnly && mediaModel == null) {
-            mediaModel = UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
+            mediaModel = uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post)
         }
         if (mediaModel != null) {
             val payload = CancelMediaPayload(site, mediaModel, true)
             dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
-            UploadService.cancelFinalNotification(context, post)
-            UploadService.cancelFinalNotificationForMedia(context, site)
+            uploadServiceFacade.cancelFinalNotification(post)
+            uploadServiceFacade.cancelFinalNotificationForMedia(site)
         }
     }
 
-    fun createCurrentFeaturedImageState(context: Context, site: SiteModel, post: PostModel): FeaturedImageData {
-        var uploadModel: MediaModel? = UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
+    fun createCurrentFeaturedImageState(site: SiteModel, post: PostModel): FeaturedImageData {
+        var uploadModel: MediaModel? = uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post)
         if (uploadModel != null) {
             return FeaturedImageData(FeaturedImageState.IMAGE_UPLOAD_IN_PROGRESS, uploadModel.filePath)
         }
@@ -125,10 +127,15 @@ internal class FeaturedImageHelper @Inject constructor(
         )
 
         // Get max width/height for photon thumbnail - we load a smaller image so it's loaded quickly
-        val maxDimen = context.resources.getDimension(R.dimen.post_settings_featured_image_height_min).toInt()
+        val maxDimen = resourceProvider.getDimension(R.dimen.post_settings_featured_image_height_min).toInt()
 
         val mediaUri = StringUtils.notNullStr(media.thumbnailUrl)
-        val photonUrl = ReaderUtils.getResizedImageUrl(mediaUri, maxDimen, maxDimen, !SiteUtils.isPhotonCapable(site))
+        val photonUrl = readerUtilsWrapper.getResizedImageUrl(
+                mediaUri,
+                maxDimen,
+                maxDimen,
+                !siteUtilsWrapper.isPhotonCapable(site)
+        )
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }
 
