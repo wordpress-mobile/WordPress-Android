@@ -916,7 +916,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 requestMorePosts();
             }
 
-            return ReaderPostDetailFragment.newInstance(
+            return ReaderPostDetailFragment.Companion.newInstance(
                     mIsFeed,
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
