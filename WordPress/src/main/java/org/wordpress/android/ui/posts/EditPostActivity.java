@@ -174,9 +174,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.modules.ThreadModuleKt.BG_THREAD;
+import static org.wordpress.android.modules.ThreadModuleKt.UI_THREAD;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+
+import kotlinx.coroutines.CoroutineDispatcher;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -306,6 +311,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject @Named(UI_THREAD) CoroutineDispatcher mainDispatcher;
+    @Inject @Named(BG_THREAD) CoroutineDispatcher bgDispatcher;
 
     private SiteModel mSite;
 
@@ -392,7 +399,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
         // TODO: Make sure local id doesn't change and if it does make it a part of the media listener and same
         // TODO: thing for isLocalDraft
-        mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore);
+        mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore, mainDispatcher, bgDispatcher);
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -2236,7 +2243,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mEditorMedia
-                        .queueFileForUpload(uri, getContentResolver().getType(uri), MediaUploadState.FAILED));
+                        .queueFileForUpload(uri, MediaUploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts.editor
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
 import android.util.ArrayMap
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorMediaUtils
@@ -18,8 +18,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
-import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
+import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
+import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -38,6 +41,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.ArrayList
+import javax.inject.Named
 
 interface EditorMediaListener {
     // Temporary overlay functions
@@ -57,45 +61,15 @@ class EditorMedia(
     private val site: SiteModel,
     private val editorMediaListener: EditorMediaListener,
     private val dispatcher: Dispatcher,
-    private val mediaStore: MediaStore
+    private val mediaStore: MediaStore,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private var addMediaListThread: AddMediaListThread? = null
-    private var mAllowMultipleSelection: Boolean = false
+    private var addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase? = null
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
-    }
-
-    /**
-     * Analytics about media from device
-     *
-     * @param isNew Whether is a fresh media
-     * @param isVideo Whether is a video or not
-     * @param uri The URI of the media on the device, or null
-     */
-    fun trackAddMediaFromDeviceEvents(isNew: Boolean, isVideo: Boolean, uri: Uri?) {
-        if (uri == null) {
-            AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!")
-            return
-        }
-
-        val properties = AnalyticsUtils.getMediaProperties(activity, isVideo, uri, null)
-        val currentStat: Stat = if (isVideo) {
-            if (isNew) {
-                Stat.EDITOR_ADDED_VIDEO_NEW
-            } else {
-                Stat.EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY
-            }
-        } else {
-            if (isNew) {
-                Stat.EDITOR_ADDED_PHOTO_NEW
-            } else {
-                Stat.EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY
-            }
-        }
-
-        AnalyticsUtils.trackWithSiteDetails(currentStat, site, properties)
     }
 
     /**
@@ -126,18 +100,18 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        addMediaListThread = AddMediaListThread(fetchedUriList, isNew, mAllowMultipleSelection)
-        addMediaListThread!!.start()
+        addMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(activity, mainDispatcher, bgDispatcher)
+        addMediaToEditorUseCase!!.optimizeAndAddAsync(
+                fetchedUriList,
+                site,
+                isNew,
+                editorMediaListener,
+                this@EditorMedia
+        )
     }
 
     fun cancelAddMediaListThread() {
-        if (addMediaListThread != null && !addMediaListThread!!.isInterrupted) {
-            try {
-                addMediaListThread!!.interrupt()
-            } catch (e: SecurityException) {
-                AppLog.e(T.MEDIA, e)
-            }
-        }
+        addMediaToEditorUseCase?.cancel()
     }
 
     /*
@@ -181,139 +155,6 @@ class EditorMedia(
         }
 
         return fetchedUriList
-    }
-
-    /*
-     * processes a list of media in the background (optimizing, resizing, etc.) and adds them to
-     * the editor one at a time
-     */
-    private inner class AddMediaListThread(
-        private val uriList: List<Uri>,
-        private val isNew: Boolean,
-        private val allowMultipleSelection: Boolean = false
-    ) : Thread() {
-        @Suppress("DEPRECATION")
-        private var progressDialog: ProgressDialog? = null
-        private var didAnyFail: Boolean = false
-        private var finishedUploads = 0
-        private val mediaMap = ArrayMap<String, MediaFile>()
-
-        init {
-            editorMediaListener.showOverlayFromEditorMedia(false)
-        }
-
-        private fun showProgressDialog(show: Boolean) {
-            activity.runOnUiThread {
-                try {
-                    if (show) {
-                        progressDialog = ProgressDialog(activity)
-                        progressDialog!!.setCancelable(false)
-                        progressDialog!!.isIndeterminate = true
-                        progressDialog!!.setMessage(activity.getString(R.string.add_media_progress))
-                        progressDialog!!.show()
-                    } else if (progressDialog != null && progressDialog!!.isShowing) {
-                        progressDialog!!.dismiss()
-                    }
-                } catch (e: IllegalArgumentException) {
-                    AppLog.e(T.MEDIA, e)
-                }
-            }
-        }
-
-        override fun run() {
-            // adding multiple media items at once can take several seconds on slower devices, so we show a blocking
-            // progress dialog in this situation - otherwise the user could accidentally back out of the process
-            // before all items were added
-            val shouldShowProgress = uriList.size > 2
-            if (shouldShowProgress) {
-                showProgressDialog(true)
-            }
-            try {
-                for (mediaUri in uriList) {
-                    if (isInterrupted) {
-                        return
-                    }
-                    if (!processMedia(mediaUri)) {
-                        didAnyFail = true
-                    }
-                }
-            } finally {
-                if (shouldShowProgress) {
-                    showProgressDialog(false)
-                }
-            }
-
-
-            activity.runOnUiThread {
-                if (!isInterrupted) {
-                    editorMediaListener.savePostAsyncFromEditorMedia()
-                    editorMediaListener.hideOverlayFromEditorMedia()
-                    if (didAnyFail) {
-                        ToastUtils.showToast(activity, R.string.gallery_error, Duration.SHORT)
-                    }
-                }
-            }
-        }
-
-        private fun processMedia(mediaUri: Uri): Boolean {
-            val path = MediaUtils.getRealPathFromURI(activity, mediaUri) ?: return false
-
-            val isVideo = MediaUtils.isVideo(mediaUri.toString())
-            val optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo)
-            var updatedMediaUri: Uri = mediaUri
-            if (optimizedMedia != null) {
-                updatedMediaUri = optimizedMedia
-            } else {
-                // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
-                if (!site.isWPCom) {
-                    // If it's not wpcom we must rotate the picture locally
-                    val rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo)
-                    if (rotatedMedia != null) {
-                        updatedMediaUri = rotatedMedia
-                    }
-                }
-            }
-
-            if (isInterrupted) {
-                return false
-            }
-
-            trackAddMediaFromDeviceEvents(isNew, isVideo, updatedMediaUri)
-            postProcessMedia(updatedMediaUri, path)
-
-            return true
-        }
-
-        private fun postProcessMedia(mediaUri: Uri, path: String) {
-            if (allowMultipleSelection) {
-                getMediaFile(mediaUri)?.let {
-                    mediaMap[path] = it
-                }
-                finishedUploads++
-                if (uriList.size == finishedUploads) {
-                    activity.runOnUiThread { editorMediaListener.appendMediaFiles(mediaMap) }
-                }
-            } else {
-                activity.runOnUiThread { addMediaVisualEditor(mediaUri, path) }
-            }
-        }
-    }
-
-    private fun addMediaVisualEditor(uri: Uri, path: String) {
-        val mediaFile = getMediaFile(uri)
-        if (mediaFile != null) {
-            editorMediaListener.appendMediaFile(mediaFile, path)
-        }
-    }
-
-    private fun getMediaFile(uri: Uri): MediaFile? {
-        val media = queueFileForUpload(uri, activity.contentResolver.getType(uri))
-        val mediaFile = FluxCUtils.mediaFileFromMediaModel(media)
-        return if (media != null) {
-            mediaFile
-        } else {
-            null
-        }
     }
 
     fun addMediaItemGroupOrSingleItem(data: Intent) {
@@ -373,15 +214,15 @@ class EditorMedia(
      * Queues a media file for upload and starts the UploadService. Toasts will alert the user
      * if there are issues with the file.
      */
-    private fun queueFileForUpload(uri: Uri, mimeType: String?): MediaModel? {
-        return queueFileForUpload(uri, mimeType, MediaUploadState.QUEUED)
+    fun queueFileForUpload(uri: Uri): MediaModel? {
+        return queueFileForUpload(uri, MediaUploadState.QUEUED)
     }
 
     fun queueFileForUpload(
         uri: Uri,
-        mimeType: String?,
         startingState: MediaUploadState
     ): MediaModel? {
+        val mimeType = activity.contentResolver.getType(uri)
         val path = MediaUtils.getRealPathFromURI(activity, uri)
 
         // Invalid file path
