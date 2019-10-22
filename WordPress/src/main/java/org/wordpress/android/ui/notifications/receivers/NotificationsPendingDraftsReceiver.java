@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
-import org.wordpress.android.push.NotificationPushIds;
+import org.wordpress.android.push.NotificationPushId;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -168,7 +168,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         builder.setDeleteIntent(
                 NotificationsProcessingService.getPendingIntentForNotificationDismiss(
                         context,
-                        NotificationPushIds.PENDING_DRAFT_NOTIFICATION
+                        NotificationPushId.PENDING_DRAFT_NOTIFICATION
                 )
         );
 

@@ -7,7 +7,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.push.NotificationPushIds
+import org.wordpress.android.push.NotificationPushId
 import org.wordpress.android.push.NotificationsProcessingService
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class PublishNotificationReceiver : BroadcastReceiver() {
                     .setDeleteIntent(
                             NotificationsProcessingService.getPendingIntentForNotificationDismiss(
                                     context,
-                                    NotificationPushIds.POST_PUBLISHED_NOTIFICATION
+                                    NotificationPushId.POST_PUBLISHED_NOTIFICATION
                             )
                     )
                     .build()
