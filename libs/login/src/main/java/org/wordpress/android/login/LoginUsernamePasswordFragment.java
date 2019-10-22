@@ -150,8 +150,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
-        // TODO: mEndpointAddress is null since discovery process has not yet taken place for the Woo APP
-        mInputSiteAddressWithoutSuffix = UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
+        String inputSiteAddressWithoutProtocol = UrlUtils.removeScheme(mInputSiteAddress);
+        mInputSiteAddressWithoutSuffix = mEndpointAddress.isEmpty()
+                ? inputSiteAddressWithoutProtocol : UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
 
         mUsernameInput = rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
