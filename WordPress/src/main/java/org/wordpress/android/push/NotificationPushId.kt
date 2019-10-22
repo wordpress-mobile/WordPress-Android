@@ -6,7 +6,6 @@ enum class NotificationPushId(val value: Int) {
     GROUP_NOTIFICATION_ID(30000),
     ACTIONS_RESULT_NOTIFICATION_ID(40000),
     ACTIONS_PROGRESS_NOTIFICATION_ID(50000),
-    GENERIC_LOCAL_NOTIFICATION_ID(60000),
     PENDING_DRAFTS_NOTIFICATION_ID(600001),
     QUICK_START_REMINDER_NOTIFICATION(4001),
     POST_UPLOAD_SUCCESS(5000),
@@ -15,5 +14,11 @@ enum class NotificationPushId(val value: Int) {
     MEDIA_UPLOAD_ERROR(5003),
     POST_PUBLISHED_NOTIFICATION(5004),
     PENDING_DRAFT_NOTIFICATION(5005),
-    ZENDESK_PUSH_NOTIFICATION_ID(1999999999),
+    ZENDESK_PUSH_NOTIFICATION_ID(1999999999);
+
+    companion object {
+        fun fromValue(value: Int): NotificationPushId? {
+            return values().find { it.value == value }
+        }
+    }
 }

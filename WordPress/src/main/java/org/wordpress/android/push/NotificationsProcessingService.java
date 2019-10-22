@@ -56,8 +56,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.push.NotificationPushId.QUICK_START_REMINDER_NOTIFICATION;
-
 /**
  * service which makes it possible to process Notifications quick actions in the background,
  * such as:
@@ -91,6 +89,7 @@ public class NotificationsProcessingService extends Service {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
+    @Inject NotificationsTracker mNotificationsTracker;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -167,7 +166,7 @@ public class NotificationsProcessingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Offload to a separate thread.
-        mQuickActionProcessor = new QuickActionProcessor(this, intent, startId);
+        mQuickActionProcessor = new QuickActionProcessor(this, mNotificationsTracker, intent, startId);
         new Thread(new Runnable() {
             public void run() {
                 mQuickActionProcessor.process();
@@ -178,6 +177,7 @@ public class NotificationsProcessingService extends Service {
     }
 
     private class QuickActionProcessor {
+        private NotificationsTracker mNotificationsTracker;
         private String mNoteId;
         private String mReplyText;
         private String mActionType;
@@ -187,8 +187,9 @@ public class NotificationsProcessingService extends Service {
         private final Context mContext;
         private final Intent mIntent;
 
-        QuickActionProcessor(Context ctx, Intent intent, int taskId) {
+        QuickActionProcessor(Context ctx, NotificationsTracker notificationsTracker, Intent intent, int taskId) {
             mContext = ctx;
+            mNotificationsTracker = notificationsTracker;
             mIntent = intent;
             mTaskId = taskId;
         }
@@ -216,9 +217,10 @@ public class NotificationsProcessingService extends Service {
                 // check notification dismissed pending intent
                 if (mActionType.equals(ARG_ACTION_NOTIFICATION_DISMISS)) {
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
+                    mNotificationsTracker.trackDismissedNotification(notificationId);
                     if (notificationId == NotificationPushId.GROUP_NOTIFICATION_ID.getValue()) {
                         GCMMessageService.clearNotifications();
-                    } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION.getValue()) {
+                    } else if (notificationId == NotificationPushId.QUICK_START_REMINDER_NOTIFICATION.getValue()) {
                         AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
                     } else {
                         GCMMessageService.removeNotification(notificationId);
@@ -228,7 +230,6 @@ public class NotificationsProcessingService extends Service {
                             notificationManager.cancel(NotificationPushId.GROUP_NOTIFICATION_ID.getValue());
                         }
                     }
-                    return;
                 }
 
                 // check special cases for pending draft notifications - ignore
