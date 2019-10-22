@@ -28,8 +28,4 @@ class FeaturedImageUtils
             false
         }
     }
-
-    companion object {
-        fun getInstance() = FeaturedImageUtils()
-    }
 }
