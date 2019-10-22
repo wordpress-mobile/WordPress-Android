@@ -2302,11 +2302,6 @@ public class EditPostActivity extends AppCompatActivity implements
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
 
-        // Set up the placeholder text
-        mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
-        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder
-                                                              : R.string.editor_post_title_placeholder));
-
         // Set post title and content
         if (mPost != null) {
             // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized
@@ -3542,9 +3537,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case LINK_ADDED_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 mEditorPhotoPicker.hidePhotoPicker();
-                break;
-            case LINK_REMOVED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LINK_REMOVED;
                 break;
             case LIST_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LIST;

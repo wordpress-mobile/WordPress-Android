@@ -123,9 +123,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_LINK_ADDED:
                 predefinedEventProperties.put("button", "link");
                 break;
-            case EDITOR_TAPPED_LINK_REMOVED:
-                predefinedEventProperties.put("button", "unlink");
-                break;
             case EDITOR_TAPPED_LIST:
                 predefinedEventProperties.put("button", "list");
                 break;
@@ -711,18 +708,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
                 return "editor_draft_saved";
-            case EDITOR_DISCARDED_CHANGES:
-                return "editor_discarded_changes";
-            case EDITOR_DISCARDED_CHANGES_UNDO:
-                return "editor_discarded_changes_undo";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
-            case EDITOR_HYBRID_ENABLED:
-                return "editor_hybrid_enabled";
-            case EDITOR_HYBRID_TOGGLED_OFF:
-                return "editor_hybrid_toggled_off";
-            case EDITOR_HYBRID_TOGGLED_ON:
-                return "editor_hybrid_toggled_on";
             case EDITOR_AZTEC_ENABLED:
                 return "editor_aztec_enabled";
             case EDITOR_AZTEC_TOGGLED_OFF:
@@ -836,8 +823,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_ORDERED:
-                return "editor_button_tapped";
-            case EDITOR_TAPPED_LINK_REMOVED:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
