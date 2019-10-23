@@ -894,7 +894,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
 
-        // TODO: It looks like we might be calling addMediaList twice
         if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
             boolean hasSelectedPicture = false;
             for (Uri uri : uriList) {
