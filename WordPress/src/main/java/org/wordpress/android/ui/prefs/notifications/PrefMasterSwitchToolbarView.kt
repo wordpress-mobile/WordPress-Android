@@ -29,17 +29,17 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         OnCheckedChangeListener,
         OnLongClickListener,
         OnClickListener {
-    private var mHintOn: String? = null
-    private var mHintOff: String? = null
-    private var mPrefKey: String? = null
-    private var mMasterSwitch: SwitchCompat
-    private var mMasterSwitchToolbarListener: MasterSwitchToolbarListener? = null
-    private var mToolbarSwitch: Toolbar
-    private var mTitleOff: String? = null
-    private var mTitleOn: String? = null
+    private var hintOn: String? = null
+    private var hintOff: String? = null
+    private var prefKey: String? = null
+    private var masterSwitch: SwitchCompat
+    private var masterSwitchToolbarListener: MasterSwitchToolbarListener? = null
+    private var toolbarSwitch: Toolbar
+    private var titleOff: String? = null
+    private var titleOn: String? = null
 
     val isMasterChecked: Boolean
-        get() = mMasterSwitch.isChecked
+        get() = masterSwitch.isChecked
 
     var shouldSaveMasterKeyOnToggle: Boolean = true
 
@@ -59,12 +59,12 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     init {
         inflate(context, R.layout.preferences_master_switch_toolbar, this)
 
-        mToolbarSwitch = findViewById(R.id.toolbar_with_switch)
-        mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary)
+        toolbarSwitch = findViewById(R.id.toolbar_with_switch)
+        toolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary)
 
-        val menuItem = mToolbarSwitch.menu.findItem(R.id.master_switch)
-        mMasterSwitch = menuItem.actionView as SwitchCompat
-        mMasterSwitch.isChecked = true
+        val menuItem = toolbarSwitch.menu.findItem(R.id.master_switch)
+        masterSwitch = menuItem.actionView as SwitchCompat
+        masterSwitch.isChecked = true
 
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
@@ -98,35 +98,35 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
             }
         }
 
-        mMasterSwitch.setOnCheckedChangeListener(this)
-        mToolbarSwitch.setOnLongClickListener(this)
-        mToolbarSwitch.setOnClickListener(this)
+        masterSwitch.setOnCheckedChangeListener(this)
+        toolbarSwitch.setOnLongClickListener(this)
+        toolbarSwitch.setOnClickListener(this)
 
-        ViewCompat.setLabelFor(mToolbarSwitch, mMasterSwitch.id)
+        ViewCompat.setLabelFor(toolbarSwitch, masterSwitch.id)
         setupFocusabilityForTalkBack()
-        mToolbarSwitch.redirectContextClickToLongPressListener()
+        toolbarSwitch.redirectContextClickToLongPressListener()
     }
 
     fun setToolbarTitleContentDescription(titleContentDescription: String?) {
         titleContentDescription?.let {
-            for (i in 0 until mToolbarSwitch.childCount) {
-                if (mToolbarSwitch.getChildAt(i) is TextView) {
-                    mToolbarSwitch.getChildAt(i).contentDescription = titleContentDescription
+            for (i in 0 until toolbarSwitch.childCount) {
+                if (toolbarSwitch.getChildAt(i) is TextView) {
+                    toolbarSwitch.getChildAt(i).contentDescription = titleContentDescription
                 }
             }
         }
     }
 
     private fun setContentOffset(offset: Int) {
-        mToolbarSwitch.setContentInsetsAbsolute(offset, 0)
+        toolbarSwitch.setContentInsetsAbsolute(offset, 0)
     }
 
     private fun setupFocusabilityForTalkBack() {
-        mMasterSwitch.isFocusable = false
-        mMasterSwitch.isClickable = false
-        mToolbarSwitch.isFocusableInTouchMode = false
-        mToolbarSwitch.isFocusable = true
-        mToolbarSwitch.isClickable = true
+        masterSwitch.isFocusable = false
+        masterSwitch.isClickable = false
+        toolbarSwitch.isFocusableInTouchMode = false
+        toolbarSwitch.isFocusable = true
+        toolbarSwitch.isClickable = true
     }
 
     /**
@@ -134,7 +134,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
      */
     fun setPrefKey(prefKey: String?) {
         prefKey?.let {
-            mPrefKey = it
+            this.prefKey = it
 
             val isMasterChecked = AppPrefs.getMasterSwitchKeyEnabled(it)
             loadInitialState(isMasterChecked)
@@ -145,30 +145,30 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
      * Loads initial state of the master switch and toolbar
      */
     fun loadInitialState(checkMaster: Boolean) {
-        mMasterSwitch.isChecked = checkMaster
+        masterSwitch.isChecked = checkMaster
 
-        mToolbarSwitch.title = if (checkMaster) {
-            mTitleOn
+        toolbarSwitch.title = if (checkMaster) {
+            titleOn
         } else {
-            mTitleOff
+            titleOff
         }
-        mToolbarSwitch.visibility = View.VISIBLE
+        toolbarSwitch.visibility = View.VISIBLE
     }
 
     fun setTitleOn(titleOn: String?) {
-        mTitleOn = titleOn ?: resources.getString(R.string.master_switch_default_title_on)
+        this.titleOn = titleOn ?: resources.getString(R.string.master_switch_default_title_on)
     }
 
     fun setTitleOff(titleOff: String?) {
-        mTitleOff = titleOff ?: resources.getString(R.string.master_switch_default_title_off)
+        this.titleOff = titleOff ?: resources.getString(R.string.master_switch_default_title_off)
     }
 
     fun setHintOn(hintOn: String?) {
-        mHintOn = hintOn ?: resources.getString(R.string.master_switch_default_hint_on)
+        this.hintOn = hintOn ?: resources.getString(R.string.master_switch_default_hint_on)
     }
 
     fun setHintOff(hintOff: String?) {
-        mHintOff = hintOff ?: resources.getString(R.string.master_switch_default_hint_off)
+        this.hintOff = hintOff ?: resources.getString(R.string.master_switch_default_hint_off)
     }
 
     /*
@@ -177,10 +177,10 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     override fun onLongClick(v: View?): Boolean {
         Toast.makeText(
                 context,
-                if (mMasterSwitch.isChecked) {
-                    mHintOn
+                if (masterSwitch.isChecked) {
+                    hintOn
                 } else {
-                    mHintOff
+                    hintOff
                 },
                 Toast.LENGTH_SHORT
         ).show()
@@ -191,25 +191,25 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     * User clicked the toolbar
     */
     override fun onClick(v: View?) {
-        mMasterSwitch.isChecked = !mMasterSwitch.isChecked
+        masterSwitch.isChecked = !masterSwitch.isChecked
     }
 
     /*
      * User toggled the master switch
      */
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        mToolbarSwitch.title = if (isChecked) {
-            mTitleOn
+        toolbarSwitch.title = if (isChecked) {
+            titleOn
         } else {
-            mTitleOff
+            titleOff
         }
 
         if (shouldSaveMasterKeyOnToggle) {
-            mPrefKey?.let {
+            prefKey?.let {
                 saveMasterKeyEnabled(it)
             }
         }
-        mMasterSwitchToolbarListener?.onMasterSwitchCheckedChanged(buttonView, isChecked)
+        masterSwitchToolbarListener?.onMasterSwitchCheckedChanged(buttonView, isChecked)
     }
 
     fun saveMasterKeyEnabled(masterKey: String) {
@@ -217,6 +217,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     }
 
     fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {
-        mMasterSwitchToolbarListener = masterSwitchToolbarListener
+        this.masterSwitchToolbarListener = masterSwitchToolbarListener
     }
 }
