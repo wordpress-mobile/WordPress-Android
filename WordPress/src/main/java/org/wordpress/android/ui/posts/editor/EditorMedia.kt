@@ -165,13 +165,11 @@ class EditorMedia(
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                     AppLog.e(T.UTILS, "Can't download the image at: $mediaUri", e)
-                    CrashLoggingUtils
-                            .logException(
-                                    e,
-                                    T.MEDIA,
-                                    "Can't download the image at: " + mediaUri.toString()
-                                            + " See issue #5823"
-                            )
+                    CrashLoggingUtils.logException(
+                            e,
+                            T.MEDIA,
+                            "Can't download the image at: $mediaUri See issue #5823"
+                    )
                     didAnyFail = true
                 }
 
@@ -251,7 +249,6 @@ class EditorMedia(
                     showProgressDialog(false)
                 }
             }
-
 
             activity.runOnUiThread {
                 if (!isInterrupted) {
