@@ -43,16 +43,14 @@ import java.io.IOException
 import java.util.ArrayList
 import javax.inject.Named
 
-interface EditorMediaListener {
-    // Temporary overlay functions
-    fun showOverlayFromEditorMedia(animate: Boolean)
+data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
 
+interface EditorMediaListener {
+    fun showOverlayFromEditorMedia(animate: Boolean)
     fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
-    fun isPostLocalDraft(): Boolean
-    fun localPostId(): Int
-    fun remotePostId(): Long
+    fun editorMediaPostData(): EditorMediaPostData
     fun savePostAsyncFromEditorMedia(listener: AfterSavePostListener? = null)
 }
 
@@ -66,6 +64,15 @@ class EditorMedia(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private var addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase? = null
+
+    // for keeping the media uri while asking for permissions
+    var droppedMediaUris: ArrayList<Uri>? = null
+    val fetchMediaRunnable = Runnable {
+        droppedMediaUris?.let {
+            droppedMediaUris = null
+            addMediaList(it, false)
+        }
+    }
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
@@ -100,14 +107,16 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        addMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(activity, mainDispatcher, bgDispatcher)
-        addMediaToEditorUseCase!!.optimizeAndAddAsync(
-                fetchedUriList,
-                site,
-                isNew,
-                editorMediaListener,
-                this@EditorMedia
-        )
+        OptimizeAndAddMediaToEditorUseCase(activity, mainDispatcher, bgDispatcher).let {
+            addMediaToEditorUseCase = it
+            it.optimizeAndAddAsync(
+                    fetchedUriList,
+                    site,
+                    isNew,
+                    editorMediaListener,
+                    this@EditorMedia
+            )
+        }
     }
 
     fun cancelAddMediaListThread() {
@@ -244,7 +253,7 @@ class EditorMedia(
             ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
             return null
         }
-        media.localPostId = editorMediaListener.localPostId()
+        media.localPostId = editorMediaListener.editorMediaPostData().localPostId
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
 
         startUploadService(listOf(media))
@@ -270,8 +279,10 @@ class EditorMedia(
         }
 
         media.setUploadState(startingState)
-        if (!editorMediaListener.isPostLocalDraft()) {
-            media.postId = editorMediaListener.remotePostId()
+        editorMediaListener.editorMediaPostData().let {
+            if (!it.isLocalDraft) {
+                media.postId = it.remotePostId
+            }
         }
 
         return media

@@ -113,6 +113,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOpera
 import org.wordpress.android.ui.posts.editor.EditorMedia;
 import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.EditorMediaListener;
+import org.wordpress.android.ui.posts.editor.EditorMediaPostData;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
@@ -249,7 +250,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mShowAztecEditor;
     private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
-    private boolean mAllowMultipleSelection;
 
     private List<String> mPendingVideoPressInfoRequests;
     private List<String> mAztecBackspaceDeletedOrGbBlockDeletedMediaItemIds = new ArrayList<>();
@@ -315,20 +315,6 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject @Named(BG_THREAD) CoroutineDispatcher bgDispatcher;
 
     private SiteModel mSite;
-
-    // for keeping the media uri while asking for permissions
-    private ArrayList<Uri> mDroppedMediaUris;
-
-    private Runnable mFetchMediaRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mDroppedMediaUris != null) {
-                final List<Uri> mediaUris = mDroppedMediaUris;
-                mDroppedMediaUris = null;
-                mEditorMedia.addMediaList(mediaUris, false);
-            }
-        }
-    };
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -397,9 +383,8 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        // TODO: Make sure local id doesn't change and if it does make it a part of the media listener and same
-        // TODO: thing for isLocalDraft
         mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore, mainDispatcher, bgDispatcher);
+
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -460,7 +445,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         (PostEditorAnalyticsSession) extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA);
             }
         } else {
-            mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
+            mEditorMedia.setDroppedMediaUris(savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS));
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
@@ -799,7 +784,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         outState.putBoolean(STATE_KEY_GUTENBERG_IS_SHOWN, mShowGutenbergEditor);
 
-        outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
+        outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mEditorMedia.getDroppedMediaUris());
 
         if (mEditorFragment != null) {
             getSupportFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
@@ -942,7 +927,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mAllowMultipleSelection = allowMultipleSelection;
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
@@ -1066,7 +1051,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                    runOnUiThread(mFetchMediaRunnable);
+                    runOnUiThread(mEditorMedia.getFetchMediaRunnable());
                     break;
             }
         }
@@ -1507,11 +1492,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, mAllowMultipleSelection);
+        WPMediaUtils.launchPictureLibrary(this, mEditorMedia.getAllowMultipleSelection());
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, mAllowMultipleSelection);
+        WPMediaUtils.launchVideoLibrary(this, mEditorMedia.getAllowMultipleSelection());
     }
 
     private void launchVideoCamera() {
@@ -1701,7 +1686,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    // TODO: Don't make this public
     public interface AfterSavePostListener {
         void onPostSave();
     }
@@ -2569,10 +2553,10 @@ public class EditPostActivity extends AppCompatActivity implements
         if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
-            // if mAllowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
-            if (mShowGutenbergEditor && mAllowMultipleSelection) {
+            // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
+            if (mShowGutenbergEditor && mEditorMedia.getAllowMultipleSelection()) {
                 mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
-                mAllowMultipleSelection = false;
+                mEditorMedia.setAllowMultipleSelection(false);
             } else {
                 for (Long id : ids) {
                     mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
@@ -2689,20 +2673,20 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddMediaImageClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
     @Override
     public void onAddMediaVideoClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
     public void onAddLibraryMediaClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
-        if (mAllowMultipleSelection) {
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        if (allowMultipleSelection) {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
@@ -2726,8 +2710,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        mAllowMultipleSelection = allowMultipleSelection;
-        WPMediaUtils.launchMediaLibrary(this, mAllowMultipleSelection);
+        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
     }
 
     @Override
@@ -2737,10 +2721,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
-        mDroppedMediaUris = mediaUris;
+        mEditorMedia.setDroppedMediaUris(mediaUris);
         if (PermissionUtils
                 .checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
-            runOnUiThread(mFetchMediaRunnable);
+            runOnUiThread(mEditorMedia.getFetchMediaRunnable());
         }
     }
 
@@ -3337,18 +3321,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean isPostLocalDraft() {
-        return mPost.isLocalDraft();
-    }
-
-    @Override
-    public int localPostId() {
-        return mPost.getId();
-    }
-
-    @Override
-    public long remotePostId() {
-        return mPost.getRemotePostId();
+    public @NonNull EditorMediaPostData editorMediaPostData() {
+        return new EditorMediaPostData(mPost.getId(), mPost.getRemotePostId(), mPost.isLocalDraft());
     }
 
     @Override
