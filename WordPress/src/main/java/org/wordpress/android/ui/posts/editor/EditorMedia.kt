@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -63,7 +62,7 @@ class EditorMedia(
     private val editorMediaListener: EditorMediaListener,
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
-    editorTracker: EditorTracker,
+    private val editorTracker: EditorTracker,
     mediaUtilsWrapper: MediaUtilsWrapper,
     fluxCUtilsWrapper: FluxCUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -91,23 +90,6 @@ class EditorMedia(
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
-    }
-
-    /**
-     * Analytics about media already available in the blog's library.
-     * @param source where the media is being added from
-     * @param media media being added
-     */
-    private fun trackAddMediaEvent(source: AddExistingMediaSource, media: MediaModel) {
-        val stat = when (source) {
-            AddExistingMediaSource.WP_MEDIA_LIBRARY -> if (media.isVideo) {
-                Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
-            } else {
-                Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY
-            }
-            AddExistingMediaSource.STOCK_PHOTO_LIBRARY -> Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY
-        }
-        AnalyticsUtils.trackWithSiteDetails(stat, site, null)
     }
 
     fun addMedia(mediaUri: Uri?, isNew: Boolean): Boolean {
@@ -208,7 +190,7 @@ class EditorMedia(
             return false
         }
 
-        trackAddMediaEvent(source, media)
+        editorTracker.trackAddMediaEvent(site, source, media)
 
         val mediaFile = FluxCUtils.mediaFileFromMediaModel(media)
         editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
@@ -222,7 +204,7 @@ class EditorMedia(
             if (media == null) {
                 AppLog.w(T.MEDIA, "Cannot add null media to post")
             } else {
-                trackAddMediaEvent(source, media)
+                editorTracker.trackAddMediaEvent(site, source, media)
 
                 mediaMap[media.urlToUse] = FluxCUtils.mediaFileFromMediaModel(media)
             }

@@ -4,7 +4,9 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -46,5 +48,22 @@ class EditorTracker @Inject constructor(private val context: Context) {
         }
 
         AnalyticsUtils.trackWithSiteDetails(currentStat, site, properties)
+    }
+
+    /**
+     * Analytics about media already available in the blog's library.
+     * @param source where the media is being added from
+     * @param media media being added
+     */
+    fun trackAddMediaEvent(site: SiteModel, source: AddExistingMediaSource, media: MediaModel) {
+        val stat = when (source) {
+            AddExistingMediaSource.WP_MEDIA_LIBRARY -> if (media.isVideo) {
+                Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
+            } else {
+                Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY
+            }
+            AddExistingMediaSource.STOCK_PHOTO_LIBRARY -> Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY
+        }
+        AnalyticsUtils.trackWithSiteDetails(stat, site, null)
     }
 }
