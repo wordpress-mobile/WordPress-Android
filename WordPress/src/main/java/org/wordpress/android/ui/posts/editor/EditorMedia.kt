@@ -69,15 +69,13 @@ class EditorMedia(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private var addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(
+    private val addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(
             editorTracker,
             mediaUtilsWrapper,
             fluxCUtilsWrapper,
             mainDispatcher,
             bgDispatcher
     )
-    // TODO this fields is not used here anymore - it seems more related to the photoPicker
-    var allowMultipleSelection: Boolean = false
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
 
