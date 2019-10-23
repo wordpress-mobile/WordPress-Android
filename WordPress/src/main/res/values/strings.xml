@@ -1418,8 +1418,8 @@
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
 
     <!-- Post Remote Preview -->
-    <string name="post_preview_saving_draft">Saving&#8230;</string>
-    <string name="post_preview_remote_auto_saving_post">Generating Preview&#8230;</string>
+    <string name="post_preview_saving_draft">Saving…</string>
+    <string name="post_preview_remote_auto_saving_post">Generating Preview…</string>
     <string name="remote_preview_operation_error">Error while trying to save post before preview</string>
     <string name="preview_unavailable_self_hosted_sites">Preview Unavailable</string>
     <string name="error_preview_empty_post">Can\'t preview an empty post</string>
