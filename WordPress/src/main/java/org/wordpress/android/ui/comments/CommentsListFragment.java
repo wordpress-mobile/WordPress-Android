@@ -302,7 +302,7 @@ public class CommentsListFragment extends Fragment {
             }
 
             @Override
-            public void onLoadData() {
+            public void onLoadData(boolean forced) {
                 updateComments(false);
             }
 

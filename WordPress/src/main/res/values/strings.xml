@@ -1201,9 +1201,6 @@
     <string name="reader">Reader</string>
 
     <!-- editor -->
-    <string name="editor_post_title_placeholder">Post Title</string>
-    <string name="editor_page_title_placeholder">Page Title</string>
-    <string name="editor_content_placeholder">Share your story here…</string>
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="editor_post_saved_locally">Post saved on device</string>
     <string name="editor_draft_saved_online">Draft saved online</string>

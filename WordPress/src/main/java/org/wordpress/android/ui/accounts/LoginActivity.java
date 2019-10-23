@@ -407,7 +407,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void onSignupSheetGoogleClicked() {
         dismissSignupSheet();
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_TAPPED);
 
         if (NetworkUtils.checkConnection(this)) {
             SignupGoogleFragment signupGoogleFragment;

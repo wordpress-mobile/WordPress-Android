@@ -8,6 +8,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderEmbedScanner;
@@ -48,9 +49,10 @@ public class ReaderPostRenderer {
     private StringBuilder mRenderBuilder;
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
+    private FeaturedImageUtils mFeaturedImageUtils;
 
     @SuppressLint("SetJavaScriptEnabled")
-    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
+    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, FeaturedImageUtils featuredImageUtils) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -61,6 +63,7 @@ public class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
+        mFeaturedImageUtils = featuredImageUtils;
 
         mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3);
         mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
@@ -247,12 +250,12 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * returns true if the post has a featured image and there are no images in the
-     * post's content - when this is the case, the featured image is inserted at
-     * the top of the content
+     * returns true if the post has a featured image and the featured image is not found in the post body
      */
     private boolean shouldAddFeaturedImage() {
-        return mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
+        return mPost.hasFeaturedImage()
+               && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())
+               && mFeaturedImageUtils.showFeaturedImage(mPost.getFeaturedImage(), mPost.getText());
     }
 
     /*

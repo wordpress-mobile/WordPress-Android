@@ -1,6 +1,0 @@
-13.3:
-* Deine Statistiken sind jetzt noch reaktionsfähiger.
-* Du kannst jetzt deinen Benutzernamen in den Kontoeinstellungen ändern.
-* Du möchtest die Einstellungen deiner Jetpack-Performance optimieren? Jetzt kannst du das direkt in der App tun!
-* Wenn du ein produktiver Publisher mit mehr als 100 Seiten auf deiner Website bist, listen wir sie für schnelleren Zugriff chronologisch auf.
-* Wir haben dem Block-Editor viele Upgrades hinzugefügt, wie Rich Text-Stile in Videountertiteln, intuitivere Blockfunktionen und die automatische Inhaltsspeicherung nach 2 Sekunden Inaktivität.

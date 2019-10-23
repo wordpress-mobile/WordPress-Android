@@ -126,7 +126,10 @@ public class AppPrefs {
         // Widget settings
         STATS_WIDGET_SELECTED_SITE_ID,
         STATS_WIDGET_COLOR_MODE,
-        STATS_WIDGET_DATA_TYPE
+        STATS_WIDGET_DATA_TYPE,
+
+        // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
+        AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
     }
 
     /**
@@ -958,5 +961,37 @@ public class AppPrefs {
 
     public static boolean getSystemNotificationsEnabled() {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
+    }
+
+    private static List<String> getPostWithHWAccelerationOff() {
+        String idsAsString = getString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, "");
+        return Arrays.asList(idsAsString.split(","));
+    }
+
+    /*
+     * adds a local site ID to the top of list of recently chosen sites
+     */
+    public static void addPostWithHWAccelerationOff(int localSiteId, int localPostId) {
+        if (localSiteId == 0 || localPostId == 0 || isPostWithHWAccelerationOff(localSiteId, localPostId)) {
+            return;
+        }
+        String key = localSiteId + "-" + localPostId;
+        List<String> currentIds = new ArrayList<>(getPostWithHWAccelerationOff());
+        currentIds.add(key);
+        // store in prefs
+        String idsAsString = TextUtils.join(",", currentIds);
+        setString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, idsAsString);
+    }
+
+    public static boolean isPostWithHWAccelerationOff(int localSiteId, int localPostId) {
+        if (localSiteId == 0 || localPostId == 0) {
+            return false;
+        }
+        List<String> currentIds = getPostWithHWAccelerationOff();
+        String key = localSiteId + "-" + localPostId;
+        if (currentIds.contains(key)) {
+            return true;
+        }
+        return false;
     }
 }
