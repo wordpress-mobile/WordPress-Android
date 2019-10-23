@@ -39,7 +39,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import java.io.File
 import java.io.FileOutputStream
@@ -122,37 +121,26 @@ class EditorMedia(
      * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
      */
     private fun fetchMediaList(uriList: List<Uri>): List<Uri> {
-        var didAnyFail = false
-        val fetchedUriList = ArrayList<Uri>()
-        for (mediaUri in uriList) {
+        val fetchedUriList = uriList.mapNotNull { mediaUri ->
             if (!MediaUtils.isInMediaStore(mediaUri)) {
                 // Do not download the file in async task. See
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-                var fetchedUri: Uri? = null
                 try {
-                    fetchedUri = MediaUtils.downloadExternalMedia(activity, mediaUri)
+                    return@mapNotNull MediaUtils.downloadExternalMedia(activity, mediaUri)
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                    AppLog.e(T.UTILS, "Can't download the image at: $mediaUri", e)
-                    CrashLoggingUtils.logException(
-                            e,
-                            T.MEDIA,
-                            "Can't download the image at: $mediaUri See issue #5823"
-                    )
-                    didAnyFail = true
-                }
-
-                if (fetchedUri != null) {
-                    fetchedUriList.add(fetchedUri)
-                } else {
-                    didAnyFail = true
+                    val errorMessage = "Can't download the image at: $mediaUri See issue #5823"
+                    AppLog.e(T.UTILS, errorMessage, e)
+                    CrashLoggingUtils.logException(e, T.MEDIA, errorMessage)
+                    return@mapNotNull null
                 }
             } else {
-                fetchedUriList.add(mediaUri)
+                return@mapNotNull mediaUri
             }
         }
 
-        if (didAnyFail) {
+        if (fetchedUriList.size < uriList.size) {
+            // At least one media failed
             ToastUtils.showToast(activity, R.string.error_downloading_image, Duration.SHORT)
         }
 
