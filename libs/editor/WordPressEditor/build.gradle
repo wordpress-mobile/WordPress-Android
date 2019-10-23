@@ -79,7 +79,7 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
     if (rootProject.ext.has("buildGutenbergFromSource") && rootProject.ext.buildGutenbergFromSource) {
-        implementation (project(':react-native-gutenberg-bridge')) {
+        implementation (project(':react-native-bridge')) {
             exclude group: 'com.squareup.okhttp3'
             exclude group: "com.android.volley"
             exclude group: 'com.google.code.findbugs'
