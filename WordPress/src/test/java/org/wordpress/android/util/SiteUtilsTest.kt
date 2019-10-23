@@ -45,12 +45,4 @@ class SiteUtilsTest {
         site.url = "https://***.wordpress.com"
         assertFalse(SiteUtils.hasCustomDomain(site))
     }
-
-    @Test
-    fun `testetest`() {
-        listOf("1","2").map {
-            println("First map: $it")
-            it
-        }.map { println("Second map: $it") }.toList()
-    }
 }

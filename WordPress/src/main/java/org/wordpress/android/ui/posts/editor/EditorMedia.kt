@@ -6,6 +6,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.ArrayMap
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -20,17 +21,21 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
 import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase
+import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtils
+import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
@@ -46,8 +51,6 @@ import javax.inject.Named
 data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
 
 interface EditorMediaListener {
-    fun showOverlayFromEditorMedia(animate: Boolean)
-    fun hideOverlayFromEditorMedia()
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
     fun editorMediaPostData(): EditorMediaPostData
@@ -60,10 +63,23 @@ class EditorMedia(
     private val editorMediaListener: EditorMediaListener,
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
+    editorTracker: EditorTracker,
+    mediaUtilsWrapper: MediaUtilsWrapper,
+    fluxCUtilsWrapper: FluxCUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private var addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase? = null
+    private var addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(
+            editorTracker,
+            mediaUtilsWrapper,
+            fluxCUtilsWrapper,
+            mainDispatcher,
+            bgDispatcher
+    )
+    // TODO this fields is not used here anymore - it seems more related to the photoPicker
+    var allowMultipleSelection: Boolean = false
+    val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
+    val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri>? = null
@@ -107,20 +123,19 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        OptimizeAndAddMediaToEditorUseCase(activity, mainDispatcher, bgDispatcher).let {
-            addMediaToEditorUseCase = it
-            it.optimizeAndAddAsync(
-                    fetchedUriList,
-                    site,
-                    isNew,
-                    editorMediaListener,
-                    this@EditorMedia
-            )
-        }
+        addMediaToEditorUseCase.optimizeAndAddAsync(
+                fetchedUriList,
+                site,
+                isNew,
+                editorMediaListener,
+                this@EditorMedia
+        )
     }
 
     fun cancelAddMediaListThread() {
-        addMediaToEditorUseCase?.cancel()
+        // TODO The current behavior seems broken - we show a blocking dialog so the user can't cancel the action, but
+        //  when the user rotates the device we actually cancel the action ourselves ...
+        addMediaToEditorUseCase.cancel()
     }
 
     /*
@@ -139,13 +154,11 @@ class EditorMedia(
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                     AppLog.e(T.UTILS, "Can't download the image at: $mediaUri", e)
-                    CrashLoggingUtils
-                            .logException(
-                                    e,
-                                    T.MEDIA,
-                                    "Can't download the image at: " + mediaUri.toString()
-                                            + " See issue #5823"
-                            )
+                    CrashLoggingUtils.logException(
+                            e,
+                            T.MEDIA,
+                            "Can't download the image at: $mediaUri See issue #5823"
+                    )
                     didAnyFail = true
                 }
 
