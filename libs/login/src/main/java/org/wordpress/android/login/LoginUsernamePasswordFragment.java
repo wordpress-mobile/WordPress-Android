@@ -355,8 +355,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override
     public void handleWpComDiscoveryError(String failedEndpoint) {
-        // Used only by wp-android as Woo already uses the Connect-Inf-url to check
-        // if site is a wp.com site
+        AppLog.e(T.API, "Inputted a wpcom address in site address screen. Redirecting to Email screen");
+        mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(failedEndpoint), null, null);
     }
 
     @Override
