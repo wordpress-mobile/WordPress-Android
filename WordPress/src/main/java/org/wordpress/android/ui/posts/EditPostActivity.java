@@ -164,6 +164,7 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException;
 import org.wordpress.aztec.util.AztecLog;
 
 import java.io.File;
@@ -930,7 +931,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
 
-        // TODO: It looks like we might be calling addMediaList twice
         if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
             boolean hasSelectedPicture = false;
             for (Uri uri : uriList) {
@@ -1635,7 +1635,29 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                 );
             }
+
+            PostModel currentPost = getPost();
+            if (currentPost != null && AppPrefs.isPostWithHWAccelerationOff(currentPost.getLocalSiteId(),
+                    currentPost.getId())) {
+                // We need to disable HW Acc. on this post
+                aztecEditorFragment.disableHWAcceleration();
+            }
             aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
+                // This method handles the custom Exception thrown by Aztec to notify the parent app of the error #8828
+                // We don't need to log the error, since it was already logged by Aztec, instead we need to write the
+                // prefs to disable HW acceleration for it.
+                private boolean isError8828(@NotNull Throwable throwable) {
+                    if (!(throwable instanceof DynamicLayoutGetBlockIndexOutOfBoundsException)) {
+                        return false;
+                    }
+                    PostModel currentPost = getPost();
+                    if (currentPost == null) {
+                        return false;
+                    }
+                    AppPrefs.addPostWithHWAccelerationOff(currentPost.getLocalSiteId(), currentPost.getId());
+                    return true;
+                }
+
                 @Override
                 public void log(@NotNull String s) {
                     // For now, we're wrapping up the actual log into an exception to reduce possibility
@@ -1646,11 +1668,17 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 @Override
                 public void logException(@NotNull Throwable throwable) {
+                    if (isError8828(throwable)) {
+                        return;
+                    }
                     CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
                 }
 
                 @Override
                 public void logException(@NotNull Throwable throwable, String s) {
+                    if (isError8828(throwable)) {
+                        return;
+                    }
                     CrashLoggingUtils.logException(
                             new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
                 }
@@ -2283,11 +2311,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
-
-        // Set up the placeholder text
-        mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
-        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder
-                                                              : R.string.editor_post_title_placeholder));
 
         // Set post title and content
         if (mPost != null) {
@@ -3096,9 +3119,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case LINK_ADDED_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LINK_ADDED;
                 mEditorPhotoPicker.hidePhotoPicker();
-                break;
-            case LINK_REMOVED_BUTTON_TAPPED:
-                currentStat = Stat.EDITOR_TAPPED_LINK_REMOVED;
                 break;
             case LIST_BUTTON_TAPPED:
                 currentStat = Stat.EDITOR_TAPPED_LIST;

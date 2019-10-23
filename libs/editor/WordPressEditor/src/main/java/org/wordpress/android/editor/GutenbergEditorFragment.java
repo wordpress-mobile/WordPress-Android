@@ -772,14 +772,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void removeMedia(String mediaId) {
     }
 
-    @Override
-    public void setTitlePlaceholder(CharSequence placeholderText) {
-    }
-
-    @Override
-    public void setContentPlaceholder(CharSequence placeholderText) {
-    }
-
     // Getting the content from the HTML editor can take time and the UI seems to be unresponsive.
     // Show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
     @Override
