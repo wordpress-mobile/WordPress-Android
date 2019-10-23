@@ -148,24 +148,17 @@ class EditorMedia(
     }
 
     fun addMediaItemGroupOrSingleItem(data: Intent) {
-        val clipData = data.clipData
-        if (clipData != null) {
-            val uriList = ArrayList<Uri>()
-            for (i in 0 until clipData.itemCount) {
-                val item = clipData.getItemAt(i)
-                uriList.add(item.uri)
+        val uriList: List<Uri> = data.clipData?.let { clipData ->
+            (0 until clipData.itemCount).mapNotNull {
+                clipData.getItemAt(it)?.uri
             }
-            addMediaList(uriList, false)
-        } else {
-            addMedia(data.data, false)
-        }
+        } ?: listOf(data.data)
+        addMediaList(uriList, false)
     }
 
     fun advertiseImageOptimisationAndAddMedia(data: Intent) {
         if (WPMediaUtils.shouldAdvertiseImageOptimization(activity)) {
-            WPMediaUtils.advertiseImageOptimization(
-                    activity
-            ) { addMediaItemGroupOrSingleItem(data) }
+            WPMediaUtils.advertiseImageOptimization(activity) { addMediaItemGroupOrSingleItem(data) }
         } else {
             addMediaItemGroupOrSingleItem(data)
         }
@@ -319,8 +312,7 @@ class EditorMedia(
     }
 
     fun cancelMediaUpload(localMediaId: Int, delete: Boolean) {
-        val mediaModel = mediaStore.getMediaWithLocalId(localMediaId)
-        if (mediaModel != null) {
+        mediaStore.getMediaWithLocalId(localMediaId)?.let { mediaModel ->
             val payload = CancelMediaPayload(site, mediaModel, delete)
             dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
         }
