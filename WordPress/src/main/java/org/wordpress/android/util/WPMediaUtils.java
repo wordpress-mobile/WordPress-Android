@@ -41,7 +41,7 @@ public class WPMediaUtils {
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
 
-    public static Uri getOptimizedMedia(Activity activity, String path, boolean isVideo) {
+    public static Uri getOptimizedMedia(Context context, String path, boolean isVideo) {
         if (isVideo) {
             return null;
         }
@@ -57,7 +57,7 @@ public class WPMediaUtils {
             return null;
         }
 
-        String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeDimension, quality);
+        String optimizedPath = ImageUtils.optimizeImage(context, path, resizeDimension, quality);
         if (optimizedPath == null) {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
@@ -68,12 +68,12 @@ public class WPMediaUtils {
         return null;
     }
 
-    public static Uri fixOrientationIssue(Activity activity, String path, boolean isVideo) {
+    public static Uri fixOrientationIssue(Context context, String path, boolean isVideo) {
         if (isVideo) {
             return null;
         }
 
-        String rotatedPath = ImageUtils.rotateImageIfNecessary(activity, path);
+        String rotatedPath = ImageUtils.rotateImageIfNecessary(context, path);
         if (rotatedPath != null) {
             return Uri.parse(rotatedPath);
         }

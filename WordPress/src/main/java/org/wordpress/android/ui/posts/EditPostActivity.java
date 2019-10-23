@@ -40,6 +40,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -116,6 +118,7 @@ import org.wordpress.android.ui.posts.editor.EditorMediaListener;
 import org.wordpress.android.ui.posts.editor.EditorMediaPostData;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
+import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
@@ -136,9 +139,11 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.FluxCUtilsWrapper;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.MediaUtilsWrapper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -176,9 +181,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.modules.ThreadModuleKt.BG_THREAD;
+import static org.wordpress.android.modules.ThreadModuleKt.UI_THREAD;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+
+import kotlinx.coroutines.CoroutineDispatcher;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -282,6 +292,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private EditorMedia mEditorMedia;
 
     private ProgressDialog mProgressDialog;
+    private ProgressDialog mAddingMediaToEditorProgressDialog;
 
     private boolean mIsNewPost;
     private boolean mIsPage;
@@ -307,6 +318,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject RemotePreviewLogicHelper mRemotePreviewLogicHelper;
     @Inject ProgressDialogHelper mProgressDialogHelper;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject @Named(UI_THREAD) CoroutineDispatcher mMainDispatcher;
+    @Inject @Named(BG_THREAD) CoroutineDispatcher mBgDispatcher;
+    @Inject EditorTracker mEditorTracker;
+    @Inject MediaUtilsWrapper mMediaUtilsWrapper;
+    @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -377,7 +393,11 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore);
+        mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore, mEditorTracker, mMediaUtilsWrapper,
+                mFluxCUtilsWrapper, mMainDispatcher, mBgDispatcher);
+
+        startObserving();
+
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -542,6 +562,22 @@ public class EditPostActivity extends AppCompatActivity implements
         });
 
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    private void startObserving() {
+        mEditorMedia.getUiState().observe(this, uiState -> {
+            if (uiState != null) {
+                updateAddingMediaToEditorProgressDialogState(uiState.getProgressDialogUiState());
+                if (uiState.getEditorOverlayVisibility()) {
+                    showOverlay(false);
+                } else {
+                    hideOverlay();
+                }
+            }
+        });
+        mEditorMedia.getSnackBarMessage().observe(this, message -> {
+            WPSnackbar.make(findViewById(R.id.editor_activity), message.getMessageRes(), Snackbar.LENGTH_SHORT).show();
+        });
     }
 
     private void initializePostObject() {
@@ -2247,7 +2283,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mEditorMedia
-                        .queueFileForUpload(uri, getContentResolver().getType(uri), MediaUploadState.FAILED));
+                        .queueFileForUpload(uri, MediaUploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }
@@ -3342,13 +3378,8 @@ public class EditPostActivity extends AppCompatActivity implements
         savePostAsync(listener);
     }
 
-    @Override
-    public void showOverlayFromEditorMedia(boolean animate) {
-        showOverlay(animate);
-    }
-
-    @Override
-    public void hideOverlayFromEditorMedia() {
-        hideOverlay();
+    private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {
+        mAddingMediaToEditorProgressDialog = mProgressDialogHelper
+                .updateProgressDialogState(this, mAddingMediaToEditorProgressDialog, uiState, mUiHelpers);
     }
 }
