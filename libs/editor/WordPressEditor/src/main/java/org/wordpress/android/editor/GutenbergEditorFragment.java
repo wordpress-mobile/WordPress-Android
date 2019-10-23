@@ -48,9 +48,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
-import static org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.MEDIA_SOURCE_GIPHY_MEDIA;
-import static org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.MEDIA_SOURCE_STOCK_MEDIA;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,6 +67,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
+
+    private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
+    private static final String MEDIA_SOURCE_GIPHY_MEDIA = "MEDIA_SOURCE_GIPHY_MEDIA";
 
     private boolean mHtmlModeEnabled;
 
@@ -289,13 +289,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
-                    public void onOtherMediaStockMediaButtonClicked(boolean allowMultipleSelection) {
-                        mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
-                    }
-
-                    @Override
-                    public void onOtherMediaGiphyMediaButtonClicked(boolean allowMultipleSelection) {
-                        mEditorFragmentListener.onAddGiphyMediaClicked(allowMultipleSelection);
+                    public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
+                        if (mediaSource.equals(MEDIA_SOURCE_STOCK_MEDIA)) {
+                            mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
+                        } else if (mediaSource.equals(MEDIA_SOURCE_GIPHY_MEDIA)) {
+                            mEditorFragmentListener.onAddGiphyMediaClicked(allowMultipleSelection);
+                        }
                     }
                 },
                 new OnReattachQueryListener() {
@@ -721,18 +720,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        if (URLUtil.isNetworkUrl(mediaUrl)) {
-            getGutenbergContainerFragment().appendMediaFile(
-                    Integer.valueOf(mediaFile.getMediaId()),
-                    mediaUrl,
-                    mediaFile.isVideo());
-        } else {
-            getGutenbergContainerFragment().appendUploadMediaFile(
-                    mediaFile.getId(),
-                    "file://" + mediaUrl,
-                    mediaFile.isVideo());
+        boolean isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl);
+        if (!isNetworkUrl) {
             mUploadingMediaProgressMax.put(String.valueOf(mediaFile.getId()), 0f);
         }
+
+        getGutenbergContainerFragment().appendUploadMediaFile(
+                isNetworkUrl ? Integer.valueOf(mediaFile.getMediaId()) : mediaFile.getId(),
+                isNetworkUrl ? mediaUrl : "file://" + mediaUrl,
+                mediaFile.isVideo());
     }
 
     @Override
@@ -754,32 +750,24 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mediaUrl = (String) mediaUrls[0];
         }
 
-        if (URLUtil.isNetworkUrl(mediaUrl)) {
-            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-                rnMediaList.add(
-                        new Media(
-                                Integer.valueOf(mediaEntry.getValue().getMediaId()),
-                                mediaEntry.getKey(),
-                                mediaEntry.getValue().getMimeType()
-                        )
-                );
-            }
-            getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
-        } else {
-            for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
-                rnMediaList.add(
-                        new Media(
-                                mediaEntry.getValue().getId(),
-                                "file://" + mediaEntry.getKey(),
-                                mediaEntry.getValue().getMimeType()
-                        )
-                );
-            }
-            getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
+        boolean isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl);
+        if (!isNetworkUrl) {
             for (Media media : rnMediaList) {
                 mUploadingMediaProgressMax.put(String.valueOf(media.getId()), 0f);
             }
         }
+
+        for (Map.Entry<String, MediaFile> mediaEntry : mediaList.entrySet()) {
+            rnMediaList.add(
+                    new Media(
+                            isNetworkUrl ? Integer.valueOf(mediaEntry.getValue().getMediaId()) : mediaEntry.getValue().getId(),
+                            isNetworkUrl ? mediaEntry.getKey() : "file://" + mediaEntry.getKey(),
+                            mediaEntry.getValue().getMimeType()
+                    )
+            );
+        }
+
+        getGutenbergContainerFragment().appendUploadMediaFiles(rnMediaList);
     }
 
     @Override
