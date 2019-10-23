@@ -56,10 +56,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.push.NotificationPushId.AUTH_PUSH_NOTIFICATION_ID;
-import static org.wordpress.android.push.NotificationPushId.GROUP_NOTIFICATION_ID;
-import static org.wordpress.android.push.NotificationPushId.PUSH_NOTIFICATION_ID;
-import static org.wordpress.android.push.NotificationPushId.ZENDESK_PUSH_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.AUTH_PUSH_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.PUSH_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationType.UNKNOWN_NOTE;
+import static org.wordpress.android.push.NotificationPushIds.ZENDESK_PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
 public class GCMMessageService extends FirebaseMessagingService {
@@ -241,7 +242,7 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         if (ACTIVE_NOTIFICATIONS_MAP.size() == 0) {
-            notificationManager.cancel(GROUP_NOTIFICATION_ID.getValue());
+            notificationManager.cancel(GROUP_NOTIFICATION_ID);
         }
     }
 
@@ -261,7 +262,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                 it.remove();
             }
         }
-        notificationManager.cancel(GROUP_NOTIFICATION_ID.getValue());
+        notificationManager.cancel(GROUP_NOTIFICATION_ID);
     }
 
     public static synchronized void remove2FANotification(Context context) {
@@ -270,7 +271,7 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.cancel(AUTH_PUSH_NOTIFICATION_ID.getValue());
+        notificationManager.cancel(AUTH_PUSH_NOTIFICATION_ID);
         ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
     }
 
@@ -324,7 +325,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     }
 
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
-        ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID.getValue(), data);
+        ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
 
     private static class NotificationHelper {
@@ -372,11 +373,11 @@ public class GCMMessageService extends FirebaseMessagingService {
             String title = context.getString(R.string.app_name);
             String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
 
-            int pushId = PUSH_NOTIFICATION_ID.getValue() + ACTIVE_NOTIFICATIONS_MAP.size();
+            int pushId = PUSH_NOTIFICATION_ID + ACTIVE_NOTIFICATIONS_MAP.size();
             ACTIVE_NOTIFICATIONS_MAP.put(pushId, data);
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            showSimpleNotification(context, title, message, resultIntent, pushId);
+            showSimpleNotification(context, title, message, resultIntent, pushId, NotificationType.TEST_NOTE);
         }
 
         private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
@@ -446,7 +447,7 @@ public class GCMMessageService extends FirebaseMessagingService {
             }
 
             if (pushId == 0) {
-                pushId = PUSH_NOTIFICATION_ID.getValue() + ACTIVE_NOTIFICATIONS_MAP.size();
+                pushId = PUSH_NOTIFICATION_ID + ACTIVE_NOTIFICATIONS_MAP.size();
                 ACTIVE_NOTIFICATIONS_MAP.put(pushId, data);
             }
 
@@ -482,9 +483,9 @@ public class GCMMessageService extends FirebaseMessagingService {
         }
 
         private void showSimpleNotification(Context context, String title, String message, Intent resultIntent,
-                                            int pushId) {
+                                            int pushId, NotificationType notificationType) {
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
-            showNotificationForBuilder(builder, context, resultIntent, pushId, true);
+            showNotificationForBuilder(builder, context, resultIntent, pushId, true, notificationType);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder,
@@ -660,13 +661,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                     .setOnlyAlertOnce(true)
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                    .setGroup(NOTIFICATION_GROUP_KEY)
-                    .setDeleteIntent(
-                            NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                                    context,
-                                    PUSH_NOTIFICATION_ID
-                            )
-                    );
+                    .setGroup(NOTIFICATION_GROUP_KEY);
         }
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
@@ -721,20 +716,16 @@ public class GCMMessageService extends FirebaseMessagingService {
                         .setTicker(message)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setContentText(subject)
-                        .setStyle(inboxStyle).setDeleteIntent(
-                                NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                                        context,
-                                        NotificationPushId.GROUP_NOTIFICATION_ID
-                                )
-                        );
+                        .setStyle(inboxStyle);
 
-                showWPComNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID.getValue(),
-                        false);
+                showWPComNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false,
+                        NotificationType.GROUP_NOTIFICATION);
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true)
                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
-                showWPComNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID.getValue(), false);
+                showWPComNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false,
+                        NotificationType.GROUP_NOTIFICATION);
             }
         }
 
@@ -749,11 +740,41 @@ public class GCMMessageService extends FirebaseMessagingService {
                 addActionsForCommentNotification(context, builder, wpcomNoteID);
             }
 
-            showWPComNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser);
+            showWPComNotificationForBuilder(builder, context, wpcomNoteID, pushId, notifyUser, fromNoteType(noteType));
+        }
+
+        private NotificationType fromNoteType(String noteType) {
+            switch (noteType) {
+                case PUSH_TYPE_COMMENT: 
+                    return NotificationType.COMMENT;
+                case PUSH_TYPE_LIKE: 
+                    return NotificationType.LIKE;
+                case PUSH_TYPE_COMMENT_LIKE: 
+                    return NotificationType.COMMENT_LIKE;
+                case PUSH_TYPE_AUTOMATTCHER: 
+                    return NotificationType.AUTOMATTCHER;
+                case PUSH_TYPE_FOLLOW: 
+                    return NotificationType.FOLLOW;
+                case PUSH_TYPE_REBLOG: 
+                    return NotificationType.REBLOG;
+                case PUSH_TYPE_PUSH_AUTH: 
+                    return NotificationType.AUTHENTICATION;
+                case PUSH_TYPE_BADGE_RESET: 
+                    return NotificationType.BADGE_RESET;
+                case PUSH_TYPE_NOTE_DELETE: 
+                    return NotificationType.NOTE_DELETE;
+                case PUSH_TYPE_TEST_NOTE: 
+                    return NotificationType.TEST_NOTE;
+                case PUSH_TYPE_ZENDESK: 
+                    return NotificationType.ZENDESK;
+                default:
+                    return UNKNOWN_NOTE;
+            }
         }
 
         private void showWPComNotificationForBuilder(NotificationCompat.Builder builder, Context context,
-                                                     String wpcomNoteID, int pushId, boolean notifyUser) {
+                                                     String wpcomNoteID, int pushId, boolean notifyUser,
+                                                     NotificationType notificationType) {
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -763,12 +784,13 @@ public class GCMMessageService extends FirebaseMessagingService {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
             resultIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, true);
 
-            showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser);
+            showNotificationForBuilder(builder, context, resultIntent, pushId, notifyUser, notificationType);
         }
 
         // Displays a notification to the user
         private void showNotificationForBuilder(NotificationCompat.Builder builder, Context context,
-                                                Intent resultIntent, int pushId, boolean notifyUser) {
+                                                Intent resultIntent, int pushId, boolean notifyUser,
+                                                NotificationType notificationType) {
             if (builder == null || context == null || resultIntent == null) {
                 return;
             }
@@ -807,7 +829,11 @@ public class GCMMessageService extends FirebaseMessagingService {
 
                 // Call processing service when notification is dismissed
                 PendingIntent pendingDeleteIntent =
-                        NotificationsProcessingService.getPendingIntentForNotificationDismiss(context, pushId);
+                        NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                                context,
+                                pushId,
+                                notificationType
+                        );
                 builder.setDeleteIntent(pendingDeleteIntent);
 
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
@@ -1002,13 +1028,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setOnlyAlertOnce(true)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setDeleteIntent(
-                            NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                                    context,
-                                    NotificationPushId.AUTH_PUSH_NOTIFICATION_ID
-                            )
-                    );
+                    .setPriority(NotificationCompat.PRIORITY_MAX);
 
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
@@ -1053,11 +1073,11 @@ public class GCMMessageService extends FirebaseMessagingService {
             // Call processing service when notification is dismissed
             PendingIntent pendingDeleteIntent =
                     NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                            context, AUTH_PUSH_NOTIFICATION_ID);
+                            context, AUTH_PUSH_NOTIFICATION_ID, NotificationType.AUTHENTICATION);
             builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID.getValue(), builder.build());
+            notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
         }
 
         // Returns true if the note type is known to have a gravatar
@@ -1093,7 +1113,8 @@ public class GCMMessageService extends FirebaseMessagingService {
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             resultIntent.putExtra(WPMainActivity.ARG_SHOW_ZENDESK_NOTIFICATIONS, true);
-            showSimpleNotification(context, title, message, resultIntent, ZENDESK_PUSH_NOTIFICATION_ID.getValue());
+            showSimpleNotification(context, title, message, resultIntent, ZENDESK_PUSH_NOTIFICATION_ID,
+                    NotificationType.ZENDESK);
         }
     }
 }

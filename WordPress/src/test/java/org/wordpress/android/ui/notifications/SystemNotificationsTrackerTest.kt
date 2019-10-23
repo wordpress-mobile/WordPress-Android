@@ -3,6 +3,7 @@ package org.wordpress.android.ui.notifications
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,6 +11,29 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_DISMISSED
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationType.ACTIONS_PROGRESS
+import org.wordpress.android.push.NotificationType.ACTIONS_RESULT
+import org.wordpress.android.push.NotificationType.AUTHENTICATION
+import org.wordpress.android.push.NotificationType.AUTOMATTCHER
+import org.wordpress.android.push.NotificationType.BADGE_RESET
+import org.wordpress.android.push.NotificationType.COMMENT
+import org.wordpress.android.push.NotificationType.COMMENT_LIKE
+import org.wordpress.android.push.NotificationType.FOLLOW
+import org.wordpress.android.push.NotificationType.GROUP_NOTIFICATION
+import org.wordpress.android.push.NotificationType.LIKE
+import org.wordpress.android.push.NotificationType.MEDIA_UPLOAD_ERROR
+import org.wordpress.android.push.NotificationType.MEDIA_UPLOAD_SUCCESS
+import org.wordpress.android.push.NotificationType.NOTE_DELETE
+import org.wordpress.android.push.NotificationType.PENDING_DRAFTS
+import org.wordpress.android.push.NotificationType.POST_PUBLISHED
+import org.wordpress.android.push.NotificationType.POST_UPLOAD_ERROR
+import org.wordpress.android.push.NotificationType.POST_UPLOAD_SUCCESS
+import org.wordpress.android.push.NotificationType.QUICK_START_REMINDER
+import org.wordpress.android.push.NotificationType.REBLOG
+import org.wordpress.android.push.NotificationType.TEST_NOTE
+import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
+import org.wordpress.android.push.NotificationType.ZENDESK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -21,7 +45,11 @@ class SystemNotificationsTrackerTest {
     private lateinit var systemNotificationsTracker: SystemNotificationsTracker
     @Before
     fun setUp() {
-        systemNotificationsTracker = SystemNotificationsTracker(analyticsTracker, appPrefs, notificationManager)
+        systemNotificationsTracker = SystemNotificationsTracker(
+                analyticsTracker,
+                appPrefs,
+                notificationManager
+        )
     }
 
     @Test
@@ -57,75 +85,46 @@ class SystemNotificationsTrackerTest {
     }
 
     @Test
-    fun `push notes dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 10000, typeValue = "push_notes")
-    }
+    fun `notification types dismiss tracked correctly`() {
+        val typeToValue = mapOf(
+                COMMENT to "comment",
+                LIKE to "like",
+                COMMENT_LIKE to "comment_like",
+                AUTOMATTCHER to "automattcher",
+                FOLLOW to "follow",
+                REBLOG to "reblog",
+                BADGE_RESET to "badge_reset",
+                NOTE_DELETE to "note_delete",
+                TEST_NOTE to "test_note",
+                UNKNOWN_NOTE to "unknown_note",
+                AUTHENTICATION to "authentication",
+                GROUP_NOTIFICATION to "group_notes",
+                ACTIONS_RESULT to "actions_result",
+                ACTIONS_PROGRESS to "actions_progress",
+                QUICK_START_REMINDER to "quick_start_reminder",
+                POST_UPLOAD_SUCCESS to "post_upload_success",
+                POST_UPLOAD_ERROR to "post_upload_error",
+                MEDIA_UPLOAD_SUCCESS to "media_upload_success",
+                MEDIA_UPLOAD_ERROR to "media_upload_error",
+                POST_PUBLISHED to "post_published",
+                PENDING_DRAFTS to "pending_draft",
+                ZENDESK to "zendesk_message"
+        )
+        val notificationTypes = NotificationType.values().toMutableSet()
+        typeToValue.forEach { (notificationType, trackingValue) ->
+            verifyTrackDismissedNotification(notificationType = notificationType, typeValue = trackingValue)
+            notificationTypes.remove(notificationType)
+        }
 
-    @Test
-    fun `authentication notifications dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 20000, typeValue = "authentication")
-    }
-
-    @Test
-    fun `group notes dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 30000, typeValue = "group_notes")
-    }
-
-    @Test
-    fun `actions result notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 40000, typeValue = "actions_result")
-    }
-
-    @Test
-    fun `actions progress notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 50000, typeValue = "actions_progress")
-    }
-
-    @Test
-    fun `pending draft notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 600001, typeValue = "pending_draft")
-    }
-
-    @Test
-    fun `quick start reminder dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 4001, typeValue = "quick_start_reminder")
-    }
-
-    @Test
-    fun `post upload success notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 5000, typeValue = "post_upload_success")
-    }
-
-    @Test
-    fun `post upload error notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 5100, typeValue = "post_upload_error")
-    }
-
-    @Test
-    fun `media upload success notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 5200, typeValue = "media_upload_success")
-    }
-
-    @Test
-    fun `media upload error notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 5300, typeValue = "media_upload_error")
-    }
-
-    @Test
-    fun `post published notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 5400, typeValue = "post_published")
-    }
-
-    @Test
-    fun `zendesk notification dismiss tracked correctly`() {
-        verifyTrackDismissedNotification(notificationId = 1999999999, typeValue = "zendesk_message")
+        // Check that all the items are covered by the test
+        assertThat(notificationTypes).isEmpty()
     }
 
     private fun verifyTrackDismissedNotification(
-        notificationId: Int,
+        notificationType: NotificationType,
         typeValue: String
     ) {
-        systemNotificationsTracker.trackDismissedNotification(notificationId)
+        systemNotificationsTracker.trackDismissedNotification(notificationType)
 
         verify(analyticsTracker).track(
                 NOTIFICATION_DISMISSED,

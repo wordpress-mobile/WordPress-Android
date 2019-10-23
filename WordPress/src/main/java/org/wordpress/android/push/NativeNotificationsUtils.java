@@ -8,30 +8,35 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
 
-import static org.wordpress.android.push.NotificationPushId.ACTIONS_PROGRESS_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationPushIds.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
 public class NativeNotificationsUtils {
-    public static void showIntermediateMessageToUser(String message, Context context) {
-        showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID, context);
+    public static void showIntermediateMessageToUser(String message, Context context,
+                                                     NotificationType notificationType) {
+        showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID, context, notificationType);
     }
 
-    public static void showFinalMessageToUser(String message, NotificationPushId pushId, Context context) {
-        showMessageToUser(message, false, pushId, context);
+    public static void showFinalMessageToUser(String message, int pushId, Context context,
+                                              NotificationType notificationType) {
+        showMessageToUser(message, false, pushId, context, notificationType);
     }
 
-    private static void showMessageToUser(String message, boolean intermediateMessage, NotificationPushId pushId,
-                                          Context context) {
+    private static void showMessageToUser(String message, boolean intermediateMessage, int pushId,
+                                          Context context, NotificationType notificationType) {
         NotificationCompat.Builder builder = getBuilder(context,
                 context.getString(R.string.notification_channel_transient_id))
                 .setContentText(message).setTicker(message)
-                .setOnlyAlertOnce(true)
-                .setDeleteIntent(
-                        NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                                context,
-                                pushId
-                        )
-                );
-        showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId.getValue(), context);
+                .setOnlyAlertOnce(true);
+        if (notificationType != null) {
+            builder = builder.setDeleteIntent(
+                    NotificationsProcessingService.getPendingIntentForNotificationDismiss(
+                            context,
+                            pushId,
+                            notificationType
+                    )
+            );
+        }
+        showMessageToUserWithBuilder(builder, message, intermediateMessage, pushId, context);
     }
 
     public static void showMessageToUserWithBuilder(NotificationCompat.Builder builder, String message,
@@ -58,10 +63,6 @@ public class NativeNotificationsUtils {
             final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.cancel(pushId);
         }
-    }
-
-    public static void dismissNotification(NotificationPushId pushId, Context context) {
-        dismissNotification(pushId.getValue(), context);
     }
 
     public static void hideStatusBar(Context context) {

@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.push.NotificationPushId;
+import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -99,7 +99,7 @@ public class PendingDraftsNotificationsUtils {
         // constructs a notification ID (int) based on a localPostId (long) which should be low numbers
         // by casting explicitely
         // Integer.MAX_VALUE should be enough notifications
-        return NotificationPushId.PENDING_DRAFTS_NOTIFICATION_ID.getValue() + localPostId;
+        return NotificationPushIds.PENDING_DRAFTS_NOTIFICATION_ID + localPostId;
     }
 
     private static Intent getNotificationsPendingDraftReceiverIntent(Context context, long localPostId) {

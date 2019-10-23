@@ -1,20 +1,29 @@
 package org.wordpress.android.ui.notifications
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.push.NotificationPushId
-import org.wordpress.android.push.NotificationPushId.ACTIONS_PROGRESS_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.ACTIONS_RESULT_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.AUTH_PUSH_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.GROUP_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.MEDIA_UPLOAD_ERROR
-import org.wordpress.android.push.NotificationPushId.MEDIA_UPLOAD_SUCCESS
-import org.wordpress.android.push.NotificationPushId.PENDING_DRAFTS_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.POST_PUBLISHED_NOTIFICATION
-import org.wordpress.android.push.NotificationPushId.POST_UPLOAD_ERROR
-import org.wordpress.android.push.NotificationPushId.POST_UPLOAD_SUCCESS
-import org.wordpress.android.push.NotificationPushId.PUSH_NOTIFICATION_ID
-import org.wordpress.android.push.NotificationPushId.QUICK_START_REMINDER_NOTIFICATION
-import org.wordpress.android.push.NotificationPushId.ZENDESK_PUSH_NOTIFICATION_ID
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationType.ACTIONS_PROGRESS
+import org.wordpress.android.push.NotificationType.ACTIONS_RESULT
+import org.wordpress.android.push.NotificationType.AUTHENTICATION
+import org.wordpress.android.push.NotificationType.AUTOMATTCHER
+import org.wordpress.android.push.NotificationType.BADGE_RESET
+import org.wordpress.android.push.NotificationType.COMMENT
+import org.wordpress.android.push.NotificationType.COMMENT_LIKE
+import org.wordpress.android.push.NotificationType.FOLLOW
+import org.wordpress.android.push.NotificationType.GROUP_NOTIFICATION
+import org.wordpress.android.push.NotificationType.LIKE
+import org.wordpress.android.push.NotificationType.MEDIA_UPLOAD_ERROR
+import org.wordpress.android.push.NotificationType.MEDIA_UPLOAD_SUCCESS
+import org.wordpress.android.push.NotificationType.NOTE_DELETE
+import org.wordpress.android.push.NotificationType.PENDING_DRAFTS
+import org.wordpress.android.push.NotificationType.POST_PUBLISHED
+import org.wordpress.android.push.NotificationType.POST_UPLOAD_ERROR
+import org.wordpress.android.push.NotificationType.POST_UPLOAD_SUCCESS
+import org.wordpress.android.push.NotificationType.QUICK_START_REMINDER
+import org.wordpress.android.push.NotificationType.REBLOG
+import org.wordpress.android.push.NotificationType.TEST_NOTE
+import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
+import org.wordpress.android.push.NotificationType.ZENDESK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -49,22 +58,30 @@ class SystemNotificationsTracker
         )
     }
 
-    fun trackDismissedNotification(pushId: Int) {
-        val notificationTypeValue = when (NotificationPushId.fromValue(pushId)) {
-            PUSH_NOTIFICATION_ID -> PUSH_NOTES_VALUE
-            AUTH_PUSH_NOTIFICATION_ID -> AUTHENTICATION_TYPE_VALUE
-            GROUP_NOTIFICATION_ID -> GROUP_NOTES_TYPE_VALUE
-            ACTIONS_RESULT_NOTIFICATION_ID -> ACTIONS_RESULT_TYPE_VALUE
-            ACTIONS_PROGRESS_NOTIFICATION_ID -> ACTIONS_PROGRESS_TYPE_VALUE
-            QUICK_START_REMINDER_NOTIFICATION -> QUICK_START_REMINDER_TYPE_VALUE
+    fun trackDismissedNotification(notificationType: NotificationType) {
+        val notificationTypeValue = when (notificationType) {
+            COMMENT -> COMMENT_VALUE
+            LIKE -> LIKE_VALUE
+            COMMENT_LIKE -> COMMENT_LIKE_VALUE
+            AUTOMATTCHER -> AUTOMATTCHER_VALUE
+            FOLLOW -> FOLLOW_VALUE
+            REBLOG -> REBLOG_VALUE
+            BADGE_RESET -> BADGE_RESET_VALUE
+            NOTE_DELETE -> NOTE_DELETE_VALUE
+            TEST_NOTE -> TEST_NOTE_VALUE
+            UNKNOWN_NOTE -> UNKNOWN_NOTE_VALUE
+            AUTHENTICATION -> AUTHENTICATION_TYPE_VALUE
+            GROUP_NOTIFICATION -> GROUP_NOTES_TYPE_VALUE
+            ACTIONS_RESULT -> ACTIONS_RESULT_TYPE_VALUE
+            ACTIONS_PROGRESS -> ACTIONS_PROGRESS_TYPE_VALUE
+            QUICK_START_REMINDER -> QUICK_START_REMINDER_TYPE_VALUE
             POST_UPLOAD_SUCCESS -> POST_UPLOAD_SUCCESS_TYPE_VALUE
             POST_UPLOAD_ERROR -> POST_UPLOAD_ERROR_TYPE_VALUE
             MEDIA_UPLOAD_SUCCESS -> MEDIA_UPLOAD_SUCCESS_TYPE_VALUE
             MEDIA_UPLOAD_ERROR -> MEDIA_UPLOAD_ERROR_TYPE_VALUE
-            POST_PUBLISHED_NOTIFICATION -> POST_PUBLISHED_TYPE_VALUE
-            PENDING_DRAFTS_NOTIFICATION_ID -> PENDING_DRAFT_TYPE_VALUE
-            ZENDESK_PUSH_NOTIFICATION_ID -> ZENDESK_MESSAGE_TYPE_VALUE
-            null -> return
+            POST_PUBLISHED -> POST_PUBLISHED_TYPE_VALUE
+            PENDING_DRAFTS -> PENDING_DRAFT_TYPE_VALUE
+            ZENDESK -> ZENDESK_MESSAGE_TYPE_VALUE
         }
         val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
         analyticsTracker.track(Stat.NOTIFICATION_DISMISSED, properties)
@@ -72,7 +89,17 @@ class SystemNotificationsTracker
 
     companion object {
         private const val NOTIFICATION_TYPE_KEY = "notification_type"
-        private const val PUSH_NOTES_VALUE = "push_notes"
+
+        private const val COMMENT_VALUE = "comment"
+        private const val LIKE_VALUE = "like"
+        private const val COMMENT_LIKE_VALUE = "comment_like"
+        private const val AUTOMATTCHER_VALUE = "automattcher"
+        private const val FOLLOW_VALUE = "follow"
+        private const val REBLOG_VALUE = "reblog"
+        private const val BADGE_RESET_VALUE = "badge_reset"
+        private const val NOTE_DELETE_VALUE = "note_delete"
+        private const val TEST_NOTE_VALUE = "test_note"
+        private const val UNKNOWN_NOTE_VALUE = "unknown_note"
         private const val AUTHENTICATION_TYPE_VALUE = "authentication"
         private const val GROUP_NOTES_TYPE_VALUE = "group_notes"
         private const val ACTIONS_RESULT_TYPE_VALUE = "actions_result"

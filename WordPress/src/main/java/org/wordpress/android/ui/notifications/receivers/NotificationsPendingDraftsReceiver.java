@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
-import org.wordpress.android.push.NotificationPushId;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -165,12 +165,6 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                .setPriority(NotificationCompat.PRIORITY_MAX)
                .setOnlyAlertOnce(true);
         builder.setContentIntent(intent);
-        builder.setDeleteIntent(
-                NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                        context,
-                        NotificationPushId.PENDING_DRAFTS_NOTIFICATION_ID
-                )
-        );
 
         if (postId != 0) {
             addOpenDraftActionForNotification(context, builder, postId, isPage);
@@ -228,6 +222,8 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                                            NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
         notificationDeletedIntent.putExtra(POST_ID_EXTRA, postId);
         notificationDeletedIntent.putExtra(IS_PAGE_EXTRA, isPage);
+        notificationDeletedIntent.putExtra(NotificationsProcessingService.ARG_NOTIFICATION_TYPE,
+                NotificationType.PENDING_DRAFTS);
         PendingIntent dismissPendingIntent = PendingIntent
                 .getService(context,
                             // need to add + 3 so the request code is different, otherwise they overlap

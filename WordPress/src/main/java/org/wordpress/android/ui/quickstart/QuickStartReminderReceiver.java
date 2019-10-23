@@ -16,7 +16,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.push.NotificationPushId;
+import org.wordpress.android.push.NotificationPushIds;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -59,7 +60,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         resultIntent.setAction(Intent.ACTION_MAIN);
         resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent notificationContentIntent =
-                PendingIntent.getActivity(context, NotificationPushId.QUICK_START_REMINDER_NOTIFICATION.getValue(),
+                PendingIntent.getActivity(context, NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID,
                         resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -73,10 +74,11 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .setContentIntent(notificationContentIntent)
                 .setDeleteIntent(NotificationsProcessingService
                         .getPendingIntentForNotificationDismiss(context,
-                                NotificationPushId.QUICK_START_REMINDER_NOTIFICATION))
+                                NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID,
+                                NotificationType.QUICK_START_REMINDER))
                 .build();
 
-        notificationManager.notify(NotificationPushId.QUICK_START_REMINDER_NOTIFICATION.getValue(), notification);
+        notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
         AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
     }
 }
