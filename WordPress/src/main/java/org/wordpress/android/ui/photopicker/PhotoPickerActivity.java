@@ -27,7 +27,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
@@ -256,16 +255,15 @@ public class PhotoPickerActivity extends AppCompatActivity
                                              new WPMediaUtils.MediaFetchDoNext() {
                                                  @Override
                                                  public void doNext(Uri uri) {
-                                                     SnackbarMessageHolder snackbarMessageHolder = mFeaturedImageHelper
+                                                     boolean imageQueued = mFeaturedImageHelper
                                                              .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
                                                                      mimeType);
-                                                     if (snackbarMessageHolder != null) {
+                                                     if (!imageQueued) {
                                                          // we intentionally display a toast instead of a snackbar as a
                                                          // Snackbar is tied to an Activity and the activity is finished
                                                          // right after this call
                                                          Toast.makeText(getApplicationContext(),
-                                                                 snackbarMessageHolder.getMessageRes(),
-                                                                 snackbarMessageHolder.getDuration()).show();
+                                                                 R.string.file_not_found, Toast.LENGTH_SHORT).show();
                                                      }
                                                      Intent intent = new Intent()
                                                              .putExtra(EXTRA_MEDIA_QUEUED, true);

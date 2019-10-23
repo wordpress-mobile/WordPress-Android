@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.net.Uri
-import com.google.android.material.snackbar.Snackbar
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -13,7 +12,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
@@ -80,9 +78,9 @@ internal class FeaturedImageHelper @Inject constructor(
         site: SiteModel,
         uri: Uri,
         mimeType: String?
-    ): SnackbarMessageHolder? {
+    ): Boolean {
         val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)
-                ?: return SnackbarMessageHolder(R.string.file_not_found, duration = Snackbar.LENGTH_SHORT)
+                ?: return false
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId
         } else {
@@ -92,7 +90,7 @@ internal class FeaturedImageHelper @Inject constructor(
 
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
         startUploadService(media)
-        return null
+        return true
     }
 
     fun cancelFeaturedImageUpload(site: SiteModel, post: PostModel, cancelFailedOnly: Boolean) {
