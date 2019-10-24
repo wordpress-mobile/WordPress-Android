@@ -3,7 +3,6 @@ package org.wordpress.android.util
 import android.content.Context
 import android.net.Uri
 import dagger.Reusable
-import org.wordpress.android.util.WPMediaUtils.OnAdvertiseImageOptimizationListener
 import javax.inject.Inject
 
 /**
