@@ -243,7 +243,9 @@ public class WPMainActivity extends AppCompatActivity implements
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 NotificationType notificationType =
                         (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
-                mSystemNotificationsTracker.trackTappedNotification(notificationType);
+                if (notificationType != null) {
+                    mSystemNotificationsTracker.trackTappedNotification(notificationType);
+                }
                 // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                         false));

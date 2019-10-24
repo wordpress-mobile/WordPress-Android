@@ -136,7 +136,6 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
 
-        Log.d("stats", "Getting pending notification for dismiss: " + pushId + " " + notificationType);
         return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
