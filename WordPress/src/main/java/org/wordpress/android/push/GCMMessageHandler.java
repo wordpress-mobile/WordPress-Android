@@ -29,6 +29,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -98,13 +99,14 @@ public class GCMMessageHandler {
     private final ArrayMap<Integer, Bundle> mActiveNotificationsMap;
     private final NotificationHelper mNotificationHelper;
 
-    @Inject GCMMessageHandler() {
+    @Inject
+    GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
         mActiveNotificationsMap = new ArrayMap<>();
-        mNotificationHelper = new NotificationHelper(this);
+        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker);
     }
 
-    public synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
-                                                                                 String noteId) {
+    synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
+                                                                          String noteId) {
         if (mActiveNotificationsMap.size() > 0) {
             // get the corresponding bundle for this noteId
             // using a copy of the ArrayMap to iterate over on, as we might need to modify the original array
@@ -126,7 +128,7 @@ public class GCMMessageHandler {
         }
     }
 
-    public synchronized Bundle getCurrentNoteBundleForNoteId(String noteId) {
+    private synchronized Bundle getCurrentNoteBundleForNoteId(String noteId) {
         if (mActiveNotificationsMap.size() > 0) {
             // get the corresponding bundle for this noteId
             for (Iterator<Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator();
@@ -141,7 +143,7 @@ public class GCMMessageHandler {
         return null;
     }
 
-    public synchronized void clearNotifications() {
+    synchronized void clearNotifications() {
         for (Iterator<Map.Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Integer, Bundle> row = it.next();
             Integer pushId = row.getKey();
@@ -156,13 +158,13 @@ public class GCMMessageHandler {
         return mActiveNotificationsMap.size();
     }
 
-    public synchronized boolean hasNotifications() {
+    synchronized boolean hasNotifications() {
         return !mActiveNotificationsMap.isEmpty();
     }
 
     // Removes a specific notification from the internal map - only use this when we know
     // the user has dismissed the app by swiping it off the screen
-    public synchronized void removeNotification(int notificationId) {
+    synchronized void removeNotification(int notificationId) {
         mActiveNotificationsMap.remove(notificationId);
     }
 
@@ -222,9 +224,7 @@ public class GCMMessageHandler {
 
     // NoteID is the ID if the note in WordPress
     public synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
-        for (Iterator<Map.Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator();
-             it.hasNext(); ) {
-            Map.Entry<Integer, Bundle> row = it.next();
+        for (Entry<Integer, Bundle> row : mActiveNotificationsMap.entrySet()) {
             Bundle noteBundle = row.getValue();
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
@@ -236,9 +236,7 @@ public class GCMMessageHandler {
 
     // Mark all notifications as tapped
     public synchronized void bumpPushNotificationsTappedAllAnalytics() {
-        for (Iterator<Map.Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator();
-             it.hasNext(); ) {
-            Map.Entry<Integer, Bundle> row = it.next();
+        for (Entry<Integer, Bundle> row : mActiveNotificationsMap.entrySet()) {
             Bundle noteBundle = row.getValue();
             bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
@@ -283,9 +281,12 @@ public class GCMMessageHandler {
 
     public static class NotificationHelper {
         private GCMMessageHandler mGCMMessageHandler;
+        private SystemNotificationsTracker mSystemNotificationsTracker;
 
-        public NotificationHelper(GCMMessageHandler gCMMessageHandler) {
+        NotificationHelper(GCMMessageHandler gCMMessageHandler,
+                           SystemNotificationsTracker systemNotificationsTracker) {
             mGCMMessageHandler = gCMMessageHandler;
+            mSystemNotificationsTracker = systemNotificationsTracker;
         }
 
         void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
@@ -631,7 +632,7 @@ public class GCMMessageHandler {
             }
 
             // using a copy of the map to avoid concurrency problems
-            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(mGCMMessageHandler.mActiveNotificationsMap);
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap<>(mGCMMessageHandler.mActiveNotificationsMap);
             // first remove 2fa push from the map, so it's not shown in the inbox style group notif
             tmpMap.remove(AUTH_PUSH_NOTIFICATION_ID);
             if (tmpMap.size() > 1) {
@@ -806,6 +807,7 @@ public class GCMMessageHandler {
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.notify(pushId, builder.build());
+                mSystemNotificationsTracker.trackShownNotification(notificationType);
             }
         }
 
@@ -814,7 +816,7 @@ public class GCMMessageHandler {
 
             // Check for wpcom auth push, if so we will process this push differently
             // and we'll remove the auth special notif out of the map while we re-build the remaining notifs
-            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(mGCMMessageHandler.mActiveNotificationsMap);
+            ArrayMap<Integer, Bundle> tmpMap = new ArrayMap<>(mGCMMessageHandler.mActiveNotificationsMap);
             Bundle authPNBundle = tmpMap.remove(AUTH_PUSH_NOTIFICATION_ID);
             if (authPNBundle != null) {
                 handlePushAuth(context, authPNBundle);
@@ -980,7 +982,8 @@ public class GCMMessageHandler {
                                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             pushAuthIntent.setAction("android.intent.action.MAIN");
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
-            pushAuthIntent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.AUTHENTICATION);
+            NotificationType notificationType = NotificationType.AUTHENTICATION;
+            pushAuthIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_important_id))
@@ -1036,11 +1039,12 @@ public class GCMMessageHandler {
             // Call processing service when notification is dismissed
             PendingIntent pendingDeleteIntent =
                     NotificationsProcessingService.getPendingIntentForNotificationDismiss(
-                            context, AUTH_PUSH_NOTIFICATION_ID, NotificationType.AUTHENTICATION);
+                            context, AUTH_PUSH_NOTIFICATION_ID, notificationType);
             builder.setDeleteIntent(pendingDeleteIntent);
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
+            mSystemNotificationsTracker.trackShownNotification(notificationType);
         }
 
         // Returns true if the note type is known to have a gravatar
