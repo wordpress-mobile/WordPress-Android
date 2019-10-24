@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
 import android.util.ArrayMap
@@ -30,7 +29,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
-import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -40,8 +38,6 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.helpers.MediaFile
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.util.ArrayList
 import javax.inject.Named
 
@@ -242,7 +238,7 @@ class EditorMedia(
         val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id) ?: return null
         if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
             val path = MediaUtils.getRealPathFromURI(activity, uri)
-            media.thumbnailUrl = getVideoThumbnail(path)
+            media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
         }
 
         media.setUploadState(startingState)
@@ -253,26 +249,6 @@ class EditorMedia(
         }
 
         return media
-    }
-
-    private fun getVideoThumbnail(videoPath: String): String? {
-        var thumbnailPath: String? = null
-        try {
-            val outputFile = File.createTempFile("thumb", ".png", activity.cacheDir)
-            val outputStream = FileOutputStream(outputFile)
-            val thumb = ImageUtils.getVideoFrameFromVideo(
-                    videoPath,
-                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(activity)
-            )
-            if (thumb != null) {
-                thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream)
-                thumbnailPath = outputFile.absolutePath
-            }
-        } catch (e: IOException) {
-            AppLog.i(T.MEDIA, "Can't create thumbnail for video: $videoPath")
-        }
-
-        return thumbnailPath
     }
 
     fun prepareMediaPost() {
