@@ -4,6 +4,8 @@ import android.content.Context
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.util.helpers.MediaFile
+import android.net.Uri
+import org.wordpress.android.fluxc.store.MediaStore
 import javax.inject.Inject
 
 /**
@@ -15,6 +17,13 @@ import javax.inject.Inject
  */
 @Reusable
 class FluxCUtilsWrapper @Inject constructor(private val appContext: Context) {
+    fun mediaModelFromLocalUri(
+        uri: Uri,
+        mimeType: String?,
+        mediaStore: MediaStore,
+        id: Int
+    ): MediaModel? = FluxCUtils.mediaModelFromLocalUri(appContext, uri, mimeType, mediaStore, id)
+
     fun mediaFileFromMediaModel(mediaModel: MediaModel?): MediaFile? =
             FluxCUtils.mediaFileFromMediaModel(mediaModel)
 }
