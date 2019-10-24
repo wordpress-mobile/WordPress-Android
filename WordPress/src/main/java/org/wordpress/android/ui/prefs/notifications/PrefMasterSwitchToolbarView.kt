@@ -81,6 +81,16 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                                 R.dimen.toolbar_content_offset
                         )
                 )
+                val masterOffsetEndResId = typedArray.getResourceId(
+                        R.styleable.PrefMasterSwitchToolbarView_masterOffsetEnd,
+                        -1
+                )
+                var masterOffsetEnd = -1
+                if (masterOffsetEndResId != -1) {
+                    masterOffsetEnd = resources.getDimensionPixelSize(
+                            masterOffsetEndResId
+                    )
+                }
 
                 setTitleOn(titleOn)
                 setTitleOff(titleOff)
@@ -88,6 +98,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 setHintOff(hintOff)
                 setToolbarTitleContentDescription(titleContentDescription)
                 setContentOffset(contentInsetStart)
+                setMasterOffsetEnd(masterOffsetEnd)
             } finally {
                 typedArray.recycle()
             }
@@ -114,6 +125,20 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
     private fun setContentOffset(offset: Int) {
         toolbarSwitch.setContentInsetsAbsolute(offset, 0)
+    }
+
+    /**
+     * Applies end padding to the switch menu
+     */
+    fun setMasterOffsetEnd(offsetEnd: Int) {
+        if (offsetEnd != -1) {
+            masterSwitch.setPaddingRelative(
+                    masterSwitch.left,
+                    masterSwitch.top,
+                    offsetEnd,
+                    masterSwitch.bottom
+            )
+        }
     }
 
     private fun setupFocusabilityForTalkBack() {

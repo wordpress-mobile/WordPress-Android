@@ -182,5 +182,6 @@
         <attr name="masterHintOn" format="reference" />
         <attr name="masterHintOff" format="reference" />
         <attr name="masterContentInsetStart" format="dimension" />
+        <attr name="masterOffsetEnd" format="dimension" />
     </declare-styleable>
 </resources>
