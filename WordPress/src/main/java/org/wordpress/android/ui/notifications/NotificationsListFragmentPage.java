@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -90,6 +90,7 @@ public class NotificationsListFragmentPage extends Fragment implements
     private int mTabPosition;
 
     @Inject AccountStore mAccountStore;
+    @Inject GCMMessageHandler mGCMMessageHandler;
 
     public static Fragment newInstance(int position) {
         NotificationsListFragmentPage fragment = new NotificationsListFragmentPage();
@@ -293,7 +294,7 @@ public class NotificationsListFragmentPage extends Fragment implements
 
         new Thread(new Runnable() {
             public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
+                mGCMMessageHandler.removeAllNotifications(getActivity());
             }
         }).start();
     }
