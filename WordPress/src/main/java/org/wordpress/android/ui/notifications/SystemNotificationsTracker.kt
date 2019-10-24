@@ -58,8 +58,26 @@ class SystemNotificationsTracker
         )
     }
 
+    fun trackShownNotification(notificationType: NotificationType) {
+        val notificationTypeValue = notificationType.toTypeValue()
+        val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
+        analyticsTracker.track(Stat.NOTIFICATION_SHOWN, properties)
+    }
+
+    fun trackTappedNotification(notificationType: NotificationType) {
+        val notificationTypeValue = notificationType.toTypeValue()
+        val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
+        analyticsTracker.track(Stat.NOTIFICATION_TAPPED, properties)
+    }
+
     fun trackDismissedNotification(notificationType: NotificationType) {
-        val notificationTypeValue = when (notificationType) {
+        val notificationTypeValue = notificationType.toTypeValue()
+        val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
+        analyticsTracker.track(Stat.NOTIFICATION_DISMISSED, properties)
+    }
+
+    private fun NotificationType.toTypeValue(): String {
+        return when (this) {
             COMMENT -> COMMENT_VALUE
             LIKE -> LIKE_VALUE
             COMMENT_LIKE -> COMMENT_LIKE_VALUE
@@ -83,8 +101,6 @@ class SystemNotificationsTracker
             PENDING_DRAFTS -> PENDING_DRAFT_TYPE_VALUE
             ZENDESK -> ZENDESK_MESSAGE_TYPE_VALUE
         }
-        val properties = mapOf(NOTIFICATION_TYPE_KEY to notificationTypeValue)
-        analyticsTracker.track(Stat.NOTIFICATION_DISMISSED, properties)
     }
 
     companion object {

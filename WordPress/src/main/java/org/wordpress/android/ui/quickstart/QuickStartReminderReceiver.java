@@ -21,14 +21,18 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 
 public class QuickStartReminderReceiver extends BroadcastReceiver {
     public static final String ARG_QUICK_START_TASK_BATCH = "ARG_QUICK_START_TASK_BATCH";
 
     @Inject QuickStartStore mQuickStartStore;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -55,6 +59,8 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
 
         Intent resultIntent = new Intent(context, WPMainActivity.class);
         resultIntent.putExtra(MySiteFragment.ARG_QUICK_START_TASK, true);
+        NotificationType notificationType = NotificationType.QUICK_START_REMINDER;
+        resultIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                               | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction(Intent.ACTION_MAIN);
@@ -75,10 +81,11 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
                 .setDeleteIntent(NotificationsProcessingService
                         .getPendingIntentForNotificationDismiss(context,
                                 NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID,
-                                NotificationType.QUICK_START_REMINDER))
+                                notificationType))
                 .build();
 
         notificationManager.notify(NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID, notification);
         AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_SENT);
+        mSystemNotificationsTracker.trackShownNotification(notificationType);
     }
 }

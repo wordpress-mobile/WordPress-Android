@@ -61,6 +61,7 @@ import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_
 import static org.wordpress.android.push.NotificationPushIds.PUSH_NOTIFICATION_ID;
 import static org.wordpress.android.push.NotificationType.UNKNOWN_NOTE;
 import static org.wordpress.android.push.NotificationPushIds.ZENDESK_PUSH_NOTIFICATION_ID;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 
 public class GCMMessageService extends FirebaseMessagingService {
@@ -745,27 +746,27 @@ public class GCMMessageService extends FirebaseMessagingService {
 
         private NotificationType fromNoteType(String noteType) {
             switch (noteType) {
-                case PUSH_TYPE_COMMENT: 
+                case PUSH_TYPE_COMMENT:
                     return NotificationType.COMMENT;
-                case PUSH_TYPE_LIKE: 
+                case PUSH_TYPE_LIKE:
                     return NotificationType.LIKE;
-                case PUSH_TYPE_COMMENT_LIKE: 
+                case PUSH_TYPE_COMMENT_LIKE:
                     return NotificationType.COMMENT_LIKE;
-                case PUSH_TYPE_AUTOMATTCHER: 
+                case PUSH_TYPE_AUTOMATTCHER:
                     return NotificationType.AUTOMATTCHER;
-                case PUSH_TYPE_FOLLOW: 
+                case PUSH_TYPE_FOLLOW:
                     return NotificationType.FOLLOW;
-                case PUSH_TYPE_REBLOG: 
+                case PUSH_TYPE_REBLOG:
                     return NotificationType.REBLOG;
-                case PUSH_TYPE_PUSH_AUTH: 
+                case PUSH_TYPE_PUSH_AUTH:
                     return NotificationType.AUTHENTICATION;
-                case PUSH_TYPE_BADGE_RESET: 
+                case PUSH_TYPE_BADGE_RESET:
                     return NotificationType.BADGE_RESET;
-                case PUSH_TYPE_NOTE_DELETE: 
+                case PUSH_TYPE_NOTE_DELETE:
                     return NotificationType.NOTE_DELETE;
-                case PUSH_TYPE_TEST_NOTE: 
+                case PUSH_TYPE_TEST_NOTE:
                     return NotificationType.TEST_NOTE;
-                case PUSH_TYPE_ZENDESK: 
+                case PUSH_TYPE_ZENDESK:
                     return NotificationType.ZENDESK;
                 default:
                     return UNKNOWN_NOTE;
@@ -838,6 +839,7 @@ public class GCMMessageService extends FirebaseMessagingService {
 
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
 
+                resultIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
                                                                         PendingIntent.FLAG_CANCEL_CURRENT
                                                                         | PendingIntent.FLAG_UPDATE_CURRENT);
@@ -1018,6 +1020,7 @@ public class GCMMessageService extends FirebaseMessagingService {
                                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             pushAuthIntent.setAction("android.intent.action.MAIN");
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
+            pushAuthIntent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.AUTHENTICATION);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_important_id))
