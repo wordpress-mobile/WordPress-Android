@@ -959,12 +959,4 @@ public class AppPrefs {
     public static boolean getSystemNotificationsEnabled() {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
     }
-
-    public static boolean getMasterSwitchKeyEnabled(@NonNull String masterKey) {
-        return prefs().getBoolean(masterKey, true);
-    }
-
-    public static void setMasterSwitchKeyEnabled(boolean enabled, @NonNull String masterKey) {
-        prefs().edit().putBoolean(masterKey, enabled).apply();
-    }
 }

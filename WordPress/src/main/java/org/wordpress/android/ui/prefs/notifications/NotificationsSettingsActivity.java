@@ -48,8 +48,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity
         // Get shared preferences for master switch.
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(NotificationsSettingsActivity.this);
 
-        // Set up primary and secondary toolbars for master switch.
-        setUpToolbars();
+        // Set up primary toolbar
+        setUpToolbar();
+
+        // Set up master switch
+        setUpMasterSwitch();
 
         FragmentManager fragmentManager = getFragmentManager();
         if (savedInstanceState == null) {
@@ -96,9 +99,9 @@ public class NotificationsSettingsActivity extends AppCompatActivity
     }
 
     /**
-     * Set up both primary toolbar for navigation and search, and secondary toolbar for master switch.
+     * Set up primary toolbar for navigation and search
      */
-    private void setUpToolbars() {
+    private void setUpToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar_with_search);
 
         if (toolbar != null) {
@@ -112,11 +115,20 @@ public class NotificationsSettingsActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
         }
+    }
 
-        // Set secondary toolbar title and master switch state from shared preferences.
+    /**
+     * Sets up master switch to disable/enable all notification settings
+     */
+    private void setUpMasterSwitch() {
         PrefMasterSwitchToolbarView masterSwitchToolBarView = findViewById(R.id.master_switch);
         masterSwitchToolBarView.setMasterSwitchToolbarListener(this);
-        hideDisabledView(masterSwitchToolBarView.isMasterChecked());
+
+        // Set master switch state from shared preferences.
+        boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
+        masterSwitchToolBarView.loadInitialState(isMasterChecked);
+
+        hideDisabledView(isMasterChecked);
     }
 
     @Override
@@ -124,6 +136,9 @@ public class NotificationsSettingsActivity extends AppCompatActivity
             CompoundButton buttonView,
             boolean isChecked
     ) {
+        mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked)
+                          .apply();
+
         hideDisabledView(isChecked);
 
         if (isChecked) {

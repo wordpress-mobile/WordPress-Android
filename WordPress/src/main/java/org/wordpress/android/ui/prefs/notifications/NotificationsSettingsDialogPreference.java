@@ -252,7 +252,6 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
 
             mMasterSwitchToolbarView = mTitleViewWithMasterSwitch.findViewById(R.id.master_switch);
 
-            mMasterSwitchToolbarView.setShouldSaveMasterKeyOnToggle(false);
             mMasterSwitchToolbarView.setMasterSwitchToolbarListener(this);
 
             // Master Switch initial state:

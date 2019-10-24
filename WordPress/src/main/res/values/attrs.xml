@@ -181,7 +181,6 @@
         <attr name="masterContentDescription" format="reference" />
         <attr name="masterHintOn" format="reference" />
         <attr name="masterHintOff" format="reference" />
-        <attr name="prefKey" format="reference" />
         <attr name="masterContentInsetStart" format="dimension" />
     </declare-styleable>
 </resources>

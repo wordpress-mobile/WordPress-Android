@@ -28,8 +28,7 @@
             app:masterTitleOff="@string/notification_settings_master_status_off"
             app:masterHintOn="@string/notification_settings_master_hint_on"
             app:masterHintOff="@string/notification_settings_master_hint_off"
-            app:masterContentDescription="@string/notification_settings_switch_desc"
-            app:prefKey="@string/wp_pref_notifications_master">
+            app:masterContentDescription="@string/notification_settings_switch_desc">
         </org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView>
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -14,7 +14,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import org.wordpress.android.R
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 
 /**
@@ -40,8 +39,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
     val isMasterChecked: Boolean
         get() = masterSwitch.isChecked
-
-    var shouldSaveMasterKeyOnToggle: Boolean = true
 
     /**
      * Interface definition for callbacks to be invoked on interaction with master switch toolbar.
@@ -76,7 +73,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 val titleOff = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterTitleOff)
                 val hintOn = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterHintOn)
                 val hintOff = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterHintOff)
-                val prefKey = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_prefKey)
                 val titleContentDescription = typedArray
                         .getString(R.styleable.PrefMasterSwitchToolbarView_masterContentDescription)
                 val contentInsetStart = resources.getDimensionPixelSize(
@@ -90,7 +86,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 setTitleOff(titleOff)
                 setHintOn(hintOn)
                 setHintOff(hintOff)
-                setPrefKey(prefKey)
                 setToolbarTitleContentDescription(titleContentDescription)
                 setContentOffset(contentInsetStart)
             } finally {
@@ -127,18 +122,6 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         toolbarSwitch.isFocusableInTouchMode = false
         toolbarSwitch.isFocusable = true
         toolbarSwitch.isClickable = true
-    }
-
-    /**
-     * Sets pref key to be used for persistence in shared preferences
-     */
-    fun setPrefKey(prefKey: String?) {
-        prefKey?.let {
-            this.prefKey = it
-
-            val isMasterChecked = AppPrefs.getMasterSwitchKeyEnabled(it)
-            loadInitialState(isMasterChecked)
-        }
     }
 
     /**
@@ -204,16 +187,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
             titleOff
         }
 
-        if (shouldSaveMasterKeyOnToggle) {
-            prefKey?.let {
-                saveMasterKeyEnabled(it)
-            }
-        }
         masterSwitchToolbarListener?.onMasterSwitchCheckedChanged(buttonView, isChecked)
-    }
-
-    fun saveMasterKeyEnabled(masterKey: String) {
-        AppPrefs.setMasterSwitchKeyEnabled(isMasterChecked, masterKey)
     }
 
     fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {
