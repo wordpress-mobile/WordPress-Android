@@ -29,7 +29,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
-import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.ListUtils
@@ -62,7 +61,7 @@ class EditorMedia(
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
     private val editorTracker: EditorTracker,
-    mediaUtilsWrapper: MediaUtilsWrapper,
+    private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -240,14 +239,8 @@ class EditorMedia(
         mimeType: String?,
         startingState: MediaUploadState
     ): MediaModel? {
-        val media = FluxCUtils.mediaModelFromLocalUri(
-                activity,
-                uri,
-                mimeType,
-                mediaStore,
-                site.id
-        ) ?: return null
-        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.mimeType)) {
+        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id) ?: return null
+        if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
             val path = MediaUtils.getRealPathFromURI(activity, uri)
             media.thumbnailUrl = getVideoThumbnail(path)
         }

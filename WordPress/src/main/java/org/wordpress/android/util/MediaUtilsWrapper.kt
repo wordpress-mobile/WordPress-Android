@@ -6,7 +6,7 @@ import dagger.Reusable
 import javax.inject.Inject
 
 /**
- * Injectable wrapper around MediaUtils and WPMediaUtils.
+ * Injectable wrapper around MediaUtils, WPMediaUtils & FluxC's MediaUtils.
  *
  * MediaUtils and WPMediaUtils interfaces are consisted of static methods, which makes the client code difficult to
  * test/mock. Main purpose of this wrapper is to make testing easier.
@@ -25,4 +25,7 @@ class MediaUtilsWrapper @Inject constructor(private val context: Context) {
 
     fun fixOrientationIssue(path: String, isVideo: Boolean): Uri? =
             WPMediaUtils.fixOrientationIssue(context, path, isVideo)
+
+    fun isVideoMimeType(mimeType: String): Boolean =
+        org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
 }
