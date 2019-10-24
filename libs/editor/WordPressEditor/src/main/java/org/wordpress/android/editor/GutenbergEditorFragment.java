@@ -369,7 +369,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         int giphyResourceId = getResources().getIdentifier("photo_picker_giphy", "string", packageName);
 
         otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_GIPHY_MEDIA, getString(giphyResourceId)));
+
+        // Suppress Giphy as we need to reconsider it's usage due to the legal reasons
+        // otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_GIPHY_MEDIA, getString(giphyResourceId)));
 
         return otherMediaOptions;
     }
