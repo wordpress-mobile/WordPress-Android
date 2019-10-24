@@ -1682,7 +1682,7 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_FAILED_MEDIA_UPLOADS_DIALOG:
                 // Clear failed uploads
-                mFeaturedImageHelper.cancelFeaturedImageUpload(this, mSite, mPost, true);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(mSite, mPost, true);
                 mEditorFragment.removeAllFailedMediaUploads();
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
