@@ -63,7 +63,7 @@ class EditorMedia(
     private val mediaStore: MediaStore,
     private val editorTracker: EditorTracker,
     mediaUtilsWrapper: MediaUtilsWrapper,
-    fluxCUtilsWrapper: FluxCUtilsWrapper,
+    private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -165,29 +165,29 @@ class EditorMedia(
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaId: Long): Boolean {
-        val media = mediaStore.getSiteMediaWithId(site, mediaId)
-        if (media == null) {
-            AppLog.w(T.MEDIA, "Cannot add null media to post")
-            return false
+        mediaStore.getSiteMediaWithId(site, mediaId)?.let { media ->
+            editorTracker.trackAddMediaEvent(site, source, media)
+            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
+            }
+            return true
         }
-
-        editorTracker.trackAddMediaEvent(site, source, media)
-
-        val mediaFile = FluxCUtils.mediaFileFromMediaModel(media)
-        editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
-        return true
+        AppLog.w(T.MEDIA, "Cannot add null media to post")
+        return false
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         val mediaMap = ArrayMap<String, MediaFile>()
-        for (mediaId in mediaIdList) {
-            val media = mediaStore.getSiteMediaWithId(site, mediaId)
+        mediaIdList.map { mediaId ->
+            mediaStore.getSiteMediaWithId(site, mediaId)
+        }.forEach { media ->
             if (media == null) {
                 AppLog.w(T.MEDIA, "Cannot add null media to post")
             } else {
                 editorTracker.trackAddMediaEvent(site, source, media)
-
-                mediaMap[media.urlToUse] = FluxCUtils.mediaFileFromMediaModel(media)
+                fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                    mediaMap[media.urlToUse] = mediaFile
+                }
             }
         }
         editorMediaListener.appendMediaFiles(mediaMap)
