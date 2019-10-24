@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -40,7 +39,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import java.io.File
 import java.io.FileOutputStream
@@ -63,21 +61,19 @@ class EditorMedia(
     private val editorMediaListener: EditorMediaListener,
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
-    editorTracker: EditorTracker,
+    private val editorTracker: EditorTracker,
     mediaUtilsWrapper: MediaUtilsWrapper,
     fluxCUtilsWrapper: FluxCUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private var addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(
+    private val addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(
             editorTracker,
             mediaUtilsWrapper,
             fluxCUtilsWrapper,
             mainDispatcher,
             bgDispatcher
     )
-    // TODO this fields is not used here anymore - it seems more related to the photoPicker
-    var allowMultipleSelection: Boolean = false
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
 
@@ -93,23 +89,6 @@ class EditorMedia(
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
-    }
-
-    /**
-     * Analytics about media already available in the blog's library.
-     * @param source where the media is being added from
-     * @param media media being added
-     */
-    private fun trackAddMediaEvent(source: AddExistingMediaSource, media: MediaModel) {
-        val stat = when (source) {
-            AddExistingMediaSource.WP_MEDIA_LIBRARY -> if (media.isVideo) {
-                Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
-            } else {
-                Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY
-            }
-            AddExistingMediaSource.STOCK_PHOTO_LIBRARY -> Stat.EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY
-        }
-        AnalyticsUtils.trackWithSiteDetails(stat, site, null)
     }
 
     fun addMedia(mediaUri: Uri?, isNew: Boolean): Boolean {
@@ -142,37 +121,26 @@ class EditorMedia(
      * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
      */
     private fun fetchMediaList(uriList: List<Uri>): List<Uri> {
-        var didAnyFail = false
-        val fetchedUriList = ArrayList<Uri>()
-        for (mediaUri in uriList) {
+        val fetchedUriList = uriList.mapNotNull { mediaUri ->
             if (!MediaUtils.isInMediaStore(mediaUri)) {
                 // Do not download the file in async task. See
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-                var fetchedUri: Uri? = null
                 try {
-                    fetchedUri = MediaUtils.downloadExternalMedia(activity, mediaUri)
+                    return@mapNotNull MediaUtils.downloadExternalMedia(activity, mediaUri)
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                    AppLog.e(T.UTILS, "Can't download the image at: $mediaUri", e)
-                    CrashLoggingUtils.logException(
-                            e,
-                            T.MEDIA,
-                            "Can't download the image at: $mediaUri See issue #5823"
-                    )
-                    didAnyFail = true
-                }
-
-                if (fetchedUri != null) {
-                    fetchedUriList.add(fetchedUri)
-                } else {
-                    didAnyFail = true
+                    val errorMessage = "Can't download the image at: $mediaUri See issue #5823"
+                    AppLog.e(T.UTILS, errorMessage, e)
+                    CrashLoggingUtils.logException(e, T.MEDIA, errorMessage)
+                    return@mapNotNull null
                 }
             } else {
-                fetchedUriList.add(mediaUri)
+                return@mapNotNull mediaUri
             }
         }
 
-        if (didAnyFail) {
+        if (fetchedUriList.size < uriList.size) {
+            // At least one media failed
             ToastUtils.showToast(activity, R.string.error_downloading_image, Duration.SHORT)
         }
 
@@ -180,24 +148,17 @@ class EditorMedia(
     }
 
     fun addMediaItemGroupOrSingleItem(data: Intent) {
-        val clipData = data.clipData
-        if (clipData != null) {
-            val uriList = ArrayList<Uri>()
-            for (i in 0 until clipData.itemCount) {
-                val item = clipData.getItemAt(i)
-                uriList.add(item.uri)
+        val uriList: List<Uri> = data.clipData?.let { clipData ->
+            (0 until clipData.itemCount).mapNotNull {
+                clipData.getItemAt(it)?.uri
             }
-            addMediaList(uriList, false)
-        } else {
-            addMedia(data.data, false)
-        }
+        } ?: listOf(data.data)
+        addMediaList(uriList, false)
     }
 
     fun advertiseImageOptimisationAndAddMedia(data: Intent) {
         if (WPMediaUtils.shouldAdvertiseImageOptimization(activity)) {
-            WPMediaUtils.advertiseImageOptimization(
-                    activity
-            ) { addMediaItemGroupOrSingleItem(data) }
+            WPMediaUtils.advertiseImageOptimization(activity) { addMediaItemGroupOrSingleItem(data) }
         } else {
             addMediaItemGroupOrSingleItem(data)
         }
@@ -210,7 +171,7 @@ class EditorMedia(
             return false
         }
 
-        trackAddMediaEvent(source, media)
+        editorTracker.trackAddMediaEvent(site, source, media)
 
         val mediaFile = FluxCUtils.mediaFileFromMediaModel(media)
         editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
@@ -224,7 +185,7 @@ class EditorMedia(
             if (media == null) {
                 AppLog.w(T.MEDIA, "Cannot add null media to post")
             } else {
-                trackAddMediaEvent(source, media)
+                editorTracker.trackAddMediaEvent(site, source, media)
 
                 mediaMap[media.urlToUse] = FluxCUtils.mediaFileFromMediaModel(media)
             }
@@ -351,8 +312,7 @@ class EditorMedia(
     }
 
     fun cancelMediaUpload(localMediaId: Int, delete: Boolean) {
-        val mediaModel = mediaStore.getMediaWithLocalId(localMediaId)
-        if (mediaModel != null) {
+        mediaStore.getMediaWithLocalId(localMediaId)?.let { mediaModel ->
             val payload = CancelMediaPayload(site, mediaModel, delete)
             dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
         }

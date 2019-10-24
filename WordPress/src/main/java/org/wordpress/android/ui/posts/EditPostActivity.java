@@ -955,7 +955,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
@@ -1520,11 +1520,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void launchPictureLibrary() {
-        WPMediaUtils.launchPictureLibrary(this, mEditorMedia.getAllowMultipleSelection());
+        WPMediaUtils.launchPictureLibrary(this, mEditorPhotoPicker.getAllowMultipleSelection());
     }
 
     private void launchVideoLibrary() {
-        WPMediaUtils.launchVideoLibrary(this, mEditorMedia.getAllowMultipleSelection());
+        WPMediaUtils.launchVideoLibrary(this, mEditorPhotoPicker.getAllowMultipleSelection());
     }
 
     private void launchVideoCamera() {
@@ -2605,9 +2605,9 @@ public class EditPostActivity extends AppCompatActivity implements
             showInsertMediaDialog(ids);
         } else {
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
-            if (mShowGutenbergEditor && mEditorMedia.getAllowMultipleSelection()) {
+            if (mShowGutenbergEditor && mEditorPhotoPicker.getAllowMultipleSelection()) {
                 mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
-                mEditorMedia.setAllowMultipleSelection(false);
+                mEditorPhotoPicker.setAllowMultipleSelection(false);
             } else {
                 for (Long id : ids) {
                     mEditorMedia.addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
@@ -2724,19 +2724,19 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddMediaImageClicked(boolean allowMultipleSelection) {
-        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
     @Override
     public void onAddMediaVideoClicked(boolean allowMultipleSelection) {
-        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
     public void onAddLibraryMediaClicked(boolean allowMultipleSelection) {
-        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         if (allowMultipleSelection) {
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else {
@@ -2761,7 +2761,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
-        mEditorMedia.setAllowMultipleSelection(allowMultipleSelection);
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         WPMediaUtils.launchMediaLibrary(this, allowMultipleSelection);
     }
 
