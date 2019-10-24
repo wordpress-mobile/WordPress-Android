@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -63,7 +64,10 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
     private void askForHttpAuthCredentials(@NonNull final String url) {
         LoginHttpAuthDialogFragment loginHttpAuthDialogFragment = LoginHttpAuthDialogFragment.newInstance(url);
         loginHttpAuthDialogFragment.setTargetFragment(this, LoginHttpAuthDialogFragment.DO_HTTP_AUTH);
-        loginHttpAuthDialogFragment.show(getFragmentManager(), LoginHttpAuthDialogFragment.TAG);
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager != null) {
+            loginHttpAuthDialogFragment.show(getFragmentManager(), LoginHttpAuthDialogFragment.TAG);
+        }
     }
 
     @SuppressWarnings("unused")

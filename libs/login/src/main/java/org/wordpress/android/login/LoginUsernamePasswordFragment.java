@@ -152,7 +152,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         String inputSiteAddressWithoutProtocol = UrlUtils.removeScheme(mInputSiteAddress);
-        mInputSiteAddressWithoutSuffix = mEndpointAddress.isEmpty()
+        mInputSiteAddressWithoutSuffix = (mEndpointAddress == null || mEndpointAddress.isEmpty())
                 ? inputSiteAddressWithoutProtocol : UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
 
         mUsernameInput = rootView.findViewById(R.id.login_username_row);
@@ -224,7 +224,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         super.onCreate(savedInstanceState);
 
         mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
-        mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS, "");
+        mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS, null);
         mSiteName = getArguments().getString(ARG_SITE_NAME);
         mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
         mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
@@ -355,8 +355,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override
     public void handleWpComDiscoveryError(String failedEndpoint) {
-        // Used only by wp-android as Woo already uses the Connect-Inf-url to check
-        // if site is a wp.com site
+        AppLog.e(T.API, "Inputted a wpcom address in site address screen. Redirecting to Email screen");
+        mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(failedEndpoint), null, null);
     }
 
     @Override
@@ -569,7 +569,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                                 lastAddedXMLRPCSite.getXmlRpcUrl(), lastAddedXMLRPCSite.getUsername(),
                                 lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl());
                     } else {
-                        mLoginListener.gotWpcomEmail(lastAddedXMLRPCSite.getJetpackUserEmail());
+                        mLoginListener.gotWpcomEmail(userEmail);
                     }
                 } else {
                     // Initiate the wp.getOptions endpoint to fetch the jetpack user email
