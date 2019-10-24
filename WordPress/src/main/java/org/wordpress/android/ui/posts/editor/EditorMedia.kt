@@ -30,7 +30,6 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -117,11 +116,11 @@ class EditorMedia(
      */
     private fun fetchMediaList(uriList: List<Uri>): List<Uri> {
         val fetchedUriList = uriList.mapNotNull { mediaUri ->
-            if (!MediaUtils.isInMediaStore(mediaUri)) {
+            if (!mediaUtilsWrapper.isInMediaStore(mediaUri)) {
                 // Do not download the file in async task. See
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
                 try {
-                    return@mapNotNull MediaUtils.downloadExternalMedia(activity, mediaUri)
+                    return@mapNotNull mediaUtilsWrapper.downloadExternalMedia(mediaUri)
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                     val errorMessage = "Can't download the image at: $mediaUri See issue #5823"
@@ -201,7 +200,7 @@ class EditorMedia(
         startingState: MediaUploadState
     ): MediaModel? {
         val mimeType = activity.contentResolver.getType(uri)
-        val path = MediaUtils.getRealPathFromURI(activity, uri)
+        val path = mediaUtilsWrapper.getRealPathFromURI(uri)
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
@@ -237,7 +236,7 @@ class EditorMedia(
     ): MediaModel? {
         val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id) ?: return null
         if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
-            val path = MediaUtils.getRealPathFromURI(activity, uri)
+            val path = mediaUtilsWrapper.getRealPathFromURI(uri)
             media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
         }
 

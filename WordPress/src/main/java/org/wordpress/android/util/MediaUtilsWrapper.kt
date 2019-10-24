@@ -28,4 +28,10 @@ class MediaUtilsWrapper @Inject constructor(private val context: Context) {
 
     fun isVideoMimeType(mimeType: String): Boolean =
         org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
+
+    fun isInMediaStore(mediaUri: Uri?): Boolean =
+            MediaUtils.isInMediaStore(mediaUri)
+
+    fun downloadExternalMedia(imageUri: Uri): Uri? =
+            MediaUtils.downloadExternalMedia(context, imageUri)
 }
