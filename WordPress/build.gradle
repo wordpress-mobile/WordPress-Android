@@ -49,6 +49,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
+        archivesBaseName = "$applicationId"
+
         // Allow versionName to be overridden with property. e.g. -PversionName=1234
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
