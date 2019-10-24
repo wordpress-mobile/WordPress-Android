@@ -30,7 +30,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
-import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPMediaUtils
@@ -57,6 +57,7 @@ class EditorMedia(
     private val editorTracker: EditorTracker,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -285,7 +286,7 @@ class EditorMedia(
     }
 
     fun refreshBlogMedia() {
-        if (NetworkUtils.isNetworkAvailable(activity)) {
+        if (networkUtilsWrapper.isNetworkAvailable()) {
             val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {
