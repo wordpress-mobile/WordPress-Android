@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
@@ -136,7 +135,6 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
 
-        Log.d("stats", "Getting pending notification for dismiss: " + pushId + " " + notificationType);
         return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
@@ -173,7 +171,6 @@ public class NotificationsProcessingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Offload to a separate thread.
 
-        Log.d("stats", "Starting command");
         mQuickActionProcessor = new QuickActionProcessor(this, mSystemNotificationsTracker, intent, startId);
         new Thread(new Runnable() {
             public void run() {
@@ -205,7 +202,6 @@ public class NotificationsProcessingService extends Service {
         }
 
         public void process() {
-            Log.d("stats", "Processing notification");
             getDataFromIntent();
 
             // now handle each action
@@ -231,8 +227,6 @@ public class NotificationsProcessingService extends Service {
                         mSystemNotificationsTracker.trackDismissedNotification(mNotificationType);
                     }
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
-                    Log.d("stats",
-                            "Dismissing notification with id: " + notificationId + " and type: " + mNotificationType);
                     if (notificationId == GROUP_NOTIFICATION_ID) {
                         mGCMMessageHandler.clearNotifications();
                     } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION_ID) {
