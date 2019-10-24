@@ -29,7 +29,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
-import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -251,8 +250,7 @@ class EditorMedia(
     }
 
     fun prepareMediaPost() {
-        val idsArray = activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)
-        ListUtils.fromLongArray(idsArray)?.forEach { id ->
+        activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.forEach { id ->
             addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id)
         }
         editorMediaListener.savePostAsyncFromEditorMedia()
