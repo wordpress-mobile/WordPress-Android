@@ -3,6 +3,7 @@ package org.wordpress.android.util
 import android.content.Context
 import android.net.Uri
 import dagger.Reusable
+import org.wordpress.android.util.WPMediaUtils.OnAdvertiseImageOptimizationListener
 import javax.inject.Inject
 
 /**
@@ -34,4 +35,13 @@ class MediaUtilsWrapper @Inject constructor(private val context: Context) {
 
     fun downloadExternalMedia(imageUri: Uri): Uri? =
             MediaUtils.downloadExternalMedia(context, imageUri)
+
+    fun shouldAdvertiseImageOptimization(): Boolean =
+            WPMediaUtils.shouldAdvertiseImageOptimization(context)
+
+    fun advertiseImageOptimization(listener: () -> Unit) {
+        WPMediaUtils.advertiseImageOptimization(context) {
+            listener.invoke()
+        }
+    }
 }

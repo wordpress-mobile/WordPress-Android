@@ -33,7 +33,6 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
-import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.helpers.MediaFile
 import java.io.File
 import java.util.ArrayList
@@ -151,8 +150,8 @@ class EditorMedia(
     }
 
     fun advertiseImageOptimisationAndAddMedia(data: Intent) {
-        if (WPMediaUtils.shouldAdvertiseImageOptimization(activity)) {
-            WPMediaUtils.advertiseImageOptimization(activity) { addMediaItemGroupOrSingleItem(data) }
+        if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
+            mediaUtilsWrapper.advertiseImageOptimization { addMediaItemGroupOrSingleItem(data) }
         } else {
             addMediaItemGroupOrSingleItem(data)
         }
