@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource
 import org.wordpress.android.util.AppLog

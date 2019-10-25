@@ -170,8 +170,9 @@ class EditorMedia(
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         val mediaMap = mediaIdList.asSequence().mapNotNull { mediaId ->
             mediaStore.getSiteMediaWithId(site, mediaId)
-        }.mapNotNull { media ->
+        }.onEach { media ->
             editorTracker.trackAddMediaEvent(site, source, media.isVideo)
+        }.mapNotNull { media ->
             fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
                 Pair(media.urlToUse, mediaFile)
             }
@@ -229,20 +230,21 @@ class EditorMedia(
         mimeType: String?,
         startingState: MediaUploadState
     ): MediaModel? {
-        return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)?.let{ media ->
-            if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
-                val path = mediaUtilsWrapper.getRealPathFromURI(uri)
-                media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
-            }
+        return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)
+                ?.let { media ->
+                    if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
+                        val path = mediaUtilsWrapper.getRealPathFromURI(uri)
+                        media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
+                    }
 
-            media.setUploadState(startingState)
-            editorMediaListener.editorMediaPostData().let {
-                if (!it.isLocalDraft) {
-                    media.postId = it.remotePostId
+                    media.setUploadState(startingState)
+                    editorMediaListener.editorMediaPostData().let {
+                        if (!it.isLocalDraft) {
+                            media.postId = it.remotePostId
+                        }
+                    }
+                    media
                 }
-            }
-            media
-        }
     }
 
     fun prepareMediaPost() {
