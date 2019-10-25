@@ -1,4 +1,4 @@
-# Welcome to the WordPress for Android docs!
+# WordPress for Android Docs
 
 ## Development Practices
 
