@@ -128,6 +128,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadServiceFacade;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -325,6 +326,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
     @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
     @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
+    @Inject UploadServiceFacade mUploadServiceFacade;
 
     private SiteModel mSite;
 
@@ -396,7 +398,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
         mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore, mEditorTracker, mMediaUtilsWrapper,
-                mFluxCUtilsWrapper, mNetworkUtilsWrapper, mMainDispatcher, mBgDispatcher);
+                mFluxCUtilsWrapper, mNetworkUtilsWrapper, mUploadServiceFacade, mMainDispatcher, mBgDispatcher);
 
         startObserving();
 

@@ -30,4 +30,8 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
 
     fun getPendingOrInProgressFeaturedImageUploadForPost(post: PostModel): MediaModel? =
             UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
+
+    fun uploadMediaFromEditor(mediaList: ArrayList<MediaModel>) {
+        UploadService.uploadMediaFromEditor(appContext, mediaList)
+    }
 }

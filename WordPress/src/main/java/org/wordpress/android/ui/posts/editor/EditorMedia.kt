@@ -23,7 +23,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState
-import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
@@ -57,6 +57,7 @@ class EditorMedia(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val uploadServiceFacade: UploadServiceFacade,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -266,10 +267,7 @@ class EditorMedia(
         // before starting the service, we need to update the posts' contents so we are sure the service
         // can retrieve it from there on
         editorMediaListener.savePostAsyncFromEditorMedia(AfterSavePostListener {
-            UploadService.uploadMediaFromEditor(
-                    activity,
-                    ArrayList(queuedMediaModels)
-            )
+            uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
         })
     }
 
