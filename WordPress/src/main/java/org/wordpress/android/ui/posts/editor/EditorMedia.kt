@@ -190,13 +190,9 @@ class EditorMedia(
      * Queues a media file for upload and starts the UploadService. Toasts will alert the user
      * if there are issues with the file.
      */
-    fun queueFileForUpload(uri: Uri): MediaModel? {
-        return queueFileForUpload(uri, MediaUploadState.QUEUED)
-    }
-
     fun queueFileForUpload(
         uri: Uri,
-        startingState: MediaUploadState
+        startingState: MediaUploadState = MediaUploadState.QUEUED
     ): MediaModel? {
         val mimeType = activity.contentResolver.getType(uri)
         val path = mediaUtilsWrapper.getRealPathFromURI(uri)
