@@ -8,23 +8,21 @@ Set contentDescription attribute to all ImageViews (null is a valid value).
 
 Illustrative images and images with labels should have contentDescription set to null -> “android:contentDescription="@null" or have importantForAccessibility set to “no” -> “android:importantForAccessibility="no".
 
-[[/images/Accessibility/illustrative_img.png|width=300px]]
+<img src="images/accessibility-guidelines/illustrative-img.png" width="300">
 
 ImageButtons with labels should have contentDescription set to null. Setting importanceForAccessibility to “no” makes them unfocusable in the accessibility mode.
 
-
-[[/images/Accessibility/image_with_label.png|width=300px]]
+<img src="images/accessibility-guidelines/image-with-label.png" width="300">
 
 ### Labels
 When a UI element is just a label for another element, set the `labelFor` attribute.
 
-[[/images/Accessibility/label_for.png|width=300px]]
+<img src="images/accessibility-guidelines/label-for.png" width="300">
 
 ### Grouping content
 If users should treat a set of elements as a single unit of information, you can group these elements in a focusable container (use android:focusable=”true”). 
 
-[[/images/Accessibility/grouping_content.png|width=300px]]
-
+<img src="images/accessibility-guidelines/grouping-content.png" width="300">
 
 ### Custom Views
 Make sure that custom views are accessible with both Switch Access and TalkBack. Consider implementing accessibility functionality for them using ExploreByTouchHelper.
