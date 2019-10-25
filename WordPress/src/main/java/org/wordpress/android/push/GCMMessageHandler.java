@@ -42,8 +42,10 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -131,10 +133,7 @@ public class GCMMessageHandler {
     private synchronized Bundle getCurrentNoteBundleForNoteId(String noteId) {
         if (mActiveNotificationsMap.size() > 0) {
             // get the corresponding bundle for this noteId
-            for (Iterator<Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator();
-                 it.hasNext(); ) {
-                Map.Entry<Integer, Bundle> row = it.next();
-                Bundle noteBundle = row.getValue();
+            for (Bundle noteBundle : mActiveNotificationsMap.values()) {
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                     return noteBundle;
                 }
@@ -144,14 +143,14 @@ public class GCMMessageHandler {
     }
 
     synchronized void clearNotifications() {
-        for (Iterator<Map.Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<Integer, Bundle> row = it.next();
-            Integer pushId = row.getKey();
+        List<Integer> removedNotifications = new ArrayList<>();
+        for (Integer pushId : mActiveNotificationsMap.keySet()) {
             // don't cancel or remove the AUTH notification if it exists
             if (!pushId.equals(AUTH_PUSH_NOTIFICATION_ID)) {
-                it.remove();
+                removedNotifications.add(pushId);
             }
         }
+        mActiveNotificationsMap.removeAll(removedNotifications);
     }
 
     public synchronized int getNotificationsCount() {
@@ -175,18 +174,19 @@ public class GCMMessageHandler {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        List<Integer> removedNotifications = new ArrayList<>();
         // here we loop with an Iterator as there might be several Notifications with the same Note ID
         // (i.e. likes on the same Note) so we need to keep cancelling them and removing them from our
         // mActiveNotificationsMap as we find it suitable
-        for (Iterator<Map.Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<Integer, Bundle> row = it.next();
+        for (Entry<Integer, Bundle> row : mActiveNotificationsMap.entrySet()) {
             Integer pushId = row.getKey();
             Bundle noteBundle = row.getValue();
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 notificationManager.cancel(pushId);
-                it.remove();
+                removedNotifications.add(pushId);
             }
         }
+        mActiveNotificationsMap.removeAll(removedNotifications);
 
         if (mActiveNotificationsMap.size() == 0) {
             notificationManager.cancel(GROUP_NOTIFICATION_ID);
