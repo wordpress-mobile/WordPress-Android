@@ -193,7 +193,7 @@ class EditorMedia(
         uri: Uri,
         startingState: MediaUploadState = MediaUploadState.QUEUED
     ): MediaModel? {
-        val mimeType = activity.contentResolver.getType(uri)
+        val mimeType = mediaUtilsWrapper.getMimeType(uri)
         val path = mediaUtilsWrapper.getRealPathFromURI(uri)
 
         // Invalid file path

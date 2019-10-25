@@ -43,4 +43,6 @@ class MediaUtilsWrapper @Inject constructor(private val context: Context) {
             listener.invoke()
         }
     }
+
+    fun getMimeType(uri: Uri): String? = context.contentResolver.getType(uri)
 }
