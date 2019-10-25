@@ -2346,7 +2346,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
             } else if (NEW_MEDIA_POST.equals(action)) {
-                mEditorMedia.prepareMediaPost();
+                mEditorMedia.prepareMediaPost(getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
             }
         }
     }

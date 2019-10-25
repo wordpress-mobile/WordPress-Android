@@ -21,7 +21,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
-import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState
 import org.wordpress.android.ui.uploads.UploadService
@@ -246,8 +245,8 @@ class EditorMedia(
                 }
     }
 
-    fun prepareMediaPost() {
-        activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.forEach { id ->
+    fun prepareMediaPost(mediaIds: LongArray) {
+        mediaIds.forEach { id ->
             addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id)
         }
         editorMediaListener.savePostAsyncFromEditorMedia()
