@@ -69,7 +69,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
-    private static final String MEDIA_SOURCE_GIPHY_MEDIA = "MEDIA_SOURCE_GIPHY_MEDIA";
 
     private boolean mHtmlModeEnabled;
 
@@ -292,8 +291,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
                         if (mediaSource.equals(MEDIA_SOURCE_STOCK_MEDIA)) {
                             mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
-                        } else if (mediaSource.equals(MEDIA_SOURCE_GIPHY_MEDIA)) {
-                            mEditorFragmentListener.onAddGiphyMediaClicked(allowMultipleSelection);
                         }
                     }
                 },
@@ -366,12 +363,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         String packageName = getActivity().getApplication().getPackageName();
         int stockMediaResourceId = getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
-        int giphyResourceId = getResources().getIdentifier("photo_picker_giphy", "string", packageName);
 
         otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
-
-        // Suppress Giphy as we need to reconsider it's usage due to the legal reasons
-        // otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_GIPHY_MEDIA, getString(giphyResourceId)));
 
         return otherMediaOptions;
     }
