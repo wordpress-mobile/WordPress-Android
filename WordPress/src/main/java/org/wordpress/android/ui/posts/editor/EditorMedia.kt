@@ -158,15 +158,13 @@ class EditorMedia(
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaId: Long): Boolean {
-        mediaStore.getSiteMediaWithId(site, mediaId)?.let { media ->
+        return mediaStore.getSiteMediaWithId(site, mediaId)?.let { media ->
             editorTracker.trackAddMediaEvent(site, source, media)
             fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
                 editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
             }
-            return true
-        }
-        AppLog.w(T.MEDIA, "Cannot add null media to post")
-        return false
+            true
+        } ?: false.also { AppLog.w(T.MEDIA, "Cannot add null media to post") }
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
@@ -233,20 +231,20 @@ class EditorMedia(
         mimeType: String?,
         startingState: MediaUploadState
     ): MediaModel? {
-        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id) ?: return null
-        if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
-            val path = mediaUtilsWrapper.getRealPathFromURI(uri)
-            media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
-        }
-
-        media.setUploadState(startingState)
-        editorMediaListener.editorMediaPostData().let {
-            if (!it.isLocalDraft) {
-                media.postId = it.remotePostId
+        return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)?.let{ media ->
+            if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
+                val path = mediaUtilsWrapper.getRealPathFromURI(uri)
+                media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
             }
-        }
 
-        return media
+            media.setUploadState(startingState)
+            editorMediaListener.editorMediaPostData().let {
+                if (!it.isLocalDraft) {
+                    media.postId = it.remotePostId
+                }
+            }
+            media
+        }
     }
 
     fun prepareMediaPost() {
