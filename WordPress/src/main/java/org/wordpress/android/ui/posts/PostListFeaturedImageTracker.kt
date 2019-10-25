@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import androidx.collection.LongSparseArray
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -12,17 +13,17 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
  * you see fit.
  */
 class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private val mediaStore: MediaStore) {
-    private val featuredImageMap = HashMap<Long, String>()
+    private val featuredImageArray = LongSparseArray<String>()
 
     fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
             return null
         }
-        featuredImageMap[featuredImageId]?.let { return it }
+        featuredImageArray[featuredImageId]?.let { return it }
         mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
             return if (media.url != null) {
-                featuredImageMap[featuredImageId] = media.url
+                featuredImageArray.put(featuredImageId, media.url)
                 media.url
             } else null
         }
@@ -36,6 +37,6 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
     }
 
     fun invalidateFeaturedMedia(featuredImageIds: List<Long>) {
-        featuredImageIds.forEach { featuredImageMap.remove(it) }
+        featuredImageIds.forEach { featuredImageArray.remove(it) }
     }
 }

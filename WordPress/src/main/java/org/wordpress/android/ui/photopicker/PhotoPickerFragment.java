@@ -68,7 +68,7 @@ public class PhotoPickerFragment extends Fragment {
     public interface PhotoPickerListener {
         void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList);
 
-        void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
+        void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon, boolean allowMultipleSelection);
     }
 
     private EmptyViewRecyclerView mRecycler;
@@ -252,7 +252,7 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         if (mListener != null) {
-            mListener.onPhotoPickerIconClicked(icon);
+            mListener.onPhotoPickerIconClicked(icon, false);
         }
     }
 
