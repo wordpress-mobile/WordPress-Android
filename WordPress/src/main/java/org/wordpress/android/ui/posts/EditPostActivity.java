@@ -580,6 +580,9 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorMedia.getSnackBarMessage().observe(this, message -> {
             WPSnackbar.make(findViewById(R.id.editor_activity), message.getMessageRes(), Snackbar.LENGTH_SHORT).show();
         });
+        mEditorMedia.getToastMessage().observe(this, toastMessageHolder -> {
+            toastMessageHolder.show(this);
+        });
     }
 
     private void initializePostObject() {

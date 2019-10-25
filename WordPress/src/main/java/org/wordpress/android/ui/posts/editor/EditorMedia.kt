@@ -31,9 +31,10 @@ import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.helpers.MediaFile
+import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.io.File
 import java.util.ArrayList
 import javax.inject.Named
@@ -69,6 +70,8 @@ class EditorMedia(
     )
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
+    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
+    val toastMessage = _toastMessage as LiveData<ToastMessageHolder>
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri>? = null
@@ -134,7 +137,7 @@ class EditorMedia(
 
         if (fetchedUriList.size < uriList.size) {
             // At least one media failed
-            ToastUtils.showToast(activity, R.string.error_downloading_image, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.error_downloading_image, Duration.SHORT)
         }
 
         return fetchedUriList
@@ -200,21 +203,21 @@ class EditorMedia(
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
-            ToastUtils.showToast(activity, R.string.editor_toast_invalid_path, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.editor_toast_invalid_path, Duration.SHORT)
             return null
         }
 
         // File not found
         val file = File(path)
         if (!file.exists()) {
-            ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.file_not_found, Duration.SHORT)
             return null
         }
 
         // we need to update media with the local post Id
         val media = buildMediaModel(uri, mimeType, startingState)
         if (media == null) {
-            ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.file_not_found, Duration.SHORT)
             return null
         }
         media.localPostId = editorMediaListener.editorMediaPostData().localPostId
@@ -287,11 +290,7 @@ class EditorMedia(
             val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {
-            ToastUtils.showToast(
-                    activity,
-                    R.string.error_media_refresh_no_connection,
-                    Duration.SHORT
-            )
+            _toastMessage.value = ToastMessageHolder(R.string.error_media_refresh_no_connection, Duration.SHORT)
         }
     }
 }
