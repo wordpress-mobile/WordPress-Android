@@ -44,7 +44,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -113,8 +112,7 @@ public class GCMMessageHandler {
             // get the corresponding bundle for this noteId
             // using a copy of the ArrayMap to iterate over on, as we might need to modify the original array
             ArrayMap<Integer, Bundle> tmpMap = new ArrayMap(mActiveNotificationsMap);
-            for (Map.Entry<Integer, Bundle> row : tmpMap.entrySet()) {
-                Bundle noteBundle = row.getValue();
+            for (Bundle noteBundle : tmpMap.values()) {
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
                     mNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
                     return;
@@ -200,15 +198,15 @@ public class GCMMessageHandler {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        for (Iterator<Map.Entry<Integer, Bundle>> it = mActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<Integer, Bundle> row = it.next();
-            Integer pushId = row.getKey();
+        List<Integer> removedNotifications = new ArrayList<>();
+        for (Integer pushId : mActiveNotificationsMap.keySet()) {
             // don't cancel or remove the AUTH notification if it exists
             if (!pushId.equals(AUTH_PUSH_NOTIFICATION_ID)) {
                 notificationManager.cancel(pushId);
-                it.remove();
+                removedNotifications.add(pushId);
             }
         }
+        mActiveNotificationsMap.removeAll(removedNotifications);
         notificationManager.cancel(GROUP_NOTIFICATION_ID);
     }
 
@@ -224,8 +222,7 @@ public class GCMMessageHandler {
 
     // NoteID is the ID if the note in WordPress
     public synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
-        for (Entry<Integer, Bundle> row : mActiveNotificationsMap.entrySet()) {
-            Bundle noteBundle = row.getValue();
+        for (Bundle noteBundle : mActiveNotificationsMap.values()) {
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
                 AnalyticsTracker.flush();
@@ -236,8 +233,7 @@ public class GCMMessageHandler {
 
     // Mark all notifications as tapped
     public synchronized void bumpPushNotificationsTappedAllAnalytics() {
-        for (Entry<Integer, Bundle> row : mActiveNotificationsMap.entrySet()) {
-            Bundle noteBundle = row.getValue();
+        for (Bundle noteBundle : mActiveNotificationsMap.values()) {
             bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
         AnalyticsTracker.flush();
