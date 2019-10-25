@@ -6,8 +6,9 @@ Supporting Right-to-left written scripts is quite straightforward as most issues
 ### Animations and Drawables
 Whenever you add a new animation/drawable, consider whether it needs to be mirrored in RtL mode (Use `ldrtl` drawable selector - example `drawable-ldrtl-v18`).
 
-<img src="images/right-to-left-layout-guidelines/left-to-right-animation.gif" width="300">
-<img src="images/right-to-left-layout-guidelines/right-to-left-animation.gif" width="300">
+LTR | RTL
+--------|-------
+<img src="images/right-to-left-layout-guidelines/left-to-right-animation.gif" width="300">        |       <img src="images/right-to-left-layout-guidelines/right-to-left-animation.gif" width="300">
 
 ### Images/Icons
 Writing direction also affects time flow direction -> some asymmetric images/icons, such as `reply` or `back`, need to be mirrored.
