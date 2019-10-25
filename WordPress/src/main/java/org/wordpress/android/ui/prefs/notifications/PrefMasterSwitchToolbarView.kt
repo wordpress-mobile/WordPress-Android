@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications
 
+import android.R.color
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import org.wordpress.android.R
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import androidx.core.content.ContextCompat
 
 /**
  * Custom view for master switch in toolbar for preferences.
@@ -28,9 +30,9 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         OnCheckedChangeListener,
         OnLongClickListener,
         OnClickListener {
+    private var backgroundStyle: Int? = null
     private var hintOn: String? = null
     private var hintOff: String? = null
-    private var prefKey: String? = null
     private var masterSwitch: SwitchCompat
     private var masterSwitchToolbarListener: MasterSwitchToolbarListener? = null
     private var toolbarSwitch: Toolbar
@@ -91,6 +93,8 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                             masterOffsetEndResId
                     )
                 }
+                val backgroundStyle = typedArray.getInt(R.styleable.PrefMasterSwitchToolbarView_backgroundStyle,
+                        HIGHLIGHTED)
 
                 setTitleOn(titleOn)
                 setTitleOff(titleOff)
@@ -99,6 +103,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 setToolbarTitleContentDescription(titleContentDescription)
                 setContentOffset(contentInsetStart)
                 setMasterOffsetEnd(masterOffsetEnd)
+                setBackgroundStyle(backgroundStyle)
             } finally {
                 typedArray.recycle()
             }
@@ -179,6 +184,33 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         this.hintOff = hintOff ?: resources.getString(R.string.master_switch_default_hint_off)
     }
 
+    /**
+     * Overrides style attributes for the switch and the toolbar
+     *
+     * @param backgroundStyle HIGHLIGHTED default style
+     *                        NORMAL light style (recommended to be used on the dialog)
+     */
+    fun setBackgroundStyle(backgroundStyle: Int) {
+        this.backgroundStyle = backgroundStyle
+
+        when (backgroundStyle) {
+            HIGHLIGHTED -> {} // Do nothing. Use default toolbar, switch style set in the xml
+            NORMAL -> {
+                val titleColor = ContextCompat.getColor(context, color.black)
+                val backgroundColor = ContextCompat.getColor(context, color.white)
+                val thumbColorList = ContextCompat.getColorStateList(context,
+                        R.color.master_switch_normal_thumb_selector)
+                val trackColorList = ContextCompat.getColorStateList(context,
+                        R.color.master_switch_normal_track_selector)
+
+                toolbarSwitch.setTitleTextColor(titleColor)
+                toolbarSwitch.setBackgroundColor(backgroundColor)
+                masterSwitch.thumbTintList = thumbColorList
+                masterSwitch.trackTintList = trackColorList
+            }
+        }
+    }
+
     /*
      * User long clicked the toolbar
      */
@@ -217,5 +249,11 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
     fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {
         this.masterSwitchToolbarListener = masterSwitchToolbarListener
+    }
+
+    companion object {
+        // Types for the "backgroundStyle" XML parameter.
+        private const val HIGHLIGHTED = 0
+        private const val NORMAL = 1
     }
 }
