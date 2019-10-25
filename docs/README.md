@@ -1,13 +1,20 @@
-Welcome to the WordPress for Android wiki!
+# Welcome to the WordPress for Android docs!
 
 ## Development Practices
 
-- [[Coding Style]] - guidelines and validation and auto-formatting tools
-- [[Using Android Resources]] - describes how to add or use Android resources like strings and drawables
-- [[Pull Request Guidelines]] - branch naming and how to write good pull requests
-- [[Subtree'd Library Projects]] - how to deal with subtree dependencies
+- [Coding Style](coding-style.md) - guidelines and validation and auto-formatting tools
+- [Using Android Resources](using-android-resources.md) - describes how to add or use Android resources like strings and drawables
+- [Pull Request Guidelines](pull-request-guidelines.md) - branch naming and how to write good pull requests
+- [Subtree'd Library Projects](subtreed-library-projects.md) - how to deal with subtree dependencies
 
-Please see the sidebar for more topics. ➡️
+## Accessibility
+
+- [Accessibility Guidelines](accessibility-guidelines.md)
+- [Right to Left Layout Guidelines](right-to-left-layout-guidelines.md)
+
+## Others
+
+- [Frequently Asked Questions](faq.md)
 
 ## Further Reading
 
