@@ -53,11 +53,11 @@ class EditorTracker @Inject constructor(private val context: Context) {
     /**
      * Analytics about media already available in the blog's library.
      * @param source where the media is being added from
-     * @param media media being added
+     * @param isVideo if media is a video
      */
-    fun trackAddMediaEvent(site: SiteModel, source: AddExistingMediaSource, media: MediaModel) {
+    fun trackAddMediaEvent(site: SiteModel, source: AddExistingMediaSource, isVideo: Boolean) {
         val stat = when (source) {
-            AddExistingMediaSource.WP_MEDIA_LIBRARY -> if (media.isVideo) {
+            AddExistingMediaSource.WP_MEDIA_LIBRARY -> if (isVideo) {
                 Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
             } else {
                 Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY

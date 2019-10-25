@@ -159,7 +159,7 @@ class EditorMedia(
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaId: Long): Boolean {
         return mediaStore.getSiteMediaWithId(site, mediaId)?.let { media ->
-            editorTracker.trackAddMediaEvent(site, source, media)
+            editorTracker.trackAddMediaEvent(site, source, media.isVideo)
             fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
                 editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
             }
@@ -168,18 +168,16 @@ class EditorMedia(
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
-        val mediaMap = ArrayMap<String, MediaFile>()
-        mediaIdList.map { mediaId ->
+        val mediaMap = mediaIdList.asSequence().mapNotNull { mediaId ->
             mediaStore.getSiteMediaWithId(site, mediaId)
-        }.forEach { media ->
-            if (media == null) {
-                AppLog.w(T.MEDIA, "Cannot add null media to post")
-            } else {
-                editorTracker.trackAddMediaEvent(site, source, media)
-                fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
-                    mediaMap[media.urlToUse] = mediaFile
-                }
+        }.mapNotNull { media ->
+            editorTracker.trackAddMediaEvent(site, source, media.isVideo)
+            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                Pair(media.urlToUse, mediaFile)
             }
+        }.toMap(ArrayMap())
+        (mediaIdList.size - mediaMap.size).takeIf { it > 0 }?.let { failedMediaCount ->
+            AppLog.w(T.MEDIA, "Failed to add $failedMediaCount media to post")
         }
         editorMediaListener.appendMediaFiles(mediaMap)
     }
