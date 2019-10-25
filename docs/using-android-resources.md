@@ -1,3 +1,5 @@
+# Using Android Resources
+
 ## String Resources
 
 We use `values/strings.xml` file for *ALL* translatable strings including string arrays. Each element in a string array should be defined as separate string resource first and then the string array should be defined with `translatable="false"` flag. This is due to a GlotPress limitation where translating arrays directly could generate smaller arrays if some elements are not translated. Here is a basic example:

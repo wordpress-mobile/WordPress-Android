@@ -1,3 +1,5 @@
+# Accessibility Guidelines
+
 ### Activity titles
 When an Activity comes to the foreground, TalkBack announces it’s title. When the activity has no title, TalkBack announces the name of the application which might confuse the user -> **_set a title to all visible activities_**, either in AndroidManifest or using Activity.setTitle() method.
 
