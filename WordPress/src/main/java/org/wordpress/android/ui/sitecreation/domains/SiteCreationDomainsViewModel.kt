@@ -255,33 +255,30 @@ class SiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-
             query?.value?.let {
                 if (data.isNotEmpty()) {
-                    val createDomain = { query: String ->
+                    val createSubDomain = { query: String ->
                         if (query.contains(".wordpress.com")) {
                             query
                         } else {
-                            query.plus(".wordpress.com")
+                            query.substringBefore(".").plus(".wordpress.com")
                         }
                     }
 
-                    val domainUnavailable = { query: String ->
+                    val subDomain = createSubDomain(it)
+
+                    val isDomainUnavailable = { query: String ->
                         (data.find { domain ->
                             domain.substringBefore('.') == query.substringBefore('.')
-                        }).isNullOrEmpty()
+                        }).isNullOrEmpty() && isValidUrl("https://$subDomain")
                     }
 
-                    val domain = createDomain(it)
-                    val result = domainUnavailable(it) && isValidUrl("https://$domain")
-                    if (result) {
-                        val takenDomain = DomainsModelUiState(
-                                domain,
+                    if (isDomainUnavailable(subDomain)) {
+                        items.add(DomainsModelUiState(
+                                subDomain,
                                 checked = false,
                                 available = false
-                        ).apply { onItemTapped = {} }
-
-                        items.add(takenDomain)
+                        ).apply { onItemTapped = {} })
                     }
                 }
             }

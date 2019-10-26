@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.domains
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
@@ -27,12 +28,13 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
         parentView: ViewGroup
     ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
-        private val suggestion = itemView.findViewById<RadioButton>(R.id.domain_suggestion)
+        private val suggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)
+        private val suggestionRadioButton = itemView.findViewById<RadioButton>(R.id.domain_suggestion_radio_button)
         private val domainUnavailability = itemView.findViewById<TextView>(R.id.domain_unavailability)
         private var onDomainSelected: (() -> Unit)? = null
 
         init {
-            suggestion.buttonTintList = ContextCompat.getColorStateList(
+            suggestionRadioButton.buttonTintList = ContextCompat.getColorStateList(
                     parentView.context,
                     R.color.neutral_10_primary_40_selector
             )
@@ -45,8 +47,8 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
             uiState as DomainsModelUiState
             onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             suggestion.text = uiState.name
-            suggestion.isChecked = uiState.checked
-            if (!uiState.available) suggestion.setButtonDrawable(android.R.color.transparent)
+            suggestionRadioButton.isChecked = uiState.checked
+            suggestionRadioButton.visibility = if (uiState.available) View.VISIBLE else View.INVISIBLE
             container.isEnabled = uiState.available
             domainUnavailability.setVisible(!uiState.available)
         }
