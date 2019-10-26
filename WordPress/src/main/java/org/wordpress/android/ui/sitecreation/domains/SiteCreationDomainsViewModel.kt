@@ -257,23 +257,17 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else {
             query?.value?.let {
                 if (data.isNotEmpty()) {
-                    val createSubDomain = { query: String ->
-                        if (query.contains(".wordpress.com")) {
-                            query
-                        } else {
-                            query.substringBefore(".").plus(".wordpress.com")
-                        }
+                    val subDomain = if (it.contains(".wordpress.com")) {
+                        it
+                    } else {
+                        it.substringBefore(".").plus(".wordpress.com")
                     }
 
-                    val subDomain = createSubDomain(it)
+                    val isDomainUnavailable = (data.find { domain ->
+                        domain.substringBefore('.') == it.substringBefore('.')
+                    }).isNullOrEmpty() && isValidUrl("https://$subDomain")
 
-                    val isDomainUnavailable = { query: String ->
-                        (data.find { domain ->
-                            domain.substringBefore('.') == query.substringBefore('.')
-                        }).isNullOrEmpty() && isValidUrl("https://$subDomain")
-                    }
-
-                    if (isDomainUnavailable(subDomain)) {
+                    if (isDomainUnavailable) {
                         items.add(DomainsModelUiState(
                                 subDomain,
                                 checked = false,
