@@ -21,8 +21,8 @@ class FluxCUtilsWrapper @Inject constructor(private val appContext: Context) {
         uri: Uri,
         mimeType: String?,
         mediaStore: MediaStore,
-        id: Int
-    ): MediaModel? = FluxCUtils.mediaModelFromLocalUri(appContext, uri, mimeType, mediaStore, id)
+        localSiteId: Int
+    ): MediaModel? = FluxCUtils.mediaModelFromLocalUri(appContext, uri, mimeType, mediaStore, localSiteId)
 
     fun mediaFileFromMediaModel(mediaModel: MediaModel?): MediaFile? =
             FluxCUtils.mediaFileFromMediaModel(mediaModel)

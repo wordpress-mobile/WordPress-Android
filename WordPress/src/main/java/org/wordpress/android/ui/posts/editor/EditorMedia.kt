@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
 import android.util.ArrayMap
@@ -29,20 +28,13 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
-import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
-import org.wordpress.android.util.ImageUtils
-import org.wordpress.android.util.ListUtils
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
-import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
-import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.helpers.MediaFile
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.util.ArrayList
 import javax.inject.Named
 
@@ -62,8 +54,9 @@ class EditorMedia(
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
     private val editorTracker: EditorTracker,
-    mediaUtilsWrapper: MediaUtilsWrapper,
-    fluxCUtilsWrapper: FluxCUtilsWrapper,
+    private val mediaUtilsWrapper: MediaUtilsWrapper,
+    private val fluxCUtilsWrapper: FluxCUtilsWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -122,11 +115,11 @@ class EditorMedia(
      */
     private fun fetchMediaList(uriList: List<Uri>): List<Uri> {
         val fetchedUriList = uriList.mapNotNull { mediaUri ->
-            if (!MediaUtils.isInMediaStore(mediaUri)) {
+            if (!mediaUtilsWrapper.isInMediaStore(mediaUri)) {
                 // Do not download the file in async task. See
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
                 try {
-                    return@mapNotNull MediaUtils.downloadExternalMedia(activity, mediaUri)
+                    return@mapNotNull mediaUtilsWrapper.downloadExternalMedia(mediaUri)
                 } catch (e: IllegalStateException) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                     val errorMessage = "Can't download the image at: $mediaUri See issue #5823"
@@ -157,38 +150,35 @@ class EditorMedia(
     }
 
     fun advertiseImageOptimisationAndAddMedia(data: Intent) {
-        if (WPMediaUtils.shouldAdvertiseImageOptimization(activity)) {
-            WPMediaUtils.advertiseImageOptimization(activity) { addMediaItemGroupOrSingleItem(data) }
+        if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
+            mediaUtilsWrapper.advertiseImageOptimization { addMediaItemGroupOrSingleItem(data) }
         } else {
             addMediaItemGroupOrSingleItem(data)
         }
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaId: Long): Boolean {
-        val media = mediaStore.getSiteMediaWithId(site, mediaId)
-        if (media == null) {
-            AppLog.w(T.MEDIA, "Cannot add null media to post")
-            return false
-        }
-
-        editorTracker.trackAddMediaEvent(site, source, media)
-
-        val mediaFile = FluxCUtils.mediaFileFromMediaModel(media)
-        editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
-        return true
+        return mediaStore.getSiteMediaWithId(site, mediaId)?.let { media ->
+            editorTracker.trackAddMediaEvent(site, source, media.isVideo)
+            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
+            }
+            true
+        } ?: false.also { AppLog.w(T.MEDIA, "Cannot add null media to post") }
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
-        val mediaMap = ArrayMap<String, MediaFile>()
-        for (mediaId in mediaIdList) {
-            val media = mediaStore.getSiteMediaWithId(site, mediaId)
-            if (media == null) {
-                AppLog.w(T.MEDIA, "Cannot add null media to post")
-            } else {
-                editorTracker.trackAddMediaEvent(site, source, media)
-
-                mediaMap[media.urlToUse] = FluxCUtils.mediaFileFromMediaModel(media)
+        val mediaMap = mediaIdList.asSequence().mapNotNull { mediaId ->
+            mediaStore.getSiteMediaWithId(site, mediaId)
+        }.onEach { media ->
+            editorTracker.trackAddMediaEvent(site, source, media.isVideo)
+        }.mapNotNull { media ->
+            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                Pair(media.urlToUse, mediaFile)
             }
+        }.toMap(ArrayMap())
+        (mediaIdList.size - mediaMap.size).takeIf { it > 0 }?.let { failedMediaCount ->
+            AppLog.w(T.MEDIA, "Failed to add $failedMediaCount media to post")
         }
         editorMediaListener.appendMediaFiles(mediaMap)
     }
@@ -206,7 +196,7 @@ class EditorMedia(
         startingState: MediaUploadState
     ): MediaModel? {
         val mimeType = activity.contentResolver.getType(uri)
-        val path = MediaUtils.getRealPathFromURI(activity, uri)
+        val path = mediaUtilsWrapper.getRealPathFromURI(uri)
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
@@ -240,51 +230,25 @@ class EditorMedia(
         mimeType: String?,
         startingState: MediaUploadState
     ): MediaModel? {
-        val media = FluxCUtils.mediaModelFromLocalUri(
-                activity,
-                uri,
-                mimeType,
-                mediaStore,
-                site.id
-        ) ?: return null
-        if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.mimeType)) {
-            val path = MediaUtils.getRealPathFromURI(activity, uri)
-            media.thumbnailUrl = getVideoThumbnail(path)
-        }
+        return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)
+                ?.let { media ->
+                    if (mediaUtilsWrapper.isVideoMimeType(media.mimeType)) {
+                        val path = mediaUtilsWrapper.getRealPathFromURI(uri)
+                        media.thumbnailUrl = EditorMediaUtils.getVideoThumbnail(activity, path)
+                    }
 
-        media.setUploadState(startingState)
-        editorMediaListener.editorMediaPostData().let {
-            if (!it.isLocalDraft) {
-                media.postId = it.remotePostId
-            }
-        }
-
-        return media
-    }
-
-    private fun getVideoThumbnail(videoPath: String): String? {
-        var thumbnailPath: String? = null
-        try {
-            val outputFile = File.createTempFile("thumb", ".png", activity.cacheDir)
-            val outputStream = FileOutputStream(outputFile)
-            val thumb = ImageUtils.getVideoFrameFromVideo(
-                    videoPath,
-                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(activity)
-            )
-            if (thumb != null) {
-                thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream)
-                thumbnailPath = outputFile.absolutePath
-            }
-        } catch (e: IOException) {
-            AppLog.i(T.MEDIA, "Can't create thumbnail for video: $videoPath")
-        }
-
-        return thumbnailPath
+                    media.setUploadState(startingState)
+                    editorMediaListener.editorMediaPostData().let {
+                        if (!it.isLocalDraft) {
+                            media.postId = it.remotePostId
+                        }
+                    }
+                    media
+                }
     }
 
     fun prepareMediaPost() {
-        val idsArray = activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)
-        ListUtils.fromLongArray(idsArray)?.forEach { id ->
+        activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.forEach { id ->
             addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id)
         }
         editorMediaListener.savePostAsyncFromEditorMedia()
@@ -319,7 +283,7 @@ class EditorMedia(
     }
 
     fun refreshBlogMedia() {
-        if (NetworkUtils.isNetworkAvailable(activity)) {
+        if (networkUtilsWrapper.isNetworkAvailable()) {
             val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {

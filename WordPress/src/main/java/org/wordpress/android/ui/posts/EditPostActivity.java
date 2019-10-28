@@ -145,6 +145,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.MediaUtilsWrapper;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
@@ -323,6 +324,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject EditorTracker mEditorTracker;
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
     @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
+    @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -394,7 +396,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
         mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore, mEditorTracker, mMediaUtilsWrapper,
-                mFluxCUtilsWrapper, mMainDispatcher, mBgDispatcher);
+                mFluxCUtilsWrapper, mNetworkUtilsWrapper, mMainDispatcher, mBgDispatcher);
 
         startObserving();
 

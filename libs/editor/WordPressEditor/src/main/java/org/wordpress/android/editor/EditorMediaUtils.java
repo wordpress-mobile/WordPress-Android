@@ -13,8 +13,14 @@ import android.util.DisplayMetrics;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class EditorMediaUtils {
     public static BitmapDrawable getAztecPlaceholderDrawableFromResID(Context context, @DrawableRes int drawableId,
@@ -45,5 +51,24 @@ public class EditorMediaUtils {
         int padding = DisplayUtils.dpToPx(context, 48) * 2;
         maximumThumbnailWidthForEditor -= padding;
         return maximumThumbnailWidthForEditor;
+    }
+
+    public static String getVideoThumbnail(Context context, String videoPath) {
+        String thumbnailPath = null;
+        try {
+            File outputFile = File.createTempFile("thumb", ".png", context.getCacheDir());
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
+                    videoPath,
+                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(context)
+            );
+            if (thumb != null) {
+                thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
+                thumbnailPath = outputFile.getAbsolutePath();
+            }
+        } catch (IOException e) {
+            AppLog.i(T.MEDIA, "Can't create thumbnail for video: " + videoPath);
+        }
+        return thumbnailPath;
     }
 }
