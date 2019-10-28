@@ -161,7 +161,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
             TextView labelTextView = view.findViewById(R.id.label);
             labelTextView.setText(Html.fromHtml(String.format(getResources().getString(
-                    R.string.login_magic_links_label), "<b>", mEmail, "</b>")));
+                    R.string.login_site_credentials_magic_link_label), mEmail)));
         } else {
             Glide.with(this)
                  .load(GravatarUtils.gravatarFromEmail(mEmail,
