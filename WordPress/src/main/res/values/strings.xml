@@ -362,8 +362,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
