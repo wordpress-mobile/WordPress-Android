@@ -432,7 +432,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
                     ActivityUtils.hideKeyboardForced(mEmailInput);
-                    mLoginListener.gotWpcomEmail(event.value);
+                    mLoginListener.gotWpcomEmail(event.value, false);
                 }
                 break;
             default:

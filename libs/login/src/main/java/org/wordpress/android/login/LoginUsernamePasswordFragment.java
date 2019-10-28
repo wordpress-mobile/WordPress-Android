@@ -569,7 +569,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                                 lastAddedXMLRPCSite.getXmlRpcUrl(), lastAddedXMLRPCSite.getUsername(),
                                 lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl());
                     } else {
-                        mLoginListener.gotWpcomEmail(userEmail);
+                        mLoginListener.gotWpcomEmail(userEmail, true);
                     }
                 } else {
                     // Initiate the wp.getOptions endpoint to fetch the jetpack user email

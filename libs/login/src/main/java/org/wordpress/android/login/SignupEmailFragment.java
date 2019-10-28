@@ -271,7 +271,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                             } else {
                                 mAnalyticsListener.trackSignupEmailToLogin();
                                 mLoginListener.showSignupToLoginMessage();
-                                mLoginListener.gotWpcomEmail(event.value);
+                                mLoginListener.gotWpcomEmail(event.value, false);
                                 // Kill connections with FluxC and this fragment since the flow is changing to login.
                                 mDispatcher.unregister(this);
                                 getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();

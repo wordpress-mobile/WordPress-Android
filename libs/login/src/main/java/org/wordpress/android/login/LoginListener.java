@@ -18,7 +18,7 @@ public interface LoginListener {
     LoginMode getLoginMode();
 
     // Login Email input callbacks
-    void gotWpcomEmail(String email);
+    void gotWpcomEmail(String email, boolean verifyEmail);
     void loginViaSiteAddress();
     void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
     void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);

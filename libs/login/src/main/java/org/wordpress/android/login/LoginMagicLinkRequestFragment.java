@@ -59,6 +59,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private static final String ARG_MAGIC_LINK_SCHEME = "ARG_MAGIC_LINK_SCHEME";
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
+    private static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
 
     private static final String ERROR_KEY = "error";
 
@@ -74,18 +75,21 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
     private boolean mInProgress;
     private boolean mIsJetpackConnect;
+    private boolean mVerifyMagicLinkEmail;
 
     @Inject protected Dispatcher mDispatcher;
 
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
     public static LoginMagicLinkRequestFragment newInstance(String email, AuthEmailPayloadScheme scheme,
-                                                            boolean isJetpackConnect, String jetpackConnectSource) {
+                                                            boolean isJetpackConnect, String jetpackConnectSource,
+                                                            boolean verifyEmail) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
         args.putSerializable(ARG_MAGIC_LINK_SCHEME, scheme);
         args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
         args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
+        args.putBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL, verifyEmail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,6 +114,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             mMagicLinkScheme = (AuthEmailPayloadScheme) getArguments().getSerializable(ARG_MAGIC_LINK_SCHEME);
             mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
             mJetpackConnectSource = getArguments().getString(ARG_JETPACK_CONNECT_SOURCE);
+            mVerifyMagicLinkEmail = getArguments().getBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL);
         }
 
         setHasOptionsMenu(true);
@@ -148,7 +153,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         ImageView avatarView = view.findViewById(R.id.gravatar);
 
         // Design changes added to the Woo Magic link sign-in
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+        if (mVerifyMagicLinkEmail) {
             View avatarContainerView = view.findViewById(R.id.avatar_container);
 
             LayoutParams lp = avatarContainerView.getLayoutParams();
@@ -162,6 +167,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             TextView labelTextView = view.findViewById(R.id.label);
             labelTextView.setText(Html.fromHtml(String.format(getResources().getString(
                     R.string.login_site_credentials_magic_link_label), mEmail)));
+
+            mRequestMagicLinkButton.setText(getString(R.string.send_verification_email));
         } else {
             Glide.with(this)
                  .load(GravatarUtils.gravatarFromEmail(mEmail,
