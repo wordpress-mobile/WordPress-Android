@@ -21,19 +21,19 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
-import org.wordpress.android.ui.posts.EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState
-import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.helpers.MediaFile
+import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.io.File
 import java.util.ArrayList
 import javax.inject.Named
@@ -57,6 +57,7 @@ class EditorMedia(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val uploadServiceFacade: UploadServiceFacade,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -69,6 +70,8 @@ class EditorMedia(
     )
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
+    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
+    val toastMessage = _toastMessage as LiveData<ToastMessageHolder>
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri>? = null
@@ -134,7 +137,7 @@ class EditorMedia(
 
         if (fetchedUriList.size < uriList.size) {
             // At least one media failed
-            ToastUtils.showToast(activity, R.string.error_downloading_image, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.error_downloading_image, Duration.SHORT)
         }
 
         return fetchedUriList
@@ -187,34 +190,30 @@ class EditorMedia(
      * Queues a media file for upload and starts the UploadService. Toasts will alert the user
      * if there are issues with the file.
      */
-    fun queueFileForUpload(uri: Uri): MediaModel? {
-        return queueFileForUpload(uri, MediaUploadState.QUEUED)
-    }
-
     fun queueFileForUpload(
         uri: Uri,
-        startingState: MediaUploadState
+        startingState: MediaUploadState = MediaUploadState.QUEUED
     ): MediaModel? {
-        val mimeType = activity.contentResolver.getType(uri)
+        val mimeType = mediaUtilsWrapper.getMimeType(uri)
         val path = mediaUtilsWrapper.getRealPathFromURI(uri)
 
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
-            ToastUtils.showToast(activity, R.string.editor_toast_invalid_path, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.editor_toast_invalid_path, Duration.SHORT)
             return null
         }
 
         // File not found
         val file = File(path)
         if (!file.exists()) {
-            ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.file_not_found, Duration.SHORT)
             return null
         }
 
         // we need to update media with the local post Id
         val media = buildMediaModel(uri, mimeType, startingState)
         if (media == null) {
-            ToastUtils.showToast(activity, R.string.file_not_found, Duration.SHORT)
+            _toastMessage.value = ToastMessageHolder(R.string.file_not_found, Duration.SHORT)
             return null
         }
         media.localPostId = editorMediaListener.editorMediaPostData().localPostId
@@ -247,8 +246,8 @@ class EditorMedia(
                 }
     }
 
-    fun prepareMediaPost() {
-        activity.intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.forEach { id ->
+    fun prepareMediaPost(mediaIds: LongArray) {
+        mediaIds.forEach { id ->
             addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id)
         }
         editorMediaListener.savePostAsyncFromEditorMedia()
@@ -268,10 +267,7 @@ class EditorMedia(
         // before starting the service, we need to update the posts' contents so we are sure the service
         // can retrieve it from there on
         editorMediaListener.savePostAsyncFromEditorMedia(AfterSavePostListener {
-            UploadService.uploadMediaFromEditor(
-                    activity,
-                    ArrayList(queuedMediaModels)
-            )
+            uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
         })
     }
 
@@ -287,11 +283,7 @@ class EditorMedia(
             val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {
-            ToastUtils.showToast(
-                    activity,
-                    R.string.error_media_refresh_no_connection,
-                    Duration.SHORT
-            )
+            _toastMessage.value = ToastMessageHolder(R.string.error_media_refresh_no_connection, Duration.SHORT)
         }
     }
 }
