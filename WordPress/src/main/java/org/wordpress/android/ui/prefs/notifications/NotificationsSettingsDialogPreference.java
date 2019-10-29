@@ -227,11 +227,11 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     try {
                         mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
 
+                        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
                         // Switch off master switch if all settings switches are off
                         if (mMasterSwitchToolbarView != null
                             && !isChecked
-                            && mUpdatedJson.length() == mSettingsArray.length
-                            && mSettings.shouldUncheckMasterSwitch(mUpdatedJson)
+                            && mSettings.shouldUncheckMasterSwitch(mUpdatedJson, settingsJson, mSettingsValues)
                         ) {
                             mMasterSwitchToolbarView.setChecked(false);
                         }
