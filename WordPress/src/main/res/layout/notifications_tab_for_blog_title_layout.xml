@@ -20,7 +20,7 @@
             app:masterContentDescription="@string/notifications_tab_dialog_switch_desc"
             app:masterContentInsetStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
             app:masterOffsetEnd="@dimen/notifications_tab_dialog_toolbar_content_offset"
-            app:backgroundStyle="normal">
+            app:masterViewStyle="normal">
         </org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView>
 
 </LinearLayout>

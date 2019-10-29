@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.notifications
 
-import android.R.color
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -11,12 +10,15 @@ import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import org.wordpress.android.R
 import org.wordpress.android.util.redirectContextClickToLongPressListener
-import androidx.core.content.ContextCompat
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.util.AppLog
 
 /**
  * Custom view for master switch in toolbar for preferences.
@@ -30,7 +32,32 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         OnCheckedChangeListener,
         OnLongClickListener,
         OnClickListener {
-    private var backgroundStyle: Int? = null
+    enum class PrefMasterSwitchToolbarViewStyle constructor(
+        val value: Int,
+        @ColorRes val titleColorResId: Int,
+        @ColorRes val backgroundColorResId: Int,
+        @ColorRes val thumbTintColorListResId: Int,
+        @ColorRes val trackTintColorListResId: Int
+    ) {
+        HIGHLIGHTED(
+            0,
+            R.color.white,
+            R.color.primary_40,
+            R.color.primary_30_neutral_10_selector,
+            R.color.primary_30_primary_20_selector
+        ),
+        NORMAL(
+            1,
+            R.color.black,
+            R.color.white,
+            R.color.primary_30_neutral_selector,
+            R.color.primary_5_neutral_20_selector
+        );
+        companion object {
+            fun fromInt(value: Int): PrefMasterSwitchToolbarViewStyle? = values().firstOrNull { it.value == value }
+        }
+    }
+
     private var hintOn: String? = null
     private var hintOff: String? = null
     private var masterSwitch: SwitchCompat
@@ -38,6 +65,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     private var toolbarSwitch: Toolbar
     private var titleOff: String? = null
     private var titleOn: String? = null
+    private var viewStyle: PrefMasterSwitchToolbarViewStyle? = null
 
     val isMasterChecked: Boolean
         get() = masterSwitch.isChecked
@@ -93,8 +121,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                             masterOffsetEndResId
                     )
                 }
-                val backgroundStyle = typedArray.getInt(R.styleable.PrefMasterSwitchToolbarView_backgroundStyle,
-                        HIGHLIGHTED)
+                val viewStyle = typedArray.getInt(R.styleable.PrefMasterSwitchToolbarView_masterViewStyle, -1)
 
                 setTitleOn(titleOn)
                 setTitleOff(titleOff)
@@ -103,7 +130,10 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
                 setToolbarTitleContentDescription(titleContentDescription)
                 setContentOffset(contentInsetStart)
                 setMasterOffsetEnd(masterOffsetEnd)
-                setBackgroundStyle(backgroundStyle)
+
+                if (viewStyle != -1) {
+                    setViewStyle(viewStyle)
+                }
             } finally {
                 typedArray.recycle()
             }
@@ -184,31 +214,39 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         this.hintOff = hintOff ?: resources.getString(R.string.master_switch_default_hint_off)
     }
 
-    /**
-     * Overrides style attributes for the switch and the toolbar
-     *
-     * @param backgroundStyle HIGHLIGHTED default style
-     *                        NORMAL light style (recommended to be used on the dialog)
-     */
-    fun setBackgroundStyle(backgroundStyle: Int) {
-        this.backgroundStyle = backgroundStyle
-
-        when (backgroundStyle) {
-            HIGHLIGHTED -> {} // Do nothing. Use default toolbar, switch style set in the xml
-            NORMAL -> {
-                val titleColor = ContextCompat.getColor(context, color.black)
-                val backgroundColor = ContextCompat.getColor(context, color.white)
-                val thumbColorList = ContextCompat.getColorStateList(context,
-                        R.color.master_switch_normal_thumb_selector)
-                val trackColorList = ContextCompat.getColorStateList(context,
-                        R.color.master_switch_normal_track_selector)
-
-                toolbarSwitch.setTitleTextColor(titleColor)
-                toolbarSwitch.setBackgroundColor(backgroundColor)
-                masterSwitch.thumbTintList = thumbColorList
-                masterSwitch.trackTintList = trackColorList
-            }
+    fun setViewStyle(viewStyleInt: Int) {
+        if (viewStyleInt == this.viewStyle?.value) {
+            return
         }
+        val nullableType = PrefMasterSwitchToolbarViewStyle.fromInt(viewStyleInt)
+        nullableType?.let {
+            updateViewStyle(nullableType)
+        } ?: if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Unknown view style id: $viewStyleInt")
+        } else {
+            AppLog.e(AppLog.T.SETTINGS, "PrefMasterSwitchToolbarView.setViewStyle called from xml " +
+                    "with an unknown viewStyle.")
+        }
+    }
+
+    fun updateViewStyle(viewStyle: PrefMasterSwitchToolbarViewStyle) {
+        if (viewStyle == this.viewStyle) {
+            return
+        }
+        this.viewStyle = viewStyle
+        loadResourcesForViewStyle(viewStyle)
+    }
+
+    private fun loadResourcesForViewStyle(viewStyle: PrefMasterSwitchToolbarViewStyle) {
+        val titleColor = ContextCompat.getColor(context, viewStyle.titleColorResId)
+        val backgroundColor = ContextCompat.getColor(context, viewStyle.backgroundColorResId)
+        val thumbColorList = ContextCompat.getColorStateList(context, viewStyle.thumbTintColorListResId)
+        val trackColorList = ContextCompat.getColorStateList(context, viewStyle.trackTintColorListResId)
+
+        toolbarSwitch.setTitleTextColor(titleColor)
+        toolbarSwitch.setBackgroundColor(backgroundColor)
+        masterSwitch.thumbTintList = thumbColorList
+        masterSwitch.trackTintList = trackColorList
     }
 
     /*
@@ -249,11 +287,5 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
     fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {
         this.masterSwitchToolbarListener = masterSwitchToolbarListener
-    }
-
-    companion object {
-        // Types for the "backgroundStyle" XML parameter.
-        private const val HIGHLIGHTED = 0
-        private const val NORMAL = 1
     }
 }
