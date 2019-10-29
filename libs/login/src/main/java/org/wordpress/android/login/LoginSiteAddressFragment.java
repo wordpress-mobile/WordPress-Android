@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.AccountStore.OnDiscoveryResponse;
 import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked;
 import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.util.SiteUtils;
@@ -46,8 +45,8 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 
-public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
-        OnEditorCommitListener {
+public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment implements TextWatcher,
+        OnEditorCommitListener, LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
 
     public static final String TAG = "login_site_address_fragment_tag";
@@ -176,6 +175,8 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
             return;
         }
 
+        mLoginBaseDiscoveryListener = this;
+
         mRequestedSiteAddress = mLoginSiteAddressValidator.getCleanedSiteAddress();
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
@@ -221,12 +222,12 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         mRequestedSiteAddress = null;
     }
 
-    private void askForHttpAuthCredentials(@NonNull final String url) {
-        LoginHttpAuthDialogFragment loginHttpAuthDialogFragment = LoginHttpAuthDialogFragment.newInstance(url);
-        loginHttpAuthDialogFragment.setTargetFragment(this, LoginHttpAuthDialogFragment.DO_HTTP_AUTH);
-        loginHttpAuthDialogFragment.show(getFragmentManager(), LoginHttpAuthDialogFragment.TAG);
+    @Override
+    @NonNull public String getRequestedSiteAddress() {
+        return mRequestedSiteAddress;
     }
 
+    @Override
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
@@ -265,6 +266,38 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                 showError(R.string.error_generic);
                 break;
         }
+    }
+
+    @Override
+    public void handleWpComDiscoveryError(String failedEndpoint) {
+        AppLog.e(T.API, "Inputted a wpcom address in site address screen.");
+
+        // If the user is already logged in a wordpress.com account, bail out
+        if (mAccountStore.hasAccessToken()) {
+            String currentUsername = mAccountStore.getAccount().getUserName();
+            AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername);
+
+            ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, true);
+            mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
+        } else {
+            mLoginListener.gotWpcomSiteInfo(failedEndpoint, null, null);
+        }
+    }
+
+    @Override
+    public void handleDiscoverySuccess(@NonNull String endpointAddress) {
+        AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + endpointAddress);
+
+        // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
+        String inputSiteAddress = mRequestedSiteAddress;
+        endProgress();
+        mLoginListener.gotXmlRpcEndpoint(inputSiteAddress, endpointAddress);
+    }
+
+    private void askForHttpAuthCredentials(@NonNull final String url) {
+        LoginHttpAuthDialogFragment loginHttpAuthDialogFragment = LoginHttpAuthDialogFragment.newInstance(url);
+        loginHttpAuthDialogFragment.setTargetFragment(this, LoginHttpAuthDialogFragment.DO_HTTP_AUTH);
+        loginHttpAuthDialogFragment.show(getFragmentManager(), LoginHttpAuthDialogFragment.TAG);
     }
 
     private void showSiteAddressHelp() {
@@ -324,57 +357,6 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
                     event.site.getName(),
                     event.site.getIconUrl());
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDiscoverySucceeded(OnDiscoveryResponse event) {
-        if (mRequestedSiteAddress == null) {
-            // bail if user canceled
-            return;
-        }
-
-        if (!isAdded()) {
-            return;
-        }
-
-        // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
-        final String requestedSiteAddress = mRequestedSiteAddress;
-
-        if (isInProgress()) {
-            endProgress();
-        }
-
-        if (event.isError()) {
-            mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
-                    event.error.name(), event.error.toString());
-
-            if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {
-                AppLog.e(T.API, "Inputted a wpcom address in site address screen.");
-
-                // If the user is already logged in a wordpress.com account, bail out
-                if (mAccountStore.hasAccessToken()) {
-                    String currentUsername = mAccountStore.getAccount().getUserName();
-                    AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername);
-
-                    ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, true);
-                    mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
-                } else {
-                    mLoginListener.gotWpcomSiteInfo(event.failedEndpoint, null, null);
-                }
-
-                return;
-            } else {
-                AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name()
-                                + " - " + event.error.toString());
-                handleDiscoveryError(event.error, event.failedEndpoint);
-                return;
-            }
-        }
-
-        AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
-
-        mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint);
     }
 
     @SuppressWarnings("unused")
