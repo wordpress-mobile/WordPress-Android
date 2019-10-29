@@ -1,5 +1,6 @@
 13.6
 -----
+* Pages ordering is case insensitive now
  
 13.5
 -----
