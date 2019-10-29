@@ -148,6 +148,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         toolbarSwitch.redirectContextClickToLongPressListener()
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setToolbarTitleContentDescription(titleContentDescription: String?) {
         titleContentDescription?.let {
             for (i in 0 until toolbarSwitch.childCount) {
@@ -158,13 +159,15 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         }
     }
 
-    private fun setContentOffset(offset: Int) {
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun setContentOffset(offset: Int) {
         toolbarSwitch.setContentInsetsAbsolute(offset, 0)
     }
 
     /**
      * Applies end padding to the switch menu
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setMasterOffsetEnd(offsetEnd: Int) {
         if (offsetEnd != -1) {
             masterSwitch.setPaddingRelative(
@@ -198,22 +201,27 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         toolbarSwitch.visibility = View.VISIBLE
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setTitleOn(titleOn: String?) {
         this.titleOn = titleOn ?: resources.getString(R.string.master_switch_default_title_on)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setTitleOff(titleOff: String?) {
         this.titleOff = titleOff ?: resources.getString(R.string.master_switch_default_title_off)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setHintOn(hintOn: String?) {
         this.hintOn = hintOn ?: resources.getString(R.string.master_switch_default_hint_on)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setHintOff(hintOff: String?) {
         this.hintOff = hintOff ?: resources.getString(R.string.master_switch_default_hint_off)
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun setViewStyle(viewStyleInt: Int) {
         if (viewStyleInt == this.viewStyle?.value) {
             return
@@ -229,6 +237,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         }
     }
 
+    @Suppress("MemberVisibilityCanBePrivate")
     fun updateViewStyle(viewStyle: PrefMasterSwitchToolbarViewStyle) {
         if (viewStyle == this.viewStyle) {
             return
