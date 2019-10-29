@@ -230,6 +230,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                         // Switch off master switch if all settings switches are off
                         if (mMasterSwitchToolbarView != null
                             && !isChecked
+                            && mUpdatedJson.length() == mSettingsArray.length
                             && mSettings.shouldUncheckMasterSwitch(mUpdatedJson)
                         ) {
                             mMasterSwitchToolbarView.setChecked(false);
