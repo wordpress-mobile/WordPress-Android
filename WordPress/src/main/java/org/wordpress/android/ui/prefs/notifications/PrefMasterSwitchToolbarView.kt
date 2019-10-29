@@ -91,7 +91,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
         val menuItem = toolbarSwitch.menu.findItem(R.id.master_switch)
         masterSwitch = menuItem.actionView as SwitchCompat
-        masterSwitch.isChecked = true
+        setChecked(true)
 
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
@@ -191,13 +191,8 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
      * Loads initial state of the master switch and toolbar
      */
     fun loadInitialState(checkMaster: Boolean) {
-        masterSwitch.isChecked = checkMaster
-
-        toolbarSwitch.title = if (checkMaster) {
-            titleOn
-        } else {
-            titleOff
-        }
+        setChecked(checkMaster)
+        setToolbarTitle(checkMaster)
         toolbarSwitch.visibility = View.VISIBLE
     }
 
@@ -278,19 +273,26 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     * User clicked the toolbar
     */
     override fun onClick(v: View?) {
-        masterSwitch.isChecked = !masterSwitch.isChecked
+        setChecked(!masterSwitch.isChecked)
+    }
+
+    fun setChecked(isChecked: Boolean) {
+        masterSwitch.isChecked = isChecked
+    }
+
+    private fun setToolbarTitle(checkMaster: Boolean) {
+        toolbarSwitch.title = if (checkMaster) {
+            titleOn
+        } else {
+            titleOff
+        }
     }
 
     /*
      * User toggled the master switch
      */
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        toolbarSwitch.title = if (isChecked) {
-            titleOn
-        } else {
-            titleOff
-        }
-
+        setToolbarTitle(isChecked)
         masterSwitchToolbarListener?.onMasterSwitchCheckedChanged(buttonView, isChecked)
     }
 

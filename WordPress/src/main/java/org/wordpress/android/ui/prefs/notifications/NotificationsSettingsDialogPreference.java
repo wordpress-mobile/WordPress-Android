@@ -226,6 +226,9 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     try {
                         mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
+                        if (mMasterSwitchToolbarView != null && shouldUncheckMasterSwitch()) {
+                            mMasterSwitchToolbarView.setChecked(false);
+                        }
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
                     }
@@ -294,7 +297,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     public void onMasterSwitchCheckedChanged(
             CompoundButton buttonView,
             boolean isChecked) {
-        checkSettingsSwitches(isChecked);
+        setSettingsSwitchesChecked(isChecked);
         hideDisabledView(isChecked);
     }
 
@@ -311,10 +314,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     /**
      * Updates Notifications Tab settings switches state based on the master switch state
      *
-     * @param isMasterChecked TRUE to switched on the settings switches.
-     *                        FALSE to switched off the settings switches.
+     * @param isMasterChecked TRUE to switch on the settings switches.
+     *                        FALSE to switch off the settings switches.
      */
-    private void checkSettingsSwitches(boolean isMasterChecked) {
+    private void setSettingsSwitchesChecked(boolean isMasterChecked) {
         JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
 
         if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
@@ -326,5 +329,29 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 }
             }
         }
+    }
+
+
+    // returns true if all Notifications Tab settings switches on the dialog are unchecked
+    private boolean shouldUncheckMasterSwitch() {
+        boolean shouldUncheckMasterSwitch = true;
+
+        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
+
+        if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
+            for (int i = 0; i < mSettingsArray.length; i++) {
+                String settingValue = mSettingsValues[i];
+                final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
+                if (toggleSwitch != null) {
+                    boolean isChecked = toggleSwitch.isChecked();
+                    if (isChecked) {
+                        shouldUncheckMasterSwitch = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return shouldUncheckMasterSwitch;
     }
 }
