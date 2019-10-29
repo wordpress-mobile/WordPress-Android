@@ -208,12 +208,12 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setHintOn(hintOn: String?) {
-        this.hintOn = hintOn ?: resources.getString(R.string.master_switch_default_hint_on)
+        this.hintOn = hintOn
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setHintOff(hintOff: String?) {
-        this.hintOff = hintOff ?: resources.getString(R.string.master_switch_default_hint_off)
+        this.hintOff = hintOff
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -257,15 +257,19 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
      * User long clicked the toolbar
      */
     override fun onLongClick(v: View?): Boolean {
-        Toast.makeText(
-                context,
-                if (masterSwitch.isChecked) {
-                    hintOn
-                } else {
-                    hintOff
-                },
-                Toast.LENGTH_SHORT
-        ).show()
+        val toastText = if (masterSwitch.isChecked) {
+            hintOn
+        } else {
+            hintOff
+        }
+
+        if (toastText?.isNotEmpty() == true) {
+            Toast.makeText(
+                    context,
+                    toastText,
+                    Toast.LENGTH_SHORT
+            ).show()
+        }
         return true
     }
 

@@ -1167,8 +1167,6 @@
 
     <string name="master_switch_default_title_on">On</string>
     <string name="master_switch_default_title_off">Off</string>
-    <string name="master_switch_default_hint_on">Disable Preferences</string>
-    <string name="master_switch_default_hint_off">Enable Preferences</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
