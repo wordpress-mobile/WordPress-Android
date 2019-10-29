@@ -418,7 +418,8 @@ public class PostUtils {
                 postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
 
                 String oldMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER, localMediaId);
-                String newMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
+                String newMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER,
+                        mediaFile.getMediaId());
                 postContent = postContent.replace(oldMediaTextBlockHeader, newMediaTextBlockHeader);
 
                 // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
