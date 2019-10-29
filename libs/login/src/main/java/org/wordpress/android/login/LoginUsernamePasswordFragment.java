@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -349,8 +350,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     @Override
-    public void showDiscoveryError(int messageId) {
-        // TODO: Add support to display discovery error messages
+    public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
+        // TODO: Add support to redirect to jetpack required or discovery error screen
     }
 
     @Override
