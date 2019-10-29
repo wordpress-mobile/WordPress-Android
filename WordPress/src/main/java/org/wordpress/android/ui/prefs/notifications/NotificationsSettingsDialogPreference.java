@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -103,10 +104,20 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 LinearLayout.LayoutParams.MATCH_PARENT));
         innerView.setOrientation(LinearLayout.VERTICAL);
 
-        View spacerView = new View(getContext());
-        int spacerHeight = getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
-        spacerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight));
-        innerView.addView(spacerView);
+        if (mShouldDisplayMasterSwitch) {
+            View dividerView = new View(getContext());
+            int dividerHeight = getContext().getResources().getDimensionPixelSize(
+                R.dimen.notifications_settings_dialog_divider_height
+            );
+            dividerView.setBackgroundColor(getContext().getResources().getColor(R.color.divider));
+            dividerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, dividerHeight));
+            innerView.addView(dividerView);
+        } else {
+            View spacerView = new View(getContext());
+            int spacerHeight = getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
+            spacerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight));
+            innerView.addView(spacerView);
+        }
 
         mDisabledView = View.inflate(getContext(), R.layout.notifications_tab_disabled_text_layout, null);
         mDisabledView.setLayoutParams(
@@ -191,6 +202,16 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                         toggleSwitch.setChecked(!toggleSwitch.isChecked());
                     }
                 });
+
+                if (mShouldDisplayMasterSwitch && (i == mSettingsArray.length - 1)) {
+                    View divider = commentsSetting.findViewById(R.id.notifications_list_divider);
+                    if (divider != null) {
+                        MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();
+                        mlp.leftMargin = 0;
+                        mlp.rightMargin = 0;
+                        divider.setLayoutParams(mlp);
+                    }
+                }
 
                 view.addView(commentsSetting);
             }

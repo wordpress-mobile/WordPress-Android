@@ -12,7 +12,7 @@
 
         <TextView
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_width="match_parent"
             android:paddingEnd="@dimen/margin_extra_large"
             android:paddingStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
@@ -30,5 +30,10 @@
             android:text="@string/notifications_tab_dialog_master_off_message"
             style="@style/TextAppearance.AppCompat.Body1">
         </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"/>
 
 </LinearLayout>
