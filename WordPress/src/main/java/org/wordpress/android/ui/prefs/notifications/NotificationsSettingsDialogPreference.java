@@ -86,7 +86,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
         super.onPrepareDialogBuilder(builder);
         if (mShouldDisplayMasterSwitch) {
              if (mTitleViewWithMasterSwitch == null) {
-                 AppLog.e(T.SETTINGS, "Master switch enabled but layout not set");
+                 AppLog.e(T.NOTIFS, "Master switch enabled but layout not set");
                  return;
              }
             builder.setCustomTitle(mTitleViewWithMasterSwitch);
@@ -226,7 +226,12 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     try {
                         mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
-                        if (mMasterSwitchToolbarView != null && shouldUncheckMasterSwitch()) {
+
+                        // Switch off master switch if all settings switches are off
+                        if (mMasterSwitchToolbarView != null
+                            && !isChecked
+                            && mSettings.shouldUncheckMasterSwitch(mUpdatedJson)
+                        ) {
                             mMasterSwitchToolbarView.setChecked(false);
                         }
                     } catch (JSONException e) {
@@ -329,29 +334,5 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                 }
             }
         }
-    }
-
-
-    // returns true if all Notifications Tab settings switches on the dialog are unchecked
-    private boolean shouldUncheckMasterSwitch() {
-        boolean shouldUncheckMasterSwitch = true;
-
-        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
-
-        if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
-            for (int i = 0; i < mSettingsArray.length; i++) {
-                String settingValue = mSettingsValues[i];
-                final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
-                if (toggleSwitch != null) {
-                    boolean isChecked = toggleSwitch.isChecked();
-                    if (isChecked) {
-                        shouldUncheckMasterSwitch = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return shouldUncheckMasterSwitch;
     }
 }

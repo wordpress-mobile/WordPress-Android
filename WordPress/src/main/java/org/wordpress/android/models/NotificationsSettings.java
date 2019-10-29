@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
+import java.util.Iterator;
+
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
 public class NotificationsSettings {
     public static final String KEY_BLOGS = "blogs";
@@ -157,6 +159,28 @@ public class NotificationsSettings {
         }
 
         return displayMasterSwitch;
+    }
+
+    /**
+     * Determines if the master switch should be unchecked
+     *
+     * @param updatedJson json with current state of switches
+     * @return TRUE if states of all switches is false in the given json
+     */
+    public boolean shouldUncheckMasterSwitch(JSONObject updatedJson) {
+        boolean shouldUncheckMasterSwitch = true;
+
+        Iterator<?> keys = updatedJson.keys();
+        while (keys.hasNext()) {
+            String settingName = (String) keys.next();
+            boolean isChecked = updatedJson.optBoolean(settingName);
+            if (isChecked) {
+                shouldUncheckMasterSwitch = false;
+                break;
+            }
+        }
+
+        return shouldUncheckMasterSwitch;
     }
 
     /**
