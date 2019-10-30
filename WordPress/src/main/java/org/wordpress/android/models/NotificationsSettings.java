@@ -8,10 +8,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
 public class NotificationsSettings {
     public static final String KEY_BLOGS = "blogs";
@@ -161,53 +157,6 @@ public class NotificationsSettings {
         }
 
         return displayMasterSwitch;
-    }
-
-    /**
-     * Determines if the master switch should be unchecked
-     *
-     * @param updatedJson json with current state of switches
-     * @param settingsJson The settings json from the remote server
-     * @param settingsValues The string array of settings json keys
-     * @return TRUE if states of all switches is false in the given json
-     */
-    public boolean shouldUncheckMasterSwitch(
-         JSONObject updatedJson,
-         JSONObject settingsJson,
-         String[] settingsValues
-    ) {
-        boolean shouldUncheckMasterSwitch = true;
-
-        if (settingsValues != null) {
-            ArrayList<String> settingsNames = new ArrayList<>(Arrays.asList(settingsValues));
-
-            // Find checked state in the updated json
-            Iterator<?> keys = updatedJson.keys();
-            while (keys.hasNext()) {
-                String settingName = (String) keys.next();
-                settingsNames.remove(settingName);
-
-                boolean isChecked = updatedJson.optBoolean(settingName);
-                if (isChecked) {
-                    shouldUncheckMasterSwitch = false;
-                    break;
-                }
-            }
-
-            // Find checked state in the remote settings json for any remaining key
-            if (settingsJson != null && shouldUncheckMasterSwitch && settingsNames.size() > 0) {
-                for (int i = 0; i < settingsNames.size(); i++) {
-                    String settingName = settingsNames.get(i);
-                    boolean isChecked = JSONUtils.queryJSON(settingsJson, settingName, true);
-                    if (isChecked) {
-                        shouldUncheckMasterSwitch = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        return shouldUncheckMasterSwitch;
     }
 
     /**

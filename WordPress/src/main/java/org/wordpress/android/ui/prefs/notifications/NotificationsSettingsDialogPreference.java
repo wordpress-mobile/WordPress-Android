@@ -228,10 +228,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                         mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
 
                         JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
-                        // Switch off master switch if all settings switches are off
+                        // Switch off master switch if all current settings switches are off
                         if (mMasterSwitchToolbarView != null
                             && !isChecked
-                            && mSettings.shouldUncheckMasterSwitch(mUpdatedJson, settingsJson, mSettingsValues)
+                            && areAllSettingsSwitchesUnchecked()
                         ) {
                             mMasterSwitchToolbarView.setChecked(false);
                         }
@@ -318,22 +318,35 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
     }
 
     /**
-     * Updates Notifications Tab settings switches state based on the master switch state
+     * Updates Notifications current settings switches state based on the master switch state
      *
      * @param isMasterChecked TRUE to switch on the settings switches.
      *                        FALSE to switch off the settings switches.
      */
     private void setSettingsSwitchesChecked(boolean isMasterChecked) {
-        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
+        for (String settingValue : mSettingsValues) {
+            final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
+            if (toggleSwitch != null) {
+                toggleSwitch.setChecked(isMasterChecked);
+            }
+        }
+    }
 
-        if (settingsJson != null && mSettingsArray.length == mSettingsValues.length) {
-            for (int i = 0; i < mSettingsArray.length; i++) {
-                String settingValue = mSettingsValues[i];
-                final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
-                if (toggleSwitch != null) {
-                    toggleSwitch.setChecked(isMasterChecked);
+    // returns true if all current settings switches on the dialog are unchecked
+    private boolean areAllSettingsSwitchesUnchecked() {
+        boolean settingsSwitchesUnchecked = true;
+
+        for (String settingValue : mSettingsValues) {
+            final SwitchCompat toggleSwitch = mOptionsView.findViewWithTag(settingValue);
+            if (toggleSwitch != null) {
+                boolean isChecked = toggleSwitch.isChecked();
+                if (isChecked) {
+                    settingsSwitchesUnchecked = false;
+                    break;
                 }
             }
         }
+
+        return settingsSwitchesUnchecked;
     }
 }
