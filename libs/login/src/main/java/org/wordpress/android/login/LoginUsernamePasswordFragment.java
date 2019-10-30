@@ -66,6 +66,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private static final String ARG_INPUT_USERNAME = "ARG_INPUT_USERNAME";
     private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
+    private static final String ARG_SKIPPED_JETPACK_REQUIRED = "ARG_SKIPPED_JETPACK_REQUIRED";
 
     private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 
@@ -92,8 +93,23 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private String mInputPassword;
     private boolean mIsWpcom;
 
+    // Used by Woo: The user was warned that Jetpack was required during the login
+    // process and continued with login anyway. Since Jetpack is needed for the login process,
+    // redirect them to install/activate/connect with Jetpack account
+    private boolean mSkippedJetpackRequired;
+
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-            String siteName, String siteIconUrl, String inputUsername, String inputPassword, boolean isWpcom) {
+                                                            String siteName, String siteIconUrl,
+                                                            String inputUsername, String inputPassword,
+                                                            boolean isWpcom) {
+        return newInstance(inputSiteAddress, endpointAddress, siteName, siteIconUrl, inputUsername,
+                inputPassword, isWpcom, false);
+    }
+
+    public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
+                                                            String siteName, String siteIconUrl,
+                                                            String inputUsername, String inputPassword,
+                                                            boolean isWpcom, boolean skippedJetpackRequired) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
@@ -103,6 +119,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         args.putString(ARG_INPUT_USERNAME, inputUsername);
         args.putString(ARG_INPUT_PASSWORD, inputPassword);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
+        args.putBoolean(ARG_SKIPPED_JETPACK_REQUIRED, skippedJetpackRequired);
         fragment.setArguments(args);
         return fragment;
     }
@@ -138,10 +155,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
         if (mSiteIconUrl != null) {
             Glide.with(this)
-                .load(mSiteIconUrl)
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
+                 .load(mSiteIconUrl)
+                 .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
+                 .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
+                 .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
         }
 
         TextView siteNameView = (rootView.findViewById(R.id.login_site_title));
@@ -231,6 +248,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
         mInputPassword = getArguments().getString(ARG_INPUT_PASSWORD);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
+        mSkippedJetpackRequired = getArguments().getBoolean(ARG_SKIPPED_JETPACK_REQUIRED);
     }
 
     @Override
@@ -351,7 +369,16 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
-        // TODO: Add support to redirect to jetpack required or discovery error screen
+        // Woo users: if it is known that user has skipped the Jetpack required screen,
+        // assume that Jetpack is not installed/active/connected and redirect to
+        // install Jetpack again since it is needed for this flow to work
+        if (mSkippedJetpackRequired) {
+            mLoginListener.helpNoJetpackScreen(mInputSiteAddress, mEndpointAddress,
+                    getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
+                    mAccountStore.getAccount().getAvatarUrl(), true);
+        } else {
+            // TODO: handle each discovery error and redirect to discovery error screen
+        }
     }
 
     @Override
@@ -568,7 +595,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     if (userEmail == null || userEmail.isEmpty()) {
                         mLoginListener.helpNoJetpackScreen(lastAddedXMLRPCSite.getUrl(),
                                 lastAddedXMLRPCSite.getXmlRpcUrl(), lastAddedXMLRPCSite.getUsername(),
-                                lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl());
+                                lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl(),
+                                false);
                     } else {
                         mLoginListener.gotWpcomEmail(userEmail, true);
                     }
