@@ -377,7 +377,34 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
                     mAccountStore.getAccount().getAvatarUrl(), true);
         } else {
-            // TODO: handle each discovery error and redirect to discovery error screen
+            // Woo users: If jetpack is installed but discovery still results in an error,
+            // redirect to discovery error screen
+            int errorMessageId = 0;
+            switch (error) {
+                case HTTP_AUTH_REQUIRED:
+                    errorMessageId = R.string.login_discovery_error_http_auth;
+                    break;
+                case ERRONEOUS_SSL_CERTIFICATE:
+                    errorMessageId = R.string.login_discovery_error_ssl;
+                    break;
+                case INVALID_URL:
+                case NO_SITE_ERROR:
+                case WORDPRESS_COM_SITE:
+                case GENERIC_ERROR:
+                    errorMessageId = R.string.login_discovery_error_generic;
+                    break;
+
+                case MISSING_XMLRPC_METHOD:
+                case XMLRPC_BLOCKED:
+                case XMLRPC_FORBIDDEN:
+                    errorMessageId = R.string.login_discovery_error_ssl;
+                    break;
+            }
+
+            ActivityUtils.hideKeyboard(getActivity());
+            mLoginListener.helpHandleDiscoveryError(mInputSiteAddress, mEndpointAddress,
+                    getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
+                    mAccountStore.getAccount().getAvatarUrl(), errorMessageId);
         }
     }
 
