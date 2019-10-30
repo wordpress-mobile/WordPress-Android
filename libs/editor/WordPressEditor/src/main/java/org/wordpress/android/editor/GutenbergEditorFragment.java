@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -45,6 +46,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequeste
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -326,6 +328,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnAuthHeaderRequestedListener() {
                     @Override public String onAuthHeaderRequested(String url) {
                         return mEditorFragmentListener.onAuthHeaderRequested(url);
+                    }
+                },
+                new OnImageFullscreenPreviewListener() {
+                    @Override public void onImageFullscreenPreviewClicked(int mediaId, String mediaSource) {
+                        // TODO call MediaPreviewActivity
+                        Toast.makeText(getActivity(), "ID: " + mediaId + ", Src: " + mediaSource, Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
