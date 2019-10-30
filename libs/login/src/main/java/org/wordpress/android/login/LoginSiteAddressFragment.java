@@ -21,7 +21,6 @@ import androidx.lifecycle.Observer;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
@@ -338,14 +337,14 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                 endProgress();
             } else {
                 // Start the discovery process
-                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                initiateDiscovery();
             }
         } else {
             if (event.site.isJetpackInstalled() && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
                 // If Jetpack site, treat it as self-hosted and start the discovery process
                 // An exception is WPCOM_LOGIN_ONLY mode - in that case we're only interested in adding sites
                 // through WordPress.com login, and should proceed along that login path
-                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                initiateDiscovery();
                 return;
             }
 
