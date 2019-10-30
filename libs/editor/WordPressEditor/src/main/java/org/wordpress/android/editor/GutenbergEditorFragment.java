@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -332,9 +331,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnImageFullscreenPreviewListener() {
                     @Override public void onImageFullscreenPreviewClicked(int mediaId, String mediaSource) {
-                        // TODO call MediaPreviewActivity
-                        Toast.makeText(getActivity(), "ID: " + mediaId + ", Src: " + mediaSource, Toast.LENGTH_SHORT).show();
-
+                        mEditorImagePreviewListener.onImagePreviewRequested(mediaId, mediaSource);
                     }
                 });
 
@@ -533,6 +530,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorDragAndDropListener = (EditorDragAndDropListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
+        }
+
+        try {
+            mEditorImagePreviewListener = (EditorImagePreviewListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement EditorImagePreviewListener");
         }
     }
 
