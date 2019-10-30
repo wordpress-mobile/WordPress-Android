@@ -12,7 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.ui.utils.UiHelpers
 
 sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(
@@ -25,7 +25,7 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
     abstract fun onBind(uiState: DomainsListItemUiState)
 
     class DomainSuggestionItemViewHolder(
-        parentView: ViewGroup
+        parentView: ViewGroup, private val uiHelpers: UiHelpers
     ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)
@@ -45,12 +45,14 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
 
         override fun onBind(uiState: DomainsListItemUiState) {
             uiState as DomainsModelUiState
-            onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            if (uiState.clickable) {
+                onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            }
             suggestion.text = uiState.name
             suggestionRadioButton.isChecked = uiState.checked
-            suggestionRadioButton.visibility = if (uiState.available) View.VISIBLE else View.INVISIBLE
-            container.isEnabled = uiState.available
-            domainUnavailability.setVisible(!uiState.available)
+            suggestionRadioButton.visibility = if (uiState.radioButtonVisibility) View.VISIBLE else View.INVISIBLE
+            container.isEnabled = uiState.clickable
+            uiHelpers.setTextOrHide(domainUnavailability, uiState.subTitle)
         }
     }
 

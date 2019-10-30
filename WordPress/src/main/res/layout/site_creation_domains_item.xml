@@ -48,7 +48,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_medium"
         android:textAlignment="viewStart"
-        android:text="@string/new_site_creation_unavailable_domain"
         android:textColor="@color/gray_40"
         android:textSize="@dimen/text_sz_medium"
         android:visibility="visible"
