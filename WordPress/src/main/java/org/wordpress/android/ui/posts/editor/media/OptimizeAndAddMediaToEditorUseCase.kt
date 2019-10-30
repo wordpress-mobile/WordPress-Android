@@ -18,7 +18,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
-import org.wordpress.android.ui.posts.editor.EditorMedia
 import org.wordpress.android.ui.posts.editor.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMediaIdle
@@ -41,6 +40,7 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
     private val editorTracker: EditorTracker,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
+    private val uploadMediaUseCase: UploadMediaUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
@@ -63,8 +63,7 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
         uriList: List<Uri>,
         site: SiteModel,
         isNew: Boolean,
-        editorMediaListener: EditorMediaListener,
-        editorMedia: EditorMedia
+        editorMediaListener: EditorMediaListener
     ) {
         launch {
             _uiState.value = if (uriList.size > 1) {
@@ -75,8 +74,9 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
 
             val optimizeMediaResult = optimizeMediaAsync(site, isNew, uriList)
             val enqueuedFiles = enqueueMediaForUpload(
+                    site.id,
                     optimizeMediaResult.optimizedMediaUris,
-                    editorMedia
+                    editorMediaListener
             )
             addMediaToEditor(editorMediaListener, enqueuedFiles)
 
@@ -109,11 +109,12 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
         }
     }
 
-    private fun enqueueMediaForUpload(
+    private suspend fun enqueueMediaForUpload(
+        localSiteId: Int,
         uris: List<Uri>,
-        editorMedia: EditorMedia
+        editorMediaListener: EditorMediaListener
     ): List<MediaFile> {
-        return uris.mapNotNull { uri -> enqueueMediaForUpload(uri, editorMedia) }
+        return uris.mapNotNull { uri -> enqueueMediaForUpload(localSiteId, uri, editorMediaListener) }
     }
 
     private fun addMediaToEditor(
@@ -147,8 +148,12 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
         return updatedMediaUri
     }
 
-    private fun enqueueMediaForUpload(uri: Uri, editorMedia: EditorMedia): MediaFile? {
-        val media = editorMedia.queueFileForUpload(uri)
+    private suspend fun enqueueMediaForUpload(
+        localSiteId: Int,
+        uri: Uri,
+        editorMediaListener: EditorMediaListener
+    ): MediaFile? {
+        val media = uploadMediaUseCase.queueFileForUpload(editorMediaListener, localSiteId, uri)
         val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(media)
         return media?.let { mediaFile }
     }

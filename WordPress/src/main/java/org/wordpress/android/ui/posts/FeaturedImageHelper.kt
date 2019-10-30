@@ -79,7 +79,7 @@ internal class FeaturedImageHelper @Inject constructor(
         uri: Uri,
         mimeType: String?
     ): Boolean {
-        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, mediaStore, site.id)
+        val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
                 ?: return false
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId

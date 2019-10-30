@@ -122,6 +122,7 @@ import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -326,7 +327,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
     @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
     @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
-    @Inject UploadServiceFacade mUploadServiceFacade;
+    @Inject UploadMediaUseCase mUploadMediaUseCase;
 
     private SiteModel mSite;
 
@@ -397,8 +398,9 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        mEditorMedia = new EditorMedia(this, mSite, this, mDispatcher, mMediaStore, mEditorTracker, mMediaUtilsWrapper,
-                mFluxCUtilsWrapper, mNetworkUtilsWrapper, mUploadServiceFacade, mMainDispatcher, mBgDispatcher);
+        mEditorMedia = new EditorMedia(mSite, this, mUploadMediaUseCase, mDispatcher, mMediaStore, mEditorTracker,
+                mMediaUtilsWrapper,
+                mFluxCUtilsWrapper, mNetworkUtilsWrapper, mMainDispatcher, mBgDispatcher);
 
         startObserving();
 
@@ -2544,6 +2546,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.GIPHY_PICKER:
                     if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        // TODO move this to EditorMedia/UploadMediaUseCase
                         int[] localIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         ArrayList<MediaModel> mediaModels = new ArrayList<>();
                         for (int localId : localIds) {
