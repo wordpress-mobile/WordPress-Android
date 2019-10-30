@@ -397,7 +397,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                 case MISSING_XMLRPC_METHOD:
                 case XMLRPC_BLOCKED:
                 case XMLRPC_FORBIDDEN:
-                    errorMessageId = R.string.login_discovery_error_ssl;
+                    errorMessageId = R.string.login_discovery_error_xmlrpc;
                     break;
             }
 
