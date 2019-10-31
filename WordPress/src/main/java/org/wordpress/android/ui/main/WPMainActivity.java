@@ -202,7 +202,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
         mBottomNav = findViewById(R.id.bottom_navigation);
 
-        if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             mBottomNav.getMenu().removeItem(R.id.nav_me);
         }
         mBottomNav.init(getSupportFragmentManager(), this);
