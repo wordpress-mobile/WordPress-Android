@@ -227,7 +227,6 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     try {
                         mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
 
-                        JSONObject settingsJson = mSettings.getSettingsJsonForChannelAndType(mChannel, mType, mBlogId);
                         // Switch off master switch if all current settings switches are off
                         if (mMasterSwitchToolbarView != null
                             && !isChecked
