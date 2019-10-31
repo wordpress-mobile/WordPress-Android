@@ -17,6 +17,7 @@ import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
@@ -145,6 +146,7 @@ class ZendeskHelper(
             zendeskNeedsToBeEnabledError
         }
         requireIdentity(context, selectedSite) {
+            AnalyticsTracker.track(Stat.SUPPORT_NEW_REQUEST_VIEWED)
             RequestActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
@@ -165,6 +167,7 @@ class ZendeskHelper(
             zendeskNeedsToBeEnabledError
         }
         requireIdentity(context, selectedSite) {
+            AnalyticsTracker.track(Stat.SUPPORT_TICKET_LIST_VIEWED)
             RequestListActivity.builder()
                     .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
         }
@@ -455,7 +458,7 @@ private fun getNetworkInformation(context: Context): String {
     return listOf(
             "${ZendeskConstants.networkTypeLabel} $networkType",
             "${ZendeskConstants.networkCarrierLabel} $carrierName",
-            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase()}"
+            "${ZendeskConstants.networkCountryCodeLabel} ${countryCodeLabel.toUpperCase(context.currentLocale)}"
     ).joinToString(separator = "\n")
 }
 

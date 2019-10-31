@@ -3,9 +3,14 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
@@ -32,6 +37,7 @@ import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -40,6 +46,7 @@ import javax.inject.Inject
 class PostListEventListener(
     private val lifecycle: Lifecycle,
     private val dispatcher: Dispatcher,
+    private val bgDispatcher: CoroutineDispatcher,
     private val postStore: PostStore,
     private val site: SiteModel,
     private val postActionHandler: PostActionHandler,
@@ -51,12 +58,17 @@ class PostListEventListener(
     private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
     private val isRemotePreviewingFromPostsList: () -> Boolean,
     private val hasRemoteAutoSavePreviewError: () -> Boolean
-) : LifecycleObserver {
+) : LifecycleObserver, CoroutineScope {
     init {
         dispatcher.register(this)
         EventBus.getDefault().register(this)
         lifecycle.addObserver(this)
     }
+
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = bgDispatcher + job
 
     private fun handleRemoteAutoSave(post: PostModel, isError: Boolean) {
         if (isError || hasRemoteAutoSavePreviewError.invoke()) {
@@ -83,63 +95,73 @@ class PostListEventListener(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
+        job.cancel()
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
         EventBus.getDefault().unregister(this)
     }
 
+    /**
+     * Has lower priority than the PostUploadHandler and UploadService, which ensures that they already processed this
+     * OnPostChanged event. This means we can safely rely on their internal state being up to date.
+     */
     @Suppress("unused")
-    @Subscribe(threadMode = BACKGROUND)
+    @Subscribe(threadMode = MAIN, priority = 5)
     fun onPostChanged(event: OnPostChanged) {
-        when (event.causeOfChange) {
-            // Fetched post list event will be handled by OnListChanged
-            is CauseOfOnPostChanged.UpdatePost -> {
-                if (event.isError) {
-                    AppLog.e(
-                            T.POSTS,
-                            "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
-                    )
-                } else {
-                    handlePostUpdatedWithoutError.invoke()
-                    invalidateUploadStatus.invoke(
-                            listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId)
-                    )
+        // We need to subscribe on the MAIN thread, in order to ensure the priority parameter is taken into account.
+        // However, we want to perform the body of the method on a background thread.
+        launch {
+            when (event.causeOfChange) {
+                // Fetched post list event will be handled by OnListChanged
+                is CauseOfOnPostChanged.UpdatePost -> {
+                    if (event.isError) {
+                        AppLog.e(
+                                T.POSTS,
+                                "Error updating the post with type: ${event.error.type} and" +
+                                        " message: ${event.error.message}"
+                        )
+                    } else {
+                        handlePostUpdatedWithoutError.invoke()
+                        invalidateUploadStatus.invoke(
+                                listOf((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId)
+                        )
+                    }
                 }
-            }
-            is CauseOfOnPostChanged.DeletePost -> {
-                val deletePostCauseOfChange = event.causeOfChange as DeletePost
-                val localPostId = LocalId(deletePostCauseOfChange.localPostId)
-                when (deletePostCauseOfChange.postDeleteActionType) {
-                    TRASH -> postActionHandler.handlePostTrashed(localPostId = localPostId, isError = event.isError)
-                    DELETE -> postActionHandler.handlePostDeletedOrRemoved(
+                is CauseOfOnPostChanged.DeletePost -> {
+                    val deletePostCauseOfChange = event.causeOfChange as DeletePost
+                    val localPostId = LocalId(deletePostCauseOfChange.localPostId)
+                    when (deletePostCauseOfChange.postDeleteActionType) {
+                        TRASH -> postActionHandler.handlePostTrashed(localPostId = localPostId, isError = event.isError)
+                        DELETE -> postActionHandler.handlePostDeletedOrRemoved(
+                                localPostId = localPostId,
+                                isRemoved = false,
+                                isError = event.isError
+                        )
+                    }
+                }
+                is CauseOfOnPostChanged.RestorePost -> {
+                    val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
+                    postActionHandler.handlePostRestored(localPostId = localPostId, isError = event.isError)
+                }
+                is CauseOfOnPostChanged.RemovePost -> {
+                    val localPostId = LocalId((event.causeOfChange as RemovePost).localPostId)
+                    postActionHandler.handlePostDeletedOrRemoved(
                             localPostId = localPostId,
-                            isRemoved = false,
+                            isRemoved = true,
                             isError = event.isError
                     )
                 }
-            }
-            is CauseOfOnPostChanged.RestorePost -> {
-                val localPostId = LocalId((event.causeOfChange as RestorePost).localPostId)
-                postActionHandler.handlePostRestored(localPostId = localPostId, isError = event.isError)
-            }
-            is CauseOfOnPostChanged.RemovePost -> {
-                val localPostId = LocalId((event.causeOfChange as RemovePost).localPostId)
-                postActionHandler.handlePostDeletedOrRemoved(
-                        localPostId = localPostId,
-                        isRemoved = true,
-                        isError = event.isError
-                )
-            }
-            is CauseOfOnPostChanged.RemoteAutoSavePost -> {
-                val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
-                if (isRemotePreviewingFromPostsList.invoke()) {
-                    if (event.isError) {
-                        AppLog.d(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
-                                event.error.type + " - " + event.error.message)
+                is CauseOfOnPostChanged.RemoteAutoSavePost -> {
+                    val post = postStore.getPostByLocalPostId((event.causeOfChange as RemoteAutoSavePost).localPostId)
+                    if (isRemotePreviewingFromPostsList.invoke()) {
+                        if (event.isError) {
+                            AppLog.d(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " +
+                                    event.error.type + " - " + event.error.message)
+                        }
+                        handleRemoteAutoSave(post, event.isError)
+                    } else {
+                        uploadStatusChanged(post.id)
                     }
-                    handleRemoteAutoSave(post, event.isError)
-                } else {
-                    uploadStatusChanged(post.id)
                 }
             }
         }
@@ -268,6 +290,7 @@ class PostListEventListener(
         fun createAndStartListening(
             lifecycle: Lifecycle,
             dispatcher: Dispatcher,
+            bgDispatcher: CoroutineDispatcher,
             postStore: PostStore,
             site: SiteModel,
             postActionHandler: PostActionHandler,
@@ -283,6 +306,7 @@ class PostListEventListener(
             PostListEventListener(
                     lifecycle = lifecycle,
                     dispatcher = dispatcher,
+                    bgDispatcher = bgDispatcher,
                     postStore = postStore,
                     site = site,
                     postActionHandler = postActionHandler,

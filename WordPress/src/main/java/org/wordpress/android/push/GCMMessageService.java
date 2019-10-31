@@ -35,6 +35,7 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -100,6 +101,7 @@ public class GCMMessageService extends FirebaseMessagingService {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
@@ -117,12 +119,12 @@ public class GCMMessageService extends FirebaseMessagingService {
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START);
+        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_START);
         synchronized (GCMMessageService.class) {
             NOTIFICATION_HELPER.handleDefaultPush(
                     this, convertMapToBundle(data), mAccountStore.getAccount().getUserId());
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END);
+        mSystemNotificationsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_RECEIVED_PROCESSING_END);
     }
 
     // convert FCM RemoteMessage's Map into legacy GCM Bundle to keep code changes to a minimum

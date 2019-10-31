@@ -8,6 +8,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
@@ -251,6 +252,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditPostPublishSettingsViewModel.class)
     abstract ViewModel editPostPublishedSettingsViewModel(EditPostPublishSettingsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderCommentListViewModel.class)
+    abstract ViewModel readerCommentListViewModel(ReaderCommentListViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

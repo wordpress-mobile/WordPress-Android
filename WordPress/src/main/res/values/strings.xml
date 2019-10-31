@@ -53,7 +53,6 @@
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
     <string name="media">Media</string>
-    <string name="video">Video</string>
     <string name="themes">Themes</string>
     <string name="about_the_app">About the app</string>
     <string name="username">Username</string>
@@ -140,6 +139,7 @@
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="pick_media">Add image or video</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
@@ -259,15 +259,15 @@
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
     <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
-    <string name="post_waiting_for_connection_publish">Post will be published next time you device is online</string>
-    <string name="post_waiting_for_connection_pending">Post will be submitted for review next time your device is online</string>
-    <string name="post_waiting_for_connection_scheduled">Post will be scheduled next time your device is online</string>
-    <string name="post_waiting_for_connection_private">Private post will be published next time your device is online</string>
-    <string name="post_waiting_for_connection_draft">Draft will be saved to the server next time your device is online</string>
-    <string name="post_waiting_for_connection_publish_cancel">Changes will not be published</string>
-    <string name="post_waiting_for_connection_pending_cancel">Changes will not be submitted</string>
-    <string name="post_waiting_for_connection_scheduled_cancel">Changes will not be scheduled</string>
-    <string name="post_waiting_for_connection_draft_cancel">Changes will not be saved to the server</string>
+    <string name="post_waiting_for_connection_publish">We\'ll publish the post when your device is back online.</string>
+    <string name="post_waiting_for_connection_pending">We\'ll submit your post for review when your device is back online.</string>
+    <string name="post_waiting_for_connection_scheduled">We\'ll schedule your post when your device is back online.</string>
+    <string name="post_waiting_for_connection_private">We\'ll publish your private post when your device is back online.</string>
+    <string name="post_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
+    <string name="post_waiting_for_connection_publish_cancel"> We won\'t publish these changes.</string>
+    <string name="post_waiting_for_connection_pending_cancel">We won\'t submit these changes for review. </string>
+    <string name="post_waiting_for_connection_scheduled_cancel">We won\'t schedule these changes.</string>
+    <string name="post_waiting_for_connection_draft_cancel">We won\'t save the latest changes to your draft.</string>
 
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
@@ -362,8 +362,8 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\'re currently using the block editor to create new posts. Want to use the classic editor by default? Head to Site Settings.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\'re currently using the block editor to create new pages. Want to use the classic editor by default? Head to Site Settings.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1201,9 +1201,6 @@
     <string name="reader">Reader</string>
 
     <!-- editor -->
-    <string name="editor_post_title_placeholder">Post Title</string>
-    <string name="editor_page_title_placeholder">Page Title</string>
-    <string name="editor_content_placeholder">Share your story here…</string>
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="editor_post_saved_locally">Post saved on device</string>
     <string name="editor_draft_saved_online">Draft saved online</string>
@@ -1421,8 +1418,8 @@
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
 
     <!-- Post Remote Preview -->
-    <string name="post_preview_saving_draft">Saving&#8230;</string>
-    <string name="post_preview_remote_auto_saving_post">Generating Preview&#8230;</string>
+    <string name="post_preview_saving_draft">Saving…</string>
+    <string name="post_preview_remote_auto_saving_post">Generating Preview…</string>
     <string name="remote_preview_operation_error">Error while trying to save post before preview</string>
     <string name="preview_unavailable_self_hosted_sites">Preview Unavailable</string>
     <string name="error_preview_empty_post">Can\'t preview an empty post</string>
@@ -1493,8 +1490,8 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
-    <string name="error_generic_error">Couldn\'t perform operation</string>
-    <string name="error_generic_error_retrying">Couldn\'t perform operation. We\'ll try again later</string>
+    <string name="error_generic_error">We couldn\'t complete this action.</string>
+    <string name="error_generic_error_retrying">We couldn\'t complete this action, but we\'ll try again later. </string>
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
 
@@ -1503,24 +1500,24 @@
     <string name="error_unknown_page">Could not find the page on the server</string>
     <string name="error_unknown_post_type">Unknown post format</string>
 
-    <string name="error_media_recover_post">Couldn\'t upload media</string>
-    <string name="error_media_recover_post_not_published">Couldn\'t upload media. Post not published</string>
-    <string name="error_media_recover_post_not_published_private">Couldn\'t upload media. Private post not published</string>
-    <string name="error_media_recover_post_not_scheduled">Couldn\'t upload media. Post not scheduled</string>
-    <string name="error_media_recover_post_not_submitted">Couldn\'t upload media. Post not submitted</string>
+    <string name="error_media_recover_post">We couldn\'t upload this media.</string>
+    <string name="error_media_recover_post_not_published">We couldn\'t upload this media, and didn\'t publish the post.</string>
+    <string name="error_media_recover_post_not_published_private">We couldn\'t upload this media, and didn\'t publish this private post.</string>
+    <string name="error_media_recover_post_not_scheduled">We couldn\'t upload this media, and didn\'t schedule this post.</string>
+    <string name="error_media_recover_post_not_submitted">We couldn\'t upload this media, and didn\'t submit this post for review. </string>
     <string name="error_media_recover_post_not_published_retrying" translatable="false">@string/error_post_not_published_retrying</string>
     <string name="error_media_recover_post_not_published_retrying_private" translatable="false">@string/error_post_not_published_retrying_private</string>
     <string name="error_media_recover_post_not_scheduled_retrying" translatable="false">@string/error_post_not_scheduled_retrying</string>
     <string name="error_media_recover_post_not_submitted_retrying" translatable="false">@string/error_post_not_submitted_retrying</string>
 
-    <string name="error_post_not_published">Couldn\'t perform operation. Post not published</string>
-    <string name="error_post_not_published_private">Couldn\'t perform operation. Private post not published</string>
-    <string name="error_post_not_scheduled">Couldn\'t perform operation. Post not scheduled</string>
-    <string name="error_post_not_submitted">Couldn\'t perform operation. Post not submitted</string>
-    <string name="error_post_not_published_retrying">Post couldn\'t be published. We\'ll try again later</string>
-    <string name="error_post_not_published_retrying_private">Private post couldn\'t be published. We\'ll try again later</string>
-    <string name="error_post_not_scheduled_retrying">Post couldn\'t be scheduled. We\'ll try again later</string>
-    <string name="error_post_not_submitted_retrying">Post couldn\'t be submitted. We\'ll try again later</string>
+    <string name="error_post_not_published">We couldn\'t complete this action, and didn\'t publish this post.</string>
+    <string name="error_post_not_published_private">We couldn\'t complete this action, and didn\'t publish this private post.</string>
+    <string name="error_post_not_scheduled">We couldn\'t complete this action, and didn\'t schedule this post.</string>
+    <string name="error_post_not_submitted">We couldn\'t complete this action, and didn\'t submit this post for review.</string>
+    <string name="error_post_not_published_retrying">We couldn\'t publish this post, but we\'ll try again later.</string>
+    <string name="error_post_not_published_retrying_private">We couldn\'t publish this private post, but we\'ll try again later.</string>
+    <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
+    <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="error_load_comment">Couldn\'t load the comment</string>

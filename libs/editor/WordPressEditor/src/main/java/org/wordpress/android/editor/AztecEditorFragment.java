@@ -105,6 +105,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -193,6 +194,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
+    private View mFragmentView;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -218,6 +221,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
+        mFragmentView = view;
 
         mTitle = view.findViewById(R.id.title);
         mContent = view.findViewById(R.id.aztec);
@@ -1098,6 +1102,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @Override public void appendMediaFiles(Map<String, MediaFile> mediaList) { }
+
     private Drawable getLoadingMediaErrorPlaceholder(String msg) {
         if (TextUtils.isEmpty(msg)) {
             ToastUtils.showToast(getActivity(), R.string.error_media_load);
@@ -1153,14 +1159,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void removeMedia(String mediaId) {
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
-    }
-
-    @Override
-    public void setTitlePlaceholder(CharSequence placeholderText) {
-    }
-
-    @Override
-    public void setContentPlaceholder(CharSequence placeholderText) {
     }
 
     @Override
@@ -2343,5 +2341,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setExternalLogger(AztecLog.ExternalLogger logger) {
         mContent.setExternalLogger(logger);
+    }
+
+    public void disableHWAcceleration() {
+        mFragmentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 }
