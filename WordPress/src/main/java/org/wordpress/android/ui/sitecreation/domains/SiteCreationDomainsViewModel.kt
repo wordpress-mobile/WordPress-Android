@@ -294,7 +294,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             return if (isDomainUnavailable) {
                 DomainsModelUnavailabilityUiState(
                         domainValidationResult.host,
-                        UiStringRes(string.new_site_creation_unavailable_domain)
+                        UiStringRes(R.string.new_site_creation_unavailable_domain)
                 )
             } else {
                 null
@@ -302,7 +302,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         } else {
             return DomainsModelUnavailabilityUiState(
                     domainValidationResult.host,
-                    UiStringRes(string.new_site_creation_invalid_domain)
+                    UiStringRes(R.string.new_site_creation_invalid_domain)
             )
         }
     }
