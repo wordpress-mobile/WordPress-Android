@@ -326,7 +326,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                                 // and the PostModel contains Gutenberg blocks.
                                 // As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The choice is
                                 // loosely made knowing the other check ("contains blocks") is in place.
-                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost, selectedSite)
+                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost.getContent(),
+                                        selectedSite)
                                         ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     }
                 }

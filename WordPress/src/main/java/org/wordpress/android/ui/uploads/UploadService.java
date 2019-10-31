@@ -346,11 +346,12 @@ public class UploadService extends Service {
 
     /**
      * Adds a post to the queue.
+     * @param postId
      * @param isFirstTimePublish true when its status changes from local draft or remote draft to published.
      */
-    public static void uploadPost(Context context, @NonNull PostModel post, boolean isFirstTimePublish) {
+    public static void uploadPost(Context context, int postId, boolean isFirstTimePublish) {
         Intent intent = new Intent(context, UploadService.class);
-        intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
+        intent.putExtra(KEY_LOCAL_POST_ID, postId);
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, isFirstTimePublish);
         context.startService(intent);
     }
@@ -476,15 +477,15 @@ public class UploadService extends Service {
     }
 
     public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
-        return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel);
+        return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel.getId());
     }
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
-        return postModel != null && MediaUploadHandler.hasPendingMediaUploadsForPost(postModel);
+        return postModel != null && MediaUploadHandler.hasPendingMediaUploadsForPost(postModel.getId());
     }
 
     public static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
-        return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel);
+        return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel.getId());
     }
 
     public static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
@@ -493,10 +494,6 @@ public class UploadService extends Service {
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post) {
         return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
-    }
-
-    public static boolean hasPendingOrInProgressPostUploads() {
-        return PostUploadHandler.hasPendingOrInProgressPostUploads();
     }
 
     public static float getMediaUploadProgressForPost(PostModel postModel) {
@@ -532,7 +529,7 @@ public class UploadService extends Service {
 
         // If this is a video and video optimization is enabled, include the optimization progress in the outcome
         if (mediaModel.isVideo() && WPMediaUtils.isVideoOptimizationEnabled()) {
-            return MediaUploadHandler.getOverallProgressForVideo(mediaModel, uploadProgress);
+            return MediaUploadHandler.getOverallProgressForVideo(mediaModel.getId(), uploadProgress);
         }
 
         return uploadProgress;
@@ -548,7 +545,7 @@ public class UploadService extends Service {
     }
 
     public static boolean isPendingOrInProgressMediaUpload(@NonNull MediaModel media) {
-        return MediaUploadHandler.isPendingOrInProgressMediaUpload(media);
+        return MediaUploadHandler.isPendingOrInProgressMediaUpload(media.getId());
     }
 
     /**

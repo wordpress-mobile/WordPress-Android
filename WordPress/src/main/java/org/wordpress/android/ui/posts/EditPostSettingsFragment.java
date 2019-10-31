@@ -143,14 +143,13 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject PostSettingsUtils mPostSettingsUtils;
+    @Inject EditPostRepository mEditPostRepository;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
 
 
     interface EditPostActivityHook {
-        PostModel getPost();
-
         SiteModel getSite();
     }
 
@@ -626,11 +625,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
-        if (getEditPostActivityHook() == null) {
-            // This can only happen during a callback while activity is re-created for some reason (config changes etc)
-            return null;
-        }
-        return getEditPostActivityHook().getPost();
+        return mEditPostRepository.getPost();
     }
 
     private SiteModel getSite() {

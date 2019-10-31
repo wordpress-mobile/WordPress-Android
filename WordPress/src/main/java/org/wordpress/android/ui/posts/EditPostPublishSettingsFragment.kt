@@ -22,13 +22,13 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
-import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
 class EditPostPublishSettingsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -175,17 +175,7 @@ class EditPostPublishSettingsFragment : Fragment() {
     }
 
     private fun getPost(): PostModel? {
-        return getEditPostActivityHook()?.post
-    }
-
-    private fun getEditPostActivityHook(): EditPostActivityHook? {
-        val activity = activity ?: return null
-
-        return if (activity is EditPostActivityHook) {
-            activity
-        } else {
-            throw RuntimeException("$activity must implement EditPostActivityHook")
-        }
+        return editPostRepository.post
     }
 
     companion object {

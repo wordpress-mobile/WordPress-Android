@@ -293,7 +293,7 @@ public class UploadUtils {
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
-            UploadService.uploadPost(activity, post, isFirstTimePublish);
+            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
         }
         PostUtils.trackSavePostAnalytics(post, site);
     }

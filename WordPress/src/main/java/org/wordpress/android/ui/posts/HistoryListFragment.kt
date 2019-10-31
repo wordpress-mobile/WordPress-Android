@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.history.HistoryAdapter
 import org.wordpress.android.ui.history.HistoryListItem
@@ -34,10 +33,10 @@ class HistoryListFragment : Fragment() {
         private const val KEY_POST_LOCAL_ID = "key_post_local_id"
         private const val KEY_SITE = "key_site"
 
-        fun newInstance(@NonNull post: PostModel, @NonNull site: SiteModel): HistoryListFragment {
+        fun newInstance(postId: Int, @NonNull site: SiteModel): HistoryListFragment {
             val fragment = HistoryListFragment()
             val bundle = Bundle()
-            bundle.putInt(KEY_POST_LOCAL_ID, post.id)
+            bundle.putInt(KEY_POST_LOCAL_ID, postId)
             bundle.putSerializable(KEY_SITE, site)
             fragment.arguments = bundle
             return fragment
