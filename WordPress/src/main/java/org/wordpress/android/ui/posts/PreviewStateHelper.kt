@@ -55,7 +55,7 @@ class PreviewStateHelper @Inject constructor() {
                         PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    UploadService.uploadPost(activity, post.getId(), false)
+                    UploadService.uploadPost(activity, post.id, false)
                 } else {
                     AppLog.d(
                             AppLog.T.POSTS,
@@ -68,7 +68,7 @@ class PreviewStateHelper @Inject constructor() {
                         PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    UploadService.uploadPost(activity, post.getId(), false)
+                    UploadService.uploadPost(activity, post.id, false)
                 } else {
                     AppLog.d(
                             AppLog.T.POSTS,

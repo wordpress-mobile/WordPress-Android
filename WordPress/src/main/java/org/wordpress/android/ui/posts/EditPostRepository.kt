@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.uploads.UploadService
@@ -123,12 +124,40 @@ class EditPostRepository
         set(value) {
             writeToPost { this.changesConfirmedContentHashcode = value }
         }
+    var postFormat: String
+        get() = readFromPost { this.postFormat }
+        set(value) {
+            writeToPost { this.postFormat = value }
+        }
+    var slug: String
+        get() = readFromPost { this.slug }
+        set(value) {
+            writeToPost { this.slug = value }
+        }
+    var location: PostLocation
+        get() = readFromPost { this.location }
+        set(value) {
+            writeToPost { this.location = value }
+        }
+    var tagNameList: List<String>
+        get() = readFromPost { this.tagNameList }
+        set(value) {
+            writeToPost { this.tagNameList = value }
+        }
+    var categoryIdList: List<Long>
+        get() = readFromPost { this.categoryIdList }
+        set(value) {
+            writeToPost { this.categoryIdList = value }
+        }
     private val snapshotStatus: PostStatus?
         get() = lock.read {
             postSnapshotWhenEditorOpened?.let { PostStatus.fromPost(it) }
         }
 
     private val lock = ReentrantReadWriteLock()
+
+    fun clearLocation() = writeToPost { this.clearLocation() }
+    fun hasLocation() = readFromPost { this.hasLocation() }
 
     fun hasPost() = post != null
 

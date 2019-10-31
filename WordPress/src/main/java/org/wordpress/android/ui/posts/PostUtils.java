@@ -332,14 +332,6 @@ public class PostUtils {
         }
     }
 
-    static boolean updatePostContentIfDifferent(PostModel post, String newContent) {
-        if (post.getContent().compareTo(newContent) != 0) {
-            post.setContent(newContent);
-            return true;
-        }
-        return false;
-    }
-
     public static boolean isFirstTimePublish(PostModel post) {
         return PostStatus.fromPost(post) == PostStatus.DRAFT
                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());

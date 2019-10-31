@@ -183,7 +183,7 @@ public class EditPostSettingsFragment extends Fragment {
         // Update post formats and categories, in case anything changed.
         SiteModel siteModel = getSite();
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(siteModel));
-        if (!getPost().isPage()) {
+        if (!mEditPostRepository.isPage()) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
         }
 
@@ -192,7 +192,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void fetchSiteSettingsAndUpdateDefaultPostFormatIfNecessary() {
         // A format is already set for the post, no need to fetch the default post format
-        if (!TextUtils.isEmpty(getPost().getPostFormat())) {
+        if (!TextUtils.isEmpty(mEditPostRepository.getPostFormat())) {
             return;
         }
         // we need to fetch site settings in order to get the latest default post format
@@ -366,7 +366,7 @@ public class EditPostSettingsFragment extends Fragment {
         });
 
 
-        if (getPost() != null && getPost().isPage()) { // remove post specific views
+        if (mEditPostRepository != null && mEditPostRepository.isPage()) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
             categoriesTagsContainer.setVisibility(View.GONE);
@@ -381,7 +381,7 @@ public class EditPostSettingsFragment extends Fragment {
         });
         mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {
             @Override public void onChanged(PostStatus postStatus) {
-                updatePostStatus(postStatus.toString());
+                updatePostStatus(postStatus);
             }
         });
 
@@ -404,7 +404,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         SiteModel site = getSite();
-        PostModel post = getPost();
+        PostModel post = mEditPostRepository.getPost();
         if (site == null || post == null) {
             AppLog.w(T.POSTS, "Unexpected state: Post or Site is null.");
             return false;
@@ -440,22 +440,21 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        PostModel postModel = getPost();
-        if (postModel.isPage()) {
+        if (mEditPostRepository.isPage()) {
             // remove post specific views
             mCategoriesContainer.setVisibility(View.GONE);
             mExcerptContainer.setVisibility(View.GONE);
             mFormatContainer.setVisibility(View.GONE);
             mTagsContainer.setVisibility(View.GONE);
         }
-        mExcerptTextView.setText(postModel.getExcerpt());
-        mSlugTextView.setText(postModel.getSlug());
-        mPasswordTextView.setText(postModel.getPassword());
+        mExcerptTextView.setText(mEditPostRepository.getExcerpt());
+        mSlugTextView.setText(mEditPostRepository.getSlug());
+        mPasswordTextView.setText(mEditPostRepository.getPassword());
         updatePostFormatTextView();
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.start(postModel);
+        mPublishedViewModel.start(mEditPostRepository.getPost());
         updateCategoriesTextView();
         initLocation();
         updateFeaturedImageView();
@@ -500,7 +499,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                getPost().getExcerpt(), getString(R.string.post_settings_excerpt),
+                mEditPostRepository.getExcerpt(), getString(R.string.post_settings_excerpt),
                 getString(R.string.post_settings_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
@@ -517,7 +516,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                getPost().getSlug(), getString(R.string.post_settings_slug),
+                mEditPostRepository.getSlug(), getString(R.string.post_settings_slug),
                 getString(R.string.post_settings_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
@@ -535,7 +534,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, getSite());
-        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, getPost().getId());
+        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 
@@ -549,7 +548,7 @@ public class EditPostSettingsFragment extends Fragment {
 
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
         tagsIntent.putExtra(WordPress.SITE, siteModel);
-        String tags = TextUtils.join(",", getPost().getTagNameList());
+        String tags = TextUtils.join(",", mEditPostRepository.getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
@@ -561,7 +560,7 @@ public class EditPostSettingsFragment extends Fragment {
         switch (fragment.getDialogType()) {
             case POST_STATUS:
                 int index = fragment.getCheckedIndex();
-                String status = getPostStatusAtIndex(index).toString();
+                PostStatus status = getPostStatusAtIndex(index);
                 updatePostStatus(status);
                 break;
             case POST_FORMAT:
@@ -589,7 +588,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         int checkedIndex = 0;
-        String postFormat = getPost().getPostFormat();
+        String postFormat = mEditPostRepository.getPostFormat();
         if (!TextUtils.isEmpty(postFormat)) {
             for (int i = 0; i < mPostFormatKeys.size(); i++) {
                 if (postFormat.equals(mPostFormatKeys.get(i))) {
@@ -610,7 +609,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                getPost().getPassword(), getString(R.string.password),
+                mEditPostRepository.getPassword(), getString(R.string.password),
                 getString(R.string.post_settings_password_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
@@ -623,10 +622,6 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     // Helpers
-
-    private PostModel getPost() {
-        return mEditPostRepository.getPost();
-    }
 
     private SiteModel getSite() {
         if (getEditPostActivityHook() == null) {
@@ -656,17 +651,17 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateExcerpt(String excerpt) {
-        getPost().setExcerpt(excerpt);
+        mEditPostRepository.setExcerpt(excerpt);
         mExcerptTextView.setText(excerpt);
     }
 
     private void updateSlug(String slug) {
-        getPost().setSlug(slug);
+        mEditPostRepository.setSlug(slug);
         mSlugTextView.setText(slug);
     }
 
     private void updatePassword(String password) {
-        getPost().setPassword(password);
+        mEditPostRepository.setPassword(password);
         mPasswordTextView.setText(password);
     }
 
@@ -674,25 +669,25 @@ public class EditPostSettingsFragment extends Fragment {
         if (categoryList == null) {
             return;
         }
-        getPost().setCategoryIdList(categoryList);
+        mEditPostRepository.setCategoryIdList(categoryList);
         updateCategoriesTextView();
     }
 
-    public void updatePostStatus(String postStatus) {
-        getPost().setStatus(postStatus);
+    public void updatePostStatus(PostStatus postStatus) {
+        mEditPostRepository.setStatus(postStatus);
         updatePostStatusRelatedViews();
         updateSaveButton();
     }
 
     private void updatePostFormat(String postFormat) {
-        getPost().setPostFormat(postFormat);
+        mEditPostRepository.setPostFormat(postFormat);
         updatePostFormatTextView();
     }
 
     public void updatePostStatusRelatedViews() {
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.onPostStatusChanged(getPost());
+        mPublishedViewModel.onPostStatusChanged(mEditPostRepository.getPost());
     }
 
     private void updateStatusTextView() {
@@ -707,18 +702,17 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateTags(String selectedTags) {
-        PostModel postModel = getPost();
         if (!TextUtils.isEmpty(selectedTags)) {
             String tags = selectedTags.replace("\n", " ");
-            postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+            mEditPostRepository.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         } else {
-            postModel.setTagNameList(null);
+            mEditPostRepository.setTagNameList(new ArrayList<>());
         }
         updateTagsTextView();
     }
 
     private void updateTagsTextView() {
-        String tags = TextUtils.join(",", getPost().getTagNameList());
+        String tags = TextUtils.join(",", mEditPostRepository.getTagNameList());
         // If `tags` is empty, the hint "Not Set" will be shown instead
         tags = StringEscapeUtils.unescapeHtml4(tags);
         mTagsTextView.setText(tags);
@@ -729,7 +723,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (mPostFormatTextView == null) {
             return;
         }
-        String postFormat = getPostFormatNameFromKey(getPost().getPostFormat());
+        String postFormat = getPostFormatNameFromKey(mEditPostRepository.getPostFormat());
         mPostFormatTextView.setText(postFormat);
     }
 
@@ -737,9 +731,9 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        PostModel postModel = getPost();
-        if (postModel != null && getActivity() != null) {
-            String labelToUse = mPostSettingsUtils.getPublishDateLabel(postModel);
+        PostModel post = mEditPostRepository.getPost();
+        if (post != null) {
+            String labelToUse = mPostSettingsUtils.getPublishDateLabel(post);
             mPublishDateTextView.setText(labelToUse);
         }
     }
@@ -749,11 +743,12 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateCategoriesTextView() {
-        if (getPost() == null || getSite() == null) {
+        PostModel post = mEditPostRepository.getPost();
+        if (post == null || getSite() == null) {
             // Since this method can get called after a callback, we have to make sure we have the post and site
             return;
         }
-        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(getPost(), getSite());
+        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(post, getSite());
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
         if (it.hasNext()) {
@@ -785,7 +780,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private int getCurrentPostStatusIndex() {
-        switch (PostStatus.fromPost(getPost())) {
+        switch (mEditPostRepository.getStatus()) {
             case DRAFT:
                 return 1;
             case PENDING:
@@ -851,8 +846,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId) {
-        PostModel postModel = getPost();
-        postModel.setFeaturedImageId(featuredImageId);
+        mEditPostRepository.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }
 
@@ -862,7 +856,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updateFeaturedImageView() {
         Context context = getContext();
-        PostModel post = getPost();
+        PostModel post = mEditPostRepository.getPost();
         SiteModel site = getSite();
         if (!isAdded() || post == null || site == null || context == null) {
             return;
@@ -901,16 +895,15 @@ public class EditPostSettingsFragment extends Fragment {
     private void launchFeaturedMediaPicker() {
         if (isAdded()) {
             ActivityLauncher.showPhotoPickerForResult(getActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
-                    getPost().getId());
+                    mEditPostRepository.getId());
         }
     }
 
     // Publish Date Helpers
 
     private Calendar getCurrentPublishDateAsCalendar() {
-        PostModel postModel = getPost();
         Calendar calendar = Calendar.getInstance();
-        String dateCreated = postModel.getDateCreated();
+        String dateCreated = mEditPostRepository.getDateCreated();
         // Set the currently selected time if available
         if (!TextUtils.isEmpty(dateCreated)) {
             calendar.setTime(DateTimeUtils.dateFromIso8601(dateCreated));
@@ -989,14 +982,13 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        PostModel postModel = getPost();
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         // Pre-pick the previous selected location if any
         LatLng latLng = null;
         if (mPostLocation != null) {
             latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
-        } else if (postModel.hasLocation()) {
-            PostLocation location = postModel.getLocation();
+        } else if (mEditPostRepository.hasLocation()) {
+            PostLocation location = mEditPostRepository.getLocation();
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
         if (latLng != null) {
@@ -1014,9 +1006,8 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void setLocation(@Nullable Place place) {
-        PostModel postModel = getPost();
         if (place == null) {
-            postModel.clearLocation();
+            mEditPostRepository.clearLocation();
             mLocationTextView.setText("");
             mPostLocation = null;
             return;
@@ -1026,16 +1017,15 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPostLocation.setLatitude(place.getLatLng().latitude);
         mPostLocation.setLongitude(place.getLatLng().longitude);
-        postModel.setLocation(mPostLocation);
+        mEditPostRepository.setLocation(mPostLocation);
         mLocationTextView.setText(place.getAddress());
     }
 
     private void initLocation() {
-        PostModel postModel = getPost();
-        if (!postModel.hasLocation()) {
+        if (!mEditPostRepository.hasLocation()) {
             mPostLocation = null;
         } else {
-            mPostLocation = postModel.getLocation();
+            mPostLocation = mEditPostRepository.getLocation();
             mLocationTextView.setText(getString(
                     R.string.latitude_longitude, mPostLocation.getLatitude(), mPostLocation.getLongitude()));
             // Asynchronously get the address from the location coordinates
@@ -1049,7 +1039,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         // If the post doesn't have location set, show the picker directly
-        if (!getPost().hasLocation()) {
+        if (!mEditPostRepository.hasLocation()) {
             showLocationPicker();
             return;
         }
