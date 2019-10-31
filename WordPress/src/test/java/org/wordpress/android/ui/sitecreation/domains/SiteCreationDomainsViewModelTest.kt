@@ -54,6 +54,7 @@ class SiteCreationDomainsViewModelTest {
     @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock private lateinit var siteCreationDomainValidator: SiteCreationDomainValidator
 
     private lateinit var viewModel: SiteCreationDomainsViewModel
 
@@ -61,6 +62,7 @@ class SiteCreationDomainsViewModelTest {
     fun setUp() {
         viewModel = SiteCreationDomainsViewModel(
                 networkUtils = networkUtils,
+                domainValidator = siteCreationDomainValidator,
                 dispatcher = dispatcher,
                 fetchDomainsUseCase = fetchDomainsUseCase,
                 tracker = tracker,

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.domains
 
-import android.webkit.URLUtil.isValidUrl
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -13,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
@@ -26,6 +26,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelAvailableUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState.DomainsModelUnavailabilityUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -49,6 +50,7 @@ private const val ERROR_CONTEXT = "domains"
 class SiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
+    private val domainValidator: SiteCreationDomainValidator,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -257,26 +259,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-            query?.value?.let {
-                if (data.isNotEmpty()) {
-                    val subDomain = if (it.contains(".wordpress.com")) {
-                        it
-                    } else {
-                        it.substringBefore(".").plus(".wordpress.com")
-                    }
 
-                    val isDomainUnavailable = (data.find { domain ->
-                        domain == subDomain
-                    }).isNullOrEmpty() && isValidUrl("https://$subDomain")
+            if (data.isNotEmpty())
+                query?.value?.let {
+                    val itemUiState = getDomainUnavailableUiState(it, data)
 
-                    if (isDomainUnavailable) {
-                        items.add(
-                                DomainsModelUnavailabilityUiState(
-                                        subDomain,
-                                        UiStringRes(R.string.new_site_creation_unavailable_domain)))
+                    itemUiState?.let {
+                        items.add(itemUiState)
                     }
                 }
-            }
 
             data.forEach { domainName ->
                 val itemUiState = DomainsModelAvailableUiState(
@@ -288,6 +279,34 @@ class SiteCreationDomainsViewModel @Inject constructor(
             }
         }
         return items
+    }
+
+    private fun getDomainUnavailableUiState(
+        query: String,
+        domains: List<String>
+    ): DomainsModelUiState? {
+
+        val domainValidationResult = domainValidator.validateDomain(query)
+
+        if (domainValidationResult.isDomainValid) {
+            val isDomainUnavailable = (domains.find { domain ->
+                domain == domainValidationResult.host
+            }).isNullOrEmpty()
+
+            return if (isDomainUnavailable) {
+                DomainsModelUnavailabilityUiState(
+                        domainValidationResult.host,
+                        UiStringRes(string.new_site_creation_unavailable_domain)
+                )
+            } else {
+                null
+            }
+        } else {
+            return DomainsModelUnavailabilityUiState(
+                    domainValidationResult.host,
+                    UiStringRes(string.new_site_creation_invalid_domain)
+            )
+        }
     }
 
     private fun createHeaderUiState(
