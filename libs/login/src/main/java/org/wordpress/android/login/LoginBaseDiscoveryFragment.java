@@ -35,6 +35,13 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
                 mLoginBaseDiscoveryListener.getRequestedSiteAddress()));
     }
 
+    boolean isXmlRpcOrGenericError(DiscoveryError error) {
+        return (error == DiscoveryError.GENERIC_ERROR
+            || error == DiscoveryError.XMLRPC_FORBIDDEN
+            || error == DiscoveryError.XMLRPC_BLOCKED
+            || error == DiscoveryError.MISSING_XMLRPC_METHOD);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDiscoverySucceeded(OnDiscoveryResponse event) {

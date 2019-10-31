@@ -367,45 +367,60 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         return mInputSiteAddressWithoutSuffix;
     }
 
+    /**
+     * Woo users: It was verified that certain discovery errors can take place even if Jetpack is
+     * installed/active/connected. In such cases, the API that is called to verify
+     * if Jetpack is available for a site, returns false (even if available).
+     *
+     * To handle this scenario, we are redirecting the users based on the type of discovery error.
+     *
+     * [MISSING_XMLRPC_METHOD], [XMLRPC_BLOCKED], [XMLRPC_FORBIDDEN] and [GENERIC_ERROR]
+     * can take place even when Jetpack is installed/active/connected.
+     * So redirect users to discovery error screen.
+     *
+     * In those rare cases where we KNOW Jetpack is available but discovery still results in an
+     * error (other than the errors mentioned above), we redirect to discovery error screen.
+     *
+     * [HTTP_AUTH_REQUIRED] and [ERRONEOUS_SSL_CERTIFICATE] is not supported by Jetpack and can
+     * only occur if jetpack is not available. Redirect to Jetpack required screen.
+     * */
     @Override
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
-        // Woo users: if it is known that user has skipped the Jetpack required screen,
-        // assume that Jetpack is not installed/active/connected and redirect to
-        // install Jetpack again since it is needed for this flow to work
-        if (mSkippedJetpackRequired) {
-            mLoginListener.helpNoJetpackScreen(mInputSiteAddress, mEndpointAddress,
-                    getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
-                    mAccountStore.getAccount().getAvatarUrl(), true);
-        } else {
-            // Woo users: If jetpack is installed but discovery still results in an error,
-            // redirect to discovery error screen
-            int errorMessageId = 0;
-            switch (error) {
-                case HTTP_AUTH_REQUIRED:
-                    errorMessageId = R.string.login_discovery_error_http_auth;
-                    break;
-                case ERRONEOUS_SSL_CERTIFICATE:
-                    errorMessageId = R.string.login_discovery_error_ssl;
-                    break;
-                case INVALID_URL:
-                case NO_SITE_ERROR:
-                case WORDPRESS_COM_SITE:
-                case GENERIC_ERROR:
-                    errorMessageId = R.string.login_discovery_error_generic;
-                    break;
-
-                case MISSING_XMLRPC_METHOD:
-                case XMLRPC_BLOCKED:
-                case XMLRPC_FORBIDDEN:
-                    errorMessageId = R.string.login_discovery_error_xmlrpc;
-                    break;
-            }
-
+        if (isXmlRpcOrGenericError(error) || !mSkippedJetpackRequired) {
             ActivityUtils.hideKeyboard(getActivity());
             mLoginListener.helpHandleDiscoveryError(mInputSiteAddress, mEndpointAddress,
                     getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
-                    mAccountStore.getAccount().getAvatarUrl(), errorMessageId);
+                    mAccountStore.getAccount().getAvatarUrl(), getDiscoveryErrorMessage(error));
+        } else {
+            mLoginListener.helpNoJetpackScreen(mInputSiteAddress, mEndpointAddress,
+                    getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
+                    mAccountStore.getAccount().getAvatarUrl(), true);
         }
+    }
+
+    private int getDiscoveryErrorMessage(DiscoveryError error) {
+        int errorMessageId = 0;
+        switch (error) {
+            case HTTP_AUTH_REQUIRED:
+                errorMessageId = R.string.login_discovery_error_http_auth;
+                break;
+            case ERRONEOUS_SSL_CERTIFICATE:
+                errorMessageId = R.string.login_discovery_error_ssl;
+                break;
+            case INVALID_URL:
+            case NO_SITE_ERROR:
+            case WORDPRESS_COM_SITE:
+            case GENERIC_ERROR:
+                errorMessageId = R.string.login_discovery_error_generic;
+                break;
+
+            case MISSING_XMLRPC_METHOD:
+            case XMLRPC_BLOCKED:
+            case XMLRPC_FORBIDDEN:
+                errorMessageId = R.string.login_discovery_error_xmlrpc;
+                break;
+        }
+        return errorMessageId;
     }
 
     @Override
