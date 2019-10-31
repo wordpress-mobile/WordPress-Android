@@ -12,6 +12,8 @@
         android:layout_width="match_parent"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"/>
 
 </LinearLayout>
