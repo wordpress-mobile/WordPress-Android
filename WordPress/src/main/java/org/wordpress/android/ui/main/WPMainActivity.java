@@ -821,8 +821,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
-                boolean isPage = data.getBooleanExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-
                 if (EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(data, WPMainActivity.this, site,
                             data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
@@ -831,7 +829,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     break;
                 }
 
-                if (!isPage && site != null && post != null) {
+                if (site != null && post != null) {
                     UploadUtils.handleEditPostResultSnackbars(
                             this,
                             mDispatcher,
