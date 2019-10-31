@@ -36,7 +36,7 @@ We do our best to respond quickly to all pull requests. If you don't get a respo
 
 ### Development Practices
 
-Have look at the [Coding Style Guide](https://github.com/wordpress-mobile/WordPress-Android/wiki/Coding-Style) to learn how to format your code so it passes the convention and quality checks like the rest of the project. The [Wiki](https://github.com/wordpress-mobile/WordPress-Android/wiki) contains all the development guides like [what a good pull request looks like](https://github.com/wordpress-mobile/WordPress-Android/wiki/Pull-Request-Guidelines), and [how to use String and Drawable resources](https://github.com/wordpress-mobile/WordPress-Android/wiki/Using-Android-Resources).
+Have look at the [Coding Style Guide](docs/coding-style.md) to learn how to format your code so it passes the convention and quality checks like the rest of the project. The [docs](docs/) contain all the development guides like [what a good pull request looks like](docs/pull-request-guidelines.md), and [how to use String and Drawable resources](docs/using-android-resources.md).
 
 ## Getting in Touch
 
