@@ -259,7 +259,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
         } else {
-
             if (data.isNotEmpty())
                 query?.value?.let {
                     val itemUiState = getDomainUnavailableUiState(it, data)
@@ -285,7 +284,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
         query: String,
         domains: List<String>
     ): DomainsModelUiState? {
-
         val domainValidationResult = domainValidator.validateDomain(query)
 
         if (domainValidationResult.isDomainValid) {
@@ -376,9 +374,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             val radioButtonVisibility: Boolean,
             open val subTitle: UiString? = null,
             override val clickable: Boolean
-        ) :
-                DomainsListItemUiState() {
-
+        ) : DomainsListItemUiState() {
             data class DomainsModelAvailableUiState(
                 override val name: String,
                 override val checked: Boolean
@@ -387,8 +383,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             data class DomainsModelUnavailabilityUiState(
                 override val name: String,
                 override val subTitle: UiString
-            ) :
-                    DomainsModelUiState(name, false, false, subTitle, false)
+            ) : DomainsModelUiState(name, false, false, subTitle, false)
         }
 
         data class DomainsFetchSuggestionsErrorUiState(

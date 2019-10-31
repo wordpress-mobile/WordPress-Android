@@ -25,7 +25,8 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
     abstract fun onBind(uiState: DomainsListItemUiState)
 
     class DomainSuggestionItemViewHolder(
-        parentView: ViewGroup, private val uiHelpers: UiHelpers
+        parentView: ViewGroup,
+        private val uiHelpers: UiHelpers
     ) : SiteCreationDomainViewHolder(parentView, R.layout.site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<TextView>(R.id.domain_suggestion)

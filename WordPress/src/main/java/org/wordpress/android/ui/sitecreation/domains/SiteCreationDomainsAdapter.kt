@@ -17,9 +17,12 @@ private const val suggestionErrorViewType: Int = 2
 class SiteCreationDomainsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationDomainViewHolder>() {
     private val items = mutableListOf<DomainsListItemUiState>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SiteCreationDomainViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): SiteCreationDomainViewHolder {
         return when (viewType) {
-            suggestionItemViewType -> DomainSuggestionItemViewHolder(parent,uiHelpers)
+            suggestionItemViewType -> DomainSuggestionItemViewHolder(parent, uiHelpers)
             suggestionErrorViewType -> DomainSuggestionErrorViewHolder(parent)
             else -> throw NotImplementedError("Unknown ViewType")
         }
