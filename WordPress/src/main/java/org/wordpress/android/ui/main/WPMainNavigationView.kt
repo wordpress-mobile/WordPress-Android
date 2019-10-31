@@ -367,7 +367,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         private const val TAG_NOTIFS = "tag-notifs"
 
         private fun numPages(): Int {
-            return if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+            return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
                 pagesWithoutMe.size
             } else {
                 defaultPages.size
@@ -375,7 +375,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         private fun pages(): List<PageType> {
-            return if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+            return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
                 pagesWithoutMe
             } else {
                 defaultPages
