@@ -20,13 +20,16 @@
             style="@style/Toolbar.Primary" >
         </androidx.appcompat.widget.Toolbar>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_with_switch"
-            android:focusableInTouchMode="true"
-            android:layout_height="@dimen/toolbar_height"
+        <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
+            android:id="@+id/master_switch"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            style="@style/Toolbar.Secondary" >
-        </androidx.appcompat.widget.Toolbar>
+            app:masterTitleOn="@string/notification_settings_master_status_on"
+            app:masterTitleOff="@string/notification_settings_master_status_off"
+            app:masterHintOn="@string/notification_settings_master_hint_on"
+            app:masterHintOff="@string/notification_settings_master_hint_off"
+            app:masterContentDescription="@string/notification_settings_switch_desc">
+        </org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView>
 
     </com.google.android.material.appbar.AppBarLayout>
 
