@@ -35,11 +35,17 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
                 mLoginBaseDiscoveryListener.getRequestedSiteAddress()));
     }
 
-    boolean isXmlRpcOrGenericError(DiscoveryError error) {
+    /**
+     *
+     * @param error - the error type returned from the discovery API
+     * @return boolean flag - if the error can occur even with Jetpack available on the site
+     */
+    boolean canErrorOccurWithJetpackEnabled(DiscoveryError error) {
         return (error == DiscoveryError.GENERIC_ERROR
             || error == DiscoveryError.XMLRPC_FORBIDDEN
             || error == DiscoveryError.XMLRPC_BLOCKED
-            || error == DiscoveryError.MISSING_XMLRPC_METHOD);
+            || error == DiscoveryError.MISSING_XMLRPC_METHOD
+            || error == DiscoveryError.NO_SITE_ERROR);
     }
 
     @SuppressWarnings("unused")

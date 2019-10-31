@@ -374,19 +374,19 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
      *
      * To handle this scenario, we are redirecting the users based on the type of discovery error.
      *
-     * [MISSING_XMLRPC_METHOD], [XMLRPC_BLOCKED], [XMLRPC_FORBIDDEN] and [GENERIC_ERROR]
-     * can take place even when Jetpack is installed/active/connected.
+     * [MISSING_XMLRPC_METHOD], [XMLRPC_BLOCKED], [XMLRPC_FORBIDDEN] [NO_SITE_ERROR]
+     * and [GENERIC_ERROR] can take place even when Jetpack is installed/active/connected.
      * So redirect users to discovery error screen.
      *
      * In those rare cases where we KNOW Jetpack is available but discovery still results in an
      * error (other than the errors mentioned above), we redirect to discovery error screen.
      *
-     * [HTTP_AUTH_REQUIRED] and [ERRONEOUS_SSL_CERTIFICATE] is not supported by Jetpack and can
-     * only occur if jetpack is not available. Redirect to Jetpack required screen.
+     * [HTTP_AUTH_REQUIRED] is not supported by Jetpack and can only occur if jetpack is not
+     * available. Redirect to Jetpack required screen.
      * */
     @Override
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
-        if (isXmlRpcOrGenericError(error) || !mSkippedJetpackRequired) {
+        if (canErrorOccurWithJetpackEnabled(error) || !mSkippedJetpackRequired) {
             ActivityUtils.hideKeyboard(getActivity());
             mLoginListener.helpHandleDiscoveryError(mInputSiteAddress, mEndpointAddress,
                     getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
