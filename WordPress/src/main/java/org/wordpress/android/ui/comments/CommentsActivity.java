@@ -164,7 +164,7 @@ public class CommentsActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
-        Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
+        Fragment fragment = ReaderPostDetailFragment.Companion.newInstance(remoteBlogId, postId);
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
@@ -217,6 +217,7 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             long commentId = data.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1);
             String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);

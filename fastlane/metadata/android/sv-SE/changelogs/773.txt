@@ -1,3 +1,0 @@
-13.1:
-* I förhandsvisningen för en webbplats och en sida kan man nu växla mellan webbplatsens utseende på dator och mobilversionen.
-* Vi har rättat ett fel som gjorde att vissa användare inte kunde ansluta mediatjänster från sina sociala nätverk.

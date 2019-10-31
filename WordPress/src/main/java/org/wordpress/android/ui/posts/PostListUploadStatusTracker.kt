@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import androidx.collection.SparseArrayCompat
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.UploadStore
@@ -15,10 +16,10 @@ class PostListUploadStatusTracker(
     private val uploadStore: UploadStore,
     private val uploadActionUseCase: UploadActionUseCase
 ) {
-    private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
+    private val uploadStatusArray = SparseArrayCompat<PostListItemUploadStatus>()
 
     fun getUploadStatus(post: PostModel, siteModel: SiteModel): PostListItemUploadStatus {
-        uploadStatusMap[post.id]?.let { return it }
+        uploadStatusArray[post.id]?.let { return it }
         val uploadError = uploadStore.getUploadErrorForPost(post)
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
@@ -34,11 +35,11 @@ class PostListUploadStatusTracker(
                 isEligibleForAutoUpload = uploadActionUseCase.isEligibleForAutoUpload(siteModel, post),
                 uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
         )
-        uploadStatusMap[post.id] = newStatus
+        uploadStatusArray.put(post.id, newStatus)
         return newStatus
     }
 
     fun invalidateUploadStatus(localPostIds: List<Int>) {
-        localPostIds.forEach { uploadStatusMap.remove(it) }
+        localPostIds.forEach { uploadStatusArray.remove(it) }
     }
 }

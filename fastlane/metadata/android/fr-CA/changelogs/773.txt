@@ -1,3 +1,0 @@
-13.1 :
-* Dans l'aperçu du site et de la page, vous pouvez désormais basculer entre les versions bureau et mobile du site.
-* Nous avons résolu un bug affectant certains utilisateurs qui ne pouvaient pas se connecter à leurs services de réseaux sociaux.

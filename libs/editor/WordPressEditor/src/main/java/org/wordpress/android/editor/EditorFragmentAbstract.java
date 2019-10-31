@@ -16,6 +16,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class EditorFragmentAbstract extends Fragment {
@@ -28,6 +29,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
+    public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean isUploadingMedia();
@@ -37,8 +39,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // This was required since Aztec Visual->HTML can slightly change the content of the HTML. See #692 for details.
     public abstract void removeAllFailedMediaUploads();
     public abstract void removeMedia(String mediaId);
-    public abstract void setTitlePlaceholder(CharSequence text);
-    public abstract void setContentPlaceholder(CharSequence text);
     public abstract boolean showSavingProgressDialogIfNeeded();
     public abstract boolean hideSavingProgressDialog();
 
@@ -171,11 +171,13 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
         void onAddMediaClicked();
-        void onAddMediaImageClicked();
-        void onAddMediaVideoClicked();
-        void onAddPhotoClicked();
+        void onAddMediaImageClicked(boolean allowMultipleSelection);
+        void onAddMediaVideoClicked(boolean allowMultipleSelection);
+        void onAddLibraryMediaClicked(boolean allowMultipleSelection);
+        void onAddPhotoClicked(boolean allowMultipleSelection);
         void onCapturePhotoClicked();
-        void onAddVideoClicked();
+        void onAddVideoClicked(boolean allowMultipleSelection);
+        void onAddDeviceMediaClicked(boolean allowMultipleSelection);
         void onCaptureVideoClicked();
         boolean onMediaRetryClicked(String mediaId);
         void onMediaRetryAllClicked(Set<String> mediaIdSet);
@@ -186,6 +188,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         String onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
+        void onAddStockMediaClicked(boolean allowMultipleSelection);
     }
 
     /**
@@ -216,7 +219,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         IMAGE_EDITED,
         ITALIC_BUTTON_TAPPED,
         LINK_ADDED_BUTTON_TAPPED,
-        LINK_REMOVED_BUTTON_TAPPED,
         LIST_BUTTON_TAPPED,
         LIST_ORDERED_BUTTON_TAPPED,
         LIST_UNORDERED_BUTTON_TAPPED,

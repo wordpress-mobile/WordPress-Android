@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
@@ -186,6 +187,8 @@ public class PostUtils {
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }
+        properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, AppPrefs.isPostWithHWAccelerationOff(
+                site.getId(), post.getId()) ? "1" : "0");
         properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                 PostUtils.contentContainsGutenbergBlocks(post.getContent()));
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,

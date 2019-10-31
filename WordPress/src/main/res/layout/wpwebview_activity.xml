@@ -12,14 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
-        android:background="@color/white"
+        android:background="?attr/colorSurface"
         android:elevation="@dimen/appbar_elevation"
         app:contentInsetEnd="@dimen/toolbar_content_offset_end"
         app:contentInsetLeft="@dimen/toolbar_content_offset"
         app:contentInsetRight="@dimen/toolbar_content_offset_end"
         app:contentInsetStart="@dimen/toolbar_content_offset"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:subtitleTextColor="?attr/wpColorTextSubtle"
+        app:theme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="?attr/colorOnSurface" />
 
 
     <RelativeLayout

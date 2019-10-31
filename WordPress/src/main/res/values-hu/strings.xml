@@ -57,9 +57,7 @@ Language: hu
     <string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="preview_post">Bejegyzés előnézet</string>
     <string name="comment_status_spam">Spam</string>
-    <string name="preview_page">Oldal előnézet</string>
     <string name="hint_comment_content">Hozzászólás</string>
     <string name="mnu_comment_trash">Lomtár</string>
     <string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
@@ -99,7 +97,6 @@ Language: hu
     <string name="httppassword">HTTP jelszó</string>
     <string name="error_media_upload">Hiba történt a média feltöltése közben</string>
     <string name="publish_date">Közzététel</string>
-    <string name="post_content">Tartalom (éritsük meg szöveg és média hozzáadásához)</string>
     <string name="incorrect_credentials">Hibás felhasználónév vagy jelszó.</string>
     <string name="password">Jelszó</string>
     <string name="username">Felhasználó név</string>
@@ -107,15 +104,11 @@ Language: hu
     <string name="reader">Olvasó</string>
     <string name="pages">Oldalak</string>
     <string name="no_network_title">Nincs elérhető hálózat</string>
-    <string name="width">Szélesség</string>
     <string name="anonymous">Névtelen</string>
-    <string name="caption">Felirat (nem kötelező)</string>
-    <string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
     <string name="posts">Bejegyzés</string>
     <string name="ok">OK</string>
     <string name="blogusername">honlap-felhasználó</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Feltöltés…</string>
     <string name="tos">Szolgáltatási feltételek</string>
     <string name="version">verzió</string>
     <string name="app_title">WordPress for Android</string>
