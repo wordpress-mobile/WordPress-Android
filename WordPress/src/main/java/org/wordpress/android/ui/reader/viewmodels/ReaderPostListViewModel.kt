@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTag
@@ -69,7 +67,7 @@ class ReaderPostListViewModel @Inject constructor(
         }
 
         _currentSubFilter.value = SiteAll(
-                label = UiStringRes(string.reader_filter_all_sites),
+                label = UiStringRes(R.string.reader_filter_all_sites),
                 onClickAction = ::onSubfilterClicked
         )
 
@@ -120,7 +118,7 @@ class ReaderPostListViewModel @Inject constructor(
         launch {
             val filterList = ArrayList<SubfilterListItem>()
 
-            filterList.add(SectionTitle(UiStringRes(string.reader_filter_sites_title)))
+            filterList.add(SectionTitle(UiStringRes(R.string.reader_filter_sites_title)))
             filterList.add(SiteAll(
                     label = UiStringRes(R.string.reader_filter_all_sites),
                     onClickAction = ::onSubfilterClicked,
@@ -130,15 +128,14 @@ class ReaderPostListViewModel @Inject constructor(
             val followedBlogs = ReaderBlogTable.getFollowedBlogs()
 
             for (blog in followedBlogs) {
-                filterList.add(
-                        Site(
+                filterList.add(Site(
                         label = if (blog.name.isNotEmpty()) UiStringText(blog.name) else UiStringRes(
-                                string.reader_untitled_post),
+                                R.string.reader_untitled_post),
                         onClickAction = ::onSubfilterClicked,
                         blog = blog,
-                        isSelected = (_currentSubFilter.value is Site) && (_currentSubFilter.value as Site).blog.name == blog.name
-                )
-                )
+                        isSelected = (_currentSubFilter.value is Site) &&
+                                (_currentSubFilter.value as Site).blog.name == blog.name
+                ))
             }
 
             filterList.add(Divider)
@@ -148,14 +145,13 @@ class ReaderPostListViewModel @Inject constructor(
             val tags = ReaderTagTable.getFollowedTags()
 
             for (tag in tags) {
-                filterList.add(
-                        Tag(
-                        label =  UiStringText(tag.tagTitle), // tag.label,
+                filterList.add(Tag(
+                        label = UiStringText(tag.tagTitle),
                         onClickAction = ::onSubfilterClicked,
                         tag = tag,
-                        isSelected = (_currentSubFilter.value is Tag) && (_currentSubFilter.value as Tag).tag.tagTitle == tag.tagTitle
-                )
-                )
+                        isSelected = (_currentSubFilter.value is Tag) &&
+                                (_currentSubFilter.value as Tag).tag.tagTitle == tag.tagTitle
+                ))
             }
 
             _subFilters.postValue(filterList)

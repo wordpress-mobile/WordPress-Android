@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.subfilter.viewholders
 
-import android.content.Context
 import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R

@@ -9,12 +9,14 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostListViewModelTest {
     @Rule
@@ -46,7 +49,7 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         whenever(newsManager.newsItemSource()).thenReturn(liveData)
-        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper)
+        viewModel = ReaderPostListViewModel(newsManager, newsTracker, newsTrackerHelper, TEST_DISPATCHER)
         val observable = viewModel.getNewsDataSource()
         observable.observeForever(observer)
     }

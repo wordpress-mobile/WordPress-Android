@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.subfilter_list.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -21,7 +17,6 @@ import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.viewmodel.ViewModelFactory
 import javax.inject.Inject
 
 class SubfilterBottomSheetFragment : WPBottomSheetDialogFragment() {

@@ -21,8 +21,6 @@ import org.wordpress.android.ui.reader.subfilter.viewholders.SiteViewHolder
 import org.wordpress.android.ui.reader.subfilter.viewholders.SubFilterDiffCallback
 import org.wordpress.android.ui.reader.subfilter.viewholders.SubfilterListItemViewHolder
 import org.wordpress.android.ui.reader.subfilter.viewholders.TagViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.utils.UiHelpers
 
 class SubfilterListAdapter(val uiHelpers: UiHelpers) : Adapter<SubfilterListItemViewHolder>() {
@@ -37,7 +35,6 @@ class SubfilterListAdapter(val uiHelpers: UiHelpers) : Adapter<SubfilterListItem
         items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
-
 
     override fun getItemCount(): Int = items.size
 

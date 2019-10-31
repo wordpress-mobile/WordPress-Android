@@ -403,7 +403,6 @@ public class ReaderPostListFragment extends Fragment
 
                 break;
             case SITE:
-                //TODO: mCurrentTag?
                 long currentFeedId = ((Site) subfilterListItem).getBlog().feedId;
                 long currentBlogId = ((Site) subfilterListItem).getBlog().hasFeedUrl()
                         ? currentFeedId : ((Site) subfilterListItem).getBlog().blogId;
