@@ -1043,4 +1043,26 @@
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
 
+    <!-- Reader styles -->
+    <style name="SiteTagFilteredTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">?attr/wpColorText</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="SufilterSectionItem">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="SubfilterSectionTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">?attr/wpColorTextSubtle</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="SufilterSiteTagItem">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
 </resources>
