@@ -431,4 +431,7 @@
     <!--settings username changer-->
     <dimen name="settings_username_changer_confirm_dialog_padding">20dp</dimen>
 
+    <!--Main bottom sheet icon size -->
+    <dimen name="main_bottom_sheet_list_row_icon_size">48dp</dimen>
+
 </resources>

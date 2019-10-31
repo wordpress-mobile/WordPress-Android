@@ -56,4 +56,19 @@
             app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_container"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:contentDescription="@string/fab_create_desc"
+        android:src="@drawable/ic_create_white_24dp"
+        app:borderWidth="0dp"/>
+
+
 </RelativeLayout>
