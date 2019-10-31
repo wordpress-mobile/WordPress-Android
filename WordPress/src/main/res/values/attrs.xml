@@ -145,6 +145,8 @@
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
         <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
+        <!-- Optional: Default to false. Activate filtering by Tabs instead of Spinner -->
+        <attr name="wpUseTabsForFiltering" format="boolean"/>
     </declare-styleable>
 
     <!--
