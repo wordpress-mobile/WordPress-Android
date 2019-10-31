@@ -22,4 +22,8 @@ class UrlUtilsWrapper @Inject constructor() {
     fun isValidUrlAndHostNotNull(url: String): Boolean {
         return UrlUtils.isValidUrlAndHostNotNull(url)
     }
+
+    fun getHost(urlString: String?): String {
+        return UrlUtils.getHost(urlString)
+    }
 }

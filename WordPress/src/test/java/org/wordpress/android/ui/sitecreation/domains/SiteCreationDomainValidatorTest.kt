@@ -15,8 +15,8 @@ class SiteCreationDomainValidatorTest : RobolectricSetupTest() {
     @Test
     fun validateDomains() {
         assertTrue(domainResolver.validateDomain("http://www.wordpress.com").isDomainValid)
-        assertTrue(domainResolver.validateDomain("johnbrown").host == "johnbrown.wordpress.com")
-        assertTrue(domainResolver.validateDomain("https://www.john.home.blog").host == "john.home.blog")
+        assertTrue(domainResolver.validateDomain("johnbrown").domain == "johnbrown.wordpress.com")
+        assertTrue(domainResolver.validateDomain("https://www.john.home.blog").domain == "john.home.blog")
         assertTrue(domainResolver.validateDomain("johnbrown.com").isDomainValid)
         assertTrue(domainResolver.validateDomain("my.square.com").isDomainValid)
 

@@ -12,7 +12,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
@@ -288,12 +287,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         if (domainValidationResult.isDomainValid) {
             val isDomainUnavailable = (domains.find { domain ->
-                domain == domainValidationResult.host
+                domain == domainValidationResult.domain
             }).isNullOrEmpty()
 
             return if (isDomainUnavailable) {
                 DomainsModelUnavailabilityUiState(
-                        domainValidationResult.host,
+                        domainValidationResult.domain,
                         UiStringRes(R.string.new_site_creation_unavailable_domain)
                 )
             } else {
@@ -301,7 +300,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             }
         } else {
             return DomainsModelUnavailabilityUiState(
-                    domainValidationResult.host,
+                    domainValidationResult.domain,
                     UiStringRes(R.string.new_site_creation_invalid_domain)
             )
         }
