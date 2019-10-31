@@ -2,7 +2,6 @@ package org.wordpress.android.ui.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import org.wordpress.android.ui.utils.UiString
 
 sealed class MainActionListItem {
     abstract val actionType: ActionType
@@ -16,5 +15,6 @@ sealed class MainActionListItem {
         override val actionType: ActionType,
         @DrawableRes val iconRes: Int,
         @StringRes val labelRes: Int,
-        val onClickAction: (actionType: ActionType) -> Unit) : MainActionListItem()
+        val onClickAction: (actionType: ActionType) -> Unit
+    ) : MainActionListItem()
 }

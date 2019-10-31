@@ -28,7 +28,7 @@ class AddContentAdapter : Adapter<ActionListItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionListItemViewHolder {
         // Currently we have only one ViewHolder type
-        return  ActionListItemViewHolder(parent)
+        return ActionListItemViewHolder(parent)
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -41,8 +41,6 @@ class MainBottomSheetFragment : WPBottomSheetDialogFragment() {
         viewModel.mainActions.observe(this, Observer {
             (dialog.create_actions_recycler_view.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
-
-        //viewModel.loadMainActions()
     }
 
     override fun onAttach(context: Context?) {
