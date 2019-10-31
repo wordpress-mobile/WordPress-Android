@@ -22,7 +22,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -101,9 +104,13 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.Up
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -161,6 +168,14 @@ public class ReaderPostListFragment extends Fragment
     private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
 
+    private View mSubFilterComponent;
+    private ImageButton mSettingsButton;
+    private ImageButton mSubFiltersListButton;
+    private TextView mSubFilterTitle;
+    private SubfilterBottomSheetFragment mBottomSheet;
+
+    private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
+
     private BottomNavController mBottomNavController;
 
     private ReaderTag mCurrentTag;
@@ -203,6 +218,7 @@ public class ReaderPostListFragment extends Fragment
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject UiHelpers mUiHelpers;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -362,7 +378,72 @@ public class ReaderPostListFragment extends Fragment
         // this fragment extends Support fragment.
         mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            mViewModel.getCurrentSubFilter().observe(getActivity(), subfilterListItem -> {
+                setCurrentSubfilter(subfilterListItem);
+            });
+
+            mViewModel.getShouldShowSubFilters().observe(getActivity(), show -> {
+                mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
+            });
+        }
+
         mViewModel.start(mCurrentTag);
+    }
+
+    private void setCurrentSubfilter(SubfilterListItem subfilterListItem) {
+        switch (subfilterListItem.getType()) {
+            case SECTION_TITLE:
+            case DIVIDER:
+                // nop
+                break;
+            case SITE_ALL:
+                manageSubFiltering(ReaderUtils.getDefaultTag(), ReaderPostListType.TAG_FOLLOWED, 0, 0);
+
+                break;
+            case SITE:
+                //TODO: mCurrentTag?
+                long currentFeedId = ((Site) subfilterListItem).getBlog().feedId;
+                long currentBlogId = ((Site) subfilterListItem).getBlog().hasFeedUrl()
+                        ? currentFeedId : ((Site) subfilterListItem).getBlog().blogId;
+
+                manageSubFiltering(null, ReaderPostListType.BLOG_PREVIEW, currentBlogId, currentFeedId);
+
+                break;
+            case TAG:
+                manageSubFiltering(
+                        ((Tag) subfilterListItem).getTag(),
+                        ReaderPostListType.TAG_FOLLOWED,
+                        0,
+                        0);
+
+                break;
+        }
+
+        if (mBottomSheet != null) {
+            mBottomSheet.dismiss();
+            mBottomSheet = null;
+        }
+        if (subfilterListItem.getLabel() != null) {
+            mSubFilterTitle.setText(mUiHelpers.getTextOfUiString(requireActivity(), subfilterListItem.getLabel()));
+        }
+    }
+
+    private void manageSubFiltering(
+            @Nullable ReaderTag tag,
+            ReaderPostListType listType,
+            long blogId,
+            long feedId
+    ) {
+        if (tag != null) {
+            mCurrentTag = tag;
+        }
+        mPostListType = listType;
+        mCurrentBlogId = blogId;
+        mCurrentFeedId = feedId;
+
+        resetPostAdapter(mPostListType);
     }
 
     @Override
@@ -711,9 +792,17 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
-        mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium),
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            mRecyclerView.setToolbarLeftAndRightPadding(
+                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large),
+                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+            mRecyclerView.setToolbarTitle(R.string.reader_screen_title);
+        } else {
+            mRecyclerView.setToolbarLeftAndRightPadding(
+                    getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+        }
 
         // add a menu to the filtered recycler's toolbar
         if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
@@ -743,7 +832,30 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setRefreshing(true);
         }
 
+        mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            mRecyclerView.getAppBarLayout().addView(mSubFilterComponent);
+
+            mSettingsButton = mSubFilterComponent.findViewById(R.id.filter_settings_button);
+            mSettingsButton.setOnClickListener(v -> {
+                showSettings();
+            });
+
+            mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_list_button);
+            mSubFiltersListButton.setOnClickListener(v -> {
+                mBottomSheet = new SubfilterBottomSheetFragment();
+                mBottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+            });
+
+            mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
+        }
+
         return rootView;
+    }
+
+    private void showSettings() {
+        ReaderActivityLauncher.showReaderSubs(getActivity());
     }
 
     /*
@@ -755,13 +867,17 @@ public class ReaderPostListFragment extends Fragment
         mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
         mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
 
-        mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                ReaderActivityLauncher.showReaderSubs(getActivity());
-                return true;
-            }
-        });
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            mSettingsMenuItem.setVisible(false);
+        } else {
+           mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    showSettings();
+                    return true;
+                }
+            });
+        }
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
@@ -790,6 +906,8 @@ public class ReaderPostListFragment extends Fragment
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
+                mRecyclerView.setTabLayoutVisibility(false);
+                mViewModel.setSubfiltersVisibility(false);
 
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
@@ -809,7 +927,9 @@ public class ReaderPostListFragment extends Fragment
                 hideSearchMessage();
                 hideSearchTabs();
                 resetSearchSuggestionAdapter();
-                mSettingsMenuItem.setVisible(true);
+                if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                    mSettingsMenuItem.setVisible(true);
+                }
                 mCurrentSearchQuery = null;
 
                 if (mBottomNavController != null) {
@@ -818,6 +938,9 @@ public class ReaderPostListFragment extends Fragment
 
                 // return to the followed tag that was showing prior to searching
                 resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
+
+                mRecyclerView.setTabLayoutVisibility(true);
+                mViewModel.setSubfiltersVisibility(true);
 
                 return true;
             }
@@ -1656,6 +1779,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setCurrentTag(final ReaderTag tag) {
+        setCurrentTag(tag, false);
+    }
+
+    private void setCurrentTag(final ReaderTag tag, boolean manageSubfilter) {
         if (tag == null) {
             return;
         }
@@ -1668,6 +1795,15 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mCurrentTag = tag;
+
+        if (manageSubfilter) {
+            if (mCurrentTag.isFollowedSites()) {
+                setCurrentSubfilter(mViewModel.getCurrentSubfilterValue());
+            } else {
+                manageSubFiltering(tag, ReaderPostListType.TAG_FOLLOWED, 0, 0);
+            }
+        }
+
         mViewModel.onTagChanged(tag);
 
         switch (getPostListType()) {
@@ -2102,7 +2238,7 @@ public class ReaderPostListFragment extends Fragment
 
         trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-        setCurrentTag(tag);
+        setCurrentTag(tag, BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE);
     }
 
     private void trackTagLoaded(ReaderTag tag) {
@@ -2317,8 +2453,12 @@ public class ReaderPostListFragment extends Fragment
         @Override
         protected ReaderTagList doInBackground(Void... voids) {
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-            tagList.addAll(ReaderTagTable.getCustomListTags());
-            tagList.addAll(ReaderTagTable.getFollowedTags());
+
+            if (!BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+                tagList.addAll(ReaderTagTable.getCustomListTags());
+                tagList.addAll(ReaderTagTable.getFollowedTags());
+            }
+
             tagList.addAll(ReaderTagTable.getBookmarkTags());
             return tagList;
         }
