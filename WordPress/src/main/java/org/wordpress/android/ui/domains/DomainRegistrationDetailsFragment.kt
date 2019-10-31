@@ -336,13 +336,13 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private fun showStatePicker(states: List<SupportedStateResponse>) {
         val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
         dialogFragment.setTargetFragment(this, 0)
-        dialogFragment.show(fragmentManager, StatePickerDialogFragment.TAG)
+        dialogFragment.show(requireFragmentManager(), StatePickerDialogFragment.TAG)
     }
 
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val dialogFragment = CountryPickerDialogFragment.newInstance(countries.toCollection(ArrayList()))
         dialogFragment.setTargetFragment(this, 0)
-        dialogFragment.show(fragmentManager, CountryPickerDialogFragment.TAG)
+        dialogFragment.show(requireFragmentManager(), CountryPickerDialogFragment.TAG)
     }
 
     private fun toggleFormProgressIndictor(visible: Boolean) {
@@ -436,7 +436,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             return builder.create()
         }
 
-        override fun onAttach(context: Context?) {
+        override fun onAttach(context: Context) {
             super.onAttach(context)
             AndroidSupportInjection.inject(this)
         }
@@ -486,7 +486,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             return builder.create()
         }
 
-        override fun onAttach(context: Context?) {
+        override fun onAttach(context: Context) {
             super.onAttach(context)
             AndroidSupportInjection.inject(this)
         }

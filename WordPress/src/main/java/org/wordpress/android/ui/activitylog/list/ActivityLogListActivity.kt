@@ -33,6 +33,7 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.ACTIVITY_LOG_DETAIL) {
             data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
                 passRewindConfirmation(it)

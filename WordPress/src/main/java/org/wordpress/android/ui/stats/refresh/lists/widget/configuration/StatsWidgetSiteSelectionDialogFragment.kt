@@ -39,12 +39,12 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
         viewModel.sites.observe(this, Observer {
-            (dialog.recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())
+            (requireDialog().recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())
         })
         viewModel.hideSiteDialog.observe(this, Observer {
             it?.applyIfNotHandled {
                 if (dialog?.isShowing == true) {
-                    dialog.dismiss()
+                    requireDialog().dismiss()
                 }
             }
         })
@@ -52,7 +52,7 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
         return alertDialogBuilder.create()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         AndroidSupportInjection.inject(this)
     }

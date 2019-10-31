@@ -1,5 +1,6 @@
 package org.wordpress.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
@@ -40,6 +42,8 @@ public class WPSwipeSnackbar {
         return show(viewPager, arrows);
     }
 
+    // BaseTransientBottomBar.LENGTH_LONG is pointing to Snackabr.LENGTH_LONG which confuses checkstyle
+    @SuppressLint("WrongConstant")
     private static Snackbar show(@NonNull ViewPager viewPager, @NonNull SwipeArrows arrows) {
         Context context = viewPager.getContext();
         String swipeText = context.getResources().getString(R.string.swipe_for_more);
@@ -62,7 +66,7 @@ public class WPSwipeSnackbar {
                 break;
         }
 
-        Snackbar snackbar = Snackbar.make(viewPager, text, Snackbar.LENGTH_LONG); // CHECKSTYLE IGNORE
+        Snackbar snackbar = Snackbar.make(viewPager, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
         centerSnackbarText(snackbar);
         snackbar.show();
 
