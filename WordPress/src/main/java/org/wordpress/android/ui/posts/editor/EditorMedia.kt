@@ -19,8 +19,11 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
-import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase
-import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState
+import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase
+import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
+import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase
+import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -49,6 +52,9 @@ class EditorMedia(
     private val site: SiteModel,
     private val editorMediaListener: EditorMediaListener,
     private val uploadMediaUseCase: UploadMediaUseCase,
+    private val updateMediaModelUseCase: UpdateMediaModelUseCase,
+    optimizeMediaUseCase: OptimizeMediaUseCase,
+    private val getMediaModelUseCase: GetMediaModelUseCase,
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
     private val editorTracker: EditorTracker,
@@ -58,13 +64,13 @@ class EditorMedia(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private val addMediaToEditorUseCase: OptimizeAndAddMediaToEditorUseCase = OptimizeAndAddMediaToEditorUseCase(
-            editorTracker,
-            mediaUtilsWrapper,
+    private val addMediaToEditorUseCase: AddMediaToEditorUseCase = AddMediaToEditorUseCase(
+            optimizeMediaUseCase,
+            getMediaModelUseCase,
+            updateMediaModelUseCase,
             fluxCUtilsWrapper,
             uploadMediaUseCase,
-            mainDispatcher,
-            bgDispatcher
+            mainDispatcher
     )
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
@@ -72,7 +78,7 @@ class EditorMedia(
     val toastMessage: LiveData<ToastMessageHolder> = mergeNotNull(
             listOf(
                     _toastMessage,
-                    uploadMediaUseCase.toastMessage
+                    getMediaModelUseCase.toastMessage
             ),
             distinct = false,
             singleEvent = true
@@ -214,15 +220,22 @@ class EditorMedia(
         }
     }
 
-    fun queueFileForUpload(uri: Uri, failed: MediaUploadState): MediaModel? {
+    fun updateMediaUploadState(uri: Uri, mediaUploadState: MediaUploadState): MediaModel? {
         // TODO Remove runBlocking block
         return runBlocking {
-            uploadMediaUseCase.queueFileForUpload(editorMediaListener, site.id, uri, failed)
+            getMediaModelUseCase.createMediaModelFromUri(site.id, uri)?.let {
+                updateMediaModelUseCase.updateMediaModel(
+                        it,
+                        editorMediaListener.editorMediaPostData(),
+                        mediaUploadState
+                )
+                it
+            }
         }
     }
 
     fun startUploadService(mediaList: List<MediaModel>) {
-        uploadMediaUseCase.startUploadService(editorMediaListener, mediaList)
+        uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaList)
     }
 }
 

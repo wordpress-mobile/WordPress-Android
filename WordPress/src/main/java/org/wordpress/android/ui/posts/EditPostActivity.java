@@ -122,6 +122,9 @@ import org.wordpress.android.ui.posts.editor.EditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase;
+import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase;
+import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase;
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -129,7 +132,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
-import org.wordpress.android.ui.uploads.UploadServiceFacade;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -328,6 +330,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
     @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
     @Inject UploadMediaUseCase mUploadMediaUseCase;
+    @Inject UpdateMediaModelUseCase mUpdateMediaModelUseCase;
+    @Inject OptimizeMediaUseCase mOptimizeMediaUseCase;
+    @Inject GetMediaModelUseCase mGetMediaModelUseCase;
 
     private SiteModel mSite;
 
@@ -398,9 +403,23 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mEditorPhotoPicker = new EditorPhotoPicker(this, this, this, mShowAztecEditor);
-        mEditorMedia = new EditorMedia(mSite, this, mUploadMediaUseCase, mDispatcher, mMediaStore, mEditorTracker,
-                mMediaUtilsWrapper,
-                mFluxCUtilsWrapper, mNetworkUtilsWrapper, mMainDispatcher, mBgDispatcher);
+        mEditorMedia =
+                new EditorMedia(
+                        mSite,
+                        this,
+                        mUploadMediaUseCase,
+                        mUpdateMediaModelUseCase,
+                        mOptimizeMediaUseCase,
+                        mGetMediaModelUseCase,
+                        mDispatcher,
+                        mMediaStore,
+                        mEditorTracker,
+                        mMediaUtilsWrapper,
+                        mFluxCUtilsWrapper,
+                        mNetworkUtilsWrapper,
+                        mMainDispatcher,
+                        mBgDispatcher
+                );
 
         startObserving();
 
@@ -2291,8 +2310,9 @@ public class EditPostActivity extends AppCompatActivity implements
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
+                // TODO make sure this logic hasn't changed as we can't easily test it
                 MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mEditorMedia
-                        .queueFileForUpload(uri, MediaUploadState.FAILED));
+                        .updateMediaUploadState(uri, MediaUploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }

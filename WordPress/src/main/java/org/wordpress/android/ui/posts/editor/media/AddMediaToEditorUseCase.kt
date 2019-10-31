@@ -7,25 +7,22 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
 import org.wordpress.android.ui.posts.editor.EditorMediaListener
-import org.wordpress.android.ui.posts.editor.EditorTracker
-import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMediaIdle
-import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMultipleMedia
-import org.wordpress.android.ui.posts.editor.media.OptimizeAndAddMediaToEditorUseCase.AddMediaToEditorUiState.AddingSingleMedia
+import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMediaIdle
+import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMultipleMedia
+import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState.AddingSingleMedia
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
-import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -36,13 +33,13 @@ import kotlin.coroutines.CoroutineContext
  * Processes a list of media in the background (optimizing, resizing, rotating, etc.) and adds them to
  * the editor one at a time.
  */
-class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
-    private val editorTracker: EditorTracker,
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
+class AddMediaToEditorUseCase @Inject constructor(
+    private val optimizeMediaUseCase: OptimizeMediaUseCase,
+    private val getMediaModelUseCase: GetMediaModelUseCase,
+    private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val uploadMediaUseCase: UploadMediaUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private var job: Job = Job()
 
@@ -71,16 +68,15 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
             } else {
                 AddingSingleMedia
             }
-
-            val optimizeMediaResult = optimizeMediaAsync(site, isNew, uriList)
-            val enqueuedFiles = enqueueMediaForUpload(
+            val optimizeMediaResult = optimizeMediaUseCase.optimizeMediaAsync(site, isNew, uriList)
+            val mediaModels = getMediaModelUseCase.createMediaModelFromUri(
                     site.id,
-                    optimizeMediaResult.optimizedMediaUris,
-                    editorMediaListener
+                    optimizeMediaResult.optimizedMediaUris
             )
-            addMediaToEditor(editorMediaListener, enqueuedFiles)
-
-            editorMediaListener.savePostAsyncFromEditorMedia()
+            enqueueForUpload(mediaModels, editorMediaListener)
+            val mediaFiles = mediaModels.mapNotNull { fluxCUtilsWrapper.mediaFileFromMediaModel(it) }
+            addMediaToEditor(editorMediaListener, mediaFiles)
+            uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaModels)
 
             if (optimizeMediaResult.someMediaCouldNotBeRetrieved) {
                 _snackBarMessage.value = SnackbarMessageHolder(R.string.gallery_error)
@@ -90,31 +86,17 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
         }
     }
 
-    private suspend fun optimizeMediaAsync(
-        site: SiteModel,
-        isNew: Boolean,
-        uriList: List<Uri>
-    ): OptimizeMediaResult {
-        return withContext(bgDispatcher) {
-            uriList
-                    .map { async { optimizeMediaAndTrackEvent(it, isNew, site) } }
-                    .map { it.await() }
-                    .toList()
-                    .let {
-                        OptimizeMediaResult(
-                                optimizedMediaUris = it.filterNotNull(),
-                                someMediaCouldNotBeRetrieved = it.contains(null)
-                        )
-                    }
-        }
-    }
-
-    private suspend fun enqueueMediaForUpload(
-        localSiteId: Int,
-        uris: List<Uri>,
+    private fun enqueueForUpload(
+        mediaModels: List<MediaModel>,
         editorMediaListener: EditorMediaListener
-    ): List<MediaFile> {
-        return uris.mapNotNull { uri -> enqueueMediaForUpload(localSiteId, uri, editorMediaListener) }
+    ) {
+        mediaModels.forEach {
+            updateMediaModelUseCase.updateMediaModel(
+                    it,
+                    editorMediaListener.editorMediaPostData(),
+                    QUEUED
+            )
+        }
     }
 
     private fun addMediaToEditor(
@@ -126,36 +108,6 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
                 .apply {
                     editorMediaListener.appendMediaFiles(this)
                 }
-    }
-
-    private fun optimizeMediaAndTrackEvent(mediaUri: Uri, isNew: Boolean, site: SiteModel): Uri? {
-        val path = mediaUtilsWrapper.getRealPathFromURI(mediaUri) ?: return null
-        val isVideo = mediaUtilsWrapper.isVideo(mediaUri.toString())
-        /**
-         * If the user enabled the optimize images feature, the image gets rotated in mediaUtils.getOptimizedMedia.
-         * If the user haven't enabled it, WPCom server takes care of rotating the image, however we need to rotate it
-         * manually on self-hosted sites. (https://github.com/wordpress-mobile/WordPress-Android/issues/5737)
-         */
-        val updatedMediaUri: Uri = mediaUtilsWrapper.getOptimizedMedia(path, isVideo)
-                ?: if (!site.isWPCom) {
-                    mediaUtilsWrapper.fixOrientationIssue(path, isVideo) ?: mediaUri
-                } else {
-                    mediaUri
-                }
-
-        editorTracker.trackAddMediaFromDevice(site, isNew, isVideo, updatedMediaUri)
-
-        return updatedMediaUri
-    }
-
-    private suspend fun enqueueMediaForUpload(
-        localSiteId: Int,
-        uri: Uri,
-        editorMediaListener: EditorMediaListener
-    ): MediaFile? {
-        val media = uploadMediaUseCase.queueFileForUpload(editorMediaListener, localSiteId, uri)
-        val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(media)
-        return media?.let { mediaFile }
     }
 
     fun cancel() {
@@ -184,9 +136,4 @@ class OptimizeAndAddMediaToEditorUseCase @Inject constructor(
 
         object AddingMediaIdle : AddMediaToEditorUiState(false, HiddenProgressDialog)
     }
-
-    private data class OptimizeMediaResult(
-        val optimizedMediaUris: List<Uri>,
-        val someMediaCouldNotBeRetrieved: Boolean
-    )
 }
