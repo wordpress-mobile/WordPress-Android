@@ -203,7 +203,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     }
                 });
 
-                if (mShouldDisplayMasterSwitch && (i == mSettingsArray.length - 1)) {
+                if (mShouldDisplayMasterSwitch && i == mSettingsArray.length - 1) {
                     View divider = commentsSetting.findViewById(R.id.notifications_list_divider);
                     if (divider != null) {
                         MarginLayoutParams mlp = (MarginLayoutParams) divider.getLayoutParams();

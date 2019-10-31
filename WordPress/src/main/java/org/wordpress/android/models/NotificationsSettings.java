@@ -172,16 +172,15 @@ public class NotificationsSettings {
         String[] settingsArray,
         String[] settingsValues
     ) {
-        boolean atLeastOneOptionEnabled = false;
         if (settingsJson != null && settingsArray.length == settingsValues.length) {
             for (int i = 0; i < settingsArray.length; i++) {
                 String settingValue = settingsValues[i];
                 boolean isChecked = JSONUtils.queryJSON(settingsJson, settingValue, true);
                 if (isChecked) {
-                    atLeastOneOptionEnabled = true;
+                    return true;
                 }
             }
         }
-        return atLeastOneOptionEnabled;
+        return false;
     }
 }
