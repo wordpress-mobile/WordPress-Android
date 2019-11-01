@@ -15,7 +15,7 @@ class UploadMediaUseCase @Inject constructor(
      *
      * Only [MediaModel] objects that have `MediaUploadState.QUEUED` statuses will be uploaded. .
      */
-    fun savePostAndStartUpload(editorMediaListener: EditorMediaListener,mediaModels: List<MediaModel>) {
+    fun savePostAndStartUpload(editorMediaListener: EditorMediaListener, mediaModels: List<MediaModel>) {
         mediaModels.filter { media ->
             MediaUploadState.fromString(media.uploadState) == MediaUploadState.QUEUED
         }.let { queuedMediaModels ->

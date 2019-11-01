@@ -29,7 +29,6 @@ class GetMediaModelUseCase @Inject constructor(
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage = _toastMessage as LiveData<ToastMessageHolder>
 
-
     suspend fun loadMediaModelFromDb(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelLocalIds
@@ -49,7 +48,7 @@ class GetMediaModelUseCase @Inject constructor(
         }
     }
 
-    suspend fun createMediaModelFromUri(localSiteId: Int, uri: Uri) : MediaModel? {
+    suspend fun createMediaModelFromUri(localSiteId: Int, uri: Uri): MediaModel? {
         return createMediaModelFromUri(localSiteId, listOf(uri)).firstOrNull()
     }
 
@@ -107,6 +106,5 @@ class GetMediaModelUseCase @Inject constructor(
     sealed class FileExistsResult {
         data class Error(@StringRes val resId: Int, val msgDuration: Duration) : FileExistsResult()
         object Success : FileExistsResult()
-
     }
 }

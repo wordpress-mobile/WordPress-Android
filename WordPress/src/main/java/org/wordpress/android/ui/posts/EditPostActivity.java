@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -763,7 +764,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mHandler.removeCallbacks(mSave);
             mHandler = null;
         }
-        mEditorMedia.cancelAddMediaListThread();
+        mEditorMedia.cancelAddMediaToEditorActions();
         removePostOpenInEditorStickyEvent();
         if (mEditorFragment instanceof AztecEditorFragment) {
             ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
@@ -918,22 +919,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
-
-        if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-            boolean hasSelectedPicture = false;
-            for (Uri uri : uriList) {
-                if (!MediaUtils.isVideo(uri.toString())) {
-                    hasSelectedPicture = true;
-                    break;
-                }
-            }
-            if (hasSelectedPicture) {
-                WPMediaUtils.advertiseImageOptimization(this, () -> mEditorMedia.addMediaList(uriList, false));
-                return;
-            }
-        }
-
-        mEditorMedia.addMediaList(uriList, false);
+        mEditorMedia.onPhotoPickerMediaChosen(uriList, this);
     }
 
     /*
@@ -2382,7 +2368,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (sharedUris != null) {
                 // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
                 getIntent().removeExtra(Intent.EXTRA_STREAM);
-                mEditorMedia.addMediaList(sharedUris, false);
+                mEditorMedia.optimizeIfSupportedAndAddMediaToEditor(sharedUris, false);
             }
         }
     }
@@ -2488,7 +2474,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(data);
+                    mEditorMedia.advertiseImageOptimisationAndAddMedia(retrieveMediaUris(data), this);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -2498,7 +2484,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
-                    mEditorMedia.addMediaItemGroupOrSingleItem(data);
+                    mEditorMedia.optimizeIfSupportedAndAddMediaToEditor(retrieveMediaUris(data), false);
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     mEditorMedia.addFreshlyTakenVideoToEditor();
@@ -2534,13 +2520,27 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private List<Uri> retrieveMediaUris(Intent data) {
+        ClipData clipData = data.getClipData();
+        ArrayList<Uri> uriList = new ArrayList<>();
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item item = clipData.getItemAt(i);
+                uriList.add(item.getUri());
+            }
+        } else {
+            uriList.add(data.getData());
+        }
+        return uriList;
+    }
+
     private void addLastTakenPicture() {
         try {
             // TODO why do we scan the file twice? Also how come it can result in OOM?
             WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
-            if (mEditorMedia.addMedia(capturedImageUri, true)) {
+            if (mEditorMedia.optimizeIfSupportedAndAddMediaToEditor(capturedImageUri, true)) {
                 final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 scanIntent.setData(capturedImageUri);
                 sendBroadcast(scanIntent);
@@ -2553,6 +2553,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void handleMediaPickerResult(Intent data) {
+        // TODO move this to EditorMedia
         ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
             return;
@@ -2755,21 +2756,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onMediaRetryAllClicked(Set<String> failedMediaIds) {
         UploadService.cancelFinalNotification(this, mPost);
         UploadService.cancelFinalNotificationForMedia(this, mSite);
-
-        ArrayList<MediaModel> failedMediaList = new ArrayList<>();
-        for (String mediaId : failedMediaIds) {
-            failedMediaList.add(mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)));
-        }
-
-        if (!failedMediaList.isEmpty()) {
-            for (MediaModel mediaModel : failedMediaList) {
-                mediaModel.setUploadState(MediaUploadState.QUEUED);
-                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
-            }
-            mEditorMedia.startUploadService(failedMediaList);
-        }
-
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        mEditorMedia.retryFailedMedia(failedMediaIds);
     }
 
     @Override

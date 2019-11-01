@@ -16,7 +16,7 @@ class OptimizeMediaUseCase @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun optimizeMediaAsync(
+    suspend fun optimizeMediaIfSupportedAsync(
         site: SiteModel,
         isNew: Boolean,
         uriList: List<Uri>

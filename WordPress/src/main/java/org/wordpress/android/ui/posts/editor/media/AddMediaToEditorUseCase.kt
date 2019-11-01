@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import android.util.ArrayMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -88,7 +87,7 @@ class AddMediaToEditorUseCase @Inject constructor(
         }
     }
 
-    fun optimizeAndAddLocalMediaToEditorAsync(
+    fun optimizeIfSupportedAndAddLocalMediaToEditorAsync(
         uriList: List<Uri>,
         site: SiteModel,
         isNew: Boolean,
@@ -100,7 +99,7 @@ class AddMediaToEditorUseCase @Inject constructor(
             } else {
                 AddingSingleMedia
             }
-            val optimizeMediaResult = optimizeMediaUseCase.optimizeMediaAsync(site, isNew, uriList)
+            val optimizeMediaResult = optimizeMediaUseCase.optimizeMediaIfSupportedAsync(site, isNew, uriList)
             val mediaModels = getMediaModelUseCase.createMediaModelFromUri(
                     site.id,
                     optimizeMediaResult.optimizedMediaUris
@@ -143,13 +142,15 @@ class AddMediaToEditorUseCase @Inject constructor(
     ) {
         mediaModels
                 .mapNotNull { media ->
-                    fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
-                        Pair(media.urlToUse, mediaFile)
+                    media.urlToUse?.let { urlToUse ->
+                        fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                            Pair(urlToUse, mediaFile)
+                        }
                     }
-                }.toMap(ArrayMap())
-                .apply {
-                    editorMediaListener.appendMediaFiles(this)
                 }
+                .forEach { pair -> editorMediaListener.appendMediaFile(pair.second, pair.first) }
+        // TODO this should ideally call .toMap(ArrayMap()).apply{editorMediaListener.appendMediaFiles(this)},
+        //  but appendMediaFiles doesn't work as expected. Eg. failed media overlay doesn't get shown.
     }
 
     fun cancel() {
