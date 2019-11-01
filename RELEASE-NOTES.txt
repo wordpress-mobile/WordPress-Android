@@ -1,6 +1,8 @@
 13.6
 -----
 * Pages ordering is case insensitive now
+* Block Editor: Add support for pexels images
+* Block Editor: Add left, center, and right image alignment controls
  
 13.5
 -----
