@@ -66,7 +66,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private static final String ARG_INPUT_USERNAME = "ARG_INPUT_USERNAME";
     private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
-    private static final String ARG_SKIPPED_JETPACK_REQUIRED = "ARG_SKIPPED_JETPACK_REQUIRED";
 
     private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 
@@ -93,23 +92,10 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private String mInputPassword;
     private boolean mIsWpcom;
 
-    // Used by Woo: The user was warned that Jetpack was required during the login
-    // process and continued with login anyway. Since Jetpack is needed for the login process,
-    // redirect them to install/activate/connect with Jetpack account
-    private boolean mSkippedJetpackRequired;
-
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
                                                             String siteName, String siteIconUrl,
                                                             String inputUsername, String inputPassword,
                                                             boolean isWpcom) {
-        return newInstance(inputSiteAddress, endpointAddress, siteName, siteIconUrl, inputUsername,
-                inputPassword, isWpcom, false);
-    }
-
-    public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-                                                            String siteName, String siteIconUrl,
-                                                            String inputUsername, String inputPassword,
-                                                            boolean isWpcom, boolean skippedJetpackRequired) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
@@ -119,7 +105,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         args.putString(ARG_INPUT_USERNAME, inputUsername);
         args.putString(ARG_INPUT_PASSWORD, inputPassword);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
-        args.putBoolean(ARG_SKIPPED_JETPACK_REQUIRED, skippedJetpackRequired);
         fragment.setArguments(args);
         return fragment;
     }
@@ -248,7 +233,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
         mInputPassword = getArguments().getString(ARG_INPUT_PASSWORD);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
-        mSkippedJetpackRequired = getArguments().getBoolean(ARG_SKIPPED_JETPACK_REQUIRED);
     }
 
     @Override
@@ -368,33 +352,27 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     /**
-     * Woo users: It was verified that certain discovery errors can take place even if Jetpack is
-     * installed/active/connected. In such cases, the API that is called to verify
-     * if Jetpack is available for a site, returns false (even if available).
-     *
-     * To handle this scenario, we are redirecting the users based on the type of discovery error.
-     *
-     * [MISSING_XMLRPC_METHOD], [XMLRPC_BLOCKED], [XMLRPC_FORBIDDEN] [NO_SITE_ERROR]
-     * and [GENERIC_ERROR] can take place even when Jetpack is installed/active/connected.
-     * So redirect users to discovery error screen.
-     *
-     * In those rare cases where we KNOW Jetpack is available but discovery still results in an
-     * error (other than the errors mentioned above), we redirect to discovery error screen.
-     *
+     * Woo users:
      * [HTTP_AUTH_REQUIRED] is not supported by Jetpack and can only occur if jetpack is not
      * available. Redirect to Jetpack required screen.
+     *
+     * The other discovery errors can take place even if Jetpack is available.
+     * Furthermore, for errors such as [MISSING_XMLRPC_METHOD], [XMLRPC_BLOCKED], [XMLRPC_FORBIDDEN]
+     * [NO_SITE_ERROR] and [GENERIC_ERROR], the jetpack available flag from the CONNECT_SITE_INFO
+     * API returns false even if Jetpack is available for the site.
+     * So we redirect to discovery error screen without checking for Jetpack availability.
      * */
     @Override
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
-        if (canErrorOccurWithJetpackEnabled(error) || !mSkippedJetpackRequired) {
-            ActivityUtils.hideKeyboard(getActivity());
-            mLoginListener.helpHandleDiscoveryError(mInputSiteAddress, mEndpointAddress,
-                    getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
-                    mAccountStore.getAccount().getAvatarUrl(), getDiscoveryErrorMessage(error));
-        } else {
+        ActivityUtils.hideKeyboard(getActivity());
+        if (error == DiscoveryError.HTTP_AUTH_REQUIRED) {
             mLoginListener.helpNoJetpackScreen(mInputSiteAddress, mEndpointAddress,
                     getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
                     mAccountStore.getAccount().getAvatarUrl(), true);
+        } else {
+            mLoginListener.helpHandleDiscoveryError(mInputSiteAddress, mEndpointAddress,
+                    getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
+                    mAccountStore.getAccount().getAvatarUrl(), getDiscoveryErrorMessage(error));
         }
     }
 
