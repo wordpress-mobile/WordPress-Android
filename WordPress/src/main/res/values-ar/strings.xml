@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-17 00:54:59+0000
+Translation-Revision-Date: 2019-10-25 18:47:33+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="pick_media">إضافة صورة أو فيديو</string>
     <string name="error_post_not_submitted_retrying">لم نتمكن من إرسال هذه المقالة للمراجعة، ولكننا سنحاول مرة أخرى لاحقًا. </string>
     <string name="error_post_not_scheduled_retrying">لم نتمكن من جدولة هذه المقالة، ولكننا سنحاول مرة أخرى لاحقًا.</string>
     <string name="error_post_not_published_retrying_private">لم نتمكن من نشر هذه المقالة الخاصة، ولكننا سنحاول مرة أخرى لاحقًا.</string>
@@ -225,7 +226,7 @@ Language: ar
     <string name="register_domain">تسجيل نطاق</string>
     <string name="jetpack_installed_message">والآن بعد تثبيت Jetpack، ما علينا سوى مساعدتك على الإعداد. لن يستغرق هذا إلا دقيقة.</string>
     <string name="stats_menu_remove">إزالة من الرؤى</string>
-    <string name="stats_menu_move_down">نقل إلى أسفل</string>
+    <string name="stats_menu_move_down">تحريك للأسفل</string>
     <string name="stats_menu_move_up">نقل إلى أعلى</string>
     <string name="stats_item_settings">إعدادات عنصر الإحصاءات</string>
     <string name="post_moving_to_draft">يجري نقل المقالة إلى المسودة</string>
@@ -464,7 +465,7 @@ Language: ar
     <string name="stats_followers_email">البريد الإلكتروني</string>
     <string name="stats_followers_wordpress_com">ووردبريس.كوم</string>
     <string name="stats_manage_insights">إدارة الرؤى</string>
-    <string name="stats_empty_insights_title">لم تتم إضافة رى حتى الآن</string>
+    <string name="stats_empty_insights_title">لم تتم إضافة أي رؤى بعد</string>
     <string name="stats_no_data_yet">لا توجد بيانات حتى الآن</string>
     <string name="menu_debug">قائمة تصحيح الأخطاء</string>
     <string name="change_password_dialog_message">جاري تغيير كلمة المرور…</string>
@@ -1513,9 +1514,6 @@ Language: ar
     <string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
     <string name="post_settings_set_featured_image">تعيين صورة مميزة</string>
     <string name="post_settings_featured_image">الصورة المميزة</string>
-    <string name="editor_content_placeholder">شارك قصتك هنا…</string>
-    <string name="editor_page_title_placeholder">عنوان الصفحة</string>
-    <string name="editor_post_title_placeholder">عنوان المقالة</string>
     <string name="email_address">عنوان البريد الإلكتروني</string>
     <string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
     <string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>
@@ -1913,7 +1911,6 @@ Language: ar
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
     <string name="comment_spammed">تم وضع علامة إزعاج على التعليق</string>
-    <string name="video">فيديو</string>
     <string name="reader_label_reply">رد</string>
     <string name="reader_likes_multi">%,d أحبوا هذا</string>
     <string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>

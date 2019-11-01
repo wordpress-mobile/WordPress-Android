@@ -113,8 +113,6 @@ Language: hi_IN
     <string name="approve_auto">सभी उपयोगकर्ता</string>
     <string name="days_quantity_one">1 दिन </string>
     <string name="days_quantity_other">%d दिन</string>
-    <string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
-    <string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
     <string name="email_address">ईमेल पता</string>
     <string name="comment_status_all">सभी</string>
     <string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
@@ -295,7 +293,6 @@ Language: hi_IN
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="share_link">कड़ी साझा करे</string>
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
-    <string name="video">वीडियो</string>
     <string name="reader_label_reply">जवाब दें</string>
     <string name="reader_likes_multi">%,d लोगों ने पसंद किया</string>
     <string name="reader_likes_you_and_multi">आपने और %,d लोगो ने इसे पसंद किया है</string>
