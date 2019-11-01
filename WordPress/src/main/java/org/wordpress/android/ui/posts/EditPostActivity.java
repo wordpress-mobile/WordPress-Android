@@ -323,7 +323,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
     @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
     @Inject UploadServiceFacade mUploadServiceFacade;
-    @Inject EditPostRepository mEditPostRepository;
+    private EditPostRepository mEditPostRepository = new EditPostRepository();
 
     private SiteModel mSite;
 
@@ -474,10 +474,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (savedInstanceState.containsKey(STATE_KEY_POST_REMOTE_ID)) {
-                mEditPostRepository.setPost(mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite));
+                mEditPostRepository.setPost(
+                        mPostStore.getPostByRemotePostId(savedInstanceState.getLong(STATE_KEY_POST_REMOTE_ID), mSite));
                 initializePostObject();
             } else if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                mEditPostRepository.setPost(mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)));
+                mEditPostRepository
+                        .setPost(mPostStore.getPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)));
                 initializePostObject();
             }
 
@@ -597,8 +599,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     .setPost(UploadService.updatePostWithCurrentlyCompletedUploads(mEditPostRepository.getPost()));
             if (mShowAztecEditor) {
                 try {
-                    mMediaMarkedUploadingOnStartIds =
-                            AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mEditPostRepository.getContent());
+                    mMediaMarkedUploadingOnStartIds = AztecEditorFragment
+                            .getMediaMarkedUploadingInPostContent(this, mEditPostRepository.getContent());
                     Collections.sort(mMediaMarkedUploadingOnStartIds);
                 } catch (NumberFormatException err) {
                     // see: https://github.com/wordpress-mobile/AztecEditor-Android/issues/805
@@ -614,8 +616,8 @@ public class EditPostActivity extends AppCompatActivity implements
             }
             mIsPage = mEditPostRepository.isPage();
 
-            EventBus.getDefault().postSticky(
-                    new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(), mEditPostRepository.getId()));
+            EventBus.getDefault().postSticky(new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(),
+                    mEditPostRepository.getId()));
 
             // run this purge in the background to not delay Editor initialization
             new Thread(this::purgeMediaToPostAssociationsIfNotInPostAnymore).start();
@@ -686,7 +688,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!mEditPostRepository.isLocalDraft()) {
                 mEditPostRepository.setLocallyChanged(true);
             }
-            mEditPostRepository.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            mEditPostRepository
+                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
 
@@ -858,7 +861,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private SecondaryEditorAction getSecondaryAction() {
-        return SecondaryEditorAction.getSecondaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
+        return SecondaryEditorAction
+                .getSecondaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
     }
 
     private @Nullable String getSecondaryActionText() {
@@ -1495,7 +1499,8 @@ public class EditPostActivity extends AppCompatActivity implements
         if (media != null && !media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.mediaFileFromMediaModel(media));
-        } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository.getId()) {
+        } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
+                .getId()) {
             setFeaturedImageId(media.getMediaId());
         }
     }
@@ -1590,7 +1595,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // only makes sense to change the publish date and locally changed date if the Post was actually changed
         if (postTitleOrContentChanged) {
             mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately();
-            mEditPostRepository.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            mEditPostRepository
+                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
     }
 
@@ -1785,7 +1791,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditPostRepository.setTitle(Objects.requireNonNull(mRevision.getPostTitle()));
         mEditPostRepository.setContent(Objects.requireNonNull(mRevision.getPostContent()));
         mEditPostRepository.setLocallyChanged(true);
-        mEditPostRepository.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        mEditPostRepository
+                .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         refreshEditorContent();
 
         WPSnackbar.make(mViewPager, getString(R.string.history_loaded_revision), 4000)
@@ -2324,7 +2331,8 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set post title and content
         if (mEditPostRepository.hasPost()) {
             // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized
-            if ((!TextUtils.isEmpty(mEditPostRepository.getContent()) || mEditorFragment instanceof GutenbergEditorFragment)
+            if ((!TextUtils.isEmpty(mEditPostRepository.getContent())
+                 || mEditorFragment instanceof GutenbergEditorFragment)
                 && !mHasSetPostContent) {
                 mHasSetPostContent = true;
                 // TODO: Might be able to drop .replaceAll() when legacy editor is removed
@@ -2378,7 +2386,8 @@ public class EditPostActivity extends AppCompatActivity implements
             // update PostModel
             mEditPostRepository.setContent(text);
             mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately();
-            mEditPostRepository.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            mEditPostRepository
+                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
 
         // Check for shared media
@@ -2437,7 +2446,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (!mEditPostRepository.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mEditPostRepository.setLocallyChanged(true);
-            mEditPostRepository.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+            mEditPostRepository
+                    .setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
 
         return titleChanged || contentChanged;
@@ -3337,6 +3347,10 @@ public class EditPostActivity extends AppCompatActivity implements
         return mSite;
     }
 
+    @Override
+    public EditPostRepository getEditPostRepository() {
+        return mEditPostRepository;
+    }
 
     // External Access to the Image Loader
     public AztecImageLoader getAztecImageLoader() {
@@ -3375,7 +3389,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public @NonNull EditorMediaPostData editorMediaPostData() {
-        return new EditorMediaPostData(mEditPostRepository.getId(), mEditPostRepository.getRemotePostId(), mEditPostRepository.isLocalDraft());
+        return new EditorMediaPostData(mEditPostRepository.getId(), mEditPostRepository.getRemotePostId(),
+                mEditPostRepository.isLocalDraft());
     }
 
     @Override

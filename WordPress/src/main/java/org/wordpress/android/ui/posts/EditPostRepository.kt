@@ -8,14 +8,10 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import java.util.concurrent.locks.ReentrantReadWriteLock
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
-@Singleton
-class EditPostRepository
-@Inject constructor() {
+class EditPostRepository {
     var post: PostModel? = null
         get() = lock.read { field }
         set(value) {
