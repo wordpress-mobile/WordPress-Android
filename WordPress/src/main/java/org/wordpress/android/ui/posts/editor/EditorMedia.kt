@@ -33,7 +33,7 @@ import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.A
 import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
-import org.wordpress.android.ui.posts.editor.media.AddMediaToPostUseCase
+import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
@@ -76,7 +76,7 @@ class EditorMedia @Inject constructor(
     private val mediaStore: MediaStore,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val addMediaToPostUseCase: AddMediaToPostUseCase,
+    private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
@@ -91,7 +91,7 @@ class EditorMedia @Inject constructor(
     private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
     val uiState: LiveData<AddMediaToPostUiState> = _uiState
 
-    val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToPostUseCase.snackBarMessage
+    val snackBarMessage: LiveData<SnackbarMessageHolder> = addLocalMediaToPostUseCase.snackBarMessage
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>() // TODO use Event<ToastMessageHolder>
     val toastMessage: LiveData<ToastMessageHolder> = mergeNotNull(
             listOf(
@@ -141,7 +141,7 @@ class EditorMedia @Inject constructor(
             }
             // fetch any shared media first - must be done on the main thread
             val fetchedUriList = fetchMediaList(uriList)
-            addMediaToPostUseCase.optimizeIfSupportedAndAddLocalMediaToEditorAsync(
+            addLocalMediaToPostUseCase.optimizeIfSupportedAndAddLocalMediaToEditorAsync(
                     fetchedUriList,
                     site,
                     isNew,
@@ -153,7 +153,7 @@ class EditorMedia @Inject constructor(
 
     fun dontOptimizeAndAddLocalMediaToEditor(localMediaIds: IntArray) {
         launch {
-            addMediaToPostUseCase.addLocalMediaToEditorAsync(
+            addLocalMediaToPostUseCase.addLocalMediaToEditorAsync(
                     localMediaIds.toList(),
                     editorMediaListener
             )
@@ -261,8 +261,7 @@ class EditorMedia @Inject constructor(
     }
 
     private fun enqueueAndStartUpload(mediaModelLocalIds: List<Int>) {
-        // TODO remove this runBlocking
-        runBlocking {
+        launch {
             getMediaModelUseCase
                     .loadMediaModelFromDb(mediaModelLocalIds)
                     .map { mediaModel ->
