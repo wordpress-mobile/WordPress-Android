@@ -143,6 +143,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.FluxCUtilsWrapper;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.MediaUtilsWrapper;
 import org.wordpress.android.util.NetworkUtils;
@@ -323,7 +324,8 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject FluxCUtilsWrapper mFluxCUtilsWrapper;
     @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
     @Inject UploadServiceFacade mUploadServiceFacade;
-    private EditPostRepository mEditPostRepository = new EditPostRepository();
+    @Inject LocaleManagerWrapper mLocaleManagerWrapper;
+    @Inject EditPostRepository mEditPostRepository;
 
     private SiteModel mSite;
 

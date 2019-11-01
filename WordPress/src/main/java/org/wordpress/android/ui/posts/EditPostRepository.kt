@@ -4,14 +4,17 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
-import java.util.Date
+import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.concurrent.locks.ReentrantReadWriteLock
+import javax.inject.Inject
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
-class EditPostRepository {
+class EditPostRepository
+@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper) {
     var post: PostModel? = null
         get() = lock.read { field }
         set(value) {
@@ -170,7 +173,7 @@ class EditPostRepository {
 
     fun updatePublishDateIfShouldBePublishedImmediately() {
         if (PostUtils.shouldPublishImmediately(status, dateCreated)) {
-            dateCreated = DateTimeUtils.iso8601FromDate(Date())
+            dateCreated = DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time)
         }
     }
 
@@ -183,9 +186,7 @@ class EditPostRepository {
         }
     }
 
-    fun isPublishable() = readFromPost {
-        PostUtils.isPublishable(this)
-    }
+    fun isPublishable() = PostUtils.isPublishable(post)
 
     fun contentHashcode() = readFromPost { this.contentHashcode() }
 
@@ -208,11 +209,7 @@ class EditPostRepository {
     fun updateStatusFromSnapshot() {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
-        status = if (snapshotStatus != null) {
-            snapshotStatus!!
-        } else {
-            PostStatus.DRAFT
-        }
+        status = snapshotStatus ?: DRAFT
     }
 
     fun hasStatusChanged(): Boolean {
