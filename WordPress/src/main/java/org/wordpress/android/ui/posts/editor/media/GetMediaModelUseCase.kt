@@ -58,6 +58,7 @@ class GetMediaModelUseCase @Inject constructor(
             uris.mapNotNull { uri ->
                 when (val result = verifyFileExists(uri)) {
                     is FileExistsResult.Error -> {
+                        // TODO FIx: this will show a toast for each error
                         _toastMessage.postValue(ToastMessageHolder(result.resId, result.msgDuration))
                         null
                     }

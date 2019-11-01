@@ -67,7 +67,7 @@ class EditorMedia @Inject constructor(
 
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
-    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
+    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>() // TODO use Event<ToastMessageHolder>
     val toastMessage: LiveData<ToastMessageHolder> = mergeNotNull(
             listOf(
                     _toastMessage,
@@ -197,8 +197,7 @@ class EditorMedia @Inject constructor(
     }
 
     fun onPhotoPickerMediaChosen(uriList: MutableList<Uri>, activity: Activity) {
-        val containsAtLeastOneImage = uriList.map { MediaUtils.isVideo(it.toString()) }
-                .any { false }
+        val containsAtLeastOneImage = uriList.any { MediaUtils.isVideo(it.toString()) }
         if (containsAtLeastOneImage) {
             advertiseImageOptimisationAndAddMedia(uriList, activity)
         } else {
