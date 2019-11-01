@@ -9,8 +9,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostLocation
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Calendar
@@ -186,7 +186,7 @@ class EditPostRepositoryTest {
     @Test
     fun `sets and reads status correctly`() {
         val post = PostModel()
-        val status = PostStatus.DRAFT
+        val status = DRAFT
 
         editPostRepository.post = post
         editPostRepository.status = status
@@ -539,19 +539,19 @@ class EditPostRepositoryTest {
         val firstPostStatus = PUBLISHED
         firstPost.status = firstPostStatus.toString()
         val secondPost = PostModel()
-        val secondPostStatus = PostStatus.PENDING
+        val secondPostStatus = PENDING
         secondPost.status = secondPostStatus.toString()
 
         editPostRepository.post = firstPost
-
-        assertThat(editPostRepository.post).isEqualTo(firstPost)
 
         editPostRepository.saveSnapshot()
 
         editPostRepository.post = secondPost
 
+        assertThat(editPostRepository.status).isEqualTo(PENDING)
 
+        editPostRepository.updateStatusFromSnapshot()
 
-        assertThat(editPostRepository.isSnapshotDifferent()).isTrue()
+        assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }
 }
