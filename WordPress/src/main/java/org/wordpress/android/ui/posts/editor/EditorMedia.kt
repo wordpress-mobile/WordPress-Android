@@ -4,8 +4,14 @@ import android.app.Activity
 import android.net.Uri
 import android.util.ArrayMap
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -17,13 +23,21 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
-import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase
-import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState
+import org.wordpress.android.ui.posts.ProgressDialogUiState
+import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
+import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
+import org.wordpress.android.ui.posts.editor.media.AddMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
@@ -37,6 +51,8 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.util.ArrayList
 import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
 data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
 
@@ -60,13 +76,22 @@ class EditorMedia @Inject constructor(
     private val mediaStore: MediaStore,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val addMediaToEditorUseCase: AddMediaToEditorUseCase
-) {
+    private val addMediaToPostUseCase: AddMediaToPostUseCase,
+    private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+) : CoroutineScope {
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = mainDispatcher + job
+
     private lateinit var site: SiteModel
     private lateinit var editorMediaListener: EditorMediaListener
 
-    val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
-    val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
+    private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
+    val uiState: LiveData<AddMediaToPostUiState> = _uiState
+
+    val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToPostUseCase.snackBarMessage
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>() // TODO use Event<ToastMessageHolder>
     val toastMessage: LiveData<ToastMessageHolder> = mergeNotNull(
             listOf(
@@ -96,6 +121,7 @@ class EditorMedia @Inject constructor(
     fun start(site: SiteModel, editorMediaListener: EditorMediaListener) {
         this.site = site
         this.editorMediaListener = editorMediaListener
+        _uiState.value = AddingMediaIdle
     }
 
     fun optimizeIfSupportedAndAddMediaToEditor(mediaUri: Uri?, isNew: Boolean): Boolean {
@@ -107,24 +133,37 @@ class EditorMedia @Inject constructor(
     }
 
     fun optimizeIfSupportedAndAddMediaToEditor(uriList: List<Uri>, isNew: Boolean) {
-        // fetch any shared media first - must be done on the main thread
-        val fetchedUriList = fetchMediaList(uriList)
-        addMediaToEditorUseCase.optimizeIfSupportedAndAddLocalMediaToEditorAsync(
-                fetchedUriList,
-                site,
-                isNew,
-                editorMediaListener
-        )
+        launch {
+            _uiState.value = if (uriList.size > 1) {
+                AddingMultipleMedia
+            } else {
+                AddingSingleMedia
+            }
+            // fetch any shared media first - must be done on the main thread
+            val fetchedUriList = fetchMediaList(uriList)
+            addMediaToPostUseCase.optimizeIfSupportedAndAddLocalMediaToEditorAsync(
+                    fetchedUriList,
+                    site,
+                    isNew,
+                    editorMediaListener
+            )
+            _uiState.value = AddingMediaIdle
+        }
     }
 
     fun dontOptimizeAndAddLocalMediaToEditor(localMediaIds: IntArray) {
-        addMediaToEditorUseCase.dontOptimizeAndAddLocalMediaToEditorAsync(localMediaIds.toList(), editorMediaListener)
+        launch {
+            addMediaToPostUseCase.addLocalMediaToEditorAsync(
+                    localMediaIds.toList(),
+                    editorMediaListener
+            )
+        }
     }
 
     fun cancelAddMediaToEditorActions() {
         // TODO The current behavior seems broken - we show a blocking dialog so the user can't cancel the action, but
         //  when the user rotates the device we actually cancel the action ourselves ...
-        addMediaToEditorUseCase.cancel()
+        job.cancel()
     }
 
     // TODO remove activity - it doesn't work with appContext!! The dialog needs to be created on a activity.
@@ -154,7 +193,14 @@ class EditorMedia @Inject constructor(
     }
 
     fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
-        addMediaToEditorUseCase.addMediaExistingInRemoteToEditorAsync(site, source, mediaIdList, editorMediaListener)
+        launch {
+            addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
+                    site,
+                    source,
+                    mediaIdList,
+                    editorMediaListener
+            )
+        }
     }
 
     fun cancelMediaUpload(localMediaId: Int, delete: Boolean) {
@@ -258,5 +304,28 @@ class EditorMedia @Inject constructor(
         }
 
         return fetchedUriList
+    }
+
+    sealed class AddMediaToPostUiState(
+        val editorOverlayVisibility: Boolean,
+        val progressDialogUiState: ProgressDialogUiState
+    ) {
+        /**
+         * Adding multiple media items at once can take several seconds on slower devices, so we show a blocking
+         * progress dialog in this situation - otherwise the user could accidentally back out of the process
+         * before all items were added
+         */
+        object AddingMultipleMedia : AddMediaToPostUiState(
+                editorOverlayVisibility = true,
+                progressDialogUiState = VisibleProgressDialog(
+                        messageString = UiStringRes(string.add_media_progress),
+                        cancelable = false,
+                        indeterminate = true
+                )
+        )
+
+        object AddingSingleMedia : AddMediaToPostUiState(true, HiddenProgressDialog)
+
+        object AddingMediaIdle : AddMediaToPostUiState(false, HiddenProgressDialog)
     }
 }
