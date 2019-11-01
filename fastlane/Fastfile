@@ -205,7 +205,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"Vanilla")
+    build_bundle(version: version, flavor:"Vanilla", buildType: "release")
   end
 
   #####################################################################################
