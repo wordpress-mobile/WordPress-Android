@@ -455,7 +455,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.start(getEditPostRepository().getPost());
+        mPublishedViewModel.start(getEditPostRepository());
         updateCategoriesTextView();
         initLocation();
         updateFeaturedImageView();
@@ -696,7 +696,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void updatePostStatusRelatedViews() {
         updateStatusTextView();
         updatePublishDateTextView();
-        mPublishedViewModel.onPostStatusChanged(getEditPostRepository().getPost());
+        mPublishedViewModel.onPostStatusChanged(getEditPostRepository());
     }
 
     private void updateStatusTextView() {
@@ -740,9 +740,9 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        PostModel post = getEditPostRepository().getPost();
-        if (post != null) {
-            String labelToUse = mPostSettingsUtils.getPublishDateLabel(post);
+        EditPostRepository postRepository = getEditPostRepository();
+        if (postRepository != null) {
+            String labelToUse = mPostSettingsUtils.getPublishDateLabel(postRepository);
             mPublishDateTextView.setText(labelToUse);
         }
     }

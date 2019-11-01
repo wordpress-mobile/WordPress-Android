@@ -128,6 +128,11 @@ class EditPostRepository {
         set(value) {
             writeToPost { this.slug = value }
         }
+    var link: String
+        get() = readFromPost { this.link }
+        set(value) {
+            writeToPost { this.link = value }
+        }
     var location: PostLocation
         get() = readFromPost { this.location }
         set(value) {
@@ -164,7 +169,7 @@ class EditPostRepository {
     }
 
     fun updatePublishDateIfShouldBePublishedImmediately() {
-        if (PostUtils.shouldPublishImmediately(post)) {
+        if (PostUtils.shouldPublishImmediately(status, dateCreated)) {
             dateCreated = DateTimeUtils.iso8601FromDate(Date())
         }
     }

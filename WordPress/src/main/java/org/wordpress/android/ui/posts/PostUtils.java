@@ -296,7 +296,7 @@ public class PostUtils {
     }
 
     static boolean shouldPublishImmediately(PostModel postModel) {
-        if (!shouldPublishImmediatelyOptionBeAvailable(postModel)) {
+        if (!shouldPublishImmediatelyOptionBeAvailable(PostStatus.fromPost(postModel))) {
             return false;
         }
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
@@ -305,14 +305,24 @@ public class PostUtils {
         return pubDate == null || !pubDate.after(now);
     }
 
-    static boolean isPublishDateInTheFuture(PostModel postModel) {
-        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+    static boolean shouldPublishImmediately(PostStatus postStatus, String dateCreated) {
+        if (!shouldPublishImmediatelyOptionBeAvailable(postStatus)) {
+            return false;
+        }
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
+        Date now = new Date();
+        // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
+        return pubDate == null || !pubDate.after(now);
+    }
+
+    static boolean isPublishDateInTheFuture(String dateCreated) {
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
         Date now = new Date();
         return pubDate != null && pubDate.after(now);
     }
 
-    static boolean isPublishDateInThePast(PostModel postModel) {
-        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+    static boolean isPublishDateInThePast(String dateCreated) {
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
 
         // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
         Calendar cal = Calendar.getInstance();
@@ -324,6 +334,10 @@ public class PostUtils {
     // Only drafts should have the option to publish immediately to avoid user confusion
     static boolean shouldPublishImmediatelyOptionBeAvailable(PostModel postModel) {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
+    }
+
+    static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
+        return postStatus == PostStatus.DRAFT;
     }
 
     public static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
