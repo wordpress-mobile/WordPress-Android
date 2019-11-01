@@ -2,10 +2,8 @@ package org.wordpress.android.ui.posts
 
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -17,7 +15,7 @@ import kotlin.concurrent.write
 
 @Singleton
 class EditPostRepository
-@Inject constructor(private val postStore: PostStore) {
+@Inject constructor() {
     var post: PostModel? = null
         get() = lock.read { field }
         set(value) {
@@ -160,10 +158,6 @@ class EditPostRepository
     fun hasLocation() = readFromPost { this.hasLocation() }
 
     fun hasPost() = post != null
-
-    fun instantiatePost(site: SiteModel, isPage: Boolean) {
-        post = postStore.instantiatePostModel(site, isPage, null, null)
-    }
 
     fun getPendingMediaForPost(): Set<MediaModel> = readFromPost {
         UploadService.getPendingMediaForPost(this)

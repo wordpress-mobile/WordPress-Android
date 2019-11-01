@@ -351,7 +351,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Create a new post
-        mEditPostRepository.instantiatePost(mSite, mIsPage);
+        mEditPostRepository.setPost(mPostStore.instantiatePostModel(mSite, mIsPage, null, null));
         mEditPostRepository.setStatus(PostStatus.DRAFT);
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(), mEditPostRepository.getId()));
