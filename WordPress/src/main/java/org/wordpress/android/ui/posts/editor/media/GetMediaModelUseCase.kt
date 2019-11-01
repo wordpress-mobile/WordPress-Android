@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -29,11 +30,21 @@ class GetMediaModelUseCase @Inject constructor(
     val toastMessage = _toastMessage as LiveData<ToastMessageHolder>
 
 
-    suspend fun loadMediaModelFromDb(mediaModelIds: Iterable<Int>): List<MediaModel> {
+    suspend fun loadMediaModelFromDb(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
         return withContext(bgDispatcher) {
-            mediaModelIds
+            mediaModelLocalIds
                     .mapNotNull {
                         mediaStore.getMediaWithLocalId(it)
+                    }
+        }
+    }
+
+    suspend fun loadMediaModelFromDb(site: SiteModel, mediaModelsRemoteIds: Iterable<Long>): List<MediaModel> {
+        return withContext(bgDispatcher) {
+            mediaModelsRemoteIds
+                    // TODO should we show a toast or log a message when getSiteMediaWithId returns null?
+                    .mapNotNull {
+                        mediaStore.getSiteMediaWithId(site, it)
                     }
         }
     }

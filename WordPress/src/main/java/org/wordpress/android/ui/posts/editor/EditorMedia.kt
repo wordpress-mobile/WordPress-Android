@@ -4,9 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.util.ArrayMap
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -15,20 +16,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
-import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
 import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase
 import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
-import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase
 import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.CrashLoggingUtils
-import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
@@ -37,41 +34,33 @@ import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.util.ArrayList
-import javax.inject.Named
+import javax.inject.Inject
 
 data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
 
 interface EditorMediaListener {
+    // TODO convert this into LiveData<Action> or similar and remove EditorMediaListener from all the places and send
+    //  there only EditorMediaPostData
     fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
-    fun editorMediaPostData(): EditorMediaPostData
     fun savePostAsyncFromEditorMedia(listener: AfterSavePostListener? = null)
+
+    fun editorMediaPostData(): EditorMediaPostData
 }
 
-class EditorMedia(
-    private val site: SiteModel,
-    private val editorMediaListener: EditorMediaListener,
+class EditorMedia @Inject constructor(
     private val uploadMediaUseCase: UploadMediaUseCase,
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
-    optimizeMediaUseCase: OptimizeMediaUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
-    private val editorTracker: EditorTracker,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
-    private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val addMediaToEditorUseCase: AddMediaToEditorUseCase
 ) {
-    private val addMediaToEditorUseCase: AddMediaToEditorUseCase = AddMediaToEditorUseCase(
-            optimizeMediaUseCase,
-            getMediaModelUseCase,
-            updateMediaModelUseCase,
-            fluxCUtilsWrapper,
-            uploadMediaUseCase,
-            mainDispatcher
-    )
+    private lateinit var site: SiteModel
+    private lateinit var editorMediaListener: EditorMediaListener
+
     val uiState: LiveData<AddMediaToEditorUiState> = addMediaToEditorUseCase.uiState
     val snackBarMessage: LiveData<SnackbarMessageHolder> = addMediaToEditorUseCase.snackBarMessage
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
@@ -99,6 +88,11 @@ class EditorMedia(
         STOCK_PHOTO_LIBRARY
     }
 
+    fun start(site:SiteModel, editorMediaListener: EditorMediaListener) {
+        this.site = site
+        this.editorMediaListener = editorMediaListener
+    }
+
     fun addMedia(mediaUri: Uri?, isNew: Boolean): Boolean {
         mediaUri?.let {
             addMediaList(listOf(it), isNew)
@@ -110,12 +104,16 @@ class EditorMedia(
     fun addMediaList(uriList: List<Uri>, isNew: Boolean) {
         // fetch any shared media first - must be done on the main thread
         val fetchedUriList = fetchMediaList(uriList)
-        addMediaToEditorUseCase.optimizeAndAddAsync(
+        addMediaToEditorUseCase.optimizeAndAddLocalMediaToEditorAsync(
                 fetchedUriList,
                 site,
                 isNew,
                 editorMediaListener
         )
+    }
+
+    fun dontOptimizeAndAddLocalMediaToEditor(localMediaIds: IntArray) {
+        addMediaToEditorUseCase.dontOptimizeAndAddLocalMediaToEditorAsync(localMediaIds.toList(), editorMediaListener)
     }
 
     fun cancelAddMediaListThread() {
@@ -171,37 +169,20 @@ class EditorMedia(
         }
     }
 
-    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaId: Long): Boolean {
-        return mediaStore.getSiteMediaWithId(site, mediaId)?.let { media ->
-            editorTracker.trackAddMediaEvent(site, source, media.isVideo)
-            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
-                editorMediaListener.appendMediaFile(mediaFile, media.urlToUse)
-            }
-            true
-        } ?: false.also { AppLog.w(T.MEDIA, "Cannot add null media to post") }
+    fun addExistingMediaToEditor(mediaModels: List<MediaModel>, source: AddExistingMediaSource) {
+        addExistingMediaToEditor(source, mediaModels.map { it.mediaId })
     }
 
-    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
-        val mediaMap = mediaIdList.asSequence().mapNotNull { mediaId ->
-            mediaStore.getSiteMediaWithId(site, mediaId)
-        }.onEach { media ->
-            editorTracker.trackAddMediaEvent(site, source, media.isVideo)
-        }.mapNotNull { media ->
-            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
-                Pair(media.urlToUse, mediaFile)
-            }
-        }.toMap(ArrayMap())
-        (mediaIdList.size - mediaMap.size).takeIf { it > 0 }?.let { failedMediaCount ->
-            AppLog.w(T.MEDIA, "Failed to add $failedMediaCount media to post")
-        }
-        editorMediaListener.appendMediaFiles(mediaMap)
+    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIds: LongArray) {
+        addExistingMediaToEditor(source, mediaIds.toList())
     }
 
     fun prepareMediaPost(mediaIds: LongArray) {
-        mediaIds.forEach { id ->
-            addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id)
-        }
-        editorMediaListener.savePostAsyncFromEditorMedia()
+        addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, mediaIds.toList())
+    }
+
+    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
+        addMediaToEditorUseCase.addMediaExistingInRemoteToEditorAsync(site, source, mediaIdList, editorMediaListener)
     }
 
     fun cancelMediaUpload(localMediaId: Int, delete: Boolean) {
@@ -237,7 +218,10 @@ class EditorMedia(
     fun startUploadService(mediaList: List<MediaModel>) {
         uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaList)
     }
-}
 
-private val MediaModel.urlToUse
-    get() = if (url.isNullOrBlank()) filePath else url
+    fun addFreshlyTakenVideoToEditor() {
+        addMediaList(listOf(mediaUtilsWrapper.getLastRecordedVideoUri()), true).also {
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW)
+        }
+    }
+}

@@ -17,13 +17,14 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
+import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource
 import org.wordpress.android.ui.posts.editor.EditorMediaListener
+import org.wordpress.android.ui.posts.editor.EditorTracker
 import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMediaIdle
 import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.AddMediaToEditorUseCase.AddMediaToEditorUiState.AddingSingleMedia
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
-import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,6 +40,7 @@ class AddMediaToEditorUseCase @Inject constructor(
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val uploadMediaUseCase: UploadMediaUseCase,
+    private val editorTracker: EditorTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private var job: Job = Job()
@@ -56,7 +58,37 @@ class AddMediaToEditorUseCase @Inject constructor(
         _uiState.value = AddingMediaIdle
     }
 
-    fun optimizeAndAddAsync(
+    fun addMediaExistingInRemoteToEditorAsync(
+        site: SiteModel,
+        source: AddExistingMediaSource,
+        mediaIdList: List<Long>,
+        editorMediaListener: EditorMediaListener
+    ) {
+        launch {
+            getMediaModelUseCase
+                    .loadMediaModelFromDb(site, mediaIdList)
+                    .onEach { media ->
+                        editorTracker.trackAddMediaEvent(site, source, media.isVideo)
+                    }
+                    .apply {
+                        addMediaToEditor(editorMediaListener, this)
+                        editorMediaListener.savePostAsyncFromEditorMedia()
+                    }
+        }
+    }
+
+    fun dontOptimizeAndAddLocalMediaToEditorAsync(
+        localMediaIds: List<Int>,
+        editorMediaListener: EditorMediaListener
+    ) {
+        launch {
+            getMediaModelUseCase.loadMediaModelFromDb(localMediaIds).let {
+                addToEditorAndUpload(it, editorMediaListener)
+            }
+        }
+    }
+
+    fun optimizeAndAddLocalMediaToEditorAsync(
         uriList: List<Uri>,
         site: SiteModel,
         isNew: Boolean,
@@ -73,10 +105,7 @@ class AddMediaToEditorUseCase @Inject constructor(
                     site.id,
                     optimizeMediaResult.optimizedMediaUris
             )
-            enqueueForUpload(mediaModels, editorMediaListener)
-            val mediaFiles = mediaModels.mapNotNull { fluxCUtilsWrapper.mediaFileFromMediaModel(it) }
-            addMediaToEditor(editorMediaListener, mediaFiles)
-            uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaModels)
+            addToEditorAndUpload(mediaModels, editorMediaListener)
 
             if (optimizeMediaResult.someMediaCouldNotBeRetrieved) {
                 _snackBarMessage.value = SnackbarMessageHolder(R.string.gallery_error)
@@ -84,6 +113,15 @@ class AddMediaToEditorUseCase @Inject constructor(
 
             _uiState.value = AddingMediaIdle
         }
+    }
+
+    private fun addToEditorAndUpload(
+        mediaModels: List<MediaModel>,
+        editorMediaListener: EditorMediaListener
+    ) {
+        enqueueForUpload(mediaModels, editorMediaListener)
+        addMediaToEditor(editorMediaListener, mediaModels)
+        uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaModels)
     }
 
     private fun enqueueForUpload(
@@ -101,10 +139,14 @@ class AddMediaToEditorUseCase @Inject constructor(
 
     private fun addMediaToEditor(
         editorMediaListener: EditorMediaListener,
-        mediaFiles: List<MediaFile>
+        mediaModels: List<MediaModel>
     ) {
-        mediaFiles
-                .associateByTo(ArrayMap(), { it.filePath }, { it })
+        mediaModels
+                .mapNotNull { media ->
+                    fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
+                        Pair(media.urlToUse, mediaFile)
+                    }
+                }.toMap(ArrayMap())
                 .apply {
                     editorMediaListener.appendMediaFiles(this)
                 }
@@ -137,3 +179,6 @@ class AddMediaToEditorUseCase @Inject constructor(
         object AddingMediaIdle : AddMediaToEditorUiState(false, HiddenProgressDialog)
     }
 }
+
+private val MediaModel.urlToUse
+    get() = if (url.isNullOrBlank()) filePath else url
