@@ -575,6 +575,14 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
             endProgress();
 
+            if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+                // Woo users: One of the errors that can happen here is the XML-RPC endpoint could
+                // be blocked by plugins such as `Disable XML-RPC`. Redirect the user to discovery
+                // error screen in such cases.
+                handleDiscoveryError(DiscoveryError.XMLRPC_BLOCKED, mInputSiteAddress);
+                return;
+            }
+
             String errorMessage;
             if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
                 if (event.rowsAffected == 0) {
