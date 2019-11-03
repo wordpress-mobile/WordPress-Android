@@ -20,19 +20,19 @@ class CustomTreeBuilder(ET.TreeBuilder):
 def xml_parse(xml_file):
     root = None
     ns_map = {} # prefix -> ns_uri
-    for event, elem in ET.iterparse(xml_file, ['start-ns', 'start', 'end'], parser=ET.XMLParser(target=CustomTreeBuilder())):
+    xml_parser = ET.XMLParser(target=CustomTreeBuilder())
+    for event, element in ET.iterparse(xml_file, ['start-ns', 'start', 'end'], parser=xml_parser):
         if event == 'start-ns':
-            # elem = (prefix, ns_uri)
-            ns_map[elem[0]] = elem[1]
+            ns_map[element[0]] = element[1]
         elif event == 'start':
             if root is None:
-                root = elem
+                root = element
     for prefix, uri in ns_map.items():
         ET.register_namespace(prefix, uri)
     return ET.ElementTree(root)
 
 def get_string_names(tree):
-    names = [element.attrib["name"] if "name" in element.attrib else None for element in tree]
+    names = [element.attrib['name'] for element in tree if 'name' in element.attrib] 
     return dict.fromkeys(names, 1)
 
 def create_section(tree_root, section_name):
@@ -53,7 +53,7 @@ def add_section(tree_root, insertion_point_index, section_name, new_elements):
         insertion_point_index = create_section(tree_root, section_name)
     # remove strings already present in main xml
     string_names = get_string_names(tree_root)
-    new_elements_filtered = [element for element in new_elements if element.tag is ET.Comment or "name" in element.attrib and element.attrib["name"] not in string_names]
+    new_elements_filtered = [element for element in new_elements if element.tag is ET.Comment or 'name' in element.attrib and element.attrib['name'] not in string_names]
     for index, new_element in enumerate(new_elements_filtered):
         tree_root.insert(insertion_point_index+index, new_element)
     new_elements_filtered[-1].tail = '\n'+xml_indent
@@ -63,12 +63,12 @@ def find_and_empty_section(tree_root, section_name):
     for index, resource_element in enumerate(tree_root):
         if resource_element.tag is ET.Comment and resource_element.text == start_section_template % section_name:
             removing = True
-            logging.debug( "Emptying section <!--%s-->" % (start_section_template % section_name) )
+            logging.debug('Emptying section <!--%s-->' % (start_section_template % section_name))
         if resource_element.tag is ET.Comment and resource_element.text == end_section_template % section_name:
             return index
         if removing:
             tree_root.remove(resource_element)
-    logging.debug( 'Adding a new setion <!--%s-->'  % (start_section_template % section_name) )
+    logging.debug('Adding a new setion <!--%s-->' % (start_section_template % section_name))
     return None
 
 def merge_strings(main_xml, extra_sections):
