@@ -357,7 +357,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val defaultPages = listOf(MY_SITE, READER, NEW_POST, ME, NOTIFS)
+        private val oldPages = listOf(MY_SITE, READER, NEW_POST, ME, NOTIFS)
         private val pages = listOf(MY_SITE, READER, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
@@ -369,7 +369,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
                 pages.size
             } else {
-                defaultPages.size
+                oldPages.size
             }
         }
 
@@ -377,7 +377,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             return if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
                 pages
             } else {
-                defaultPages
+                oldPages
             }
         }
 
