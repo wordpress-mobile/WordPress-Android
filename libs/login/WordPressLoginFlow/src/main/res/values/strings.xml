@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Login -->
     <string name="email_address">Email address</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
@@ -64,6 +65,8 @@
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+
+    <!-- Signup -->
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
@@ -103,12 +106,11 @@
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 
+    <!-- Login notifications -->
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
-
     <string name="notification_login_title_in_progress">Login in progress…</string>
     <string name="notification_logging_in">Please wait while logging in.</string>
-
     <string name="notification_login_title_stopped">Login stopped</string>
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
