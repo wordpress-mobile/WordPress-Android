@@ -20,5 +20,5 @@ class MainActionDiffCallback(
     override fun areContentsTheSame(
         oldItemPosition: Int,
         newItemPosition: Int
-    ): Boolean = true
+    ): Boolean = oldList[oldItemPosition] == newList[newItemPosition]
 }
