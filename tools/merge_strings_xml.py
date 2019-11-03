@@ -55,7 +55,7 @@ def add_section(tree_root, insertion_point_index, section_name, new_elements):
     new_elements_filtered = [element for element in new_elements if element.tag is ET.Comment or "name" in element.attrib and element.attrib["name"] not in string_names]
     for index, new_element in enumerate(new_elements_filtered):
         tree_root.insert(insertion_point_index+index, new_element)
-    new_elements_filtered[-1].tail = '\n'+xml_indent;
+    new_elements_filtered[-1].tail = '\n'+xml_indent
 
 def find_and_empty_section(tree_root, section_name):
     removing = False
