@@ -34,18 +34,22 @@ def get_string_names(tree):
     names = [element.attrib["name"] if "name" in element.attrib else None for element in tree]
     return dict.fromkeys(names, 1)
 
+def create_section(tree_root, section_name):
+    insertion_point_index = len(tree_root)
+    previous_element = list(tree_root)[insertion_point_index-1]
+    previous_element.tail = ('\n'+xml_indent) * 3
+    start_section_comment = ET.Comment(' '+section_name+' ')
+    start_section_comment.tail = '\n'+xml_indent
+    tree_root.insert(insertion_point_index, start_section_comment)
+    end_section_comment = ET.Comment(' END ('+section_name+') ')
+    end_section_comment.tail = '\n'
+    insertion_point_index = insertion_point_index + 1
+    tree_root.insert(insertion_point_index, end_section_comment)
+    return insertion_point_index
+
 def add_section(tree_root, insertion_point_index, section_name, new_elements):
     if insertion_point_index is None:
-        insertion_point_index = len(tree_root)
-        previous_element = list(tree_root)[insertion_point_index-1]
-        previous_element.tail = ('\n'+xml_indent) * 3
-        start_section_comment = ET.Comment(' '+section_name+' ')
-        start_section_comment.tail = '\n'+xml_indent
-        tree_root.insert(insertion_point_index, start_section_comment)
-        end_section_comment = ET.Comment(' END ('+section_name+') ')
-        end_section_comment.tail = '\n'
-        insertion_point_index = insertion_point_index + 1
-        tree_root.insert(insertion_point_index, end_section_comment)
+        insertion_point_index = create_section(tree_root, section_name)
     # remove existing strings in main xml
     string_names = get_string_names(tree_root)
     new_elements_filtered = [element for element in new_elements if element.tag is ET.Comment or "name" in element.attrib and element.attrib["name"] not in string_names]
