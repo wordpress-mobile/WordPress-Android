@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 
-open class ActionListItemViewHolder(
+class ActionListItemViewHolder(
     internal val parent: ViewGroup
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.main_action_list_item, parent, false)) {
     open fun bind(action: CreateAction) {
