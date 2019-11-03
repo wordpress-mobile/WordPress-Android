@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 91
+        return 92
     }
 
     override fun getDbName(): String {
@@ -1013,6 +1013,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "GATEWAY_ID TEXT NOT NULL," +
                                     "DATA TEXT NOT NULL)"
                     )
+                }
+                91 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT NULL")
                 }
             }
         }
