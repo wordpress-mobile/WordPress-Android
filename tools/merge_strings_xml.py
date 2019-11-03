@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import json
 
-xml_indent = '    ';
+xml_indent = '    '
 #logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
 
@@ -50,7 +50,7 @@ def create_section(tree_root, section_name):
 def add_section(tree_root, insertion_point_index, section_name, new_elements):
     if insertion_point_index is None:
         insertion_point_index = create_section(tree_root, section_name)
-    # remove existing strings in main xml
+    # remove strings already present in main xml
     string_names = get_string_names(tree_root)
     new_elements_filtered = [element for element in new_elements if element.tag is ET.Comment or "name" in element.attrib and element.attrib["name"] not in string_names]
     for index, new_element in enumerate(new_elements_filtered):
