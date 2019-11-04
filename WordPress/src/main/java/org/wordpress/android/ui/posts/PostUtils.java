@@ -14,6 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
@@ -57,7 +58,8 @@ public class PostUtils {
     private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
 
-    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostModel post, Map<String, Object> properties) {
+    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostImmutableModel post,
+                                                                       Map<String, Object> properties) {
         if (properties == null) {
             properties = new HashMap<>();
         }
@@ -138,7 +140,7 @@ public class PostUtils {
         return SHORTCODE_TABLE.contains(shortCode);
     }
 
-    public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
+    public static void trackSavePostAnalytics(PostImmutableModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeToAnalyticsProperties(post, properties);
@@ -181,7 +183,7 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenEditorAnalytics(PostModel post, SiteModel site) {
+    public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
@@ -195,20 +197,20 @@ public class PostUtils {
                 properties);
     }
 
-    public static boolean isPublishable(PostModel post) {
+    public static boolean isPublishable(PostImmutableModel post) {
         return post != null && !(post.getContent().trim().isEmpty()
                                  && post.getExcerpt().trim().isEmpty()
                                  && post.getTitle().trim().isEmpty());
     }
 
-    public static boolean hasEmptyContentFields(PostModel post) {
+    public static boolean hasEmptyContentFields(PostImmutableModel post) {
         return TextUtils.isEmpty(post.getTitle()) && TextUtils.isEmpty(post.getContent());
     }
 
     /**
      * Checks if two posts have differing data
      */
-    public static boolean postHasEdits(@Nullable PostModel oldPost, PostModel newPost) {
+    public static boolean postHasEdits(@Nullable PostImmutableModel oldPost, PostImmutableModel newPost) {
         if (oldPost == null) {
             return newPost != null;
         }
@@ -346,7 +348,7 @@ public class PostUtils {
         }
     }
 
-    public static boolean isFirstTimePublish(PostModel post) {
+    public static boolean isFirstTimePublish(PostImmutableModel post) {
         return PostStatus.fromPost(post) == PostStatus.DRAFT
                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
     }
@@ -451,7 +453,7 @@ public class PostUtils {
         return postContent.indexOf(imgBlockHeaderToSearchFor) != -1;
     }
 
-    public static boolean isPostInConflictWithRemote(PostModel post) {
+    public static boolean isPostInConflictWithRemote(PostImmutableModel post) {
         // at this point we know there's a potential version conflict (the post has been modified
         // both locally and on the remote)
         return !post.getLastModified().equals(post.getRemoteLastModified()) && post.isLocallyChanged();
@@ -516,7 +518,7 @@ public class PostUtils {
         return dateFormat.format(date) + " @ " + timeFormat.format(date);
     }
 
-    public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostModel post) {
+    public static String getPreviewUrlForPost(RemotePreviewType remotePreviewType, PostImmutableModel post) {
         String previewUrl;
 
         switch (remotePreviewType) {
@@ -559,7 +561,7 @@ public class PostUtils {
         post.setChangesConfirmedContentHashcode(post.contentHashcode());
     }
 
-    public static boolean isPostCurrentlyBeingEdited(PostModel post) {
+    public static boolean isPostCurrentlyBeingEdited(PostImmutableModel post) {
         PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
         return flag != null && post != null
                && post.getLocalSiteId() == flag.localSiteId

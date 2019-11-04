@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.uploads
 
 import dagger.Reusable
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
@@ -26,7 +26,7 @@ class UploadActionUseCase @Inject constructor(
         REMOTE_AUTO_SAVE, UPLOAD_AS_DRAFT, UPLOAD, DO_NOTHING
     }
 
-    fun getAutoUploadAction(post: PostModel, site: SiteModel): UploadAction {
+    fun getAutoUploadAction(post: PostImmutableModel, site: SiteModel): UploadAction {
         val twoDaysAgoTimestamp = Date().time - TWO_DAYS_IN_MILLIS
         // Don't auto-upload/save changes which are older than 2 days
         if (DateTimeUtils.timestampFromIso8601Millis(post.dateLocallyChanged) < twoDaysAgoTimestamp) {
@@ -68,7 +68,7 @@ class UploadActionUseCase @Inject constructor(
         return action
     }
 
-    fun getUploadAction(post: PostModel): UploadAction {
+    fun getUploadAction(post: PostImmutableModel): UploadAction {
         return when {
             uploadWillPushChanges(post) ->
                 // We are sure we can push the post as the user has explicitly confirmed the changes
@@ -83,12 +83,13 @@ class UploadActionUseCase @Inject constructor(
         }
     }
 
-    fun isEligibleForAutoUpload(site: SiteModel, post: PostModel): Boolean {
+    fun isEligibleForAutoUpload(site: SiteModel, post: PostImmutableModel): Boolean {
         return when (getAutoUploadAction(post, site)) {
             UPLOAD -> true
             UPLOAD_AS_DRAFT, REMOTE_AUTO_SAVE, DO_NOTHING -> false
         }
     }
 
-    fun uploadWillPushChanges(post: PostModel) = post.changesConfirmedContentHashcode == post.contentHashcode()
+    fun uploadWillPushChanges(post: PostImmutableModel) =
+            post.changesConfirmedContentHashcode == post.contentHashcode()
 }

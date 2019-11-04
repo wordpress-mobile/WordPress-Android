@@ -2,7 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.app.Activity
 import dagger.Reusable
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.WPWebViewUsageCategory
@@ -38,17 +38,17 @@ class RemotePreviewLogicHelper @Inject constructor(
     }
 
     interface RemotePreviewHelperFunctions {
-        fun notifyUploadInProgress(post: PostModel): Boolean
-        fun updatePostIfNeeded(): PostModel? = null
+        fun notifyUploadInProgress(post: PostImmutableModel): Boolean
+        fun updatePostIfNeeded(): PostImmutableModel? = null
         fun notifyEmptyDraft() {}
-        fun startUploading(isRemoteAutoSave: Boolean, post: PostModel)
+        fun startUploading(isRemoteAutoSave: Boolean, post: PostImmutableModel)
         fun notifyEmptyPost() {}
     }
 
     fun runPostPreviewLogic(
         activity: Activity,
         site: SiteModel,
-        post: PostModel,
+        post: PostImmutableModel,
         helperFunctions: RemotePreviewHelperFunctions
     ): PreviewLogicOperationResult {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -125,11 +125,11 @@ class RemotePreviewLogicHelper @Inject constructor(
         }
     }
 
-    private fun shouldUpload(post: PostModel, action: UploadAction): Boolean {
+    private fun shouldUpload(post: PostImmutableModel, action: UploadAction): Boolean {
         return (post.isLocallyChanged || post.isLocalDraft) && (action == UPLOAD_AS_DRAFT || action == UPLOAD)
     }
 
-    private fun shouldRemoteAutoSave(post: PostModel, action: UploadAction): Boolean {
+    private fun shouldRemoteAutoSave(post: PostImmutableModel, action: UploadAction): Boolean {
         return post.isLocallyChanged && action == REMOTE_AUTO_SAVE
     }
 }

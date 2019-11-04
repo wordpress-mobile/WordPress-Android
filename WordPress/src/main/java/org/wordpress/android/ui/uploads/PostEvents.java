@@ -1,28 +1,28 @@
 package org.wordpress.android.ui.uploads;
 
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 
 public class PostEvents {
     public static class PostUploadStarted {
-        public final PostModel post;
+        public final PostImmutableModel post;
 
-        public PostUploadStarted(PostModel post) {
+        public PostUploadStarted(PostImmutableModel post) {
             this.post = post;
         }
     }
 
     public static class PostUploadCanceled {
-        public final PostModel post;
+        public final PostImmutableModel post;
 
-        PostUploadCanceled(PostModel post) {
+        PostUploadCanceled(PostImmutableModel post) {
             this.post = post;
         }
     }
 
     public static class PostMediaCanceled {
-        public PostModel post;
+        public PostImmutableModel post;
 
-        public PostMediaCanceled(PostModel post) {
+        public PostMediaCanceled(PostImmutableModel post) {
             this.post = post;
         }
     }

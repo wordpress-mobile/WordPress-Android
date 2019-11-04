@@ -11,7 +11,7 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.util.AppLog.T;
@@ -59,7 +59,7 @@ public class WPMeShortlinks {
      * @return String The blog shortlink or null (null is returned if the blog object is empty, or it's not a
      * wpcom/jetpack blog, or in case of errors).
      */
-    public static String getPostShortlink(SiteModel site, PostModel post) {
+    public static String getPostShortlink(SiteModel site, PostImmutableModel post) {
         if (post == null || site == null) {
             return null;
         }

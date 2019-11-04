@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -35,6 +36,7 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.posts.PostUtilsWrapper;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -80,6 +82,7 @@ public class UploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
     @Inject UploadStore mUploadStore;
+    @Inject PostUtilsWrapper mPostUtilsWrapper;
 
     @Override
     public void onCreate() {
@@ -210,7 +213,7 @@ public class UploadService extends Service {
     private void registerPostModelsForMedia(List<MediaModel> mediaList, boolean isRetry) {
         if (mediaList != null && !mediaList.isEmpty()) {
             Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
-            for (PostModel post : postsToRefresh) {
+            for (PostImmutableModel post : postsToRefresh) {
                 // If the post is already registered, the new media will be added to its list
                 mUploadStore.registerPostModel(post, mediaList);
             }
@@ -230,7 +233,7 @@ public class UploadService extends Service {
         if (post != null) {
             boolean shouldTrackAnalytics = intent.getBooleanExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
             if (shouldTrackAnalytics) {
-                mPostUploadHandler.registerPostForAnalyticsTracking(post);
+                mPostUploadHandler.registerPostForAnalyticsTracking(post.getId());
             }
 
             // cancel any outstanding "end" notification for this Post before we start processing it again
@@ -281,7 +284,7 @@ public class UploadService extends Service {
         }
     }
 
-    public static void cancelFinalNotification(Context context, PostModel post) {
+    public static void cancelFinalNotification(Context context, PostImmutableModel post) {
         // cancel any outstanding "end" notification for this Post before we start processing it again
         // i.e. dismiss success or error notification for the post.
         PostUploadNotifier.cancelFinalNotification(context, post);
@@ -300,7 +303,7 @@ public class UploadService extends Service {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 
-    private boolean isThisPostTotallyNewOrFailed(PostModel post) {
+    private boolean isThisPostTotallyNewOrFailed(PostImmutableModel post) {
         // if we have any tracks for this Post's UploadState, this means this Post is not new.
         // Conditions under which the UploadStore would contain traces of this Post's UploadState are:
         // - it's been cancelled by entering/exiting/entering the editor thus cancelling the queued post upload
@@ -312,7 +315,8 @@ public class UploadService extends Service {
                 .isPendingPost(post));
     }
 
-    public static Intent getRetryUploadServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics) {
+    public static Intent getRetryUploadServiceIntent(Context context, @NonNull PostImmutableModel post,
+                                                     boolean trackAnalytics) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
@@ -328,7 +332,8 @@ public class UploadService extends Service {
      * PendingIntent - eg. publish action on a notification. If you want to start the upload right away use
      * UploadUtils.publishPost(..) instead.
      */
-    public static Intent getPublishPostServiceIntent(Context context, @NonNull PostModel post, boolean trackAnalytics) {
+    public static Intent getPublishPostServiceIntent(Context context, @NonNull PostImmutableModel post,
+                                                     boolean trackAnalytics) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
@@ -389,7 +394,7 @@ public class UploadService extends Service {
      * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
-    public static boolean isPostUploadingOrQueued(PostModel post) {
+    public static boolean isPostUploadingOrQueued(PostImmutableModel post) {
         UploadService instance = sInstance;
         if (instance == null || post == null) {
             return false;
@@ -404,9 +409,9 @@ public class UploadService extends Service {
         return instance.mUploadStore.isPendingPost(post);
     }
 
-    public static boolean isPostQueued(PostModel post) {
+    public static boolean isPostQueued(PostImmutableModel post) {
         // Check for posts queued inside the PostUploadManager
-        return sInstance != null && post != null && PostUploadHandler.isPostQueued(post);
+        return sInstance != null && PostUploadHandler.isPostQueued(post);
     }
 
     /**
@@ -414,8 +419,8 @@ public class UploadService extends Service {
      * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
-    public static boolean isPostUploading(PostModel post) {
-        return sInstance != null && post != null && PostUploadHandler.isPostUploading(post);
+    public static boolean isPostUploading(PostImmutableModel post) {
+        return sInstance != null && PostUploadHandler.isPostUploading(post);
     }
 
     public static void cancelQueuedPostUploadAndRelatedMedia(Context context, PostModel post) {
@@ -476,23 +481,23 @@ public class UploadService extends Service {
         return post;
     }
 
-    public static boolean hasInProgressMediaUploadsForPost(PostModel postModel) {
+    public static boolean hasInProgressMediaUploadsForPost(PostImmutableModel postModel) {
         return postModel != null && MediaUploadHandler.hasInProgressMediaUploadsForPost(postModel.getId());
     }
 
-    public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
+    public static boolean hasPendingMediaUploadsForPost(PostImmutableModel postModel) {
         return postModel != null && MediaUploadHandler.hasPendingMediaUploadsForPost(postModel.getId());
     }
 
-    public static boolean hasPendingOrInProgressMediaUploadsForPost(PostModel postModel) {
+    public static boolean hasPendingOrInProgressMediaUploadsForPost(PostImmutableModel postModel) {
         return postModel != null && MediaUploadHandler.hasPendingOrInProgressMediaUploadsForPost(postModel.getId());
     }
 
-    public static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostModel postModel) {
+    public static MediaModel getPendingOrInProgressFeaturedImageUploadForPost(PostImmutableModel postModel) {
         return MediaUploadHandler.getPendingOrInProgressFeaturedImageUploadForPost(postModel);
     }
 
-    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post) {
+    public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostImmutableModel post) {
         return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
     }
 
@@ -597,11 +602,8 @@ public class UploadService extends Service {
         if (media != null && post != null && processor != null) {
             boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             // actually replace the media ID with the media uri
-            PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                                                                             FluxCUtils.mediaFileFromMediaModel(media));
-            if (modifiedPost != null) {
-                post = modifiedPost;
-            }
+            processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
+                    FluxCUtils.mediaFileFromMediaModel(media));
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
@@ -624,11 +626,8 @@ public class UploadService extends Service {
         if (media != null && post != null && processor != null) {
             boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
             // actually mark the media failed within the Post
-            PostModel modifiedPost = processor.markMediaUploadFailedInPost(post, String.valueOf(media.getId()),
-                                                                           FluxCUtils.mediaFileFromMediaModel(media));
-            if (modifiedPost != null) {
-                post = modifiedPost;
-            }
+            processor.markMediaUploadFailedInPost(post, String.valueOf(media.getId()),
+                    FluxCUtils.mediaFileFromMediaModel(media));
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
@@ -676,7 +675,6 @@ public class UploadService extends Service {
     }
 
 
-
     private void verifyMediaOnlyUploadsAndNotify() {
         // check if all are successful uploads, then notify the user about it
         if (!mMediaBatchUploaded.isEmpty()) {
@@ -699,15 +697,14 @@ public class UploadService extends Service {
         }
     }
 
-    private PostModel updateOnePostModelWithCompletedAndFailedUploads(PostModel postModel) {
-        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
+    private void updateOnePostModelWithCompletedAndFailedUploads(PostModel updatedPost) {
+        updatePostWithCurrentlyCompletedUploads(updatedPost);
         // also do the same now with failed uploads
-        updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
+        updatePostWithCurrentlyFailedUploads(updatedPost);
         // finally, save the PostModel
         if (updatedPost != null) {
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
-        return updatedPost;
     }
 
     private boolean mediaBelongsToAPost(MediaModel media) {
@@ -739,13 +736,13 @@ public class UploadService extends Service {
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
-            String message = UploadUtils.getErrorMessage(this, postToCancel, errorMessage, true);
+            String message = UploadUtils.getErrorMessage(this, errorMessage, true, postToCancel.isPage());
             SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
             mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message,
-                                                               mUploadStore.getFailedMediaForPost(postToCancel).size());
+                    mUploadStore.getFailedMediaForPost(postToCancel).size());
         }
 
-        mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
+        mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel.getId());
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel));
 
         return true;
@@ -755,8 +752,8 @@ public class UploadService extends Service {
         Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(post);
         mPostUploadNotifier.setTotalMediaItems(post, failedMedia.size());
         mPostUploadNotifier.updateNotificationErrorForPost(post,
-                                                           mSiteStore.getSiteByLocalId(post.getLocalSiteId()),
-                                                           errorMessage, 0);
+                mSiteStore.getSiteByLocalId(post.getLocalSiteId()),
+                errorMessage, 0);
     }
 
     private void aztecRegisterFailedMediaForThisPost(PostModel post) {
@@ -911,7 +908,7 @@ public class UploadService extends Service {
                 }
 
                 mPostUploadNotifier.updateNotificationErrorForMedia(failedStandAloneMedia,
-                                                                    selectedSite, message);
+                        selectedSite, message);
             }
             stopServiceIfUploadsComplete();
             return;
@@ -963,48 +960,47 @@ public class UploadService extends Service {
      *
      * (*)`Registered` posts are posts that had media in them and are waiting to be uploaded once
      * their corresponding associated media is uploaded first.
-    */
+     */
     private boolean doFinalProcessingOfPosts(Boolean isError, PostModel post) {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
-            if (PostUtils.isPostCurrentlyBeingEdited(postModel)) {
+            if (mPostUtilsWrapper.isPostCurrentlyBeingEdited(postModel)) {
                 // don't touch a Post that is being currently open in the Editor.
                 break;
             }
 
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                 // Replace local with remote media in the post content
-                PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
-                if (updatedPost != null) {
-                    // here let's check if there are any failed media
-                    Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
-                    if (failedMedia != null && !failedMedia.isEmpty()) {
-                        // this Post has failed media, don't upload it just yet,
-                        // but tell the user about the error
-                        cancelQueuedPostUpload(postModel);
+                updateOnePostModelWithCompletedAndFailedUploads(postModel);
+                // here let's check if there are any failed media
+                Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+                if (failedMedia != null && !failedMedia.isEmpty()) {
+                    // this Post has failed media, don't upload it just yet,
+                    // but tell the user about the error
+                    cancelQueuedPostUpload(postModel);
 
-                        // update error notification for Post, unless the media is in the user-deleted media set
-                        if (!isAllFailedMediaUserDeleted(failedMedia)) {
-                            SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
-                            String message = UploadUtils
-                                    .getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
-                            mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
-                        }
-
-                        mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
-                        EventBus.getDefault().post(
-                                new PostEvents.PostUploadCanceled(postModel));
-                    } else {
-                        // Do not re-enqueue a post that has already failed
-                        if (isError != null && isError && mUploadStore.isFailedPost(post)) {
-                            continue;
-                        }
-                        // TODO Should do some extra validation here
-                        // e.g. what if the post has local media URLs but no pending media uploads?
-                        mPostUploadHandler.upload(updatedPost);
-                        return true;
+                    // update error notification for Post, unless the media is in the user-deleted media set
+                    if (!isAllFailedMediaUserDeleted(failedMedia)) {
+                        SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
+                        String message = UploadUtils
+                                .getErrorMessage(this, getString(R.string.error_generic_error), true,
+                                        postModel.isPage());
+                        mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
                     }
+
+                    mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel.getId());
+                    EventBus.getDefault().post(
+                            new PostEvents.PostUploadCanceled(postModel));
+                } else {
+                    // Do not re-enqueue a post that has already failed
+                    if (isError != null && isError && mUploadStore.isFailedPost(post)) {
+                        continue;
+                    }
+                    // TODO Should do some extra validation here
+                    // e.g. what if the post has local media URLs but no pending media uploads?
+                    mPostUploadHandler.upload(postModel);
+                    return true;
                 }
             }
         }

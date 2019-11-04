@@ -155,7 +155,7 @@ class PostActionHandler(
         if (!checkNetworkConnection.invoke()) {
             return
         }
-        post.status = DRAFT.toString()
+        post.setStatus(DRAFT.toString())
         dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
 
         val localPostId = LocalId(post.id)

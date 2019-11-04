@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -36,20 +37,20 @@ class EditPostRepository
         get() = post!!.remotePostId
     val title: String
         get() = post!!.title
-    val autoSaveTitle: String
+    val autoSaveTitle: String?
         get() = post!!.autoSaveTitle
     val content: String
         get() = post!!.content
-    val autoSaveContent: String
+    val autoSaveContent: String?
         get() = post!!.autoSaveContent
     val excerpt: String
         get() = post!!.excerpt
-    val autoSaveExcerpt: String
+    val autoSaveExcerpt: String?
         get() = post!!.autoSaveExcerpt
     val password: String
         get() = post!!.password
     val status: PostStatus
-        get() = fromPost(post!!)
+        get() = fromPost(getPost())
     val isPage: Boolean
         get() = post!!.isPage
     val isLocalDraft: Boolean
@@ -92,7 +93,8 @@ class EditPostRepository
     fun hasLocation() = post!!.hasLocation()
 
     fun hasPost() = post != null
-    fun getPost() = lock.read { post }
+    fun getPost(): PostImmutableModel? = post
+    fun getEditablePost() = post
     fun setPost(post: PostModel) {
         lock.write {
             this.post = post
@@ -113,7 +115,7 @@ class EditPostRepository
 
     fun updatePublishDateIfShouldBePublishedImmediately(post: PostModel) {
         if (postUtils.shouldPublishImmediately(fromPost(post), post.dateCreated)) {
-            post.dateCreated = DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time)
+            post.setDateCreated(DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time))
         }
     }
 
@@ -139,19 +141,19 @@ class EditPostRepository
     fun updateStatusFromSnapshot(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
-        post.status = postSnapshotWhenEditorOpened?.status ?: DRAFT.toString()
+        post.setStatus(postSnapshotWhenEditorOpened?.status ?: DRAFT.toString())
     }
 
     fun hasStatusChanged(postStatus: String?): Boolean {
         return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
     }
 
-    fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post)
+    fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post!!)
 
     private fun <Y> readFromPost(action: PostModel.() -> Y) = lock.read { post!!.action() }
     fun updateStatus(status: PostStatus) {
         updateInTransaction {
-            it.status = status.toString()
+            it.setStatus(status.toString())
             true
         }
     }

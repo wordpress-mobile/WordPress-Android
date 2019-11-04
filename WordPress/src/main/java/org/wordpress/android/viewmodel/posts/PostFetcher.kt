@@ -49,7 +49,7 @@ class PostFetcher constructor(
                     ongoingRequests.add(remoteId)
 
                     val postToFetch = PostModel()
-                    postToFetch.remotePostId = remoteId.value
+                    postToFetch.setRemotePostId(remoteId.value)
                     dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(postToFetch, site)))
                 }
     }

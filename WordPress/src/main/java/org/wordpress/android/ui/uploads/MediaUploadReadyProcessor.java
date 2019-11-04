@@ -13,7 +13,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     @Override
-    public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile) {
+    public void replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile) {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
@@ -26,12 +26,10 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
                                                                             localMediaId, mediaFile));
             }
         }
-
-        return post;
     }
 
     @Override
-    public PostModel markMediaUploadFailedInPost(@Nullable PostModel post, String localMediaId,
+    public void markMediaUploadFailedInPost(@Nullable PostModel post, String localMediaId,
                                                  final MediaFile mediaFile) {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
@@ -44,7 +42,5 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
                                                                     localMediaId, mediaFile));
             }
         }
-
-        return post;
     }
 }
