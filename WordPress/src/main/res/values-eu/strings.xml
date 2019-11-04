@@ -127,9 +127,6 @@ Language: eu_ES
     <string name="days_quantity_other">%d egun</string>
     <string name="days_quantity_one">Egun 1</string>
     <string name="primary_site">Gune nagusia</string>
-    <string name="editor_content_placeholder">Partekatu zure istorioa hemen…</string>
-    <string name="editor_page_title_placeholder">Orrialdearen izenburua</string>
-    <string name="editor_post_title_placeholder">Bidalketaren izenburua</string>
     <string name="email_address">E-posta helbidea</string>
     <string name="dlg_sure_to_delete_comments">Behin betiko ezabatu iruzkin hauek?</string>
     <string name="dlg_sure_to_delete_comment">Behin betiko ezabatu iruzkin hau?</string>
@@ -392,7 +389,6 @@ Language: eu_ES
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
     <string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>
     <string name="comment_spammed">Iruzkina spam bezala markatuta</string>
-    <string name="video">Bideoa</string>
     <string name="reader_label_reply">Erantzun</string>
     <string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>
     <string name="reader_likes_you_and_multi">Zuk eta %,d pertsonak hau gustuko duzue</string>

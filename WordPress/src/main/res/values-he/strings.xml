@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-16 00:55:17+0000
+Translation-Revision-Date: 2019-10-30 00:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="pick_media">להוסיף תמונה או וידאו</string>
     <string name="error_post_not_submitted_retrying">לא הצלחנו לשלוח את הפוסט לבדיקה אבל ננסה שוב מאוחר יותר. </string>
     <string name="error_post_not_scheduled_retrying">לא הצלחנו לתזמן את הפוסט אבל ננסה שוב מאוחר יותר.</string>
     <string name="error_post_not_published_retrying_private">לא הצלחנו לפרסם את הפוסט הפרטי אבל ננסה שוב מאוחר יותר.</string>
@@ -1487,9 +1488,6 @@ Language: he_IL
     <string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
     <string name="post_settings_set_featured_image">בחירת תמונה ראשית</string>
     <string name="post_settings_featured_image">תמונה ראשית</string>
-    <string name="editor_content_placeholder">כאן המקום לשתף את הסיפור שלך…</string>
-    <string name="editor_page_title_placeholder">כותרת עמוד</string>
-    <string name="editor_post_title_placeholder">כותרת הפוסט</string>
     <string name="email_address">כתובת אימייל</string>
     <string name="dlg_sure_to_delete_comments">האם למחוק תגובות אלה לצמיתות?</string>
     <string name="dlg_sure_to_delete_comment">האם למחוק תגובה זו לצמיתות?</string>
@@ -1884,7 +1882,6 @@ Language: he_IL
     <string name="reader_empty_posts_in_tag_updating">מביא רשומות…</string>
     <string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress ללא אתר גלוי</string>
     <string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
-    <string name="video">וידאו</string>
     <string name="reader_label_reply">תשובה</string>
     <string name="reader_likes_multi">%,d אנשים אוהבים את זה</string>
     <string name="reader_likes_you_and_multi">אתה ו- %,d אחרים אוהבים את זה</string>

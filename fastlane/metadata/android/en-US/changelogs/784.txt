@@ -1,5 +1,0 @@
-13.4:
-* Added Remote Preview support for posts and pages.
-* Trashed posts stay trashed. They must be restored before editing or previewing.
-* Fixed: Clicking on “Publish” on a private post now reliably publishes the post as private, some link editing issues resolved.
-* Unsaved changes to posts and pages are automatically backed up.
