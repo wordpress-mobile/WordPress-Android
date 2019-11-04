@@ -18,8 +18,8 @@ class UploadMediaUseCase @Inject constructor(
     private val uploadServiceFacade: UploadServiceFacade
 ) {
     fun saveQueuedPostAndStartUpload(editorMediaListener: EditorMediaListener, mediaModels: List<MediaModel>) {
-        require(mediaModels.all { MediaUploadState.fromString(it.uploadState) == QUEUED })
-        { "Upload can be initiated only on MediaModels with UploadStatus set to QUEUED." }
+        require(mediaModels.all { MediaUploadState.fromString(it.uploadState) == QUEUED }) { "Upload can " +
+                "be initiated only on MediaModels with UploadStatus set to QUEUED." }
 
         mediaModels.let { queuedMediaModels ->
             // before starting the service, we need to update the posts' contents so we are sure the service

@@ -65,9 +65,9 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         // Add media to editor and initiate upload
         addToEditorAndUpload(createMediaModelsResult.mediaModels, editorMediaListener)
 
-        return !optimizeMediaResult.loadingSomeMediaFailed
-                && !createMediaModelsResult.loadingSomeMediaFailed
-                && !copyFilesResult.copyingSomeMediaFailed
+        return !optimizeMediaResult.loadingSomeMediaFailed &&
+                !createMediaModelsResult.loadingSomeMediaFailed &&
+                !copyFilesResult.copyingSomeMediaFailed
     }
 
     private fun addToEditorAndUpload(

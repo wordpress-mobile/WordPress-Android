@@ -33,7 +33,6 @@ import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.RetryFailedMediaUploadUseCase
 import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
-import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -48,7 +47,11 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
+data class EditorMediaPostData(
+    val localPostId: Int,
+    val remotePostId: Long,
+    val isLocalDraft: Boolean
+)
 
 interface EditorMediaListener {
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
@@ -59,10 +62,7 @@ interface EditorMediaListener {
     fun editorMediaPostData(): EditorMediaPostData
 }
 
-// TODO convert this into a view model
-// TODO move this to media package
 class EditorMedia @Inject constructor(
-    private val uploadMediaUseCase: UploadMediaUseCase,
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val dispatcher: Dispatcher,
@@ -73,6 +73,7 @@ class EditorMedia @Inject constructor(
     private val retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
+    // region Fields
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -92,11 +93,7 @@ class EditorMedia @Inject constructor(
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri> = ArrayList()
-
-    enum class AddExistingMediaSource {
-        WP_MEDIA_LIBRARY,
-        STOCK_PHOTO_LIBRARY
-    }
+    // endregion
 
     fun start(site: SiteModel, editorMediaListener: EditorMediaListener) {
         this.site = site
@@ -104,8 +101,7 @@ class EditorMedia @Inject constructor(
         _uiState.value = AddingMediaIdle
     }
 
-
-    //region Adding new media to a post
+    // region Adding new media to a post
     fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>) {
         if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
             editorMediaListener.advertiseImageOptimization {
@@ -136,7 +132,7 @@ class EditorMedia @Inject constructor(
                     freshlyTaken,
                     editorMediaListener
             )
-            if(!allMediaSucceed) {
+            if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
             }
             _uiState.value = AddingMediaIdle
@@ -168,11 +164,13 @@ class EditorMedia @Inject constructor(
             addNewMediaItemsToEditorAsync(uriList, false)
         }
     }
-    //endregion
+    // endregion
 
-
-    //region Add existing media to a post
-    fun addExistingMediaToEditorAsync(mediaModels: List<MediaModel>, source: AddExistingMediaSource) {
+    // region Add existing media to a post
+    fun addExistingMediaToEditorAsync(
+        mediaModels: List<MediaModel>,
+        source: AddExistingMediaSource
+    ) {
         addExistingMediaToEditorAsync(source, mediaModels.map { it.mediaId })
     }
 
@@ -190,12 +188,9 @@ class EditorMedia @Inject constructor(
             )
         }
     }
-    //endregion
+    // endregion
 
-    fun cancelAddMediaToEditorActions() {
-        job.cancel()
-    }
-
+    // region Other
     fun cancelMediaUploadAsync(localMediaId: Int, delete: Boolean) {
         launch {
             getMediaModelUseCase
@@ -213,21 +208,27 @@ class EditorMedia @Inject constructor(
             val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {
-            _toastMessage.value = Event(ToastMessageHolder(R.string.error_media_refresh_no_connection, Duration.SHORT))
+            _toastMessage.value = Event(
+                    ToastMessageHolder(
+                            R.string.error_media_refresh_no_connection,
+                            Duration.SHORT
+                    )
+            )
         }
     }
 
-    fun updateMediaUploadState(uri: Uri, mediaUploadState: MediaUploadState): MediaModel? {
-        // TODO Remove runBlocking block
+    @Deprecated(message = "Blocking method shouldn't be used in new code.")
+    fun updateMediaUploadStateBlocking(uri: Uri, mediaUploadState: MediaUploadState): MediaModel? {
         return runBlocking {
-            getMediaModelUseCase.createMediaModelFromUri(site.id, uri).mediaModels.firstOrNull()?.let {
-                updateMediaModelUseCase.updateMediaModel(
-                        it,
-                        editorMediaListener.editorMediaPostData(),
-                        mediaUploadState
-                )
-                it
-            }
+            getMediaModelUseCase.createMediaModelFromUri(site.id, uri).mediaModels.firstOrNull()
+                    ?.let {
+                        updateMediaModelUseCase.updateMediaModel(
+                                it,
+                                editorMediaListener.editorMediaPostData(),
+                                mediaUploadState
+                        )
+                        it
+                    }
         }
     }
 
@@ -236,6 +237,17 @@ class EditorMedia @Inject constructor(
             retryFailedMediaUploadUseCase.retryFailedMediaAsync(editorMediaListener, failedMediaIds)
         }
     }
+    // endregion
+
+    fun cancelAddMediaToEditorActions() {
+        job.cancel()
+    }
+
+    enum class AddExistingMediaSource {
+        WP_MEDIA_LIBRARY,
+        STOCK_PHOTO_LIBRARY
+    }
+
     sealed class AddMediaToPostUiState(
         val editorOverlayVisibility: Boolean,
         val progressDialogUiState: ProgressDialogUiState

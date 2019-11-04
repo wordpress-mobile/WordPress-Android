@@ -2268,9 +2268,8 @@ public class EditPostActivity extends AppCompatActivity implements
             while (matcher.find()) {
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
-                // TODO make sure this logic hasn't changed as we can't easily test it
                 MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mEditorMedia
-                        .updateMediaUploadState(uri, MediaUploadState.FAILED));
+                        .updateMediaUploadStateBlocking(uri, MediaUploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }

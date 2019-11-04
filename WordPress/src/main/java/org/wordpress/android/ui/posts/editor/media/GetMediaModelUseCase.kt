@@ -38,7 +38,7 @@ class GetMediaModelUseCase @Inject constructor(
         return withContext(bgDispatcher) {
             mediaModelsRemoteIds
                     .mapNotNull {
-                        val mediaModel : MediaModel? = mediaStore.getSiteMediaWithId(site, it)
+                        val mediaModel: MediaModel? = mediaStore.getSiteMediaWithId(site, it)
                         mediaModel ?: AppLog.w(AppLog.T.POSTS, "Loading mediaModel with id $it failed.")
                         mediaModel
                     }
