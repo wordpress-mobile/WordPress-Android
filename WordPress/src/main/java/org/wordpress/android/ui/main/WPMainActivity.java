@@ -20,9 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,6 +111,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -159,6 +163,10 @@ public class WPMainActivity extends AppCompatActivity implements
     private boolean mIsMagicLinkSignup;
 
     private SiteModel mSelectedSite;
+    private WPMainActivityViewModel mViewModel;
+    private FloatingActionButton mFloatingActionButton;
+    private MainBottomSheetFragment mMainBottomSheetFragment;
+    private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -170,6 +178,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -202,8 +211,9 @@ public class WPMainActivity extends AppCompatActivity implements
 
         mBottomNav = findViewById(R.id.bottom_navigation);
 
-        if (BuildConfig.ME_ACTIVITY_AVAILABLE) {
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
             mBottomNav.getMenu().removeItem(R.id.nav_me);
+            mBottomNav.getMenu().removeItem(R.id.nav_write);
         }
         mBottomNav.init(getSupportFragmentManager(), this);
 
@@ -332,6 +342,8 @@ public class WPMainActivity extends AppCompatActivity implements
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
+
+        initViewModel();
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -356,6 +368,46 @@ public class WPMainActivity extends AppCompatActivity implements
                                    + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
+    }
+
+    private void initViewModel() {
+        mFloatingActionButton = findViewById(R.id.fab_button);
+
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+
+        if (BuildConfig.INFORMATION_ARCHITECTURE_AVAILABLE) {
+            // Setup Observers
+            mViewModel.getShowMainActionFab().observe(this, shouldShow -> {
+                if (shouldShow) {
+                    mFloatingActionButton.show();
+                } else {
+                    mFloatingActionButton.hide();
+                }
+            });
+
+            mViewModel.getCreateAction().observe(this, createAction -> {
+                switch (createAction) {
+                    case CREATE_NEW_POST:
+                        handleNewPostAction();
+                        break;
+                    case CREATE_NEW_PAGE:
+                        handleNewPageAction();
+                        break;
+                }
+
+                if (mMainBottomSheetFragment != null) {
+                    mMainBottomSheetFragment.dismiss();
+                    mMainBottomSheetFragment = null;
+                }
+            });
+
+            mFloatingActionButton.setOnClickListener(v -> {
+                mMainBottomSheetFragment = new MainBottomSheetFragment();
+                mMainBottomSheetFragment.show(getSupportFragmentManager(), MAIN_BOTTOM_SHEET_TAG);
+            });
+        }
+
+        mViewModel.start(mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
     }
 
     private @Nullable String getAuthToken() {
@@ -646,11 +698,31 @@ public class WPMainActivity extends AppCompatActivity implements
                 getMySiteFragment().requestNextStepOfActiveQuickStartTask();
             }
         }
+
+        mViewModel.onPageChanged(pageType == PageType.MY_SITE);
     }
 
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
+        handleNewPostAction();
+    }
+
+    private void handleNewPageAction() {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
+            ActivityLauncher.addNewPageForResult(this, site);
+        }
+    }
+
+    public void handleNewPostAction() {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);

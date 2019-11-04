@@ -1043,4 +1043,13 @@
         <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
 
+    <!-- Main actions styles -->
+    <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
+        <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
+    </style>
+
+    <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
 </resources>
