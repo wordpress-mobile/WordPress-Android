@@ -15,13 +15,7 @@ import kotlin.concurrent.write
 
 class EditPostRepository
 @Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper) {
-    var post: PostModel? = null
-        get() = lock.read { field }
-        set(value) {
-            lock.write {
-                field = value
-            }
-        }
+    private var post: PostModel? = null
     var postForUndo: PostModel? = null
         get() = lock.read { field }
         set(value) {
@@ -162,6 +156,16 @@ class EditPostRepository
     fun hasLocation() = readFromPost { this.hasLocation() }
 
     fun hasPost() = post != null
+    fun getPost() = lock.read { post }
+    fun setPost(post: PostModel) {
+        lock.write {
+            this.post = post
+        }
+    }
+
+    fun hasStatus(status: PostStatus): Boolean {
+        return post?.status == status.toString()
+    }
 
     fun getPendingMediaForPost(): Set<MediaModel> = readFromPost {
         UploadService.getPendingMediaForPost(this)
@@ -178,8 +182,8 @@ class EditPostRepository
     }
 
     fun updatePostTitleIfDifferent(newTitle: String): Boolean {
-        return if (this.title.compareTo(newTitle) != 0) {
-            this.title = newTitle
+        return if (title != newTitle) {
+            title = newTitle
             true
         } else {
             false
@@ -199,7 +203,7 @@ class EditPostRepository
     }
 
     fun saveSnapshot() {
-        postSnapshotWhenEditorOpened = post
+        postSnapshotWhenEditorOpened = post?.clone()
     }
 
     fun isSnapshotDifferent(): Boolean = postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
@@ -213,7 +217,7 @@ class EditPostRepository
     }
 
     fun hasStatusChanged(): Boolean {
-        return snapshotStatus != null && status != snapshotStatus
+        return postSnapshotWhenEditorOpened?.status != null && post?.status != postSnapshotWhenEditorOpened?.status
     }
 
     fun postHasEdits() = PostUtils.postHasEdits(postSnapshotWhenEditorOpened, post)

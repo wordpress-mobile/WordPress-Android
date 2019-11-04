@@ -1650,7 +1650,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         throwable -> {
                             // Do not log private or password protected post
                             return mEditPostRepository.hasPost() && TextUtils.isEmpty(mEditPostRepository.getPassword())
-                                   && !PostStatus.PRIVATE.equals(mEditPostRepository.getStatus());
+                                   && !mEditPostRepository.hasStatus(PostStatus.PRIVATE);
                         }
                 );
             }
@@ -3345,14 +3345,15 @@ public class EditPostActivity extends AppCompatActivity implements
     // EditPostActivityHook methods
 
     @Override
+    public EditPostRepository getEditPostRepository() {
+        return mEditPostRepository;
+    }
+
+    @Override
     public SiteModel getSite() {
         return mSite;
     }
 
-    @Override
-    public EditPostRepository getEditPostRepository() {
-        return mEditPostRepository;
-    }
 
     // External Access to the Image Loader
     public AztecImageLoader getAztecImageLoader() {
