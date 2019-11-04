@@ -2771,7 +2771,11 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onMediaRetryAllClicked(Set<String> failedMediaIds) {
         UploadService.cancelFinalNotification(this, mPost);
         UploadService.cancelFinalNotificationForMedia(this, mSite);
-        mEditorMedia.retryFailedMediaAsync(failedMediaIds);
+        ArrayList<Integer> localMediaIds = new ArrayList<>();
+        for (String idString : failedMediaIds) {
+            localMediaIds.add(Integer.valueOf(idString));
+        }
+        mEditorMedia.retryFailedMediaAsync(localMediaIds);
     }
 
     @Override
@@ -2809,9 +2813,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             UploadService.cancelFinalNotification(this, mPost);
             UploadService.cancelFinalNotificationForMedia(this, mSite);
-            media.setUploadState(MediaUploadState.QUEUED);
-            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-            mEditorMedia.startUploadService(Collections.singletonList(media));
+            mEditorMedia.retryFailedMediaAsync(Collections.singletonList(media.getId()));
         }
 
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);

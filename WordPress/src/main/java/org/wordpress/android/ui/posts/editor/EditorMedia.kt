@@ -231,13 +231,9 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    fun startUploadService(mediaList: List<MediaModel>) {
-        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaList)
-    }
-
-    fun retryFailedMediaAsync(failedMediaIds: Set<String>) {
+    fun retryFailedMediaAsync(failedMediaIds: List<Int>) {
         launch {
-            retryFailedMediaUploadUseCase.retryFailedMediaAsync(editorMediaListener, failedMediaIds.toList())
+            retryFailedMediaUploadUseCase.retryFailedMediaAsync(editorMediaListener, failedMediaIds)
         }
     }
     sealed class AddMediaToPostUiState(
