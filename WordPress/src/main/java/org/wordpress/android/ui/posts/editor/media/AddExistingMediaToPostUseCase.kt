@@ -6,6 +6,9 @@ import org.wordpress.android.ui.posts.editor.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
 import javax.inject.Inject
 
+/**
+ * Loads existing media items (they must have a valid url) from the local db and adds them to the editor.
+ */
 class AddExistingMediaToPostUseCase @Inject constructor(
     private val editorTracker: EditorTracker,
     private val getMediaModelUseCase: GetMediaModelUseCase,

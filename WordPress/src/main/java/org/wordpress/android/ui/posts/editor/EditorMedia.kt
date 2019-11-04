@@ -11,7 +11,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -73,7 +72,6 @@ class EditorMedia @Inject constructor(
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val dispatcher: Dispatcher,
-    private val mediaStore: MediaStore,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
@@ -91,7 +89,9 @@ class EditorMedia @Inject constructor(
     private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
     val uiState: LiveData<AddMediaToPostUiState> = _uiState
 
-    val snackBarMessage: LiveData<SnackbarMessageHolder> = addLocalMediaToPostUseCase.snackBarMessage
+    private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
+    val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
+
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>() // TODO use Event<ToastMessageHolder>
     val toastMessage: LiveData<ToastMessageHolder> = mergeNotNull(
             listOf(
@@ -109,7 +109,7 @@ class EditorMedia @Inject constructor(
     val fetchMediaRunnable = Runnable {
         droppedMediaUris?.let {
             droppedMediaUris = null
-            optimizeIfSupportedAndAddMediaToEditor(it, false)
+            addNewMediaItemsToEditorAsync(it, freshlyTaken = false)
         }
     }
 
@@ -124,15 +124,27 @@ class EditorMedia @Inject constructor(
         _uiState.value = AddingMediaIdle
     }
 
-    fun optimizeIfSupportedAndAddMediaToEditor(mediaUri: Uri?, isNew: Boolean): Boolean {
-        mediaUri?.let {
-            optimizeIfSupportedAndAddMediaToEditor(listOf(it), isNew)
-            return true
+
+    //region Adding new media to a post
+    fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>, activity: Activity) {
+        // TODO remove activity - it doesn't work with appContext!! The dialog needs to be created on a activity.
+        if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
+            mediaUtilsWrapper.advertiseImageOptimization(activity) {
+                addNewMediaItemsToEditorAsync(
+                        uriList,
+                        false
+                )
+            }
+        } else {
+            addNewMediaItemsToEditorAsync(uriList, false)
         }
-        return false
     }
 
-    fun optimizeIfSupportedAndAddMediaToEditor(uriList: List<Uri>, isNew: Boolean) {
+    fun addNewMediaToEditorAsync(mediaUri: Uri, freshlyTaken: Boolean) {
+        addNewMediaItemsToEditorAsync(listOf(mediaUri), freshlyTaken)
+    }
+
+    fun addNewMediaItemsToEditorAsync(uriList: List<Uri>, freshlyTaken: Boolean) {
         launch {
             _uiState.value = if (uriList.size > 1) {
                 AddingMultipleMedia
@@ -141,17 +153,23 @@ class EditorMedia @Inject constructor(
             }
             // fetch any shared media first - must be done on the main thread
             val fetchedUriList = fetchMediaList(uriList)
-            addLocalMediaToPostUseCase.optimizeIfSupportedAndAddLocalMediaToEditorAsync(
+            val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
                     fetchedUriList,
                     site,
-                    isNew,
+                    freshlyTaken,
                     editorMediaListener
             )
+            if(!allMediaSucceed) {
+                _snackBarMessage.value = SnackbarMessageHolder(R.string.gallery_error)
+            }
             _uiState.value = AddingMediaIdle
         }
     }
 
-    fun dontOptimizeAndAddLocalMediaToEditor(localMediaIds: IntArray) {
+    /**
+     * This won't create a MediaModel. It assumes the model was already created.
+     */
+    fun addMediaFromGiphyToPostAsync(localMediaIds: IntArray) {
         launch {
             addLocalMediaToPostUseCase.addLocalMediaToEditorAsync(
                     localMediaIds.toList(),
@@ -160,39 +178,36 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    fun cancelAddMediaToEditorActions() {
-        // TODO The current behavior seems broken - we show a blocking dialog so the user can't cancel the action, but
-        //  when the user rotates the device we actually cancel the action ourselves ...
-        job.cancel()
+    fun addFreshlyTakenVideoToEditor() {
+        addNewMediaItemsToEditorAsync(listOf(mediaUtilsWrapper.getLastRecordedVideoUri()), true)
+                .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
     }
 
-    // TODO remove activity - it doesn't work with appContext!! The dialog needs to be created on a activity.
-    fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>, activity: Activity) {
-        if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
-            mediaUtilsWrapper.advertiseImageOptimization(activity) {
-                optimizeIfSupportedAndAddMediaToEditor(
-                        uriList,
-                        false
-                )
-            }
+    fun onPhotoPickerMediaChosen(uriList: MutableList<Uri>, activity: Activity) {
+        val containsAtLeastOneImage = uriList.any { MediaUtils.isVideo(it.toString()) }
+        if (containsAtLeastOneImage) {
+            advertiseImageOptimisationAndAddMedia(uriList, activity)
         } else {
-            optimizeIfSupportedAndAddMediaToEditor(uriList, false)
+            addNewMediaItemsToEditorAsync(uriList, false)
         }
     }
+    //endregion
 
-    fun addExistingMediaToEditor(mediaModels: List<MediaModel>, source: AddExistingMediaSource) {
-        addExistingMediaToEditor(source, mediaModels.map { it.mediaId })
+
+    //region Add existing media to a post
+    fun addExistingMediaToEditorAsync(mediaModels: List<MediaModel>, source: AddExistingMediaSource) {
+        addExistingMediaToEditorAsync(source, mediaModels.map { it.mediaId })
     }
 
-    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIds: LongArray) {
-        addExistingMediaToEditor(source, mediaIds.toList())
+    fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIds: LongArray) {
+        addExistingMediaToEditorAsync(source, mediaIds.toList())
     }
 
     fun prepareMediaPost(mediaIds: LongArray) {
-        addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, mediaIds.toList())
+        addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, mediaIds.toList())
     }
 
-    fun addExistingMediaToEditor(source: AddExistingMediaSource, mediaIdList: List<Long>) {
+    fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         launch {
             addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
                     site,
@@ -202,11 +217,23 @@ class EditorMedia @Inject constructor(
             )
         }
     }
+    //endregion
 
-    fun cancelMediaUpload(localMediaId: Int, delete: Boolean) {
-        mediaStore.getMediaWithLocalId(localMediaId)?.let { mediaModel ->
-            val payload = CancelMediaPayload(site, mediaModel, delete)
-            dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
+    fun cancelAddMediaToEditorActions() {
+        // TODO The current behavior seems broken - we show a blocking dialog so the user can't cancel the action, but
+        //  when the user rotates the device we actually cancel the action ourselves ...
+        job.cancel()
+    }
+
+    fun cancelMediaUploadAsync(localMediaId: Int, delete: Boolean) {
+        launch {
+            getMediaModelUseCase
+                    .loadMediaModelFromDb(listOf(localMediaId))
+                    .firstOrNull()
+                    ?.let { mediaModel ->
+                        val payload = CancelMediaPayload(site, mediaModel, delete)
+                        dispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload))
+                    }
         }
     }
 
@@ -234,33 +261,19 @@ class EditorMedia @Inject constructor(
     }
 
     fun startUploadService(mediaList: List<MediaModel>) {
-        uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaList)
+        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaList)
     }
 
-    fun addFreshlyTakenVideoToEditor() {
-        optimizeIfSupportedAndAddMediaToEditor(listOf(mediaUtilsWrapper.getLastRecordedVideoUri()), true)
-                .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
-    }
-
-    fun onPhotoPickerMediaChosen(uriList: MutableList<Uri>, activity: Activity) {
-        val containsAtLeastOneImage = uriList.any { MediaUtils.isVideo(it.toString()) }
-        if (containsAtLeastOneImage) {
-            advertiseImageOptimisationAndAddMedia(uriList, activity)
-        } else {
-            optimizeIfSupportedAndAddMediaToEditor(uriList, false)
-        }
-    }
-
-    fun retryFailedMedia(failedMediaIds: MutableSet<String>) {
+    fun retryFailedMediaAsync(failedMediaIds: MutableSet<String>) {
         failedMediaIds
                 .map { Integer.valueOf(it) }
                 .let {
-                    enqueueAndStartUpload(it)
+                    enqueueAndStartUploadAsync(it)
                 }
                 .also { AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED) }
     }
 
-    private fun enqueueAndStartUpload(mediaModelLocalIds: List<Int>) {
+    private fun enqueueAndStartUploadAsync(mediaModelLocalIds: List<Int>) {
         launch {
             getMediaModelUseCase
                     .loadMediaModelFromDb(mediaModelLocalIds)
@@ -269,7 +282,7 @@ class EditorMedia @Inject constructor(
                                 .updateMediaModel(mediaModel, editorMediaListener.editorMediaPostData(), QUEUED)
                         mediaModel
                     }.let { mediaModels ->
-                        uploadMediaUseCase.savePostAndStartUpload(editorMediaListener, mediaModels)
+                        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaModels)
                     }
         }
     }
@@ -317,7 +330,7 @@ class EditorMedia @Inject constructor(
         object AddingMultipleMedia : AddMediaToPostUiState(
                 editorOverlayVisibility = true,
                 progressDialogUiState = VisibleProgressDialog(
-                        messageString = UiStringRes(string.add_media_progress),
+                        messageString = UiStringRes(R.string.add_media_progress),
                         cancelable = false,
                         indeterminate = true
                 )

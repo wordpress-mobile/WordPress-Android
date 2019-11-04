@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import dagger.Reusable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -8,8 +7,10 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.ui.posts.editor.EditorMediaPostData
 import javax.inject.Inject
 
-// TODO Delete this class and move the logic to one of the related classes
-@Reusable
+/**
+ * Updates posts localId, remoteId and upload status.
+ *
+ */
 class UpdateMediaModelUseCase @Inject constructor(private val dispatcher: Dispatcher) {
     fun updateMediaModel(
         media: MediaModel,

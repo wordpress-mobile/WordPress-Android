@@ -20,6 +20,9 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+/**
+ * Helper class for retrieving/creating MediaModel from the provided data.
+ */
 class GetMediaModelUseCase @Inject constructor(
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,

@@ -11,6 +11,11 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
+/**
+ * Optimizes images and fixes their rotation.
+ *
+ * Warning: This use case optimizes images only if the user enabled image optimization (AppPrefs.isImageOptimize()).
+ */
 class OptimizeMediaUseCase @Inject constructor(
     private val editorTracker: EditorTracker,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
@@ -18,12 +23,12 @@ class OptimizeMediaUseCase @Inject constructor(
 ) {
     suspend fun optimizeMediaIfSupportedAsync(
         site: SiteModel,
-        isNew: Boolean,
+        freshlyTaken: Boolean,
         uriList: List<Uri>
     ): OptimizeMediaResult {
         return withContext(bgDispatcher) {
             uriList
-                    .map { async { optimizeMediaAndTrackEvent(it, isNew, site) } }
+                    .map { async { optimizeMediaAndTrackEvent(it, freshlyTaken, site) } }
                     .map { it.await() }
                     .toList()
                     .let {
@@ -35,7 +40,7 @@ class OptimizeMediaUseCase @Inject constructor(
         }
     }
 
-    private fun optimizeMediaAndTrackEvent(mediaUri: Uri, isNew: Boolean, site: SiteModel): Uri? {
+    private fun optimizeMediaAndTrackEvent(mediaUri: Uri, freshlyTaken: Boolean, site: SiteModel): Uri? {
         val path = mediaUtilsWrapper.getRealPathFromURI(mediaUri) ?: return null
         val isVideo = mediaUtilsWrapper.isVideo(mediaUri.toString())
         /**
@@ -50,7 +55,7 @@ class OptimizeMediaUseCase @Inject constructor(
                     mediaUri
                 }
 
-        editorTracker.trackAddMediaFromDevice(site, isNew, isVideo, updatedMediaUri)
+        editorTracker.trackAddMediaFromDevice(site, freshlyTaken, isVideo, updatedMediaUri)
 
         return updatedMediaUri
     }
