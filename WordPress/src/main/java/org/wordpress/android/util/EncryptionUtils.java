@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +27,7 @@ public class EncryptionUtils {
 
     static final String PUBLIC_KEY = "K0y2oQ++gEN00S4CbCH3IYoBIxVF6H86Wz4wi2t2C3M=";
     static final String KEYED_WITH = "v1";
+    static final String ENCODING = "UTF-8";
 
     /**
      * returns a JSON String with the following:
@@ -36,7 +38,7 @@ public class EncryptionUtils {
      * "messages": []                      // the stream elements, base-64 encoded
      *}
      */
-    public static String getEncryptedAppLog(Context context) throws JSONException {
+    public static String getEncryptedAppLog(Context context) throws JSONException, UnsupportedEncodingException {
 
         JSONObject encryptedLogJson = new JSONObject();
         encryptedLogJson.put("keyedWith", KEYED_WITH);
@@ -48,15 +50,15 @@ public class EncryptionUtils {
         // Encrypt, encode and add key to JSON object
 
         byte[] encryptedKey = new byte[XCHACHA20POLY1305_KEYBYTES + BOX_SEALBYTES];
-        NaCl.sodium().crypto_box_seal(encryptedKey, key, XCHACHA20POLY1305_KEYBYTES, PUBLIC_KEY.getBytes());
-        encryptedLogJson.put("encryptedKey", Base64.encodeToString(encryptedKey, Base64.DEFAULT));
+        NaCl.sodium().crypto_box_seal(encryptedKey, key, XCHACHA20POLY1305_KEYBYTES, PUBLIC_KEY.getBytes(ENCODING));
+        encryptedLogJson.put("encryptedKey", Base64.encodeToString(encryptedKey, Base64.NO_WRAP));
 
         // Set up a new stream: initialize the state and create the header
         byte[] state = new byte[XCHACHA20POLY1305_STATEBYTES];
         byte[] header = new byte[XCHACHA20POLY1305_HEADERBYTES];
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
 
-        encryptedLogJson.put("header", Base64.encodeToString(header, Base64.DEFAULT));
+        encryptedLogJson.put("header", Base64.encodeToString(header, Base64.NO_WRAP));
 
         // encrypt the logs and add to JSON array
         String logText = AppLog.toPlainText(context);
@@ -72,13 +74,13 @@ public class EncryptionUtils {
                 state,
                 encryptedLogLine,
                 clen,
-                logLine.getBytes(),
+                logLine.getBytes(ENCODING),
                 logLine.length(),
                 ad,
                 0,
                 (short) 0);
 
-            encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, Base64.DEFAULT));
+            encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, Base64.NO_WRAP));
         }
 
         // last element in the JSON array is an encrypted and encoded empty string with FINAL tag
@@ -91,13 +93,13 @@ public class EncryptionUtils {
             state,
             encryptedLogLine,
             clen,
-            emptyString.getBytes(),
+            emptyString.getBytes(ENCODING),
             0,
             ad,
             0,
             (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final());
 
-        encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, Base64.DEFAULT));
+        encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, Base64.NO_WRAP));
 
         encryptedLogJson.put("messages", encryptedLogLinesJson);
 
