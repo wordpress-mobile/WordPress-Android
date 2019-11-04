@@ -10,13 +10,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.preference.PreferenceManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -25,17 +22,16 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
 import org.wordpress.android.util.LocaleManager;
-import org.wordpress.android.util.ViewUtilsKt;
 
 // Simple wrapper activity for NotificationsSettingsFragment
-public class NotificationsSettingsActivity extends AppCompatActivity {
+public class NotificationsSettingsActivity extends AppCompatActivity
+        implements MasterSwitchToolbarListener {
     private TextView mMessageTextView;
     private View mMessageContainer;
 
     protected SharedPreferences mSharedPreferences;
-    protected SwitchCompat mMasterSwitch;
-    protected Toolbar mToolbarSwitch;
     protected View mFragmentContainer;
 
     @Override
@@ -52,8 +48,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         // Get shared preferences for master switch.
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(NotificationsSettingsActivity.this);
 
-        // Set up primary and secondary toolbars for master switch.
-        setUpToolbars();
+        // Set up primary toolbar
+        setUpToolbar();
+
+        // Set up master switch
+        setUpMasterSwitch();
 
         FragmentManager fragmentManager = getFragmentManager();
         if (savedInstanceState == null) {
@@ -100,9 +99,9 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Set up both primary toolbar for navigation and search, and secondary toolbar for master switch.
+     * Set up primary toolbar for navigation and search
      */
-    private void setUpToolbars() {
+    private void setUpToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar_with_search);
 
         if (toolbar != null) {
@@ -116,77 +115,37 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
         }
+    }
 
-        // Set secondary toolbar title and master switch state from shared preferences.
+    /**
+     * Sets up master switch to disable/enable all notification settings
+     */
+    private void setUpMasterSwitch() {
+        PrefMasterSwitchToolbarView masterSwitchToolBarView = findViewById(R.id.master_switch);
+        masterSwitchToolBarView.setMasterSwitchToolbarListener(this);
+
+        // Set master switch state from shared preferences.
         boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
+        masterSwitchToolBarView.loadInitialState(isMasterChecked);
+
         hideDisabledView(isMasterChecked);
-
-        mToolbarSwitch = findViewById(R.id.toolbar_with_switch);
-        mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
-        mToolbarSwitch.setTitle(isMasterChecked
-                                        ? getString(R.string.notification_settings_master_status_on)
-                                        : getString(R.string.notification_settings_master_status_off));
-
-        MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
-        mMasterSwitch = (SwitchCompat) menuItem.getActionView();
-        ViewCompat.setLabelFor(mToolbarSwitch, mMasterSwitch.getId());
-        mMasterSwitch.setChecked(isMasterChecked);
-
-        setToolbarTitleContentDescription();
-        setupFocusabilityForTalkBack();
-
-        mMasterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                hideDisabledView(isChecked);
-                mToolbarSwitch.setTitle(isChecked
-                                                ? getString(R.string.notification_settings_master_status_on)
-                                                : getString(R.string.notification_settings_master_status_off));
-                mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked)
-                                  .apply();
-
-                if (isChecked) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED);
-                } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED);
-                }
-            }
-        });
-
-        mToolbarSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mMasterSwitch.setChecked(!mMasterSwitch.isChecked());
-            }
-        });
-
-        mToolbarSwitch.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(NotificationsSettingsActivity.this, mMasterSwitch.isChecked()
-                                       ? getString(R.string.notification_settings_master_hint_on)
-                                       : getString(R.string.notification_settings_master_hint_off),
-                               Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mToolbarSwitch);
     }
 
-    private void setToolbarTitleContentDescription() {
-        for (int i = 0; i < mToolbarSwitch.getChildCount(); i++) {
-            if (mToolbarSwitch.getChildAt(i) instanceof TextView) {
-                mToolbarSwitch.getChildAt(i).setContentDescription(
-                        getString(R.string.notification_settings_switch_desc));
-            }
+    @Override
+    public void onMasterSwitchCheckedChanged(
+            CompoundButton buttonView,
+            boolean isChecked
+    ) {
+        mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked)
+                          .apply();
+
+        hideDisabledView(isChecked);
+
+        if (isChecked) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED);
         }
-    }
-
-    private void setupFocusabilityForTalkBack() {
-        mMasterSwitch.setFocusable(false);
-        mMasterSwitch.setClickable(false);
-        mToolbarSwitch.setFocusableInTouchMode(false);
-        mToolbarSwitch.setFocusable(true);
-        mToolbarSwitch.setClickable(true);
     }
 
     /**

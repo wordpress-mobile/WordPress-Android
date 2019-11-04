@@ -1,5 +1,9 @@
 13.6
 -----
+ * Change navigation bar color to white on Android 8.1+
+* Pages ordering is case insensitive now
+* Block Editor: Add support for pexels images
+* Block Editor: Add left, center, and right image alignment controls
  
 13.5
 -----
