@@ -125,7 +125,7 @@ class PageStore @Inject constructor(
                         // local DB pages have a non-unique remote ID value of 0
                         // to keep the apart we replace it with page ID (still unique)
                         // and make it negative (to easily tell it's a temporary value)
-                        it.remotePostId = -it.id.toLong()
+                        it.setRemotePostId(-it.id.toLong())
                     }
                     it
                 }
@@ -236,11 +236,11 @@ class PageStore @Inject constructor(
     }
 
     private fun PostModel.updatePageData(page: PageModel) {
-        this.id = page.pageId
-        this.title = page.title
-        this.status = page.status.toPostStatus().toString()
-        this.parentId = page.parent?.remoteId ?: 0
-        this.remotePostId = page.remoteId
-        this.dateCreated = DateTimeUtils.iso8601FromDate(page.date)
+        this.setId(page.pageId)
+        this.setTitle(page.title)
+        this.setStatus(page.status.toPostStatus().toString())
+        this.setParentId(page.parent?.remoteId ?: 0)
+        this.setRemotePostId(page.remoteId)
+        this.setDateCreated(DateTimeUtils.iso8601FromDate(page.date))
     }
 }
