@@ -212,7 +212,6 @@ Language: sr_RS
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="reader_likes_multi">%,d људи се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпрес без видљивог блога</string>
-    <string name="video">Видео снимак</string>
     <string name="reader_label_reply">Одговор</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>
     <string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>

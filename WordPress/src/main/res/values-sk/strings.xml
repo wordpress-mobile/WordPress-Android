@@ -1148,9 +1148,6 @@ Language: sk
     <string name="error_refresh_comments_showing_older">Komentáre sa nepodarilo aktualizovať v tejto chvíli - zobrazujú sa staršie komentáre</string>
     <string name="post_settings_set_featured_image">Nastaviť odporúčaný obrázok</string>
     <string name="post_settings_featured_image">Odporúčaný obrázok</string>
-    <string name="editor_content_placeholder">Zdieľaj svoj príbeh tu…</string>
-    <string name="editor_page_title_placeholder">Nadpis stránky</string>
-    <string name="editor_post_title_placeholder">Nadpis článku</string>
     <string name="email_address">Emailová adresa</string>
     <string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
     <string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
@@ -1545,7 +1542,6 @@ Language: sk
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Odpovedať</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>

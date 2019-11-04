@@ -10,6 +10,7 @@
  * Block Editor: Fix issue when multiple media selection adds only one image or video block.
  * Block Editor: Add Link Target (Open in new tab) to Image Block.
  * Block Editor: New block "Media & Text".
+ * Block Editor: Fix issue where the block inserter layout wasn't correct after device rotation.
  
 13.4
 -----

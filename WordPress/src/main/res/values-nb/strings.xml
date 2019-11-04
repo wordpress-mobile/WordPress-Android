@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-10 17:46:07+0000
+Translation-Revision-Date: 2019-10-25 13:03:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_published_retrying_private">Vi kunne ikke publisere dette private innlegget, men vi vil prøve igjen senere.</string>
@@ -54,10 +55,20 @@ Language: nb_NO
     <string name="site_settings_jetpack_performance_settings_hint">Se og endre dine ytelsesinnstillinger i Jetpack.</string>
     <string name="site_settings_performance_and_speed">Ytelse og hastighet</string>
     <string name="site_settings_more">Mer</string>
+    <string name="site_settings_improved_search_summary">Erstatt WordPress sin innebygde søkefunksjon med en forbedret søkeopplevelse</string>
+    <string name="site_settings_improved_search">Forbedret søk</string>
+    <string name="site_settings_jetpack_search">Jetpack-søk</string>
+    <string name="site_settings_ad_free_video_hosting">Reklamefri videobetjening</string>
     <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Last sider raskere ved å la Jetpack optimalisere dine bilder og statiske filer (som CSS og JavaScript).</string>
+    <string name="site_settings_faster_static_files">Raskere statiske filer</string>
+    <string name="site_settings_faster_images">Raskere bilder</string>
     <string name="site_settings_site_accelerator_off">Av</string>
     <string name="site_settings_site_accelerator_on">På</string>
+    <string name="site_settings_site_accelerator">Nettstedsaksellerator</string>
+    <string name="site_settings_lazy_load_images_summary">Forbedre farten på ditt nettsted ved bare å laste bilder som er synlige på skjermen.</string>
     <string name="site_settings_performance">Ytelse</string>
+    <string name="notification_settings_moved_notices">Innstillinger for varsling finnes nå under fanen Varslinger.</string>
     <string name="stats_file_downloads_value_label">Nedlastinger</string>
     <string name="stats_file_downloads_title_label">Fil</string>
     <string name="stats_file_downloads">Filnedlastinger</string>
@@ -72,7 +83,15 @@ Language: nb_NO
     <string name="share_desc">Del</string>
     <string name="navigate_back_desc">Gå tilbake</string>
     <string name="navigate_forward_desc">Gå forover</string>
+    <string name="calendar_scheduled_post_description">\"%s\" planlagt for publisering den \"%s\" i din WordPress-app\n%s</string>
+    <string name="calendar_scheduled_post_title">WordPress planlagt innlegg: \"%s\"</string>
+    <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" vil bli publiser om 10 minutter</string>
+    <string name="notification_post_will_be_published_in_one_hour">\"%s\" vil bli publisert om en time</string>
+    <string name="notification_post_has_been_published">\"%s\" har blitt publisert</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Planlagt innlegg: 10 minutters påminnelse</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Planlagt innlegg: 1 times påminnelse</string>
     <string name="notification_scheduled_post">Planlagt innlegg</string>
+    <string name="post_notification_error">Varsling kan ikke opprettes når publiseringsdatoen er i fortiden.</string>
     <string name="post_notification_when_published">Når publisert</string>
     <string name="post_notification_ten_minutes_before">10 minutter før</string>
     <string name="post_notification_one_hour_before">1 time før</string>
@@ -838,6 +857,7 @@ Language: nb_NO
     <string name="signup_epilogue_heading">Ny konto</string>
     <string name="signup_epilogue_error_button_positive">Prøv igjen</string>
     <string name="signup_epilogue_error_button_negative">Tilbakestill</string>
+    <string name="signup_epilogue_error_avatar">Det oppsto problemer med å laste opp din avatar.</string>
     <string name="signup_email_header">For å lage din nye brukerkonto på WordPres.com, vennligst oppgi dn epost-adresse.</string>
     <string name="signup_email_error_generic">Det opsto problemer med å kontrollere din e-postadresse.</string>
     <string name="sign_up">Registrer deg på WordPress.com</string>
@@ -912,6 +932,7 @@ Language: nb_NO
     <string name="plugin_icon_content_description">Utvidelsesikon</string>
     <string name="plugin_home_page">Utvidelsens hjemmeside</string>
     <string name="wordpress_dot_org_plugin_page">WordPress.org-utvidelsesside</string>
+    <string name="plugin_remove_dialog_message">Er du sikker på at du vil fjerne %1$s fra %2$s?\n\nDette vil deaktivere utvidelsen og slette alle tilknyttede filer og data.</string>
     <string name="plugin_remove_dialog_title">Fjerner utvidelsen</string>
     <string name="plugin_remove_progress_dialog_message">Fjerner %s …</string>
     <string name="plugin_disable_progress_dialog_message">Skrur av %s …</string>
@@ -1461,9 +1482,6 @@ Language: nb_NO
     <string name="error_refresh_comments_showing_older">Kommentarene kunne ikke bli oppfrisket for øyeblikket, så vi viser eldre kommentarer istedet</string>
     <string name="post_settings_set_featured_image">Velg fremhevet bilde</string>
     <string name="post_settings_featured_image">Fremhevet bilde</string>
-    <string name="editor_content_placeholder">Del historien din her …</string>
-    <string name="editor_page_title_placeholder">Sidens tittel</string>
-    <string name="editor_post_title_placeholder">Innleggets tittel</string>
     <string name="email_address">E-postadresse</string>
     <string name="dlg_sure_to_delete_comments">Vil du permanent slette disse kommentarene?</string>
     <string name="dlg_sure_to_delete_comment">Vil du permanent slette denne kommentaren?</string>
@@ -1860,7 +1878,6 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Svar</string>
     <string name="reader_likes_multi">%,d personer liker dette</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre liker dette</string>

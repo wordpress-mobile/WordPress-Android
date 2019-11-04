@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-16 04:54:11+0000
+Translation-Revision-Date: 2019-10-31 02:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
     <string name="error_post_not_published_retrying_private">我們無法發表這篇私密文章，但稍後會再試一次。</string>
@@ -1474,9 +1475,6 @@ Language: zh_TW
     <string name="pending_email_change_snackbar">按一下電子郵件 (收件者：%1$s) 中的驗證連結以確認您的新地址</string>
     <string name="editor_toast_uploading_please_wait">你目前正在上傳媒體。請等待此作業完成。</string>
     <string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
-    <string name="editor_content_placeholder">在此分享你的故事…</string>
-    <string name="editor_page_title_placeholder">頁面標題</string>
-    <string name="editor_post_title_placeholder">文章標題</string>
     <string name="email_address">電子郵件地址</string>
     <string name="dlg_sure_to_delete_comments">永久刪除這些留言？</string>
     <string name="dlg_sure_to_delete_comment">永久刪除此回應？</string>
@@ -1867,7 +1865,6 @@ Language: zh_TW
     <string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
     <string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
     <string name="comment_spammed">已將留言標記為垃圾</string>
-    <string name="video">影片</string>
     <string name="reader_label_reply">回覆</string>
     <string name="reader_likes_multi">%,d 人說這個讚</string>
     <string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>

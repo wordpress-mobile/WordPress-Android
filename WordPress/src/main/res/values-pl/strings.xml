@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-09-14 17:32:00+0000
+Translation-Revision-Date: 2019-10-29 05:56:40+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="pick_media">Dodaj zdjęcie lub film</string>
+    <string name="error_post_not_submitted_retrying">Nie można było przesłać tego wpisu do przeglądu, ale spróbujemy później</string>
+    <string name="error_post_not_scheduled_retrying">Nie można było zaplanować daty opublikowania tego wpisu, ale spróbujemy później.</string>
+    <string name="error_post_not_published_retrying_private">Nie można było opublikować tego prywatnego wpisu, ale spróbujemy później.</string>
+    <string name="error_post_not_published_retrying">Nie można było opublikować tego wpisu, ale spróbujemy później.</string>
+    <string name="error_post_not_submitted">Nie można było ukończyć tego działania, i przesłać tego wpisu do przeglądu.</string>
+    <string name="error_post_not_scheduled">Nie można było ukończyć tego działania, i zaplanować daty publikacji tego wpisu.</string>
+    <string name="error_post_not_published_private">Nie można było ukończyć tego działania, i opublikować tego prywatnego wpisu.</string>
+    <string name="error_post_not_published">Nie można było ukończyć tego działania, i opublikować tego wpisu.</string>
+    <string name="error_media_recover_post_not_submitted">Nie można było przesłać tego pliku mediów i przesłać tego wpisu do przeglądu.</string>
+    <string name="error_media_recover_post_not_scheduled">Nie można było przesłać tego pliku mediów i zaplanować daty opublikowania tego wpisu.</string>
+    <string name="error_media_recover_post_not_published_private">Nie można było przesłać tego pliku mediów i opublikować tego prywatnego wpisu.</string>
+    <string name="error_media_recover_post_not_published">Nie można było przesłać tego pliku mediów i opublikować wpisu.</string>
+    <string name="error_media_recover_post">Nie można było przesłać tego pliku mediów.</string>
+    <string name="error_generic_error_retrying">Nie można było zakończyć tego działania, ale spróbujemy ponownie później.</string>
+    <string name="error_generic_error">Nie można było ukończyć tego działania.</string>
+    <string name="error_preview_empty_draft">Nie można zobaczyć podglądu pustego szkica</string>
+    <string name="error_preview_empty_page">Nie można podejrzeć pustej strony</string>
+    <string name="error_preview_empty_post">Nie można podejrzeć pustego wpisu</string>
+    <string name="preview_unavailable_self_hosted_sites">Podgląd niedostępny</string>
+    <string name="remote_preview_operation_error">Błąd podczas próby zapisania wpisu przed uruchomieniem podglądu</string>
+    <string name="post_preview_remote_auto_saving_post">Generowanie podglądu…</string>
+    <string name="post_preview_saving_draft">Zapisywanie…</string>
+    <string name="local_post_autosave_revision_available">Dokonałeś niezapisanych zmian do tego wpisu</string>
+    <string name="dialog_confirm_autosave_dont_restore_button">Wersja z tej aplikacji</string>
+    <string name="dialog_confirm_autosave_restore_button">Wersja z innego urządzenia</string>
+    <string name="dialog_confirm_autosave_body_second_part">Z tej aplikacji\nZapisany dnia %s\n\nZ innego urządzenia\nZapisany dnia %s\n</string>
+    <string name="dialog_confirm_autosave_body_first_part">Dokonałeś ostatnio zmian w tym wpisie, ale nie zostały zapisane. Wybierz wersję, którą chcesz wczytać:\n\n</string>
+    <string name="dialog_confirm_autosave_title">Którą wersję chciał(a)byś edytować?</string>
+    <string name="button_delete_permanently">Usuń trwale</string>
+    <string name="post_waiting_for_connection_draft_cancel">Nie zapiszemy ostatnich zmian do twojego szkica.</string>
+    <string name="post_waiting_for_connection_scheduled_cancel">Nie zaplanujemy daty opublikowania tych zmian.</string>
+    <string name="post_waiting_for_connection_pending_cancel">Nie prześlemy tych zmian do przeglądu.</string>
+    <string name="post_waiting_for_connection_publish_cancel">Nie opublikujemy tych zmian.</string>
+    <string name="post_waiting_for_connection_draft">Zapiszemy twój szkic kiedy urządzenie będzie ponownie online</string>
+    <string name="post_waiting_for_connection_private">Opublikujemy twój prywatny wpis kiedy urządzenie będzie ponownie online.</string>
+    <string name="post_waiting_for_connection_scheduled">Zaplanujemy publikację tego wpisu kiedy urządzenie będzie ponownie online.</string>
+    <string name="post_waiting_for_connection_pending">Prześlemy twój wpis do przeglądu kiedy urządzenie będzie ponownie online.</string>
+    <string name="post_waiting_for_connection_publish">Opublikujemy wpis kiedy twoje urządzenie będzie ponownie online.</string>
+    <string name="settings_username_changer_snackbar_cancel">To działanie nie może być anulowane. Nazwa użytkownika mogła być już uaktualniona.</string>
+    <string name="settings_username_changer_toast_content">Twoja nowa nazwa użytkownika to %1$s</string>
+    <string name="settings_username_changer_progress_dialog">Zapisywanie nazwy użytkownika…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Zmiana nazwy użytkownika</string>
+    <string name="settings_username_changer_confirm_dialog_content">Zmieniasz nazwę użytkownika na %1$s%2$s%3$s. Zmiana nazwy użytkownika będzie również miała wpływ na profil Gravatar i adresy profilowe Intense Debate. Proszę potwierdzić nową nazwę użytkownika aby kontynuować.</string>
+    <string name="settings_username_changer_confirm_dialog_title">Ostrożenie!</string>
+    <string name="settings_username_changer_header">Masz zamiar zmienić nazwę użytkownika, którą aktualnie jest %1$s%2$s%3$s. Nie będziesz mógł przywrócić swojej nazwy użytkownika.</string>
+    <string name="site_settings_jetpack_performance_settings_hint">Podejrzyj i zmień ustawienia wydajności Jetpacka</string>
+    <string name="site_settings_performance_and_speed">Wydajność i prędkość</string>
+    <string name="site_settings_more">Więcej</string>
+    <string name="site_settings_improved_search_summary">Zamień wbudowane w WordPressa narzędzie do wyszukiwania na narzędzie ulepszone</string>
+    <string name="site_settings_improved_search">Ulepszone narzędzie do wyszukiwania</string>
+    <string name="site_settings_jetpack_search">Wyszukiwanie Jetpack</string>
+    <string name="site_settings_ad_free_video_hosting">Hosting filmów bez reklam</string>
+    <string name="site_settings_media">Media</string>
+    <string name="site_settings_site_accelerator_summary">Wczytuj strony szybciej zezwalając Jetpackowi na optymalizację twoich obrazków i plików statycznych (takich jak arkusze CSS i JavaScript).</string>
+    <string name="site_settings_faster_static_files">Szybsze pliki statyczne</string>
+    <string name="site_settings_faster_images">Szybsze obrazki</string>
+    <string name="site_settings_site_accelerator_off">Wyłączone</string>
+    <string name="site_settings_site_accelerator_on">Włączone</string>
+    <string name="site_settings_site_accelerator">Przyspieszacz witryny</string>
+    <string name="site_settings_lazy_load_images_summary">Zwiększ szybkość swojej witryny wczytując jedynie obrazki widoczne na ekranie.</string>
+    <string name="site_settings_performance">Wydajność</string>
     <string name="notification_settings_moved_notices">Ustawienia powiadomień znajdziesz w zakładce Powiadomienia.</string>
     <string name="stats_file_downloads_value_label">Pobrań</string>
     <string name="stats_file_downloads_title_label">Plik</string>
@@ -82,7 +144,7 @@ Language: pl
     <string name="stats_widget_all_time_insights_name">Od początku</string>
     <string name="stats_widget_weekly_views_name">Wyświetleń w tym tygodniu</string>
     <string name="stats_widget_log_in_message">Proszę zalogować się do aplikacji WordPress aby dodać widget.</string>
-    <string name="stats_widget_error_no_network">Brak dostępnej sieci</string>
+    <string name="stats_widget_error_no_network">Brak dostępu do sieci</string>
     <string name="stats_widget_error_no_data">Nie udało się załadować danych</string>
     <string name="stats_widget_select_type">Typ</string>
     <string name="stats_widget_select_color">Kolor</string>
@@ -135,7 +197,7 @@ Language: pl
     <string name="domain_registration_privacy_protection_title">Zabezpieczenie prywatności</string>
     <string name="domain_registration_contact_form_input_error">Wprowadź prawidłowy %s</string>
     <string name="domains_suggestions_choose_domain">Wybierz domenę</string>
-    <string name="stats_management_new">Nowy</string>
+    <string name="stats_management_new">Nowe</string>
     <string name="stats_management_edit">Edycja</string>
     <string name="stats_management_dismiss_insights_news_card">Odrzuć</string>
     <string name="stats_management_try_it_now">Wypróbuj</string>
@@ -152,7 +214,7 @@ Language: pl
     <string name="post_list_author_me">Ja</string>
     <string name="error_restoring_post">Wystąpił błąd podczas odzyskiwania wpisu</string>
     <string name="backdated_for">Datowany wstecznie dla: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Obiekt pokazany powyżej pojawi się w zakładce Trendy. Przesuń i upuść aby spersonalizować.</string>
+    <string name="stats_insights_management_drag_and_drop_hint">Obiekt pokazany powyżej pojawi się w zakładce Trendy. Przesuń i upuść aby spersonalizować wygląd statystyk.</string>
     <string name="stats_insights_add_insights_header">Dodaj Trendy</string>
     <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Na tej karcie możesz dodawać i organizować najistotniejsze dla siebie trendy.</string>
     <string name="stats_insights_social">Społecznościowe</string>
@@ -164,8 +226,8 @@ Language: pl
     <string name="register_domain">Zarejestruj domenę</string>
     <string name="jetpack_installed_message">Jetpack jest już zainstalowany, czas go skonfigurować. Zajmie to chwilę. </string>
     <string name="stats_menu_remove">Usuń z Trendów</string>
-    <string name="stats_menu_move_down">Przejdź w dół</string>
-    <string name="stats_menu_move_up">Przejdź w górę</string>
+    <string name="stats_menu_move_down">Przesuń niżej</string>
+    <string name="stats_menu_move_up">Przesuń wyżej</string>
     <string name="stats_item_settings">Ustawienia statystyk</string>
     <string name="post_moving_to_draft">Wpis jest przesuwany do szkiców</string>
     <string name="post_restoring">Wpis jest odzyskiwany</string>
@@ -211,7 +273,7 @@ Language: pl
     <string name="stats_insights_today_stats">Dziś</string>
     <string name="stats_insights_best_hour">Najlepsza godzina</string>
     <string name="stats_insights_best_day">Najlepszy Dzień</string>
-    <string name="showing_stats_for">Pokazywanie statystyk dla:</string>
+    <string name="showing_stats_for">Prezentacja statystyk dla wpisu:</string>
     <string name="app_rating_rate_never">Nie dziękuję</string>
     <string name="app_rating_rate_later">Później</string>
     <string name="app_rating_rate_now">Oceń teraz</string>
@@ -297,7 +359,7 @@ Language: pl
     <string name="stats_select_next_period_description">Wybierz kolejny okres</string>
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
     <string name="stats_most_popular_percent_views">%1$d%% wyświetleń</string>
-    <string name="stats_insights_popular">Najbardziej Popularna godzina</string>
+    <string name="stats_insights_popular">Najbardziej popularna pora</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_site_preview_content_description">Prezentacja podglądu witryny</string>
@@ -323,7 +385,7 @@ Language: pl
     <string name="new_site_creation_site_info_header_title">Informacje podstawowe</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Wystąpił problem</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">Brak połączenia</string>
-    <string name="site_creation_segments_subtitle">To pomaga nam w przekazywaniu rekomendacji. Ale nie ograniczasz się - wszystkie witryny ewoluują!</string>
+    <string name="site_creation_segments_subtitle">Dzięki temu nasza rekomendacja będzie trafniejsza. Ale nie oznacza to zaszufladowania - wszystkie witryny ewoluują!</string>
     <string name="site_creation_segments_title">Powiedz nam jaki rodzaj witryny chcesz utworzyć</string>
     <string name="new_site_creation_preview_title">Twoja witryna został utworzona!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
@@ -343,7 +405,7 @@ Language: pl
     <string name="dialog_confirm_load_remote_post_body">Ten wpis ma dwie konfliktujące ze sobą wersje. Wybierz wersję którą chciał(a)byś odrzucić.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Rozwiąż problem synchronizacji</string>
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
-    <string name="preference_strip_image_location">Usuń lokalizację z plików mediów</string>
+    <string name="preference_strip_image_location">Usuń lokalizację GPS z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
     <string name="giphy_powered_by_giphy">Wspierane przez GIPHY</string>
     <string name="giphy_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się przesłać z powodu błędu sieci. </string>
@@ -410,7 +472,7 @@ Language: pl
     <string name="change_password_dialog_hint">Twoje hasło powinno zawierać co najmniej 6 znaków. Aby było to silne hasło, użyj małych i wielkich liter, cyfr oraz znaków specjalnych takich jak  ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Zmiana hasła zakończona powodzeniem</string>
     <string name="change_password">Zmień hasło</string>
-    <string name="support_identity_input_dialog_name_label">Nazwa</string>
+    <string name="support_identity_input_dialog_name_label">Imię</string>
     <string name="history_no_title">(brak tytułu)</string>
     <string name="history_preview_html">Podgląd HTML</string>
     <string name="history_preview_visual">Podgląd wizualny</string>
@@ -446,7 +508,7 @@ Language: pl
     <string name="pages_empty_search_result">Brak stron pasujących do twoich kryteriów wyszukiwania</string>
     <string name="pages_delete_permanently">Usuń permanentnie</string>
     <string name="pages_move_to_trash">Przesuń do kosza</string>
-    <string name="pages_move_to_draft">Przesuń do Szkiców</string>
+    <string name="pages_move_to_draft">Przesuń do szkiców</string>
     <string name="pages_publish_now">Opublikuj teraz</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
     <string name="pages_view">Podgląd</string>
@@ -502,7 +564,7 @@ Language: pl
     <string name="content_description_more">Więcej</string>
     <string name="my_site_create_new_site_title">Nie msz żadnych witryn</string>
     <string name="reader_empty_followed_tags_title">Nie obserwujesz żadnych tagów</string>
-    <string name="reader_empty_followed_tags_subtitle">Dodaj tagi aby odnaleźć wpisy o swoich ulubionych tematach </string>
+    <string name="reader_empty_followed_tags_subtitle">Dodaj tagi aby odnaleźć wpisy dotyczące tematów które ciebie interesują</string>
     <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
     <string name="install_jetpack_retry">Ponów</string>
     <string name="install_jetpack_continue">Utwórz</string>
@@ -533,13 +595,13 @@ Language: pl
     <string name="reader_empty_posts_liked_description">Pojawią się tu wpisy które polubisz</string>
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
     <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
-    <string name="reader_empty_followed_blogs_button_discover">Odkryj witryny </string>
+    <string name="reader_empty_followed_blogs_button_discover">Odkrywaj witryny </string>
     <string name="reader_empty_followed_blogs_description">Nie obserwujesz żadnych witryn. Może zaczniesz? </string>
     <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
     <string name="notifications_empty_likes">Brak polubień</string>
     <string name="notifications_empty_followers">Brak obserwujących</string>
     <string name="activity_log_limited_content_on_free_plan">Korzystasz z planu darmowego,  więc zobaczysz tylko ograniczoną liczbę działań w ramach swojej aktywności. </string>
-    <string name="activity_log_empty_subtitle">Kiedy dokonujesz zmian na swojej witrynie, zobaczysz tutaj historię swojej aktywności. </string>
+    <string name="activity_log_empty_subtitle">Kiedy dokonasz zmian na swojej witrynie, tutaj zobaczysz historię swojej aktywności</string>
     <string name="activity_log_empty_title">Brak aktywności jak dotąd</string>
     <string name="posts_empty_list_button">Utwórz wpis</string>
     <string name="pages_empty_list_button">Utwórz stronę</string>
@@ -844,6 +906,7 @@ Language: pl
     <string name="my_site_add_new_site">Dodaj nową witrynę</string>
     <string name="my_site_create_new_site">Stwórz nową witrynę dla swojej firmy, magazynu czy własnego bloga; lub połącz istniejącą instalację WordPressa.</string>
     <string name="notifications_jetpack_connection_setup_info">Aby uzyskać pomocne powiadomienia na swoim urządzeniu ze swojej WordPressowej witryny, będziesz musiał zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
+    <string name="site_settings_lazy_load_images">Lazy load - wczytuj tylko widoczne na stronie obrazki</string>
     <string name="stats_jetpack_connection_setup">Zainstaluj Jetpacka</string>
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>
@@ -1007,7 +1070,7 @@ Language: pl
     <string name="notification_settings_category_other">Inne</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Wszystkie moje witryny</string>
     <string name="notification_settings_category_your_sites">Twoje witryny</string>
-    <string name="notification_settings_master_off_message">Zmiana ustawienia na brak powiadomień spowoduje że nie będziesz otrzymywać żadnych powiadomień z tej aplikacji, bez względu na ich typ. Możesz dostosować rodzaj powiadomień, które otrzymujesz po włączeniu ustawienia.</string>
+    <string name="notification_settings_master_off_message">Zmiana ustawienia na \"Brak powiadomień\" spowoduje że nie będziesz otrzymywać żadnych powiadomień z tej aplikacji, bez względu na ich typ. Możesz dostosować typ otrzymywanych powiadomień po włączeniu powyższej funkcji.</string>
     <string name="notification_settings_master_off_title">Aby włączyć powiadomienia na tym urządzeniu, włącz ustawienie w sekcji Powiadomień.</string>
     <string name="notification_settings_master_hint_off">Włącz powiadomienia</string>
     <string name="notification_settings_master_hint_on">Wyłącz powiadomienia</string>
@@ -1090,7 +1153,7 @@ Language: pl
     <string name="editor_dropped_html_images_not_allowed">Upuszczanie obrazków w trybie HTML nie jest dozwolone</string>
     <string name="editor_content_hint">Podziel się swoją historią…</string>
     <string name="post_list_trashed">W koszu</string>
-    <string name="post_list_scheduled">Zaplanowany</string>
+    <string name="post_list_scheduled">Zaplanowane</string>
     <string name="post_status_post_private">Prywatny</string>
     <string name="post_status_draft">Szkic</string>
     <string name="post_status_pending_review">Oczekuje na przegląd</string>
@@ -1451,9 +1514,6 @@ Language: pl
     <string name="error_refresh_comments_showing_older">Odświeżenie komentarzy nie było możliwe - pokazane są starsze komentarze</string>
     <string name="post_settings_set_featured_image">Ustaw obrazek wyróżniający</string>
     <string name="post_settings_featured_image">Obrazek wyróżniający</string>
-    <string name="editor_content_placeholder">Podziel się swoją historią…</string>
-    <string name="editor_page_title_placeholder">Tytuł strony</string>
-    <string name="editor_post_title_placeholder">Tytuł wpisu</string>
     <string name="email_address">Adres e-mail</string>
     <string name="dlg_sure_to_delete_comments">Trwale usunąć te komentarze ?</string>
     <string name="dlg_sure_to_delete_comment">Trwale usunąć ten komentarz ?</string>
@@ -1851,7 +1911,6 @@ Language: pl
     <string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów…</string>
     <string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego blogu</string>
     <string name="comment_spammed">Komentarz został oznaczony jako spam</string>
-    <string name="video">Film</string>
     <string name="reader_label_reply">Odpowiedz</string>
     <string name="reader_likes_multi">%,d osób lubi to</string>
     <string name="reader_likes_you_and_multi">Ty i %,d innych lubią to</string>
