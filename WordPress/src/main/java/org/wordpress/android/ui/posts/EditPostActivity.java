@@ -159,6 +159,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSou
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
@@ -564,8 +565,11 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorMedia.getSnackBarMessage().observe(this, message -> {
             WPSnackbar.make(findViewById(R.id.editor_activity), message.getMessageRes(), Snackbar.LENGTH_SHORT).show();
         });
-        mEditorMedia.getToastMessage().observe(this, toastMessageHolder -> {
-            toastMessageHolder.show(this);
+        mEditorMedia.getToastMessage().observe(this, event -> {
+            ToastMessageHolder contentIfNotHandled = event.getContentIfNotHandled();
+            if (contentIfNotHandled != null) {
+                contentIfNotHandled.show(this);
+            }
         });
     }
 

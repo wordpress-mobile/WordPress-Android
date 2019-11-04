@@ -45,7 +45,9 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.helpers.MediaFile
+import org.wordpress.android.util.merge
 import org.wordpress.android.util.mergeNotNull
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.util.ArrayList
@@ -89,18 +91,11 @@ class EditorMedia @Inject constructor(
     private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
     val uiState: LiveData<AddMediaToPostUiState> = _uiState
 
-    private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
-    val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
+    private val _snackBarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
+    val snackBarMessage = _snackBarMessage as LiveData<Event<SnackbarMessageHolder>>
 
-    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>() // TODO use Event<ToastMessageHolder>
-    val toastMessage: LiveData<ToastMessageHolder> = mergeNotNull(
-            listOf(
-                    _toastMessage,
-                    getMediaModelUseCase.toastMessage
-            ),
-            distinct = false,
-            singleEvent = true
-    )
+    private val _toastMessage = SingleLiveEvent<Event<ToastMessageHolder>>()
+    val toastMessage: LiveData<Event<ToastMessageHolder>> = merge(_toastMessage, getMediaModelUseCase.toastMessage)
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri>? = null
@@ -160,7 +155,7 @@ class EditorMedia @Inject constructor(
                     editorMediaListener
             )
             if(!allMediaSucceed) {
-                _snackBarMessage.value = SnackbarMessageHolder(R.string.gallery_error)
+                _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
             }
             _uiState.value = AddingMediaIdle
         }
@@ -242,7 +237,7 @@ class EditorMedia @Inject constructor(
             val payload = FetchMediaListPayload(site, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
             dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
         } else {
-            _toastMessage.value = ToastMessageHolder(R.string.error_media_refresh_no_connection, Duration.SHORT)
+            _toastMessage.value = Event(ToastMessageHolder(R.string.error_media_refresh_no_connection, Duration.SHORT))
         }
     }
 
@@ -312,7 +307,7 @@ class EditorMedia @Inject constructor(
 
         if (fetchedUriList.size < uriList.size) {
             // At least one media failed
-            _toastMessage.value = ToastMessageHolder(R.string.error_downloading_image, Duration.SHORT)
+            _toastMessage.value = Event(ToastMessageHolder(R.string.error_downloading_image, Duration.SHORT))
         }
 
         return fetchedUriList

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts.editor.media
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -14,7 +15,7 @@ import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
-import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.io.File
 import javax.inject.Inject
@@ -29,8 +30,8 @@ class GetMediaModelUseCase @Inject constructor(
     private val mediaStore: MediaStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
-    val toastMessage = _toastMessage as LiveData<ToastMessageHolder>
+    private val _toastMessage = MutableLiveData<Event<ToastMessageHolder>>()
+    val toastMessage = _toastMessage as LiveData<Event<ToastMessageHolder>>
 
     suspend fun loadMediaModelFromDb(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
         return withContext(bgDispatcher) {
@@ -62,7 +63,7 @@ class GetMediaModelUseCase @Inject constructor(
                 when (val result = verifyFileExists(uri)) {
                     is FileExistsResult.Error -> {
                         // TODO FIx: this will show a toast for each error
-                        _toastMessage.postValue(ToastMessageHolder(result.resId, result.msgDuration))
+                        _toastMessage.postValue(Event(ToastMessageHolder(result.resId, result.msgDuration)))
                         null
                     }
                     is FileExistsResult.Success -> createNewMediaModel(localSiteId, uri)
