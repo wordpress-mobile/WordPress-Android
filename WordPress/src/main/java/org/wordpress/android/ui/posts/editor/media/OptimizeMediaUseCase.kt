@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
+import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -16,6 +17,7 @@ import javax.inject.Named
  *
  * Warning: This use case optimizes images only if the user enabled image optimization (AppPrefs.isImageOptimize()).
  */
+@Reusable
 class OptimizeMediaUseCase @Inject constructor(
     private val editorTracker: EditorTracker,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
@@ -34,7 +36,7 @@ class OptimizeMediaUseCase @Inject constructor(
                     .let {
                         OptimizeMediaResult(
                                 optimizedMediaUris = it.filterNotNull(),
-                                someMediaCouldNotBeRetrieved = it.contains(null)
+                                loadingSomeMediaFailed = it.contains(null)
                         )
                     }
         }
@@ -62,6 +64,6 @@ class OptimizeMediaUseCase @Inject constructor(
 
     data class OptimizeMediaResult(
         val optimizedMediaUris: List<Uri>,
-        val someMediaCouldNotBeRetrieved: Boolean
+        val loadingSomeMediaFailed: Boolean
     )
 }

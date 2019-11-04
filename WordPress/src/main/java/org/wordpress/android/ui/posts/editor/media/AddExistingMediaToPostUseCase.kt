@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import dagger.Reusable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource
 import org.wordpress.android.ui.posts.editor.EditorMediaListener
@@ -9,6 +10,7 @@ import javax.inject.Inject
 /**
  * Loads existing media items (they must have a valid url) from the local db and adds them to the editor.
  */
+@Reusable
 class AddExistingMediaToPostUseCase @Inject constructor(
     private val editorTracker: EditorTracker,
     private val getMediaModelUseCase: GetMediaModelUseCase,

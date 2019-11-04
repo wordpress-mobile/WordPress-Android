@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import dagger.Reusable
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
@@ -12,6 +13,7 @@ import javax.inject.Inject
 /**
  * Saves post so the UploadService has access to the most up to date version and initiates an upload.
  */
+@Reusable
 class UploadMediaUseCase @Inject constructor(
     private val uploadServiceFacade: UploadServiceFacade
 ) {

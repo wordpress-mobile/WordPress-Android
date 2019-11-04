@@ -1,22 +1,15 @@
 package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
-import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
-import org.wordpress.android.util.ToastUtils.Duration
-import org.wordpress.android.util.ToastUtils.Duration.SHORT
-import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,15 +17,13 @@ import javax.inject.Named
 /**
  * Helper class for retrieving/creating MediaModel from the provided data.
  */
+@Reusable
 class GetMediaModelUseCase @Inject constructor(
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val mediaStore: MediaStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    private val _toastMessage = MutableLiveData<Event<ToastMessageHolder>>()
-    val toastMessage = _toastMessage as LiveData<Event<ToastMessageHolder>>
-
     suspend fun loadMediaModelFromDb(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelLocalIds
@@ -52,23 +43,27 @@ class GetMediaModelUseCase @Inject constructor(
         }
     }
 
-    suspend fun createMediaModelFromUri(localSiteId: Int, uri: Uri): MediaModel? {
-        return createMediaModelFromUri(localSiteId, listOf(uri)).firstOrNull()
+    suspend fun createMediaModelFromUri(localSiteId: Int, uri: Uri): CreateMediaModelsResult {
+        return createMediaModelFromUri(localSiteId, listOf(uri))
     }
 
-    // TODO consider moving toastMessages somewhere else
-    suspend fun createMediaModelFromUri(localSiteId: Int, uris: List<Uri>): List<MediaModel> {
+    suspend fun createMediaModelFromUri(localSiteId: Int, uris: List<Uri>): CreateMediaModelsResult {
         return withContext(bgDispatcher) {
-            uris.mapNotNull { uri ->
-                when (val result = verifyFileExists(uri)) {
-                    is FileExistsResult.Error -> {
-                        // TODO FIx: this will show a toast for each error
-                        _toastMessage.postValue(Event(ToastMessageHolder(result.resId, result.msgDuration)))
-                        null
+            uris
+                    .map { uri ->
+                        if (verifyFileExists(uri)) {
+                            createNewMediaModel(localSiteId, uri)
+                        } else {
+                            null
+                        }
                     }
-                    is FileExistsResult.Success -> createNewMediaModel(localSiteId, uri)
-                }
-            }
+                    .toList()
+                    .let {
+                        CreateMediaModelsResult(
+                                mediaModels = it.filterNotNull(),
+                                loadingSomeMediaFailed = it.contains(null)
+                        )
+                    }
         }
     }
 
@@ -97,19 +92,13 @@ class GetMediaModelUseCase @Inject constructor(
         return path?.let { mediaUtilsWrapper.getVideoThumbnail(it) }
     }
 
-    private fun verifyFileExists(uri: Uri): FileExistsResult {
-        return mediaUtilsWrapper.getRealPathFromURI(uri)?.let { path ->
-            val file = File(path)
-            return if (file.exists()) {
-                FileExistsResult.Success
-            } else {
-                FileExistsResult.Error(R.string.file_not_found, SHORT)
-            }
-        } ?: FileExistsResult.Error(R.string.editor_toast_invalid_path, SHORT)
+    private fun verifyFileExists(uri: Uri): Boolean {
+        return mediaUtilsWrapper.getRealPathFromURI(uri)?.let { path -> File(path).exists() }
+                ?: false
     }
 
-    sealed class FileExistsResult {
-        data class Error(@StringRes val resId: Int, val msgDuration: Duration) : FileExistsResult()
-        object Success : FileExistsResult()
-    }
+    data class CreateMediaModelsResult(
+        val mediaModels: List<MediaModel>,
+        val loadingSomeMediaFailed: Boolean
+    )
 }

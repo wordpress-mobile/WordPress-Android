@@ -95,7 +95,7 @@ class EditorMedia @Inject constructor(
     val snackBarMessage = _snackBarMessage as LiveData<Event<SnackbarMessageHolder>>
 
     private val _toastMessage = SingleLiveEvent<Event<ToastMessageHolder>>()
-    val toastMessage: LiveData<Event<ToastMessageHolder>> = merge(_toastMessage, getMediaModelUseCase.toastMessage)
+    val toastMessage: LiveData<Event<ToastMessageHolder>> = _toastMessage
 
     // for keeping the media uri while asking for permissions
     var droppedMediaUris: ArrayList<Uri>? = null
@@ -244,7 +244,7 @@ class EditorMedia @Inject constructor(
     fun updateMediaUploadState(uri: Uri, mediaUploadState: MediaUploadState): MediaModel? {
         // TODO Remove runBlocking block
         return runBlocking {
-            getMediaModelUseCase.createMediaModelFromUri(site.id, uri)?.let {
+            getMediaModelUseCase.createMediaModelFromUri(site.id, uri).mediaModels.firstOrNull()?.let {
                 updateMediaModelUseCase.updateMediaModel(
                         it,
                         editorMediaListener.editorMediaPostData(),

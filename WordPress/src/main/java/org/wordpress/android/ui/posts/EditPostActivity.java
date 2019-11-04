@@ -105,6 +105,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -562,8 +563,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         });
-        mEditorMedia.getSnackBarMessage().observe(this, message -> {
-            WPSnackbar.make(findViewById(R.id.editor_activity), message.getMessageRes(), Snackbar.LENGTH_SHORT).show();
+        mEditorMedia.getSnackBarMessage().observe(this, event -> {
+            SnackbarMessageHolder messageHolder = event.getContentIfNotHandled();
+            if (messageHolder != null) {
+                WPSnackbar
+                        .make(findViewById(R.id.editor_activity), messageHolder.getMessageRes(), Snackbar.LENGTH_SHORT)
+                        .show();
+            }
         });
         mEditorMedia.getToastMessage().observe(this, event -> {
             ToastMessageHolder contentIfNotHandled = event.getContentIfNotHandled();
