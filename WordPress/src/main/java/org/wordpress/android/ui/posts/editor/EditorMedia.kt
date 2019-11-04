@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.editor
 
-import android.app.Activity
 import android.net.Uri
 import android.util.ArrayMap
 import androidx.lifecycle.LiveData
@@ -45,8 +44,6 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.helpers.MediaFile
-import org.wordpress.android.util.merge
-import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -58,12 +55,11 @@ import kotlin.coroutines.CoroutineContext
 data class EditorMediaPostData(val localPostId: Int, val remotePostId: Long, val isLocalDraft: Boolean)
 
 interface EditorMediaListener {
-    // TODO convert this into LiveData<Action> or similar and remove EditorMediaListener from all the places and send
-    //  there only EditorMediaPostData
-    fun appendMediaFiles(mediaMap: ArrayMap<String, MediaFile>)
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
     fun savePostAsyncFromEditorMedia(listener: AfterSavePostListener? = null)
+    fun advertiseImageOptimization(listener: () -> Unit)
 
+    // TODO replace this with PostModelRepository
     fun editorMediaPostData(): EditorMediaPostData
 }
 
@@ -121,10 +117,10 @@ class EditorMedia @Inject constructor(
 
 
     //region Adding new media to a post
-    fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>, activity: Activity) {
+    fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>) {
         // TODO remove activity - it doesn't work with appContext!! The dialog needs to be created on a activity.
         if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
-            mediaUtilsWrapper.advertiseImageOptimization(activity) {
+            editorMediaListener.advertiseImageOptimization {
                 addNewMediaItemsToEditorAsync(
                         uriList,
                         false
@@ -178,10 +174,10 @@ class EditorMedia @Inject constructor(
                 .also { AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW) }
     }
 
-    fun onPhotoPickerMediaChosen(uriList: MutableList<Uri>, activity: Activity) {
+    fun onPhotoPickerMediaChosen(uriList: MutableList<Uri>) {
         val containsAtLeastOneImage = uriList.any { MediaUtils.isVideo(it.toString()) }
         if (containsAtLeastOneImage) {
-            advertiseImageOptimisationAndAddMedia(uriList, activity)
+            advertiseImageOptimisationAndAddMedia(uriList)
         } else {
             addNewMediaItemsToEditorAsync(uriList, false)
         }
@@ -215,8 +211,6 @@ class EditorMedia @Inject constructor(
     //endregion
 
     fun cancelAddMediaToEditorActions() {
-        // TODO The current behavior seems broken - we show a blocking dialog so the user can't cancel the action, but
-        //  when the user rotates the device we actually cancel the action ourselves ...
         job.cancel()
     }
 

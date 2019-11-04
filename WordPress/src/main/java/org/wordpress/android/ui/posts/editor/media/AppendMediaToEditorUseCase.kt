@@ -25,8 +25,6 @@ class AppendMediaToEditorUseCase @Inject constructor(private val fluxCUtilsWrapp
                     }
                 }
                 .forEach { pair -> editorMediaListener.appendMediaFile(pair.second, pair.first) }
-        // TODO this should ideally call .toMap(ArrayMap()).let{editorMediaListener.appendMediaFiles(this)},
-        //  but appendMediaFileS doesn't work as expected. Eg. failed media overlay doesn't get shown.
     }
 }
 

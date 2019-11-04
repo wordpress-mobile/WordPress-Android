@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import java.io.File
@@ -36,9 +37,10 @@ class GetMediaModelUseCase @Inject constructor(
     suspend fun loadMediaModelFromDb(site: SiteModel, mediaModelsRemoteIds: Iterable<Long>): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelsRemoteIds
-                    // TODO should we show a toast or log a message when getSiteMediaWithId returns null?
                     .mapNotNull {
-                        mediaStore.getSiteMediaWithId(site, it)
+                        val mediaModel : MediaModel? = mediaStore.getSiteMediaWithId(site, it)
+                        mediaModel ?: AppLog.w(AppLog.T.POSTS, "Loading mediaModel with id $it failed.")
+                        mediaModel
                     }
         }
     }

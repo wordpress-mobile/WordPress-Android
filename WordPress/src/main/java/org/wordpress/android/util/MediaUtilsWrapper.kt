@@ -1,6 +1,5 @@
 package org.wordpress.android.util
 
-import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import dagger.Reusable
@@ -41,12 +40,6 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
 
     fun shouldAdvertiseImageOptimization(): Boolean =
             WPMediaUtils.shouldAdvertiseImageOptimization(appContext)
-
-    fun advertiseImageOptimization(activity: Activity, listener: () -> Unit) {
-        WPMediaUtils.advertiseImageOptimization(activity) {
-            listener.invoke()
-        }
-    }
 
     fun getMimeType(uri: Uri): String? = appContext.contentResolver.getType(uri)
 

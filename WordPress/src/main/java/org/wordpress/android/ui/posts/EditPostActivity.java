@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -153,6 +155,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPMediaUtils.OnAdvertiseImageOptimizationListener;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -929,7 +932,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorMedia.onPhotoPickerMediaChosen(uriList, this);
+        mEditorMedia.onPhotoPickerMediaChosen(uriList);
     }
 
     /*
@@ -2484,7 +2487,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(retrieveMediaUris(data), this);
+                    mEditorMedia.advertiseImageOptimisationAndAddMedia(retrieveMediaUris(data));
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
@@ -3316,11 +3319,6 @@ public class EditPostActivity extends AppCompatActivity implements
     // EditorMediaListener
 
     @Override
-    public void appendMediaFiles(@NotNull ArrayMap<String, MediaFile> mediaMap) {
-        mEditorFragment.appendMediaFiles(mediaMap);
-    }
-
-    @Override
     public void appendMediaFile(@NotNull MediaFile mediaFile, @NotNull String imageUrl) {
         mEditorFragment.appendMediaFile(mediaFile, imageUrl, mImageLoader);
     }
@@ -3333,6 +3331,10 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void savePostAsyncFromEditorMedia(@Nullable AfterSavePostListener listener) {
         savePostAsync(listener);
+    }
+
+    @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
+        WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {
