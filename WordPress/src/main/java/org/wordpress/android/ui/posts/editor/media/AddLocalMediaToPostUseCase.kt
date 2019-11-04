@@ -6,6 +6,9 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.EditorMediaListener
+import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase.CopyMediaResult
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase.CreateMediaModelsResult
+import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase.OptimizeMediaResult
 import javax.inject.Inject
 
 /**
@@ -14,6 +17,7 @@ import javax.inject.Inject
  */
 @Reusable
 class AddLocalMediaToPostUseCase @Inject constructor(
+    private val copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase,
     private val optimizeMediaUseCase: OptimizeMediaUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
@@ -28,11 +32,12 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         localMediaIds: List<Int>,
         editorMediaListener: EditorMediaListener
     ) {
+        // Add media to editor and initiate upload
         addToEditorAndUpload(getMediaModelUseCase.loadMediaModelFromDb(localMediaIds), editorMediaListener)
     }
 
     /**
-     * Optimizes new media items, adds then to the editor and initiates an upload.
+     * Copies files to app storage, optimizes them, adds them to the editor and initiates an upload.
      */
     suspend fun addNewMediaToEditorAsync(
         uriList: List<Uri>,
@@ -40,15 +45,29 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         freshlyTaken: Boolean,
         editorMediaListener: EditorMediaListener
     ): Boolean {
-        val optimizeMediaResult = optimizeMediaUseCase
-                .optimizeMediaIfSupportedAsync(site, freshlyTaken, uriList)
-        val createMediaModelsResult = getMediaModelUseCase.createMediaModelFromUri(
+        // Copy files to apps storage to make sure they are permanently accessible.
+        val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
+
+        // Optimize and rotate the media
+        val optimizeMediaResult: OptimizeMediaResult = optimizeMediaUseCase
+                .optimizeMediaIfSupportedAsync(
+                        site,
+                        freshlyTaken,
+                        copyFilesResult.permanentlyAccessibleUris
+                )
+
+        // Transform Uris to MediaModels
+        val createMediaModelsResult: CreateMediaModelsResult = getMediaModelUseCase.createMediaModelFromUri(
                 site.id,
                 optimizeMediaResult.optimizedMediaUris
         )
+
+        // Add media to editor and initiate upload
         addToEditorAndUpload(createMediaModelsResult.mediaModels, editorMediaListener)
 
-        return !optimizeMediaResult.loadingSomeMediaFailed && !createMediaModelsResult.loadingSomeMediaFailed
+        return !optimizeMediaResult.loadingSomeMediaFailed
+                && !createMediaModelsResult.loadingSomeMediaFailed
+                && !copyFilesResult.copyingSomeMediaFailed
     }
 
     private fun addToEditorAndUpload(

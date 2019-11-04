@@ -35,7 +35,7 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isInMediaStore(mediaUri: Uri?): Boolean =
             MediaUtils.isInMediaStore(mediaUri)
 
-    fun downloadExternalMedia(imageUri: Uri): Uri? =
+    fun copyFileToAppStorage(imageUri: Uri): Uri? =
             MediaUtils.downloadExternalMedia(appContext, imageUri)
 
     fun shouldAdvertiseImageOptimization(): Boolean =

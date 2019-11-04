@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.net.Uri
-import android.util.ArrayMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,9 +35,6 @@ import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -110,7 +106,6 @@ class EditorMedia @Inject constructor(
 
     //region Adding new media to a post
     fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>) {
-        // TODO remove activity - it doesn't work with appContext!! The dialog needs to be created on a activity.
         if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
             editorMediaListener.advertiseImageOptimization {
                 addNewMediaItemsToEditorAsync(
@@ -134,10 +129,8 @@ class EditorMedia @Inject constructor(
             } else {
                 AddingSingleMedia
             }
-            // fetch any shared media first - must be done on the main thread
-            val fetchedUriList = fetchMediaList(uriList)
             val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                    fetchedUriList,
+                    uriList,
                     site,
                     freshlyTaken,
                     editorMediaListener
@@ -266,37 +259,6 @@ class EditorMedia @Inject constructor(
                         uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaModels)
                     }
         }
-    }
-
-    /*
-    * called before we add media to make sure we have access to any media shared from another app (Google Photos, etc.)
-    */
-    private fun fetchMediaList(uriList: List<Uri>): List<Uri> {
-        // TODO refactor
-        val fetchedUriList = uriList.mapNotNull { mediaUri ->
-            if (!mediaUtilsWrapper.isInMediaStore(mediaUri)) {
-                // Do not download the file in async task. See
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-                try {
-                    return@mapNotNull mediaUtilsWrapper.downloadExternalMedia(mediaUri)
-                } catch (e: IllegalStateException) {
-                    // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                    val errorMessage = "Can't download the image at: $mediaUri See issue #5823"
-                    AppLog.e(T.UTILS, errorMessage, e)
-                    CrashLoggingUtils.logException(e, T.MEDIA, errorMessage)
-                    return@mapNotNull null
-                }
-            } else {
-                return@mapNotNull mediaUri
-            }
-        }
-
-        if (fetchedUriList.size < uriList.size) {
-            // At least one media failed
-            _toastMessage.value = Event(ToastMessageHolder(R.string.error_downloading_image, Duration.SHORT))
-        }
-
-        return fetchedUriList
     }
 
     sealed class AddMediaToPostUiState(
