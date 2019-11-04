@@ -39,8 +39,9 @@
         android:layout_gravity="center_horizontal"
         android:duplicateParentState="true"
         android:singleLine="true"
-        android:textColor="@color/neutral_20"
+        android:textColor="@color/primary_40"
         android:textSize="12sp"
-        android:visibility="visible"
-        tools:text="label"/>
+        android:visibility="gone"
+        tools:text="label"
+        tools:visibility="visible"/>
 </LinearLayout>
