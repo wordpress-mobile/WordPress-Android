@@ -308,10 +308,10 @@ class PostStoreTest {
 
     private fun createPostModel(isLocallyChanged: Boolean = false, postStatus: PostStatus = PUBLISHED): PostModel {
         val post = PostModel()
-        post.remotePostId = 1
-        post.status = postStatus.toString()
+        post.setRemotePostId(1)
+        post.setStatus(postStatus.toString())
         post.setIsLocallyChanged(isLocallyChanged)
-        post.autoSaveModified = "1955-11-05T14:15:00Z"
+        post.setAutoSaveModified("1955-11-05T14:15:00Z")
         return post
     }
 
@@ -319,6 +319,6 @@ class PostStoreTest {
         post: PostModel,
         status: String = post.status,
         lastModified: String = post.lastModified,
-        autoSaveModified: String = post.autoSaveModified
+        autoSaveModified: String? = post.autoSaveModified
     ) = PostListItem(post.remotePostId, lastModified, status, autoSaveModified)
 }

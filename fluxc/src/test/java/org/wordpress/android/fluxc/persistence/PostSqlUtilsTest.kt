@@ -40,8 +40,8 @@ class PostSqlUtilsTest {
         val site = createSite()
 
         var post = PostModel()
-        post.localSiteId = site.id
-        post.remotePostId = remotePostId
+        post.setLocalSiteId(site.id)
+        post.setRemotePostId(remotePostId)
 
         post = postSqlUtils.insertPostForResult(post)
 
@@ -95,10 +95,10 @@ class PostSqlUtilsTest {
     }
 
     private fun createPost(localSiteId: Int, localId: Int, remoteId: Long) = PostModel().apply {
-        id = localId
-        remotePostId = remoteId
+        setId(localId)
+        setRemotePostId(remoteId)
 
-        this.localSiteId = localSiteId
+        setLocalSiteId(localSiteId)
     }
 
     private fun createSite() = SiteModel().apply {

@@ -61,8 +61,8 @@ class PageStoreLocalChangesTest {
                 createLocalDraft(localSiteId = 4_000, isPage = true),
                 // uploaded page
                 PostModel().apply {
-                    title = "Title"
-                    localSiteId = site.id
+                    setTitle("Title")
+                    setLocalSiteId(site.id)
                     setIsLocalDraft(false)
                 }
         )
@@ -96,7 +96,7 @@ class PageStoreLocalChangesTest {
             })
 
             add(createUploadedPost(localSiteId = site.id, baseTitle = baseTitle, isPage = true).apply {
-                status = PostStatus.PUBLISHED.toString()
+                setStatus(PostStatus.PUBLISHED.toString())
                 setIsLocallyChanged(true)
             })
         }.toList()
@@ -114,7 +114,7 @@ class PageStoreLocalChangesTest {
                 createUploadedPost(localSiteId = site.id, isPage = true),
                 // published page with no changes
                 createUploadedPost(localSiteId = site.id, isPage = true).apply {
-                    status = PostStatus.PUBLISHED.toString()
+                    setStatus(PostStatus.PUBLISHED.toString())
                 }
         )
 
@@ -130,17 +130,17 @@ class PageStoreLocalChangesTest {
     }
 
     private fun createLocalDraft(localSiteId: Int, baseTitle: String = "Title", isPage: Boolean) = PostModel().apply {
-        this.localSiteId = localSiteId
-        title = "$baseTitle:${UUID.randomUUID()}"
+        setLocalSiteId(localSiteId)
+        setTitle("$baseTitle:${UUID.randomUUID()}")
         setIsPage(isPage)
         setIsLocalDraft(true)
-        status = PostStatus.DRAFT.toString()
+        setStatus(PostStatus.DRAFT.toString())
     }
 
     private fun createUploadedPost(localSiteId: Int, baseTitle: String = "Title", isPage: Boolean) = PostModel().apply {
-        this.localSiteId = localSiteId
-        remotePostId = Random.nextLong()
-        title = "$baseTitle:${UUID.randomUUID()}"
+        setLocalSiteId(localSiteId)
+        setRemotePostId(Random.nextLong())
+        setTitle("$baseTitle:${UUID.randomUUID()}")
         setIsPage(isPage)
     }
 }

@@ -275,17 +275,17 @@ class PageStoreTest {
         remoteId: Long = id.toLong()
     ): PostModel {
         val page = PostModel()
-        page.id = id
+        page.setId(id)
         parentId?.let {
-            page.parentId = parentId
+            page.setParentId(parentId)
         }
         title?.let {
-            page.title = it
+            page.setTitle(it)
         }
         status?.let {
-            page.status = status
+            page.setStatus(status)
         }
-        page.remotePostId = remoteId
+        page.setRemotePostId(remoteId)
         return page
     }
 }
