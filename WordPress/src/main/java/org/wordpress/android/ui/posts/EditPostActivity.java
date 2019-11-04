@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -155,7 +154,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.util.WPMediaUtils.OnAdvertiseImageOptimizationListener;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -2330,7 +2328,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
             } else if (NEW_MEDIA_POST.equals(action)) {
-                mEditorMedia.prepareMediaPost(getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
+                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
+                        getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
             }
         }
     }

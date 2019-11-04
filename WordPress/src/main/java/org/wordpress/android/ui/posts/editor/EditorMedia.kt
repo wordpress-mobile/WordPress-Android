@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
-import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
@@ -32,6 +31,7 @@ import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.A
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
+import org.wordpress.android.ui.posts.editor.media.RetryFailedMediaUploadUseCase
 import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.posts.editor.media.UploadMediaUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -70,6 +70,7 @@ class EditorMedia @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
+    private val retryFailedMediaUploadUseCase: RetryFailedMediaUploadUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     private var job: Job = Job()
@@ -179,10 +180,6 @@ class EditorMedia @Inject constructor(
         addExistingMediaToEditorAsync(source, mediaIds.toList())
     }
 
-    fun prepareMediaPost(mediaIds: LongArray) {
-        addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, mediaIds.toList())
-    }
-
     fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         launch {
             addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
@@ -238,29 +235,11 @@ class EditorMedia @Inject constructor(
         uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaList)
     }
 
-    fun retryFailedMediaAsync(failedMediaIds: MutableSet<String>) {
-        failedMediaIds
-                .map { Integer.valueOf(it) }
-                .let {
-                    enqueueAndStartUploadAsync(it)
-                }
-                .also { AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED) }
-    }
-
-    private fun enqueueAndStartUploadAsync(mediaModelLocalIds: List<Int>) {
+    fun retryFailedMediaAsync(failedMediaIds: Set<String>) {
         launch {
-            getMediaModelUseCase
-                    .loadMediaModelFromDb(mediaModelLocalIds)
-                    .map { mediaModel ->
-                        updateMediaModelUseCase
-                                .updateMediaModel(mediaModel, editorMediaListener.editorMediaPostData(), QUEUED)
-                        mediaModel
-                    }.let { mediaModels ->
-                        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaModels)
-                    }
+            retryFailedMediaUploadUseCase.retryFailedMediaAsync(editorMediaListener, failedMediaIds.toList())
         }
     }
-
     sealed class AddMediaToPostUiState(
         val editorOverlayVisibility: Boolean,
         val progressDialogUiState: ProgressDialogUiState
