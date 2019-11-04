@@ -10,14 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.add_content_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.WPBottomSheetDialogFragment
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import javax.inject.Inject
 
-class MainBottomSheetFragment : WPBottomSheetDialogFragment() {
+class MainBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: WPMainActivityViewModel
 
