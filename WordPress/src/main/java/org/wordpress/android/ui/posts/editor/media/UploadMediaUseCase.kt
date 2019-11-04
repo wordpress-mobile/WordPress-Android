@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.editor.EditorMediaListener
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import java.util.ArrayList
 import javax.inject.Inject

@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
-import org.wordpress.android.ui.posts.editor.EditorMediaPostData
 import javax.inject.Inject
 
 /**

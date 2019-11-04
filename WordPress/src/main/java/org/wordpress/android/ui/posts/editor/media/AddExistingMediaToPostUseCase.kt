@@ -2,9 +2,8 @@ package org.wordpress.android.ui.posts.editor.media
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.editor.EditorMedia.AddExistingMediaSource
-import org.wordpress.android.ui.posts.editor.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.EditorTracker
+import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource
 import javax.inject.Inject
 
 /**

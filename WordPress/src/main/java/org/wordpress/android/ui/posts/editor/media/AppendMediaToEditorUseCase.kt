@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts.editor.media
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.ui.posts.editor.EditorMediaListener
 import org.wordpress.android.util.FluxCUtilsWrapper
 import javax.inject.Inject
 

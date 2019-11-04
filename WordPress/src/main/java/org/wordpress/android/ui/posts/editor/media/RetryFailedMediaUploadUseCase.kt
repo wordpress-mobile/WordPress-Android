@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts.editor.media
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
-import org.wordpress.android.ui.posts.editor.EditorMediaListener
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 

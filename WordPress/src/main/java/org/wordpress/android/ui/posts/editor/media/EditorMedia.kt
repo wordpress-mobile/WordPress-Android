@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.editor
+package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -25,14 +25,9 @@ import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
-import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
-import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
-import org.wordpress.android.ui.posts.editor.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
-import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
-import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
-import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
-import org.wordpress.android.ui.posts.editor.media.RetryFailedMediaUploadUseCase
-import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
+import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
+import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
+import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
