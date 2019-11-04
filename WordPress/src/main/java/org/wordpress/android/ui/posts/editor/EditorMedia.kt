@@ -94,15 +94,7 @@ class EditorMedia @Inject constructor(
     val toastMessage: LiveData<Event<ToastMessageHolder>> = _toastMessage
 
     // for keeping the media uri while asking for permissions
-    var droppedMediaUris: ArrayList<Uri>? = null
-
-    // TODO refactor
-    val fetchMediaRunnable = Runnable {
-        droppedMediaUris?.let {
-            droppedMediaUris = null
-            addNewMediaItemsToEditorAsync(it, freshlyTaken = false)
-        }
-    }
+    var droppedMediaUris: ArrayList<Uri> = ArrayList()
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,

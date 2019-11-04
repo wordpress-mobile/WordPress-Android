@@ -1066,7 +1066,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                     break;
                 case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                    runOnUiThread(mEditorMedia.getFetchMediaRunnable());
+                    mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
+                    mEditorMedia.getDroppedMediaUris().clear();
                     break;
             }
         }
@@ -2750,7 +2751,8 @@ public class EditPostActivity extends AppCompatActivity implements
         mEditorMedia.setDroppedMediaUris(mediaUris);
         if (PermissionUtils
                 .checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
-            runOnUiThread(mEditorMedia.getFetchMediaRunnable());
+            mEditorMedia.addNewMediaItemsToEditorAsync(mEditorMedia.getDroppedMediaUris(), false);
+            mEditorMedia.getDroppedMediaUris().clear();
         }
     }
 
