@@ -463,7 +463,6 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mAutoSaveExcerpt = autoSaveExcerpt;
     }
 
-    @Override
     @Deprecated
     public long getLastKnownRemoteFeaturedImageId() {
         return mLastKnownRemoteFeaturedImageId;
