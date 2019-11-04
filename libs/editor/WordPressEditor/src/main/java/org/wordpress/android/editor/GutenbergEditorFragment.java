@@ -169,8 +169,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
 
             String fieldName = stringField.getName();
-            // Filter out all strings that are not prefixed with `gutenberg_mobile_`
-            if (!fieldName.startsWith("gutenberg_mobile_")) {
+            // Filter out all strings that are not prefixed with `gutenberg_native_`
+            if (!fieldName.startsWith("gutenberg_native_")) {
                 continue;
             }
 
@@ -184,6 +184,40 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 );
             }
         }
+
+        try {
+            rPlurals = getActivity().getApplication().getClassLoader().loadClass(mainPackage.getName() + ".R$plurals");
+        } catch (ClassNotFoundException ex) {
+            // ignore plurals if not found
+            return translations;
+        }
+
+        for (Field stringField : rPlurals.getDeclaredFields()) {
+            int resourceId;
+            try {
+                resourceId = stringField.getInt(rPlurals);
+            } catch (IllegalArgumentException | IllegalAccessException iae) {
+                AppLog.e(T.EDITOR, iae);
+                continue;
+            }
+
+            String fieldName = stringField.getName();
+            // Filter out all strings that are not prefixed with `gutenberg_native_`
+            if (!fieldName.startsWith("gutenberg_native_")) {
+                continue;
+            }
+
+            // Add the mapping english => [ singular, plural ] to the bundle
+            String[] currentResourceStrings = currentResources.getStringArray(resourceId);
+            String defaultResourceString = defaultResources.getString(resourceId);
+            if (currentResourceStrings.length > 1 && defaultResourceString.length() > 0) {
+                translations.putStringArrayList(
+                        defaultResourceString,
+                        new ArrayList<>(Arrays.asList(currentResourceStrings))
+                );
+            }
+        }
+
         return translations;
     }
 
