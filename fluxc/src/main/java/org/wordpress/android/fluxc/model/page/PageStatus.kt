@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.model.page
 
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 
 enum class PageStatus {
@@ -12,7 +12,7 @@ enum class PageStatus {
     TRASHED;
 
     companion object {
-        fun fromPost(post: PostModel): PageStatus {
+        fun fromPost(post: PostImmutableModel): PageStatus {
             return fromPostStatus(PostStatus.fromPost(post))
         }
 

@@ -4,7 +4,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.fluxc.model.post.PostLocation
 
-internal interface PostImmutableModel {
+interface PostImmutableModel {
     val id: Int
     val localSiteId: Int
     val remoteSiteId: Long
