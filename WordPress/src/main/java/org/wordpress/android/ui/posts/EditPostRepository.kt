@@ -14,7 +14,10 @@ import kotlin.concurrent.read
 import kotlin.concurrent.write
 
 class EditPostRepository
-@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper) {
+@Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val postUtils: PostUtilsWrapper
+) {
     private var post: PostModel? = null
     var postForUndo: PostModel? = null
         get() = lock.read { field }
@@ -176,7 +179,7 @@ class EditPostRepository
     }
 
     fun updatePublishDateIfShouldBePublishedImmediately() {
-        if (PostUtils.shouldPublishImmediately(status, dateCreated)) {
+        if (postUtils.shouldPublishImmediately(status, dateCreated)) {
             dateCreated = DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time)
         }
     }
@@ -190,7 +193,7 @@ class EditPostRepository
         }
     }
 
-    fun isPublishable() = PostUtils.isPublishable(post)
+    fun isPublishable() = post?.let { postUtils.isPublishable(it) } ?: false
 
     fun contentHashcode() = readFromPost { this.contentHashcode() }
 
@@ -206,7 +209,8 @@ class EditPostRepository
         postSnapshotWhenEditorOpened = post?.clone()
     }
 
-    fun isSnapshotDifferent(): Boolean = postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
+    fun isSnapshotDifferent(): Boolean =
+            postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
 
     fun hasSnapshot() = postSnapshotWhenEditorOpened != null
 
@@ -220,7 +224,7 @@ class EditPostRepository
         return postSnapshotWhenEditorOpened?.status != null && post?.status != postSnapshotWhenEditorOpened?.status
     }
 
-    fun postHasEdits() = PostUtils.postHasEdits(postSnapshotWhenEditorOpened, post)
+    fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post)
 
     private fun <Y> writeToPost(action: PostModel.() -> Y) = lock.write { post!!.action() }
 
