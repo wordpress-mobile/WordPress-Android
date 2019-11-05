@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-09-30 11:24:58+0000
+Translation-Revision-Date: 2019-10-27 13:50:52+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -95,7 +95,7 @@ Language: cs_CZ
     <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
     <string name="new_site_creation_search_domain_input_hint">Prohledat domény</string>
     <string name="new_site_creation_verticals_custom_subtitle">Vlastní rubrika</string>
-    <string name="new_site_creation_button_skip">Přeskočít</string>
+    <string name="new_site_creation_button_skip">Přeskočit</string>
     <string name="new_site_creation_site_title_hint">Název stránky</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvořit webovou stránku</string>
@@ -415,7 +415,7 @@ Language: cs_CZ
     <string name="media_preview_audio_desc">audio</string>
     <string name="media_grid_item_play_video_desc">přehrát video</string>
     <string name="media_grid_item_trash_desc">koš</string>
-    <string name="media_grid_item_retry_desc">zkusit to znovu</string>
+    <string name="media_grid_item_retry_desc">opakovat</string>
     <string name="media_grid_item_image_desc">náhled obrázku, jméno souboru %s</string>
     <string name="invite_user_delete_desc">odstranit %s</string>
     <string name="profile_picture">%s\'s profilový obrázek</string>
@@ -1174,9 +1174,6 @@ Language: cs_CZ
     <string name="error_refresh_comments_showing_older">Komentáře nemohou být v tuto chvíli aktualizonány - zobrazující se starší komentáře</string>
     <string name="post_settings_set_featured_image">Nastavit náhledový obrázek</string>
     <string name="post_settings_featured_image">Náhledový obrázek</string>
-    <string name="editor_content_placeholder">Sdílejte svůj příběh zde…</string>
-    <string name="editor_page_title_placeholder">Název stránky</string>
-    <string name="editor_post_title_placeholder">Název příspěvku</string>
     <string name="email_address">Emailová adresa</string>
     <string name="dlg_sure_to_delete_comments">Smazat trvale tyto komentáře?</string>
     <string name="dlg_sure_to_delete_comment">Smazat trvale tento komentář?</string>
@@ -1574,7 +1571,6 @@ Language: cs_CZ
     <string name="reader_empty_posts_in_tag_updating">Načítám příspěvky…</string>
     <string name="cant_share_no_visible_blog">Nemůžete sdílet s WordPressem bez viditelného webu</string>
     <string name="comment_spammed">Komentář byl označen jako spam</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Znovu</string>
     <string name="reader_likes_multi">To se mi líbí (%,d)</string>
     <string name="reader_likes_you_and_multi">To se líbí vám a dalším %,d</string>

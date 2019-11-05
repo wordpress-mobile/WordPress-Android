@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-10 17:31:29+0000
+Translation-Revision-Date: 2019-10-25 05:33:23+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="pick_media">Добавить изображение или видео</string>
     <string name="error_post_not_submitted_retrying">Невозможно отправить запись на одобрение, но мы попробуем ещё раз позже.</string>
     <string name="error_post_not_scheduled_retrying">Невозможно запланировать публикацию записи, но мы попробуем ещё раз позже.</string>
     <string name="error_post_not_published_retrying_private">Невозможно опубликовать эту личную запись, но мы попробуем ещё раз позже.</string>
@@ -1513,9 +1514,6 @@ Language: ru
     <string name="error_refresh_comments_showing_older">Не удалось обновить ленту комментариев — отображены старые комментарии</string>
     <string name="post_settings_set_featured_image">Настроить изображение записи</string>
     <string name="post_settings_featured_image">Изображение записи</string>
-    <string name="editor_content_placeholder">Поделитесь своей историей здесь…</string>
-    <string name="editor_page_title_placeholder">Заголовок страницы</string>
-    <string name="editor_post_title_placeholder">Заголовок записи</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="dlg_sure_to_delete_comments">Удалить эти комментарии без возможности восстановления?</string>
     <string name="dlg_sure_to_delete_comment">Удалить этот комментарий без возможности восстановления?</string>
@@ -1913,7 +1911,6 @@ Language: ru
     <string name="reader_empty_posts_in_tag_updating">Ищем записи…</string>
     <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
-    <string name="video">Видео</string>
     <string name="reader_label_reply">Ответ</string>
     <string name="reader_likes_multi">Понравилось %,d людям</string>
     <string name="reader_likes_you_and_multi">Вам и %,d другим понравилось это.</string>

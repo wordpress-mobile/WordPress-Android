@@ -1,5 +1,0 @@
-13.4:
-* İletiler ve sayfalar için Uzaktan Önizleme desteği eklendi.
-* Çöpe atılan iletiler çöpte kalır. Düzenleme veya önizlemeden önce geri getirilmeleri gerekir.
-* Düzeltildi: Özel bir iletide “Yayınla” öğesine tıklamak artık iletiyi güvenilir bir biçimde özel olarak yayınlar, bazı bağlantı düzenleme sorunları düzeltildi.
-* İleti ve sayfalardaki kaydedilmeyen değişiklikler otomatik olarak yedeklenir.
