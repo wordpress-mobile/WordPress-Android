@@ -28,7 +28,7 @@ class AddExistingMediaToPostUseCase @Inject constructor(
                 }
                 .let {
                     appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, it)
-                    editorMediaListener.savePostAsyncFromEditorMedia()
+                    editorMediaListener.syncPostObjectWithUiAndSaveIt()
                 }
     }
 }

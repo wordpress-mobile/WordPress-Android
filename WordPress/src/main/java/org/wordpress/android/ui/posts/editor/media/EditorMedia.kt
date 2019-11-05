@@ -50,7 +50,7 @@ data class EditorMediaPostData(
 
 interface EditorMediaListener {
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
-    fun savePostAsyncFromEditorMedia(listener: AfterSavePostListener? = null)
+    fun syncPostObjectWithUiAndSaveIt(listener: AfterSavePostListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
 
     // TODO replace this with PostModelRepository

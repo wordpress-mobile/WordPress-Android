@@ -3331,7 +3331,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void savePostAsyncFromEditorMedia(@Nullable AfterSavePostListener listener) {
+    public void syncPostObjectWithUiAndSaveIt(@Nullable AfterSavePostListener listener) {
         savePostAsync(listener);
     }
 
