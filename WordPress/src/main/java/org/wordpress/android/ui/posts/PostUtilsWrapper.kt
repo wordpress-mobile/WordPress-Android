@@ -23,5 +23,6 @@ class PostUtilsWrapper @Inject constructor() {
     fun shouldPublishImmediately(postStatus: PostStatus, dateCreated: String) =
             PostUtils.shouldPublishImmediately(postStatus, dateCreated)
 
-    fun postHasEdits(oldPost: PostModel?, newPost: PostModel?)= PostUtils.postHasEdits(oldPost, newPost)
+    fun postHasEdits(oldPost: PostModel?, newPost: PostModel?) =
+            PostUtils.postHasEdits(oldPost, newPost)
 }
