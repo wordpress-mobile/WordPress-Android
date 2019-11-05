@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts
 
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +11,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore
@@ -33,6 +36,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var editPostRepository: EditPostRepository
     private lateinit var viewModel: EditPostPublishSettingsViewModel
+    private lateinit var actionCaptor: KArgumentCaptor<(PostModel) -> Boolean>
 
     private val dateCreated = "2019-05-05T14:33:20+0000"
     private val currentCalendar = Calendar.getInstance(Locale.US)
@@ -54,6 +58,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.immediately)).thenReturn("Immediately")
         whenever(postSchedulingNotificationStore.getSchedulingReminderPeriod(any())).thenReturn(OFF)
         whenever(editPostRepository.dateCreated).thenReturn("")
+        actionCaptor = argumentCaptor()
     }
 
     @Test
@@ -167,8 +172,12 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(futureDate, editPostRepository)
 
-        verify(editPostRepository).status = PostStatus.SCHEDULED
-        verify(editPostRepository).dateCreated = updatedDate
+        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        val post = PostModel()
+        actionCaptor.firstValue.invoke(post)
+
+        assertThat(post.status).isEqualTo(PostStatus.SCHEDULED.toString())
+        assertThat(post.dateCreated).isEqualTo(updatedDate)
 
         assertThat(updatedStatus).isEqualTo(PostStatus.SCHEDULED)
         uiModel?.apply {
@@ -196,8 +205,12 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(currentCalendar, editPostRepository)
 
-        verify(editPostRepository).status = PostStatus.DRAFT
-        verify(editPostRepository).dateCreated = any()
+        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        val post = PostModel()
+        actionCaptor.firstValue.invoke(post)
+
+        assertThat(post.status).isEqualTo(PostStatus.DRAFT.toString())
+        assertThat(post.dateCreated).isNotNull()
 
         assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
         uiModel?.apply {
@@ -235,8 +248,12 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         viewModel.updatePost(currentCalendar, editPostRepository)
 
-        verify(editPostRepository).status = PostStatus.DRAFT
-        verify(editPostRepository).dateCreated = any()
+        verify(editPostRepository).updateInTransaction(actionCaptor.capture())
+        val post = PostModel()
+        actionCaptor.firstValue.invoke(post)
+
+        assertThat(post.status).isEqualTo(PostStatus.DRAFT.toString())
+        assertThat(post.dateCreated).isNotNull()
 
         assertThat(updatedStatus).isEqualTo(PostStatus.DRAFT)
         uiModel?.apply {

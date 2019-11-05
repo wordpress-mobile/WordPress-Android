@@ -27,7 +27,7 @@ class EditPostRepositoryTest {
     }
 
     @Test
-    fun `sets and reads post correctly`() {
+    fun `reads post correctly`() {
         val post = PostModel()
 
         editPostRepository.setPost(post)
@@ -43,11 +43,11 @@ class EditPostRepositoryTest {
 
     @Test
     fun `is not publishable before initialization`() {
-        assertThat(editPostRepository.isPublishable()).isFalse()
+        assertThat(editPostRepository.isPostPublishable()).isFalse()
     }
 
     @Test
-    fun `sets and reads post for undo correctly`() {
+    fun `reads post for undo correctly`() {
         val post = PostModel()
 
         editPostRepository.postForUndo = post
@@ -56,213 +56,204 @@ class EditPostRepositoryTest {
     }
 
     @Test
-    fun `sets and reads post snapshot correctly`() {
-        val post = PostModel()
-
-        editPostRepository.postSnapshotWhenEditorOpened = post
-
-        assertThat(editPostRepository.postSnapshotWhenEditorOpened).isEqualTo(post)
-    }
-
-    @Test
-    fun `sets and reads id correctly`() {
+    fun `reads id correctly`() {
         val post = PostModel()
         val id = 10
+        post.id = id
 
         editPostRepository.setPost(post)
-        editPostRepository.id = id
 
         assertThat(editPostRepository.getPost()!!.id).isEqualTo(id)
         assertThat(editPostRepository.id).isEqualTo(id)
     }
 
     @Test
-    fun `sets and reads localSiteId correctly`() {
+    fun `reads localSiteId correctly`() {
         val post = PostModel()
         val localSiteId = 10
+        post.localSiteId = localSiteId
 
         editPostRepository.setPost(post)
-        editPostRepository.localSiteId = localSiteId
 
         assertThat(editPostRepository.getPost()!!.localSiteId).isEqualTo(localSiteId)
         assertThat(editPostRepository.localSiteId).isEqualTo(localSiteId)
     }
 
     @Test
-    fun `sets and reads remotePostId correctly`() {
+    fun `reads remotePostId correctly`() {
         val post = PostModel()
         val remotePostId = 10L
+        post.remotePostId = remotePostId
 
         editPostRepository.setPost(post)
-        editPostRepository.remotePostId = remotePostId
 
         assertThat(editPostRepository.getPost()!!.remotePostId).isEqualTo(remotePostId)
         assertThat(editPostRepository.remotePostId).isEqualTo(remotePostId)
     }
 
     @Test
-    fun `sets and reads title correctly`() {
+    fun `reads title correctly`() {
         val post = PostModel()
         val title = "title"
+        post.title = title
 
         editPostRepository.setPost(post)
-        editPostRepository.title = title
 
         assertThat(editPostRepository.getPost()!!.title).isEqualTo(title)
         assertThat(editPostRepository.title).isEqualTo(title)
     }
 
     @Test
-    fun `sets and reads autoSaveTitle correctly`() {
+    fun `reads autoSaveTitle correctly`() {
         val post = PostModel()
         val autoSaveTitle = "autoSaveTitle"
+        post.autoSaveTitle = autoSaveTitle
 
         editPostRepository.setPost(post)
-        editPostRepository.autoSaveTitle = autoSaveTitle
 
         assertThat(editPostRepository.getPost()!!.autoSaveTitle).isEqualTo(autoSaveTitle)
         assertThat(editPostRepository.autoSaveTitle).isEqualTo(autoSaveTitle)
     }
 
     @Test
-    fun `sets and reads content correctly`() {
+    fun `reads content correctly`() {
         val post = PostModel()
         val content = "content"
+        post.content = content
 
         editPostRepository.setPost(post)
-        editPostRepository.content = content
 
         assertThat(editPostRepository.getPost()!!.content).isEqualTo(content)
         assertThat(editPostRepository.content).isEqualTo(content)
     }
 
     @Test
-    fun `sets and reads autoSaveContent correctly`() {
+    fun `reads autoSaveContent correctly`() {
         val post = PostModel()
         val autoSaveContent = "autoSaveContent"
+        post.autoSaveContent = autoSaveContent
 
         editPostRepository.setPost(post)
-        editPostRepository.autoSaveContent = autoSaveContent
 
         assertThat(editPostRepository.getPost()!!.autoSaveContent).isEqualTo(autoSaveContent)
         assertThat(editPostRepository.autoSaveContent).isEqualTo(autoSaveContent)
     }
 
     @Test
-    fun `sets and reads excerpt correctly`() {
+    fun `reads excerpt correctly`() {
         val post = PostModel()
         val excerpt = "excerpt"
+        post.excerpt = excerpt
 
         editPostRepository.setPost(post)
-        editPostRepository.excerpt = excerpt
 
         assertThat(editPostRepository.getPost()!!.excerpt).isEqualTo(excerpt)
         assertThat(editPostRepository.excerpt).isEqualTo(excerpt)
     }
 
     @Test
-    fun `sets and reads autoSaveExcerpt correctly`() {
+    fun `reads autoSaveExcerpt correctly`() {
         val post = PostModel()
         val autoSaveExcerpt = "autoSaveExcerpt"
+        post.autoSaveExcerpt = autoSaveExcerpt
 
         editPostRepository.setPost(post)
-        editPostRepository.autoSaveExcerpt = autoSaveExcerpt
 
         assertThat(editPostRepository.getPost()!!.autoSaveExcerpt).isEqualTo(autoSaveExcerpt)
         assertThat(editPostRepository.autoSaveExcerpt).isEqualTo(autoSaveExcerpt)
     }
 
     @Test
-    fun `sets and reads password correctly`() {
+    fun `reads password correctly`() {
         val post = PostModel()
         val password = "password"
+        post.password = password
 
         editPostRepository.setPost(post)
-        editPostRepository.password = password
 
         assertThat(editPostRepository.getPost()!!.password).isEqualTo(password)
         assertThat(editPostRepository.password).isEqualTo(password)
     }
 
     @Test
-    fun `sets and reads status correctly`() {
+    fun `reads status correctly`() {
         val post = PostModel()
         val status = DRAFT
+        post.status = status.toString()
 
         editPostRepository.setPost(post)
-        editPostRepository.status = status
 
         assertThat(editPostRepository.getPost()!!.status).isEqualTo(status.toString())
         assertThat(editPostRepository.status).isEqualTo(status)
     }
 
     @Test
-    fun `sets and reads isPage correctly`() {
+    fun `reads isPage correctly`() {
         val post = PostModel()
         val isPage = true
+        post.setIsPage(isPage)
 
         editPostRepository.setPost(post)
-        editPostRepository.isPage = isPage
 
         assertThat(editPostRepository.getPost()!!.isPage).isEqualTo(isPage)
         assertThat(editPostRepository.isPage).isEqualTo(isPage)
     }
 
     @Test
-    fun `sets and reads isLocalDraft correctly`() {
+    fun `reads isLocalDraft correctly`() {
         val post = PostModel()
         val isLocalDraft = true
+        post.setIsLocalDraft(isLocalDraft)
 
         editPostRepository.setPost(post)
-        editPostRepository.isLocalDraft = isLocalDraft
 
         assertThat(editPostRepository.getPost()!!.isLocalDraft).isEqualTo(isLocalDraft)
         assertThat(editPostRepository.isLocalDraft).isEqualTo(isLocalDraft)
     }
 
     @Test
-    fun `sets and reads isLocallyChanged correctly`() {
+    fun `reads isLocallyChanged correctly`() {
         val post = PostModel()
         val isLocallyChanged = true
+        post.setIsLocallyChanged(isLocallyChanged)
 
         editPostRepository.setPost(post)
-        editPostRepository.isLocallyChanged = isLocallyChanged
 
         assertThat(editPostRepository.getPost()!!.isLocallyChanged).isEqualTo(isLocallyChanged)
         assertThat(editPostRepository.isLocallyChanged).isEqualTo(isLocallyChanged)
     }
 
     @Test
-    fun `sets and reads featuredImageId correctly`() {
+    fun `reads featuredImageId correctly`() {
         val post = PostModel()
         val featuredImageId = 10L
+        post.featuredImageId = featuredImageId
 
         editPostRepository.setPost(post)
-        editPostRepository.featuredImageId = featuredImageId
 
         assertThat(editPostRepository.getPost()!!.featuredImageId).isEqualTo(featuredImageId)
         assertThat(editPostRepository.featuredImageId).isEqualTo(featuredImageId)
     }
 
     @Test
-    fun `sets and reads dateCreated correctly`() {
+    fun `reads dateCreated correctly`() {
         val post = PostModel()
         val dateCreated = "2019-05-05T14:33:20+0000"
+        post.dateCreated = dateCreated
 
         editPostRepository.setPost(post)
-        editPostRepository.dateCreated = dateCreated
 
         assertThat(editPostRepository.getPost()!!.dateCreated).isEqualTo(dateCreated)
         assertThat(editPostRepository.dateCreated).isEqualTo(dateCreated)
     }
 
     @Test
-    fun `sets and reads changesConfirmedContentHashcode correctly`() {
+    fun `reads changesConfirmedContentHashcode correctly`() {
         val post = PostModel()
         val changesConfirmedContentHashcode = 10
+        post.changesConfirmedContentHashcode = changesConfirmedContentHashcode
 
         editPostRepository.setPost(post)
-        editPostRepository.changesConfirmedContentHashcode = changesConfirmedContentHashcode
 
         assertThat(editPostRepository.getPost()!!.changesConfirmedContentHashcode).isEqualTo(
                 changesConfirmedContentHashcode
@@ -273,68 +264,52 @@ class EditPostRepositoryTest {
     }
 
     @Test
-    fun `sets and reads postFormat correctly`() {
+    fun `reads postFormat correctly`() {
         val post = PostModel()
         val postFormat = "format"
+        post.postFormat = postFormat
 
         editPostRepository.setPost(post)
-        editPostRepository.postFormat = postFormat
 
         assertThat(editPostRepository.getPost()!!.postFormat).isEqualTo(postFormat)
         assertThat(editPostRepository.postFormat).isEqualTo(postFormat)
     }
 
     @Test
-    fun `sets and reads slug correctly`() {
+    fun `reads slug correctly`() {
         val post = PostModel()
         val slug = "slug"
+        post.slug = slug
 
         editPostRepository.setPost(post)
-        editPostRepository.slug = slug
 
         assertThat(editPostRepository.getPost()!!.slug).isEqualTo(slug)
         assertThat(editPostRepository.slug).isEqualTo(slug)
     }
 
     @Test
-    fun `sets and reads link correctly`() {
+    fun `reads link correctly`() {
         val post = PostModel()
         val link = "link"
+        post.link = link
 
         editPostRepository.setPost(post)
-        editPostRepository.link = link
 
         assertThat(editPostRepository.getPost()!!.link).isEqualTo(link)
         assertThat(editPostRepository.link).isEqualTo(link)
     }
 
     @Test
-    fun `sets and reads location correctly`() {
+    fun `reads location correctly`() {
         val post = PostModel()
         val location = PostLocation(20.0, 30.0)
+        post.location = location
 
         editPostRepository.setPost(post)
-        editPostRepository.location = location
 
         assertThat(editPostRepository.getPost()!!.location).isEqualTo(location)
         assertThat(editPostRepository.location).isEqualTo(location)
         assertThat(editPostRepository.hasLocation()).isTrue()
-    }
-
-    @Test
-    fun `clears location correctly`() {
-        val post = PostModel()
-        val location = PostLocation(20.0, 30.0)
-        val removedLocation = PostLocation(8888.0, 8888.0)
-
-        editPostRepository.setPost(post)
-        editPostRepository.location = location
-
-        editPostRepository.clearLocation()
-
-        assertThat(editPostRepository.getPost()!!.location).isEqualTo(removedLocation)
-        assertThat(editPostRepository.location).isEqualTo(removedLocation)
-        assertThat(editPostRepository.hasLocation()).isFalse()
     }
 
     @Test
@@ -348,12 +323,12 @@ class EditPostRepositoryTest {
 
         whenever(localeManager.getCurrentCalendar()).thenReturn(calendar)
 
+        post.status = DRAFT.toString()
+        post.dateCreated = dateCreated
         editPostRepository.setPost(post)
-        editPostRepository.status = DRAFT
-        editPostRepository.dateCreated = dateCreated
         whenever(postUtils.shouldPublishImmediately(DRAFT, dateCreated)).thenReturn(true)
 
-        editPostRepository.updatePublishDateIfShouldBePublishedImmediately()
+        editPostRepository.updatePublishDateIfShouldBePublishedImmediately(post)
 
         assertThat(editPostRepository.getPost()!!.dateCreated).isEqualTo(now)
         assertThat(editPostRepository.dateCreated).isEqualTo(now)
@@ -367,46 +342,15 @@ class EditPostRepositoryTest {
         calendar.timeInMillis = 1572000000000
         calendar.timeZone = TimeZone.getTimeZone("UTC")
 
+        post.status = PUBLISHED.toString()
+        post.dateCreated = dateCreated
         editPostRepository.setPost(post)
-        editPostRepository.status = PUBLISHED
-        editPostRepository.dateCreated = dateCreated
         whenever(postUtils.shouldPublishImmediately(PUBLISHED, dateCreated)).thenReturn(false)
 
-        editPostRepository.updatePublishDateIfShouldBePublishedImmediately()
+        editPostRepository.updatePublishDateIfShouldBePublishedImmediately(post)
 
         assertThat(editPostRepository.getPost()!!.dateCreated).isEqualTo(dateCreated)
         assertThat(editPostRepository.dateCreated).isEqualTo(dateCreated)
-    }
-
-    @Test
-    fun `updates post title if different`() {
-        val post = PostModel()
-        val title = "title"
-        val updatedTitle = "updatedTitle"
-
-        editPostRepository.setPost(post)
-        editPostRepository.title = title
-
-        val result = editPostRepository.updatePostTitleIfDifferent(updatedTitle)
-
-        assertThat(result).isTrue()
-        assertThat(editPostRepository.getPost()!!.title).isEqualTo(updatedTitle)
-        assertThat(editPostRepository.title).isEqualTo(updatedTitle)
-    }
-
-    @Test
-    fun `does not update post title if not different`() {
-        val post = PostModel()
-        val title = "title"
-
-        editPostRepository.setPost(post)
-        editPostRepository.title = title
-
-        val result = editPostRepository.updatePostTitleIfDifferent(title)
-
-        assertThat(result).isFalse()
-        assertThat(editPostRepository.getPost()!!.title).isEqualTo(title)
-        assertThat(editPostRepository.title).isEqualTo(title)
     }
 
     @Test
@@ -417,7 +361,7 @@ class EditPostRepositoryTest {
 
         whenever(postUtils.isPublishable(post)).thenReturn(false)
 
-        assertThat(editPostRepository.isPublishable()).isFalse()
+        assertThat(editPostRepository.isPostPublishable()).isFalse()
     }
 
     @Test
@@ -428,7 +372,7 @@ class EditPostRepositoryTest {
 
         whenever(postUtils.isPublishable(post)).thenReturn(true)
 
-        assertThat(editPostRepository.isPublishable()).isTrue()
+        assertThat(editPostRepository.isPostPublishable()).isTrue()
     }
 
     @Test
@@ -509,7 +453,7 @@ class EditPostRepositoryTest {
 
         assertThat(editPostRepository.status).isEqualTo(PENDING)
 
-        editPostRepository.updateStatusFromSnapshot()
+        editPostRepository.updateStatusFromSnapshot(secondPost)
 
         assertThat(editPostRepository.status).isEqualTo(PUBLISHED)
     }
