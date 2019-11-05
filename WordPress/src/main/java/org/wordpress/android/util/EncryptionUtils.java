@@ -4,21 +4,17 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.libsodium.jni.NaCl;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.AppLog;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class EncryptionUtils {
-
     static final int BOX_SEALBYTES = NaCl.sodium().crypto_box_sealbytes();
     static final int XCHACHA20POLY1305_KEYBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_keybytes();
     static final int XCHACHA20POLY1305_STATEBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_statebytes();
@@ -39,7 +35,6 @@ public class EncryptionUtils {
      *}
      */
     public static String getEncryptedAppLog(Context context) throws JSONException, UnsupportedEncodingException {
-
         JSONObject encryptedLogJson = new JSONObject();
         encryptedLogJson.put("keyedWith", KEYED_WITH);
 
@@ -69,7 +64,7 @@ public class EncryptionUtils {
         byte[] ad = new byte[0];
 
         for (String logLine : logLines) {
-            // add the line break back
+            // add the line break back to the log line
             logLine = logLine + "\n";
             byte[] encryptedLogLine = new byte[logLine.length() + XCHACHA20POLY1305_ABYTES];
 
@@ -104,29 +99,25 @@ public class EncryptionUtils {
 
         encryptedLogJson.put("messages", encryptedLogLinesJson);
 
-        //******* test code begin
+        // ******* test code begin
         // write test output files
         try {
             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
 
-            {
-                BufferedWriter out = new BufferedWriter(new FileWriter(path + "app_log.txt"));
-                out.write(logText);
-                out.close();
-            }
+            BufferedWriter logOutput = new BufferedWriter(new FileWriter(path + "app_log.txt"));
+            logOutput.write(logText);
+            logOutput.close();
 
             // write encrypted text output file
-            {
-                BufferedWriter out = new BufferedWriter(new FileWriter(path + "app_log_encrypted.json"));
-                out.write(encryptedLogJson.toString(4));
-                out.close();
-            }
+            BufferedWriter encryptedLogOut = new BufferedWriter(new FileWriter(path + "app_log_encrypted.json"));
+            encryptedLogOut.write(encryptedLogJson.toString(4));
+            encryptedLogOut.close();
 
             ToastUtils.showToast(context, "EncryptionUtils test code, test files saved to: " + path);
         } catch (IOException e) {
             ToastUtils.showToast(context, "EncryptionUtils test code, IOException: " + e.toString());
         }
-        //******* test code end
+        // ******* test code end
 
         return encryptedLogJson.toString();
     }
