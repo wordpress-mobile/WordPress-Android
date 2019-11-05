@@ -73,12 +73,12 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         mediaModels: List<MediaModel>,
         editorMediaListener: EditorMediaListener
     ) {
-        changeUploadStatusToQueued(mediaModels, editorMediaListener)
+        updateMediaModel(mediaModels, editorMediaListener)
         appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, mediaModels)
         uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaModels)
     }
 
-    private fun changeUploadStatusToQueued(
+    private fun updateMediaModel(
         mediaModels: List<MediaModel>,
         editorMediaListener: EditorMediaListener
     ) {
