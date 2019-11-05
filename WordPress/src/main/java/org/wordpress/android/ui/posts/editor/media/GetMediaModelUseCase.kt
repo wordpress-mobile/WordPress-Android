@@ -29,17 +29,27 @@ class GetMediaModelUseCase @Inject constructor(
         return withContext(bgDispatcher) {
             mediaModelLocalIds
                     .mapNotNull {
-                        mediaStore.getMediaWithLocalId(it)
+                        val model = mediaStore.getMediaWithLocalId(it)
+                        if (model == null) {
+                            AppLog.e(AppLog.T.MEDIA, "Media model not found in the local database. Id $it")
+                        }
+                        model
                     }
         }
     }
 
-    suspend fun loadMediaModelFromDb(site: SiteModel, mediaModelsRemoteIds: Iterable<Long>): List<MediaModel> {
+    suspend fun loadMediaModelFromDb(
+        site: SiteModel,
+        mediaModelsRemoteIds: Iterable<Long>
+    ): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelsRemoteIds
                     .mapNotNull {
                         val mediaModel: MediaModel? = mediaStore.getSiteMediaWithId(site, it)
-                        mediaModel ?: AppLog.w(AppLog.T.POSTS, "Loading mediaModel with id $it failed.")
+                        mediaModel ?: AppLog.w(
+                                AppLog.T.POSTS,
+                                "Loading mediaModel with id $it failed."
+                        )
                         mediaModel
                     }
         }
@@ -49,7 +59,10 @@ class GetMediaModelUseCase @Inject constructor(
         return createMediaModelFromUri(localSiteId, listOf(uri))
     }
 
-    suspend fun createMediaModelFromUri(localSiteId: Int, uris: List<Uri>): CreateMediaModelsResult {
+    suspend fun createMediaModelFromUri(
+        localSiteId: Int,
+        uris: List<Uri>
+    ): CreateMediaModelsResult {
         return withContext(bgDispatcher) {
             uris
                     .map { uri ->

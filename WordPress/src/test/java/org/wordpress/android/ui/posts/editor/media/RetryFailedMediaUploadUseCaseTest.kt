@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Rule
@@ -79,6 +80,32 @@ class RetryFailedMediaUploadUseCaseTest {
         useCase.retryFailedMediaAsync(mock(), FAILED_MEDIA_IDS)
         // Assert
         verify(trackerWrapper).track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
+    }
+
+    @Test
+    fun `Does NOT invoke save and initiate upload if the media list is empty`() = test {
+        // Arrange
+        val emptyList = listOf<Int>()
+        val uploadMediaUseCase: UploadMediaUseCase = mock()
+        val useCase = createUseCase(uploadMediaUseCase = uploadMediaUseCase)
+
+        // Act
+        useCase.retryFailedMediaAsync(mock(), emptyList)
+
+        // Assert
+        verify(uploadMediaUseCase, never()).saveQueuedPostAndStartUpload(anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `Does NOT track upload retried event if the media list is empty`() = test {
+        // Arrange
+        val emptyList = listOf<Int>()
+        val trackerWrapper: AnalyticsTrackerWrapper = mock()
+        val useCase = createUseCase(tracker = trackerWrapper)
+        // Act
+        useCase.retryFailedMediaAsync(mock(), emptyList)
+        // Assert
+        verify(trackerWrapper, never()).track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
     }
 
     private fun createUseCase(

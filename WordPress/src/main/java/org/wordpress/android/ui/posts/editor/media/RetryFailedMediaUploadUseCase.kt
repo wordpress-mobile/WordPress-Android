@@ -28,11 +28,13 @@ class RetryFailedMediaUploadUseCase @Inject constructor(
                     media
                 }
                 .let { mediaModels ->
-                    uploadMediaUseCase.saveQueuedPostAndStartUpload(
-                            editorMediaListener,
-                            mediaModels
-                    )
+                    if (mediaModels.isNotEmpty()) {
+                        uploadMediaUseCase.saveQueuedPostAndStartUpload(
+                                editorMediaListener,
+                                mediaModels
+                        )
+                        tracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
+                    }
                 }
-                .also { tracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED) }
     }
 }
