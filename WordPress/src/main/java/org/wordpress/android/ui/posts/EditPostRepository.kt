@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -26,136 +27,60 @@ class EditPostRepository
                 field = value
             }
         }
-    var postSnapshotWhenEditorOpened: PostModel? = null
-        get() = lock.read { field }
-    var id: Int
+    private var postSnapshotWhenEditorOpened: PostModel? = null
+    val id: Int
         get() = readFromPost { this.id }
-        set(value) {
-            writeToPost { this.id = value }
-        }
-    var localSiteId: Int
+    val localSiteId: Int
         get() = readFromPost { this.localSiteId }
-        set(value) {
-            writeToPost { this.localSiteId = value }
-        }
-    var remotePostId: Long
+    val remotePostId: Long
         get() = readFromPost { this.remotePostId }
-        set(value) {
-            writeToPost { this.remotePostId = value }
-        }
-    var title: String
+    val title: String
         get() = readFromPost { this.title }
-        set(value) {
-            writeToPost { this.title = value }
-        }
-    var autoSaveTitle: String
+    val autoSaveTitle: String
         get() = readFromPost { this.autoSaveTitle }
-        set(value) {
-            writeToPost { this.autoSaveTitle = value }
-        }
-    var content: String
+    val content: String
         get() = readFromPost { this.content }
-        set(value) {
-            writeToPost { this.content = value }
-        }
-    var autoSaveContent: String
+    val autoSaveContent: String
         get() = readFromPost { this.autoSaveContent }
-        set(value) {
-            writeToPost { this.autoSaveContent = value }
-        }
-    var excerpt: String
+    val excerpt: String
         get() = readFromPost { this.excerpt }
-        set(value) {
-            writeToPost { this.excerpt = value }
-        }
-    var autoSaveExcerpt: String
+    val autoSaveExcerpt: String
         get() = readFromPost { this.autoSaveExcerpt }
-        set(value) {
-            writeToPost { this.autoSaveExcerpt = value }
-        }
-    var password: String
+    val password: String
         get() = readFromPost { this.password }
-        set(value) {
-            writeToPost { this.password = value }
-        }
-    var status: PostStatus
-        get() = readFromPost { PostStatus.fromPost(this) }
-        set(value) {
-            writeToPost { this.status = value.toString() }
-        }
-    var isPage: Boolean
+    val status: PostStatus
+        get() = readFromPost { fromPost(this) }
+    val isPage: Boolean
         get() = readFromPost { this.isPage }
-        set(value) {
-            writeToPost { this.setIsPage(value) }
-        }
-    var isLocalDraft: Boolean
+    val isLocalDraft: Boolean
         get() = readFromPost { this.isLocalDraft }
-        set(value) {
-            writeToPost { this.setIsLocalDraft(value) }
-        }
-    var isLocallyChanged: Boolean
+    val isLocallyChanged: Boolean
         get() = readFromPost { this.isLocallyChanged }
-        set(value) {
-            writeToPost { this.setIsLocallyChanged(value) }
-        }
-    var dateLocallyChanged: String
-        get() = readFromPost { this.dateLocallyChanged }
-        set(value) {
-            writeToPost { this.dateLocallyChanged = value }
-        }
-    var featuredImageId: Long
+    val featuredImageId: Long
         get() = readFromPost { this.featuredImageId }
-        set(value) {
-            writeToPost { this.featuredImageId = value }
-        }
-    var dateCreated: String
+    val dateCreated: String
         get() = readFromPost { this.dateCreated }
-        set(value) {
-            writeToPost { this.dateCreated = value }
-        }
-    var changesConfirmedContentHashcode: Int
+    val changesConfirmedContentHashcode: Int
         get() = readFromPost { this.changesConfirmedContentHashcode }
-        set(value) {
-            writeToPost { this.changesConfirmedContentHashcode = value }
-        }
-    var postFormat: String
+    val postFormat: String
         get() = readFromPost { this.postFormat }
-        set(value) {
-            writeToPost { this.postFormat = value }
-        }
-    var slug: String
+    val slug: String
         get() = readFromPost { this.slug }
-        set(value) {
-            writeToPost { this.slug = value }
-        }
-    var link: String
+    val link: String
         get() = readFromPost { this.link }
-        set(value) {
-            writeToPost { this.link = value }
-        }
-    var location: PostLocation
+    val location: PostLocation
         get() = readFromPost { this.location }
-        set(value) {
-            writeToPost { this.location = value }
-        }
-    var tagNameList: List<String>
+    val tagNameList: List<String>
         get() = readFromPost { this.tagNameList }
-        set(value) {
-            writeToPost { this.tagNameList = value }
-        }
-    var categoryIdList: List<Long>
-        get() = readFromPost { this.categoryIdList }
-        set(value) {
-            writeToPost { this.categoryIdList = value }
-        }
-    private val snapshotStatus: PostStatus?
-        get() = lock.read {
-            postSnapshotWhenEditorOpened?.let { PostStatus.fromPost(it) }
-        }
 
     private val lock = ReentrantReadWriteLock()
 
-    fun clearLocation() = writeToPost { this.clearLocation() }
+    fun updateInTransaction(action: (PostModel) -> Boolean) = lock.write {
+        post?.let {
+            action(it)
+        } ?: false
+    }
+
     fun hasLocation() = readFromPost { this.hasLocation() }
 
     fun hasPost() = post != null
@@ -178,24 +103,13 @@ class EditPostRepository
         UploadService.getPendingOrInProgressMediaUploadsForPost(this)
     }
 
-    fun updatePublishDateIfShouldBePublishedImmediately() {
-        if (postUtils.shouldPublishImmediately(status, dateCreated)) {
-            dateCreated = DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time)
+    fun updatePublishDateIfShouldBePublishedImmediately(post: PostModel) {
+        if (postUtils.shouldPublishImmediately(fromPost(post), post.dateCreated)) {
+            post.dateCreated = DateTimeUtils.iso8601FromDate(localeManagerWrapper.getCurrentCalendar().time)
         }
     }
 
-    fun updatePostTitleIfDifferent(newTitle: String): Boolean {
-        return if (title != newTitle) {
-            title = newTitle
-            true
-        } else {
-            false
-        }
-    }
-
-    fun isPublishable() = post?.let { postUtils.isPublishable(it) } ?: false
-
-    fun contentHashcode() = readFromPost { this.contentHashcode() }
+    fun isPostPublishable() = post?.let { postUtils.isPublishable(it) } ?: false
 
     fun saveForUndo() {
         postForUndo = post?.clone()
@@ -210,23 +124,27 @@ class EditPostRepository
     }
 
     fun isSnapshotDifferent(): Boolean =
-            postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened
+            lock.read { postSnapshotWhenEditorOpened == null || post != postSnapshotWhenEditorOpened }
 
-    fun hasSnapshot() = postSnapshotWhenEditorOpened != null
+    fun hasSnapshot() = lock.read { postSnapshotWhenEditorOpened != null }
 
-    fun updateStatusFromSnapshot() {
+    fun updateStatusFromSnapshot(post: PostModel) {
         // the user has just tapped on "PUBLISH" on an empty post, make sure to set the status back to the
         // original post's status as we could not proceed with the action
-        status = snapshotStatus ?: DRAFT
+        post.status = postSnapshotWhenEditorOpened?.status ?: DRAFT.toString()
     }
 
-    fun hasStatusChanged(): Boolean {
-        return postSnapshotWhenEditorOpened?.status != null && post?.status != postSnapshotWhenEditorOpened?.status
+    fun hasStatusChanged(postStatus: String?): Boolean {
+        return postSnapshotWhenEditorOpened?.status != null && postStatus != postSnapshotWhenEditorOpened?.status
     }
 
     fun postHasEdits() = postUtils.postHasEdits(postSnapshotWhenEditorOpened, post)
 
-    private fun <Y> writeToPost(action: PostModel.() -> Y) = lock.write { post!!.action() }
-
     private fun <Y> readFromPost(action: PostModel.() -> Y) = lock.read { post!!.action() }
+    fun updateStatus(status: PostStatus) {
+        updateInTransaction {
+            it.status = status.toString()
+            true
+        }
+    }
 }

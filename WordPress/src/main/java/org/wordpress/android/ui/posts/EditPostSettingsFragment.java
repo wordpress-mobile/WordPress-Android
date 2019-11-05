@@ -660,37 +660,73 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateExcerpt(String excerpt) {
-        getEditPostRepository().setExcerpt(excerpt);
-        mExcerptTextView.setText(excerpt);
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateInTransaction(postModel -> {
+                postModel.setExcerpt(excerpt);
+                mExcerptTextView.setText(excerpt);
+                return true;
+            });
+        }
     }
 
     private void updateSlug(String slug) {
-        getEditPostRepository().setSlug(slug);
-        mSlugTextView.setText(slug);
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateInTransaction(postModel -> {
+                postModel.setSlug(slug);
+                mSlugTextView.setText(slug);
+                return true;
+            });
+        }
     }
 
     private void updatePassword(String password) {
-        getEditPostRepository().setPassword(password);
-        mPasswordTextView.setText(password);
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateInTransaction(postModel -> {
+                postModel.setPassword(password);
+                mPasswordTextView.setText(password);
+                return true;
+            });
+        }
     }
 
     private void updateCategories(List<Long> categoryList) {
         if (categoryList == null) {
             return;
         }
-        getEditPostRepository().setCategoryIdList(categoryList);
-        updateCategoriesTextView();
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateInTransaction(postModel -> {
+                postModel.setCategoryIdList(categoryList);
+                updateCategoriesTextView();
+                return true;
+            });
+        }
     }
 
     public void updatePostStatus(PostStatus postStatus) {
-        getEditPostRepository().setStatus(postStatus);
-        updatePostStatusRelatedViews();
-        updateSaveButton();
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateInTransaction(postModel -> {
+                postModel.setStatus(postStatus.toString());
+                updatePostStatusRelatedViews();
+                updateSaveButton();
+                return true;
+            });
+        }
     }
 
     private void updatePostFormat(String postFormat) {
-        getEditPostRepository().setPostFormat(postFormat);
-        updatePostFormatTextView();
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateInTransaction(postModel -> {
+                postModel.setPostFormat(postFormat);
+                updatePostFormatTextView();
+                return true;
+            });
+        }
     }
 
     public void updatePostStatusRelatedViews() {
@@ -711,13 +747,20 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateTags(String selectedTags) {
-        if (!TextUtils.isEmpty(selectedTags)) {
-            String tags = selectedTags.replace("\n", " ");
-            getEditPostRepository().setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
-        } else {
-            getEditPostRepository().setTagNameList(new ArrayList<>());
+        EditPostRepository postRepository = getEditPostRepository();
+        if (postRepository == null) {
+            return;
         }
-        updateTagsTextView();
+        postRepository.updateInTransaction(postModel -> {
+            if (!TextUtils.isEmpty(selectedTags)) {
+                String tags = selectedTags.replace("\n", " ");
+                postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+            } else {
+                postModel.setTagNameList(new ArrayList<>());
+            }
+            updateTagsTextView();
+            return true;
+        });
     }
 
     private void updateTagsTextView() {
@@ -855,8 +898,15 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId) {
-        getEditPostRepository().setFeaturedImageId(featuredImageId);
-        updateFeaturedImageView();
+        EditPostRepository postRepository = getEditPostRepository();
+        if (postRepository == null) {
+            return;
+        }
+        postRepository.updateInTransaction(postModel -> {
+            postModel.setFeaturedImageId(featuredImageId);
+            updateFeaturedImageView();
+            return true;
+        });
     }
 
     private void clearFeaturedImage() {
@@ -1015,19 +1065,26 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void setLocation(@Nullable Place place) {
-        if (place == null) {
-            getEditPostRepository().clearLocation();
-            mLocationTextView.setText("");
-            mPostLocation = null;
+        EditPostRepository postRepository = getEditPostRepository();
+        if (postRepository == null) {
             return;
         }
-        if (mPostLocation == null) {
-            mPostLocation = new PostLocation();
-        }
-        mPostLocation.setLatitude(place.getLatLng().latitude);
-        mPostLocation.setLongitude(place.getLatLng().longitude);
-        getEditPostRepository().setLocation(mPostLocation);
-        mLocationTextView.setText(place.getAddress());
+        postRepository.updateInTransaction(postModel -> {
+            if (place == null) {
+                postModel.clearLocation();
+                mLocationTextView.setText("");
+                mPostLocation = null;
+                return false;
+            }
+            if (mPostLocation == null) {
+                mPostLocation = new PostLocation();
+            }
+            mPostLocation.setLatitude(place.getLatLng().latitude);
+            mPostLocation.setLongitude(place.getLatLng().longitude);
+            postModel.setLocation(mPostLocation);
+            mLocationTextView.setText(place.getAddress());
+            return true;
+        });
     }
 
     private void initLocation() {

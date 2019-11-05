@@ -110,9 +110,9 @@ class EditPostPublishSettingsViewModel
     }
 
     fun updatePost(updatedDate: Calendar, postRepository: EditPostRepository?) {
-        postRepository?.let {
+        postRepository?.updateInTransaction { postModel ->
             val dateCreated = DateTimeUtils.iso8601FromDate(updatedDate.time)
-            postRepository.dateCreated = dateCreated
+            postModel.dateCreated = dateCreated
             val initialPostStatus = postRepository.status
             val isPublishDateInTheFuture = PostUtils.isPublishDateInTheFuture(dateCreated)
             var finalPostStatus = initialPostStatus
@@ -133,11 +133,12 @@ class EditPostPublishSettingsViewModel
                 // show toast only once, when time is shown
                 _onToast.postValue(Event(resourceProvider.getString(R.string.editor_post_converted_back_to_draft)))
             }
-            postRepository.status = finalPostStatus
+            postModel.status = finalPostStatus.toString()
             _onPostStatusChanged.value = finalPostStatus
             val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
             updateNotifications(postRepository, scheduledTime)
             updateUiModel(postRepository = postRepository)
+            true
         }
     }
 
