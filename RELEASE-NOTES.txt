@@ -1,3 +1,6 @@
+13.7
+-----
+ 
 13.6
 -----
  * Change navigation bar color to white on Android 8.1+
