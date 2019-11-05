@@ -23,7 +23,8 @@ class UploadMediaUseCaseTest {
     @Mock lateinit var uploadServiceFacade: UploadServiceFacade
     @Mock lateinit var editorMediaListener: EditorMediaListener
 
-    lateinit var uploadMediaUseCase: UploadMediaUseCase
+    private lateinit var uploadMediaUseCase: UploadMediaUseCase
+
     @Before
     fun setUp() {
         uploadMediaUseCase = UploadMediaUseCase(uploadServiceFacade)

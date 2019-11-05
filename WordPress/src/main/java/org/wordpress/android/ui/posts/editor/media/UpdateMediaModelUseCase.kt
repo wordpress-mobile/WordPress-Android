@@ -18,18 +18,9 @@ class UpdateMediaModelUseCase @Inject constructor(private val dispatcher: Dispat
         postData: EditorMediaPostData,
         initialUploadState: MediaUploadState
     ) {
-        setPostIds(media, postData)
+        media.postId = postData.remotePostId
+        media.localPostId = postData.localPostId
         media.setUploadState(initialUploadState)
         dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
-    }
-
-    private fun setPostIds(
-        media: MediaModel,
-        postData: EditorMediaPostData
-    ) {
-        if (!postData.isLocalDraft) {
-            media.postId = postData.remotePostId
-        }
-        media.localPostId = postData.localPostId
     }
 }

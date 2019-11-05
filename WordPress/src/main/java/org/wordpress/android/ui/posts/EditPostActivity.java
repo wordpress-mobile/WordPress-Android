@@ -3327,7 +3327,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public @NonNull EditorMediaPostData editorMediaPostData() {
-        return new EditorMediaPostData(mPost.getId(), mPost.getRemotePostId(), mPost.isLocalDraft());
+        return new EditorMediaPostData(mPost.getId(), mPost.getRemotePostId());
     }
 
     @Override

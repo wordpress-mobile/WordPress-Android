@@ -44,8 +44,7 @@ import kotlin.coroutines.CoroutineContext
 
 data class EditorMediaPostData(
     val localPostId: Int,
-    val remotePostId: Long,
-    val isLocalDraft: Boolean
+    val remotePostId: Long
 )
 
 interface EditorMediaListener {
