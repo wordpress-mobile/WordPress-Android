@@ -63,7 +63,6 @@ public class EncryptionUtils {
         byte[] ad = new byte[0];
 
         for (String logLine : logLines) {
-
             logLine = logLine + "\n"; // Add linebreak back
             byte[] logLineBytes = logLine.getBytes();
             byte[] encryptedLogLine = new byte[logLineBytes.length + XCHACHA20POLY1305_ABYTES];
