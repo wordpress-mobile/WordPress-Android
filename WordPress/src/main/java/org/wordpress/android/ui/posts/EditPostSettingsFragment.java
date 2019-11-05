@@ -404,27 +404,33 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        SiteModel site = getSite();
+        PostModel post = getPost();
+        if (site == null || post == null) {
+            AppLog.w(T.POSTS, "Unexpected state: Post or Site is null.");
+            return false;
+        }
         switch (item.getItemId()) {
             case CHOOSE_FEATURED_IMAGE_MENU_ID:
-                mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
                 launchFeaturedMediaPicker();
                 return true;
             case REMOVE_FEATURED_IMAGE_UPLOAD_MENU_ID:
             case REMOVE_FEATURED_IMAGE_MENU_ID:
-                mFeaturedImageHelper.cancelFeaturedImageUpload(getContext(), getSite(), getPost(), false);
+                mFeaturedImageHelper.cancelFeaturedImageUpload(site, post, false);
                 clearFeaturedImage();
                 return true;
             case RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID:
-                retryFeaturedImageUpload();
+                retryFeaturedImageUpload(site, post);
                 return true;
             default:
                 return false;
         }
     }
 
-    private void retryFeaturedImageUpload() {
+    private void retryFeaturedImageUpload(@NonNull SiteModel site, @NonNull PostModel post) {
         MediaModel mediaModel =
-                mFeaturedImageHelper.retryFeaturedImageUpload(getContext(), getSite(), getPost());
+                mFeaturedImageHelper.retryFeaturedImageUpload(site, post);
         if (mediaModel == null) {
             clearFeaturedImage();
         }
@@ -867,7 +873,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         final FeaturedImageData currentFeaturedImageState =
-                mFeaturedImageHelper.createCurrentFeaturedImageState(context, site, post);
+                mFeaturedImageHelper.createCurrentFeaturedImageState(site, post);
 
         FeaturedImageState uiState = currentFeaturedImageState.getUiState();
         updateFeaturedImageViews(currentFeaturedImageState.getUiState());
