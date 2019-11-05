@@ -24,38 +24,38 @@ public class EncryptionUtils {
     static final String PUBLIC_KEY_BASE64 = "K0y2oQ++gEN00S4CbCH3IYoBIxVF6H86Wz4wi2t2C3M=";
     static final String KEYED_WITH = "v1";
 
-    /**
-     * returns a JSON String containing following data:
-     * {
-     * "keyedWith": "v1",
-     * "encryptedKey": "$key_as_base_64",  // The encrypted AES key
-     * "header": "base_64_encoded_header", // The xchacha20poly1305 stream header
-     * "messages": []                      // the stream elements, base-64 encoded
-     *}
-     */
+    /*
+        Returns a JSON String containing following data:
+        {
+            "keyedWith": "v1",
+            "encryptedKey": "$key_as_base_64",  // The encrypted AES key
+            "header": "base_64_encoded_header", // The xchacha20poly1305 stream header
+            "messages": []                      // the stream elements, base-64 encoded
+        }
+    */
     public static String getEncryptedAppLog(Context context) throws JSONException {
         JSONObject encryptedLogJson = new JSONObject();
         encryptedLogJson.put("keyedWith", KEYED_WITH);
 
-        // Shared secret key required to encrypt the stream
+        // Create log-specific key
         byte[] key = new byte[XCHACHA20POLY1305_KEYBYTES];
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_keygen(key);
 
-        // Encrypt, encode and add key to JSON object
-
+        // Encrypt log-specific key
         byte[] encryptedKey = new byte[XCHACHA20POLY1305_KEYBYTES + BOX_SEALBYTES];
         byte[] publicKeyBytes = Base64.decode(PUBLIC_KEY_BASE64, Base64.DEFAULT);
         NaCl.sodium().crypto_box_seal(encryptedKey, key, XCHACHA20POLY1305_KEYBYTES, publicKeyBytes);
+
         encryptedLogJson.put("encryptedKey", Base64.encodeToString(encryptedKey, BASE64_ENCODE_FLAGS));
 
-        // Set up a new stream: initialize the state and create the header
+        // Set up a new stream
         byte[] state = new byte[XCHACHA20POLY1305_STATEBYTES];
         byte[] header = new byte[XCHACHA20POLY1305_HEADERBYTES];
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
 
         encryptedLogJson.put("header", Base64.encodeToString(header, BASE64_ENCODE_FLAGS));
 
-        // encrypt the logs and add to JSON array
+        // Encrypt each log line individually and add them to JSON array
         String logText = AppLog.toPlainText(context);
         String[] logLines = logText.split("\n");
         JSONArray encryptedLogLinesJson = new JSONArray();
@@ -63,8 +63,8 @@ public class EncryptionUtils {
         byte[] ad = new byte[0];
 
         for (String logLine : logLines) {
-            // add the line break back to the log line
-            logLine = logLine + "\n";
+
+            logLine = logLine + "\n"; // Add linebreak back
             byte[] logLineBytes = logLine.getBytes();
             byte[] encryptedLogLine = new byte[logLineBytes.length + XCHACHA20POLY1305_ABYTES];
 
@@ -81,7 +81,7 @@ public class EncryptionUtils {
             encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, BASE64_ENCODE_FLAGS));
         }
 
-        // last element in the JSON array is an encrypted and encoded empty string with FINAL tag
+        // Last element in the JSON array is an encrypted and encoded empty string with the FINAL tag
         String emptyString = new String();
         byte[] encryptedLogLine = new byte[XCHACHA20POLY1305_ABYTES];
 
@@ -99,8 +99,7 @@ public class EncryptionUtils {
 
         encryptedLogJson.put("messages", encryptedLogLinesJson);
 
-        // ******* test code begin
-        // write test output files
+        // Write output files for testing
         try {
             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
 
@@ -108,7 +107,6 @@ public class EncryptionUtils {
             logOutput.write(logText);
             logOutput.close();
 
-            // write encrypted text output file
             BufferedWriter encryptedLogOut = new BufferedWriter(new FileWriter(path + "app_log_encrypted.json"));
             encryptedLogOut.write(encryptedLogJson.toString(4));
             encryptedLogOut.close();
@@ -117,7 +115,6 @@ public class EncryptionUtils {
         } catch (IOException e) {
             ToastUtils.showToast(context, "EncryptionUtils test code, IOException: " + e.toString());
         }
-        // ******* test code end
 
         return encryptedLogJson.toString();
     }
