@@ -12,7 +12,6 @@ import org.libsodium.jni.NaCl;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public class EncryptionUtils {
     static final int BOX_SEALBYTES = NaCl.sodium().crypto_box_sealbytes();
@@ -34,7 +33,7 @@ public class EncryptionUtils {
      * "messages": []                      // the stream elements, base-64 encoded
      *}
      */
-    public static String getEncryptedAppLog(Context context) throws JSONException, UnsupportedEncodingException {
+    public static String getEncryptedAppLog(Context context) throws JSONException {
         JSONObject encryptedLogJson = new JSONObject();
         encryptedLogJson.put("keyedWith", KEYED_WITH);
 
@@ -66,14 +65,15 @@ public class EncryptionUtils {
         for (String logLine : logLines) {
             // add the line break back to the log line
             logLine = logLine + "\n";
-            byte[] encryptedLogLine = new byte[logLine.length() + XCHACHA20POLY1305_ABYTES];
+            byte[] logLineBytes = logLine.getBytes();
+            byte[] encryptedLogLine = new byte[logLineBytes.length + XCHACHA20POLY1305_ABYTES];
 
             NaCl.sodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
                 encryptedLogLine,
                 clen,
-                logLine.getBytes(),
-                logLine.length(),
+                logLineBytes,
+                logLineBytes.length,
                 ad,
                 0,
                 (short) 0);
