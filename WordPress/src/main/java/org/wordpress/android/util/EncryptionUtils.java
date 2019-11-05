@@ -24,8 +24,9 @@ public class EncryptionUtils {
     static final int XCHACHA20POLY1305_STATEBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_statebytes();
     static final int XCHACHA20POLY1305_HEADERBYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_headerbytes();
     static final int XCHACHA20POLY1305_ABYTES = NaCl.sodium().crypto_secretstream_xchacha20poly1305_abytes();
+    static final int BASE64_FLAGS = Base64.DEFAULT;
 
-    static final String PUBLIC_KEY = "K0y2oQ++gEN00S4CbCH3IYoBIxVF6H86Wz4wi2t2C3M=";
+    static final String PUBLIC_KEY_BASE64 = "K0y2oQ++gEN00S4CbCH3IYoBIxVF6H86Wz4wi2t2C3M=";
     static final String KEYED_WITH = "v1";
     static final String ENCODING = "UTF-8";
 
@@ -50,15 +51,16 @@ public class EncryptionUtils {
         // Encrypt, encode and add key to JSON object
 
         byte[] encryptedKey = new byte[XCHACHA20POLY1305_KEYBYTES + BOX_SEALBYTES];
-        NaCl.sodium().crypto_box_seal(encryptedKey, key, XCHACHA20POLY1305_KEYBYTES, PUBLIC_KEY.getBytes(ENCODING));
-        encryptedLogJson.put("encryptedKey", Base64.encodeToString(encryptedKey, Base64.NO_WRAP));
+        byte[] publicKeyBytes = Base64.decode(PUBLIC_KEY_BASE64, BASE64_FLAGS);
+        NaCl.sodium().crypto_box_seal(encryptedKey, key, XCHACHA20POLY1305_KEYBYTES, publicKeyBytes);
+        encryptedLogJson.put("encryptedKey", Base64.encodeToString(encryptedKey, BASE64_FLAGS));
 
         // Set up a new stream: initialize the state and create the header
         byte[] state = new byte[XCHACHA20POLY1305_STATEBYTES];
         byte[] header = new byte[XCHACHA20POLY1305_HEADERBYTES];
         NaCl.sodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
 
-        encryptedLogJson.put("header", Base64.encodeToString(header, Base64.NO_WRAP));
+        encryptedLogJson.put("header", Base64.encodeToString(header, BASE64_FLAGS));
 
         // encrypt the logs and add to JSON array
         String logText = AppLog.toPlainText(context);
@@ -80,7 +82,7 @@ public class EncryptionUtils {
                 0,
                 (short) 0);
 
-            encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, Base64.NO_WRAP));
+            encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, BASE64_FLAGS));
         }
 
         // last element in the JSON array is an encrypted and encoded empty string with FINAL tag
@@ -99,7 +101,7 @@ public class EncryptionUtils {
             0,
             (short) NaCl.sodium().crypto_secretstream_xchacha20poly1305_tag_final());
 
-        encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, Base64.NO_WRAP));
+        encryptedLogLinesJson.put(Base64.encodeToString(encryptedLogLine, BASE64_FLAGS));
 
         encryptedLogJson.put("messages", encryptedLogLinesJson);
 
