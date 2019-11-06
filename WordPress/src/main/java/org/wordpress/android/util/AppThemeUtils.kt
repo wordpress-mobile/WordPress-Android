@@ -19,7 +19,7 @@ class AppThemeUtils {
                 sharedPreferences
                         .getString(
                                 context.getString(R.string.pref_key_app_theme),
-                                context.getString(R.string.app_theme_default)
+                                context.getString(R.string.app_theme_entry_value_default)
                         )
             } else {
                 newTheme
