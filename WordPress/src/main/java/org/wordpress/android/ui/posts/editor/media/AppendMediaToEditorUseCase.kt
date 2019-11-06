@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.editor.media
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.FluxCUtilsWrapper
 import javax.inject.Inject
 
@@ -18,12 +19,22 @@ class AppendMediaToEditorUseCase @Inject constructor(private val fluxCUtilsWrapp
         mediaModels
                 .mapNotNull { media ->
                     media.urlToUse?.let { urlToUse ->
-                        fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let { mediaFile ->
-                            Pair(urlToUse, mediaFile)
+                        val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(media)
+                        if (mediaFile == null) {
+                            AppLog.e(AppLog.T.MEDIA, "Media with remote id ${media.mediaId} not " +
+                                    "added to editor.")
+                        }
+                        mediaFile?.let { it ->
+                            Pair(urlToUse, it)
                         }
                     }
                 }
-                .forEach { pair -> editorMediaListener.appendMediaFile(pair.second, pair.first) }
+                .forEach { (urlToUse, mediaFile) ->
+                    editorMediaListener.appendMediaFile(
+                            mediaFile,
+                            urlToUse
+                    )
+                }
     }
 }
 
