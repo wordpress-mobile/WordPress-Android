@@ -41,10 +41,10 @@ class StatsUtilsTest {
                 "92M",
                 "123M",
                 "9.9M",
-                "999P",
-                "1.2P",
-                "-9.2E",
-                "9.2E"
+                "999Qa",
+                "1.2Qa",
+                "-9.2Qi",
+                "9.2Qi"
         )
         for (i in numbers.indices) {
             val number = numbers[i]
