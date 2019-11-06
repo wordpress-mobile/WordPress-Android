@@ -2,16 +2,30 @@ package org.wordpress.android.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import android.text.TextUtils
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.BuildCompat
+import androidx.preference.PreferenceManager
 import org.wordpress.android.R
 
 class AppThemeUtils {
     companion object {
         @SuppressLint("WrongConstant") // we use MODE_NIGHT_AUTO_BATTERY for API <= 27
         @JvmStatic
-        fun changeTheme(context: Context, newTheme: String) {
-            when (newTheme) {
+        @JvmOverloads
+        fun setAppTheme(context: Context, themeKey: String? = null) {
+            val themeName = if (TextUtils.isEmpty(themeKey)) {
+                val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+                sharedPreferences
+                        .getString(
+                                context.getString(R.string.pref_key_app_theme),
+                                context.getString(R.string.app_theme_default)
+                        )
+            } else {
+                themeKey
+            }
+
+            when (themeName) {
                 context.getString(R.string.app_theme_entry_value_light) -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 }
@@ -19,7 +33,7 @@ class AppThemeUtils {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
                 context.getString(R.string.app_theme_entry_value_default) -> {
-                    if (BuildCompat.isAtLeastQ()) {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                         AppCompatDelegate.setDefaultNightMode(
                                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                         )
@@ -29,7 +43,7 @@ class AppThemeUtils {
                         )
                     }
                 }
-                else -> AppLog.w(AppLog.T.UTILS, "Theme key $newTheme is not recognized.")
+                else -> AppLog.w(AppLog.T.UTILS, "Theme key $themeName is not recognized.")
             }
         }
     }

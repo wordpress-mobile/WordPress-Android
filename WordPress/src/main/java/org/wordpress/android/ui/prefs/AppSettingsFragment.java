@@ -304,7 +304,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
         } else if (preference == mAppThemePreference) {
-            AppThemeUtils.Companion.changeTheme(getActivity(), (String) newValue);
+            AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
         }
         return true;
     }
