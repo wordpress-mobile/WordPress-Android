@@ -47,7 +47,7 @@ class OptimizeMediaUseCaseTest {
     }
 
     @Test
-    fun `LoadingSomeMediaFailed set to false when getRealPathFromURI returns path`() = test {
+    fun `LoadingSomeMediaFailed set to false on success`() = test {
         // Arrange
         val uris = listOf<Uri>(mock(), mock(), mock())
         // Act
