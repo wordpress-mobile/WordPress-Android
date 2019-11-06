@@ -826,8 +826,7 @@ public class WPMainActivity extends AppCompatActivity implements
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
                     boolean isSameSiteSelected = data != null
-                                                 && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs
-                            .getSelectedSite();
+                            && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
@@ -1177,7 +1176,7 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-        refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
+       refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
     }
 
     @SuppressWarnings("unused")

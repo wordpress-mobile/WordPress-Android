@@ -2,7 +2,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
-<!--        &lt;!&ndash; Material theme &ndash;&gt;-->
         <item name="colorPrimary">@color/blue_30</item>
         <item name="colorPrimaryVariant">@color/blue_50</item>
         <item name="colorSecondary">@color/pink_30</item>

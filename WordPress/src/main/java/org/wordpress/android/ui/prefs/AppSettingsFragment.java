@@ -52,9 +52,6 @@ import javax.inject.Inject;
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final int LANGUAGE_CHANGED = 1000;
-    public static final String LIGHT_MODE = "light";
-    public static final String DARK_MODE = "dark";
-    public static final String DEFAULT_MODE = "default";
 
     private DetailListPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
