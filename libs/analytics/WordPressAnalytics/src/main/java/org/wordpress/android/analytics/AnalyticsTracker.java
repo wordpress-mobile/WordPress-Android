@@ -159,12 +159,7 @@ public final class AnalyticsTracker {
         EDITOR_SESSION_END,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
-        EDITOR_DISCARDED_CHANGES,
-        EDITOR_DISCARDED_CHANGES_UNDO,
         EDITOR_EDITED_IMAGE, // Visual editor only
-        EDITOR_HYBRID_ENABLED, // Visual editor only
-        EDITOR_HYBRID_TOGGLED_OFF, // Visual editor only
-        EDITOR_HYBRID_TOGGLED_ON, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
@@ -183,7 +178,6 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_IMAGE,
         EDITOR_TAPPED_ITALIC,
         EDITOR_TAPPED_LINK_ADDED,
-        EDITOR_TAPPED_LINK_REMOVED, // Visual editor only
         EDITOR_TAPPED_LIST,
         EDITOR_TAPPED_LIST_ORDERED, // Visual editor only
         EDITOR_TAPPED_LIST_UNORDERED, // Visual editor only
@@ -379,7 +373,7 @@ public final class AnalyticsTracker {
         SIGNUP_EMAIL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED,
         SIGNUP_EMAIL_EPILOGUE_USERNAME_TAPPED,
         SIGNUP_EMAIL_EPILOGUE_VIEWED,
-        SIGNUP_GOOGLE_BUTTON_TAPPED,
+        SIGNUP_SOCIAL_BUTTON_TAPPED,
         SIGNUP_TERMS_OF_SERVICE_TAPPED,
         SIGNUP_CANCELED,
         SIGNUP_EMAIL_TO_LOGIN,

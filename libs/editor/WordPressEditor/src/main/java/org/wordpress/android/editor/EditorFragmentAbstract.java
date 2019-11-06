@@ -39,8 +39,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // This was required since Aztec Visual->HTML can slightly change the content of the HTML. See #692 for details.
     public abstract void removeAllFailedMediaUploads();
     public abstract void removeMedia(String mediaId);
-    public abstract void setTitlePlaceholder(CharSequence text);
-    public abstract void setContentPlaceholder(CharSequence text);
     public abstract boolean showSavingProgressDialogIfNeeded();
     public abstract boolean hideSavingProgressDialog();
 
@@ -190,6 +188,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         String onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
+        void onAddStockMediaClicked(boolean allowMultipleSelection);
     }
 
     /**
@@ -220,7 +219,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         IMAGE_EDITED,
         ITALIC_BUTTON_TAPPED,
         LINK_ADDED_BUTTON_TAPPED,
-        LINK_REMOVED_BUTTON_TAPPED,
         LIST_BUTTON_TAPPED,
         LIST_ORDERED_BUTTON_TAPPED,
         LIST_UNORDERED_BUTTON_TAPPED,

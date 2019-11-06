@@ -1,6 +1,0 @@
-13.3:
-* Statistik Anda kini menjadi jauh lebih responsif.
-* Sekarang Anda dapat mengubah nama pengguna di Pengaturan Akun.
-* Ingin menyesuaikan pengaturan performa Jetpack? Lakukan langsung dari aplikasi!
-* Jika Anda adalah penerbit yang giat dengan lebih dari 100 halaman di situs, kami akan mencantumkannya secara kronologis demi akses yang lebih cepat.
-* Kami telah menambahkan banyak peningkatan untuk Penyunting Blok, seperti pengaturan gaya kaya teks dalam keterangan video, penambahan blok yang lebih intuitif, dan penyimpanan konten otomatis setelah tidak aktif selama dua detik.

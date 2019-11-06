@@ -18,8 +18,6 @@ Language: sr_RS
     <string name="reader_short_like_count_none">Свиђање</string>
     <string name="reader_label_follow_count">%,d пратиоца</string>
     <string name="reader_title_post_detail">Чланак читача</string>
-    <string name="local_draft_explainer">Овај чланак је локални нацрт који није објављен</string>
-    <string name="local_changes_explainer">Овај чланак има локалне измене које нису објављене</string>
     <string name="notifications_push_summary">Подешавања за обавештења која се појављују на вашем уређају.</string>
     <string name="notifications_email_summary">Подешавања за обавештења која су послата на е-пошту повезану са вашим налогом.</string>
     <string name="notifications_tab_summary">Подешавања за обавештења која се појављују у језичку Обавештења.</string>
@@ -161,7 +159,6 @@ Language: sr_RS
     <string name="comment_status_spam">Непожељни коментар</string>
     <string name="dlg_spamming_comments">Означавам као непожељно</string>
     <string name="mnu_comment_spam">Непожељни коментар</string>
-    <string name="horizontal_alignment">Водоравно поравнање</string>
     <string name="fatal_db_error">Дошло је до грешке током прављења базе података апликације. Покушајте поново са инсталацијом апликације.</string>
     <string name="reader_title_applog">Белешка апликације</string>
     <string name="view_in_browser">Погледајте у прегледачу веба</string>
@@ -175,7 +172,6 @@ Language: sr_RS
     <string name="open_source_licenses">Дозволе Отвореног кода</string>
     <string name="post_settings">Подешавања чланка</string>
     <string name="local_draft">Локални нацрт</string>
-    <string name="create_a_link">Направите везу</string>
     <string name="link_enter_url_text">Текст везе (опционо)</string>
     <string name="cannot_delete_multi_media_items">Неки медији тренутно не могу бити обрисани. Пробајте поново касније.</string>
     <string name="image_settings">Подешавања слике</string>
@@ -184,7 +180,6 @@ Language: sr_RS
     <string name="new_media">Нови медиј</string>
     <string name="new_post">Нови чланак</string>
     <string name="http_authorization_required">Неопходно овлашћење</string>
-    <string name="preview_post">Прегледајте чланак</string>
     <string name="toast_comment_unedited">Коментар није промењен</string>
     <string name="content_required">Коментар је неопходан</string>
     <string name="sure_to_cancel_edit_comment">Одустајете од уређивања овог коментара?</string>
@@ -209,7 +204,6 @@ Language: sr_RS
     <string name="learn_more">Сазнајте више</string>
     <string name="cancel_edit">Одустани од уређивања</string>
     <string name="connection_error">Грешка у успостављању везе</string>
-    <string name="preview_page">Прегледајте страну</string>
     <string name="page_settings">Подешавања стране</string>
     <string name="select_categories">Одаберите категорије</string>
     <string name="remove_account">Уклони веб место</string>
@@ -218,7 +212,6 @@ Language: sr_RS
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="reader_likes_multi">%,d људи се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпрес без видљивог блога</string>
-    <string name="video">Видео снимак</string>
     <string name="reader_label_reply">Одговор</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>
     <string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>
@@ -270,17 +263,13 @@ Language: sr_RS
     <string name="httpuser">HTTP корисничко име</string>
     <string name="error_media_upload">Дошло је до грешке током отпремања медија</string>
     <string name="publish_date">Објављено</string>
-    <string name="post_content">Садржај (додирните да додате текст и медије)</string>
     <string name="incorrect_credentials">Неисправно корисничко име или лозинка.</string>
     <string name="username">Корисничко име</string>
     <string name="password">Лозинка</string>
     <string name="reader">Читач</string>
     <string name="anonymous">Анониман</string>
     <string name="posts">Чланци</string>
-    <string name="width">Ширина</string>
-    <string name="caption">Натпис (опционо)</string>
     <string name="no_network_title">Нема доступне мреже</string>
-    <string name="featured_in_post">Укључи слику у садржај чланка</string>
     <string name="pages">Стране</string>
     <string name="blogusername">korisnickoimebloga</string>
     <string name="ok">У реду</string>
