@@ -616,7 +616,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String errorMessage = mUiHelpers.getTextOfUiString(context,
                     UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
                             event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post)));
-            String notificationMessage = UploadUtils.getErrorMessage(context, errorMessage, false, event.post.isPage());
+            String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
             mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
                     mMediaStore.getMediaForPost(event.post));
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);

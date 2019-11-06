@@ -50,8 +50,8 @@ public class UploadUtils {
      * Returns a post-type specific error message string.
      */
     static @NonNull
-    String getErrorMessage(Context context, String errorMessage,
-                           boolean isMediaError, boolean isPage) {
+    String getErrorMessage(Context context, boolean isPage, String errorMessage,
+                           boolean isMediaError) {
         String baseErrorString;
         if (isPage) {
             if (isMediaError) {

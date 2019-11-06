@@ -737,7 +737,7 @@ public class UploadService extends Service {
             // Only show the media upload error notification if the post is NOT registered in the UploadStore
             // - otherwise if it IS registered in the UploadStore and we get a `cancelled` signal it means
             // the user actively cancelled it. No need to show an error then.
-            String message = UploadUtils.getErrorMessage(this, errorMessage, true, postToCancel.isPage());
+            String message = UploadUtils.getErrorMessage(this, postToCancel.isPage(), errorMessage, true);
             SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
             mPostUploadNotifier.updateNotificationErrorForPost(postToCancel, site, message,
                     mUploadStore.getFailedMediaForPost(postToCancel).size());
@@ -986,8 +986,8 @@ public class UploadService extends Service {
                         if (!isAllFailedMediaUserDeleted(failedMedia)) {
                             SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
                             String message = UploadUtils
-                                    .getErrorMessage(this, getString(R.string.error_generic_error), true,
-                                            postModel.isPage());
+                                    .getErrorMessage(this, postModel.isPage(), getString(R.string.error_generic_error), true
+                                    );
                             mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
                         }
 
