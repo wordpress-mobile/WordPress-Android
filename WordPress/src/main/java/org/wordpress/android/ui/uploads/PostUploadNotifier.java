@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.push.NotificationType;
+import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
@@ -331,8 +333,12 @@ class PostUploadNotifier {
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(notificationMessage));
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
-
         long notificationId = getNotificationIdForPost(post);
+
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        NotificationType.POST_UPLOAD_SUCCESS));
+
         Intent notificationIntent = getNotificationIntent(post, site, notificationId);
 
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
@@ -406,6 +412,9 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        NotificationType.MEDIA_UPLOAD_SUCCESS));
 
         // Add WRITE POST action - only if there is media we can insert in the Post
         if (mediaList != null && !mediaList.isEmpty()) {
@@ -495,6 +504,9 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setOnlyAlertOnce(true);
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        NotificationType.POST_UPLOAD_ERROR));
 
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
@@ -564,6 +576,9 @@ class PostUploadNotifier {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setOnlyAlertOnce(true);
+        notificationBuilder.setDeleteIntent(NotificationsProcessingService
+                .getPendingIntentForNotificationDismiss(mContext, (int) notificationId,
+                        NotificationType.MEDIA_UPLOAD_ERROR));
 
         // Add RETRY action - only if there is media to retry
         if (mediaList != null && !mediaList.isEmpty()) {
