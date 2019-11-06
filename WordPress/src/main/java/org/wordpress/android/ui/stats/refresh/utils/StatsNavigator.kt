@@ -60,7 +60,9 @@ class StatsNavigator
 ) {
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
-            is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
+            is AddNewPost -> {
+                ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
+            }
             is ViewPost -> {
                 StatsUtils.openPostInReaderOrInAppWebview(
                         activity,
