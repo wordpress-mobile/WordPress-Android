@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-16 00:55:17+0000
+Translation-Revision-Date: 2019-10-30 00:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="pick_media">Afbeelding of video toevoegen</string>
     <string name="error_post_not_submitted_retrying">We konden dit bericht niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
     <string name="error_post_not_scheduled_retrying">We konden dit bericht niet inplannen, maar we proberen het later nog eens.</string>
     <string name="error_post_not_published_retrying_private">We konden dit privébericht niet publiceren, maar we proberen het later nog eens.</string>
@@ -1384,9 +1385,6 @@ Language: nl
     <string name="error_refresh_comments_showing_older">Reacties konden momenteel niet worden vernieuwd - oudere reacties worden weergegeven</string>
     <string name="post_settings_set_featured_image">Stel uitgelichte afbeelding in</string>
     <string name="post_settings_featured_image">Uitgelichte afbeelding</string>
-    <string name="editor_content_placeholder">Deel hier je verhaal…</string>
-    <string name="editor_page_title_placeholder">Paginatitel</string>
-    <string name="editor_post_title_placeholder">Berichttitel</string>
     <string name="email_address">E-mailadres</string>
     <string name="dlg_sure_to_delete_comments">Deze reacties permanent verwijderen?</string>
     <string name="dlg_sure_to_delete_comment">Deze reactie permanent verwijderen?</string>
@@ -1772,7 +1770,6 @@ Language: nl
     <string name="reader_empty_posts_in_tag_updating">Berichten ophalen…</string>
     <string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
     <string name="comment_spammed">Reactie als spam gemarkeerd</string>
-    <string name="video">Video</string>
     <string name="reader_label_reply">Beantwoord</string>
     <string name="reader_likes_multi">%,d mensen vinden dit leuk</string>
     <string name="reader_likes_you_and_multi">Jij en %,d anderen vinden dit leuk</string>

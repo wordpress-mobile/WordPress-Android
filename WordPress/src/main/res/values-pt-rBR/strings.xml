@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-18 17:06:00+0000
+Translation-Revision-Date: 2019-10-25 16:46:48+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_published_retrying_private">Não foi possível publicar esse post privado, mas tentaremos novamente mais tarde.</string>
@@ -1513,9 +1514,6 @@ Language: pt_BR
     <string name="error_refresh_comments_showing_older">Não foi possível atualizar os comentários no momento. Comentários mais antigos estão sendo exibidos</string>
     <string name="post_settings_set_featured_image">Configurar imagem destacada</string>
     <string name="post_settings_featured_image">Imagem destacada</string>
-    <string name="editor_content_placeholder">Compartilhe sua história aqui…</string>
-    <string name="editor_page_title_placeholder">Título da página</string>
-    <string name="editor_post_title_placeholder">Título do post</string>
     <string name="email_address">Endereço de e-mail</string>
     <string name="dlg_sure_to_delete_comments">Excluir estes comentários permanentemente?</string>
     <string name="dlg_sure_to_delete_comment">Excluir este comentário permanentemente?</string>
@@ -1913,7 +1911,6 @@ Language: pt_BR
     <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
-    <string name="video">Vídeo</string>
     <string name="reader_label_reply">Responder</string>
     <string name="reader_likes_multi">%,d pessoas curtiram isso</string>
     <string name="reader_likes_you_and_multi">Você e %,d outros curtiram isso</string>

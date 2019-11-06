@@ -1,5 +1,0 @@
-13.4:
-* Añadida compatibilidad de vista previa remota para entradas y páginas.
-* Las entradas de la papelera se quedan en la papelera. Deben ser restauradas antes de editar o previsualizar.
-* Corregido: Ahora, al hacer clic en «Publicar» en una entrada privada, la entrada se publica con seguridad como privada; resueltos algunos problemas de edición de enlaces.
-* Los cambios no guardados en entradas y páginas se guardan automáticamente en una copia de seguridad.
