@@ -1588,7 +1588,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean updatePostObject(boolean isAutosave) {
         if (!mEditPostRepository.hasPost() || mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
-            return true;
+            return false;
         }
         return mEditPostRepository.updateInTransaction(postModel -> {
             try {

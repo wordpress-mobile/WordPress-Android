@@ -78,9 +78,7 @@ class EditPostRepository
     private val lock = ReentrantReadWriteLock()
 
     fun updateInTransaction(action: (PostModel) -> Boolean) = lock.write {
-        post?.let {
-            action(it)
-        } ?: false
+        action(post!!)
     }
 
     fun hasLocation() = post!!.hasLocation()
