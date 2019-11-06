@@ -1,14 +1,23 @@
 package org.wordpress.android.ui
 
 enum class PagePostCreationSources(val label: String) {
+    // post created from android shortcut long pressing on app icon
     POST_FROM_SHORTCUT("post-from-short-cut"),
+    // post created from the posts list fab
     POST_FROM_LIST("post-from-list"),
+    // page created from the pages list fab
     PAGE_FROM_LIST("page-from-list"),
+    // post created from the navigation bar (until we will remove it)
     POST_FROM_NAV_BAR("post-from-nav-bar"),
+    // post created from bottom sheet in my site screen
     POST_FROM_MY_SITE("post-from-my-site"),
+    // page created from bottom sheet in my site screen
     PAGE_FROM_MY_SITE("page-from-my-site"),
+    // post created from stats empty view when no stats/post available yet
     POST_FROM_STATS("post-from-stats"),
+    // post created from notifications unread page when empty
     POST_FROM_NOTIFS_EMPTY_VIEW("post-from-notif-empty-view"),
+    // all other cases container
     OTHER("other");
 
     companion object {
