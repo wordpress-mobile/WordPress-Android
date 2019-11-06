@@ -192,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:maxLines="3"
-                android:textColor="@color/neutral_30"
+                android:textColor="@color/neutral_50"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_attribution"
                 style="@style/ReaderTextView" >
