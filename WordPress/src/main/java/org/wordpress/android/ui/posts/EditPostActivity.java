@@ -2159,7 +2159,11 @@ public class EditPostActivity extends AppCompatActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
-                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost, wpcomLocaleSlug, supportsStockPhotos);
+                        return GutenbergEditorFragment.newInstance("",
+                                "",
+                                mIsNewPost,
+                                wpcomLocaleSlug,
+                                supportsStockPhotos);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
