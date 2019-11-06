@@ -1312,6 +1312,8 @@ public class ReaderPostListFragment extends Fragment
         mActionableEmptyView.image.setVisibility(View.VISIBLE);
         mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
         mActionableEmptyView.subtitle.setText(ssb);
+        mActionableEmptyView.subtitle
+                .setContentDescription(getString(R.string.reader_empty_saved_posts_content_description));
         mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
         mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
         mActionableEmptyView.button.setVisibility(View.VISIBLE);
@@ -1380,9 +1382,12 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void announceEmptyStateForAccessibility() {
-        mActionableEmptyView.announceForAccessibility(
-                String.format("%s... %s", mActionableEmptyView.title.getText(),
-                        mActionableEmptyView.subtitle.getText()));
+        CharSequence title = mActionableEmptyView.title.getText();
+
+        CharSequence subTitle = !TextUtils.isEmpty(mActionableEmptyView.subtitle.getContentDescription())
+                ? mActionableEmptyView.subtitle.getContentDescription() : mActionableEmptyView.subtitle.getText();
+
+        mActionableEmptyView.announceForAccessibility(String.format("%s... %s", title, subTitle));
     }
 
     private void hideEmptyView() {
