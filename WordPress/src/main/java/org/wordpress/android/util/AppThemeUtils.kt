@@ -10,11 +10,11 @@ import org.wordpress.android.R
 
 class AppThemeUtils {
     companion object {
-        @SuppressLint("WrongConstant") // we use MODE_NIGHT_AUTO_BATTERY for API <= 27
+        @SuppressLint("WrongConstant") // lint suggests deprecated constant for some reason
         @JvmStatic
         @JvmOverloads
-        fun setAppTheme(context: Context, themeKey: String? = null) {
-            val themeName = if (TextUtils.isEmpty(themeKey)) {
+        fun setAppTheme(context: Context, newTheme: String? = null) {
+            val themeName = if (TextUtils.isEmpty(newTheme)) {
                 val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
                 sharedPreferences
                         .getString(
@@ -22,7 +22,7 @@ class AppThemeUtils {
                                 context.getString(R.string.app_theme_default)
                         )
             } else {
-                themeKey
+                newTheme
             }
 
             when (themeName) {
