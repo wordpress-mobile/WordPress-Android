@@ -332,7 +332,6 @@ Language: th
     <string name="reader_likes_multi">%,d คนชอบสิ่งนี้</string>
     <string name="reader_likes_you_and_multi">คุณและ %,d คนชอบสิ่งนี้</string>
     <string name="reader_label_reply">ตอบกลับ</string>
-    <string name="video">วีดีโอ</string>
     <string name="pick_photo">เลือกรูปภาพ</string>
     <string name="pick_video">เลือกวีดีโอ</string>
     <string name="reader_toast_err_get_post">ไม่สามารถดึงข้อมูลเรื่องนี้</string>

@@ -1,5 +1,0 @@
-13.4:
-* Adicionamos visualização remota a posts e páginas
-* Posts enviados para a lixeira continuarão nela. É necessário restaurá-los antes de editar ou visualizar.
-* Correções: ao clicar em "Publicar" em um post privado, agora ele é publicado como privado. Também corrigimos alguns problemas com links de edição.
-* Agora criamos um backup das alterações não salvas em posts e páginas.

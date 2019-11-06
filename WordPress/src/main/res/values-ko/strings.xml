@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-17 00:55:00+0000
+Translation-Revision-Date: 2019-10-31 01:54:38+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="pick_media">이미지 또는 비디오 추가</string>
     <string name="error_post_not_submitted_retrying">리뷰를 위해 이 글을 제출하지 못했지만 나중에 다시 시도하겠습니다. </string>
     <string name="error_post_not_scheduled_retrying">이 글을 예약하지 못했지만 나중에 다시 시도하겠습니다.</string>
     <string name="error_post_not_published_retrying_private">이 비공개 글을 발행하지 못했지만 나중에 다시 시도하겠습니다.</string>
@@ -1513,9 +1514,6 @@ Language: ko_KR
     <string name="error_refresh_comments_showing_older">지금은 댓글을 새로 고칠 수 없습니다. 이전 댓글을 표시 중입니다.</string>
     <string name="post_settings_set_featured_image">특성 이미지 설정</string>
     <string name="post_settings_featured_image">특성 이미지</string>
-    <string name="editor_content_placeholder">여기서 스토리 공유…</string>
-    <string name="editor_page_title_placeholder">페이지 제목</string>
-    <string name="editor_post_title_placeholder">글 제목</string>
     <string name="email_address">이메일 주소</string>
     <string name="dlg_sure_to_delete_comments">이 댓글을 영구 삭제하시겠습니까?</string>
     <string name="dlg_sure_to_delete_comment">이 댓글을 영구 삭제하시겠습니까?</string>
@@ -1913,7 +1911,6 @@ Language: ko_KR
     <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 …</string>
     <string name="cant_share_no_visible_blog">공개 블로그가 없기 때문에 WordPress에 공유 할 수 없습니다</string>
     <string name="comment_spammed">댓글이 스팸으로 처리됨</string>
-    <string name="video">동영상</string>
     <string name="reader_label_reply">회신</string>
     <string name="reader_likes_multi">%d명이 \"좋아요\"를 눌렀습니다.</string>
     <string name="reader_likes_you_and_multi">당신에게 %d명이 \"좋아요\"를 하고 있습니다.</string>

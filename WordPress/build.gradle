@@ -49,13 +49,15 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
+        archivesBaseName = "$applicationId"
+
         // Allow versionName to be overridden with property. e.g. -PversionName=1234
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-192"
+            versionName "alpha-194"
         }
-        versionCode 786
+        versionCode 791
         minSdkVersion 21
         targetSdkVersion 28
 
@@ -81,9 +83,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "13.5-rc-1"
+                versionName "13.6-rc-1"
             }
-            versionCode 785
+            versionCode 790
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
         }
 
