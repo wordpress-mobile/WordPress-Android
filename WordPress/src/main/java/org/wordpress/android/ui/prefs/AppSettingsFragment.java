@@ -16,9 +16,6 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
 
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.os.BuildCompat;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -35,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -81,7 +79,6 @@ public class AppSettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        setRetainInstance(true);
         addPreferencesFromResource(R.xml.app_settings);
 
         findPreference(getString(R.string.pref_key_send_usage)).setOnPreferenceChangeListener(
@@ -111,13 +108,7 @@ public class AppSettingsFragment extends PreferenceFragment
         mLanguagePreference.setOnPreferenceChangeListener(this);
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
-        if (!BuildConfig.DARK_MODE_AVAILABLE) {
-            PreferenceScreen preferenceScreen =
-                    (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-            preferenceScreen.removePreference(mAppThemePreference);
-        } else {
-            mAppThemePreference.setOnPreferenceChangeListener(this);
-        }
+        mAppThemePreference.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -313,29 +304,9 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
         } else if (preference == mAppThemePreference) {
-            changeTheme((String) newValue);
+            AppThemeUtils.Companion.changeTheme(getActivity(), (String) newValue);
         }
         return true;
-    }
-
-    private void changeTheme(String newTheme) {
-        switch (newTheme) {
-            case LIGHT_MODE:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-
-            case DARK_MODE:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-
-            default:
-                if (BuildCompat.isAtLeastQ()) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                }
-                break;
-        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

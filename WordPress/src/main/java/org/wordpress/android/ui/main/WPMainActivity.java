@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -95,6 +97,7 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -198,6 +201,7 @@ public class WPMainActivity extends AppCompatActivity implements
         ((WordPress) getApplication()).component().inject(this);
 
         super.onCreate(savedInstanceState);
+        setAppTheme();
         setContentView(R.layout.main_activity);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
@@ -332,6 +336,14 @@ public class WPMainActivity extends AppCompatActivity implements
         if (canShowAppRatingPrompt) {
             AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
         }
+    }
+
+    private void setAppTheme() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String themeKey = sharedPreferences
+                .getString(getString(R.string.pref_key_app_theme), getString(R.string.app_theme_default));
+
+        AppThemeUtils.Companion.changeTheme(this, themeKey);
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -817,7 +829,8 @@ public class WPMainActivity extends AppCompatActivity implements
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
 
                     boolean isSameSiteSelected = data != null
-                            && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
+                                                 && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs
+                            .getSelectedSite();
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
@@ -1167,7 +1180,7 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-       refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
+        refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
     }
 
     @SuppressWarnings("unused")
