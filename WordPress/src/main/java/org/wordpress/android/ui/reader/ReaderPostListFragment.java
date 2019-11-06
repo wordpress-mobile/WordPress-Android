@@ -1375,6 +1375,9 @@ public class ReaderPostListFragment extends Fragment
     private void showEmptyView() {
         if (isAdded()) {
             mActionableEmptyView.setVisibility(View.VISIBLE);
+            mActionableEmptyView.announceForAccessibility(
+                    String.format("%s... %s", mActionableEmptyView.title.getText(),
+                            mActionableEmptyView.subtitle.getText()));
         }
     }
 

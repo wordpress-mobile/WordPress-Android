@@ -11,6 +11,7 @@
         android:layout_width="match_parent" >
 
         <LinearLayout
+            android:importantForAccessibility="yes"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:gravity="center"
@@ -19,7 +20,7 @@
             <ImageView
                 android:id="@+id/image"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/content_description_person_reading_device_notification"
+                android:importantForAccessibility="no"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
