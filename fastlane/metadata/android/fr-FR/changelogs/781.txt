@@ -1,6 +1,0 @@
-13.3 :
-* Vos statistiques ont considérablement gagné en fluidité.
-* Vous pouvez désormais modifier votre nom d'utilisateur dans les paramètres de votre compte.
-* Vous souhaitez modifier vos paramètres de performances Jetpack ? Faites-le directement dans l'application !
-* Si vous êtes prolifique et que vous avez publié plus de 100 pages sur votre site, nous les listerons par ordre chronologique pour permettre d'y accéder plus rapidement.
-* Nous avons ajouté de nombreuses mises à niveau à l'éditeur de blocs : notamment des styles de texte enrichi pour les légendes vidéo, des fonctionnalités de bloc plus intuitives et l'enregistrement automatique du contenu après deux secondes d'inactivité.

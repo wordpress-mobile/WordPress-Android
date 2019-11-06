@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -254,9 +255,16 @@ public class PhotoPickerActivity extends AppCompatActivity
                                              new WPMediaUtils.MediaFetchDoNext() {
                                                  @Override
                                                  public void doNext(Uri uri) {
-                                                     mFeaturedImageHelper
-                                                             .queueFeaturedImageForUpload(PhotoPickerActivity.this,
-                                                                     mLocalPostId, mSite, uri, mimeType);
+                                                     boolean imageQueued = mFeaturedImageHelper
+                                                             .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
+                                                                     mimeType);
+                                                     if (!imageQueued) {
+                                                         // we intentionally display a toast instead of a snackbar as a
+                                                         // Snackbar is tied to an Activity and the activity is finished
+                                                         // right after this call
+                                                         Toast.makeText(getApplicationContext(),
+                                                                 R.string.file_not_found, Toast.LENGTH_SHORT).show();
+                                                     }
                                                      Intent intent = new Intent()
                                                              .putExtra(EXTRA_MEDIA_QUEUED, true);
                                                      setResult(RESULT_OK, intent);

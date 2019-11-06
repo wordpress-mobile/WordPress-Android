@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatEditText;
 
 /**
- * WPEditText which notifies when text is cut, copied, or pasted.
+ * EditText which notifies when text is cut, copied, or pasted.
  */
 public class ContextMenuEditText extends AppCompatEditText {
     public interface OnContextMenuListener {
@@ -63,7 +63,7 @@ public class ContextMenuEditText extends AppCompatEditText {
     }
 
     /**
-     * Text cut from WPEditText.
+     * Text cut from EditText.
      */
     public void onCut() {
         if (mOnContextMenuListener != null) {
@@ -72,7 +72,7 @@ public class ContextMenuEditText extends AppCompatEditText {
     }
 
     /**
-     * Text copied from WPEditText.
+     * Text copied from EditText.
      */
     public void onCopy() {
         if (mOnContextMenuListener != null) {
@@ -81,7 +81,7 @@ public class ContextMenuEditText extends AppCompatEditText {
     }
 
     /**
-     * Text pasted into WPEditText.
+     * Text pasted into EditText.
      */
     public void onPaste() {
         if (mOnContextMenuListener != null) {

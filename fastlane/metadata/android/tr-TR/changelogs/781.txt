@@ -1,6 +1,0 @@
-13.3:
-* İstatistikleriniz çok daha duyarlı hale geldi.
-* Artık kullanıcı adınızı hesap ayarlarından değiştirebilirsiniz.
-* Jetpack performans ayarlarınızı değiştirmek? Doğrudan uygulamadan yapın!
-* Sitenizde 100'den fazla sayfa bulunan üretken bir yayıncıysanız, daha hızlı erişim için kronolojik olarak listeleyeceğiz.
-* Video başlıklarındaki zengin metin stili, daha sezgisel blok eklemeleri ve iki saniye kullanılmadığında otomatik içerik tasarrufu gibi, Blok düzenleyiciye birçok yükseltme ekledik.

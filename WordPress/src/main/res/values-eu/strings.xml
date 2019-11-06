@@ -7,7 +7,6 @@ Language: eu_ES
 -->
 <resources>
     <string name="add_media_progress">Media gehitzen</string>
-    <string name="async_promo_link">Nola dabil?</string>
     <string name="post_title">Izenburua</string>
     <string name="post_settings_post_format">Bidalketa formatua</string>
     <string name="sharing">Partekatzea</string>
@@ -49,25 +48,12 @@ Language: eu_ES
     <string name="error_remove_follower">Ezin izan da jarraitzailea kendu</string>
     <string name="error_fetch_email_followers_list">Ezin izan dira guneko e-posta jarraitzaileak eskuratu</string>
     <string name="error_fetch_followers_list">Ezin izan dira guneko jarraitzaileak eskuratu</string>
-    <string name="visual_editor">Editore bisuala</string>
-    <string name="format_bar_description_html">HTML</string>
-    <string name="format_bar_description_ol">Zerrenda ordenatua</string>
-    <string name="format_bar_description_ul">Ordenarik gabeko zerrenda</string>
-    <string name="format_bar_description_more">Irakurri gehiago</string>
-    <string name="format_bar_description_underline">Azpimarra</string>
-    <string name="format_bar_description_italic">Etzana</string>
-    <string name="format_bar_description_bold">Lodia</string>
     <string name="image_width">Zabalera</string>
     <string name="image_link_to">Estekatu:</string>
-    <string name="image_alt_text">Testu alternatiboa</string>
     <string name="image_caption">Izenburua</string>
     <string name="image_settings_save_toast">Aldaketak gorde dira</string>
     <string name="image_settings_dismiss_dialog_title">Gorde gabeko aldaketa baztertu?</string>
     <string name="stop_upload_dialog_title">Karga gelditu?</string>
-    <string name="alert_error_adding_media">Errore bat gertatu da mediak txertatzean</string>
-    <string name="alert_action_while_uploading">Mediak kargatzen ari zara. Mesedez itxaron kargak dirauen artean.</string>
-    <string name="alert_insert_image_html_mode">Ezin da media zuzenean txertatu HTML moduan. Itzuli modu bisualera, mesedez.</string>
-    <string name="uploading_gallery_placeholder">Galeria igotzen…</string>
     <string name="tap_to_try_again">Egin tap berriro saiatzeko!</string>
     <string name="invite_sent">Gonbidapena ondo bidali da</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -141,10 +127,6 @@ Language: eu_ES
     <string name="days_quantity_other">%d egun</string>
     <string name="days_quantity_one">Egun 1</string>
     <string name="primary_site">Gune nagusia</string>
-    <string name="visual_editor_enabled">Editore bisuala gaituta</string>
-    <string name="editor_content_placeholder">Partekatu zure istorioa hemen…</string>
-    <string name="editor_page_title_placeholder">Orrialdearen izenburua</string>
-    <string name="editor_post_title_placeholder">Bidalketaren izenburua</string>
     <string name="email_address">E-posta helbidea</string>
     <string name="dlg_sure_to_delete_comments">Behin betiko ezabatu iruzkin hauek?</string>
     <string name="dlg_sure_to_delete_comment">Behin betiko ezabatu iruzkin hau?</string>
@@ -367,8 +349,6 @@ Language: eu_ES
     <string name="category_name">Kategoriaren izena</string>
     <string name="add_new_category">Gehitu kategoria berria</string>
     <string name="view_in_browser">Nabigatzailean ikusi</string>
-    <string name="preview_post">Aurreikusi bidalketa</string>
-    <string name="preview_page">Aurreikusi orrialdea</string>
     <string name="remove_account">Ezabatu gunea</string>
     <string name="toast_comment_unedited">Iruzkina ez da aldatu</string>
     <string name="content_required">Iruzkina beharrezkoa da</string>
@@ -394,10 +374,8 @@ Language: eu_ES
     <string name="comment_status_approved">Onartua</string>
     <string name="post_settings">Bidalketaren ezarpenak</string>
     <string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
-    <string name="horizontal_alignment">Lerrokatze horizontala</string>
     <string name="local_draft">Zirriborro lokala</string>
     <string name="page_settings">Orrialdearen ezarpenak</string>
-    <string name="create_a_link">Esteka sortu</string>
     <string name="link_enter_url_text">Estekaren testua (hautazkoa)</string>
     <string name="cannot_delete_multi_media_items">Mediaren bat ezin izan da orain ezabatu. Saiatu zaitez berriz beranduago.</string>
     <string name="media_error_no_permission">Ez duzu media bilduma ikusteko baimenik</string>
@@ -411,7 +389,6 @@ Language: eu_ES
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
     <string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>
     <string name="comment_spammed">Iruzkina spam bezala markatuta</string>
-    <string name="video">Bideoa</string>
     <string name="reader_label_reply">Erantzun</string>
     <string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>
     <string name="reader_likes_you_and_multi">Zuk eta %,d pertsonak hau gustuko duzue</string>
@@ -466,7 +443,6 @@ Language: eu_ES
     <string name="httpuser">HTTP erabiltzaile-izena</string>
     <string name="error_media_upload">Errore bat gertatu da mediak kargatzean</string>
     <string name="publish_date">Argitaratu</string>
-    <string name="post_content">Edukia (egin tap testua eta multimedia gehitzeko)</string>
     <string name="incorrect_credentials">Erabiltzaile-izen edo pasahitz okerra.</string>
     <string name="log_in">Saioa hasi</string>
     <string name="username">Erabiltzaile-izena</string>
@@ -474,15 +450,11 @@ Language: eu_ES
     <string name="reader">Irakurlea</string>
     <string name="anonymous">Anonimoa</string>
     <string name="posts">Bidalketak</string>
-    <string name="width">Zabalera</string>
-    <string name="caption">Legenda (hautazkoa)</string>
     <string name="pages">Orrialdeak</string>
     <string name="no_network_title">Ez dago sarerik eskuragarri</string>
-    <string name="featured_in_post">Txertatu irudia mezuaren edukian</string>
     <string name="ok">Ados</string>
     <string name="blogusername">Blogeko erabiltzaile-izena</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Igotzen…</string>
     <string name="app_title">WordPress Android-erako</string>
     <string name="tos">Zerbitzuaren baldintzak</string>
     <string name="version">Bertsioa:</string>
