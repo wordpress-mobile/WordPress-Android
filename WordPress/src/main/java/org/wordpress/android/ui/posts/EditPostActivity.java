@@ -355,9 +355,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Create a new post
-        PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
-        post.setStatus(PostStatus.DRAFT.toString());
-        mEditPostRepository.setPost(post);
+        mEditPostRepository.setInTransaction(() -> {
+            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
+            post.setStatus(PostStatus.DRAFT.toString());
+            return post;
+        });
         EventBus.getDefault().postSticky(
                 new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(), mEditPostRepository.getId()));
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
@@ -603,8 +605,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void initializePostObject() {
         if (mEditPostRepository.hasPost()) {
             mEditPostRepository.saveSnapshot();
-            mEditPostRepository
-                    .setPost(UploadService.updatePostWithCurrentlyCompletedUploads(mEditPostRepository.getPost()));
+            mEditPostRepository.replaceInTransaction(UploadService::updatePostWithCurrentlyCompletedUploads);
             if (mShowAztecEditor) {
                 try {
                     mMediaMarkedUploadingOnStartIds = AztecEditorFragment
@@ -3256,7 +3257,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.setPost(mPostStore.getPostByLocalPostId(mEditPostRepository.getId()));
-            handleRemoteAutoSave(event.isError(), mEditPostRepository.getPost());
+            mEditPostRepository.updateInTransaction(postModel -> {
+                handleRemoteAutoSave(event.isError(), postModel);
+                return true;
+            });
         }
     }
 

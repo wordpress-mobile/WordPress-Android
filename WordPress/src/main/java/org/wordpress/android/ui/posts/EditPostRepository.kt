@@ -81,6 +81,14 @@ class EditPostRepository
         action(post!!)
     }
 
+    fun replaceInTransaction(action: (PostModel) -> PostModel) = lock.write {
+        this.post = action(post!!)
+    }
+
+    fun setInTransaction(action: () -> PostModel) = lock.write {
+        this.post = action()
+    }
+
     fun hasLocation() = post!!.hasLocation()
 
     fun hasPost() = post != null
