@@ -51,8 +51,6 @@ interface EditorMediaListener {
     fun appendMediaFile(mediaFile: MediaFile, imageUrl: String)
     fun syncPostObjectWithUiAndSaveIt(listener: AfterSavePostListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
-
-    // TODO replace this with PostModelRepository
     fun editorMediaPostData(): EditorMediaPostData
 }
 
