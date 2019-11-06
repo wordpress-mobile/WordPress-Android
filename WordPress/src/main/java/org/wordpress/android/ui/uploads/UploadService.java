@@ -697,14 +697,15 @@ public class UploadService extends Service {
         }
     }
 
-    private void updateOnePostModelWithCompletedAndFailedUploads(PostModel updatedPost) {
-        updatePostWithCurrentlyCompletedUploads(updatedPost);
+    private PostModel updateOnePostModelWithCompletedAndFailedUploads(PostModel postModel) {
+        PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(postModel);
         // also do the same now with failed uploads
-        updatePostWithCurrentlyFailedUploads(updatedPost);
+        updatedPost = updatePostWithCurrentlyFailedUploads(updatedPost);
         // finally, save the PostModel
         if (updatedPost != null) {
             mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
         }
+        return updatedPost;
     }
 
     private boolean mediaBelongsToAPost(MediaModel media) {
@@ -972,35 +973,37 @@ public class UploadService extends Service {
 
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                 // Replace local with remote media in the post content
-                updateOnePostModelWithCompletedAndFailedUploads(postModel);
-                // here let's check if there are any failed media
-                Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
-                if (failedMedia != null && !failedMedia.isEmpty()) {
-                    // this Post has failed media, don't upload it just yet,
-                    // but tell the user about the error
-                    cancelQueuedPostUpload(postModel);
+                PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
+                if (updatedPost != null) {
+                    // here let's check if there are any failed media
+                    Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(postModel);
+                    if (!failedMedia.isEmpty()) {
+                        // this Post has failed media, don't upload it just yet,
+                        // but tell the user about the error
+                        cancelQueuedPostUpload(postModel);
 
-                    // update error notification for Post, unless the media is in the user-deleted media set
-                    if (!isAllFailedMediaUserDeleted(failedMedia)) {
-                        SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
-                        String message = UploadUtils
-                                .getErrorMessage(this, getString(R.string.error_generic_error), true,
-                                        postModel.isPage());
-                        mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
-                    }
+                        // update error notification for Post, unless the media is in the user-deleted media set
+                        if (!isAllFailedMediaUserDeleted(failedMedia)) {
+                            SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
+                            String message = UploadUtils
+                                    .getErrorMessage(this, getString(R.string.error_generic_error), true,
+                                            postModel.isPage());
+                            mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
+                        }
 
-                    mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel.getId());
-                    EventBus.getDefault().post(
-                            new PostEvents.PostUploadCanceled(postModel));
-                } else {
-                    // Do not re-enqueue a post that has already failed
-                    if (isError != null && isError && mUploadStore.isFailedPost(post)) {
-                        continue;
+                        mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel.getId());
+                        EventBus.getDefault().post(
+                                new PostEvents.PostUploadCanceled(postModel));
+                    } else {
+                        // Do not re-enqueue a post that has already failed
+                        if (isError != null && isError && mUploadStore.isFailedPost(post)) {
+                            continue;
+                        }
+                        // TODO Should do some extra validation here
+                        // e.g. what if the post has local media URLs but no pending media uploads?
+                        mPostUploadHandler.upload(updatedPost);
+                        return true;
                     }
-                    // TODO Should do some extra validation here
-                    // e.g. what if the post has local media URLs but no pending media uploads?
-                    mPostUploadHandler.upload(postModel);
-                    return true;
                 }
             }
         }
