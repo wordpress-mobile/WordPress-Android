@@ -20,26 +20,13 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 
 @RunWith(MockitoJUnitRunner::class)
 class UploadMediaUseCaseTest {
-    @Mock lateinit var uploadServiceFacade: UploadServiceFacade
-    @Mock lateinit var editorMediaListener: EditorMediaListener
-
-    private lateinit var uploadMediaUseCase: UploadMediaUseCase
-
-    @Before
-    fun setUp() {
-        uploadMediaUseCase = UploadMediaUseCase(uploadServiceFacade)
-        whenever(editorMediaListener.syncPostObjectWithUiAndSaveIt(any())).thenAnswer { invocation ->
-            (invocation.getArgument(0) as AfterSavePostListener).onPostSave()
-        }
-    }
-
     @Test(expected = IllegalArgumentException::class)
     fun `Starting an upload with a not-queued post throws an exception`() {
         // Arrange
         val models = listOf(createMediaModel(uploadState = FAILED))
 
         // Act
-        uploadMediaUseCase.saveQueuedPostAndStartUpload(mock(), models)
+        createUploadMediaUseCase().saveQueuedPostAndStartUpload(mock(), models)
 
         // Assert
         // results in exception
@@ -49,9 +36,10 @@ class UploadMediaUseCaseTest {
     fun `Post is synced and saved before initiating an upload`() {
         // Arrange
         val models = listOf(createMediaModel(), createMediaModel())
+        val editorMediaListener = createEditorMediaListener()
 
         // Act
-        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, models)
+        createUploadMediaUseCase().saveQueuedPostAndStartUpload(editorMediaListener, models)
 
         // Assert
         verify(editorMediaListener).syncPostObjectWithUiAndSaveIt(any())
@@ -61,9 +49,13 @@ class UploadMediaUseCaseTest {
     fun `Upload is initiated after the post is saved`() {
         // Arrange
         val models = listOf(createMediaModel(), createMediaModel())
+        val uploadServiceFacade: UploadServiceFacade = mock()
 
         // Act
-        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, models)
+        createUploadMediaUseCase(uploadServiceFacade = uploadServiceFacade).saveQueuedPostAndStartUpload(
+                createEditorMediaListener(),
+                models
+        )
 
         // Assert
         verify(uploadServiceFacade).uploadMediaFromEditor(any())
@@ -74,15 +66,31 @@ class UploadMediaUseCaseTest {
         // Arrange
         val models = listOf(createMediaModel(), createMediaModel())
         val modelListCaptor: KArgumentCaptor<ArrayList<MediaModel>> = argumentCaptor()
+        val uploadServiceFacade: UploadServiceFacade = mock()
 
         // Act
-        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, models)
+        createUploadMediaUseCase(uploadServiceFacade = uploadServiceFacade).saveQueuedPostAndStartUpload(
+                createEditorMediaListener(),
+                models
+        )
 
         // Assert
         verify(uploadServiceFacade).uploadMediaFromEditor(modelListCaptor.capture())
         assertThat(modelListCaptor.firstValue).isEqualTo(models)
     }
 
-    private fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
-            MediaModel().apply { this.uploadState = uploadState.name }
+    private companion object Fixtures {
+        private fun createUploadMediaUseCase(uploadServiceFacade: UploadServiceFacade = mock()): UploadMediaUseCase {
+            return UploadMediaUseCase(uploadServiceFacade)
+        }
+
+        private fun createEditorMediaListener() = mock<EditorMediaListener> {
+            on { syncPostObjectWithUiAndSaveIt(any()) }.thenAnswer { invocation ->
+                (invocation.getArgument(0) as AfterSavePostListener).onPostSave()
+            }
+        }
+
+        private fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
+                MediaModel().apply { this.uploadState = uploadState.name }
+    }
 }

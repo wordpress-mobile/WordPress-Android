@@ -4,12 +4,9 @@ import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.MediaAction
@@ -19,23 +16,15 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 
 @RunWith(MockitoJUnitRunner::class)
 class UpdateMediaModelUseCaseTest {
-    @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var postData: EditorMediaPostData
-
-    private lateinit var updateMediaUseCase: UpdateMediaModelUseCase
-    @Before
-    fun setUp() {
-        updateMediaUseCase = UpdateMediaModelUseCase(dispatcher)
-    }
-
     @Test
     fun `Update media action is dispatched`() {
         // Arrange
         val mediaModel = createMediaModel()
         val captor: KArgumentCaptor<Action<MediaModel>> = argumentCaptor()
+        val dispatcher: Dispatcher = mock()
 
         // Act
-        updateMediaUseCase.updateMediaModel(mediaModel, mock(), mock())
+        createUpdateMediaModelUseCase(dispatcher).updateMediaModel(mediaModel, mock(), mock())
         verify(dispatcher).dispatch(captor.capture())
 
         // Assert
@@ -47,28 +36,26 @@ class UpdateMediaModelUseCaseTest {
     fun `Remote post id gets set`() {
         // Arrange
         val mediaModel = createMediaModel()
-        val id = 999L
-        whenever(postData.remotePostId).thenReturn(id)
+        val postData = createPostData(remoteId = REMOTE_ID)
 
         // Act
-        updateMediaUseCase.updateMediaModel(mediaModel, postData, mock())
+        createUpdateMediaModelUseCase().updateMediaModel(mediaModel, postData, mock())
 
         // Assert
-        assertThat(mediaModel.postId).isEqualTo(id)
+        assertThat(mediaModel.postId).isEqualTo(REMOTE_ID)
     }
 
     @Test
     fun `Local post id gets set`() {
         // Arrange
         val mediaModel = createMediaModel()
-        val id = 123
-        whenever(postData.localPostId).thenReturn(id)
+        val postData = createPostData(localId = LOCAL_ID)
 
         // Act
-        updateMediaUseCase.updateMediaModel(mediaModel, postData, mock())
+        createUpdateMediaModelUseCase().updateMediaModel(mediaModel, postData, mock())
 
         // Assert
-        assertThat(mediaModel.localPostId).isEqualTo(id)
+        assertThat(mediaModel.localPostId).isEqualTo(LOCAL_ID)
     }
 
     @Test
@@ -78,17 +65,32 @@ class UpdateMediaModelUseCaseTest {
         val uploadState = MediaUploadState.FAILED
 
         // Act
-        updateMediaUseCase.updateMediaModel(mediaModel, postData, uploadState)
+        createUpdateMediaModelUseCase().updateMediaModel(mediaModel, mock(), uploadState)
 
         // Assert
         assertThat(mediaModel.uploadState).isEqualTo(uploadState.name)
     }
 
-    private fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
-            MediaModel().apply {
-                this.uploadState = uploadState.name
-                this.id = 1
-                this.postId = 2
-                this.localPostId = 3
-            }
+    private companion object Fixtures {
+        private const val REMOTE_ID = 999L
+        private const val LOCAL_ID = 111
+
+        private fun createUpdateMediaModelUseCase(dispatcher: Dispatcher = mock()): UpdateMediaModelUseCase {
+            return UpdateMediaModelUseCase(dispatcher)
+        }
+
+        fun createPostData(localId: Int = LOCAL_ID, remoteId: Long = REMOTE_ID) =
+                mock<EditorMediaPostData> {
+                    on { remotePostId }.thenReturn(remoteId)
+                    on { localPostId }.thenReturn(localId)
+                }
+
+        fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
+                MediaModel().apply {
+                    this.uploadState = uploadState.name
+                    this.id = 1
+                    this.postId = 2
+                    this.localPostId = 3
+                }
+    }
 }

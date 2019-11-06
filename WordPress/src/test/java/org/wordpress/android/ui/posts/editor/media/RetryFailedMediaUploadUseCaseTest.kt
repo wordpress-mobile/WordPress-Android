@@ -108,22 +108,22 @@ class RetryFailedMediaUploadUseCaseTest {
         verify(trackerWrapper, never()).track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
     }
 
-    private fun createUseCase(
-        getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),
-        updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
-        uploadMediaUseCase: UploadMediaUseCase = mock(),
-        tracker: AnalyticsTrackerWrapper = mock()
-    ): RetryFailedMediaUploadUseCase {
-        return RetryFailedMediaUploadUseCase(
-                getMediaModelUseCase,
-                updateMediaModelUseCase,
-                uploadMediaUseCase,
-                tracker
-        )
-    }
-
     private companion object Fixtures {
         private val FAILED_MEDIA_IDS = listOf(1, 2, 3)
+
+        private fun createUseCase(
+            getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),
+            updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
+            uploadMediaUseCase: UploadMediaUseCase = mock(),
+            tracker: AnalyticsTrackerWrapper = mock()
+        ): RetryFailedMediaUploadUseCase {
+            return RetryFailedMediaUploadUseCase(
+                    getMediaModelUseCase,
+                    updateMediaModelUseCase,
+                    uploadMediaUseCase,
+                    tracker
+            )
+        }
 
         fun createGetMediaModelUseCase() = mock<GetMediaModelUseCase> {
             onBlocking { loadMediaModelFromDb(any()) } doAnswer { invocation ->
