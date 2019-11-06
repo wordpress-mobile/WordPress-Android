@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="WordPress" parent="Theme.MaterialComponents.DayNight.Bridge">
+<!--        &lt;!&ndash; Material theme &ndash;&gt;-->
+        <item name="colorPrimary">@color/blue_30</item>
+        <item name="colorPrimaryVariant">@color/blue_50</item>
+        <item name="colorSecondary">@color/pink_30</item>
+        <item name="colorSecondaryVariant">@color/pink_50</item>
+        <item name="android:colorBackground">@color/material_background_dark</item>
+        <item name="colorSurface">@color/material_background_dark</item>
+        <item name="colorError">@color/red_30</item>
+        <item name="colorOnPrimary">@android:color/black</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorOnBackground">@android:color/white</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        <item name="colorOnError">@android:color/black</item>
+
+        <item name="wpColorText">@color/neutral_70</item>
+        <item name="wpColorTextSubtle">@color/neutral</item>
+        <item name="wpColorError">@color/error</item>
+        <item name="wpColorWarningDark">@color/warning_50</item>
+    </style>
+
+
+</resources>
