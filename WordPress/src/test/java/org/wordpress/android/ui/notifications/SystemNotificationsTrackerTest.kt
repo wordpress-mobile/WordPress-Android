@@ -11,6 +11,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_DISMISSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationType.ACTIONS_PROGRESS
 import org.wordpress.android.push.NotificationType.ACTIONS_RESULT
@@ -43,6 +45,30 @@ class SystemNotificationsTrackerTest {
     @Mock lateinit var appPrefs: AppPrefsWrapper
     @Mock lateinit var notificationManager: NotificationManagerWrapper
     private lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    private val typeToValue = mapOf(
+            COMMENT to "comment",
+            LIKE to "like",
+            COMMENT_LIKE to "comment_like",
+            AUTOMATTCHER to "automattcher",
+            FOLLOW to "follow",
+            REBLOG to "reblog",
+            BADGE_RESET to "badge_reset",
+            NOTE_DELETE to "note_delete",
+            TEST_NOTE to "test_note",
+            UNKNOWN_NOTE to "unknown_note",
+            AUTHENTICATION to "authentication",
+            GROUP_NOTIFICATION to "group_notes",
+            ACTIONS_RESULT to "actions_result",
+            ACTIONS_PROGRESS to "actions_progress",
+            QUICK_START_REMINDER to "quick_start_reminder",
+            POST_UPLOAD_SUCCESS to "post_upload_success",
+            POST_UPLOAD_ERROR to "post_upload_error",
+            MEDIA_UPLOAD_SUCCESS to "media_upload_success",
+            MEDIA_UPLOAD_ERROR to "media_upload_error",
+            POST_PUBLISHED to "post_published",
+            PENDING_DRAFTS to "pending_draft",
+            ZENDESK to "zendesk_message"
+    )
     @Before
     fun setUp() {
         systemNotificationsTracker = SystemNotificationsTracker(
@@ -85,34 +111,34 @@ class SystemNotificationsTrackerTest {
     }
 
     @Test
-    fun `notification types dismiss tracked correctly`() {
-        val typeToValue = mapOf(
-                COMMENT to "comment",
-                LIKE to "like",
-                COMMENT_LIKE to "comment_like",
-                AUTOMATTCHER to "automattcher",
-                FOLLOW to "follow",
-                REBLOG to "reblog",
-                BADGE_RESET to "badge_reset",
-                NOTE_DELETE to "note_delete",
-                TEST_NOTE to "test_note",
-                UNKNOWN_NOTE to "unknown_note",
-                AUTHENTICATION to "authentication",
-                GROUP_NOTIFICATION to "group_notes",
-                ACTIONS_RESULT to "actions_result",
-                ACTIONS_PROGRESS to "actions_progress",
-                QUICK_START_REMINDER to "quick_start_reminder",
-                POST_UPLOAD_SUCCESS to "post_upload_success",
-                POST_UPLOAD_ERROR to "post_upload_error",
-                MEDIA_UPLOAD_SUCCESS to "media_upload_success",
-                MEDIA_UPLOAD_ERROR to "media_upload_error",
-                POST_PUBLISHED to "post_published",
-                PENDING_DRAFTS to "pending_draft",
-                ZENDESK to "zendesk_message"
-        )
+    fun `notification dismiss tracked correctly`() {
         val notificationTypes = NotificationType.values().toMutableSet()
         typeToValue.forEach { (notificationType, trackingValue) ->
             verifyTrackDismissedNotification(notificationType = notificationType, typeValue = trackingValue)
+            notificationTypes.remove(notificationType)
+        }
+
+        // Check that all the items are covered by the test
+        assertThat(notificationTypes).isEmpty()
+    }
+
+    @Test
+    fun `notification tap tracked correctly`() {
+        val notificationTypes = NotificationType.values().toMutableSet()
+        typeToValue.forEach { (notificationType, trackingValue) ->
+            verifyTrackTappedNotification(notificationType = notificationType, typeValue = trackingValue)
+            notificationTypes.remove(notificationType)
+        }
+
+        // Check that all the items are covered by the test
+        assertThat(notificationTypes).isEmpty()
+    }
+
+    @Test
+    fun `notification shown tracked correctly`() {
+        val notificationTypes = NotificationType.values().toMutableSet()
+        typeToValue.forEach { (notificationType, trackingValue) ->
+            verifyTrackShowNotification(notificationType = notificationType, typeValue = trackingValue)
             notificationTypes.remove(notificationType)
         }
 
@@ -128,6 +154,30 @@ class SystemNotificationsTrackerTest {
 
         verify(analyticsTracker).track(
                 NOTIFICATION_DISMISSED,
+                mapOf("notification_type" to typeValue)
+        )
+    }
+
+    private fun verifyTrackTappedNotification(
+        notificationType: NotificationType,
+        typeValue: String
+    ) {
+        systemNotificationsTracker.trackTappedNotification(notificationType)
+
+        verify(analyticsTracker).track(
+                NOTIFICATION_TAPPED,
+                mapOf("notification_type" to typeValue)
+        )
+    }
+
+    private fun verifyTrackShowNotification(
+        notificationType: NotificationType,
+        typeValue: String
+    ) {
+        systemNotificationsTracker.trackShownNotification(notificationType)
+
+        verify(analyticsTracker).track(
+                NOTIFICATION_SHOWN,
                 mapOf("notification_type" to typeValue)
         )
     }
