@@ -22,7 +22,7 @@ class AddExistingMediaToPostUseCase @Inject constructor(
         editorMediaListener: EditorMediaListener
     ) {
         getMediaModelUseCase
-                .loadMediaModelFromDb(site, mediaIdList)
+                .loadMediaByRemoteId(site, mediaIdList)
                 .onEach { media ->
                     editorTracker.trackAddMediaEvent(site, source, media.isVideo)
                 }

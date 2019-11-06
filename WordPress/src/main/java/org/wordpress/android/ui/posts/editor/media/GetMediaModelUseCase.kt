@@ -9,9 +9,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.FileProvider
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,22 +23,24 @@ class GetMediaModelUseCase @Inject constructor(
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val mediaStore: MediaStore,
+    private val fileProvider: FileProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun loadMediaModelFromDb(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
+    suspend fun loadMediaByLocalId(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
         return withContext(bgDispatcher) {
             mediaModelLocalIds
                     .mapNotNull {
-                        val model = mediaStore.getMediaWithLocalId(it)
-                        if (model == null) {
-                            AppLog.e(AppLog.T.MEDIA, "Media model not found in the local database. Id $it")
-                        }
-                        model
+                        val mediaModel = mediaStore.getMediaWithLocalId(it)
+                        mediaModel ?: AppLog.e(
+                                AppLog.T.MEDIA,
+                                "Media model not found in the local database. Id $it"
+                        )
+                        mediaModel
                     }
         }
     }
 
-    suspend fun loadMediaModelFromDb(
+    suspend fun loadMediaByRemoteId(
         site: SiteModel,
         mediaModelsRemoteIds: Iterable<Long>
     ): List<MediaModel> {
@@ -48,7 +50,7 @@ class GetMediaModelUseCase @Inject constructor(
                         val mediaModel: MediaModel? = mediaStore.getSiteMediaWithId(site, it)
                         mediaModel ?: AppLog.w(
                                 AppLog.T.POSTS,
-                                "Loading mediaModel with id $it failed."
+                                "Media model not found in the local database. Id $it"
                         )
                         mediaModel
                     }
@@ -108,7 +110,9 @@ class GetMediaModelUseCase @Inject constructor(
     }
 
     private fun verifyFileExists(uri: Uri): Boolean {
-        return mediaUtilsWrapper.getRealPathFromURI(uri)?.let { path -> File(path).exists() }
+        return mediaUtilsWrapper.getRealPathFromURI(uri)?.let { path ->
+            fileProvider.createFile(path).exists()
+        }
                 ?: false
     }
 

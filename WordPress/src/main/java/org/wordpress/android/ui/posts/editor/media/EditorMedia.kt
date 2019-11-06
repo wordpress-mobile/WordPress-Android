@@ -186,7 +186,7 @@ class EditorMedia @Inject constructor(
     fun cancelMediaUploadAsync(localMediaId: Int, delete: Boolean) {
         launch {
             getMediaModelUseCase
-                    .loadMediaModelFromDb(listOf(localMediaId))
+                    .loadMediaByLocalId(listOf(localMediaId))
                     .firstOrNull()
                     ?.let { mediaModel ->
                         val payload = CancelMediaPayload(site, mediaModel, delete)

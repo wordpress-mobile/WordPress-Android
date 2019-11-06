@@ -35,7 +35,7 @@ class RetryFailedMediaUploadUseCaseTest {
         // Act
         useCase.retryFailedMediaAsync(mock(), FAILED_MEDIA_IDS)
         // Assert
-        verify(getMediaModelUseCase).loadMediaModelFromDb(FAILED_MEDIA_IDS)
+        verify(getMediaModelUseCase).loadMediaByLocalId(FAILED_MEDIA_IDS)
     }
 
     @Test
@@ -126,7 +126,7 @@ class RetryFailedMediaUploadUseCaseTest {
         }
 
         fun createGetMediaModelUseCase() = mock<GetMediaModelUseCase> {
-            onBlocking { loadMediaModelFromDb(any()) } doAnswer { invocation ->
+            onBlocking { loadMediaByLocalId(any()) } doAnswer { invocation ->
                 // Creates dummy media models from provided model ids
                 (invocation.getArgument(0) as Iterable<Int>)
                         .map { createMediaModel(it) }

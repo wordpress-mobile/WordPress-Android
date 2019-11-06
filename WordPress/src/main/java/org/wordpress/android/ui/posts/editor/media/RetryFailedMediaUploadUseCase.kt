@@ -18,7 +18,7 @@ class RetryFailedMediaUploadUseCase @Inject constructor(
         failedMediaLocalIds: List<Int>
     ) {
         getMediaModelUseCase
-                .loadMediaModelFromDb(failedMediaLocalIds)
+                .loadMediaByLocalId(failedMediaLocalIds)
                 .map { media ->
                     updateMediaModelUseCase.updateMediaModel(
                             media,

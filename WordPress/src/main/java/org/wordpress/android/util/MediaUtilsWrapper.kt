@@ -29,7 +29,7 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun fixOrientationIssue(path: String, isVideo: Boolean): Uri? =
             WPMediaUtils.fixOrientationIssue(appContext, path, isVideo)
 
-    fun isVideoMimeType(mimeType: String): Boolean =
+    fun isVideoMimeType(mimeType: String?): Boolean =
         org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
 
     fun isInMediaStore(mediaUri: Uri?): Boolean =

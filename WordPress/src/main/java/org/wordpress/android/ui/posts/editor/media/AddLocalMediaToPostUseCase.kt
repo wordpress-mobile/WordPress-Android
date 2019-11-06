@@ -32,7 +32,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         editorMediaListener: EditorMediaListener
     ) {
         // Add media to editor and initiate upload
-        addToEditorAndUpload(getMediaModelUseCase.loadMediaModelFromDb(localMediaIds), editorMediaListener)
+        addToEditorAndUpload(getMediaModelUseCase.loadMediaByLocalId(localMediaIds), editorMediaListener)
     }
 
     /**

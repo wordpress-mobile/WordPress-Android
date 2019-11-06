@@ -26,7 +26,7 @@ class OptimizeMediaUseCaseTest {
     fun `Uri filtered out when getRealPathFromURI returns null`() = test {
         // Arrange
         val uris = listOf<Uri>(mock(), mock(), mock())
-        val mediaUtilsWrapper = createMediaUtilsWrapper(uris[1] to null)
+        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetRealPath = uris[1] to null)
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
                 .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
@@ -38,7 +38,7 @@ class OptimizeMediaUseCaseTest {
     fun `LoadingSomeMediaFailed set to true when getRealPathFromURI returns null`() = test {
         // Arrange
         val uris = listOf<Uri>(mock(), mock(), mock())
-        val mediaUtilsWrapper = createMediaUtilsWrapper(uris[1] to null)
+        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetRealPath = uris[1] to null)
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
                 .optimizeMediaIfSupportedAsync(SiteModel(), FRESHLY_TAKEN, uris)
@@ -63,7 +63,7 @@ class OptimizeMediaUseCaseTest {
         val uris = listOf<Uri>(mock())
         val optimizedUri = mock<Uri>()
         // OptimizeMediaResult is not null => optimization supported
-        val mediaUtilsWrapper = createMediaUtilsWrapper(optimizeMediaResult = optimizedUri)
+        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetOptimizeMedia = optimizedUri)
 
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
@@ -80,7 +80,7 @@ class OptimizeMediaUseCaseTest {
         val uris = listOf<Uri>(mock(), mock(), mock())
         val siteModel = SiteModel().apply { setIsWPCom(true) }
         // OptimizeMediaResult is null => optimization disabled
-        val mediaUtilsWrapper = createMediaUtilsWrapper(optimizeMediaResult = null)
+        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForGetOptimizeMedia = null)
 
         // Act
         val optimizeMediaResult = createOptimizeMediaUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
@@ -100,8 +100,8 @@ class OptimizeMediaUseCaseTest {
                 val siteModel = SiteModel().apply { setIsWPCom(false) }
                 // OptimizeMediaResult is null => optimization disabled
                 val mediaUtilsWrapper = createMediaUtilsWrapper(
-                        optimizeMediaResult = null,
-                        fixedOrientationResult = fixedOrientationUri
+                        resultForGetOptimizeMedia = null,
+                        resultForFixOrientation = fixedOrientationUri
                 )
 
                 // Act
@@ -127,8 +127,8 @@ class OptimizeMediaUseCaseTest {
                 val siteModel = SiteModel().apply { setIsWPCom(false) }
                 // OptimizeMediaResult is null => optimization disabled
                 val mediaUtilsWrapper = createMediaUtilsWrapper(
-                        optimizeMediaResult = null,
-                        fixedOrientationResult = fixedOrientationUri
+                        resultForGetOptimizeMedia = null,
+                        resultForFixOrientation = fixedOrientationUri
                 )
 
                 // Act
@@ -150,17 +150,17 @@ class OptimizeMediaUseCaseTest {
         }
 
         private fun createMediaUtilsWrapper(
-            realPathResult: Pair<Uri, String?>? = null,
-            optimizeMediaResult: Uri? = mock(),
-            fixedOrientationResult: Uri? = mock()
+            resultForGetRealPath: Pair<Uri, String?>? = null,
+            resultForGetOptimizeMedia: Uri? = mock(),
+            resultForFixOrientation: Uri? = mock()
         ) =
                 mock<MediaUtilsWrapper> {
-                    on { getOptimizedMedia(any(), any()) }.thenReturn(optimizeMediaResult)
-                    on { fixOrientationIssue(any(), any()) }.thenReturn(fixedOrientationResult)
+                    on { getOptimizedMedia(any(), any()) }.thenReturn(resultForGetOptimizeMedia)
+                    on { fixOrientationIssue(any(), any()) }.thenReturn(resultForFixOrientation)
                     on { getRealPathFromURI(any()) }.thenReturn("")
-                    realPathResult?.let {
-                        on { getRealPathFromURI(realPathResult.first) }.thenReturn(
-                                realPathResult.second
+                    resultForGetRealPath?.let {
+                        on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
+                                resultForGetRealPath.second
                         )
                     }
                 }
