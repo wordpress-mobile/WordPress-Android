@@ -95,7 +95,6 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -199,7 +198,6 @@ public class WPMainActivity extends AppCompatActivity implements
         ((WordPress) getApplication()).component().inject(this);
 
         super.onCreate(savedInstanceState);
-        AppThemeUtils.Companion.setAppTheme(this);
         setContentView(R.layout.main_activity);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
