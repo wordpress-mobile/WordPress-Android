@@ -111,4 +111,76 @@ public class NotificationsSettings {
     public JSONObject getWPComSettings() {
         return mWPComSettings;
     }
+
+    // Returns settings json for the given {@link Channel}, {@link Type} and optional blog id
+    public JSONObject getSettingsJsonForChannelAndType(Channel channel, Type type, long blogId) {
+        JSONObject settingsJson = null;
+        String typeString = type.toString();
+        switch (channel) {
+            case BLOGS:
+                if (blogId != -1) {
+                    settingsJson = JSONUtils.queryJSON(getBlogSettings().get(blogId),
+                            typeString, new JSONObject());
+                }
+                break;
+            case OTHER:
+                settingsJson = JSONUtils.queryJSON(getOtherSettings(),
+                        typeString, new JSONObject());
+                break;
+            case WPCOM:
+                settingsJson = getWPComSettings();
+                break;
+        }
+        return settingsJson;
+    }
+
+    /**
+     * Determines if the master switch should be displayed on a notifications settings preference screen
+     * for the given {@link Channel} and {@link Type}
+     *
+     * @param channel The {@link Channel}
+     * @param type The {@link Type}
+     * @return A flag indicating whether master switch should be displayed.
+     */
+    public boolean shouldDisplayMasterSwitch(Channel channel, Type type) {
+        boolean displayMasterSwitch = false;
+        switch (channel) {
+            case BLOGS:
+                if (type == Type.TIMELINE) {
+                    displayMasterSwitch = true;
+                }
+                break;
+            case OTHER:
+            case WPCOM:
+            default:
+                break;
+        }
+
+        return displayMasterSwitch;
+    }
+
+    /**
+     * Finds if at least one notifications settings value is enabled in the given json
+     *
+     * @param settingsJson The settings json
+     * @param settingsArray The string array of settings display names
+     * @param settingsValues The string array of settings json keys
+     * @return A flag indicating if at least one settings option is enabled.
+     */
+    public boolean isAtLeastOneSettingsEnabled(
+        JSONObject settingsJson,
+        String[] settingsArray,
+        String[] settingsValues
+    ) {
+        if (settingsJson != null && settingsArray.length == settingsValues.length) {
+            for (int i = 0; i < settingsArray.length; i++) {
+                String settingValue = settingsValues[i];
+                boolean isChecked = JSONUtils.queryJSON(settingsJson, settingValue, true);
+                if (isChecked) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

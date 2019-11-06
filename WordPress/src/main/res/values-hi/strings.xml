@@ -52,7 +52,6 @@ Language: hi_IN
     <string name="cant_open_url">लिंक को खोलने में अक्षम</string>
     <string name="error_unknown_post">इस सर्वर पर पोस्ट मौजूद नहीं है </string>
     <string name="error_post_does_not_exist">पोस्ट अब मौजूद नहीं है </string>
-    <string name="async_promo_link">यह कैसे काम करता है?</string>
     <string name="editor_uploading_post">आपकी पोस्ट अपलोड हो रहे है</string>
     <string name="uploading_media">मीडिया अपलोड हो रही है…</string>
     <string name="button_retry">पुन: प्रयास करें</string>
@@ -67,7 +66,6 @@ Language: hi_IN
     <string name="leave_off">छोड़ दें</string>
     <string name="post_title">शीर्षक</string>
     <string name="media_audio">ऑडियो</string>
-    <string name="format_bar_description_media">मीडिया</string>
     <string name="permission_camera">कैमरा</string>
     <string name="twitter">ट्विटर</string>
     <string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
@@ -95,8 +93,6 @@ Language: hi_IN
     <string name="notifications_label_new_notifications">नई सूचनाएं I</string>
     <string name="like">लाइक</string>
     <string name="timespan_now">अब</string>
-    <string name="visual_editor">विजुअल सम्पादक</string>
-    <string name="format_bar_description_html">एचटीएमएल</string>
     <string name="image_width">चौड़ाई </string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
@@ -117,8 +113,6 @@ Language: hi_IN
     <string name="approve_auto">सभी उपयोगकर्ता</string>
     <string name="days_quantity_one">1 दिन </string>
     <string name="days_quantity_other">%d दिन</string>
-    <string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
-    <string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
     <string name="email_address">ईमेल पता</string>
     <string name="comment_status_all">सभी</string>
     <string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
@@ -159,7 +153,6 @@ Language: hi_IN
     <string name="reader_short_like_count_none">पसंद</string>
     <string name="reader_label_follow_count">%,d अनुयायी</string>
     <string name="reader_title_post_detail">पाठक लेख</string>
-    <string name="local_changes_explainer">इस लेख में स्थानीय परिवर्तन हुआ है, जो प्रकाशित नहीं हुआ है।</string>
     <string name="notifications_push_summary">अपने उपकरण में सूचना हेतु व्यवस्था।</string>
     <string name="notification_types">अधिसूचना के प्रकार</string>
     <string name="notifications_tab">अधिसूचना सूचि</string>
@@ -252,7 +245,6 @@ Language: hi_IN
     <string name="edit_comment">टिप्पणी संपादित करें</string>
     <string name="cancel_edit">संपादन रद्द करें</string>
     <string name="category_name">श्रेणी नाम</string>
-    <string name="create_a_link">एक कड़ी बनाएं</string>
     <string name="image_settings">छवि सेटिंग्स</string>
     <string name="learn_more">और जानें</string>
     <string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
@@ -263,8 +255,6 @@ Language: hi_IN
     <string name="page_settings">पृष्ठ सेटिंग्स</string>
     <string name="comment_status_unapproved">विचाराधीन</string>
     <string name="post_settings">पोस्ट सेटिंग्स</string>
-    <string name="preview_page">पूर्वावलोकन पृष्ठ</string>
-    <string name="preview_post">पूर्वावलोकन पोस्ट</string>
     <string name="privacy_policy">गोपनीयता नीति</string>
     <string name="comment_status_spam">स्पैम</string>
     <string name="mnu_comment_spam">स्पैम</string>
@@ -293,7 +283,6 @@ Language: hi_IN
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
     <string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>
-    <string name="horizontal_alignment">क्षैतिज संरेखण</string>
     <string name="local_changes">स्थानीय परिवर्तन</string>
     <string name="local_draft">स्थानीय प्रारूप</string>
     <string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
@@ -304,7 +293,6 @@ Language: hi_IN
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="share_link">कड़ी साझा करे</string>
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
-    <string name="video">वीडियो</string>
     <string name="reader_label_reply">जवाब दें</string>
     <string name="reader_likes_multi">%,d लोगों ने पसंद किया</string>
     <string name="reader_likes_you_and_multi">आपने और %,d लोगो ने इसे पसंद किया है</string>
@@ -361,7 +349,6 @@ Language: hi_IN
     <string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
     <string name="error_media_upload">मीडिया अपलोड करने के दौरान एक त्रुटि हुई</string>
     <string name="publish_date">प्रकाशित करे</string>
-    <string name="post_content">सामग्री(शब्द और मीडिया को जोड़ने के लिए टैप करे)</string>
     <string name="incorrect_credentials">गलत उपयोगकर्ता नाम या कूटशब्द.</string>
     <string name="username">उपयोगकर्ता नाम</string>
     <string name="password">कूटशब्द</string>
@@ -370,13 +357,9 @@ Language: hi_IN
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
     <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
-    <string name="width">चौडाई</string>
-    <string name="caption">शीर्षक (वैकल्पिक)</string>
-    <string name="featured_in_post">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="blogusername">ब्लॉग उपयोगकर्ता नाम</string>
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
-    <string name="uploading">अपलोड किया जा रहा</string>
     <string name="version">संस्करण</string>
     <string name="tos">सेवा की शर्तें</string>
     <string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>

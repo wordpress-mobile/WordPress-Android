@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringText;
@@ -53,8 +54,9 @@ public class PostUtils {
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
-    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s} -->";
+    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s";
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
+    private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
 
     public static Map<String, Object> addPostTypeToAnalyticsProperties(PostModel post, Map<String, Object> properties) {
         if (properties == null) {
@@ -186,6 +188,8 @@ public class PostUtils {
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }
+        properties.put(AnalyticsUtils.EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY, AppPrefs.isPostWithHWAccelerationOff(
+                site.getId(), post.getId()) ? "1" : "0");
         properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                 PostUtils.contentContainsGutenbergBlocks(post.getContent()));
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
@@ -412,6 +416,11 @@ public class PostUtils {
                 String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
                 String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
                 postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
+
+                String oldMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER, localMediaId);
+                String newMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER,
+                        mediaFile.getMediaId());
+                postContent = postContent.replace(oldMediaTextBlockHeader, newMediaTextBlockHeader);
 
                 // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
                 String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);

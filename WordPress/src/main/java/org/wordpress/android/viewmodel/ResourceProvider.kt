@@ -23,4 +23,9 @@ class ResourceProvider @Inject constructor(private val contextProvider: ContextP
         val resources = contextProvider.getContext().resources
         return resources.getDimensionPixelSize(dimen)
     }
+
+    fun getDimension(@DimenRes dimen: Int): Float {
+        val resources = contextProvider.getContext().resources
+        return resources.getDimension(dimen)
+    }
 }
