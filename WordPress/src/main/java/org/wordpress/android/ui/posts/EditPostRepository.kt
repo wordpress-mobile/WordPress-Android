@@ -29,49 +29,51 @@ class EditPostRepository
         }
     private var postSnapshotWhenEditorOpened: PostModel? = null
     val id: Int
-        get() = readFromPost { this.id }
+        get() = post!!.id
     val localSiteId: Int
-        get() = readFromPost { this.localSiteId }
+        get() = post!!.localSiteId
     val remotePostId: Long
-        get() = readFromPost { this.remotePostId }
+        get() = post!!.remotePostId
     val title: String
-        get() = readFromPost { this.title }
+        get() = post!!.title
     val autoSaveTitle: String
-        get() = readFromPost { this.autoSaveTitle }
+        get() = post!!.autoSaveTitle
     val content: String
-        get() = readFromPost { this.content }
+        get() = post!!.content
     val autoSaveContent: String
-        get() = readFromPost { this.autoSaveContent }
+        get() = post!!.autoSaveContent
     val excerpt: String
-        get() = readFromPost { this.excerpt }
+        get() = post!!.excerpt
     val autoSaveExcerpt: String
-        get() = readFromPost { this.autoSaveExcerpt }
+        get() = post!!.autoSaveExcerpt
     val password: String
-        get() = readFromPost { this.password }
+        get() = post!!.password
     val status: PostStatus
-        get() = readFromPost { fromPost(this) }
+        get() = fromPost(post!!)
     val isPage: Boolean
-        get() = readFromPost { this.isPage }
+        get() = post!!.isPage
     val isLocalDraft: Boolean
-        get() = readFromPost { this.isLocalDraft }
+        get() = post!!.isLocalDraft
     val isLocallyChanged: Boolean
-        get() = readFromPost { this.isLocallyChanged }
+        get() = post!!.isLocallyChanged
     val featuredImageId: Long
-        get() = readFromPost { this.featuredImageId }
+        get() = post!!.featuredImageId
     val dateCreated: String
-        get() = readFromPost { this.dateCreated }
+        get() = post!!.dateCreated
     val changesConfirmedContentHashcode: Int
-        get() = readFromPost { this.changesConfirmedContentHashcode }
+        get() = post!!.changesConfirmedContentHashcode
     val postFormat: String
-        get() = readFromPost { this.postFormat }
+        get() = post!!.postFormat
     val slug: String
-        get() = readFromPost { this.slug }
+        get() = post!!.slug
     val link: String
-        get() = readFromPost { this.link }
+        get() = post!!.link
     val location: PostLocation
-        get() = readFromPost { this.location }
+        get() = post!!.location
     val tagNameList: List<String>
-        get() = readFromPost { this.tagNameList }
+        get() = post!!.tagNameList
+    val dateLocallyChanged: String
+        get() = post!!.dateLocallyChanged
 
     private val lock = ReentrantReadWriteLock()
 
@@ -81,7 +83,7 @@ class EditPostRepository
         } ?: false
     }
 
-    fun hasLocation() = readFromPost { this.hasLocation() }
+    fun hasLocation() = post!!.hasLocation()
 
     fun hasPost() = post != null
     fun getPost() = lock.read { post }

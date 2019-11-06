@@ -1588,7 +1588,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean updatePostObject(boolean isAutosave) {
         if (!mEditPostRepository.hasPost() || mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
-            return false;
+            return true;
         }
         return mEditPostRepository.updateInTransaction(postModel -> {
             try {
@@ -1602,12 +1602,12 @@ public class EditPostActivity extends AppCompatActivity implements
                     postModel
                             .setDateLocallyChanged(
                                     DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-                    return true;
                 }
             } catch (EditorFragmentNotAddedException e) {
                 AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
+                return false;
             }
-            return false;
+            return true;
         });
     }
 
@@ -1888,38 +1888,37 @@ public class EditPostActivity extends AppCompatActivity implements
 
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(postModel, false, postModel.getTitle(), postModel.getContent());
-
-                    savePostToDb();
-
-                    // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
-                    // .uploadState`
-                    // can get stuck in `PENDING`. This happens in this scenario:
-                    //
-                    // 1. The user edits an existing post
-                    // 2. Adds an image -- this creates the `PostUploadModel` as `PENDING`
-                    // 3. Exits the editor by tapping on Back (not saving or publishing)
-                    //
-                    // If the `uploadState` is stuck at `PENDING`, the Post List will indefinitely show a “Queued post”
-                    // label.
-                    //
-                    // The `uploadState` does not get stuck on `PENDING` for WPCom because the app will automatically
-                    // start a remote auto-save when the editor exits. Hence, the `PostUploadModel` eventually gets
-                    // updated.
-                    //
-                    // Marking the `PostUploadModel` as `CANCELLED` when exiting should be fine for all site types since
-                    // we do not currently have any special handling for cancelled uploads. Eventually, the user will
-                    // restart them and the `uploadState` will be corrected.
-                    //
-                    // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
-                    // the Post List determines what label to use.
-                    mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(postModel));
-
-                    // now set the pending notification alarm to be triggered in the next day, week, and month
-                    PendingDraftsNotificationsUtils
-                            .scheduleNextNotifications(EditPostActivity.this, postModel.getId(),
-                                    postModel.getDateLocallyChanged());
                     return true;
                 });
+                savePostToDb();
+
+                // For self-hosted sites, when exiting the editor without uploading, the `PostUploadModel
+                // .uploadState`
+                // can get stuck in `PENDING`. This happens in this scenario:
+                //
+                // 1. The user edits an existing post
+                // 2. Adds an image -- this creates the `PostUploadModel` as `PENDING`
+                // 3. Exits the editor by tapping on Back (not saving or publishing)
+                //
+                // If the `uploadState` is stuck at `PENDING`, the Post List will indefinitely show a “Queued post”
+                // label.
+                //
+                // The `uploadState` does not get stuck on `PENDING` for WPCom because the app will automatically
+                // start a remote auto-save when the editor exits. Hence, the `PostUploadModel` eventually gets
+                // updated.
+                //
+                // Marking the `PostUploadModel` as `CANCELLED` when exiting should be fine for all site types since
+                // we do not currently have any special handling for cancelled uploads. Eventually, the user will
+                // restart them and the `uploadState` will be corrected.
+                //
+                // See `PostListUploadStatusTracker` and `PostListItemUiStateHelper.createUploadUiState` for how
+                // the Post List determines what label to use.
+                mDispatcher.dispatch(UploadActionBuilder.newCancelPostAction(mEditPostRepository.getPost()));
+
+                // now set the pending notification alarm to be triggered in the next day, week, and month
+                PendingDraftsNotificationsUtils
+                        .scheduleNextNotifications(EditPostActivity.this, mEditPostRepository.getId(),
+                                mEditPostRepository.getDateLocallyChanged());
             }
 
             return true;
