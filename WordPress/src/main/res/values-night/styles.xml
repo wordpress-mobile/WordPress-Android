@@ -6,8 +6,8 @@
         <item name="colorPrimaryVariant">@color/blue_50</item>
         <item name="colorSecondary">@color/pink_30</item>
         <item name="colorSecondaryVariant">@color/pink_50</item>
-        <item name="android:colorBackground">@color/material_background_dark</item>
-        <item name="colorSurface">@color/material_background_dark</item>
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>
         <item name="colorOnPrimary">@android:color/black</item>
         <item name="colorOnSecondary">@android:color/black</item>
@@ -20,6 +20,5 @@
         <item name="wpColorError">@color/error</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
     </style>
-
 
 </resources>
