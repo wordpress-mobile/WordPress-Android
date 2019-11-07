@@ -305,9 +305,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preference == mAppThemePreference) {
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
             // restart activity to make sure changes are applied to PreferenceScreen
-            Intent refresh = new Intent(getActivity(), getActivity().getClass());
-            startActivity(refresh);
-            getActivity().finish();
+            getActivity().recreate();
         }
         return true;
     }
