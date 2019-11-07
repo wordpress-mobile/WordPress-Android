@@ -812,7 +812,7 @@
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="app_theme">App Theme</string>
-    <string name="app_theme_dialog_title">Chose theme</string>
+    <string name="app_theme_dialog_title">Choose theme</string>
     <string name="app_theme_light">Light</string>
     <string name="app_theme_dark">Dark</string>
     <string name="app_theme_default">Set by Battery Saver</string>
